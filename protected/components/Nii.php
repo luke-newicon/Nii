@@ -7,7 +7,7 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-
+echo 'howdy';
 /**
  * Description of NApp
  *

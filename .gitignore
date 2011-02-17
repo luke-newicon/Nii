@@ -35,6 +35,7 @@ Icon?
 Thumbs.db
 
 assets/*
+protected/runtime/*
 uploads
 nbproject
 

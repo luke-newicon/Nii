@@ -10,7 +10,7 @@ return array(
 	'name'=>'Projects!',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log','nii'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -32,7 +32,10 @@ return array(
 
 	// application components
 	'components'=>array(
-		'Nii'=>array(),
+		'nii'=>array(
+			'class'=>'Nii'
+		),
+
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
