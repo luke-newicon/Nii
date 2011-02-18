@@ -59,7 +59,7 @@ return array(
 		// uncomment the following to use a MySQL database
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=projects_manager',
+			'connectionString' => 'mysql:host=localhost;dbname=project_manager',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
