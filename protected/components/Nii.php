@@ -7,7 +7,6 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-echo 'howdy';
 /**
  * Description of NApp
  *
@@ -17,6 +16,10 @@ class Nii extends CApplicationComponent
 {
     //put your code here
 	public function init(){
-		echo 'howdy';
+		$exclude = array('gii');
+		foreach(Yii::app()->getModules() as $module=>$v){
+			if (in_array($module, $exclude)) continue;
+			Yii::app()->getModule($module);
+		}
 	}
 }
