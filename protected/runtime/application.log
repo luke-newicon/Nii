@@ -515,3 +515,37 @@ Stack trace:
 #20 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CApplication.php(155): CWebApplication->processRequest()
 #21 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php(13): CApplication->run()
 #22 {main} REQUEST_URI=/newicon/projects/index.php?r=site/index
+2011/02/17 19:43:15 [error] [exception.CException] exception 'CException' with message 'Object configuration must be an array containing a "class" element.' in /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php:187
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(371): YiiBase::createComponent(Array)
+#1 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(477): CModule->getComponent('Nii')
+#2 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CApplication.php(139): CModule->preloadComponents()
+#3 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(118): CApplication->__construct('/Applications/X...')
+#4 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(91): YiiBase::createApplication('CWebApplication', '/Applications/X...')
+#5 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php(13): YiiBase::createWebApplication('/Applications/X...')
+#6 {main} REQUEST_URI=/newicon/projects/
+2011/02/17 19:46:37 [error] [exception.CException] exception 'CException' with message 'Object configuration must be an array containing a "class" element.' in /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php:187
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(371): YiiBase::createComponent(Array)
+#1 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(477): CModule->getComponent('nii')
+#2 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CApplication.php(139): CModule->preloadComponents()
+#3 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(118): CApplication->__construct('/Applications/X...')
+#4 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(91): YiiBase::createApplication('CWebApplication', '/Applications/X...')
+#5 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php(13): YiiBase::createWebApplication('/Applications/X...')
+#6 {main} REQUEST_URI=/newicon/projects/index.php/site/index
+2011/02/17 19:46:57 [error] [exception.CException] exception 'CException' with message 'Object configuration must be an array containing a "class" element.' in /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php:187
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(371): YiiBase::createComponent(Array)
+#1 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php(477): CModule->getComponent('nii')
+#2 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CApplication.php(139): CModule->preloadComponents()
+#3 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(118): CApplication->__construct('/Applications/X...')
+#4 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(91): YiiBase::createApplication('CWebApplication', '/Applications/X...')
+#5 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php(13): YiiBase::createWebApplication('/Applications/X...')
+#6 {main} REQUEST_URI=/newicon/projects/index.php/site/index
+2011/02/17 19:56:44 [error] [php] Illegal offset type in isset or empty (/Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/base/CModule.php:362)
+Stack trace:
+#0 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(118): CWebApplication->__construct()
+#1 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/yii/YiiBase.php(91): createApplication()
+#2 /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php(13): createWebApplication()
+REQUEST_URI=/newicon/projects/index.php/site/page?view=about
+in /Applications/XAMPP/xamppfiles/htdocs/projects/newicon/projects/index.php (13)
