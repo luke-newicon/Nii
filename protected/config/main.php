@@ -28,6 +28,8 @@ return array(
 		 	// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),
+		'crm'=>array(
+		)
 	),
 
 	// application components
@@ -57,7 +59,7 @@ return array(
 		// uncomment the following to use a MySQL database
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=projects_manager',
+			'connectionString' => 'mysql:host=localhost;dbname=project_manager',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
