@@ -1,0 +1,62 @@
+/* ----- bigShadow (extends pop) ----- */
+.bigShadow .inner{bottom:-50px;right:-50px;padding:0px 29px 29px 0px;}
+.bigShadow,.bigShadow .inner,.bigShadow b{background-image:url(skin/mod/bigShadow.png);_background-image:none;}
+.bigShadow{margin:3px 50px 50px 3px;}
+.bigShadow .tl, .bigShadow .tr, .bigShadow .bl, .bigShadow .br {height:50px;width:50px;}
+.bigShadow .tr {right:-50px;}
+.bigShadow .hd {margin-left:-50px;margin-right:29px;position:relative;top:-21px;right:-29px;}
+.bigShadow .bd {margin-left:-50px;margin-right:29px;position:relative;top:-21px;right:-29px;top:-21px;margin-bottom:-21px;z-index:11;}
+.bigShadow .ft {margin-left:-21px;}
+.bigShadow .bl {*margin-top:11px;}
+/* ----- pop-wp (extends bigShadow) ----- */
+.bigShadow.pop-wp,.bigShadow.pop-wp .inner,.bigShadow.pop-wp b{background-image:url(skin/mod/pop-wp.png);_background-image:none;}
+
+/* ----- polaroid (extends complex) ----- */
+.polaroid .inner{_border:3px solid #D7D7D7;}/*IE6 backup no alpha transparency */
+.polaroid,.polaroid .inner,.polaroid b{background-image:url(skin/mod/polaroid.png);_background-image:none;}
+.polaroid .inner{bottom:-15px;padding-left:3px;padding-right:13px;}
+.polaroid{/*margin:3px 10px 10px 3px;*/}
+.polaroid .bl,.polaroid .tr{height:15px;}
+.polaroid .hd,.polaroid .bd,.polaroid .ft{position:relative;top:-4px;}
+/* ----- polaroid (extends complex) ----- */
+.polaroid1 .inner{_border:3px solid #D7D7D7;}/*IE6 backup no alpha transparency */
+
+.polaroid1,.polaroid1 .inner,.polaroid1 b{background-image:url(skin/mod/polaroid.png);_background-image:none;}
+.polaroid1 .bl{height:15px;}
+
+.shimmer{background: #fff url(skin/shimmer.png) repeat-x left top;}
+.shimmerDown{background: #fff url(skin/shimmerDown.png) repeat-x left bottom;}
+/*.shimmerUp{background: #fff url(skin/shimmer.png) repeat-x left top;border-top:1px solid #ccc;}*/
+.hd.shimmerUp{border-top:none;}
+/*.shimmerDown{background: #fff url(skin/shimmerDown.png) repeat-x left bottom;}*/
+.hd.shimmerDown{border-bottom:1px solid #ccc;}
+
+.shimmerUp .inner .bd{background: #fff url(skin/shimmer.png) repeat-x left top;border-top:1px solid #ccc;}
+.shimmerDown .inner .bd{background: #fff url(skin/shimmerDown.png) repeat-x left bottom;}
+
+
+/** newicon mod block skins **/
+/* wordpress theme collection -darkbox is used in wordpress admin area */
+.wpDarkbox .inner{background-color:#F1F1F1;-moz-border-radius:6px;-webkit-border-radius:6px;}
+.wpDarkbox .hd{width:auto;background:#636363 url(skin/wp-darkbox-bg.png) repeat-x top left;color:#FFFFFF;text-shadow:0 -1px 0 #3F3F3F; -moz-border-radius-topleft:6px; -moz-border-radius-topright:6px;-webkit-border-top-left-radius: 6px 6px;-webkit-border-top-right-radius: 6px 6px;border:1px solid #636363;font-size:13px;cursor:pointer;}
+.wpDarkbox .bd{width:auto;border:1px solid #DDDDDD;border-top:none;padding:0px 0px 2px 0px;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;-webkit-border-bottom-left-radius:6px 6px;-webkit-border-bottom-right-radius:6px 6px;}
+.wpDarkbox .hd  h3{background:url(skin/wp-arrow.gif) no-repeat 100% -2px;border:none;font-size:13px;height:16px;margin:0;overflow:hidden;padding:6px 12px;white-space:nowrap;color:#fff;margin-right:9px;}
+/*used to minimise the content*/
+.wpDarkbox.close .bd {display:none;}
+.wpDarkbox.close .hd {border-bottom:1px solid #636363;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;-webkit-border-bottom-left-radius: 6px 6px;-webkit-border-bottom-right-radius: 6px 6px;}
+/* wordpress theme collection -wp-stuffbox is used in wordpress admin area */
+
+.wpStuffbox .inner .hd {background:#DFDFDF url(skin/wp-stuffbox-bg.png) repeat-x top left;color:#333;text-shadow:0 1px 0 #FFFFFF; -moz-border-radius-topleft:6px; -moz-border-radius-topright:6px;-webkit-border-top-left-radius: 6px 6px;-webkit-border-top-right-radius: 6px 6px;border:1px solid #DFDFDF;font-size:13px;}
+.wpStuffbox .inner .bd {border:1px solid #DFDFDF;border-top:none;padding:6px;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;-webkit-border-bottom-left-radius: 6px 6px;-webkit-border-bottom-right-radius: 6px 6px;}
+.wpStuffbox .inner .hd  h3 {border:none;font-size:13px;height:15px;margin:0;overflow:hidden;padding:5px 12px;white-space:nowrap;color:#333;}
+/*used to minimise the content*/
+.wpStuffbox.close .inner .bd {display:none;}
+.wpStuffbox.close .inner .hd {border-bottom:1px solid #DFDFDF;-moz-border-radius-bottomleft:6px;-moz-border-radius-bottomright:6px;-webkit-border-bottom-left-radius: 6px 6px;-webkit-border-bottom-right-radius: 6px 6px;}
+
+
+/** Grey bar silver top definition **/
+.topperGreyBar h2 {font-size:16px;padding:4px 10px;}
+.topperGreyBar{background:url('./skin/topperGreyBar.png') repeat-x bottom left;}
+
+.mod.complex.flow.stateBox .inner{border-top:none;background-color:#FED5D3;}
+.mod.complex.flow.stateBox.priorityNormal .inner{background-color:#ffe88e;}

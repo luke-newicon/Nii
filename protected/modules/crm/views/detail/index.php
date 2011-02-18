@@ -3,20 +3,20 @@
 </style>
 <div class="media">
 	<a href="#" class="img">
-		<?php echo $contact->getImage(array('size'=>70)); ?>
+		<?php $this->widget('crm.components.CrmImage',array('size'=>70,'contact'=>$contact)); ?>
 	</a>
 	<div class="bd">
   		<h1>
-  			<a href="<?php echo Nworx::url('crm/detail/index/'.$contact->id()); ?>">
+  			<a href="<?php echo NHtml::url('crm/detail/index/'.$contact->id()); ?>">
     		<?php if($contact->isPerson()): ?>
-				<?php echo $contact->contact_first_name . ' ' . $contact->contact_last_name; ?>
+				<?php echo $contact->first_name . ' ' . $contact->last_name; ?>
 			<?php else: ?>
-				<?php echo $contact->contact_company; ?>
+				<?php echo $contact->company; ?>
 			<?php endif; ?>
 			</a>
 		</h1>
 		<?php if($contact->isPerson() && $contact->hasCompany()): ?>
-		<p class="mtn"><?php echo $contact->getCompany()->contact_company; ?></p>
+		<p class="mtn"><?php echo $contact->getCompany()->company; ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -53,11 +53,11 @@
 
 <?php if($contact->isCompany()): ?>
 	<?php foreach($contact->contacts as $c): ?>
-		<?php echo $this->com('crm/card', array('contact'=>$c)); ?>
+		<?php $this->widget('crm.components.crmCard', array('contact'=>$c)); ?>
 	<?php endforeach; ?>
 <?php endif; ?>
 
-<?php echo NPage::ajaxLink('facebook', 'crm/index/facebook-lookup/'.$contact->id(), array(
+<?php echo NHtml::ajaxLink('facebook', 'crm/index/facebook-lookup/'.$contact->id(), array(
 	'live'=>false,
 	'success'=>'js:function(r){alert(r);}'
 )); ?>

@@ -1,0 +1,26 @@
+/* FORMS */
+.base fieldset{margin:20px 10px;padding:20px 15px 20px 20px;background-color:#eee;border:1px solid #ccc;border-top-color:#bbb;border-bottom-color:#ddd;-moz-border-radius:5px;-webkit-border-radius:5px;border-radius:5px;}
+.base .field .input,.base .field .input input,.base .field .input select,.base .field .input textarea{background-color:#fff;}
+.base .field .input,.base .field .select select{border:1px solid #ccc;border-top-color:#aaa;border-bottom-color:#ddd;}
+.base .field .input{padding:1px 1px 1px 3px;}
+.base .field .select{border:0 none;padding:0;background-color:transparent;}
+
+/* BUTTONS */
+.base .bt,.base .bt .btInner{background:transparent url(skin/forms/bt_base.png) 0 0 no-repeat;}
+.base .bt{margin:5px;height:25px;background-position:100% -30px;}
+.base .bt .btInner{margin-right:5px;height:25px;background-position:0 0;}
+.base .bt .btInner .btText{margin-right:-5px;padding:6px 10px;}
+/* hover and active states - via js for cross-browser compatibility */
+.base .btOver{background-position:100% -90px;}
+.base .btOver .btInner{background-position:0 -60px;}
+.base .btActive{background-position:100% -150px;}
+.base .btActive .btInner{background-position:0 -120px;}
+/* icons */
+.base .bt .icon .btText{padding-left:28px;background:transparent url(skin/forms/bt_base_icons.png) 0 0 no-repeat;}
+.base .bt .submit .btText{background-position:0 0;}
+.base .bt .cancel .btText{background-position:0 -30px;}
+/* ie fixes for icons */
+.base .bt .submit button.btText,
+.base .bt .submit input.btText{*background-position:0 2px;}
+.base .bt .cancel button.btText,
+.base .bt .cancel input.btText{*background-position:0 -28px;}
