@@ -2,7 +2,7 @@
 
 Class Nworx_Crm_Controller_Detail extends Nworx_Core_Controller
 {
-	public function indexAction($contactId){
+	public function actionIndex($contactId){
 		try {
 			$c = new Nworx_Crm_Model_Contact($contactId);
 			$this->view->contact = $c;

@@ -14,7 +14,6 @@
  */
 class Nii extends CApplicationComponent
 {
-    //put your code here
 	public function init(){
 		$exclude = array('gii');
 		foreach(Yii::app()->getModules() as $module=>$v){
@@ -22,4 +21,5 @@ class Nii extends CApplicationComponent
 			Yii::app()->getModule($module);
 		}
 	}
+
 }

@@ -12,3 +12,8 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 require_once($yii);
 Yii::createWebApplication($config)->run();
 
+/**
+ * debug print functionn
+ * @param mixed $debugObj
+ */
+function dp($debugObj){	echo '<pre>'.print_r($debugObj,true).'</pre>'; }
