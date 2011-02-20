@@ -15,10 +15,27 @@
  */
 class NHtml extends CHtml
 {
-    //put your code here
+   
+	/**
+	 * Format a route into a url a shorthand method of calling normalizeUrl
+	 * 
+	 * For convienience the $route parameter can be a string
+	 * A yii route is defined array('/moduleId/controllerId/actionId', 'getParam1'=>'getParamVal1')
+	 * This function allows route to be a string as well for example
+	 * NHtml::url('/crm/contact/show', array('id'=>3))
+	 * however you can also use this the same as calling normalizeUrl
+	 * 
+	 * @see CHtml::normalizeUrl
+	 * @param mixed (string|array) $route if route is an array the $getArray parameter is ignored
+	 * @param array $getArray additional get parameters
+	 * @return type 
+	 */
 	public static function url($route, $getArray=array()){
-		
-		return CHtml::encode(self::normalizeUrl(array($route, $getArray)));
+		if(is_string($route)){
+			$getArray[0] = $route; 
+			$route = $getArray;
+		}
+		return self::normalizeUrl($route);
 	}
 
 	public static function baseUrl(){

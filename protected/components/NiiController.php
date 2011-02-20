@@ -3,7 +3,7 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends CController
+class NiiController extends CController
 {
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
@@ -31,8 +31,9 @@ class Controller extends CController
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
 			$path = Yii::app()->getAssetManager()->publish($path);
+			Yii::app()->getClientScript()->registerScriptFile("$path/jquery/jquery.scrollto.js");
 			Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
-			Yii::app()->clientScript->registerCoreScript("jquery");
+			Yii::app()->getClientScript()->registerCoreScript("jquery");
 		}
 	}
 

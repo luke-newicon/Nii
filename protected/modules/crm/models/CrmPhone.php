@@ -26,7 +26,7 @@ class CrmPhone extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'nworx_crm__phone';
+		return '{{nii_crm__phone}}';
 	}
 
 	/**

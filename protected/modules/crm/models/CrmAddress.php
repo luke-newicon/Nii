@@ -30,7 +30,7 @@ class CrmAddress extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'nworx_crm__address';
+		return '{{nii_crm__address}}';
 	}
 
 	/**

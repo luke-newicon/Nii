@@ -25,7 +25,7 @@ class CrmWebsite extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'nworx_crm__website';
+		return '{{nii_crm__website}}';
 	}
 
 	/**

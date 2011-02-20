@@ -23,13 +23,13 @@
 		<div class="loginMenu">
 			<div class="menu menuR">
 			<?php if(!Yii::app()->user->isGuest): ?>
-				<?php $login = $this->com('users/user-login-info'); ?>
-				<?php $this->com('core/menu',array(
-					'items'=>array(
-						array('label'=>'profile', 'url'=>'users/profile', 'template'=>$login),
-						array('label'=>'Sign out', 'url'=>'users/index/logout')
-					)
-				)); ?>
+				<?php $login = $this->widget('application.components.UserLoginInfo'); ?>
+				<?php //$this->widget('zii.widgets.CMenu',array(
+					//'items'=>array(
+					//	array('label'=>'profile', 'url'=>array('users/profile'), 'template'=>$login),
+					//	array('label'=>'Sign out', 'url'=>array('users/index/logout'))
+					//)
+				//)); ?>
 			<?php else: ?>
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(

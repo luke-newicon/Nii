@@ -1,5 +1,5 @@
 <?php
-class IndexController extends Controller
+class IndexController extends NiiController
 {
 
 	public function init() {
@@ -17,38 +17,13 @@ class IndexController extends Controller
 		));
 	}
 
-	public function getContactFormAction($cid=null) {
-		extract($this->getEditContactObjects($cid));
-		echo $this->view->renderPartial('edit-contact', array('f' => $f, 'c' => $c), true);
+	public function actionGetContactForm($cid=null) {
+		$c = CrmContact::model()->findByPk($cid);
+		if(!$c) $c = new CrmContact();
+		echo $this->render('_edit-contact', array('c' => $c), true);
 	}
 
-	/**
-	 * creates the contact form and populates it appropriately
-	 * returns an array of f=>the form object, c=>the contact object
-	 * the contact object can be either a new record or an existing record depending on
-	 * the value passed to $cid or false if the contact record was not found
-	 *
-	 * @param int $cid the contact_id of the contact
-	 * @return array f=>Newicon_Form, c=>Nworx_Crm_Model_Contact || false
-	 */
-	public function getEditContactObjects($cid=null) {
-		$f = new Nworx_Crm_Model_Form_Contact();
-		$f->setFormAction('crm/index/edit-contact/' . $cid);
-		if ($cid === null) {
-			// load a blank form and a new contact
-			$c = new Nworx_Crm_Model_Contact();
-		} else {
-			// load a pre filled form and the specified contact for edit
-			try {
-				$c = new Nworx_Crm_Model_Contact($cid);
-			} catch (Newicon_Db_Exception_RowNotFound $e) {
-				$c = false;
-			}
-			$f->populateFromContact($c);
-		}
-		return array('f' => $f, 'c' => $c);
-	}
-
+	
 	/**
 	 * Handles Add and Edit form actions
 	 *
@@ -58,22 +33,35 @@ class IndexController extends Controller
 	 * @param int $cid contact_id
 	 * @return string json array
 	 */
-	public function editContactAction($cid=null) {
-		extract($this->getEditContactObjects($cid));
+	public function actionEditContact($cid=null) {
+		
 		$card = false;
 		$html = false;
 		$ret = array();
-		$valid = ($f->isValidPost() && $c !== false);
-		if ($valid) {
-			$f->populateContactFromForm($c);
-			$card = $this->loadComponent('crm/card', array('contact' => $c))->render();
+		
+		$c = CrmContact::model()->findByPk($cid);
+		if($cid!==null){
+			$c = CrmContact::model()->findByPk($cid);
+			if($c !== null){
+				//found contact
+			}
+		}else{
+			//add contact
+			
+		}
+		$c = new CrmContact();
+		$c->populateAttributes($_POST['CrmContact']);
+		$c->save();
+	
+		if ($c->validate()) {
+			$card = $this->widget('crm.components.CrmCard', array('contact' => $c),true);
 		} else {
-			$html = $this->view->renderPartial('edit-contact', array('f' => $f, 'c' => $c), true);
+			$html = $this->render('_edit-contact', array('c' => $c), true);
 		}
 
 		$compData = false;
-		if ($company = $c->getCreatedCompany()) {
-			$companyCard = $this->loadComponent('crm/card', array('contact' => $company))->render();
+		if (($company = $c->getCreatedCompany())) {
+			$companyCard = $this->widget('crm.components.CrmCard', array('contact' => $company),true);
 			$compData = array('id' => $company->id(), 'card' => $companyCard);
 		}
 
@@ -82,7 +70,7 @@ class IndexController extends Controller
 		));
 	}
 
-	public function lookupCompanyAction() {
+	public function actionLookupCompany() {
 		$t = $this->getRequest()->getParam('term', '');
 		$c = new Nworx_Crm_Model_Contacts();
 		$cs = $c->select()->where('contact_company like ?', "%$t%")->go();
@@ -94,13 +82,13 @@ class IndexController extends Controller
 		echo CJSON::encode($arr);
 	}
 
-	public function deleteAction($contactId) {
+	public function actionDelete($contactId) {
 		$c = new Nworx_Crm_Model_Contact($contactId);
 		$c->delete();
 		echo CJSON::encode(true);
 	}
 
-	public function findContactAction($term='', $group='') {
+	public function actionFindContact($term='', $group='') {
 		$cs = new Nworx_Crm_Model_Contacts();
 		$q = $cs->getContactsWhereNameLike($term);
 		$cs->addGroupFilter($q, $group);
@@ -109,7 +97,7 @@ class IndexController extends Controller
 		echo $this->view->renderPartial('user-list', array('contacts' => $contacts, 'term' => $term), true);
 	}
 
-	public function findContactAlphaAction($letter){
+	public function actionFindContactAlpha($letter){
 		$cs = new Nworx_Crm_Model_Contacts();
 		$q = $cs->getContactsQ();
 
@@ -125,37 +113,10 @@ class IndexController extends Controller
 			$q->orWhere("$col like ?","$l%");
 			$q->orWhere('contact_company like ?',"$l%");
 		}
-
-
 		echo $this->view->renderPartial('user-list', array('contacts' => $q->go(), 'term' => ''), true);
 	}
-
-
-
-	public function facebookAction(){
-
-
-		$config = array(
-			'adapter'   => 'Zend_Http_Client_Adapter_Curl',
-			'curloptions' => array(CURLOPT_FOLLOWLOCATION => true),
-		);
-		$client = new Zend_Http_Client('https://www.facebook.com/search.php?q=luke.spencer@newicon.net&type=all&init=srp', $config);
-		$html = $client->request()->getBody();
-
-		require_once Nworx::path('vendors/phpQuery/phpQuery/phpQuery.php','/');
-		phpQuery::newDocument($html);
-		$li = pq('#content ul.uiList li.objectListItem');
-		if($li->length() == 1){
-			//found facebook user. scrape their id
-			$profileLink = $li->find('a')->attr('href');
-			$fbId = str_replace(array('http://www.facebook.com/','profile.php?id='),'',$profileLink);
-			echo $fbId;
-		}
-
-		// echo curl('http://www.facebook.com/search.php?q=dan.deluca@newicon.net&type=all&init=srp');
-	}
-
-	public function facebookLookupAction($id){
+	
+	public function actionFacebookLookup($id){
 		$c = new Nworx_Crm_Model_Contact($id);
 		$e = $c->emails[0]->address;
 		$config = array(
@@ -175,6 +136,4 @@ class IndexController extends Controller
 			echo $fbId;
 		}
 	}
-
-
 }

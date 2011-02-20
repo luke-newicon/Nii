@@ -1,8 +1,8 @@
 <?php 
 
-Class Nworx_Crm_Controller_Import extends Nworx_Core_Controller
+Class ImportController extends NiiController
 {
-	public function kashflowAction(){
+	public function actionKashflow(){
 		$ks = new Nworx_Kashflow_Model_Customers();
 		$kc = $ks->getCustomers();
 		//for($i=1; $i<100; $i++){

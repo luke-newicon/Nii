@@ -26,7 +26,7 @@ class CrmEmail extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'nworx_crm__email';
+		return '{{nii_crm__email}}';
 	}
 
 	/**

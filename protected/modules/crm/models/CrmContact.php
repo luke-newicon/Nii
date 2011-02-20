@@ -4,13 +4,13 @@
  * This is the model class for table "pm__nworx_crm_contacts".
  *
  * The followings are the available columns in table 'pm__nworx_crm_contacts':
- * @property string $contact_id
- * @property string $contact_title
- * @property string $contact_first_name
- * @property string $contact_last_name
- * @property string $contact_company
- * @property string $contact_company_id
- * @property string $contact_type
+ * @property string $id
+ * @property string $title
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $company
+ * @property string $company_id
+ * @property string $type
  *
  * The followings are the available model relations:
  * @property addresses[] $CrmAddress
@@ -38,7 +38,7 @@ class CrmContact extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'nworx_crm__contact';
+		return '{{nii_crm__contact}}';
 	}
 
 	/**
@@ -49,7 +49,6 @@ class CrmContact extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, first_name, last_name, company, company_id', 'required'),
 			array('title', 'length', 'max'=>50),
 			array('first_name, last_name, company', 'length', 'max'=>250),
 			array('company_id', 'length', 'max'=>11),
@@ -131,14 +130,14 @@ class CrmContact extends CActiveRecord
 	 *
 	 * Also see getCreatedCompany() sets the $this->_createdCompany variable if created a new company
 	 * @param string $companyName
-	 * @return Nworx_Crm_Model_Contact || false
+	 * @return CrmContact || false
 	 */
 	public function saveCompany($companyName){
 		if (empty($companyName)) return false;
 		if(!$newComp = $this->findCompany($companyName)){
 			// no company exists, lets add one!
-			$newComp = new Nworx_Crm_Model_Contact();
-			$newComp->type = Nworx_Crm_Model_Contacts::TYPE_COMPANY;
+			$newComp = new CrmContact();
+			$newComp->type = self::TYPE_COMPANY;
 			$newComp->company = $companyName;
 			$newComp->save();
 			$this->_createdCompany = $newComp;
@@ -148,6 +147,18 @@ class CrmContact extends CActiveRecord
 	}
 
 
+	/**
+	 * Returns a contact object for the company
+	 * or returns false if none exists
+	 * 
+	 * @param string $companyName
+	 * @return CrmContact || null
+	 */
+	public function findCompany($companyName){
+		return CrmContact::model()->find('company=:c and type=:t',
+			array(':c'=>$companyName,':t'=>self::TYPE_COMPANY)
+		);
+	}
 
 	/**
 	 * Adds an email address to the contact
@@ -229,19 +240,6 @@ class CrmContact extends CActiveRecord
 		return $a->save();
 	}
 
-	/**
-	 * Returns a contact object for the company
-	 * or returns false if none exists
-	 *
-	 * @param string $companyName
-	 * @return Nworx_Crm_Model_Contact || null
-	 */
-	public function findCompany($companyName){
-		return self::model()->find(
-			'company=:1 and type=:2',
-			array(':1'=>$companyName,':2'=>self::TYPE_COMPANY)
-		);
-	}
 
 	/**
 	 * boolean true or false
@@ -276,6 +274,72 @@ class CrmContact extends CActiveRecord
 		return false;
 	}
 
+	/**
+	 * returns a company based on the contact id or null
+	 * @param $id
+	 * @return CrmModel | null
+	 */
+	public function getCompany($id){
+		return self::model()->find('id=:id and type=:type',array(':id'=>$id,':type'=>self::TYPE_COMPANY));
+	}
+	
+	/**
+	 * builds a typical contact query
+	 * and orders by name
+	 * @return Newicon_Db_Query
+	 */
+	public function getContactsQ(){
+		$q = new CDbCriteria();
+		if(Yii::app()->getModule('crm')->sortOrderFirstLast) 
+			$q = self::model()-> $this->select('*, CONCAT(contact_first_name, contact_company) AS name');
+		else
+			$q = $this->select('*, CONCAT(contact_last_name, contact_company) AS name');
+		$q->limit(100);
+		return $q->order('name');
+	}
+	
+	public function getContactsWhereNameLike($term=''){
+		if(Nworx_Crm_Crm::get()->displayOrderFirstLast){
+			$col1='contact_first_name';	$col2='contact_last_name';
+		}else{
+			$col1='contact_last_name'; $col2='contact_first_name';
+		}
+		$q = $this->getContactsQ();
+		$q->limit(200);
+		if($term!=''){
+			if(strpos($term, ' ') === false) {
+				$q->where($col1.' LIKE ?',"%$term%",1);
+				$q->orWhere($col2.' LIKE ?',"%$term%",1);
+			} else {
+				// as soon as there is a space assume firstname *space* lastname
+				$name = explode(' ', $term);
+				$q->where($col1.' LIKE ?',"%{$name[0]}%",1);
+	            if(array_key_exists(1, $name)){
+				    $q->where($col2.' LIKE ?',"%{$name[1]}%",1);
+				}
+			}
+			$q->orWhere('contact_company like ?',"%$term%");
+			$q->limit(200);
+		}
+		return $q;
+	}
+
+	public function addGroupFilter(Newicon_Db_Query $q, $group){
+		// built in groups
+		if($group=='people')
+			$q->where('contact_type = ?',self::TYPE_CONTACT);
+		if($group=='companies')
+			$q->where('contact_type = ?',self::TYPE_COMPANY);
+	}
+	
+	public function getContacts(){
+		return $this->getContactsQ()->go();
+	}
+
+	public function getCompanys(){
+		return $this->select()->where('contact_type = ?',self::TYPE_COMPANY)->go();
+	}
+	
 	public function hasCompany(){
 		return ($this->getCompany() == true);
 	}
@@ -312,7 +376,7 @@ class CrmContact extends CActiveRecord
 		}
 
 		if(strpos($term, ' ') === false) {
-			return Nworx::t($this->getNameTemplate(), array(
+			return Yii::t($this->getNameTemplate(), array(
 				$col1=>NHtml::hilightText($this->$col1,$term),
 				$col2=>NHtml::hilightText($this->$col2,$term)
 			));
@@ -351,4 +415,19 @@ class CrmContact extends CActiveRecord
 		return $this->getPrimaryKey();
 	}
 
+	
+	public function populateAttributes($array){
+		if(($this->type == self::TYPE_COMPANY) 
+		|| ($array['company'] != '' && empty($array['first_name']) && empty($array['last_name']))){
+			// must be saving a company
+			$this->type = self::TYPE_COMPANY;
+			$this->company = $array['company'];
+		}else{
+			$this->title      = $array['title'];
+			$this->first_name = $array['first_name'];
+			$this->last_name  = $array['last_name'];
+			$this->saveCompany($array['company']);
+		}
+		
+	}
 }

@@ -60,7 +60,8 @@ Class Nworx_Crm_Model_Contacts extends Newicon_Db_Table
 	 * @return Newicon_Db_Query
 	 */
 	public function getContactsQ(){
-		if(Nworx_Crm_Crm::get()->sortOrderFirstLast) 
+		if(Yii::app()->getModule('crm')->sortOrderFirstLast) 
+				$this->
 			$q = $this->select('*, CONCAT(contact_first_name, contact_company) AS name');
 		else
 			$q = $this->select('*, CONCAT(contact_last_name, contact_company) AS name');

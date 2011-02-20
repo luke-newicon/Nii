@@ -1,12 +1,13 @@
 <br/>
 <br/>
-<?php echo NHtml::url('/crm/detail/index',array('id'=>'we')) ?>;
+<?php echo NHtml::url("/crm/detail/index") ?>;
 <style>
 	.userList li,.groupList li {border-left:1px solid #ccc;border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
-	.userList li.selected,.groupList .selected {background:transparent url('<?php echo NHtml::baseUrl('/'); ?>app/Nworx/Crm/theme/assets/selected.png') repeat-x left center;}
+	.userList li.selected,.groupList .selected {
+		background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;}
 	.userList li.ui-selecting { background: #FECA40; }
-	.userList li.ui-selected {background:transparent url('<?php echo NHtml::baseUrl(); ?>app/Nworx/Crm/theme/assets/selected.png') repeat-x left center; }
+	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;}
 	
 	.editContact{display:none;}
 	.userList li.selected .editContact {display:block;/*margin-right:16px;*/}
@@ -111,7 +112,7 @@ $(function(){
 			var id = $(this).attr('id').replace('cid_','');
 			$('#detailsScreen').load('<?php echo NHtml::url("/crm/detail/index"); ?>?id='+id);
 		} else {
-			$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/get-contact-form'); ?>");
+			$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
 		}
 	});
 
@@ -134,7 +135,7 @@ $(function(){
 		$('<li class="contact mystery"><div class="media"><a class="img" href="#"><img width="24" alt="Mystery Image" src="http://localhost/newicon/project-manager/app/Nworx/Crm/theme/assets/mistery-img.png"></a><div class="bd"><p>Add</p></div></li>')
 			.prependTo($ul).addClass('selected');
 		$('#userListScroll').scrollTo(0);
-		$('#detailsScreen').load("<?php echo NHtml::url('index/get-contact-form'); ?>");
+		$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
 		return false;
 	});
 	// save
@@ -153,7 +154,7 @@ $(function(){
 				$li.attr('id','cid_'+r.id);
 				$li.html(r.card).trigger('click');
 				$.ajax({
-					url:'<?php echo NHtml::url('/crm/index/find-contact/'); ?>',
+					url:'<?php echo NHtml::url('/crm/index/findContact/'); ?>',
 					type:'post',
 					success:function(html){
 						$('#userListScroll').html(html);
@@ -178,7 +179,7 @@ $(function(){
 		var id = $li.attr('id');
 		if(!id){alert('nothing to edit');return false;}
 		$('#contactEdit').hide();$('#contactDelete').hide();$('#contactCancel').show();$('#contactSave').show();
-		$('#detailsScreen').load('<?php echo NHtml::url("/crm/index/get-contact-form/"); ?>'+id.replace('cid_',''));
+		$('#detailsScreen').load('<?php echo NHtml::url("/crm/index/getContactForm"); ?>?cid='+id.replace('cid_',''));
 		return false;
 	});
 	// delete
@@ -187,7 +188,7 @@ $(function(){
 		var id = $li.attr('id');
 		if(!confirm('Are you sure you want to delete this contact and all associated data?')) return false;
 		if(!id){alert('nothing to delete');return false;}
-		$.getJSON("<?php echo NHtml::url('crm/index/delete/'); ?>"+id.replace('cid_',''), function(r){
+		$.getJSON("<?php echo NHtml::url('crm/index/delete'); ?>?cid="+id.replace('cid_',''), function(r){
 			if(r){
 				deleteLi($li);
 			}
@@ -195,6 +196,7 @@ $(function(){
 		return false;
 	});
 	$('.contactBook').delegate('.contactCancel','click',function(){
+		alert('hello');
 		$li = $('.userList li.selected');
 		if($li.is('.mystery'))
 			deleteLi($li);
@@ -228,7 +230,7 @@ $(function(){
 	var loadContactList = function(){
 		var grpId = $('#groups .selected').attr('id');
 		$.ajax({
-			url:'<?php echo NHtml::url('crm/index/find-contact/'); ?>'+$('#contactSearch').val()+'/'+grpId,
+			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
 			type:'post',
 			success:function(r){
 				$('#userListScroll').html(r);
@@ -243,7 +245,7 @@ $(function(){
 			$('#userListScroll').scrollTo(s2el,'y');
 		}else{
 			$.ajax({
-				url:'<?php echo NHtml::url('crm/index/find-contact-alpha/'); ?>'+letter,
+				url:'<?php echo NHtml::url('crm/index/find-contact-alpha'); ?>/'+letter,
 				type:'post',
 				success:function(r){
 					$('#userListScroll').html(r);
