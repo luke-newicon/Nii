@@ -1,5 +1,5 @@
 <div class="media">
-	<a href="<?php echo NHtml::url('crm/detail/index/'.$contact->id()); ?>" class="img">
+	<a href="<?php echo $contact->getUrl(); ?>" class="img">
 		<?php $this->widget('crm.components.CrmImage',array('contact'=>$contact,'size'=>24)); ?>
 	</a>
 	<div class="bd">

@@ -44,6 +44,7 @@ class IndexController extends NiiController
 			$c = CrmContact::model()->findByPk($cid);
 			if($c !== null){
 				//found contact
+				echo 'found!';
 			}
 		}else{
 			//add contact
@@ -52,6 +53,16 @@ class IndexController extends NiiController
 		$c = new CrmContact();
 		$c->populateAttributes($_POST['CrmContact']);
 		$c->save();
+		
+		CrmEmail::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
+		foreach($_POST['CrmEmail'] as $i => $v){
+			
+			$e = new CrmEmail;
+			$e->attributes = $_POST['CrmEmail'][$i];
+			$e->contact_id = $cid;
+			$e->save(false);
+		}
+
 	
 		if ($c->validate()) {
 			$card = $this->widget('crm.components.CrmCard', array('contact' => $c),true);
@@ -89,22 +100,18 @@ class IndexController extends NiiController
 	}
 
 	public function actionFindContact($term='', $group='') {
-		$cs = new Nworx_Crm_Model_Contacts();
-		$q = $cs->getContactsWhereNameLike($term);
-		$cs->addGroupFilter($q, $group);
-
-		$contacts = $q->go();
-		echo $this->view->renderPartial('user-list', array('contacts' => $contacts, 'term' => $term), true);
+		$cs = CrmContact::model();
+		$contacts = $cs->orderByName()->nameLike($term)->group($group)->findAll();
+		echo $this->render('_user-list', array('contacts' => $contacts, 'term' => $term), true);
 	}
 
 	public function actionFindContactAlpha($letter){
-		$cs = new Nworx_Crm_Model_Contacts();
-		$q = $cs->getContactsQ();
-
+		$cs = CrmContact::model();
+		//$cs->orderByName()->nameLetterIndex()
 		if(Nworx_Crm_Crm::get()->sortOrderFirstLast){
-			$col = 'contact_first_name';
+			$col = 'first_name';
 		}else{
-			$col = 'contact_last_name';
+			$col = 'last_name';
 		}
 		$q->where("$col like ?","$letter%");
 		$q->orWhere('contact_company like ?',"$letter%");

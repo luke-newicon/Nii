@@ -71,7 +71,8 @@ class CrmContact extends CActiveRecord
 			'emails' => array(self::HAS_MANY, 'CrmEmail', 'contact_id'),
 			'phones' => array(self::HAS_MANY, 'CrmPhone', 'contact_id'),
 			'websites' => array(self::HAS_MANY, 'CrmWebsite', 'contact_id'),
-			'contacts'=> array(self::HAS_MANY, 'CrmContact', 'company_id')
+			'contacts'=> array(self::HAS_MANY, 'CrmContact', 'company_id'),
+			'company'=>array(self::BELONGS_TO, 'CrmContact', 'company_id')
 		);
 	}
 
@@ -257,7 +258,7 @@ class CrmContact extends CActiveRecord
 
 	/**
 	 * cache a company contact row associated with this contact
-	 * @var unknown_type
+	 * @var CrmContact
 	 */
 	private $_company;
 
@@ -274,62 +275,70 @@ class CrmContact extends CActiveRecord
 		return false;
 	}
 
-	/**
-	 * returns a company based on the contact id or null
-	 * @param $id
-	 * @return CrmModel | null
-	 */
-	public function getCompany($id){
-		return self::model()->find('id=:id and type=:type',array(':id'=>$id,':type'=>self::TYPE_COMPANY));
-	}
 	
-	/**
-	 * builds a typical contact query
-	 * and orders by name
-	 * @return Newicon_Db_Query
-	 */
-	public function getContactsQ(){
-		$q = new CDbCriteria();
-		if(Yii::app()->getModule('crm')->sortOrderFirstLast) 
-			$q = self::model()-> $this->select('*, CONCAT(contact_first_name, contact_company) AS name');
-		else
-			$q = $this->select('*, CONCAT(contact_last_name, contact_company) AS name');
-		$q->limit(100);
-		return $q->order('name');
-	}
-	
-	public function getContactsWhereNameLike($term=''){
-		if(Nworx_Crm_Crm::get()->displayOrderFirstLast){
-			$col1='contact_first_name';	$col2='contact_last_name';
-		}else{
-			$col1='contact_last_name'; $col2='contact_first_name';
-		}
-		$q = $this->getContactsQ();
-		$q->limit(200);
-		if($term!=''){
-			if(strpos($term, ' ') === false) {
-				$q->where($col1.' LIKE ?',"%$term%",1);
-				$q->orWhere($col2.' LIKE ?',"%$term%",1);
-			} else {
-				// as soon as there is a space assume firstname *space* lastname
-				$name = explode(' ', $term);
-				$q->where($col1.' LIKE ?',"%{$name[0]}%",1);
-	            if(array_key_exists(1, $name)){
-				    $q->where($col2.' LIKE ?',"%{$name[1]}%",1);
-				}
-			}
-			$q->orWhere('contact_company like ?',"%$term%");
-			$q->limit(200);
-		}
-		return $q;
+	public function scopes(){
+		return array(
+			'people'=>array(
+				'condition'=>'type=:contact',
+				'params'=>array(':contact'=>self::TYPE_CONTACT)
+			),
+			'companies'=>array(
+				'condition'=>'type=:company',
+				'params'=>array(':company'=>self::TYPE_COMPANY)
+			)
+		);
 	}
 
-	public function addGroupFilter(Newicon_Db_Query $q, $group){
+	public function orderByName(){
+		if(Yii::app()->getModule('crm')->sortOrderFirstLast){
+			$name = 'first_name';
+		}else{
+			$name = 'last_name';
+		}
+		$this->getDbCriteria()->mergeWith(array(
+			'select'=>"*, CONCAT($name, company) AS name",
+			'order'=>'name'
+		));
+		return $this;
+	}
+
+	
+	public function nameLike($term=''){
+		if($term=='')
+			return $this;
+		if(Yii::app()->getModule('crm')->displayOrderFirstLast){
+			$col1='first_name';	$col2='last_name';
+		}else{
+			$col1='last_name'; $col2='first_name';
+		}
+		$p = array(':t'=>"%$term%");
+		if(strpos($term, ' ') === false) {
+			$q = "($col1 like :t or $col2 like :t)";
+		} else {
+			// as soon as there is a space assume firstname *space* lastname
+			$name = explode(' ', $term);
+			$q = "$col1 like ? :t1";
+			$q .= array_key_exists(1, $name) ? " or $col2 LIKE :t2" : '';
+			$q = "($q) ";
+			$p = array_merge($p, array(':t1'=>"%{$name[0]}%",':t2'=>"%$name[1]%"));
+		}
+		$q .= " or company like :t";
+
+		$this->getDbCriteria()->mergeWith(array(
+			'condition'=>$q,
+			'params'=>$p,
+			'limit'=>200
+		));
+		return $this;
+	}
+
+	public function group($group=''){
 		// built in groups
 		if($group=='people')
-			$q->where('contact_type = ?',self::TYPE_CONTACT);
+			return $this->people();
 		if($group=='companies')
-			$q->where('contact_type = ?',self::TYPE_COMPANY);
+			return $this->companies();
+		return $this;
 	}
 	
 	public function getContacts(){
@@ -376,7 +385,7 @@ class CrmContact extends CActiveRecord
 		}
 
 		if(strpos($term, ' ') === false) {
-			return Yii::t($this->getNameTemplate(), array(
+			return NData::replace($this->getNameTemplate(), array(
 				$col1=>NHtml::hilightText($this->$col1,$term),
 				$col2=>NHtml::hilightText($this->$col2,$term)
 			));
@@ -388,8 +397,7 @@ class CrmContact extends CActiveRecord
             if(array_key_exists(1, $t)){
             	$arr[$col2] = NHtml::hilightText($this->$col2,$t[1]);
 			}
-//			FB::log($arr,'t arr');
-			return Yii::t($this->getNameTemplate(), $arr);
+			return NData::replace($this->getNameTemplate(), $arr);
 		}
 	}
 	
@@ -429,5 +437,9 @@ class CrmContact extends CActiveRecord
 			$this->saveCompany($array['company']);
 		}
 		
+	}
+	
+	public function getUrl(){
+		return NHtml::url(array('/crm/detail/index','id'=>$this->id()));
 	}
 }

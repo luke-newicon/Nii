@@ -17,16 +17,19 @@ class CrmImage extends CWidget
 {
 	public $size = 32;
 
+	/**
+	 * @var CrmContact 
+	 */
 	public $contact;
 
 	public function run(){
 	
 		if($this->contact->isPerson()){
-			$email = empty($this->contact->emails) ? '' : $this->contact->emails[0]->address_address;
+			$email = empty($this->contact->emails) ? '' : $this->contact->emails[0]->address;
 			echo $this->widget('crm.components.Gravatar',array('size'=>$this->size,'email'=>$email),true);
 		}else{
-			$orgImg = NHtml::baseUrl().'/app/Nworx/Crm/theme/assets/mistery-org.png';
-			return NHtml::image($orgImg,'Compnay Image',array('width'=>$this->size));
+			$orgImg = CrmModule::get()->getAssetsUrl().'/images/mistery-org.png';
+			echo NHtml::image($orgImg,'Compnay Image',array('width'=>$this->size));
 		}
 	}
 

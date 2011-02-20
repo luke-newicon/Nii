@@ -1,13 +1,12 @@
 <br/>
 <br/>
-<?php echo NHtml::url("/crm/detail/index") ?>;
+
 <style>
 	.userList li,.groupList li {border-left:1px solid #ccc;border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
-	.userList li.selected,.groupList .selected {
-		background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;}
+	.userList li.selected,.groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
-	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;}
+	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	
 	.editContact{display:none;}
 	.userList li.selected .editContact {display:block;/*margin-right:16px;*/}
@@ -34,7 +33,7 @@
 	
 	.userListScreen .alpha{border:1px solid #fff;-moz-border-radius:8px 8px 8px 8px;border-radius:8px 8px 8px 8px;}
 	.userListScreen .alpha a{color:#999;font-size:10px;}
-	.userList li.letter {background:transparent url('<?php echo NHtml::url('/'); ?>app/Nworx/Crm/theme/assets/selected.png') repeat-x left center;padding:2px 0px 2px 5px;}
+	.userList li.letter {background:-moz-linear-gradient(center top , #f9f9f9, #eee) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#eee), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#eee');padding:2px 0px 2px 5px;}
 	.userList li.letter a {color:#999;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);}
 	.groupList{background-color:#fff;}
 	.groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}

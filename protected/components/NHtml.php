@@ -61,10 +61,10 @@ class NHtml extends CHtml
 		//if search term is empty then return the string do not perform the search
 		if(empty($searchTerm))
 			return $textToHilight;
-		$attrs = new Newicon_Html_Attr($htmlOptions);
-		$attrs->add('class',$hilightClass);
+		if(!isset($htmlOptions['class']))
+			$htmlOptions['class'] = $hilightClass;
 		$search = preg_quote($searchTerm, '/');
-		return preg_replace("/($search)/i", '<span '.$attrs.'>$1</span>', $textToHilight);
+		return preg_replace("/($search)/i", '<span '.CHtml::renderAttributes($htmlOptions).'>$1</span>', $textToHilight);
 	}
 
 }

@@ -24,6 +24,8 @@ class CrmModule extends CWebModule
 	 * @var bollean
 	 */
 	public $sortOrderLastFirst = true;
+	
+	private $_assetsUrl;
 
 	public function init()
 	{
@@ -37,13 +39,16 @@ class CrmModule extends CWebModule
 		));
 	}
 
-
-	
-
-
-	public function configure(){
-//		Nworx_Core_Model_Nav::addItem('Crm', 'crm');
+	/**
+	 * @return string the base URL that contains all published asset files of crm.
+	 */
+	public function getAssetsUrl()
+	{
+		if($this->_assetsUrl===null)
+			$this->_assetsUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('crm.assets'));
+		return $this->_assetsUrl;
 	}
+
 
 	public function install(){
 //		Newicon_Db_Table::install('Nworx_Crm_Model_Contacts');
