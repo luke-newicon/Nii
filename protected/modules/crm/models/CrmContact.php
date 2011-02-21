@@ -166,17 +166,16 @@ class CrmContact extends CActiveRecord
 	 *
 	 * @param (string) $emailAddress
 	 * @param (string) $emailLabel description e.g. Home, Work
-	 * @return Nworx_Crm_Model_Email
+	 * @return CrmEmail
 	 */
 	public function saveEmailAddress($emailAddress, $emailLabel='', $id=null){
-		if($this->id()==0)
-			throw Newicon_Exception('Can not save data to an empty contact object');
 		if(empty($emailAddress)) return false;
-		$e = (empty($id)) ? new Nworx_Crm_Model_Email() : new Nworx_Crm_Model_Email($id);
-		$e->email_address    = $emailAddress;
-		$e->email_label      = $emailLabel;
-		$e->email_contact_id = $this->id();
-		return $e->save();
+		$e = (empty($id)) ? new CrmEmail() : CrmEmail::model()->findByPk($id);
+		$e->address    = $emailAddress;
+		$e->label      = $emailLabel;
+		$e->contact_id = $this->id();
+
+		return $e->save() ? $e : false;
 	}
 
 	/**
@@ -184,17 +183,15 @@ class CrmContact extends CActiveRecord
 	 *
 	 * @param (string) $number the phone number
 	 * @param (string) $label description e.g. Home, Work, Office, Mobile
-	 * @return Nworx_Crm_Model_Phone
+	 * @return CrmPhone | false on failure to save
 	 */
 	public function savePhone($number, $label='', $id=null){
-		if($this->id()==0)
-			throw Newicon_Exception('Can not save data to an empty contact object');
 		if(empty($number)) return false;
-		$p = (empty($id)) ? new Nworx_Crm_Model_Phone() : new Nworx_Crm_Model_Phone($id);
-		$p->phone_number     = $number;
-		$p->phone_label      = $label;
-		$p->phone_contact_id = $this->id();
-		return $p->save();
+		$p = (empty($id)) ? new CrmPhone() : CrmPhone::model()->findByPk($id);
+		$p->number     = $number;
+		$p->label      = $label;
+		$p->contact_id = $this->id();
+		return $p->save() ? $p : false;
 	}
 
 	/**
@@ -205,40 +202,44 @@ class CrmContact extends CActiveRecord
 	 * @return Nworx_Crm_Model_Website | false not added
 	 */
 	public function saveWebsite($address, $label='', $id=null){
-		if($this->id()==0)
-			throw Newicon_Exception('Can not save data to an empty contact object');
 		if(empty($address)) return false;
-		$w = (empty($id)) ? new Nworx_Crm_Model_Website() : new Nworx_Crm_Model_Website($id);
-		$w->website_address    = $address;
-		$w->website_label      = $label;
-		$w->website_contact_id = $this->id();
-		return $w->save();
+		$w = (empty($id)) ? new CrmWebsite() : CrmWebsite::model()->findByPk($id);
+		$w->address    = $address;
+		$w->label      = $label;
+		$w->contact_id = $this->id();
+		return $w->save() ? $w : false;
 	}
 
 	/**
 	 * Add an address to the contact record
 	 *
-	 * @param (string) $lines
-	 * @param (string) $city
-	 * @param (string) $postcode
-	 * @param (string) $county
-	 * @param (string) $country The two characater country code
-	 * @param (string) $label description e.g. Home, Office, Delivery
-	 * @return Nworx_Crm_Model_Address
+	 * @param (string) $attrbutes array of key => value pairs associated with CrmAddress
+	 * @return CrmAddress
 	 */
-	public function saveAddress($lines, $city, $postcode, $county, $country, $label='', $id=null){
-		if($this->id()==0)
-			throw Newicon_Exception('Can not save data to an empty contact object');
-		if(empty($lines) && empty($city) && empty($postcode) && empty($county)) return false;
-		$a = (empty($id)) ? new Nworx_Crm_Model_Address() : new Nworx_Crm_Model_Address($id);
-		$a->lines      = $lines;
-		$a->city       = $city;
-		$a->postcode   = $postcode;
-		$a->county     = $county;
-		$a->country_id = $country;
-		$a->label      = $label;
-		$a->contact_id = $this->primaryKey();
-		return $a->save();
+	public function saveAddress(array $attributes, $id=null){
+		$a = (empty($id)) ? new CrmAddress() : CrmAddress::model()->findByPk($id);
+		$a->attributes = $attributes;
+		$a->contact_id = $this->id();
+		return $a->save() ? $a : false;
+	}
+
+	/**
+	 * Add an address to the contact record
+	 *
+	 * @param (string) $attrbutes array of key => value pairs associated with CrmAddress
+	 * @param (string) $model the model name of the object e.g. CrmAddress
+	 * @return CrmAddress
+	 */
+	public function saveContactObject(array $attributes, $model, $id=null){
+		if (empty($id)){
+			$a = new $model();
+		}else{
+			$m = call_user_func(array($model,'model'));
+			$a = $m->findByPk($id);
+		}
+		$a->attributes = $attributes;
+		$a->contact_id = $this->id();
+		return $a->save() ? $a : false;
 	}
 
 

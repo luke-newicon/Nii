@@ -12,14 +12,20 @@ return array(
 	// preloading 'log' component
 	'preload'=>array('log','nii'),
 
+
+
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
-		'application.extensions.*'
+		'application.extensions.*',
+		'application.validators.*',
+		'application.Nii'
+
 	),
 	'theme'=>'classic',
 
+	'modulePath'=>dirname(__FILE__).'/../../modules',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'gii'=>array(
@@ -28,8 +34,8 @@ return array(
 		 	// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),
-		'crm'=>array(
-		)
+		'crm',
+		'kashflow',
 	),
 
 	// application components
@@ -64,26 +70,32 @@ return array(
 			'username' => 'root',
 			'password' => '',
 			'charset' => 'utf8',
-			'tablePrefix' =>''
+			'tablePrefix' =>'',
+			'schemaCachingDuration' => 3600,
+			'enableProfiling'=>true,
+			'enableParamLogging'=>true,
 		),
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
             'errorAction'=>'site/error',
         ),
+
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning, trace',
+					'levels'=>'error, warning, trace, profile',
 				),
-				// uncomment the following to show log messages on web pages
-				/*
 				array(
 					'class'=>'CWebLogRoute',
+					'categories'=>'system.db.CDbCommand',
+					'showInFireBug'=>true,
 				),
-				*/
 			),
+		),
+		'cache' => array(
+			'class' => 'CFileCache',
 		),
 	),
 

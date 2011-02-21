@@ -36,7 +36,7 @@ class CrmWebsite extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('address, label, contact_id', 'required'),
+			array('address, contact_id', 'required'),
 			array('address, label', 'length', 'max'=>250),
 			array('contact_id', 'length', 'max'=>11),
 			// The following rule is used by search().

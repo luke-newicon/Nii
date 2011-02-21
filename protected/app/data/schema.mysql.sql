@@ -139,12 +139,6 @@ ALTER TABLE `nii_crm__address`
   ADD CONSTRAINT `nii_crm__address_ibfk_1` FOREIGN KEY (`contact_id`) REFERENCES `nii_crm__contact` (`id`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `nii_crm__contact`
---
-ALTER TABLE `nii_crm__contact`
-  ADD CONSTRAINT `nii_crm__contact_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `nii_crm__contact` (`id`) ON UPDATE CASCADE;
-
---
 -- Constraints for table `nii_crm__email`
 --
 ALTER TABLE `nii_crm__email`

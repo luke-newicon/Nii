@@ -4,13 +4,10 @@ class IndexController extends NiiController
 
 	public function init() {
 		// Only logged in people can see pages within this file.
-//		Nworx::auth()->doAuth();
-//
-//		$f = new Nworx_Crm_Model_Form_Contact();
 	}
 
 	public function actionIndex() {
-		$contacts = CrmContact::model()->findAll();
+		$contacts = CrmContact::model()->orderByName()->findAll();
 		$this->render('index',array(
 			'term'=>'',
 			'contacts'=>$contacts
@@ -56,14 +53,28 @@ class IndexController extends NiiController
 		
 		CrmEmail::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
 		foreach($_POST['CrmEmail'] as $i => $v){
-			
 			$e = new CrmEmail;
 			$e->attributes = $_POST['CrmEmail'][$i];
 			$e->contact_id = $cid;
-			$e->save(false);
+			$e->save();
 		}
 
-	
+		CrmPhone::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
+		foreach($_POST['CrmPhone'] as $i => $v){
+			$e = new CrmEmail;
+			$e->attributes = $_POST['CrmPhone'][$i];
+			$e->contact_id = $cid;
+			$e->save();
+		}
+
+		CrmAddress::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
+		foreach($_POST['CrmAddress'] as $i => $v){
+			$e = new CrmEmail;
+			$e->attributes = $_POST['CrmAddress'][$i];
+			$e->contact_id = $cid;
+			$e->save();
+		}
+
 		if ($c->validate()) {
 			$card = $this->widget('crm.components.CrmCard', array('contact' => $c),true);
 		} else {

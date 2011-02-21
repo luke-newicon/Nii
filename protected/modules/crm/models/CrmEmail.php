@@ -37,7 +37,7 @@ class CrmEmail extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('contact_id, address, label, verified', 'required'),
+			array('contact_id, address', 'required'),
 			array('contact_id', 'length', 'max'=>11),
 			array('address, label', 'length', 'max'=>250),
 			array('verified', 'length', 'max'=>1),

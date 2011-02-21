@@ -46,7 +46,7 @@
 				<div class="inputBox multiInput">
 					<div class="line noHighlight">
 						<div class="unit inputContainer noBorder" style="width:11%;">
-							<a href="#title" class="btn btnN btnDropDown ui-corner-tl-only" style="display:block;border-right:0px;padding:0.52em;"><?php echo $f->general->title->value; ?></a>
+							<a href="#title" class="btn btnN btnDropDown ui-corner-tl-only" style="display:block;border-right:0px;padding:0.52em;"><?php echo NData::param($c->title,'&nbsp;'); ?></a>
 							<?php echo $form->hiddenField($c,'title',array('class'=>'input')); ?>
 						</div>
 						<div class="unit leftBorderOnly cornerOff" style="width:39%;">
@@ -84,25 +84,7 @@
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" tipsy-gravity="sw" title="Add another email address"></a></p></div>
 		</div>
 		<?php foreach($c->emails as $i=>$e): ?>
-		<div class="formFieldBlock replicate">
-			<div class="line"> 
-				<div class="unit size23of25 inputBox multiInput ">
-					<div class="line noHighlight">
-						<div class="unit noBorder size1of6 txtC">
-							<a href="#email" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;"><?php echo NData::param($e->label,'&nbsp;'); ?></a>
-							<?php echo CHtml::activeHiddenField($e, "[$i]label"); ?>
-							<?php echo CHtml::activeHiddenField($e, "[$i]id"); ?>
-						</div>
-						<div class="lastUnit leftBorderOnly cornerLeftOff">
-							<div class="inputBox">
-								<?php echo CHtml::activeTextField($e, "[$i]address",array('class'=>'input')); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" tipsy-gravity="w" title="Remove"></a></div>
-			</div>
-		</div>
+			<?php $this->render('_edit-contact-email',array('e'=>$e, 'i'=>$i)); ?>
 		<?php endforeach; ?>
 	</div>
 	<div class="formFieldState">
@@ -110,25 +92,9 @@
 			<div class="unit"><h4>Phone</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php //foreach($f->phone->getSubForms() as $p): ?>
-		<div class="formFieldBlock replicate">
-			<div class="line">
-				<div class="unit size23of25 inputBox multiInput">
-					<div class="line noHighlight">
-						<div class="unit size1of6 noBorder txtC">
-							<a id="selectTitle" href="#phone" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;"><?php //echo $p->label->value; ?></a>
-							<?php //echo $p->label; ?>
-							<?php //echo $p->id; ?>
-						</div>
-						<div class="lastUnit leftBorderOnly cornerLeftOff">
-							<?php // echo $p->number; ?>
-						</div>
-					</div>
-				</div>
-				<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" title="Remove"></a></div>
-			</div>
-		</div>
-		<?php //endforeach; ?>
+		<?php foreach($c->phones as $p): ?>
+			<?php $this->render('_edit-contact-phone',array('p'=>$p, 'i'=>$i)); ?>
+		<?php endforeach; ?>
 	</div>
 	
 	<div class="formFieldState">
@@ -136,27 +102,9 @@
 			<div class="unit"><h4>Website</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php //foreach($f->website->getSubForms() as $w): ?>
-		<?php //$display = (!empty($w->address->value))?'block':'none'; ?>
-		<div class="formFieldBlock replicate" style="display:<?php //echo $display; ?>;">
-			<div class="line">
-				<div class="unit size23of25 inputBox multiInput">
-					<div class="line noHighlight">
-						<div class="unit noBorder size1of6 txtC">
-							<a id="selectTitle" href="#website" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;"><?php echo $w->label->value; ?></a>
-							<?php //echo $w->label; ?>
-							<?php //echo $w->id; ?>
-						</div>
-						<div class="lastUnit leftBorderOnly cornerLeftOff">
-							<?php //echo $w->address; ?>
-						</div>
-					</div>
-				</div>
-				<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" title="Remove"></a></div>
-			</div>
-			<span class="formGuide"></span>
-		</div>
-		<?php //endforeach; ?>
+		<?php foreach($c->websites as $w): ?>
+			<?php $this->render('_edit-contact-website',array('w'=>$w, 'i'=>$i)); ?>
+		<?php endforeach; ?>
 	</div>
 	
 	<div class="formFieldState">
@@ -164,39 +112,10 @@
 			<div class="unit"><h4>Address</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php //foreach($f->address->getSubForms() as $a): ?>
-		<?php //$display = (!empty($a->lines->value) || !empty($a->city->value) || !empty($a->city->postcode) || !empty($a->city->county))?'block':'none'; ?>
-		<div class="line replicate " style="display:<?php echo $display; ?>;">
-			<div class="unit size23of25 formFieldBlock"> 
-				<div class="line inputBox multiInput">
-					<div class="unit noBorder size1of6 txtC">
-						<a href="#address" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;"><?php //echo $a->label->value; ?></a>
-						<?php //echo $a->label; ?>
-						<?php //echo $a->id; ?>
-					</div>
-					<div class="lastUnit leftBorderOnly noHighlight">
-						<div class="line cornerLeftOff">
-							<?php //echo $a->lines; ?>
-						</div>
-						<div class="line">
-							<div class="unit cornerOff topLeftBorderOnly"><?php //echo $a->city; ?></div>
-							<div class="lastUnit cornerOff topLeftBorderOnly"><?php //echo $a->postcode; ?></div>
-						</div>
-						<div class="line cornerOff topLeftBorderOnly">
-							<?php //echo $a->county; ?>
-						</div>
-						<div class="line topLeftBorderOnly cornerTopBottomLeftOff">
-							<?php //echo $a->country; ?>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus removeRow showTip" title="Remove"></a></div>
-		</div>
-		<?php //endforeach; ?>
+		<?php foreach($c->addresses as $a): ?>
+			<?php $this->render('_edit-contact-address',array('a'=>$a, 'i'=>$i)); ?>
+		<?php endforeach; ?>
 	</div>
-	<?php //echo $f->save; ?>
-<?php //echo $f->renderFormFooter();?>
 </div>
 <div id="title" class="popmenu ui-corner-all">
 	<ul>
@@ -207,7 +126,7 @@
 </div>
 <div id="email" class="popmenu ui-corner-all">
 	<ul>
-		<?php // foreach($f->getEmailLabels() as $k=>$l): ?>
+		<?php //foreach($f->getEmailLabels() as $k=>$l): ?>
 			<li><a href="#" title="<?php //echo NPage::encode($l['title']); ?>"><?php //echo $k; ?></a></li>
 		<?php //endforeach; ?>
 	</ul>

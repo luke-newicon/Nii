@@ -3,41 +3,61 @@
 Class ImportController extends NiiController
 {
 	public function actionKashflow(){
-		$ks = new Nworx_Kashflow_Model_Customers();
+		$ks = new KashCustomers();
 		$kc = $ks->getCustomers();
-		//for($i=1; $i<100; $i++){
+		dp($kc);
 		foreach($kc as $i=>$k){
-			//$k = new Nworx_Kashflow_Model_Customer();
-			$cust = new Nworx_Crm_Model_Contact();
+			$cust = new CrmContact();
 			$name = explode(' ', $k->Contact);
-			$cust->contact_first_name = (isset($name[0]))?$name[0]:'';
-			$cust->contact_last_name = (isset($name[1]))?$name[1]:'';
+			$cust->first_name = (isset($name[0]))?$name[0]:'';
+			$cust->last_name = (isset($name[1]))?$name[1]:'';
 			$c=false;
 
 
-			if($cust->contact_first_name != '' || $cust->contact_last_name != ''){
-				$cust->contact_type = Nworx_Crm_Model_Contacts::TYPE_CONTACT;
+			if($cust->first_name != '' || $cust->last_name != ''){
+				$cust->type = CrmContact::TYPE_CONTACT;
 				$c = $cust->saveCompany($k->Name);
-				$cust->contact_type =  Nworx_Crm_Model_Contacts::TYPE_CONTACT;
-				$c = $cust->save();
+				$cust->type =  CrmContact::TYPE_CONTACT;
+				$cust->save(false);
+				$c = $cust;
 			}else{
-				$c = ($c!==false) ? $c : new Nworx_Crm_Model_Contact();
-				$c->contact_type = Nworx_Crm_Model_Contacts::TYPE_COMPANY;
+				$c = ($c!==false) ? $c : new CrmContact();
+				$c->type = CrmContact::TYPE_COMPANY;
 				$c->company = $k->Name;
-				$c->save();
+				$c->save(false);
 			}
 						
 			$c->saveEmailAddress($k->Email);
 			$c->savePhone($k->Mobile, 'Mobile');
 			$c->savePhone($k->Fax,'Fax');
 			$c->savePhone($k->Telephone,'Tel');
-			
+
 			$c->saveWebsite($k->Website,'Website');
 			$addy = (empty($k->Address1)?'':$k->Address1."\n").(empty($k->Address2)?'':$k->Address2."\n")
-				.(empty($k->Address3)?'':$k->Address3."\n").(empty($k->Address4)?'':$k->Address4."\n");
+				.(empty($k->Address3)?'':$k->Address3."\n").(empty($k->Address4)?'':$k->Address4);
 			$c->saveAddress($addy, '',$k->Postcode,'','UK');
 			
 		}
-		//}
+	}
+
+	public function actionAdd(){
+
+		$c = new CrmContact();
+		$c->first_name = 'steve';
+		$c->last_name = 'obrien';
+		$c->save();
+		$e = new CrmEmail();
+		$e->address    = 'steve@newicon.net';
+		$e->label      = 'home';
+		$e->contact_id = $c->id();
+		$e->save();
+
+		$a = new CrmAddress();
+		$a->contact_id=$c->id();
+
+		$a->save();
+
+		//$c->saveEmailAddress('steve@newicon.net');
+
 	}
 }

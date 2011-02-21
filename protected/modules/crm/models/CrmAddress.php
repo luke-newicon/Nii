@@ -41,14 +41,15 @@ class CrmAddress extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('lines, city, postcode, county, country_id, label, contact_id, verified', 'required'),
+			array('contact_id','required'),
+			array('lines, city, postcode, county', 'NOneRequiredValidator'),
 			array('city, county, label', 'length', 'max'=>250),
 			array('postcode, country_id', 'length', 'max'=>10),
 			array('contact_id', 'length', 'max'=>11),
 			array('verified', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, lines, city, postcode, county, country_id, label, contact_id, verified', 'safe', 'on'=>'search'),
+			array('id, lines, city, postcode, county, country_id, label, verified', 'safe', 'on'=>'search'),
 		);
 	}
 

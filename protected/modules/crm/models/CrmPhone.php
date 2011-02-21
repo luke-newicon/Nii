@@ -37,7 +37,7 @@ class CrmPhone extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('number, label, contact_id, verified', 'required'),
+			array('number, contact_id', 'required'),
 			array('number, label', 'length', 'max'=>250),
 			array('contact_id', 'length', 'max'=>11),
 			array('verified', 'length', 'max'=>1),
