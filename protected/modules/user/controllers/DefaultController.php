@@ -8,17 +8,24 @@ class DefaultController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('User', array(
-			'criteria'=>array(
-		        'condition'=>'status>'.User::STATUS_BANED,
-		    ),
-			'pagination'=>array(
-				'pageSize'=>Yii::app()->controller->module->user_page_size,
-			),
-		));
-
+//		$dataProvider=new CActiveDataProvider('User', array(
+//			'criteria'=>array(
+//		        'condition'=>'status>'.User::STATUS_BANED,
+//		    ),
+//			'pagination'=>array(
+//				'pageSize'=>Yii::app()->controller->module->user_page_size,
+//			),
+//		));
+//
+//		$this->render('/user/index',array(
+//			'dataProvider'=>$dataProvider,
+//		));
+		
+		$model= new User('search');
+		if(isset($_GET['User']))
+			$model->attributes=$_GET['User'];
 		$this->render('/user/index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model
 		));
 	}
 

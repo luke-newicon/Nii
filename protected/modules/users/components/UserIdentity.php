@@ -9,7 +9,7 @@ class UserIdentity extends CUserIdentity
 {
 	private $_id;
 	const ERROR_EMAIL_INVALID=3;
-	const ERROR_STATUS_NOTACTIV=4;
+	const ERROR_STATUS_NOTACTIVE=4;
 	const ERROR_STATUS_BAN=5;
 	/**
 	 * Authenticates a user.
@@ -32,10 +32,9 @@ class UserIdentity extends CUserIdentity
 			} else {
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
-			
-		else if($this->checkPassword($user))
+		else if(Yii::app()->getModule('user')->encrypting($this->password)!==$user->password)
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else if($user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
+		else if($user->status==0&&Yii::app()->getModule('user')->loginNotActiv==false)
 			$this->errorCode=self::ERROR_STATUS_NOTACTIV;
 		else if($user->status==-1)
 			$this->errorCode=self::ERROR_STATUS_BAN;
@@ -46,16 +45,8 @@ class UserIdentity extends CUserIdentity
 		}
 		return !$this->errorCode;
 	}
-	
-	public function checkPassword(User $user){
-		$dbPass = $user->password;
-		// uses a salt so that two people with the same password will have
-		// different encrypted password values
-		// creates a unique salt from each password
-		$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
-		return ($dbPass == crypt($this->password, $salt));
-	}
-   /**
+    
+    /**
     * @return integer the ID of the user record
     */
 	public function getId()
