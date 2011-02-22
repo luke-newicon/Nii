@@ -68,7 +68,7 @@ class Nworx_Core_Model_Uploader
 	public function getUrlPath($fileId,$makeDownload=false,$name=null){
 		return self::url($fileId,$makeDownload=false,$name=null);
 	}
-	
+
 	/**
 	 * REturn the url link to display the file
 	 * @param $fileId

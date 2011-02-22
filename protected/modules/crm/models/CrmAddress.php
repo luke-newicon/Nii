@@ -14,8 +14,13 @@
  * @property string $contact_id
  * @property string $verified
  */
-class CrmAddress extends CActiveRecord
+class CrmAddress extends CrmActiveRecord
 {
+
+	public function init(){
+		$this->country_id = 'UK';
+	}
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CrmAddress the static model class

@@ -13,7 +13,6 @@ Class ImportController extends NiiController
 			$cust->last_name = (isset($name[1]))?$name[1]:'';
 			$c=false;
 
-
 			if($cust->first_name != '' || $cust->last_name != ''){
 				$cust->type = CrmContact::TYPE_CONTACT;
 				$c = $cust->saveCompany($k->Name);
@@ -26,8 +25,9 @@ Class ImportController extends NiiController
 				$c->company = $k->Name;
 				$c->save(false);
 			}
-						
+			
 			$c->saveEmailAddress($k->Email);
+
 			$c->savePhone($k->Mobile, 'Mobile');
 			$c->savePhone($k->Fax,'Fax');
 			$c->savePhone($k->Telephone,'Tel');

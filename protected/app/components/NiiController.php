@@ -34,6 +34,7 @@ class NiiController extends CController
 			Yii::app()->getClientScript()->registerScriptFile("$path/jquery/jquery.scrollto.js");
 			Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
 			Yii::app()->getClientScript()->registerCoreScript("jquery");
+			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		}
 	}
 

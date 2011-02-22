@@ -20,7 +20,9 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
-		'application.Nii'
+		'application.Nii',
+		'application.modules.user.models.*',
+        'application.modules.user.components.*',
 
 	),
 	'theme'=>'classic',
@@ -36,6 +38,7 @@ return array(
 		),
 		'crm',
 		'kashflow',
+		'user',
 	),
 
 	// application components
@@ -47,6 +50,14 @@ return array(
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+			'loginUrl' => array('/user/login'),
+			
+		),
+		'components'=>array(
+			'authManager'=>array(
+				'class'=>'CDbAuthManager',
+				'defaultRoles'=>array('authenticated', 'guest'),
+			),
 		),
 		// uncomment the following to enable URLs in path-format
 

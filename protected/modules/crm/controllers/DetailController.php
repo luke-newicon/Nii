@@ -6,8 +6,8 @@ class DetailController extends NiiController
 		if(!$c = CrmContact::model()->findByPk($id))
 			throw new CHttpException(404, 'This contact does not exist');
 		
-		$this->render('index',array(
+		echo $this->render('index',array(
 			'contact'=>$c,
-		));
+		), true);
 	}
 }

@@ -21,4 +21,9 @@ class NData
 	public static function replace($subject, $replaceArray){
 		return str_replace(array_keys($replaceArray), array_values($replaceArray), $subject);
 	}
+
+	public static function post($name, $default=null){
+		return Yii::app()->request->getPost($name, $default);
+	}
+
 }

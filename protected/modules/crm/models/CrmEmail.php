@@ -10,7 +10,7 @@
  * @property string $label
  * @property string $verified
  */
-class CrmEmail extends CActiveRecord
+class CrmEmail extends CrmActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -38,6 +38,7 @@ class CrmEmail extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('contact_id, address', 'required'),
+			array('address','email'),
 			array('contact_id', 'length', 'max'=>11),
 			array('address, label', 'length', 'max'=>250),
 			array('verified', 'length', 'max'=>1),
@@ -94,4 +95,28 @@ class CrmEmail extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+
+	public static function getEmailLabels(){
+		return self::labelArray(
+			self::model()->query()->selectDistinct('label')->queryAll(),
+			array(
+				'Home'=>array('title'=>''),
+				'Work'=>array('title'=>''),
+				'Other'=>array('title'=>'')
+			)
+		);
+	}
+
+
+	public static function labelArray($rowset, $defaultsArray){
+		$tmp=array();
+		foreach($rowset as $l){
+			if(empty($l->label)) continue;
+			$tmp[$l->label] = $l->label;
+		}
+		return array_merge($tmp, array_combine(array_keys($defaultsArray), array_values($defaultsArray)));
+	}
+
+
 }

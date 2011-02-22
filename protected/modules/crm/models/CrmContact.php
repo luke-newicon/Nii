@@ -18,11 +18,16 @@
  * @property phones[] $CrmPhone
  * @property websites[] $CrmWebsite
  */
-class CrmContact extends CActiveRecord
+class CrmContact extends NiiActiveRecord
 {
 
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
+
+	public function init(){
+
+		$this->onAfterDelete = array($this,'deleteLinkedData');
+	}
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -354,20 +359,12 @@ class CrmContact extends CActiveRecord
 		return ($this->getCompany() == true);
 	}
 
-	public function delete(){
-		$this->deleteLinkedData();
-		parent::delete();
-	}
 
 	public function deleteLinkedData(){
-		$cs = new Nworx_Crm_Model_Emails();
-		$cs->deleteQuery()->where('contact_id=?',$this->id())->go();
-		$cs = new Nworx_Crm_Model_Phones();
-		$cs->deleteQuery()->where('contact_id=?',$this->id())->go();
-		$cs = new Nworx_Crm_Model_Websites();
-		$cs->deleteQuery()->where('contact_id=?',$this->id())->go();
-		$cs = new Nworx_Crm_Model_Addresses();
-		$cs->deleteQuery()->where('contact_id=?',$this->id())->go();
+		CrmEmail::model()->deleteAll('contact_id=:id',array(':id'=>$this->id()));
+		CrmPhone::model()->deleteAll('contact_id=:id',array(':id'=>$this->id()));
+		CrmWebsite::model()->deleteAll('contact_id=:id',array(':id'=>$this->id()));
+		CrmAddress::model()->deleteAll('contact_id=:id',array(':id'=>$this->id()));
 	}
 
 
@@ -437,7 +434,6 @@ class CrmContact extends CActiveRecord
 			$this->last_name  = $array['last_name'];
 			$this->saveCompany($array['company']);
 		}
-		
 	}
 	
 	public function getUrl(){

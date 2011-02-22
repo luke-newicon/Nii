@@ -17,8 +17,18 @@
 class NiiActiveRecord extends CActiveRecord {
 	
 	
+	/**
+	 * Shorthand method to Yii::app()->db->createCommand()
+	 *
+	 * @return CDbCommand
+	 */
 	public function query(){
-		return Yii::app()->db->createCommand()
-			->from(self::model()->tableName());
+		return Yii::app()->db->createCommand()->from($this->tableName());
 	}
+
+	public function querySelect($select='*'){
+		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
+	}
+
+
 }

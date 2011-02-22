@@ -34,48 +34,22 @@ class IndexController extends NiiController
 		
 		$card = false;
 		$html = false;
-		$ret = array();
-		
-		$c = CrmContact::model()->findByPk($cid);
-		if($cid!==null){
-			$c = CrmContact::model()->findByPk($cid);
-			if($c !== null){
-				//found contact
-				echo 'found!';
-			}
+		if (!empty($cid)){
+			if (($c = CrmContact::model()->findByPk($cid)) === null)
+				throw new CHttpException (404, 'No contact found');
 		}else{
-			//add contact
-			
+			$c = new CrmContact();
 		}
-		$c = new CrmContact();
+		
 		$c->populateAttributes($_POST['CrmContact']);
 		$c->save();
 		
-		CrmEmail::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
-		foreach($_POST['CrmEmail'] as $i => $v){
-			$e = new CrmEmail;
-			$e->attributes = $_POST['CrmEmail'][$i];
-			$e->contact_id = $cid;
-			$e->save();
-		}
+		$e = CrmEmail::model()->saveMany(NData::post('CrmEmail',array()), $c->id());
+		$p = CrmPhone::model()->saveMany(NData::post('CrmPhone',array()), $c->id());
+		$a = CrmAddress::model()->saveMany(NData::post('CrmPhone',array()), $c->id());
 
-		CrmPhone::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
-		foreach($_POST['CrmPhone'] as $i => $v){
-			$e = new CrmEmail;
-			$e->attributes = $_POST['CrmPhone'][$i];
-			$e->contact_id = $cid;
-			$e->save();
-		}
-
-		CrmAddress::model()->deleteAll('contact_id=:id',array(':id'=>$cid));
-		foreach($_POST['CrmAddress'] as $i => $v){
-			$e = new CrmEmail;
-			$e->attributes = $_POST['CrmAddress'][$i];
-			$e->contact_id = $cid;
-			$e->save();
-		}
-
-		if ($c->validate()) {
+		$valid = ($e && $p && $a && $c->validate());
+		if ($valid) {
 			$card = $this->widget('crm.components.CrmCard', array('contact' => $c),true);
 		} else {
 			$html = $this->render('_edit-contact', array('c' => $c), true);
@@ -104,10 +78,9 @@ class IndexController extends NiiController
 		echo CJSON::encode($arr);
 	}
 
-	public function actionDelete($contactId) {
-		$c = new Nworx_Crm_Model_Contact($contactId);
-		$c->delete();
-		echo CJSON::encode(true);
+	public function actionDelete($cid) {
+		$c = CrmContact::model()->findByPk($cid);
+		echo CJSON::encode($c->delete());
 	}
 
 	public function actionFindContact($term='', $group='') {

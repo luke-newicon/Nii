@@ -83,18 +83,26 @@
 			<div class="unit"><h4>Email</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" tipsy-gravity="sw" title="Add another email address"></a></p></div>
 		</div>
-		<?php foreach($c->emails as $i=>$e): ?>
-			<?php $this->render('_edit-contact-email',array('e'=>$e, 'i'=>$i)); ?>
-		<?php endforeach; ?>
+		<?php if(count($c->emails)): ?>
+			<?php foreach($c->emails as $i=>$e): ?>
+				<?php $this->render('_edit-contact-email',array('e'=>$e, 'i'=>$i)); ?>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<?php $this->render('_edit-contact-email',array('e'=>new CrmEmail, 'i'=>0)); ?>
+		<?php endif; ?>
 	</div>
 	<div class="formFieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Phone</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php foreach($c->phones as $p): ?>
-			<?php $this->render('_edit-contact-phone',array('p'=>$p, 'i'=>$i)); ?>
-		<?php endforeach; ?>
+		<?php if(count($c->phones)): ?>
+			<?php foreach($c->phones as $p): ?>
+				<?php $this->render('_edit-contact-phone',array('p'=>$p, 'i'=>$i)); ?>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<?php $this->render('_edit-contact-phone',array('p'=>new CrmPhone, 'i'=>0)); ?>
+		<?php endif; ?>
 	</div>
 	
 	<div class="formFieldState">
@@ -102,9 +110,13 @@
 			<div class="unit"><h4>Website</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php foreach($c->websites as $w): ?>
-			<?php $this->render('_edit-contact-website',array('w'=>$w, 'i'=>$i)); ?>
-		<?php endforeach; ?>
+		<?php if(count($c->websites)): ?>
+			<?php foreach($c->websites as $w): ?>
+				<?php $this->render('_edit-contact-website',array('w'=>$w, 'i'=>$i)); ?>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<?php $this->render('_edit-contact-website',array('w'=>new CrmWebsite, 'i'=>0)); ?>
+		<?php endif; ?>
 	</div>
 	
 	<div class="formFieldState">
@@ -112,9 +124,13 @@
 			<div class="unit"><h4>Address</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
 		</div>
-		<?php foreach($c->addresses as $a): ?>
-			<?php $this->render('_edit-contact-address',array('a'=>$a, 'i'=>$i)); ?>
-		<?php endforeach; ?>
+		<?php if(count($c->addresses)): ?>
+			<?php foreach($c->addresses as $a): ?>
+				<?php $this->render('_edit-contact-address',array('a'=>$a, 'i'=>$i)); ?>
+			<?php endforeach; ?>
+		<?php else: ?>
+			<?php $this->render('_edit-contact-address',array('a'=>new CrmAddress, 'i'=>0)); ?>
+		<?php endif; ?>
 	</div>
 </div>
 <div id="title" class="popmenu ui-corner-all">
@@ -126,9 +142,9 @@
 </div>
 <div id="email" class="popmenu ui-corner-all">
 	<ul>
-		<?php //foreach($f->getEmailLabels() as $k=>$l): ?>
-			<li><a href="#" title="<?php //echo NPage::encode($l['title']); ?>"><?php //echo $k; ?></a></li>
-		<?php //endforeach; ?>
+		<?php foreach(CrmEmail::getEmailLabels() as $k=>$l): ?>
+			<li><a href="#" title="<?php echo CHtml::encode($l['title']); ?>"><?php echo $k; ?></a></li>
+		<?php endforeach; ?>
 	</ul>
 </div>
 <div id="phone" class="popmenu ui-corner-all">
@@ -169,4 +185,6 @@ $(function(){
 		.appendTo( ul );
 	}
 });
+
+
 </script>

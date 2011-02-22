@@ -9,7 +9,7 @@
  * @property string $label
  * @property string $contact_id
  */
-class CrmWebsite extends CActiveRecord
+class CrmWebsite extends CrmActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.

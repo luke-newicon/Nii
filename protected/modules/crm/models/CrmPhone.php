@@ -10,7 +10,7 @@
  * @property string $contact_id
  * @property string $verified
  */
-class CrmPhone extends CActiveRecord
+class CrmPhone extends CrmActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -94,4 +94,5 @@ class CrmPhone extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
 }

@@ -53,11 +53,11 @@
 
 <?php if($contact->isCompany()): ?>
 	<?php foreach($contact->contacts as $c): ?>
-		<?php $this->widget('crm.components.crmCard', array('contact'=>$c)); ?>
+		<?php $this->widget('crm.components.CrmCard', array('contact'=>$c)); ?>
 	<?php endforeach; ?>
 <?php endif; ?>
 
-<?php echo NHtml::ajaxLink('facebook', 'crm/index/facebook-lookup/'.$contact->id(), array(
-	'live'=>false,
-	'success'=>'js:function(r){alert(r);}'
-)); ?>
+<?php //echo NHtml::ajaxLink('facebook', 'crm/index/facebook-lookup/'.$contact->id(), array(
+//	'live'=>false,
+//	'success'=>'js:function(r){alert(r);}'
+//)); ?>

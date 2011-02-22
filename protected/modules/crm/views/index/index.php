@@ -37,13 +37,14 @@
 	.userList li.letter a {color:#999;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);}
 	.groupList{background-color:#fff;}
 	.groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
+	.inputBox{position:relative;}
 </style>
 
 <div id="contactBook" class="line contactBook noBull">
 	<div class="unit size2of10 groupList">
 		<div class="topperGreyBar pls line prs" style="height:24px;padding:3px 3px 0px 2px;">
 			<div class="unit size4of5 flashy" style="padding-left:2px;">
-				<div class="inputContainer">
+				<div class="inputContainer" style="position:relative;">
 					<div class="inputBox line" style="padding:2px;">
 						<div class="unit" style="width:20px;"><span class="grey-icon fam-zoom"></span></div>
 						<div class="lastUnit"><input id="groupSearch" name="contactSearch" type="text" class="input" /></div>
@@ -101,6 +102,82 @@
 </div>
 <script type="text/javascript">
 
+
+
+
+
+;(function($){
+	var methods = {
+		init : function(options) {
+			return this.each(function(){
+				var $btn = $(this);
+         		var $menu = $($btn.attr('href'));
+             	methods.attachOpenMenu($btn, $menu);
+			});
+		},
+		attachOpenMenu:function($btn, $menu){
+			$menu.unbind('.dropButton');
+			$btn.unbind().one('click.dropButton',function(){
+				$btn.addClass('down');
+				$menu.click(function(e) {
+					e.stopPropagation();
+				}).slideDown(200, function() {
+					$(document).one('click.dropButton',function(){
+						methods.closeMenu($btn, $menu);
+					});
+				}).position({my:"left top",at:"left bottom",of:$btn});
+				//if($menu.width() < $btn.parent().width())
+					//$menu.css('width',$btn.parent().width());
+				// Highlight the parent fieldBlock when button slelected
+				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
+				if($blocks.length != 0)
+					$blocks.addClass('focus');
+				$menu.delegate('li a','click.dropButton',function(){
+					$btn.html($(this).html());
+					methods.closeMenu($btn, $menu);
+					$btn.next('input:hidden').val($(this).html());
+					$b = $btn.closest('.formFieldBlock').find('.formGuide');
+					$g = $b.find('.formGuide');
+					if($g.length==0)
+						$g = $('<span class="formGuide"></span>').appendTo($b);
+					$g.html($(this).attr('title'));
+					return false;
+         		});
+				return false;
+			});
+		},
+		closeMenu : function($btn, $menu){
+			// should be able to figure this out?
+			$(window).unbind('.dropButton');
+			$menu.hide(100);
+			methods.attachOpenMenu($btn.removeClass('down'), $menu);
+			var $block = $btn.parents('.formFieldBlock,.formFieldState');
+			if($block.length != 0)
+				$block.removeClass('focus');
+		},
+		destroy : function() {
+			return this.each(function(){
+				var $this = $(this),
+				data = $this.data('dropButton');
+				// Namespacing FTW
+				$(window).unbind('.dropButton');
+				data.dropButton.remove();
+				$this.removeData('dropButton');
+			});
+		}
+	};
+
+	$.fn.dropButton = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
+		}
+	};
+
+})(jQuery);
 
 $(function(){
 	$('.contactBook').delegate('.userList li.contact','click',function(){
@@ -187,7 +264,7 @@ $(function(){
 		var id = $li.attr('id');
 		if(!confirm('Are you sure you want to delete this contact and all associated data?')) return false;
 		if(!id){alert('nothing to delete');return false;}
-		$.getJSON("<?php echo NHtml::url('crm/index/delete'); ?>?cid="+id.replace('cid_',''), function(r){
+		$.getJSON("<?php echo NHtml::url('/crm/index/delete'); ?>?cid="+id.replace('cid_',''), function(r){
 			if(r){
 				deleteLi($li);
 			}
@@ -195,7 +272,6 @@ $(function(){
 		return false;
 	});
 	$('.contactBook').delegate('.contactCancel','click',function(){
-		alert('hello');
 		$li = $('.userList li.selected');
 		if($li.is('.mystery'))
 			deleteLi($li);
@@ -244,7 +320,7 @@ $(function(){
 			$('#userListScroll').scrollTo(s2el,'y');
 		}else{
 			$.ajax({
-				url:'<?php echo NHtml::url('crm/index/find-contact-alpha'); ?>/'+letter,
+				url:'<?php echo NHtml::url('/crm/index/find-contact-alpha'); ?>/'+letter,
 				type:'post',
 				success:function(r){
 					$('#userListScroll').html(r);
@@ -255,146 +331,66 @@ $(function(){
 	});
 
 	// $('.userList').selectable();
-});
 
 
 
 
+	/**********************
+	 * form controls
+	 *********************/
 
-
-
-
-
-
-
-
-/**********************
- * form controls
- *********************/
- 
-$('body').delegate('.btnDropDown','click',function(){
-	$(this).dropButton();
-	$(this).trigger('click');
-	return false;
-});
-
-$('#detailsScreen').delegate('.addRow','click',function(){
-	var $b = $(this).closest('.formFieldState');
-	var $el = $b.find('.replicate:first');
-	// if the first element is hidden then dont add another
-	// just show the existing hidden one with position 0
-	if(!$el.is(':visible')){
-		$el.show().find('input,textarea').val('');
+	$('body').delegate('.btnDropDown','click',function(){
+		$(this).dropButton();
+		$(this).trigger('click');
 		return false;
-	}
-	var $c = $el.clone();
-	// remove values
-	$c.find('input,textarea').val('');
-	var num = $b.find('.replicate').length;
-	$c.find('[name]').each(function(i,el){
-		$(el).attr('name',$(el).attr('name').replace('[0]', '['+num+']'));
-		$(el).attr('id', $(el).attr('id').replace('_0_', '_'+num+'_'));
 	});
-	$c.find('[for]').each(function(i,el){
-		$(el).attr('for',$(el).attr('for').replace('_0_', '_'+num+'_'));
+
+	$('#detailsScreen').delegate('.addRow','click',function(){
+		var $b = $(this).closest('.formFieldState');
+		var $el = $b.find('.replicate:first');
+		// if the first element is hidden then dont add another
+		// just show the existing hidden one with position 0
+		if(!$el.is(':visible')){
+			$el.show().find('input,textarea').val('');
+			return false;
+		}
+		var $c = $el.clone();
+		// remove values
+		$c.find('input,textarea').val('');
+		var num = $b.find('.replicate').length;
+		$c.find('[name]').each(function(i,el){
+			$(el).attr('name',$(el).attr('name').replace('[0]', '['+num+']'));
+			$(el).attr('id', $(el).attr('id').replace('_0_', '_'+num+'_'));
+		});
+		$c.find('[for]').each(function(i,el){
+			$(el).attr('for',$(el).attr('for').replace('_0_', '_'+num+'_'));
+		});
+		$c.appendTo($b).show();
+		// reattach infield labels
+		$fLbl = $c.find('.formFieldHint');
+		$tEx = $c.find("textarea[class*=expand]");
+		if($fLbl.length >= 1)
+			$fLbl.css('opacity',1).inFieldLabels().show();
+		if($tEx.size() >= 1)
+			$tEx.textAreaExpander();
+		return false;
 	});
-	$c.appendTo($b).show();
-	// reattach infield labels
-	$fLbl = $c.find('.formFieldHint');
-	$tEx = $c.find("textarea[class*=expand]");
-	if($fLbl.length >= 1)
-		$fLbl.css('opacity',1).inFieldLabels().show();
-	if($tEx.size() >= 1)
-		$tEx.textAreaExpander();
-	return false;
-});
-$('#detailsScreen').delegate('.removeRow','click',function(){
-	var $r = $(this).closest('.replicate');
-	var $b = $r.parent();
-	if($b.find('.replicate').length!=1){
-		$r.remove();
-	}else{
-		// last replicate block left so lets just hide it.
-		$r.hide();
-	}
-	// show we ajax remove this
-	// if the row has an id field then its in the database so we want to remove it from there
-	$('.tipsy').remove();
-	return false;
+	$('#detailsScreen').delegate('.removeRow','click',function(){
+		var $r = $(this).closest('.replicate');
+		var $b = $r.parent();
+		if($b.find('.replicate').length!=1){
+			$r.remove();
+		}else{
+			// last replicate block left so lets just hide it.
+			$r.hide();
+		}
+		// show we ajax remove this
+		// if the row has an id field then its in the database so we want to remove it from there
+		$('.tipsy').remove();
+		return false;
+	});
+
 });
 
-
-(function($){
-	var methods = {
-		init : function(options) {
-			return this.each(function(){
-				var $btn = $(this);
-         		var $menu = $($btn.attr('href'));
-             	methods.attachOpenMenu($btn, $menu);
-			});
-		},
-		attachOpenMenu:function($btn, $menu){
-			$menu.unbind('.dropButton');
-			$btn.unbind().one('click.dropButton',function(){
-				$btn.addClass('down');
-				$menu.click(function(e) { 
-					e.stopPropagation(); 
-				}).slideDown(200, function() {
-					$(document).one('click.dropButton',function(){
-						methods.closeMenu($btn, $menu);
-					});
-				}).position({my:"left top",at:"left bottom",of:$btn});
-				//if($menu.width() < $btn.parent().width())
-					//$menu.css('width',$btn.parent().width());
-				// Highlight the parent fieldBlock when button slelected
-				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
-				if($blocks.length != 0)
-					$blocks.addClass('focus');
-				$menu.delegate('li a','click.dropButton',function(){
-					$btn.html($(this).html());
-					methods.closeMenu($btn, $menu);
-					$btn.next('input:hidden').val($(this).html());
-					$b = $btn.closest('.formFieldBlock').find('.formGuide');
-					$g = $b.find('.formGuide');
-					if($g.length==0)
-						$g = $('<span class="formGuide"></span>').appendTo($b);
-					$g.html($(this).attr('title'));
-					return false;
-         		});
-				return false;
-			});
-		},
-		closeMenu : function($btn, $menu){
-			// should be able to figure this out?
-			$(window).unbind('.dropButton');
-			$menu.hide(100);
-			methods.attachOpenMenu($btn.removeClass('down'), $menu);
-			var $block = $btn.parents('.formFieldBlock,.formFieldState');
-			if($block.length != 0)
-				$block.removeClass('focus');
-		},
-		destroy : function() {
-			return this.each(function(){
-				var $this = $(this),
-				data = $this.data('dropButton');
-				// Namespacing FTW
-				$(window).unbind('.dropButton');
-				data.dropButton.remove();
-				$this.removeData('dropButton');
-			});
-		}
-	};
-
-	$.fn.dropButton = function( method ) {
-		if ( methods[method] ) {
-			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
-		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
-		}
-	};
-
-})(jQuery);
 
 </script>
