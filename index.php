@@ -11,9 +11,11 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
 
 require_once($yii);
 
-$rootConf = dirname(__FILE__).'../config.php';
+$rootConf = dirname(__FILE__).'/../config.php';
 if(file_exists($rootConf)){
-	unset($config['components']['db']);
+	$rootConf = require $rootConf;
+	$config = require $config;
+	//unset($config['components']['db']);
 	$config = CMap::mergeArray($config, $rootConf);
 }
 Yii::createWebApplication($config)->run();
