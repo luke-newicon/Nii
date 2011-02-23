@@ -12,7 +12,8 @@ $this->breadcrumbs=array(
 </ul><!-- actions --><?php 
 } ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'dataProvider'=>$dataProvider,
+	'dataProvider'=>$model->search(),
+	'filter'=>$model,
 	'columns'=>array(
 		array(
 			'name' => 'username',
@@ -22,10 +23,12 @@ $this->breadcrumbs=array(
 		array(
 			'name' => 'createtime',
 			'value' => 'date("d.m.Y H:i:s",$data->createtime)',
+			'filter'=>false,
 		),
 		array(
 			'name' => 'lastvisit',
 			'value' => '(($data->lastvisit)?date("d.m.Y H:i:s",$data->lastvisit):UserModule::t("Not visited"))',
+			'filter'=>false,
 		),
 	),
 )); ?>

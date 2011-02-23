@@ -1,23 +1,22 @@
 <?php
-
+/**
+ * 
+ * The following are the available columns in table 'users':
+ * @property integer $id
+ * @property string $username
+ * @property string $password 
+ * @property string $email
+ * @property string $activekey
+ * @property integer $createtime
+ * @property integer $lastvisit
+ * @property integer $superuser
+ * @property integer $status
+ */
 class User extends CActiveRecord
 {
 	const STATUS_NOACTIVE=0;
 	const STATUS_ACTIVE=1;
 	const STATUS_BANED=-1;
-	
-	/**
-	 * The followings are the available columns in table 'users':
-	 * @var integer $id
-	 * @var string $username
-	 * @var string $password
-	 * @var string $email
-	 * @var string $activkey
-	 * @var integer $createtime
-	 * @var integer $lastvisit
-	 * @var integer $superuser
-	 * @var integer $status
-	 */
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -56,6 +55,7 @@ class User extends CActiveRecord
 			array('superuser', 'in', 'range'=>array(0,1)),
 			array('username, email, createtime, lastvisit, superuser, status', 'required'),
 			array('createtime, lastvisit, superuser, status', 'numerical', 'integerOnly'=>true),
+			array('username', 'safe', 'on'=>'search'),
 		):((Yii::app()->user->id==$this->id)?array(
 			array('username, email', 'required'),
 			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
@@ -63,6 +63,7 @@ class User extends CActiveRecord
 			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
 			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
 			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
+			array('username', 'safe', 'on'=>'search'),
 		):array()));
 	}
 
@@ -90,7 +91,7 @@ class User extends CActiveRecord
 			'email'=>UserModule::t("E-mail"),
 			'verifyCode'=>UserModule::t("Verification Code"),
 			'id' => UserModule::t("Id"),
-			'activkey' => UserModule::t("activation key"),
+			'activekey' => UserModule::t("activation key"),
 			'createtime' => UserModule::t("Registration date"),
 			'lastvisit' => UserModule::t("Last visit"),
 			'superuser' => UserModule::t("Superuser"),
@@ -114,7 +115,7 @@ class User extends CActiveRecord
                 'condition'=>'superuser=1',
             ),
             'notsafe'=>array(
-            	'select' => 'id, username, password, email, activkey, createtime, lastvisit, superuser, status',
+            	'select' => 'id, username, password, email, activekey, createtime, lastvisit, superuser, status',
             ),
         );
     }
@@ -142,5 +143,20 @@ class User extends CActiveRecord
 			return isset($_items[$type][$code]) ? $_items[$type][$code] : false;
 		else
 			return isset($_items[$type]) ? $_items[$type] : false;
+	}
+	
+	/**
+	 * Retrieves the list of Users based on the current search/filter conditions.
+	 * @return CActiveDataProvider the data provider that can return the needed users.
+	 */
+	public function search()
+	{
+		$criteria=new CDbCriteria;
+
+		$criteria->compare('username',$this->username,true);
+
+		return new CActiveDataProvider('User', array(
+			'criteria'=>$criteria,
+		));
 	}
 }

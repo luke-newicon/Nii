@@ -71,7 +71,7 @@ class AdminController extends Controller
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
-			$model->activkey=Yii::app()->controller->module->encrypting(microtime().$model->password);
+			$model->activekey=Yii::app()->controller->module->encrypting(microtime().$model->password);
 			$model->createtime=time();
 			$model->lastvisit=time();
 			$profile->attributes=$_POST['Profile'];
@@ -109,7 +109,7 @@ class AdminController extends Controller
 				$old_password = User::model()->notsafe()->findByPk($model->id);
 				if ($old_password->password!=$model->password) {
 					$model->password=Yii::app()->controller->module->encrypting($model->password);
-					$model->activkey=Yii::app()->controller->module->encrypting(microtime().$model->password);
+					$model->activekey=Yii::app()->controller->module->encrypting(microtime().$model->password);
 				}
 				$model->save();
 				$profile->save();

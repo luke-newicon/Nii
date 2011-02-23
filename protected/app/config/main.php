@@ -47,10 +47,10 @@ return array(
 			'class'=>'Nii'
 		),
 
-		'user'=>array(
+		'users'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-			'loginUrl' => array('/user/login'),
+			'loginUrl' => array('/users/login'),
 			
 		),
 		'components'=>array(
@@ -82,7 +82,7 @@ return array(
 			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
-			'schemaCachingDuration' => 3600,
+			//'schemaCachingDuration' => 3600,
 			'enableProfiling'=>true,
 			'enableParamLogging'=>true,
 		),

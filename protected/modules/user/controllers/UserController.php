@@ -50,18 +50,20 @@ class UserController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('User', array(
-			'criteria'=>array(
-		        'condition'=>'status>'.User::STATUS_BANED,
-		    ),
-				
-			'pagination'=>array(
-				'pageSize'=>Yii::app()->controller->module->user_page_size,
-			),
-		));
-
+//		$dataProvider=new CActiveDataProvider('User', array(
+//			'criteria'=>array(
+//		        'condition'=>'status>'.User::STATUS_BANED,
+//		    ),
+//				
+//			'pagination'=>array(
+//				'pageSize'=>Yii::app()->controller->module->user_page_size,
+//			),
+//		));
+		$model= new User('search');
+		if(isset($_GET['User']))
+			$model->attributes=$_GET['User'];
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model
 		));
 	}
 
