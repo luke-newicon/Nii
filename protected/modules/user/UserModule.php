@@ -51,7 +51,7 @@ class UserModule extends NiiWebModule
 	public $loginUrl = array("/user/index/login");
 	public $logoutUrl = array("/user/index/logout");
 	public $profileUrl = array("/user/profile");
-	public $returnUrl = array("/user/profile");
+	public $returnUrl = array("/user/dashboard");
 	public $returnLogoutUrl = array("/user/index/login");
 	
 	public $fieldsMessage = '';
@@ -80,8 +80,7 @@ class UserModule extends NiiWebModule
 	//public $cacheEnable = false;
 	
 	public $tableUsers = '{{users}}';
-	public $tableProfiles = '{{profiles}}';
-	public $tableProfileFields = '{{profiles_fields}}';
+	public $tableProfiles = '{{nii_crm__contact}}';
 
 
 	static private $_user;

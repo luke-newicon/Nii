@@ -67,13 +67,6 @@ class UserController extends Controller
 		));
 	}
 
-	public function actionTest(){
-		$u = User::model()->findByAttributes(array('username'=>'admin'));
-		$u->password ='admin';
-		$u->save();
-		echo 'oi';
-	}
-
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -107,6 +100,8 @@ class UserController extends Controller
 		}
 		return $this->_model;
 	}
+
+
 
 
 }

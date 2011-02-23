@@ -37,8 +37,8 @@ class CrmModule extends NiiWebModule
 			'crm.models.*',
 			'crm.components.*',
 		));
-
-		$this->addMenuItem('Crm', array('/crm/index/index'));
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem('Crm', array('/crm/index/index'));
 
 	}
 

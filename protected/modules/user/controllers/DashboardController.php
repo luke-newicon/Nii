@@ -1,6 +1,6 @@
 <?php
 /**
- * ProfileController class file.
+ * Dashboard class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,14 +9,14 @@
  */
 
 /**
- * Description of ProfileController
+ * Description of Dashboard
  *
  * @author steve
  */
-class ProfileController extends Controller
+class DashboardController extends Controller
 {
 
     public function actionIndex(){
-		$this->render('/profile/index');
+		$this->render('/dashboard/index');
 	}
 }

@@ -12,7 +12,7 @@
  * @property integer $superuser
  * @property integer $status
  */
-class User extends CActiveRecord
+class User extends NiiActiveRecord
 {
 	const STATUS_NOACTIVE=0;
 	const STATUS_ACTIVE=1;
@@ -158,16 +158,11 @@ class User extends CActiveRecord
 		return ($this->password == crypt($checkPassword, $salt));
 	}
 
-	public function __set($name, $value){
-		if($name == 'password') {
-			$this->password = crypt($value);
-		} else {
-			parent::__set($name, $value);
-		}
-	}
-
 	public function  beforeSave() {
-		$model->activekey=crypt(microtime().$this->password);
+		if ($this->getScenario()=='insert'){
+			$this->password = crypt($this->password);
+			$this->activekey=crypt(microtime().$this->password);
+		}
 		$this->createtime=time();
 		$this->lastvisit=time();
 		return parent::beforeSave();

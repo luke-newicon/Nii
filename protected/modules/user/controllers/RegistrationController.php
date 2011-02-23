@@ -23,13 +23,11 @@ class RegistrationController extends Controller
 	 */
 	public function actionRegistration() {
             $model = new RegistrationForm;
-            $profile=new Profile;
             $profile->regMode = true;
-            
 			// ajax validator
 			if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
 			{
-				echo UActiveForm::validate(array($model,$profile));
+				echo CActiveForm::validate(array($model,$profile));
 				Yii::app()->end();
 			}
 			
@@ -38,21 +36,13 @@ class RegistrationController extends Controller
 		    } else {
 		    	if(isset($_POST['RegistrationForm'])) {
 					$model->attributes=$_POST['RegistrationForm'];
-					$profile->attributes=((isset($_POST['Profile'])?$_POST['Profile']:array()));
-					if($model->validate()&&$profile->validate())
+					if($model->validate())
 					{
-						$soucePassword = $model->password;
-						$model->activekey=crypt(microtime().$model->password);
-						$model->password=crypt($model->password);
-						$model->verifyPassword=crypt($model->verifyPassword);
 						$model->createtime=time();
-						$model->lastvisit=((Yii::app()->controller->module->loginNotActive||(Yii::app()->controller->module->activeAfterRegister&&Yii::app()->controller->module->sendActivationMail==false))&&Yii::app()->controller->module->autoLogin)?time():0;
 						$model->superuser=0;
 						$model->status=((Yii::app()->controller->module->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
 						
 						if ($model->save()) {
-							$profile->user_id=$model->id;
-							$profile->save();
 							if (Yii::app()->controller->module->sendActivationMail) {
 								$activation_url = $this->createAbsoluteUrl('/user/activation/activation',array("activekey" => $model->activekey, "email" => $model->email));
 								UserModule::sendMail($model->email,UserModule::t("You registered from {site_name}",array('{site_name}'=>Yii::app()->name)),UserModule::t("Please activate you account go to {activation_url}",array('{activation_url}'=>$activation_url)));
@@ -78,7 +68,7 @@ class RegistrationController extends Controller
 						}
 					} else $profile->validate();
 				}
-			    $this->render('/user/registration',array('model'=>$model,'profile'=>$profile));
+			    $this->render('/user/registration',array('model'=>$model));
 		    }
 	}
 }

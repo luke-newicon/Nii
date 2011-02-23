@@ -15,7 +15,6 @@
 
 <body>
 
-
 <div class="page liquid">
 	<div class="head">
 
@@ -53,7 +52,6 @@
 				'items'=>array(
 					array('label'=>'Home', 'url'=>array('/site/index')),
 					array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-					array('label'=>'Crm', 'url'=>array('/crm/index/index')),
 					array('label'=>'Contact', 'url'=>array('/site/contact')),
 					array('url'=>Yii::app()->getModule('user')->loginUrl, 'label'=>"Login", 'visible'=>Yii::app()->user->isGuest),
 					array('url'=>Yii::app()->getModule('user')->registrationUrl, 'label'=>"Register", 'visible'=>Yii::app()->user->isGuest),
@@ -76,13 +74,9 @@
 	<div class="foot"><?php // echo $this->renderPartial('core/_footer'); ?></div>
 </div>
 
-	
+<div id="footer">
 
-	
-
-	<div id="footer">
-
-	</div><!-- footer -->
+</div><!-- footer -->
 
 
 </body>
