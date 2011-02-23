@@ -97,7 +97,6 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning, trace, profile',
 				),
 				array(
 					'class'=>'CWebLogRoute',

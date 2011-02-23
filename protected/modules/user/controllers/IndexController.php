@@ -64,8 +64,8 @@ class IndexController extends Controller
 	 * Activattion link for user account
 	 */
 	public function actionActivation() {
-		$email = $_GET['email'];
-		$activekey = $_GET['activekey'];
+		$email = NData::base64UrlDecode($_GET['e']);
+		$activekey = NData::base64UrlDecode($_GET['activekey']);
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find)&&$find->status) {

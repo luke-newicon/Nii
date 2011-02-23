@@ -44,7 +44,7 @@ class RegistrationController extends Controller
 						
 						if ($model->save()) {
 							if (Yii::app()->controller->module->sendActivationMail) {
-								$activation_url = $this->createAbsoluteUrl('/user/index/activation',array("activekey" => $model->activekey, "email" => $model->email));
+								$activation_url = $this->createAbsoluteUrl('/user/index/activation',array("activekey" => NData::base64UrlEncode($model->activekey), "e" => NData::base64UrlEncode($model->email)));
 								UserModule::sendMail($model->email,UserModule::t("You registered from {site_name}",array('{site_name}'=>Yii::app()->name)),UserModule::t("Please activate you account go to {activation_url}",array('{activation_url}'=>$activation_url)));
 							}
 							
@@ -71,4 +71,6 @@ class RegistrationController extends Controller
 			    $this->render('/user/registration',array('model'=>$model));
 		    }
 	}
+
+
 }
