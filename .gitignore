@@ -36,6 +36,7 @@ Thumbs.db
 
 assets/*
 protected/runtime/*
+protected/app/runtime/*
 uploads
 nbproject
 
