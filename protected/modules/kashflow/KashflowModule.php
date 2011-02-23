@@ -16,7 +16,7 @@
  * @author Luke
  *
  */
-Class KashflowModule extends CWebModule
+Class KashflowModule extends NiiWebModule
 {
 
 	public $defaultController = 'index';
