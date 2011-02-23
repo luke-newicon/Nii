@@ -144,6 +144,34 @@ class User extends CActiveRecord
 		else
 			return isset($_items[$type]) ? $_items[$type] : false;
 	}
+
+	/**
+	 *
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function checkPassword($checkPassword){
+		// uses a salt so that two people with the same password will have
+		// different encrypted password values
+		// creates a unique salt from each password
+		$salt = substr($this->password, 0, CRYPT_SALT_LENGTH);
+		return ($this->password == crypt($checkPassword, $salt));
+	}
+
+	public function __set($name, $value){
+		if($name == 'password') {
+			$this->password = crypt($value);
+		} else {
+			parent::__set($name, $value);
+		}
+	}
+
+	public function  beforeSave() {
+		$model->activekey=crypt(microtime().$this->password);
+		$this->createtime=time();
+		$this->lastvisit=time();
+		return parent::beforeSave();
+	}
 	
 	/**
 	 * Retrieves the list of Users based on the current search/filter conditions.
@@ -159,4 +187,8 @@ class User extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+
+
+
 }

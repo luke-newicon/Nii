@@ -1,8 +1,8 @@
 <?php
 
-class CrmModule extends CWebModule
+class CrmModule extends NiiWebModule
 {
-	public $defaultController = 'index';
+	
 
 	/**
 	 * Display contact name: First, Last
@@ -37,6 +37,9 @@ class CrmModule extends CWebModule
 			'crm.models.*',
 			'crm.components.*',
 		));
+
+		$this->addMenuItem('Crm', array('/crm/index/index'));
+
 	}
 
 	/**

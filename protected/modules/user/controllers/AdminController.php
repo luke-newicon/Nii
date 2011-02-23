@@ -37,6 +37,10 @@ class AdminController extends Controller
 	 */
 	public function actionAdmin()
 	{
+		$model = new User('search');
+		if(isset($_GET['User']))
+			$model->attributes = $_GET['User'];
+
 		$dataProvider=new CActiveDataProvider('User', array(
 			'pagination'=>array(
 				'pageSize'=>Yii::app()->controller->module->user_page_size,
@@ -71,13 +75,11 @@ class AdminController extends Controller
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
-			$model->activekey=Yii::app()->controller->module->encrypting(microtime().$model->password);
-			$model->createtime=time();
-			$model->lastvisit=time();
+
 			$profile->attributes=$_POST['Profile'];
 			$profile->user_id=0;
 			if($model->validate()&&$profile->validate()) {
-				$model->password=Yii::app()->controller->module->encrypting($model->password);
+				//$model->password=crypt($model->password);
 				if($model->save()) {
 					$profile->user_id=$model->id;
 					$profile->save();
@@ -107,11 +109,10 @@ class AdminController extends Controller
 			
 			if($model->validate()&&$profile->validate()) {
 				$old_password = User::model()->notsafe()->findByPk($model->id);
-				if ($old_password->password!=$model->password) {
-					$model->password=Yii::app()->controller->module->encrypting($model->password);
-					$model->activekey=Yii::app()->controller->module->encrypting(microtime().$model->password);
+				if ($old_password->checkPassword($_POST['Profile']['password'])) {
+					$model->save();
 				}
-				$model->save();
+				
 				$profile->save();
 				$this->redirect(array('view','id'=>$model->id));
 			} else $profile->validate();
@@ -149,6 +150,7 @@ class AdminController extends Controller
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
+	 * @return User
 	 */
 	public function loadModel()
 	{

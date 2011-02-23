@@ -8,7 +8,7 @@
  * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
  */
 
-class UserModule extends CWebModule
+class UserModule extends NiiWebModule
 {
 	/**
 	 * @var int
@@ -48,11 +48,11 @@ class UserModule extends CWebModule
 	
 	public $registrationUrl = array("/user/registration");
 	public $recoveryUrl = array("/user/recovery/recovery");
-	public $loginUrl = array("/user/login");
-	public $logoutUrl = array("/user/logout");
+	public $loginUrl = array("/user/index/login");
+	public $logoutUrl = array("/user/index/logout");
 	public $profileUrl = array("/user/profile");
 	public $returnUrl = array("/user/profile");
-	public $returnLogoutUrl = array("/user/login");
+	public $returnLogoutUrl = array("/user/index/login");
 	
 	public $fieldsMessage = '';
 	
@@ -82,7 +82,8 @@ class UserModule extends CWebModule
 	public $tableUsers = '{{users}}';
 	public $tableProfiles = '{{profiles}}';
 	public $tableProfileFields = '{{profiles_fields}}';
-	
+
+
 	static private $_user;
 	static private $_admin;
 	static private $_admins;

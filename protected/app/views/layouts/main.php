@@ -48,6 +48,7 @@
 	<div class="body"><!-- Body -->
 		<div class="main">
 			<div class="menu lightBar">
+				
 			<?php $this->widget('zii.widgets.CMenu',array(
 				'items'=>array(
 					array('label'=>'Home', 'url'=>array('/site/index')),
@@ -59,6 +60,9 @@
 					array('url'=>Yii::app()->getModule('user')->profileUrl, 'label'=>"Profile", 'visible'=>!Yii::app()->user->isGuest),
 					array('url'=>Yii::app()->getModule('user')->logoutUrl, 'label'=>"Logout".' ('.Yii::app()->user->name.')', 'visible'=>!Yii::app()->user->isGuest),
 				),
+			)); ?>
+			<?php $this->widget('zii.widgets.CMenu',array(
+				'items'=>NiiWebModule::$items,
 			)); ?>
 			</div>
 			<?php //echo $this->renderPartial('core/_nav'); ?>
@@ -77,9 +81,7 @@
 	
 
 	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
-		<?php echo Yii::powered(); ?>
+
 	</div><!-- footer -->
 
 
