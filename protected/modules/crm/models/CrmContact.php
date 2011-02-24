@@ -23,6 +23,7 @@ class CrmContact extends NiiActiveRecord
 
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
+	const TYPE_USER = 'USER';
 
 	public function init(){
 
@@ -291,6 +292,10 @@ class CrmContact extends NiiActiveRecord
 			'companies'=>array(
 				'condition'=>'type=:company',
 				'params'=>array(':company'=>self::TYPE_COMPANY)
+			),
+			'users'=>array(
+				'condition'=>'type=:users',
+				'params'=>array(':users'=>self::TYPE_USER)
 			)
 		);
 	}
@@ -351,6 +356,8 @@ class CrmContact extends NiiActiveRecord
 			return $this->people();
 		if($group=='companies')
 			return $this->companies();
+		if($group=='users')
+			return $this->users();
 		return $this;
 	}
 	

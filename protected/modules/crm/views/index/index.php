@@ -59,6 +59,7 @@
 			<li id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All contacts</a></li>
 			<li id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
 			<li id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
+			<li id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
 		</ul>
 	</div>
 	<div class="unit size3of10 userListScreen ">

@@ -2,10 +2,6 @@
 class IndexController extends NiiController
 {
 
-	public function init() {
-		// Only logged in people can see pages within this file.
-	}
-
 	public function actionIndex() {
 		$contacts = CrmContact::model()->orderByName()->findAll();
 		$this->render('index',array(
@@ -126,5 +122,10 @@ class IndexController extends NiiController
 			$fbId = str_replace(array('http://www.facebook.com/','profile.php?id='),'',$profileLink);
 			echo $fbId;
 		}
+	}
+	
+	public function actionTest(){
+		$contact = new CrmContact;
+		$this->render('test',array('contact'=>$contact));
 	}
 }
