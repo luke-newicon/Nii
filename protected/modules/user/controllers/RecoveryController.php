@@ -1,6 +1,6 @@
 <?php
 
-class RecoveryController extends Controller
+class RecoveryController extends NiiController
 {
 	public $defaultAction = 'recovery';
 	

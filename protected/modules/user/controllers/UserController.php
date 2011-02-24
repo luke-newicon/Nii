@@ -1,6 +1,6 @@
 <?php
 
-class UserController extends Controller
+class UserController extends NiiController
 {
 	/**
 	 * @var CActiveRecord the currently loaded data model instance.
@@ -12,10 +12,12 @@ class UserController extends Controller
 	 */
 	public function filters()
 	{
+		// perform access control for CRUD operations
 		return CMap::mergeArray(parent::filters(),array(
-			'accessControl', // perform access control for CRUD operations
+			'accessControl', 
 		));
 	}
+	
 	/**
 	 * Specifies the access control rules.
 	 * This method is used by the 'accessControl' filter.
@@ -24,11 +26,13 @@ class UserController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
+			// allow all users to perform 'index' and 'view' actions
+			array('allow',  
 				'actions'=>array('index','view','test'),
 				'users'=>array('*'),
 			),
-			array('deny',  // deny all users
+			// deny all users
+			array('deny',  
 				'users'=>array('*'),
 			),
 		);
@@ -50,15 +54,6 @@ class UserController extends Controller
 	 */
 	public function actionIndex()
 	{
-//		$dataProvider=new CActiveDataProvider('User', array(
-//			'criteria'=>array(
-//		        'condition'=>'status>'.User::STATUS_BANED,
-//		    ),
-//				
-//			'pagination'=>array(
-//				'pageSize'=>Yii::app()->controller->module->user_page_size,
-//			),
-//		));
 		$model = new User('search');
 		if(isset($_GET['User']))
 			$model->attributes=$_GET['User'];

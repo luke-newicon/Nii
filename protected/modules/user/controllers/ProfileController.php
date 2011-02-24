@@ -13,7 +13,7 @@
  *
  * @author steve
  */
-class ProfileController extends Controller
+class ProfileController extends NiiController
 {
 
     public function actionIndex(){

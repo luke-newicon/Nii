@@ -30,7 +30,7 @@ class UserModule extends NiiWebModule
 	
 	/**
 	 * @var boolean
-	 * @desc allow auth for is not active user
+	 * @desc allow auth for users that are not active
 	 */
 	public $loginNotActive=false;
 	

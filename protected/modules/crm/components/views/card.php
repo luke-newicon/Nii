@@ -1,6 +1,6 @@
 <div class="media">
 	<a href="<?php echo $contact->getUrl(); ?>" class="img">
-		<?php $this->widget('crm.components.CrmImage',array('contact'=>$contact,'size'=>24)); ?>
+		<?php $this->widget('crm.components.CrmImage',array('contact'=>$contact,'size'=>$this->size)); ?>
 	</a>
 	<div class="bd">
 		<p class="mtn mbn">

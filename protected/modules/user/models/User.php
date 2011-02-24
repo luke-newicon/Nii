@@ -183,7 +183,9 @@ class User extends NiiActiveRecord
 		));
 	}
 
-
+	public static function getCurrentUser(){
+		return User::model()->findByPk(Yii::app()->user->getId());
+	}
 
 
 }

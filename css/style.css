@@ -1,6 +1,7 @@
 /* core application stylesheet */
 body{background:#fff url("../images/top-bg.png") repeat-x left -20px;}
-.head{height:70px;}
+.head{}
+.bigHead{height:75px}
 .page{position:relative;}
 
 .leftCol{width:150px;padding:10px;margin-right:10px;}

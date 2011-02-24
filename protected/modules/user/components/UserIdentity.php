@@ -11,6 +11,7 @@ class UserIdentity extends CUserIdentity
 	const ERROR_EMAIL_INVALID=3;
 	const ERROR_STATUS_NOTACTIV=4;
 	const ERROR_STATUS_BAN=5;
+	
 	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password

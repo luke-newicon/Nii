@@ -13,10 +13,13 @@
  *
  * @author steve
  */
-class DashboardController extends Controller
+class DashboardController extends NiiController
 {
+	
+	
 
     public function actionIndex(){
-		$this->render('/dashboard/index');
+		$u = User::model()->findByPk(Yii::app()->user->getId());
+		$this->render('/dashboard/index',array('u'=>$u));
 	}
 }
