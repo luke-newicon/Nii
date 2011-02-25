@@ -8,7 +8,6 @@
  * @version $Id: jquery.yiiactiveform.js 2779 2010-12-28 13:10:09Z qiang.xue $
  * @since 1.1.1
  */
-
 ;(function($) {
 	/**
 	 * yiiactiveform set function.
@@ -80,6 +79,8 @@
 				}, attribute.validationDelay);
 			};
 
+
+			// get the attributes automatically
 			$.each(settings.attributes, function(i, attribute) {
 				if (attribute.validateOnChange) {
 					$('#'+attribute.inputID, $form).change(function(){

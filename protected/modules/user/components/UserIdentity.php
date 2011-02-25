@@ -11,6 +11,7 @@ class UserIdentity extends CUserIdentity
 	const ERROR_EMAIL_INVALID=3;
 	const ERROR_STATUS_NOTACTIV=4;
 	const ERROR_STATUS_BAN=5;
+	
 	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
@@ -33,7 +34,7 @@ class UserIdentity extends CUserIdentity
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
 			
-		else if($this->checkPassword($user))
+		else if(!$user->checkPassword($this->password))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		else if($user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
 			$this->errorCode=self::ERROR_STATUS_NOTACTIV;
@@ -46,15 +47,9 @@ class UserIdentity extends CUserIdentity
 		}
 		return !$this->errorCode;
 	}
-	
-	public function checkPassword(User $user){
-		$dbPass = $user->password;
-		// uses a salt so that two people with the same password will have
-		// different encrypted password values
-		// creates a unique salt from each password
-		$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
-		return ($dbPass == crypt($this->password, $salt));
-	}
+
+
+
    /**
     * @return integer the ID of the user record
     */

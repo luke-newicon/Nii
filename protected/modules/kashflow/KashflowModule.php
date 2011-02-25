@@ -16,7 +16,7 @@
  * @author Luke
  *
  */
-Class KashflowModule extends CWebModule
+Class KashflowModule extends NWebModule
 {
 
 	public $defaultController = 'index';
@@ -39,6 +39,9 @@ Class KashflowModule extends CWebModule
 			'kashflow.models.api.*',
 			'kashflow.components.*',
 		));
+
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem('Kashflow', array('/kashflow/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)

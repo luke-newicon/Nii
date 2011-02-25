@@ -1,12 +1,6 @@
 <?php $this->beginContent('//layouts/main'); ?>
-<div class="container">
-	<div class="span-19">
-		<div id="content">
-			<?php echo $content; ?>
-		</div><!-- content -->
-	</div>
-	<div class="span-5 last">
-		<div id="sidebar">
+<div class="leftCol gMail">
+	<div id="sidebar">
 		<?php
 			$this->beginWidget('zii.widgets.CPortlet', array(
 				'title'=>'Operations',
@@ -17,7 +11,17 @@
 			));
 			$this->endWidget();
 		?>
-		</div><!-- sidebar -->
-	</div>
+	</div><!-- sidebar -->
 </div>
+<div class="main">
+		
+	<!-- breadcrumbs -->
+	<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+		'links'=>$this->breadcrumbs,
+	)); ?>
+	
+	<?php echo $content; ?>
+			
+</div>
+
 <?php $this->endContent(); ?>

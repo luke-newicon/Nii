@@ -25,6 +25,8 @@
 	'id'=>'contactForm',
 	'action'=>array('/crm/index/editContact','cid'=>$c->id()),
 	'enableAjaxValidation'=>true,
+	'clientOptions'=>array(
+	'validateOnSubmit'=>true),
 )); ?>
 <?php // echo $form->errorSummary($c); ?>
 <div id="editUserForm" class="flashy">
@@ -39,7 +41,10 @@
 				<?php if($c && $c->type == CrmContact::TYPE_COMPANY): ?>
 				<div class="inputBox multiInput">
 					<div class="noHighlight noBorder">
-						<?php echo $form->textField($c,'company',array('class'=>'input')); ?>
+						<div class="inputBox">
+							<?php echo $form->textField($c,'company',array('class'=>'input')); ?>
+							<?php echo $form->error($c,'company'); ?>
+						</div>
 					</div>
 				</div>
 				<?php else: ?>
@@ -53,6 +58,7 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'first_name',array('class'=>'input')); ?>
+									<?php echo $form->error($c,'first_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -60,6 +66,7 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'last_name',array('class'=>'input')); ?>
+									<?php echo $form->error($c,'last_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -69,6 +76,7 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'company',array('class'=>'input')); ?>
+									<?php echo $form->error($c,'company'); ?>
 								</div>
 							</div>
 						</div>
@@ -85,10 +93,10 @@
 		</div>
 		<?php if(count($c->emails)): ?>
 			<?php foreach($c->emails as $i=>$e): ?>
-				<?php $this->render('_edit-contact-email',array('e'=>$e, 'i'=>$i)); ?>
+				<?php $this->renderPartial('_edit-contact-email',array('e'=>$e, 'i'=>$i, 'form'=>$form)); ?>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<?php $this->render('_edit-contact-email',array('e'=>new CrmEmail, 'i'=>0)); ?>
+			<?php $this->renderPartial('_edit-contact-email',array('e'=>new CrmEmail, 'i'=>0, 'form'=>$form)); ?>
 		<?php endif; ?>
 	</div>
 	<div class="formFieldState">
@@ -98,10 +106,10 @@
 		</div>
 		<?php if(count($c->phones)): ?>
 			<?php foreach($c->phones as $p): ?>
-				<?php $this->render('_edit-contact-phone',array('p'=>$p, 'i'=>$i)); ?>
+				<?php $this->renderPartial('_edit-contact-phone',array('p'=>$p, 'i'=>$i)); ?>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<?php $this->render('_edit-contact-phone',array('p'=>new CrmPhone, 'i'=>0)); ?>
+			<?php $this->renderPartial('_edit-contact-phone',array('p'=>new CrmPhone, 'i'=>0)); ?>
 		<?php endif; ?>
 	</div>
 	
@@ -112,10 +120,10 @@
 		</div>
 		<?php if(count($c->websites)): ?>
 			<?php foreach($c->websites as $w): ?>
-				<?php $this->render('_edit-contact-website',array('w'=>$w, 'i'=>$i)); ?>
+				<?php $this->renderPartial('_edit-contact-website',array('w'=>$w, 'i'=>$i)); ?>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<?php $this->render('_edit-contact-website',array('w'=>new CrmWebsite, 'i'=>0)); ?>
+			<?php $this->renderPartial('_edit-contact-website',array('w'=>new CrmWebsite, 'i'=>0)); ?>
 		<?php endif; ?>
 	</div>
 	
@@ -126,13 +134,16 @@
 		</div>
 		<?php if(count($c->addresses)): ?>
 			<?php foreach($c->addresses as $a): ?>
-				<?php $this->render('_edit-contact-address',array('a'=>$a, 'i'=>$i)); ?>
+				<?php $this->renderPartial('_edit-contact-address',array('a'=>$a, 'i'=>$i)); ?>
 			<?php endforeach; ?>
 		<?php else: ?>
-			<?php $this->render('_edit-contact-address',array('a'=>new CrmAddress, 'i'=>0)); ?>
+			<?php $this->renderPartial('_edit-contact-address',array('a'=>new CrmAddress, 'i'=>0)); ?>
 		<?php endif; ?>
 	</div>
+	
 </div>
+
+
 <div id="title" class="popmenu ui-corner-all">
 	<ul>
 		<li><a href="#">Mr</a></li>
@@ -172,19 +183,94 @@
 <script type="text/javascript">
 $(function(){
 	$('#general_first_name').focus();
-	$('#general_company').autocomplete({
-		minLength: 2,
-		source:'crm/index/lookup-company',
-		select: function( event, ui ) {
-		
-		}
-	}).data( "autocomplete" )._renderItem = function( ul, item ) {
-		return $( "<li></li>" )
-		.data("item.autocomplete", item )
-		.append('<a>'+item.label+'</a>')
-		.appendTo( ul );
-	}
+//	$('#general_company').autocomplete({
+//		minLength: 2,
+//		source:'crm/index/lookup-company',
+//		select: function( event, ui ) {
+//		
+//		}
+//	}).data( "autocomplete" )._renderItem = function( ul, item ) {
+//		return $( "<li></li>" )
+//		.data("item.autocomplete", item )
+//		.append('<a>'+item.label+'</a>')
+//		.appendTo( ul );
+//	}
 });
 
+/**
+ * Requires jquery UI for position
+ */
+;(function($){
+	var methods = {
+		init : function(options) {
+			return this.each(function(){
+				var $btn = $(this);
+         		var $menu = $($btn.attr('href'));
+             	methods.attachOpenMenu($btn, $menu);
+			});
+		},
+		attachOpenMenu:function($btn, $menu){
+			$menu.unbind('.dropButton');
+			$btn.unbind().one('click.dropButton',function(){
+				$btn.addClass('down');
+				$menu.click(function(e) {
+					e.stopPropagation();
+				}).slideDown(200, function() {
+					$(document).one('click.dropButton',function(){
+						methods.closeMenu($btn, $menu);
+					});
+				}).position({my:"left top",at:"left bottom",of:$btn});
+				//if($menu.width() < $btn.parent().width())
+					//$menu.css('width',$btn.parent().width());
+				// Highlight the parent fieldBlock when button slelected
+				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
+				if($blocks.length != 0)
+					$blocks.addClass('focus');
+				$menu.delegate('li a','click.dropButton',function(){
+					$btn.html($(this).html());
+					methods.closeMenu($btn, $menu);
+					$btn.next('input:hidden').val($(this).html());
+					$b = $btn.closest('.formFieldBlock').find('.formGuide');
+					$g = $b.find('.formGuide');
+					if($g.length==0)
+						$g = $('<span class="formGuide"></span>').appendTo($b);
+					$g.html($(this).attr('title'));
+					return false;
+         		});
+				return false;
+			});
+		},
+		closeMenu : function($btn, $menu){
+			// should be able to figure this out?
+			$(window).unbind('.dropButton');
+			$menu.hide(100);
+			methods.attachOpenMenu($btn.removeClass('down'), $menu);
+			var $block = $btn.parents('.formFieldBlock,.formFieldState');
+			if($block.length != 0)
+				$block.removeClass('focus');
+		},
+		destroy : function() {
+			return this.each(function(){
+				var $this = $(this),
+				data = $this.data('dropButton');
+				// Namespacing FTW
+				$(window).unbind('.dropButton');
+				data.dropButton.remove();
+				$this.removeData('dropButton');
+			});
+		}
+	};
+
+	$.fn.dropButton = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
+		}
+	};
+
+})(jQuery);
 
 </script>

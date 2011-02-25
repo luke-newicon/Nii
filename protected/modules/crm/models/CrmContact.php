@@ -18,11 +18,12 @@
  * @property phones[] $CrmPhone
  * @property websites[] $CrmWebsite
  */
-class CrmContact extends NiiActiveRecord
+class CrmContact extends NActiveRecord
 {
 
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
+	const TYPE_USER = 'USER';
 
 	public function init(){
 
@@ -291,6 +292,10 @@ class CrmContact extends NiiActiveRecord
 			'companies'=>array(
 				'condition'=>'type=:company',
 				'params'=>array(':company'=>self::TYPE_COMPANY)
+			),
+			'users'=>array(
+				'condition'=>'type=:users',
+				'params'=>array(':users'=>self::TYPE_USER)
 			)
 		);
 	}
@@ -317,18 +322,25 @@ class CrmContact extends NiiActiveRecord
 		}else{
 			$col1='last_name'; $col2='first_name';
 		}
-		$p = array(':t'=>"%$term%");
+		$p = array(':t0'=>"%$term%");
 		if(strpos($term, ' ') === false) {
-			$q = "($col1 like :t or $col2 like :t)";
+			$q = "($col1 like :t0 or $col2 like :t0)";
 		} else {
 			// as soon as there is a space assume firstname *space* lastname
 			$name = explode(' ', $term);
-			$q = "$col1 like ? :t1";
-			$q .= array_key_exists(1, $name) ? " or $col2 LIKE :t2" : '';
+			$t1 = trim($name[0]); 
+			$q = "$col1 like :t1";
+			$p[':t1'] = "%$t1%";
+
+			if(array_key_exists(1, $name)){
+				$t2 = trim($name[1]);
+				$q .=  " and $col2 LIKE :t2";
+				$p[':t2'] = "%$t2%";
+			}
+			
 			$q = "($q) ";
-			$p = array_merge($p, array(':t1'=>"%{$name[0]}%",':t2'=>"%$name[1]%"));
 		}
-		$q .= " or company like :t";
+		$q .= " or company like :t0";
 
 		$this->getDbCriteria()->mergeWith(array(
 			'condition'=>$q,
@@ -344,6 +356,8 @@ class CrmContact extends NiiActiveRecord
 			return $this->people();
 		if($group=='companies')
 			return $this->companies();
+		if($group=='users')
+			return $this->users();
 		return $this;
 	}
 	

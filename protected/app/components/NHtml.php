@@ -65,6 +65,7 @@ class NHtml extends CHtml
 			$htmlOptions['class'] = $hilightClass;
 		$search = preg_quote($searchTerm, '/');
 		return preg_replace("/($search)/i", '<span '.CHtml::renderAttributes($htmlOptions).'>$1</span>', $textToHilight);
+		
 	}
 
 }

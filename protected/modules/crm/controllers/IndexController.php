@@ -1,10 +1,6 @@
 <?php
-class IndexController extends NiiController
+class IndexController extends NController
 {
-
-	public function init() {
-		// Only logged in people can see pages within this file.
-	}
 
 	public function actionIndex() {
 		$contacts = CrmContact::model()->orderByName()->findAll();
@@ -21,6 +17,38 @@ class IndexController extends NiiController
 	}
 
 	
+	
+	public function validate($models){
+		$result=array();
+		if(!is_array($models))
+			$models=array($models);
+		foreach($models as $model)
+		{
+			$modelName = get_class($model);
+			if(isset($_POST[$modelName])){
+				if(isset($_POST[$modelName][0])){
+					// tabular input
+					foreach($_POST[$modelName] as $i=>$post){
+						$model = new $modelName;
+						$model->attributes=$_POST[$modelName][$i];
+						$model->validate();
+						foreach($model->getErrors() as $attribute=>$errors)
+							$result[CHtml::activeId($model,"[$i]$attribute")]=$errors;
+					}
+					
+				}else{
+					$model->attributes=$_POST[$modelName];
+				}
+			}
+			$model->validate();
+			foreach($model->getErrors() as $attribute=>$errors)
+				$result[CHtml::activeId($model,$attribute)]=$errors;
+		}
+		return json_encode($result);
+	}
+	
+	
+	
 	/**
 	 * Handles Add and Edit form actions
 	 *
@@ -31,6 +59,14 @@ class IndexController extends NiiController
 	 * @return string json array
 	 */
 	public function actionEditContact($cid=null) {
+		
+		
+		if(isset($_POST['ajax']) && $_POST['ajax'] == 'contactForm'){
+			$c = new CrmContact;
+			$e = new CrmEmail;
+			echo $this->validate(array($c, $e));
+			Yii::app()->end();
+		}
 		
 		$card = false;
 		$html = false;
@@ -46,9 +82,10 @@ class IndexController extends NiiController
 		
 		$e = CrmEmail::model()->saveMany(NData::post('CrmEmail',array()), $c->id());
 		$p = CrmPhone::model()->saveMany(NData::post('CrmPhone',array()), $c->id());
-		$a = CrmAddress::model()->saveMany(NData::post('CrmPhone',array()), $c->id());
+		$a = CrmAddress::model()->saveMany(NData::post('CrmAddress',array()), $c->id());
+		$w = CrmWebsite::model()->saveMany(NData::post('CrmWebsite',array()), $c->id());
 
-		$valid = ($e && $p && $a && $c->validate());
+		$valid = ($e && $p && $a && $w && $c->validate());
 		if ($valid) {
 			$card = $this->widget('crm.components.CrmCard', array('contact' => $c),true);
 		} else {
@@ -126,5 +163,10 @@ class IndexController extends NiiController
 			$fbId = str_replace(array('http://www.facebook.com/','profile.php?id='),'',$profileLink);
 			echo $fbId;
 		}
+	}
+	
+	public function actionTest(){
+		$contact = new CrmContact;
+		$this->render('test',array('contact'=>$contact));
 	}
 }

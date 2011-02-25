@@ -26,7 +26,7 @@
  *
  * //general code example
  * //create an uploader object
- * $up = new Nworx_Core_Model_Uploader();
+ * $up = new Uploader();
  * //call the save file method to save files passed by the $_FILES variable
  * $id = $up->saveFile();
  * //check successful upload
@@ -44,7 +44,7 @@
  * @author steve
  *
  */
-class Nworx_Core_Model_Uploader
+class Uploader extends CApplicationComponent
 {
 	private $_fileTransObj;
 	private $_fileId;

@@ -1,6 +1,6 @@
 <?php
 /**
- * ProfileController class file.
+ * Dashboard class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,14 +9,17 @@
  */
 
 /**
- * Description of ProfileController
+ * Description of Dashboard
  *
  * @author steve
  */
-class ProfileController extends NController
+class DashboardController extends NController
 {
+	
+	
 
     public function actionIndex(){
-		$this->render('/profile/index');
+		$u = User::model()->findByPk(Yii::app()->user->getId());
+		$this->render('/dashboard/index',array('u'=>$u));
 	}
 }

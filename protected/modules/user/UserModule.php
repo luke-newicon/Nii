@@ -8,7 +8,7 @@
  * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
  */
 
-class UserModule extends CWebModule
+class UserModule extends NWebModule
 {
 	/**
 	 * @var int
@@ -30,7 +30,7 @@ class UserModule extends CWebModule
 	
 	/**
 	 * @var boolean
-	 * @desc allow auth for is not active user
+	 * @desc allow auth for users that are not active
 	 */
 	public $loginNotActive=false;
 	
@@ -48,11 +48,11 @@ class UserModule extends CWebModule
 	
 	public $registrationUrl = array("/user/registration");
 	public $recoveryUrl = array("/user/recovery/recovery");
-	public $loginUrl = array("/user/login");
-	public $logoutUrl = array("/user/logout");
+	public $loginUrl = array("/user/index/login");
+	public $logoutUrl = array("/user/index/logout");
 	public $profileUrl = array("/user/profile");
-	public $returnUrl = array("/user/profile");
-	public $returnLogoutUrl = array("/user/login");
+	public $returnUrl = array("/user/dashboard");
+	public $returnLogoutUrl = array("/user/index/login");
 	
 	public $fieldsMessage = '';
 	
@@ -80,9 +80,9 @@ class UserModule extends CWebModule
 	//public $cacheEnable = false;
 	
 	public $tableUsers = '{{users}}';
-	public $tableProfiles = '{{profiles}}';
-	public $tableProfileFields = '{{profiles_fields}}';
-	
+	public $tableProfiles = '{{nii_crm__contact}}';
+
+
 	static private $_user;
 	static private $_admin;
 	static private $_admins;

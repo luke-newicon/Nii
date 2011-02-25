@@ -26,4 +26,15 @@ class NData
 		return Yii::app()->request->getPost($name, $default);
 	}
 
+	public static function base64UrlEncode($data)
+	{
+		return strtr(rtrim(base64_encode($data), '='), '+/', '-_');
+	}
+
+	public static function base64UrlDecode($base64)
+	{
+		return base64_decode(strtr($base64, '-_', '+/'));
+	}
+
+
 }

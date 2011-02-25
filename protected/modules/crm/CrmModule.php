@@ -1,8 +1,8 @@
 <?php
 
-class CrmModule extends CWebModule
+class CrmModule extends NWebModule
 {
-	public $defaultController = 'index';
+	
 
 	/**
 	 * Display contact name: First, Last
@@ -37,6 +37,9 @@ class CrmModule extends CWebModule
 			'crm.models.*',
 			'crm.components.*',
 		));
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem('Crm', array('/crm/index/index'));
+
 	}
 
 	/**

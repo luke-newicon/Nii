@@ -11,8 +11,9 @@
  * @property integer $lastvisit
  * @property integer $superuser
  * @property integer $status
+ * @property integer $contact_id
  */
-class User extends CActiveRecord
+class User extends NActiveRecord
 {
 	const STATUS_NOACTIVE=0;
 	const STATUS_ACTIVE=1;
@@ -73,7 +74,7 @@ class User extends CActiveRecord
 	public function relations()
 	{
 		$relations = array(
-			'profile'=>array(self::HAS_ONE, 'Profile', 'user_id'),
+			'profile'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
 		);
 		if (isset(Yii::app()->getModule('user')->relations)) $relations = array_merge($relations,Yii::app()->getModule('user')->relations);
 		return $relations;
@@ -144,6 +145,29 @@ class User extends CActiveRecord
 		else
 			return isset($_items[$type]) ? $_items[$type] : false;
 	}
+
+	/**
+	 *
+	 * @param string $password
+	 * @return boolean
+	 */
+	public function checkPassword($checkPassword){
+		// uses a salt so that two people with the same password will have
+		// different encrypted password values
+		// creates a unique salt from each password
+		$salt = substr($this->password, 0, CRYPT_SALT_LENGTH);
+		return ($this->password == crypt($checkPassword, $salt));
+	}
+
+	public function  beforeSave() {
+		if ($this->getScenario()=='insert'){
+			$this->password = crypt($this->password);
+			$this->activekey=crypt(microtime().$this->password);
+		}
+		$this->createtime=time();
+		$this->lastvisit=time();
+		return parent::beforeSave();
+	}
 	
 	/**
 	 * Retrieves the list of Users based on the current search/filter conditions.
@@ -159,4 +183,10 @@ class User extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+	public static function getCurrentUser(){
+		return User::model()->findByPk(Yii::app()->user->getId());
+	}
+
+
 }
