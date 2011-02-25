@@ -1,6 +1,6 @@
 <?php
 /**
- * NiiWebModule class file.
+ * NWebModule class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,11 +9,11 @@
  */
 
 /**
- * Description of NiiWebModule
+ * Description of NWebModule
  *
  * @author steve
  */
-class NiiWebModule extends CWebModule
+class NWebModule extends CWebModule
 {
     public $defaultController = 'index';
 	

@@ -1,6 +1,6 @@
 <?php
 
-class DetailController extends NiiController
+class DetailController extends NController
 {
 	public function actionIndex($id=null){
 		if(!$c = CrmContact::model()->findByPk($id))

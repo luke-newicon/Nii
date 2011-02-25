@@ -9,7 +9,8 @@
 				</div>
 				<div class="lastUnit leftBorderOnly cornerLeftOff">
 					<div class="inputBox">
-						<?php echo CHtml::activeTextField($e, "[$i]address",array('class'=>'input')); ?>
+						<?php echo $form->textField($e, "[$i]address",array('class'=>'input')); ?>
+						<?php echo $form->error($e, "[$i]address"); ?>
 					</div>
 				</div>
 			</div>

@@ -291,7 +291,6 @@ class CActiveForm extends CWidget
 		echo CHtml::endForm();
 		
 		
-		dp($this->_attributes);
 		if((!$this->enableAjaxValidation || empty($this->_attributes)))
 		{
 			if($this->focus!==null)
@@ -301,7 +300,6 @@ class CActiveForm extends CWidget
 						$('".$this->focus."').focus();
 				");
 			}
-			echo 'helloo>>';
 			return;
 		}
 
@@ -319,7 +317,6 @@ class CActiveForm extends CWidget
 
 		$options=CJavaScript::encode($options);
 		Yii::app()->clientScript->registerCoreScript('yiiactiveform');
-		echo 'out put script god dam!';
 		$id=$this->id;
 		Yii::app()->clientScript->registerScript(__CLASS__.'#'.$id,"\$('#$id').yiiactiveform($options);");
 	}

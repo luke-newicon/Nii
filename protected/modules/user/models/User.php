@@ -11,8 +11,9 @@
  * @property integer $lastvisit
  * @property integer $superuser
  * @property integer $status
+ * @property integer $contact_id
  */
-class User extends NiiActiveRecord
+class User extends NActiveRecord
 {
 	const STATUS_NOACTIVE=0;
 	const STATUS_ACTIVE=1;
@@ -73,7 +74,7 @@ class User extends NiiActiveRecord
 	public function relations()
 	{
 		$relations = array(
-			'profile'=>array(self::HAS_ONE, 'Profile', 'user_id'),
+			'profile'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
 		);
 		if (isset(Yii::app()->getModule('user')->relations)) $relations = array_merge($relations,Yii::app()->getModule('user')->relations);
 		return $relations;

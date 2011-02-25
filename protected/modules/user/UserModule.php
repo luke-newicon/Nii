@@ -8,7 +8,7 @@
  * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
  */
 
-class UserModule extends NiiWebModule
+class UserModule extends NWebModule
 {
 	/**
 	 * @var int

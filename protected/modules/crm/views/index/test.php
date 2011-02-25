@@ -7,15 +7,30 @@
 ?>
 
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'drtgsrh',
-	'enableAjaxValidation'=>true,
-	'htmlOptions' => array('enctype'=>'multipart/form-data'),
-)); ?>
+<from name="myform">
+    
+    <input id="contact_0_name" />
+    <input id="contact_1_name" />
+    
+    
+</form>
+    
+<script>
+$(function() {
+    var attrs = [];
+    alert('oi')
+        alert($('form').attr('name'))
+    $('form').find('input').each(function(i, e) {
+        $el = $(e);
+        var modelName = $el.attr('id');
+        var patrn = '(.*)_[0-9]_(.*)';
+        var m = modelName.match(patrn);
 
-<?php echo $form->labelEx($contact,'first_name'); ?>
-<?php echo $form->textField($contact,'first_name'); ?>
-<?php echo $form->error($contact,'first_name'); ?>
-
-
-<?php $this->endWidget(); ?>
+        alert('oi')
+        if (m.length == 4) {
+            //attrs[i] = {'inputID':$el.attr('id'),'errorID':$el.attr('id')+'_em_','model':m[1],'name':m[3]};}
+        };
+    });
+})
+       
+</script>

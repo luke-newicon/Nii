@@ -18,7 +18,7 @@
  * @property phones[] $CrmPhone
  * @property websites[] $CrmWebsite
  */
-class CrmContact extends NiiActiveRecord
+class CrmContact extends NActiveRecord
 {
 
 	const TYPE_CONTACT = 'CONTACT';

@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class NiiActiveRecord extends CActiveRecord {
+class NActiveRecord extends CActiveRecord {
 	
 	
 	/**

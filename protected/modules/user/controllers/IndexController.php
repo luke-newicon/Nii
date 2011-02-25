@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NiiController
+class IndexController extends NController
 {
 	
 	/**

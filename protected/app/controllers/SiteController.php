@@ -1,6 +1,6 @@
 <?php
 
-class SiteController extends NiiController
+class SiteController extends NController
 {
 	/**
 	 * Declares class-based actions.

@@ -3,7 +3,7 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class NiiController extends CController
+class NController extends CController
 {
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
@@ -27,6 +27,7 @@ class NiiController extends CController
 		parent::__construct($id, $module);
 		if(Yii::app()->getRequest()->getIsAjaxRequest()){
 			$this->layout = '//layouts/ajax.php';
+			//Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		}else{
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');

@@ -14,10 +14,19 @@
  *
  * @author steve
  */
-class CrmContactForm extends CFormModel {
+class CrmContactForm extends CrmContact 
+{
 
-	public function somefun() {
+	public function rules(){
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
 		
+		return CMap::mergeArray(
+			array(
+				array('first_name, last_name, company', 'NOneRequiredValidator','message'=>'At least one is required')
+			),
+			parent::rules()
+		);
 	}
 
 }

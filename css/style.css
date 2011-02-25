@@ -1,8 +1,9 @@
 /* core application stylesheet */
 body{background:#fff url("../images/top-bg.png") repeat-x left -20px;}
 .head{}
-.bigHead{height:75px}
+.bigHead{height:78px}
 .page{position:relative;}
+.mainMenu{border-bottom:1px solid #d2d2d2;}
 
 .leftCol{width:150px;padding:10px;margin-right:10px;}
 .main{padding:10px;}

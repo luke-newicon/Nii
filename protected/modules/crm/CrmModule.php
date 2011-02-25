@@ -1,6 +1,6 @@
 <?php
 
-class CrmModule extends NiiWebModule
+class CrmModule extends NWebModule
 {
 	
 

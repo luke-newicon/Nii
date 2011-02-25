@@ -1,6 +1,6 @@
 <?php 
 
-Class ImportController extends NiiController
+Class ImportController extends NController
 {
 	public function actionKashflow(){
 		$ks = new KashCustomers();

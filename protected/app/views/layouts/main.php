@@ -44,7 +44,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="menu lightBar">		
+		<div class="menu lightBar mainMenu">		
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
 						array('label'=>'Home', 'url'=>array('/site/index')),
@@ -57,7 +57,7 @@
 					),
 				)); ?>
 				<?php $this->widget('zii.widgets.CMenu',array(
-					'items'=>NiiWebModule::$items,
+					'items'=>NWebModule::$items,
 				)); ?>
 		</div>
 	</div>

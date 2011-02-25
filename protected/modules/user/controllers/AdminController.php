@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends NiiController
+class AdminController extends NController
 {
 	public $defaultAction = 'admin';
 	
