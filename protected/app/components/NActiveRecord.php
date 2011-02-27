@@ -22,11 +22,11 @@ class NActiveRecord extends CActiveRecord {
 	 *
 	 * @return CDbCommand
 	 */
-	public function query(){
+	public function q(){
 		return Yii::app()->db->createCommand()->from($this->tableName());
 	}
 
-	public function querySelect($select='*'){
+	public function qSelect($select='*'){
 		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
 	}
 

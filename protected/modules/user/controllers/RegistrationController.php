@@ -83,9 +83,7 @@ class RegistrationController extends NController
 				}
 			}
 			$this->render('/user/registration',array('model'=>$model,'contact'=>$contact));
-		}
-		
-		
+		}		
 	}
 	
 	
@@ -97,9 +95,13 @@ class RegistrationController extends NController
 		$activekey = $_GET['activekey'];
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
-			if (isset($find)&&$find->status) {
+			if (isset($find) && $find->status==1) {
+				echo $email;
+				echo $find->status;
+				echo 'NOT THIS ONE!';
 			    $this->render('/user/message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
 			} elseif(isset($find->activekey) && $this->checkActivationKey ($find, $activekey)) {
+				echo 'doing this';
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
@@ -113,7 +115,7 @@ class RegistrationController extends NController
 	}
 	
 	public function actionTest(){
-		$u = User::model()->notsafe()->findByPk(2);
+		$u = User::model()->notsafe()->findByPk(4);
 		echo $this->makeActivationLink($u);
 	}
 	
@@ -140,7 +142,7 @@ class RegistrationController extends NController
 	{
 		// need to perform the same processing to the users key as the $urlKey
 		// recieved before it was sent
-		return (NData::base64UrlDecode($this->makeKeyPretty($u->activekey))==NData::base64UrlDecode($activekey));
+		return (NData::base64UrlDecode($this->makeKeyPretty($u->activekey))==NData::base64UrlDecode($urlKey));
 	}
 	
 	/**
