@@ -1,5 +1,11 @@
-<?php if($user = Yii::app()->getUser()): ?>
-
+<?php if($user->isGuest): ?>
+<?php $this->widget('zii.widgets.CMenu',array(
+	'items'=>array(
+		array('label'=>'Login', 'url'=>Yii::app()->getModule('user')->loginUrl),
+		array('label'=>'Register', 'url'=>Yii::app()->getModule('user')->registrationUrl),
+	)
+)); ?>
+guest
 <div class="media man" style="float:left;width:250px;">
 	<a href="<?php echo NHtml::url('/users/profile'); ?>">
 	<?php //echo $this->com('users/gravatar',array(
@@ -25,4 +31,5 @@
 	</div>
 </div>
 <?php else: ?>
+
 <?php endif; ?>

@@ -108,6 +108,10 @@ return array(
 		'cache' => array(
 			'class' => 'CFileCache',
 		),
+		
+		'viewRenderer'=>array(
+            'class'=>'CPradoViewRenderer',
+        ),
 	),
 
 	// application-level parameters that can be accessed

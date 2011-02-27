@@ -8,8 +8,6 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
 
-<!--	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />-->
-
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
@@ -26,21 +24,8 @@
 			<div class="title"><h2><?php echo CHtml::encode(Yii::app()->name); ?></h2></div>
 			<div class="loginMenu">
 				<div class="menu menuR">
-				<?php if(!Yii::app()->user->isGuest): ?>
-					<?php $login = $this->widget('user.components.UserLoginInfo'); ?>
-					<?php //$this->widget('zii.widgets.CMenu',array(
-						//'items'=>array(
-						//	array('label'=>'profile', 'url'=>array('users/profile'), 'template'=>$login),
-						//	array('label'=>'Sign out', 'url'=>array('users/index/logout'))
-						//)
-					//)); ?>
-				<?php else: ?>
-					<?php $this->widget('zii.widgets.CMenu',array(
-						'items'=>array(
-							array('label'=>'Sign in', 'url'=>'users/index/login')
-						)
-					)); ?>
-				<?php endif; ?>
+					<com:user.components.NLoginInfo/>
+					<?php $this->widget('user.components.NLoginInfo'); ?>
 				</div>
 			</div>
 		</div>
@@ -48,7 +33,6 @@
 				<?php $this->widget('zii.widgets.CMenu',array(
 					'items'=>array(
 						array('label'=>'Home', 'url'=>array('/site/index')),
-						array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
 						array('label'=>'Contact', 'url'=>array('/site/contact')),
 						array('url'=>Yii::app()->getModule('user')->loginUrl, 'label'=>"Login", 'visible'=>Yii::app()->user->isGuest),
 						array('url'=>Yii::app()->getModule('user')->registrationUrl, 'label'=>"Register", 'visible'=>Yii::app()->user->isGuest),

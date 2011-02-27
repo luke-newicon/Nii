@@ -14,9 +14,11 @@
  *
  * @author steve
  */
-class UserLoginInfo extends CWidget 
+class NLoginInfo extends CWidget 
 {
-	public function run(){
-		$this->render('user-login-info');
+	public $something;
+	public function run()
+	{
+		$this->render('login-info',array('user'=>Yii::app()->user));
 	}
 }

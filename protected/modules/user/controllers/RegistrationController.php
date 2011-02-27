@@ -43,7 +43,9 @@ class RegistrationController extends NController
 					$model->superuser=0;
 					$model->status=(($module->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
 					$contact->attributes = $_POST['CrmContact'];
+					$contact->type = CrmContact::TYPE_USER;
 					$contact->save();
+					
 					$model->contact_id = $contact->id;
 					$model->save();
 					if ($module->sendActivationMail) {
