@@ -84,6 +84,8 @@ class RegistrationController extends NController
 			}
 			$this->render('/user/registration',array('model'=>$model,'contact'=>$contact));
 		}
+		
+		
 	}
 	
 	
@@ -92,7 +94,7 @@ class RegistrationController extends NController
 	 */
 	public function actionActivation() {
 		$email = NData::base64UrlDecode($_GET['e']);
-		$activekey = NData::base64UrlDecode($_GET['activekey']);
+		$activekey = $_GET['activekey'];
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find)&&$find->status) {
@@ -122,11 +124,8 @@ class RegistrationController extends NController
 	 */
 	public function makeActivationLink(User $u)
 	{
-		// lets take only a few characters 
-		$ak = $this->makeKeyPretty($u->activekey);
-		$key = NData::base64UrlEncode($ak);
 		return $this->createAbsoluteUrl('/user/registration/activation',array(
-			"activekey" =>$key, 
+			"activekey" =>$this->makeKeyPretty($u->activekey), 
 			"e" => NData::base64UrlEncode($u->email)
 		));
 	}
@@ -141,7 +140,7 @@ class RegistrationController extends NController
 	{
 		// need to perform the same processing to the users key as the $urlKey
 		// recieved before it was sent
-		return ($this->makeKeyPretty($u->activekey)==$activekey);
+		return (NData::base64UrlDecode($this->makeKeyPretty($u->activekey))==NData::base64UrlDecode($activekey));
 	}
 	
 	/**
@@ -151,10 +150,11 @@ class RegistrationController extends NController
 	 */
 	public function makeKeyPretty($activeKey)
 	{
+		$ak = NData::base64UrlEncode($activeKey);
 		$compareKeyChars = array(1,5,2,7,3,9,11);
 		$key = '';
 		foreach($compareKeyChars as $index)
-			$key .= substr ($activeKey, $index, 1);
+			$key .= substr ($ak, $index, 1);
 		return $key;
 	}
 }
