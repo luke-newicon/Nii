@@ -110,6 +110,11 @@ class RegistrationController extends NController
 		}
 	}
 	
+	public function actionTest(){
+		$u = User::model()->notsafe()->findByPk(2);
+		echo $this->makeActivationLink($u);
+	}
+	
 	/**
 	 * returns the encoded activation key 
 	 * @param User $u
@@ -144,13 +149,12 @@ class RegistrationController extends NController
 	 * So lets only send over a few select characters from the key
 	 * @return type 
 	 */
-	public function makeKeyPretty()
+	public function makeKeyPretty($activeKey)
 	{
-		$keyLetrArr = str_split($u->activekey);
 		$compareKeyChars = array(1,5,2,7,3,9,11);
 		$key = '';
 		foreach($compareKeyChars as $index)
-			$key .= $keyLetrArr[$index];
+			$key .= substr ($activeKey, $index, 1);
 		return $key;
 	}
 }
