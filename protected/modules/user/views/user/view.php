@@ -14,19 +14,8 @@ $this->breadcrumbs=array(
 
 // For all users
 	$attributes = array(
-			'username',
+			'username','email'
 	);
-	
-	$profileFields=ProfileField::model()->forAll()->sort()->findAll();
-	if ($profileFields) {
-		foreach($profileFields as $field) {
-			array_push($attributes,array(
-					'label' => UserModule::t($field->title),
-					'name' => $field->varname,
-					'value' => $model->profile->getAttribute($field->varname),
-				));
-		}
-	}
 	array_push($attributes,
 		array(
 			'name' => 'createtime',

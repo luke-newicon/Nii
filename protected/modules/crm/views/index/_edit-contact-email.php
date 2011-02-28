@@ -10,11 +10,11 @@
 				<div class="lastUnit leftBorderOnly cornerLeftOff">
 					<div class="inputBox">
 						<?php echo $form->textField($e, "[$i]address",array('class'=>'input')); ?>
-						<?php echo $form->error($e, "[$i]address"); ?>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" tipsy-gravity="w" title="Remove"></a></div>
+		<?php echo $form->error($e, "[$i]address"); ?>
 	</div>
 </div>

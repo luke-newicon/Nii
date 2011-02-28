@@ -71,7 +71,6 @@ class AdminController extends NController
 	public function actionCreate()
 	{
 		$model=new User;
-		$profile=new Profile;
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
@@ -101,7 +100,6 @@ class AdminController extends NController
 	public function actionUpdate()
 	{
 		$model=$this->loadModel();
-		$profile=$model->profile;
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];

@@ -359,9 +359,13 @@ $(function(){
 		// remove values
 		$c.find('input,textarea').val('');
 		var num = $b.find('.replicate').length;
-		$c.find('[name]').each(function(i,el){
-			$(el).attr('name',$(el).attr('name').replace('[0]', '['+num+']'));
-			$(el).attr('id', $(el).attr('id').replace('_0_', '_'+num+'_'));
+		$c.find('[id*="_0_"]').each(function(i,el){
+			var $el = $(el);
+			if($el.attr('name') !== undefined)
+				$el.attr('name',$el.attr('name').replace('[0]', '['+num+']'));
+			$el.attr('id', $el.attr('id').replace('_0_', '_'+num+'_'));
+			if($el.has('.errorMessage'))
+				$el.html('');
 		});
 		$c.find('[for]').each(function(i,el){
 			$(el).attr('for',$(el).attr('for').replace('_0_', '_'+num+'_'));

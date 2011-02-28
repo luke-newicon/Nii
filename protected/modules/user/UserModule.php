@@ -103,6 +103,8 @@ class UserModule extends NWebModule
 			'user.models.*',
 			'user.components.*',
 		));
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem('Users', array('/user/index/index'));
 	}
 	
 	public function getBehaviorsFor($componentName){

@@ -20,18 +20,6 @@ $this->breadcrumbs=array(
 		'username',
 	);
 	
-	$profileFields=ProfileField::model()->forOwner()->sort()->findAll();
-	if ($profileFields) {
-		foreach($profileFields as $field) {
-			array_push($attributes,array(
-					'label' => UserModule::t($field->title),
-					'name' => $field->varname,
-					'type'=>'raw',
-					'value' => (($field->widgetView($model->profile))?$field->widgetView($model->profile):(($field->range)?Profile::range($field->range,$model->profile->getAttribute($field->varname)):$model->profile->getAttribute($field->varname))),
-				));
-		}
-	}
-	
 	array_push($attributes,
 		'password',
 		'email',
