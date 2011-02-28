@@ -16,9 +16,12 @@
  */
 class NLoginInfo extends CWidget 
 {
-	public $something;
+
+	public $size = 25;
+	
 	public function run()
 	{
-		$this->render('login-info',array('user'=>Yii::app()->user));
+		$contact = Yii::app()->user->contact;
+		$this->render('login-info',array('user'=>Yii::app()->user,'contact'=>$contact));
 	}
 }

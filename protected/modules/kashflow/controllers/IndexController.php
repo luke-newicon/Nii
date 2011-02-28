@@ -1,6 +1,6 @@
 <?php 
 
-Class IndexController extends NiiController
+Class IndexController extends NController
 {
 	public function actionIndex(){
 		$this->render('index');

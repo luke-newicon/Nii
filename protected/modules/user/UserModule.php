@@ -46,11 +46,11 @@ class UserModule extends NWebModule
 	 */
 	public $autoLogin=true;
 	
-	public $registrationUrl = array("/user/registration");
+	public $registrationUrl = array("/user/registration/index");
 	public $recoveryUrl = array("/user/recovery/recovery");
 	public $loginUrl = array("/user/index/login");
 	public $logoutUrl = array("/user/index/logout");
-	public $profileUrl = array("/user/profile");
+	public $profileUrl = array("/user/profile/index");
 	public $returnUrl = array("/user/dashboard");
 	public $returnLogoutUrl = array("/user/index/login");
 	

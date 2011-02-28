@@ -1,5 +1,5 @@
 <?php 
-Class QuotesController extends NiiController
+Class QuotesController extends NController
 {
 	public function actionIndex(){
 		$quotes = new KashQuotes();

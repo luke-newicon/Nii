@@ -18,6 +18,8 @@ class NWebUser extends CWebUser {
 
 	private $_user;
 	
+	private $_contact;
+	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
 	 * If no user is logged in then this function will return null
@@ -29,7 +31,21 @@ class NWebUser extends CWebUser {
 		if($this->_user === null){
 			$this->_user = User::model()->findByPk($this->getId());
 		}
-		return $_user;
+		return $this->_user;
+	}
+	
+	/**
+	 * returns the related contact CrmContact record if it exists, or null if it does not.
+	 * 
+	 * @return CrmContact | null
+	 */
+	public function getContact(){
+		if($this->getRecord() === null)
+			return null;
+		if($this->_contact===null){
+			$this->_contact = $this->getRecord()->contact;
+		}
+		return $this->_contact;
 	}
 
 }

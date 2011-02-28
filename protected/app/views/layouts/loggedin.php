@@ -8,6 +8,7 @@
 	<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/loggedin.css" />
 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
@@ -43,7 +44,7 @@
 		</div>
 	</div>
 	<div class="body"><!-- Body -->
-		<?php echo $content; ?>
+		<div class="main"><?php echo $content; ?></div>		
 	</div>
 	<div class="foot"><?php // echo $this->renderPartial('core/_footer'); ?></div>
 </div>

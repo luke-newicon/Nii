@@ -17,6 +17,8 @@ class ProfileController extends NController
 {
 
     public function actionIndex(){
-		$this->render('/profile/index');
+		// get the contact profile record.  
+		// For profiles to be enabled you have to have the crm module installed. 
+		$this->render('/profile/index',array('contact'=>Yii::app()->user->contact));
 	}
 }

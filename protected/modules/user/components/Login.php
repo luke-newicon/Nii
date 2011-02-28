@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Dashboard class file.
+ * Login class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,16 +10,14 @@
  */
 
 /**
- * Description of Dashboard
+ * Description of Login
  *
  * @author steve
  */
-class DashboardController extends NController
-{
-	
-	
+class Login {
 
-    public function actionIndex(){
-		$this->render('/dashboard/index',array('u'=>Yii::app()->user->record));
+	public function run() {
+		
 	}
+
 }

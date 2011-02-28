@@ -99,7 +99,7 @@ class CrmEmail extends CrmActiveRecord
 
 	public static function getEmailLabels(){
 		return self::labelArray(
-			self::model()->query()->selectDistinct('label')->queryAll(),
+			self::model()->cmd()->selectDistinct('label')->queryAll(),
 			array(
 				'Home'=>array('title'=>''),
 				'Work'=>array('title'=>''),

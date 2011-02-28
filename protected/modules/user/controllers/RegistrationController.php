@@ -2,7 +2,7 @@
 
 class RegistrationController extends NController
 {
-	public $defaultAction = 'registration';
+	public $defaultAction = 'index';
 	
 
 
@@ -21,7 +21,7 @@ class RegistrationController extends NController
 	/**
 	 * Registration user
 	 */
-	public function actionRegistration() {
+	public function actionIndex() {
 		$model = new RegistrationForm;
 		$contact = new CrmContact;
 		$module = $this->getModule();
@@ -42,12 +42,14 @@ class RegistrationController extends NController
 					$model->createtime=time();
 					$model->superuser=0;
 					$model->status=(($module->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
+					$model->save();
+					
+					// if crm module installed
 					$contact->attributes = $_POST['CrmContact'];
 					$contact->type = CrmContact::TYPE_USER;
+					$contact->user_id = $model->id;
 					$contact->save();
 					
-					$model->contact_id = $contact->id;
-					$model->save();
 					if ($module->sendActivationMail) {
 						$activationUrl = $this->makeActivationLink($model);
 						UserModule::sendMail($model->email,
@@ -57,8 +59,8 @@ class RegistrationController extends NController
 								array('{activation_url}'=>$activationUrl)));
 					}
 
-					if (($module->loginNotActive ||($module->activeAfterRegister && $module->sendActivationMail==false))
-						&&$module->autoLogin) {
+					// if users can login imediately after registration
+					if (($module->loginNotActive ||($module->activeAfterRegister && $module->sendActivationMail==false)) && $module->autoLogin) {
 						$identity=new UserIdentity($model->username,$soucePassword);
 						$identity->authenticate();
 						Yii::app()->user->login($identity,0);

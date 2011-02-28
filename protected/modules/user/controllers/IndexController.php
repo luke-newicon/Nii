@@ -17,7 +17,7 @@ class IndexController extends NController
 		));
 	}
 
-		/**
+	/**
 	 * Displays the login page
 	 */
 	public function actionLogin()

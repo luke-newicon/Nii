@@ -11,7 +11,6 @@
  * @property integer $lastvisit
  * @property integer $superuser
  * @property integer $status
- * @property integer $contact_id
  */
 class User extends NActiveRecord
 {
@@ -74,7 +73,7 @@ class User extends NActiveRecord
 	public function relations()
 	{
 		$relations = array(
-			'profile'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
+			'contact'=>array(self::HAS_ONE, 'CrmContact', 'user_id'),
 		);
 		if (isset(Yii::app()->getModule('user')->relations)) $relations = array_merge($relations,Yii::app()->getModule('user')->relations);
 		return $relations;

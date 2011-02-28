@@ -31,9 +31,12 @@ CREATE TABLE IF NOT EXISTS `nii_crm__contact` (
   `company` varchar(250) NOT NULL,
   `company_id` int(11) unsigned NOT NULL,
   `type` enum('CONTACT','COMPANY','USER') NOT NULL DEFAULT 'CONTACT',
+  `user_id` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `company_id` (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `company_id` (`company_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=96 ;
+
 
 -- --------------------------------------------------------
 
