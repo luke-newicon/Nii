@@ -65,9 +65,9 @@ return array(
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
-				'http://<company:\w+>.<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'http://<company:\w+>.<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'http://<company:\w+>.<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				'http://<company:\w+>.newicon.org/<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				'http://<company:\w+>.newicon.org/<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'http://<company:\w+>.newicon.org/<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 			'showScriptName'=>false,
 		),
