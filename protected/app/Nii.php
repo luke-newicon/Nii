@@ -15,11 +15,20 @@
 class Nii extends CApplicationComponent
 {
 	public function init(){
+		
+		
+		// set up application context:
+		echo Yii::app()->request->getParam('company');
+		
+		// initialise modules
 		$exclude = array('gii');
 		foreach(Yii::app()->getModules() as $module=>$v){
 			if (in_array($module, $exclude)) continue;
 			Yii::app()->getModule($module);
 		}
+		
+		
+		
 	}
 
 }
