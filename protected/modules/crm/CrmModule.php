@@ -54,6 +54,7 @@ class CrmModule extends NWebModule
 
 
 	public function install(){
+		
 //		Newicon_Db_Table::install('Nworx_Crm_Model_Contacts');
 //		Newicon_Db_Table::install('Nworx_Crm_Model_Emails');
 //		Newicon_Db_Table::install('Nworx_Crm_Model_Phones');
