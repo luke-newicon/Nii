@@ -35,7 +35,7 @@ Class ImportController extends NController
 			$c->saveWebsite($k->Website,'Website');
 			$addy = (empty($k->Address1)?'':$k->Address1."\n").(empty($k->Address2)?'':$k->Address2."\n")
 				.(empty($k->Address3)?'':$k->Address3."\n").(empty($k->Address4)?'':$k->Address4);
-			$c->saveAddress($addy, '',$k->Postcode,'','UK');
+			$c->saveAddress(array('lines'=>$addy,'postcode'=>$k->Postcode,'country_id'=>'UK'));
 			
 		}
 	}

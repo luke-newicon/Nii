@@ -33,5 +33,39 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
   KEY `status` (`status`),
-  KEY `superuser` (`superuser`),
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `superuser` (`superuser`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+
+drop table if exists auth_assignment;
+drop table if exists auth_item_child;
+drop table if exists auth_item;
+
+create table auth_item
+(
+   name                 varchar(64) not null,
+   type                 integer not null,
+   description          text,
+   bizrule              text,
+   data                 text,
+   primary key (name)
+);
+
+create table auth_item_child
+(
+   parent               varchar(64) not null,
+   child                varchar(64) not null,
+   primary key (parent,child),
+   foreign key (parent) references auth_item (name) on delete cascade on update cascade,
+   foreign key (child) references auth_item (name) on delete cascade on update cascade
+);
+
+create table auth_assignment
+(
+   itemname             varchar(64) not null,
+   userid               varchar(64) not null,
+   bizrule              text,
+   data                 text,
+   primary key (itemname,userid),
+   foreign key (itemname) references auth_item (name) on delete cascade on update cascade
+);

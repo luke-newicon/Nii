@@ -46,7 +46,12 @@ class NController extends CController
 		}
 	}
 
-
+	public function filters()
+    {
+        return array(
+            'accessControl',
+        );
+    }
 	
 
 }

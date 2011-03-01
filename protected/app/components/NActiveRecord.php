@@ -29,6 +29,5 @@ class NActiveRecord extends CActiveRecord {
 	public function cmdSelect($select='*'){
 		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
 	}
-
-
+	
 }

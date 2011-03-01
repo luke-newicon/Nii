@@ -38,7 +38,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-		return parent::model($className);
+		return parent::model($className);;
 	}
 
 	/**
@@ -46,7 +46,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__contact}}';
+		return "{{nii_crm__contact}}";//'{{nii_crm__contact}}';
 	}
 
 	/**
@@ -479,4 +479,26 @@ class CrmContact extends NActiveRecord
 			return empty($this->emails) ? null : $this->emails[0]->address;
 		}
 	}
+	
+
+	public function definition(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'title'=>'string',
+				'first_name'=>'string',
+				'last_name'=>'string',
+				'company'=>'string',
+				'company_id'=>'integer unsigned',
+				'type'=>'enum("'.self::TYPE_CONTACT.'","'.self::TYPE_COMPANY.'","'.self::TYPE_USER.'") NOT NULL DEFAULT \'CONTACT\'',
+				'user_id'=>'integer unsigned'
+			),
+			'extra'=>'ENGINE=InnoDB',
+			'keys'=>array(
+				array('company_id','company_id'),
+				array('user_id','user_id'),
+			)
+		);
+	}
+	
 }

@@ -7,28 +7,32 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
+
 /**
  * Description of NApp
  *
  * @author steve
  */
-class Nii extends CApplicationComponent
+class Nii extends CWebApplication
 {
-	public function init(){
-		
-		
-		// set up application context:
-		echo Yii::app()->request->getParam('company');
-		
+
+	
+	public function run(){
+
+		// set up application context using the subdomain
+		$host = Yii::app()->request->getHostInfo();
+		$domain = 'newicon.org';
+		$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
+		//echo $subdomain;
+
 		// initialise modules
 		$exclude = array('gii');
 		foreach(Yii::app()->getModules() as $module=>$v){
 			if (in_array($module, $exclude)) continue;
 			Yii::app()->getModule($module);
 		}
-		
-		
-		
+		// run the application (process the request)
+		parent::run();
 	}
 
 }

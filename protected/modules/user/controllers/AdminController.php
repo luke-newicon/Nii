@@ -74,22 +74,15 @@ class AdminController extends NController
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
-
-			$profile->attributes=$_POST['Profile'];
-			$profile->user_id=0;
-			if($model->validate()&&$profile->validate()) {
+			if($model->validate()) {
 				//$model->password=crypt($model->password);
-				if($model->save()) {
-					$profile->user_id=$model->id;
-					$profile->save();
-				}
+				$model->save();
 				$this->redirect(array('view','id'=>$model->id));
-			} else $profile->validate();
+			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
-			'profile'=>$profile,
 		));
 	}
 
@@ -103,22 +96,18 @@ class AdminController extends NController
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
-			$profile->attributes=$_POST['Profile'];
 			
-			if($model->validate()&&$profile->validate()) {
+			if($model->validate()) {
 				$old_password = User::model()->notsafe()->findByPk($model->id);
 				if ($old_password->checkPassword($_POST['Profile']['password'])) {
 					$model->save();
 				}
-				
-				$profile->save();
 				$this->redirect(array('view','id'=>$model->id));
-			} else $profile->validate();
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
-			'profile'=>$profile,
 		));
 	}
 
@@ -133,8 +122,6 @@ class AdminController extends NController
 		{
 			// we only allow deletion via POST request
 			$model = $this->loadModel();
-			$profile = Profile::model()->findByPk($model->id);
-			$profile->delete();
 			$model->delete();
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_POST['ajax']))

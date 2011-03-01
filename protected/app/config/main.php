@@ -10,7 +10,7 @@ return array(
 	'name'=>'Projects!',
 
 	// preloading 'log' component
-	'preload'=>array('log','nii'),
+	'preload'=>array('log'),
 
 
 
@@ -20,7 +20,6 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
-		'application.Nii',
 		'modules.user.models.*',
         'modules.user.components.*',
 
@@ -43,31 +42,30 @@ return array(
 
 	// application components
 	'components'=>array(
-		'nii'=>array(
-			'class'=>'Nii'
-		),
 
 		'user'=>array(
 			'class'=>'NWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-			'loginUrl' => array('/users/login'),
+			'loginUrl' => array("/user/index/login"),
 			
 		),
-		'components'=>array(
-			'authManager'=>array(
-				'class'=>'CDbAuthManager',
-				'defaultRoles'=>array('authenticated', 'guest'),
-			),
+		'authManager'=>array(
+			'class'=>'CDbAuthManager',
+			'connectionID'=>'db',
+			'assignmentTable'=>'auth_assignment',
+			'itemChildTable'=>'auth_item_child',
+			'itemTable'=>'auth_item',
+			'defaultRoles'=>array('authenticated', 'guest'),
 		),
 		// uncomment the following to enable URLs in path-format
 
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
-				'http://<company:\w+>.newicon.org/<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'http://<company:\w+>.newicon.org/<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'http://<company:\w+>.newicon.org/<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
+				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 			'showScriptName'=>false,
 		),
