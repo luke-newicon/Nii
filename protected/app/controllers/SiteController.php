@@ -27,6 +27,7 @@ class SiteController extends NController
 	 */
 	public function actionIndex()
 	{
+		echo Yii::app()->request->getParam('company');
 		// renders the view file 'protected/views/site/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index');
