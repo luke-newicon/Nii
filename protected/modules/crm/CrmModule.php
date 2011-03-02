@@ -54,6 +54,11 @@ class CrmModule extends NWebModule
 
 
 	public function install(){
+		$auth=Yii::app()->authManager;
+		$auth->createOperation('createPost','create a post');
+		$auth->createOperation('readPost','read a post');
+		$auth->createOperation('updatePost','update a post');
+		$auth->createOperation('deletePost','delete a post');
 //		//echo 'hello?';
 //		$sqlFile = Yii::getPathOfAlias('crm.data').DS.'schema.mysql.sql';
 //		$sql = file_get_contents($sqlFile);

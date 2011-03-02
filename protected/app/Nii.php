@@ -25,6 +25,9 @@ class Nii extends CWebApplication
 		$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
 		//echo $subdomain;
 
+		$ni = Yii::app()->getModule('crm');
+		$ni->install();
+		
 		// initialise modules
 		$exclude = array('gii');
 		foreach(Yii::app()->getModules() as $module=>$v){
