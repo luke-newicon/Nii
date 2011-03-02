@@ -24,9 +24,6 @@ class Nii extends CWebApplication
 		$domain = 'newicon.org';
 		$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
 		//echo $subdomain;
-
-		$ni = Yii::app()->getModule('crm');
-		$ni->install();
 		
 		// initialise modules
 		$exclude = array('gii');
@@ -37,5 +34,10 @@ class Nii extends CWebApplication
 		// run the application (process the request)
 		parent::run();
 	}
-
+	
+	public function install(){
+		$auth = Yii::app()->authManager;
+		$auth->createRole('authenticated', 'authenticated user', 'return !Yii::app()->user->isGuest;');
+		$auth->createRole('guest', 'guest user', 'return Yii::app()->user->isGuest;');
+	}
 }

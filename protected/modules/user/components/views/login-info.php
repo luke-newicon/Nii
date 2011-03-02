@@ -8,7 +8,7 @@
 <?php else: ?>
 	<div class="line man" style="float:left">
 		<div class="unit size1of3">
-		<?php if($user->contact !== null): ?>
+		<?php if($contact !== null): ?>
 			<?php $this->widget('crm.components.CrmCard',array(
 					'size'=>$this->size,
 					'contact'=>$user->contact,

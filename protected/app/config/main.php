@@ -38,6 +38,7 @@ return array(
 		'crm',
 		'kashflow',
 		'user',
+		
 	),
 
 	// application components
@@ -108,9 +109,9 @@ return array(
 			'class' => 'CFileCache',
 		),
 		
-		'viewRenderer'=>array(
-            'class'=>'CPradoViewRenderer',
-        ),
+	//	'viewRenderer'=>array(
+        //    'class'=>'CPradoViewRenderer',
+      //  ),
 	),
 
 	// application-level parameters that can be accessed

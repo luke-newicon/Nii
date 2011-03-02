@@ -79,7 +79,7 @@ class UserModule extends NWebModule
 	 */
 	//public $cacheEnable = false;
 	
-	public $tableUsers = '{{users}}';
+	public $tableUsers = '{{user}}';
 	public $tableProfiles = '{{nii_crm__contact}}';
 
 
@@ -213,12 +213,12 @@ class UserModule extends NWebModule
 		}
 	}
 	
-	/**
-	 * Return safe user data.
-	 * @param user id not required
-	 * @return user object or false
-	 */
-	public function users() {
-		return User;
-	}
+//	/**
+//	 * Return safe user data.
+//	 * @param user id not required
+//	 * @return user object or false
+//	 */
+//	public function users() {
+//		return User;
+//	}
 }

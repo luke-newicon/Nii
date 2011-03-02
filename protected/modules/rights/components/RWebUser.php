@@ -8,6 +8,8 @@
 */
 class RWebUser extends CWebUser
 {
+	public $contact;
+	
 	/**
 	* Actions to be taken after logging in.
 	* Overloads the parent method in order to mark superusers.
