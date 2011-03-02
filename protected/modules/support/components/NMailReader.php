@@ -15,7 +15,7 @@
  * @version $Id: NMailReader.php $
  * @package Support
  */
-Class NMailReader 
+Class NMailReader extends CComponent
 {
 	public static $readLimit = 10;
 	
@@ -28,7 +28,6 @@ Class NMailReader
 			'port'     => $support->emailPort,
 			'ssl'	   => $support->emailSsl
 		));
-	
 		$msgNum = $mail->countMessages();
 		// read messages Latest First.
 		// should limit results:

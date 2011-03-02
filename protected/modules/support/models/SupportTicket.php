@@ -131,5 +131,8 @@ class SupportTicket extends NActiveRecord
 		$this->save();
 	}
 	
-	
+	public function getFrom(){
+		$f = NMailReader::splitFromHeader($this->from);
+		return $f['name'];
+	}
 }
