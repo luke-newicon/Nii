@@ -30,4 +30,13 @@ class NActiveRecord extends CActiveRecord {
 		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
 	}
 	
+	/**
+	 * proxies to getPrimaryKey method
+	 * @see CActiveRecord::getPrimaryKey
+	 * @return mixed primary key value 
+	 */
+	public function id(){
+		return $this->getPrimaryKey();
+	}
+	
 }

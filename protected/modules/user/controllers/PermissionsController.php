@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class PermissionsController extends NController {
+class PermissionsController extends NAController {
 	
 	public function actionIndex() {
 		$this->render('index');

@@ -43,6 +43,9 @@
 		</div>
 	</div>
 	<div class="body"><!-- Body -->
+		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+			'links'=>$this->breadcrumbs,
+		)); ?>
 		<?php echo $content; ?>
 	</div>
 	<div class="foot"><?php // echo $this->renderPartial('core/_footer'); ?></div>

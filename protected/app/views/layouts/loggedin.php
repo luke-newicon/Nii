@@ -44,7 +44,12 @@
 		</div>
 	</div>
 	<div class="body"><!-- Body -->
-		<div class="main"><?php echo $content; ?></div>		
+		<div class="main">
+			<?php $this->widget('NBreadcrumbs', array(
+				'links'=>$this->breadcrumbs,
+			)); ?>
+			<?php echo $content; ?>
+		</div>		
 	</div>
 	<div class="foot"><?php // echo $this->renderPartial('core/_footer'); ?></div>
 </div>

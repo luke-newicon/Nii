@@ -22,6 +22,7 @@
 					'items'=>array(
 						array('url'=>Yii::app()->getModule('user')->loginUrl, 'label'=>"Login", 'visible'=>Yii::app()->user->isGuest),
 						array('url'=>Yii::app()->getModule('user')->registrationUrl, 'label'=>"Register", 'visible'=>Yii::app()->user->isGuest),
+						array('url'=>array('/user/dashboard/index'), 'label'=>"Dashboard", 'visible'=>!Yii::app()->user->isGuest),
 						array('url'=>Yii::app()->getModule('user')->profileUrl, 'label'=>"Profile", 'visible'=>!Yii::app()->user->isGuest),
 						array('url'=>Yii::app()->getModule('user')->logoutUrl, 'label'=>"Logout".' ('.Yii::app()->user->name.')', 'visible'=>!Yii::app()->user->isGuest),
 					),

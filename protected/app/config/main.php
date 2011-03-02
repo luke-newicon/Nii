@@ -20,9 +20,9 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
+		'application.vendors.*',
 		'modules.user.models.*',
         'modules.user.components.*',
-
 	),
 	'theme'=>'classic',
 
@@ -38,6 +38,7 @@ return array(
 		'crm',
 		'kashflow',
 		'user',
+		'support',
 		
 	),
 

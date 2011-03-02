@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "nworx_crm__phone".
+ * This is the model class for table "support_Attachment".
  *
- * The followings are the available columns in table 'nworx_crm__phone':
- * @property string $id
- * @property string $number
- * @property string $label
- * @property string $contact_id
- * @property string $verified
+ * The followings are the available columns in table 'support_Attachment':
+ * @property string $attachment_id
+ * @property string $attachment_name
+ * @property string $attachment_type
+ * @property string $attachment_mail_id
+ * @property string $attachment_file_id
  */
-class CrmPhone extends CrmActiveRecord
+class SupportAttachment extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return CrmPhone the static model class
+	 * @return SupportAttachment the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -26,7 +26,7 @@ class CrmPhone extends CrmActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{crm_phone}}';
+		return '{{support_attachment}}';
 	}
 
 	/**
@@ -37,13 +37,12 @@ class CrmPhone extends CrmActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('number, contact_id', 'required'),
-			array('number, label', 'length', 'max'=>250),
-			array('contact_id', 'length', 'max'=>11),
-			array('verified', 'length', 'max'=>1),
+			array('attachment_name, attachment_type, attachment_mail_id, attachment_file_id', 'required'),
+			array('attachment_name, attachment_type', 'length', 'max'=>255),
+			array('attachment_mail_id, attachment_file_id', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, number, label, contact_id, verified', 'safe', 'on'=>'search'),
+			array('attachment_id, attachment_name, attachment_type, attachment_mail_id, attachment_file_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -55,7 +54,6 @@ class CrmPhone extends CrmActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'contact'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
 		);
 	}
 
@@ -65,11 +63,11 @@ class CrmPhone extends CrmActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'number' => 'Number',
-			'label' => 'Label',
-			'contact_id' => 'Contact',
-			'verified' => 'Verified',
+			'attachment_id' => 'Attachment',
+			'attachment_name' => 'Attachment Name',
+			'attachment_type' => 'Attachment Type',
+			'attachment_mail_id' => 'Attachment Mail',
+			'attachment_file_id' => 'Attachment File',
 		);
 	}
 
@@ -84,15 +82,14 @@ class CrmPhone extends CrmActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('number',$this->number,true);
-		$criteria->compare('label',$this->label,true);
-		$criteria->compare('contact_id',$this->contact_id,true);
-		$criteria->compare('verified',$this->verified,true);
+		$criteria->compare('attachment_id',$this->attachment_id,true);
+		$criteria->compare('attachment_name',$this->attachment_name,true);
+		$criteria->compare('attachment_type',$this->attachment_type,true);
+		$criteria->compare('attachment_mail_id',$this->attachment_mail_id,true);
+		$criteria->compare('attachment_file_id',$this->attachment_file_id,true);
 
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria'=>$criteria,
 		));
 	}
-
 }
