@@ -23,7 +23,7 @@ class SupportModule extends NWebModule
 	 * @guideText The support email address that messages will be sent from e.g. support@newicon.net
 	 * @property string
 	 */
-	public $email = 'support@newicon.org';
+	public $email = 'steve@newicon.net';
 	
 	/**
 	 * support email name i.e newicon support team
@@ -35,17 +35,17 @@ class SupportModule extends NWebModule
 	 * the host server name e.g. snarf.cm.bytemark.co.uk
 	 * @property string
 	 */
-	public $emailHost = 'snarf.vm.bytemark.co.uk';
+	public $emailHost = 'imap.gmail.com';
 	/**
 	 * imap/pop mailbox username
 	 * @property string
 	 */
-	public $emailUsername = 'support@newicon.org';
+	public $emailUsername = 'steve@newicon.net';
 	/**
 	 * imap/pop mailbox password
 	 * @property string
 	 */
-	public $emailPassword = 'newiconsupport123';
+	public $emailPassword = 'mushroom11';
 	
 	/**
 	 * imap/pop port

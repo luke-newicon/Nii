@@ -26,7 +26,6 @@
 			<div class="title"><h2><?php echo CHtml::encode(Yii::app()->name); ?></h2></div>
 			<div class="loginMenu">
 				<div class="menu menuR">
-<!--					<com:user.components.NLoginInfo />-->
 					<?php $this->widget('user.components.NLoginInfo'); ?>
 				</div>
 			</div>

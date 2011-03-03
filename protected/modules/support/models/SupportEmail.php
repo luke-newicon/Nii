@@ -18,6 +18,7 @@
  * @property string $opened_date
  * @property integer $bounced
  * @property string $created
+ * @property string $date
  */
 class SupportEmail extends NActiveRecord
 {
@@ -51,7 +52,7 @@ class SupportEmail extends NActiveRecord
 			array('template_id', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, to, from, message_id, subject, headers, template_id, message_text, message_html, sent, opened, opened_date, bounced, created', 'safe', 'on'=>'search'),
+			array('id, to, from, message_id, subject, headers, template_id, message_text, message_html, sent, opened, opened_date, bounced, created, date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -119,4 +120,26 @@ class SupportEmail extends NActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	/**
+	 * decides whether to render the text or the html version of the message
+	 * if the html version exists it uses this as the preference.
+	 * @return string message 
+	 */
+	public function message(){
+		// TODO: implement message settings to render text or html message by default
+		if($this->message_html !== null || $this->message_html != ''){
+			return $this->message_html;
+		}
+		$md = new CMarkdown();
+		return $md->transform($this->message_text);
+	}
+	
+	
+	public function getPreviewText(){
+		//strip silly long strings 
+		$totalTxt = substr($this->message_text, 0, 500);
+		return preg_replace("/([^\s]{14})/"," ",$totalTxt);
+	}
+	
 }

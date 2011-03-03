@@ -68,8 +68,10 @@ class SupportTicket extends NActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'emails'=>array(self::MANY_MANY, 'SupportEmail', 'support_ticket_email(ticket_id,email_id)', 'order'=>'date DESC')
 		);
 	}
+
 
 
 	
@@ -126,6 +128,7 @@ class SupportTicket extends NActiveRecord
 		}
 
 		$this->from = $m->from;
+		$this->date = $m->date;
 		$this->status = SupportTicket::STATUS_OPEN;
 		$this->priority = SupportTicket::PRIORITY_NORMAL;
 		$this->save();
@@ -135,4 +138,13 @@ class SupportTicket extends NActiveRecord
 		$f = NMailReader::splitFromHeader($this->from);
 		return $f['name'];
 	}
+	
+	/**
+	 *
+	 * @return SupportEmail 
+	 */
+	public function getRecentEmail(){
+		return $this->emails[0];
+	}
+	
 }

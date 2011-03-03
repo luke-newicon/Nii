@@ -17,7 +17,7 @@
  */
 Class NMailReader extends CComponent
 {
-	public static $readLimit = 10;
+	public static $readLimit = 5;
 	
 	public static function readMail(){
 		$support = Yii::app()->getModule('support');
@@ -31,6 +31,7 @@ Class NMailReader extends CComponent
 		$msgNum = $mail->countMessages();
 		// read messages Latest First.
 		// should limit results:
+
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 			if($ii >= self::$readLimit) break;
@@ -56,7 +57,7 @@ Class NMailReader extends CComponent
 		// create mail message
 		$m = new SupportEmail();
 		$m->subject = mb_decode_mimeheader($e->subject);
-		$m->headers = CJSON::encode($e->getHeaders());
+		$m->headers = CJavaScript::encode($e->getHeaders());
 		$m->from = $e->from;
 		$m->to = $e->to;
 		$m->message_id = $e->getHeader('message-id');
@@ -64,27 +65,26 @@ Class NMailReader extends CComponent
 			$m->cc = $e->cc;
 		// add message and attachments to email
 		// attachments need the mail id so save it first
+		$m->date = self::date($e);
 		$m->save();
 		self::parseParts($e, $m);
+		
 		$m->save();
-		
-		
+		Yii::log($m->message_html);
+		// yii::app()->end();
 		$t = false;
 		// Check the subject line for possible ID.
         if (self::hasSubjectTicketId($m->subject, $id))
         	if(($t = SupportTicket::model()->findByPk($id)));
 				$t = new SupportTicket();
         	
-
 		$t->createTicketFromMail($m);
 			
-		
 		// create link table
 		$te = new SupportTicketEmail();
 		$te->email_id = $m->id();
 		$te->ticket_id = $t->id();
 		$te->save();
-		
 	}
 
 
@@ -109,7 +109,7 @@ Class NMailReader extends CComponent
 		foreach($parts as $part) {
 			$encoding = self::headerParam($part,'content-transfer-encoding');
 			if (strtok($part->contentType, ';') == 'text/html'){
-				$m->message_html = self::decode($part->getContent(),$encoding);
+				$m->message_html = $part->getContent();
 				continue;
 			}elseif (strtok($part->contentType, ';') == 'text/plain'){
 				$m->message_text = self::decode($part->getContent(),$encoding);
@@ -123,21 +123,21 @@ Class NMailReader extends CComponent
 	}
 	
 	public static function saveAttachment($part, $mail){
-		$path = Yii::app()->getRuntimePath();
-		if($part->headerExists('content-disposition')){
-			if(strtok($part->contentDisposition, ';')=='attachment'){
-				$filename = trim(str_replace(array('filename=','"'),'',strtok(';')));
-				$data = self::decode($part->getContent(),$part->contentTransferEncoding);
-				$up = new NUploader();
-				$fileId = $up->addFile($filename, $data, 'support_attachments');
-				$a = new SupportAttachment();
-				$a->name = $filename;
-				$a->type = strtok($part->contentType, ';');
-				$a->mail_id = $mail->id();
-				$a->file_id = $fileId;
-				$a->save();
-			}
-		}
+//		$path = Yii::app()->getRuntimePath();
+//		if($part->headerExists('content-disposition')){
+//			if(strtok($part->contentDisposition, ';')=='attachment'){
+//				$filename = trim(str_replace(array('filename=','"'),'',strtok(';')));
+//				$data = self::decode($part->getContent(),$part->contentTransferEncoding);
+//				$up = new NUploader();
+//				$fileId = $up->addFile($filename, $data, 'support_attachments');
+//				$a = new SupportAttachment();
+//				$a->name = $filename;
+//				$a->type = strtok($part->contentType, ';');
+//				$a->mail_id = $mail->id();
+//				$a->file_id = $fileId;
+//				$a->save();
+//			}
+//		}
 	}
 	
 	public static function headerParam($part,$header,$defaultVal=null){
@@ -173,8 +173,8 @@ Class NMailReader extends CComponent
         }
     }
     
-    public function parsePriority($header=null){
-
+    public function parsePriority($header=null)
+	{
         $priority=0;
         if($header && ($begin=strpos($header,'X-Priority:'))!==false){
             $begin+=strlen('X-Priority:');
@@ -198,13 +198,26 @@ Class NMailReader extends CComponent
 	 * @retun array(name=>'nameValue',email=>'emailValue') 
 	 */
 	public static function splitFromHeader($fromString){
-		preg_match('/"(.*)" <(.*)>/', $fromString, $matches);
+		preg_match('/([^<]*) <(.*)>/', $fromString, $matches);
 		$name = array_key_exists(1,$matches)?$matches[1]:'';
 		$email = array_key_exists(2,$matches)?$matches[2]:'';
 		return array(
-			'name'=>$name,
+			'name'=>str_replace('"','',$name),
 			'email'=>$email
 		);
+	}
+	
+	
+	public static function date(Zend_Mail_Message $mail){
+		if($mail->headerExists('date')){
+			$date = $mail->getHeader('date');
+			if(!($unixTs = strtotime($date)))
+				//can not read the date make the date the current date.
+				$unixTs = time();
+		} else {
+			$unixTs = time();
+		}
+		return date('Y-m-d H:i:s',$unixTs);
 	}
 	
 }

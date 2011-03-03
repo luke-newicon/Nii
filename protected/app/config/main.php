@@ -61,7 +61,6 @@ return array(
 			'defaultRoles'=>array('authenticated', 'guest'),
 		),
 		// uncomment the following to enable URLs in path-format
-
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -110,9 +109,9 @@ return array(
 			'class' => 'CFileCache',
 		),
 		
-	//	'viewRenderer'=>array(
-        //    'class'=>'CPradoViewRenderer',
-      //  ),
+//		'viewRenderer'=>array(
+//			///'class'=>'application.extensions.yiiext.renderers.smarty.ESmartyViewRenderer',
+//        ),
 	),
 
 	// application-level parameters that can be accessed
