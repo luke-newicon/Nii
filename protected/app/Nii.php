@@ -15,7 +15,6 @@
  */
 class Nii extends CWebApplication
 {
-
 	
 	public function run(){
 

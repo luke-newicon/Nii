@@ -22,3 +22,4 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -20px;}
  * @Todo: move into oocss core
  */
 .faded{color:#787878;}
+.spinner{background:url('../images/ajax-loader.gif');width:31px; height:31px;}

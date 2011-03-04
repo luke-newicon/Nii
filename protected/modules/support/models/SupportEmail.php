@@ -47,9 +47,9 @@ class SupportEmail extends NActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('sent, opened, bounced', 'numerical', 'integerOnly'=>true),
-			array('to, from, message_id, subject', 'length', 'max'=>255),
-			array('template_id', 'length', 'max'=>11),
+//			array('sent, opened, bounced', 'numerical', 'integerOnly'=>true),
+//			array('to, from, message_id, subject', 'length', 'max'=>255),
+//			array('template_id', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, to, from, message_id, subject, headers, template_id, message_text, message_html, sent, opened, opened_date, bounced, created, date', 'safe', 'on'=>'search'),
@@ -128,17 +128,21 @@ class SupportEmail extends NActiveRecord
 	 */
 	public function message(){
 		// TODO: implement message settings to render text or html message by default
-		if($this->message_html !== null || $this->message_html != ''){
+		if($this->message_html !== null && $this->message_html != ''){
 			return $this->message_html;
 		}
-		$md = new CMarkdown();
+		$md = new NMarkdown();
 		return $md->transform($this->message_text);
 	}
 	
 	
 	public function getPreviewText(){
 		//strip silly long strings 
-		$totalTxt = substr($this->message_text, 0, 500);
+		if($this->message_text){
+			$totalTxt = substr($this->message_text, 0, 500);
+		}else{
+			$totalTxt = strip_tags($this->message_html);
+		}
 		return preg_replace("/([^\s]{14})/"," ",$totalTxt);
 	}
 	

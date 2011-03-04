@@ -29,4 +29,26 @@ class IndexController extends NController
 		$this->render('email',array('e'=>$e));
 	}
 	
+	public function actionLoadMessageList()
+	{
+		$total = NMailReader::countMessages();
+		$tickets = SupportTicket::model()->findAll();
+		echo $this->render('message-list',array(
+			'total'=>$total,
+			'tickets'=>$tickets
+		), true);
+	}
+
+	public function actionLoadMessageFolders()
+	{
+		$folders = NMailReader::folders();
+		echo $this->render('message-folders',array(
+			'folders'=>$folders
+		), true);
+	}
+
+	public function actionTest($index){
+		NMailReader::testrPrintMessage($index);
+	}
+	
 }

@@ -19,19 +19,69 @@ Class NMailReader extends CComponent
 {
 	public static $readLimit = 5;
 	
+	public static $mail;
+	
+	/**
+	 *
+	 * @return Zend_Mail_Storage_Imap 
+	 */
+	public static function connect(){
+		if(self::$mail ===null){
+			$support = Yii::app()->getModule('support');
+			self::$mail = new Zend_Mail_Storage_Imap(array(
+				'host'     => $support->emailHost,
+				'user'     => $support->emailUsername,
+				'password' => $support->emailPassword,
+				'port'     => $support->emailPort,
+				'ssl'	   => $support->emailSsl
+			));
+		}
+		return self::$mail;
+	}
+	
+	public static function countMessages(){
+		return self::connect()->countMessages();
+	}
+	
+	
+	public static function testrPrintMessage($msgIndex){
+		$mail = self::connect();
+		$msgNum = self::countMessages();
+		$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
+		dp($msg);
+		dp($msg->getContent());
+		
+		if($msg->isMultipart()){
+			foreach($msg as $part){
+				dp($part);
+			}
+		}else{
+			$encoding = self::headerParam($msg,'content-transfer-encoding');
+			if (strtok($msg->contentType, ';') == 'text/html'){
+				echo self::decode($msg->getContent(),$encoding);
+			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
+				echo self::decode($msg->getContent(),$encoding);
+			}
+		}
+		
+//		foreach($msg as $part){
+//			dp($part);
+//			
+//			
+//		}
+	}
+	
 	public static function readMail(){
-		$support = Yii::app()->getModule('support');
-		$mail = new Zend_Mail_Storage_Imap(array(
-			'host'     => $support->emailHost,
-			'user'     => $support->emailUsername,
-			'password' => $support->emailPassword,
-			'port'     => $support->emailPort,
-			'ssl'	   => $support->emailSsl
-		));
-		$msgNum = $mail->countMessages();
+		
+		$mail = self::connect();
+		$msgNum = self::countMessages();
+		$msg = $mail->getMessage($msgNum-1);
+			
+		
+
 		// read messages Latest First.
 		// should limit results:
-
+		$msgNum = self::countMessages();
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 			if($ii >= self::$readLimit) break;
@@ -46,10 +96,8 @@ Class NMailReader extends CComponent
 					continue;
 				}
 			}
-
 			self::saveMail($e);
-			
-			$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
+			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
 	}
 	
@@ -70,14 +118,13 @@ Class NMailReader extends CComponent
 		self::parseParts($e, $m);
 		
 		$m->save();
-		Yii::log($m->message_html);
-		// yii::app()->end();
+
 		$t = false;
 		// Check the subject line for possible ID.
         if (self::hasSubjectTicketId($m->subject, $id))
-        	if(($t = SupportTicket::model()->findByPk($id)));
+        	if(($t = SupportTicket::model()->findByPk($id))===null);
 				$t = new SupportTicket();
-        	
+				
 		$t->createTicketFromMail($m);
 			
 		// create link table
@@ -105,19 +152,28 @@ Class NMailReader extends CComponent
 		return ($ret !== 0);
 	}
 	
-	public static function parseParts($parts, &$m){
-		foreach($parts as $part) {
-			$encoding = self::headerParam($part,'content-transfer-encoding');
-			if (strtok($part->contentType, ';') == 'text/html'){
-				$m->message_html = $part->getContent();
-				continue;
-			}elseif (strtok($part->contentType, ';') == 'text/plain'){
-				$m->message_text = self::decode($part->getContent(),$encoding);
-				continue;	
-			}elseif ($part->isMultipart()){
-				self::parseParts($part, $m);
-			}else{
-				self::saveAttachment($part, $m);
+	public static function parseParts($msg, &$m){
+		if($msg->isMultipart()){
+			foreach($msg as $part) {
+				$encoding = self::headerParam($part,'content-transfer-encoding');
+				if (strtok($part->contentType, ';') == 'text/html'){
+					$m->message_html = self::decode($part->getContent(),$encoding);
+					continue;
+				}elseif (strtok($part->contentType, ';') == 'text/plain'){
+					$m->message_text = self::decode($part->getContent(),$encoding);
+					continue;	
+				}elseif ($part->isMultipart()){
+					self::parseParts($part, $m);
+				}else{
+					self::saveAttachment($part, $m);
+				}
+			}
+		}else{
+			$encoding = self::headerParam($msg,'content-transfer-encoding');
+			if (strtok($msg->contentType, ';') == 'text/html'){
+				$m->message_html = self::decode($msg->getContent(),$encoding);
+			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
+				$m->message_text = self::decode($msg->getContent(),$encoding);
 			}
 		}
 	}
@@ -219,5 +275,13 @@ Class NMailReader extends CComponent
 		}
 		return date('Y-m-d H:i:s',$unixTs);
 	}
+	
+	
+	public static function folders()
+	{
+		$mail = self::connect();
+		return new RecursiveIteratorIterator($mail->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
+	}
+	
 	
 }

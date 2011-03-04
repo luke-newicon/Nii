@@ -4,7 +4,6 @@
  * This is the model class for table "support_ticket_email".
  *
  * The followings are the available columns in table 'support_ticket_email':
- * @property string $id
  * @property string $email_id
  * @property string $ticket_id
  * @property string $type
@@ -41,7 +40,7 @@ class SupportTicketEmail extends NActiveRecord
 			array('type', 'length', 'max'=>13),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, email_id, ticket_id, type', 'safe', 'on'=>'search'),
+			array('email_id, ticket_id, type', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,7 +63,6 @@ class SupportTicketEmail extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
 			'email_id' => 'Email',
 			'ticket_id' => 'Ticket',
 			'type' => 'Type',
@@ -82,7 +80,6 @@ class SupportTicketEmail extends NActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
 		$criteria->compare('email_id',$this->email_id,true);
 		$criteria->compare('ticket_id',$this->ticket_id,true);
 		$criteria->compare('type',$this->type,true);

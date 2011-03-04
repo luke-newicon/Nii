@@ -50,10 +50,10 @@ class SupportTicket extends NActiveRecord
 		// will receive user inputs.
 		return array(
 			//array('subject, message, from', 'required'),
-			array('answered', 'numerical', 'integerOnly'=>true),
-			array('subject, from', 'length', 'max'=>255),
-			array('priority', 'length', 'max'=>18),
-			array('status', 'length', 'max'=>13),
+//			array('answered', 'numerical', 'integerOnly'=>true),
+//			array('subject, from', 'length', 'max'=>255),
+//			array('priority', 'length', 'max'=>18),
+//			array('status', 'length', 'max'=>13),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, subject, message, from, priority, status, created, answered', 'safe', 'on'=>'search'),
@@ -73,7 +73,11 @@ class SupportTicket extends NActiveRecord
 	}
 
 
-
+	public function  defaultScope() {
+		return array(
+			'order'=>'date DESC'
+		);
+	}
 	
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -144,7 +148,10 @@ class SupportTicket extends NActiveRecord
 	 * @return SupportEmail 
 	 */
 	public function getRecentEmail(){
-		return $this->emails[0];
+		if($this->emails)
+			return $this->emails[0];
+		else
+			return null;
 	}
 	
 }

@@ -47,7 +47,7 @@ $e = $ticket->emails[0];
 <div id="message">
 	<script type="text/javascript">
 		$(function(){
-			$("#eframe'.$e->id().'").load(function () {
+			$("#eframe'.<?php echo $e->id() ?>.'").load(function () {
 				alert('oi');
 				alert($(this).contents().height());
 				$(this).height($(this).contents().height());
