@@ -4,19 +4,21 @@
  * This is the model class for table "pm__nworx_crm_contacts".
  *
  * The followings are the available columns in table 'pm__nworx_crm_contacts':
- * @property string $id
+ * @property int $id
  * @property string $title
  * @property string $first_name
  * @property string $last_name
  * @property string $company
- * @property string $company_id
- * @property string $type
+ * @property int $company_id
+ * @property enum $type
+ * @property int $user_id
  *
  * The followings are the available model relations:
  * @property addresses[] $CrmAddress
  * @property emails[] $CrmEmail
  * @property phones[] $CrmPhone
  * @property websites[] $CrmWebsite
+ * @property user $User
  */
 class CrmContact extends NActiveRecord
 {
@@ -36,7 +38,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-		return parent::model($className);
+		return parent::model($className);;
 	}
 
 	/**
@@ -44,7 +46,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__contact}}';
+		return "{{crm_contact}}";//'{{crm_contact}}';
 	}
 
 	/**
@@ -61,7 +63,7 @@ class CrmContact extends NActiveRecord
 			array('type', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, title, first_name, last_name, company, company_id, type, contact_id', 'safe', 'on'=>'search'),
+			array('id, title, first_name, last_name, company, company_id, type, user_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +80,8 @@ class CrmContact extends NActiveRecord
 			'phones' => array(self::HAS_MANY, 'CrmPhone', 'contact_id'),
 			'websites' => array(self::HAS_MANY, 'CrmWebsite', 'contact_id'),
 			'contacts'=> array(self::HAS_MANY, 'CrmContact', 'company_id'),
-			'company'=>array(self::BELONGS_TO, 'CrmContact', 'company_id')
+			'company'=>array(self::BELONGS_TO, 'CrmContact', 'company_id'),
+			'user'=>array(self::BELONGS_TO, 'User', 'user_id'),
 		);
 	}
 
@@ -255,7 +258,7 @@ class CrmContact extends NActiveRecord
 	 * @return boolean - true if contact is a person false if it is a company
 	 */
 	public function isPerson(){
-		return ($this->type == self::TYPE_CONTACT);
+		return ($this->type == self::TYPE_CONTACT || $this->type == self::TYPE_USER);
 	}
 
 	public function isCompany(){
@@ -450,7 +453,52 @@ class CrmContact extends NActiveRecord
 		}
 	}
 	
+	/**
+	 * return the route to the crm detail page for this contact
+	 * The returned route has NOT been normalised
+	 * @return array route
+	 */
 	public function getUrl(){
-		return NHtml::url(array('/crm/detail/index','id'=>$this->id()));
+		return array('/crm/detail/index','id'=>$this->id());
 	}
+	
+	/**
+	 * Return the contacts primary email address
+	 * This function will also look for the email address from within the user table
+	 * 
+	 * @return string | null if no email address exists for the contact
+	 */
+	public function getPrimaryEmail(){
+		if($this->type == CrmContact::TYPE_USER){
+			// if the contact has a user account
+			// get the email from the user account
+			if(($user = $this->user)===null)
+				return null;
+			return $user->email;
+		}else{
+			return empty($this->emails) ? null : $this->emails[0]->address;
+		}
+	}
+	
+
+	public function definition(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'title'=>'string',
+				'first_name'=>'string',
+				'last_name'=>'string',
+				'company'=>'string',
+				'company_id'=>'integer unsigned',
+				'type'=>'enum("'.self::TYPE_CONTACT.'","'.self::TYPE_COMPANY.'","'.self::TYPE_USER.'") NOT NULL DEFAULT \'CONTACT\'',
+				'user_id'=>'integer unsigned'
+			),
+			'extra'=>'ENGINE=InnoDB',
+			'keys'=>array(
+				array('company_id','company_id'),
+				array('user_id','user_id'),
+			)
+		);
+	}
+	
 }

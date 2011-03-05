@@ -7,8 +7,8 @@ $this->breadcrumbs=array(
 <h1><?php echo UserModule::t("List User"); ?></h1>
 <?php if(UserModule::isAdmin()) {
 	?><ul class="actions">
-	<li><?php echo CHtml::link(UserModule::t('Manage User'),array('/user/admin')); ?></li>
-	<li><?php echo CHtml::link(UserModule::t('Manage Profile Field'),array('profileField/admin')); ?></li>
+	<li><?php echo CHtml::link(UserModule::t('Manage Users'),array('/user/admin')); ?></li>
+	<li><?php echo CHtml::link(UserModule::t('Manage Permissions'),array('/user/permissions')); ?></li>
 </ul><!-- actions --><?php 
 } ?>
 <?php $this->widget('zii.widgets.grid.CGridView', array(

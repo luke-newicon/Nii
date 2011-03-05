@@ -39,7 +39,7 @@ class CrmModule extends NWebModule
 		));
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem('Crm', array('/crm/index/index'));
-
+		
 	}
 
 	/**
@@ -54,12 +54,34 @@ class CrmModule extends NWebModule
 
 
 	public function install(){
-//		Newicon_Db_Table::install('Nworx_Crm_Model_Contacts');
-//		Newicon_Db_Table::install('Nworx_Crm_Model_Emails');
-//		Newicon_Db_Table::install('Nworx_Crm_Model_Phones');
-//		Newicon_Db_Table::install('Nworx_Crm_Model_Websites');
-//		Newicon_Db_Table::install('Nworx_Crm_Model_Addresses');
+		
+		$auth=Yii::app()->authManager;
+		$auth->createTask('createSomething','create a something');
+		$auth->createTask('createContact','create a new contact record');
+		
+		$auth->getAuthItem('authenticated')
+			->addChild('createSomething','create a something');
+		
+		
+//		//echo 'hello?';
+//		$sqlFile = Yii::getPathOfAlias('crm.data').DS.'schema.mysql.sql';
+//		$sql = file_get_contents($sqlFile);
+//		dp($sql);
+//		$c = new CrmContact('install');
+//		
+//		$def = $c->definition();
+//		dp($def);
+//		Yii::app()->db->createCommand()->createTable(
+//			$c->tableName(), 
+//			$def['columns'],
+//			$def['extra']
+//		);
+//		foreach($def['keys'] as $i=>$v){
+//			Yii::app()->db->createCommand()->createIndex($v[0], $c->tableName(), $v[1]);
+//		}
 	}
+
+	
 
 	public function uninstall(){
 

@@ -21,6 +21,9 @@ class NController extends CController
 	 */
 	public $breadcrumbs=array();
 
+	
+	public $coreAssets;
+	
 	public function  __construct($id, $module = null) {
 		// this method is called before any module controller action is performed
 		// you may place customized code here
@@ -31,15 +34,24 @@ class NController extends CController
 		}else{
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
-			$path = Yii::app()->getAssetManager()->publish($path);
-			Yii::app()->getClientScript()->registerScriptFile("$path/jquery/jquery.scrollto.js");
-			Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
+			$this->coreAssets = Yii::app()->getAssetManager()->publish($path);
+			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/jquery/jquery.scrollto.js');
+			//Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
 			Yii::app()->getClientScript()->registerCoreScript("jquery");
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
+			if(!Yii::app()->user->isGuest){
+				// if logged in use admin layout
+				$this->layout = '//layouts/loggedin';
+			}
 		}
 	}
 
-
 	
-
+	public function filters()
+    {
+        return array(
+            'accessControl',
+        );
+    }
+	
 }

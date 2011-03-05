@@ -13,13 +13,12 @@
  *
  * @author steve
  */
-class DashboardController extends NController
+class DashboardController extends NAController
 {
 	
 	
 
     public function actionIndex(){
-		$u = User::model()->findByPk(Yii::app()->user->getId());
-		$this->render('/dashboard/index',array('u'=>$u));
+		$this->render('/dashboard/index',array('u'=>Yii::app()->user->record));
 	}
 }

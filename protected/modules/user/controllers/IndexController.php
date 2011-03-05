@@ -1,7 +1,19 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends NAController
 {
+	
+	
+	public function accessRules() {
+		return CMap::mergeArray(array(
+			array('allow',
+				'actions'=>array('login','index','logout'),
+				'users'=>array('*')
+			)),
+			parent::accessRules()
+		);
+		
+	}
 	
 	/**
 	 * Lists all models.
@@ -17,7 +29,7 @@ class IndexController extends NController
 		));
 	}
 
-		/**
+	/**
 	 * Displays the login page
 	 */
 	public function actionLogin()

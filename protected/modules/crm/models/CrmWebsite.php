@@ -25,7 +25,7 @@ class CrmWebsite extends CrmActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__website}}';
+		return '{{crm_website}}';
 	}
 
 	/**

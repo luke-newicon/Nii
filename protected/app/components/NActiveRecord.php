@@ -22,13 +22,21 @@ class NActiveRecord extends CActiveRecord {
 	 *
 	 * @return CDbCommand
 	 */
-	public function q(){
+	public function cmd(){
 		return Yii::app()->db->createCommand()->from($this->tableName());
 	}
 
-	public function qSelect($select='*'){
+	public function cmdSelect($select='*'){
 		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
 	}
-
-
+	
+	/**
+	 * proxies to getPrimaryKey method
+	 * @see CActiveRecord::getPrimaryKey
+	 * @return mixed primary key value 
+	 */
+	public function id(){
+		return $this->getPrimaryKey();
+	}
+	
 }

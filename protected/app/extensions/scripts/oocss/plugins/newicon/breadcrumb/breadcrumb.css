@@ -1,9 +1,9 @@
 .breadcrumbApple {padding:0px;}
-.breadcrumbApple {height:2.0em;overflow:visible;border:1px solid #dedede;}
-.breadcrumbApple li {float:left;	line-height:2.0em;	color:#777;	padding-left:.75em;border-bottom:1px solid #ccc;}		
-.breadcrumbApple li a {background:url(skin/appleCrumbs.gif) no-repeat right center;display:block;padding:0 15px 0 0;font-size:11px;}
-.breadcrumbApple li.current a {background:none;}
+.breadcrumbApple {height:2em;overflow:visible;border:1px solid #dedede;}
+.breadcrumbApple li {float:left;	line-height:2.4em;	color:#777;	padding-left:.75em;font-size:11px}		
+.breadcrumbApple li a {background:url(skin/appleCrumbs.gif) no-repeat right center;display:block;padding:0 15px 0 0;}
+.breadcrumbApple .current a {background:none;}
 
 /*extends breadcrumbApple*/
 .breadcrumbApple.breadcrumbAppleWhite li a {background-image:url(skin/appleCrumbsWhite.gif);}
-.breadcrumbApple.breadcrumbAppleWhite li.current a {background:none;}
+.breadcrumbApple.breadcrumbAppleWhite .current {font-size:11px;}

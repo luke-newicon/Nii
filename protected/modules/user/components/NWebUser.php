@@ -14,10 +14,11 @@
  *
  * @author steve
  */
-class NWebUser extends CWebUser 
-{
+class NWebUser extends CWebUser {
 
 	private $_user;
+	
+	private $_contact;
 	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
@@ -34,13 +35,17 @@ class NWebUser extends CWebUser
 	}
 	
 	/**
-	 * Gets the associated contact record.
+	 * returns the related contact CrmContact record if it exists, or null if it does not.
 	 * 
-	 * @return CrmContact
+	 * @return CrmContact | null
 	 */
 	public function getContact(){
-		//return CrmContact::model()->findByPk($this->getRecord()->contact_id);
-		return $this->getRecord()->contact;
+		if($this->getRecord() === null)
+			return null;
+		if($this->_contact===null){
+			$this->_contact = $this->getRecord()->contact;
+		}
+		return $this->_contact;
 	}
 
 }

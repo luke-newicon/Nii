@@ -15,10 +15,6 @@
  */
 class CrmImage extends CWidget
 {
-	/**
-	 * Image size
-	 * @var type 
-	 */
 	public $size = 32;
 
 	/**
@@ -27,24 +23,32 @@ class CrmImage extends CWidget
 	public $contact;
 	
 	/**
-	 * Additional html options for the image tag
-	 * @var array
+	 * html options for the image tag
+	 * @var array 
 	 */
 	public $htmlOptions = array();
+	
+	/**
+	 * Allows the user to edit the image displayed.
+	 * @var boolean 
+	 */
+	public $edit = false;
+	
+	
 
-	public function run()
-	{
-		if($this->contact->isPerson()){
-			$email = empty($this->contact->emails) ? '' : $this->contact->emails[0]->address;
-			echo $this->widget('crm.components.Gravatar',array(
-				'size'=>$this->size,
-				'email'=>$email,
-				'htmlOptions'=>$this->htmlOptions),true);
+	public function run(){
+		$this->htmlOptions['width'] = $this->size;
+		if($this->contact===null){
+			$img = CrmModule::get()->getAssetsUrl().'/images/mistery-img.png';
+			$img = NHtml::image($img,'Mystery person Image',$this->htmlOptions);
+		}elseif($this->contact->isPerson()){
+			$email = $this->contact->getPrimaryEmail();
+			$img = $this->widget('crm.components.Gravatar',array('size'=>$this->size,'email'=>$email, 'htmlOptions'=>$this->htmlOptions),true);
 		}else{
 			$orgImg = CrmModule::get()->getAssetsUrl().'/images/mistery-org.png';
-			$this->htmlOptions['width'] = $this->size;
-			echo NHtml::image($orgImg,'Compnay Image',$this->htmlOptions);
+			$img = NHtml::image($orgImg,'Compnay Image',$this->htmlOptions);
 		}
+		$this->render('crm-image',array('img'=>$img));
 	}
 
 }

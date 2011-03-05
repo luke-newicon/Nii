@@ -1,8 +1,8 @@
 <?php
 define('DS',DIRECTORY_SEPARATOR);
-echo Yii::getPathOfAlias('application.modules');
 // uncomment the following to define a path alias
-Yii::setPathOfAlias('modules',  dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
+ Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
@@ -10,7 +10,8 @@ return array(
 	'name'=>'Projects!',
 
 	// preloading 'log' component
-	'preload'=>array('log','nii'),
+	'preload'=>array('log'),
+
 
 
 	// autoloading model and component classes
@@ -19,13 +20,14 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
-		'application.Nii',
+		'application.vendors.*',
+		'application.vendors.FirePHPCore.*',
 		'modules.user.models.*',
         'modules.user.components.*',
 	),
 	'theme'=>'classic',
 
-	'modulePath'=>dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules',
+	'modulePath'=>dirname(__FILE__).'/../../modules',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'gii'=>array(
@@ -37,28 +39,29 @@ return array(
 		'crm',
 		'kashflow',
 		'user',
+		'support',
+		
 	),
 
 	// application components
 	'components'=>array(
-		'nii'=>array(
-			'class'=>'Nii'
-		),
+
 		'user'=>array(
 			'class'=>'NWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-			'loginUrl' => array('/users/login'),
+			'loginUrl' => array("/user/index/login"),
 			
 		),
-		'components'=>array(
-			'authManager'=>array(
-				'class'=>'CDbAuthManager',
-				'defaultRoles'=>array('authenticated', 'guest'),
-			),
+		'authManager'=>array(
+			'class'=>'CDbAuthManager',
+			'connectionID'=>'db',
+			'assignmentTable'=>'auth_assignment',
+			'itemChildTable'=>'auth_item_child',
+			'itemTable'=>'auth_item',
+			'defaultRoles'=>array('authenticated', 'guest'),
 		),
 		// uncomment the following to enable URLs in path-format
-
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -98,7 +101,7 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'system.db.CDbCommand',
+					'categories'=>'error,trace,system.db.CDbCommand',
 					'showInFireBug'=>true,
 				),
 			),
@@ -107,9 +110,9 @@ return array(
 			'class' => 'CFileCache',
 		),
 		
-		'viewRenderer'=>array(
-            'class'=>'CPradoViewRenderer',
-        ),
+//		'viewRenderer'=>array(
+//			///'class'=>'application.extensions.yiiext.renderers.smarty.ESmartyViewRenderer',
+//        ),
 	),
 
 	// application-level parameters that can be accessed

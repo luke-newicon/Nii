@@ -1,5 +1,5 @@
 <?php 
-Class SuppliersController extends NiiController
+Class SuppliersController extends NController
 {
 	public function actionIndex(){
 		$suppliers = new KashSuppliers();

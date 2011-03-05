@@ -2,7 +2,7 @@
 
 class RegistrationController extends NController
 {
-	public $defaultAction = 'registration';
+	public $defaultAction = 'index';
 	
 
 
@@ -21,7 +21,7 @@ class RegistrationController extends NController
 	/**
 	 * Registration user
 	 */
-	public function actionRegistration() {
+	public function actionIndex() {
 		$model = new RegistrationForm;
 		$contact = new CrmContact;
 		$module = $this->getModule();
@@ -42,14 +42,16 @@ class RegistrationController extends NController
 					$model->createtime=time();
 					$model->superuser=0;
 					$model->status=(($module->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
+					$model->save();
+					
+					// if crm module installed
 					$contact->attributes = $_POST['CrmContact'];
 					$contact->type = CrmContact::TYPE_USER;
+					$contact->user_id = $model->id;
 					$contact->save();
 					
-					$model->contact_id = $contact->id;
-					$model->save();
 					if ($module->sendActivationMail) {
-						$activationUrl = $this->makeActivationLink($model);
+						$activationUrl = $this->makeActivationLink($model, '/user/registration/activation');
 						UserModule::sendMail($model->email,
 							UserModule::t("You registered from {site_name}",
 								array('{site_name}'=>Yii::app()->name)),
@@ -57,8 +59,8 @@ class RegistrationController extends NController
 								array('{activation_url}'=>$activationUrl)));
 					}
 
-					if (($module->loginNotActive ||($module->activeAfterRegister && $module->sendActivationMail==false))
-						&&$module->autoLogin) {
+					// if users can login imediately after registration
+					if (($module->loginNotActive ||($module->activeAfterRegister && $module->sendActivationMail==false)) && $module->autoLogin) {
 						$identity=new UserIdentity($model->username,$soucePassword);
 						$identity->authenticate();
 						Yii::app()->user->login($identity,0);
@@ -96,8 +98,11 @@ class RegistrationController extends NController
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find) && $find->status==1) {
+				echo $email;
+				echo $find->status;
+				echo 'NOT THIS ONE!';
 			    $this->render('/user/message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
-			} elseif(isset($find->activekey) && $this->checkActivationKey ($find, $activekey)) {
+			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
@@ -110,23 +115,21 @@ class RegistrationController extends NController
 		}
 	}
 	
-	public function actionTest(){
-		$u = User::model()->notsafe()->findByPk(3);
-		echo $this->makeActivationLink($u);
-	}
 	
 	/**
 	 * returns the encoded activation key 
 	 * @param User $u
 	 * @return type 
 	 */
-	public function makeActivationLink(User $u)
+	public function makeActivationLink(User $u, $url)
 	{
-		return $this->createAbsoluteUrl('/user/registration/activation',array(
+		return $this->createAbsoluteUrl($url,array(
 			"activekey" =>$this->makeKeyPretty($u->activekey), 
 			"e" => NData::base64UrlEncode($u->email)
 		));
 	}
+	
+	
 	/**
 	 * Check the activation key to ensure the authentisity of this activation
 	 * request
@@ -154,5 +157,58 @@ class RegistrationController extends NController
 		foreach($compareKeyChars as $index)
 			$key .= substr ($ak, $index, 1);
 		return $key;
+	}
+	
+	
+	
+	
+	/**
+	 * Recovery password
+	 */
+	public function actionRecovery () {
+		$form = new UserRecoveryForm;
+		if (Yii::app()->user->id) {
+			$this->redirect(Yii::app()->controller->module->returnUrl);
+		} else {
+			$email = NData::base64UrlDecode(((isset($_GET['e']))?$_GET['e']:''));
+			$activekey = ((isset($_GET['activekey']))?$_GET['activekey']:'');
+			if ($email&&$activekey) {
+				$form2 = new UserChangePassword;
+				$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
+				if (isset($find) && $this->checkActivationKey($find, $activekey)) {
+					if(isset($_POST['UserChangePassword'])) {
+						$form2->attributes=$_POST['UserChangePassword'];
+						if($form2->validate()) {
+							if ($find->status==0) {
+								$find->status = 1;
+							}
+							$find->save();
+							Yii::app()->user->setFlash('recoveryMessage',UserModule::t("New password is saved."));
+							$this->redirect(Yii::app()->controller->module->recoveryUrl);
+						}
+					} 
+					$this->render('/recovery/changepassword',array('form'=>$form2));
+				} else {
+					Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Incorrect recovery link."));
+					$this->redirect(Yii::app()->controller->module->recoveryUrl);
+				}
+			} else {
+				if(isset($_POST['UserRecoveryForm'])) {
+					$form->attributes=$_POST['UserRecoveryForm'];
+					if($form->validate()) {
+						$user = User::model()->notsafe()->findbyPk($form->user_id);
+						$activation_url = $this->makeActivationLink($user, '/user/registration/recovery');
+
+						$subject = UserModule::t("You have requested password recovery from {site_name}",array('{site_name}'=>Yii::app()->name));
+						$message = UserModule::t("You have requested password recovery from {site_name}. To receive a new password, go to {activation_url}.",array('{site_name}'=>Yii::app()->name, '{activation_url}'=>$activation_url));
+						UserModule::sendMail($user->email,$subject,$message);
+
+						Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Please check your email. instructions have been sent to your email address."));
+						$this->refresh();
+					}
+				}
+				$this->render('/recovery/recovery',array('form'=>$form));
+			}
+		}
 	}
 }

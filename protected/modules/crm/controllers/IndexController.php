@@ -1,8 +1,25 @@
 <?php
-class IndexController extends NController
+class IndexController extends NAController
 {
 
-	public function actionIndex() {
+	public function init(){
+		parent::init();
+		$this->breadcrumbs=array($this->module->id);
+	}
+	
+	public function accessRules() 
+	{
+		return array(
+			array('allow',
+				//'actions'=>array('index'),
+				'users'=>array('@'),
+			),
+        );
+		parent::accessRules();
+	}
+	
+	public function actionIndex() 
+	{
 		$contacts = CrmContact::model()->orderByName()->findAll();
 		$this->render('index',array(
 			'term'=>'',
@@ -10,7 +27,8 @@ class IndexController extends NController
 		));
 	}
 
-	public function actionGetContactForm($cid=null) {
+	public function actionGetContactForm($cid=null) 
+	{
 		$c = CrmContact::model()->findByPk($cid);
 		if(!$c) $c = new CrmContact();
 		echo $this->render('_edit-contact', array('c' => $c), true);
@@ -18,7 +36,8 @@ class IndexController extends NController
 
 	
 	
-	public function validate($models){
+	public function validate($models)
+	{
 		$result=array();
 		if(!is_array($models))
 			$models=array($models);
@@ -58,7 +77,8 @@ class IndexController extends NController
 	 * @param int $cid contact_id
 	 * @return string json array
 	 */
-	public function actionEditContact($cid=null) {
+	public function actionEditContact($cid=null) 
+	{
 		
 		
 		if(isset($_POST['ajax']) && $_POST['ajax'] == 'contactForm'){
@@ -102,8 +122,15 @@ class IndexController extends NController
 			'valid' => $valid, 'form' => $html, 'id' => $c->id(), 'card' => $card, 'createdCompany' => $compData
 		));
 	}
-
-	public function actionLookupCompany() {
+	
+	/**
+	 * ajax action to lookup and return a list of companies for
+	 * an autocomplete box
+	 * expects $_REQUEST['term']
+	 * echos json string
+	 */
+	public function actionLookupCompany() 
+	{
 		$t = $this->getRequest()->getParam('term', '');
 		$c = new Nworx_Crm_Model_Contacts();
 		$cs = $c->select()->where('contact_company like ?', "%$t%")->go();
@@ -115,18 +142,37 @@ class IndexController extends NController
 		echo CJSON::encode($arr);
 	}
 
-	public function actionDelete($cid) {
+	/**
+	 * ajax action: deletes a contact and returns json true or false
+	 * @param int $cid the contact id
+	 */
+	public function actionDelete($cid) 
+	{
 		$c = CrmContact::model()->findByPk($cid);
 		echo CJSON::encode($c->delete());
 	}
 
-	public function actionFindContact($term='', $group='') {
+	/**
+	 * ajax action to find a contact based on a search term
+	 * echoes html _user-list
+	 * @param string $term the search term
+	 * @param string $group group name or identifier
+	 */
+	public function actionFindContact($term='', $group='') 
+	{
 		$cs = CrmContact::model();
 		$contacts = $cs->orderByName()->nameLike($term)->group($group)->findAll();
 		echo $this->render('_user-list', array('contacts' => $contacts, 'term' => $term), true);
 	}
 
-	public function actionFindContactAlpha($letter){
+	/**
+	 * ajax action returns a html user list matching the 
+	 * searched character. This is used for the a-z character lookup
+	 * 
+	 * @param string $letter a letter character eg: 'a' | 'b'
+	 */
+	public function actionFindContactAlpha($letter)
+	{
 		$cs = CrmContact::model();
 		//$cs->orderByName()->nameLetterIndex()
 		if(Nworx_Crm_Crm::get()->sortOrderFirstLast){
@@ -144,7 +190,9 @@ class IndexController extends NController
 		echo $this->view->renderPartial('user-list', array('contacts' => $q->go(), 'term' => ''), true);
 	}
 	
-	public function actionFacebookLookup($id){
+	
+	public function actionFacebookLookup($id)
+	{
 		$c = new Nworx_Crm_Model_Contact($id);
 		$e = $c->emails[0]->address;
 		$config = array(
@@ -165,7 +213,8 @@ class IndexController extends NController
 		}
 	}
 	
-	public function actionTest(){
+	public function actionTest()
+	{
 		$contact = new CrmContact;
 		$this->render('test',array('contact'=>$contact));
 	}

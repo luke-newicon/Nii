@@ -4,7 +4,7 @@
 
 	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 
-	<?php echo CHtml::errorSummary(array($model,$profile)); ?>
+	<?php echo CHtml::errorSummary(array($model)); ?>
 
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'username'); ?>
@@ -35,30 +35,7 @@
 		<?php echo CHtml::activeDropDownList($model,'status',User::itemAlias('UserStatus')); ?>
 		<?php echo CHtml::error($model,'status'); ?>
 	</div>
-<?php 
-		$profileFields=$profile->getFields();
-		if ($profileFields) {
-			foreach($profileFields as $field) {
-			?>
-	<div class="row">
-		<?php echo CHtml::activeLabelEx($profile,$field->varname); ?>
-		<?php 
-		if ($field->widgetEdit($profile)) {
-			echo $field->widgetEdit($profile);
-		} elseif ($field->range) {
-			echo CHtml::activeDropDownList($profile,$field->varname,Profile::range($field->range));
-		} elseif ($field->field_type=="TEXT") {
-			echo CHtml::activeTextArea($profile,$field->varname,array('rows'=>6, 'cols'=>50));
-		} else {
-			echo CHtml::activeTextField($profile,$field->varname,array('size'=>60,'maxlength'=>(($field->field_size)?$field->field_size:255)));
-		}
-		 ?>
-		<?php echo CHtml::error($profile,$field->varname); ?>
-	</div>	
-			<?php
-			}
-		}
-?>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

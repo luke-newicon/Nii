@@ -36,7 +36,7 @@ Class KashflowModule extends NWebModule
 		// import the module-level models and components
 		$this->setImport(array(
 			'kashflow.models.*',
-			'kashflow.models.api.*',
+			'kashflow.models.Api.*',
 			'kashflow.components.*',
 		));
 
