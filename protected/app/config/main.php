@@ -84,7 +84,7 @@ return array(
 			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
-			'schemaCachingDuration' => 3600,
+			//'schemaCachingDuration' => 3600,
 			'enableProfiling'=>true,
 			'enableParamLogging'=>true,
 		),
