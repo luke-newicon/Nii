@@ -6,8 +6,10 @@ class IndexController extends NController
 	{
 		NMailReader::readMail();
 		$tickets = SupportTicket::model()->findAll();
+		$total = NMailReader::countMessages();
 		$this->render('index',array(
 			'tickets'=>$tickets,
+			'total'=>$total,
 		));
 	}
 	
@@ -49,6 +51,10 @@ class IndexController extends NController
 
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
+	}
+	
+	public function actionLayout(){
+		$this->render('test');
 	}
 	
 }

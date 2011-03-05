@@ -1,11 +1,12 @@
-<?php $this->breadcrumbs=array($this->module->id); ?>
-
+<?php $msgPreviewHeight=75; ?>
+<?php $msgPreviewNumber=30; ?>
+<?php echo 'total messages ' . $total; ?>
 <h1>Support</h1>
 <style>
-	.listItem{border-bottom:1px solid #ECECEC;padding:5px 10px;cursor:pointer;}
-	.listItem .subject{overflow:hidden;height:18px;}
+	.listItem{border-bottom:1px solid #ECECEC;padding:5px 10px;cursor:pointer;height:75px;}
+	.listItem .subject{overflow:hidden;height:1.4em;}
 	.listItem .body{overflow:hidden;height:32px;}
-	.listItem .from{font-weight:bold;font-size:15px;}
+	.listItem .from{font-weight:bold;font-size:15px;height:1.4em;overflow:hidden;}
 	.leftPanel{border-right:1px solid #ccc;width:300px;}
 	.leftMainPanel{border-right:1px solid #ccc;background-color:#f9f9f9;}
 	.flags{width:5%;}
@@ -14,14 +15,17 @@
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #bbb;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
 	.mod.toolbar .inner .bd {height:30px;}
-	.spinner-white{background:url('/images/white-spinner.gif');}
-	.popSpinner{border:1px solid #333;-moz-border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#ccc;position:absolute;top:50px;left:200px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
+	.popSpinner{display:none;border:1px solid #333;-moz-border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
+	
+	.scroll{overflow:auto;height:300px;}
+	#messageList{background:url('http://localhost/newicon/projects/images/message-border.png') repeat top left;}
 </style>
-<script type="text/javascript" src="http://localhost/newicon/projects/assets/jquery.layout.min.js"></script>
+<script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
+<div class="">Center</div>
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;">Loading...</div></div></div>
 </div>
-<div class="line">
+<div class="line" id="mClient">
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
@@ -29,7 +33,7 @@
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
-
+			
 		</div>
 	</div>
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
@@ -38,11 +42,14 @@
 				&nbsp;
 			</div>
 		<?php $this->endWidget(); ?>
-		<div id="messageList" >
-			
+		<div id="messageScroll" class="scroll">
+			<?php //messageList will be as high as total number of messages  ?>
+			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;">
+				
+			</div>
 		</div>
 	</div>
-	<div id="emailBox" class="lastUnit ui-layout-east">
+	<div id="emailBox" class="lastUnit ui-layout-center">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
 				<a href="#" class="btn btnN">Reply</a>
@@ -65,5 +72,22 @@
 			var id = $(this).attr('id');
 			$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
 		});
+		$('#messageScroll').scroll(function(){
+			var msgHeight = <?php echo $msgPreviewHeight;?>;
+			var msgNumber = <?php echo $msgPreviewNumber;?>;
+			var allMsgsHeight = msgHeight*msgNumber;
+			
+			$lastMsg = $('#messageList').find('.listItem:last');
+			if(!$lastMsg.length)
+				return;
+			var lastMsgPos = $lastMsg.position();
+			if((lastMsgPos - $('#messageScroll').height()) < -30){
+				var loadMsgOffset = $(this).scrollTop() / msgHeight;
+				//alert('load from message ' + loadMsgOffset);
+				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
+				
+			}
+		});
+		
 	});
 </script>
