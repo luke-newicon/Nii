@@ -15,21 +15,35 @@
  */
 class CrmImage extends CWidget
 {
+	/**
+	 * Image size
+	 * @var type 
+	 */
 	public $size = 32;
 
 	/**
 	 * @var CrmContact 
 	 */
 	public $contact;
-
-	public function run(){
 	
+	/**
+	 * Additional html options for the image tag
+	 * @var array
+	 */
+	public $htmlOptions = array();
+
+	public function run()
+	{
 		if($this->contact->isPerson()){
 			$email = empty($this->contact->emails) ? '' : $this->contact->emails[0]->address;
-			echo $this->widget('crm.components.Gravatar',array('size'=>$this->size,'email'=>$email),true);
+			echo $this->widget('crm.components.Gravatar',array(
+				'size'=>$this->size,
+				'email'=>$email,
+				'htmlOptions'=>$this->htmlOptions),true);
 		}else{
 			$orgImg = CrmModule::get()->getAssetsUrl().'/images/mistery-org.png';
-			echo NHtml::image($orgImg,'Compnay Image',array('width'=>$this->size));
+			$this->htmlOptions['width'] = $this->size;
+			echo NHtml::image($orgImg,'Compnay Image',$this->htmlOptions);
 		}
 	}
 

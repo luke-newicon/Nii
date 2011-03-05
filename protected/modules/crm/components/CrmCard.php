@@ -9,7 +9,6 @@ Class CrmCard extends CWidget
 	
 	public $size = 24;
 	
-	
 	public function init(){
 		$this->render('card',array('contact'=>$this->contact,'term'=>$this->term));
 	}

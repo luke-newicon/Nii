@@ -5,13 +5,16 @@
 		array('label'=>'Register', 'url'=>Yii::app()->getModule('user')->registrationUrl),
 	)
 )); ?>
-guest
+<?php else: ?>
 <div class="media man" style="float:left;width:250px;">
-	<a href="<?php echo NHtml::url('/users/profile'); ?>">
-	<?php //echo $this->com('users/gravatar',array(
-	//	'email'=>$user->email,
-	//	'size'=>25,
-	//	'htmlOptions'=>array('class'=>'img','style'=>'background-color:#fff;padding:2px;border:1px solid #ddd;')));?>
+
+	<a href="<?php echo NHtml::url('/user/profile'); ?>">
+	
+	<?php 
+	$this->widget('crm.components.crmImage',array(
+		'contact'=>$user->contact,
+		'size'=>25,
+		'htmlOptions'=>array('class'=>'img','style'=>'background-color:#fff;padding:2px;border:1px solid #ddd;')));?>
 	</a>
 	<div class="bd">
 		<p>
@@ -30,6 +33,4 @@ guest
 		</p>
 	</div>
 </div>
-<?php else: ?>
-
 <?php endif; ?>

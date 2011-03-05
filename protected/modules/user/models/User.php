@@ -74,7 +74,7 @@ class User extends NActiveRecord
 	public function relations()
 	{
 		$relations = array(
-			'profile'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
+			'contact'=>array(self::BELONGS_TO, 'CrmContact', 'contact_id'),
 		);
 		if (isset(Yii::app()->getModule('user')->relations)) $relations = array_merge($relations,Yii::app()->getModule('user')->relations);
 		return $relations;
@@ -124,7 +124,7 @@ class User extends NActiveRecord
 	public function defaultScope()
     {
         return array(
-            'select' => 'id, username, email, createtime, lastvisit, superuser, status',
+            'select' => 'id, username, email, createtime, lastvisit, superuser, status, contact_id',
         );
     }
 	
@@ -187,6 +187,5 @@ class User extends NActiveRecord
 	public static function getCurrentUser(){
 		return User::model()->findByPk(Yii::app()->user->getId());
 	}
-
 
 }

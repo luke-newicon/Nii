@@ -14,7 +14,8 @@
  *
  * @author steve
  */
-class NWebUser extends CWebUser {
+class NWebUser extends CWebUser 
+{
 
 	private $_user;
 	
@@ -29,7 +30,17 @@ class NWebUser extends CWebUser {
 		if($this->_user === null){
 			$this->_user = User::model()->findByPk($this->getId());
 		}
-		return $_user;
+		return $this->_user;
+	}
+	
+	/**
+	 * Gets the associated contact record.
+	 * 
+	 * @return CrmContact
+	 */
+	public function getContact(){
+		//return CrmContact::model()->findByPk($this->getRecord()->contact_id);
+		return $this->getRecord()->contact;
 	}
 
 }

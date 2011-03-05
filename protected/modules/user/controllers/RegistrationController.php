@@ -96,12 +96,8 @@ class RegistrationController extends NController
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find) && $find->status==1) {
-				echo $email;
-				echo $find->status;
-				echo 'NOT THIS ONE!';
 			    $this->render('/user/message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
 			} elseif(isset($find->activekey) && $this->checkActivationKey ($find, $activekey)) {
-				echo 'doing this';
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
@@ -115,7 +111,7 @@ class RegistrationController extends NController
 	}
 	
 	public function actionTest(){
-		$u = User::model()->notsafe()->findByPk(4);
+		$u = User::model()->notsafe()->findByPk(3);
 		echo $this->makeActivationLink($u);
 	}
 	

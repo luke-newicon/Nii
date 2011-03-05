@@ -61,7 +61,7 @@ class CrmContact extends NActiveRecord
 			array('type', 'length', 'max'=>7),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, title, first_name, last_name, company, company_id, type', 'safe', 'on'=>'search'),
+			array('id, title, first_name, last_name, company, company_id, type, contact_id', 'safe', 'on'=>'search'),
 		);
 	}
 

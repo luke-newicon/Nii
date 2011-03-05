@@ -16,7 +16,6 @@
  */
 class NLoginInfo extends CWidget 
 {
-	public $something;
 	public function run()
 	{
 		$this->render('login-info',array('user'=>Yii::app()->user));

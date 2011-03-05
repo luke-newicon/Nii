@@ -25,7 +25,7 @@
 			<div class="loginMenu">
 				<div class="menu menuR">
 					<com:user.components.NLoginInfo/>
-					<?php $this->widget('user.components.NLoginInfo'); ?>
+					<?php //$this->widget('user.components.NLoginInfo'); ?>
 				</div>
 			</div>
 		</div>

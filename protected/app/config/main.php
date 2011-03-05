@@ -1,17 +1,16 @@
 <?php
-
+define('DS',DIRECTORY_SEPARATOR);
+echo Yii::getPathOfAlias('application.modules');
 // uncomment the following to define a path alias
-// Yii::setPathOfAlias('local','path/to/local-folder');
-
+Yii::setPathOfAlias('modules',  dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
+	'basePath'=>dirname(__FILE__).DS.'..',
 	'name'=>'Projects!',
 
 	// preloading 'log' component
 	'preload'=>array('log','nii'),
-
 
 
 	// autoloading model and component classes
@@ -21,13 +20,12 @@ return array(
 		'application.extensions.*',
 		'application.validators.*',
 		'application.Nii',
-		'application.modules.user.models.*',
-        'application.modules.user.components.*',
-
+		'modules.user.models.*',
+        'modules.user.components.*',
 	),
 	'theme'=>'classic',
 
-	'modulePath'=>dirname(__FILE__).'/../../modules',
+	'modulePath'=>dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules',
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'gii'=>array(
@@ -46,8 +44,8 @@ return array(
 		'nii'=>array(
 			'class'=>'Nii'
 		),
-
-		'users'=>array(
+		'user'=>array(
+			'class'=>'NWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 			'loginUrl' => array('/users/login'),
