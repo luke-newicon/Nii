@@ -4,7 +4,6 @@ class IndexController extends NController
 {
 	public function actionIndex()
 	{
-		NMailReader::readMail();
 		$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();
 		$this->render('index',array(
@@ -30,14 +29,21 @@ class IndexController extends NController
 			throw new CHttpException(404, 'Can not find the email message in the database');
 		$this->render('email',array('e'=>$e));
 	}
-	
-	public function actionLoadMessageList()
+
+	/**
+	 * load in the message previews
+	 * @param int $offset
+	 */
+	public function actionLoadMessageList($offset=0)
 	{
+		NMailReader::$readOfset = $offset*SupportModule::get()->msgPageLimit;
+		NMailReader::readMail();
 		$total = NMailReader::countMessages();
-		$tickets = SupportTicket::model()->findAll();
+		$tickets = SupportTicket::model()->findAll(array('limit'=>30,'offset'=>$offset*30));
 		echo $this->render('message-list',array(
 			'total'=>$total,
-			'tickets'=>$tickets
+			'tickets'=>$tickets,
+			'offset'=>$offset,
 		), true);
 	}
 

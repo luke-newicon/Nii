@@ -81,7 +81,6 @@ class SupportTicket extends NActiveRecord
 	public function  defaultScope() {
 		return array(
 			'order'=>'date DESC',
-			'limit'=>30
 		);
 	}
 	

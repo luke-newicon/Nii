@@ -84,6 +84,12 @@ class SupportModule extends NWebModule
 	 * @property string 
 	 */
 	public $subjectPrepend = '#';
+
+	/**
+	 * The number of messages to load per page
+	 * @var int
+	 */
+	public $msgPageLimit = 30;
 	
 	public function init()
 	{
@@ -111,5 +117,12 @@ class SupportModule extends NWebModule
 		}
 		else
 			return false;
+	}
+
+	/**
+	 * @return SupportModule
+	 */
+	public function get(){
+		return Yii::app()->getModule('support');
 	}
 }

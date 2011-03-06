@@ -17,7 +17,9 @@
  */
 Class NMailReader extends CComponent
 {
-	public static $readLimit = 5;
+	public static $readLimit = 30;
+
+	public static $readOfset = 30;
 	
 	public static $mail;
 	
@@ -39,7 +41,8 @@ Class NMailReader extends CComponent
 		return self::$mail;
 	}
 	
-	public static function countMessages(){
+	public static function countMessages()
+	{
 		return self::connect()->countMessages();
 	}
 	
@@ -51,11 +54,11 @@ Class NMailReader extends CComponent
 		dp($msg);
 		dp($msg->getContent());
 		
-		if($msg->isMultipart()){
+		if ($msg->isMultipart()) {
 			foreach($msg as $part){
 				dp($part);
 			}
-		}else{
+		} else {
 			$encoding = self::headerParam($msg,'content-transfer-encoding');
 			if (strtok($msg->contentType, ';') == 'text/html'){
 				echo self::decode($msg->getContent(),$encoding);
@@ -63,33 +66,22 @@ Class NMailReader extends CComponent
 				echo self::decode($msg->getContent(),$encoding);
 			}
 		}
-		
-//		foreach($msg as $part){
-//			dp($part);
-//			
-//			
-//		}
 	}
 	
 	public static function readMail(){
 		
 		$mail = self::connect();
-		$msgNum = self::countMessages();
-		$msg = $mail->getMessage($msgNum-1);
-			
-		
 
 		// read messages Latest First.
 		// should limit results:
 		$msgNum = self::countMessages();
+		$msgNum = $msgNum - self::$readOfset;
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 			if($ii >= self::$readLimit) break;
 			$e = $mail->getMessage($i);	
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
-			//FB::log($i,'mail number');
-			//FB::log($ii,'loop number');
 			$ii++;
 			if($e->headerExists('message-id')){
 				if(SupportEmail::model()->find('message_id=:id',array(':id'=>$e->getHeader('message-id')))){

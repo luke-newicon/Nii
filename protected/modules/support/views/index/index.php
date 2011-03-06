@@ -63,50 +63,134 @@
 
 
 <script>
-	$(function(){
-		
-		$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
-		$('#messageList').delegate('.listItem','click',function(){
-			$(this).parent().find('.listItem').removeClass('sel');
-			$(this).addClass('sel');
-			var id = $(this).attr('id');
-			$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
-		});
-		
-		$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList') ?>');
-		var loadedPages = [];
-		loadedPages[1] = 1;
-		$('#messageScroll').scroll(function(){
-			var msgHeight = <?php echo $msgPreviewHeight;?>;
-			var msgNumber = <?php echo $msgPreviewNumber;?>;
-			var allMsgsHeight = msgHeight*msgNumber;
-			
-			$lastMsg = $('#messageList').find('.listItem:last');
-			if(!$lastMsg.length)
-				return;
-			var lastMsgPos = $lastMsg.position();
-			
-			// calculate the batch (page) to load based on the current scroll position
-			var batchToLoad = Math.floor(($(this).scrollTop() / allMsgsHeight))
+$(function(){
 
-			if(batchToLoad in loadedPages){
-				alert('LOAD BATCH: ' + batchToLoad);
-			}
-			// checks if there are visible messages in the scroll portion of the window
-			if((lastMsgPos.top - $('#messageScroll').height()) < -30){
-				// calculate which messages to load based on the scroll position.
-				// allMsgsHeight: the height of one batch of loaded messages
-				// divide the scroll pane up in batches and see which batch we have scrolled to. 
-				// a batch of messages is equivelant to a page
-				
-				var loadMsgOffset = $(this).scrollTop() / allMsgsHeight;
-				$('.popSpinner').show();
-				
-//				alert('load from message ' + (loadMsgOffset - 3));
-//				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
-//				alert(($('#messageList').height() / allMsgsHeight))
-			}
-		});
-		
+	$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
+	$('#messageList').delegate('.listItem','click',function(){
+		$(this).parent().find('.listItem').removeClass('sel');
+		$(this).addClass('sel');
+		var id = $(this).attr('id');
+		$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
 	});
+
+	$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList') ?>');
+	var loadedBatches = [];
+	loadedBatches[0] = 1;
+	$('#messageScroll').bind('scrollstop',function(){
+		var msgHeight = <?php echo $msgPreviewHeight;?>;
+		var msgNumber = <?php echo $msgPreviewNumber;?>;
+		var allMsgsHeight = msgHeight*msgNumber;
+
+		$lastMsg = $('#messageList').find('.listItem:last');
+		if(!$lastMsg.length)
+			return;
+		var lastMsgPos = $lastMsg.position();
+
+		// calculate the batch (page) to load based on the current scroll position
+		//console.log($(this).scrollTop());
+		//console.log('allmsgbath height: '+allMsgsHeight);
+		var batchToLoad = Math.floor(($(this).scrollTop() / allMsgsHeight));
+		//console.log('LOAD BATCH: ' + batchToLoad);
+		if(batchToLoad in loadedBatches){
+			//alert('LOAD BATCH: ' + batchToLoad);
+			//console.log('DO NOT LOAD BATCH: ' + batchToLoad);
+		}else{
+			$('.popSpinner').show();
+			$.ajax({
+				url:'<?php echo NHtml::url('/support/index/loadMessageList/offset'); ?>/'+batchToLoad,
+				success:function($msgs){
+					$('#messageList').append($msgs);
+					$('.popSpinner').hide();
+
+				}
+			});
+			loadedBatches[batchToLoad] = 1;
+		}
+		// checks if there are visible messages in the scroll portion of the window
+//			if((lastMsgPos.top - $('#messageScroll').height()) < -30){
+//				// calculate which messages to load based on the scroll position.
+//				// allMsgsHeight: the height of one batch of loaded messages
+//				// divide the scroll pane up in batches and see which batch we have scrolled to.
+//				// a batch of messages is equivelant to a page
+//
+//				var loadMsgOffset = $(this).scrollTop() / allMsgsHeight;
+//				$('.popSpinner').show();
+//
+////				alert('load from message ' + (loadMsgOffset - 3));
+////				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
+////				alert(($('#messageList').height() / allMsgsHeight))
+//			}
+	});
+
+});
+
+(function(){
+
+    var special = jQuery.event.special,
+        uid1 = 'D' + (+new Date()),
+        uid2 = 'D' + (+new Date() + 1);
+
+    special.scrollstart = {
+        setup: function() {
+
+            var timer,
+                handler =  function(evt) {
+
+                    var _self = this,
+                        _args = arguments;
+
+                    if (timer) {
+                        clearTimeout(timer);
+                    } else {
+                        evt.type = 'scrollstart';
+                        jQuery.event.handle.apply(_self, _args);
+                    }
+
+                    timer = setTimeout( function(){
+                        timer = null;
+                    }, special.scrollstop.latency);
+
+                };
+
+            jQuery(this).bind('scroll', handler).data(uid1, handler);
+
+        },
+        teardown: function(){
+            jQuery(this).unbind( 'scroll', jQuery(this).data(uid1) );
+        }
+    };
+
+    special.scrollstop = {
+        latency: 300,
+        setup: function() {
+
+            var timer,
+                    handler = function(evt) {
+
+                    var _self = this,
+                        _args = arguments;
+
+                    if (timer) {
+                        clearTimeout(timer);
+                    }
+
+                    timer = setTimeout( function(){
+
+                        timer = null;
+                        evt.type = 'scrollstop';
+                        jQuery.event.handle.apply(_self, _args);
+
+                    }, special.scrollstop.latency);
+
+                };
+
+            jQuery(this).bind('scroll', handler).data(uid2, handler);
+
+        },
+        teardown: function() {
+            jQuery(this).unbind( 'scroll', jQuery(this).data(uid2) );
+        }
+    };
+
+})();
 </script>
