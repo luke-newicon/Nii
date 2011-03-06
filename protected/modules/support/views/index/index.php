@@ -64,7 +64,7 @@
 
 <script>
 	$(function(){
-		$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList') ?>');
+		
 		$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
 		$('#messageList').delegate('.listItem','click',function(){
 			$(this).parent().find('.listItem').removeClass('sel');
@@ -72,6 +72,10 @@
 			var id = $(this).attr('id');
 			$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
 		});
+		
+		$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList') ?>');
+		var loadedPages = [];
+		loadedPages[1] = 1;
 		$('#messageScroll').scroll(function(){
 			var msgHeight = <?php echo $msgPreviewHeight;?>;
 			var msgNumber = <?php echo $msgPreviewNumber;?>;
@@ -81,11 +85,26 @@
 			if(!$lastMsg.length)
 				return;
 			var lastMsgPos = $lastMsg.position();
-			if((lastMsgPos - $('#messageScroll').height()) < -30){
-				var loadMsgOffset = $(this).scrollTop() / msgHeight;
-				//alert('load from message ' + loadMsgOffset);
-				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
+			
+			// calculate the batch (page) to load based on the current scroll position
+			var batchToLoad = Math.floor(($(this).scrollTop() / allMsgsHeight))
+
+			if(batchToLoad in loadedPages){
+				alert('LOAD BATCH: ' + batchToLoad);
+			}
+			// checks if there are visible messages in the scroll portion of the window
+			if((lastMsgPos.top - $('#messageScroll').height()) < -30){
+				// calculate which messages to load based on the scroll position.
+				// allMsgsHeight: the height of one batch of loaded messages
+				// divide the scroll pane up in batches and see which batch we have scrolled to. 
+				// a batch of messages is equivelant to a page
 				
+				var loadMsgOffset = $(this).scrollTop() / allMsgsHeight;
+				$('.popSpinner').show();
+				
+//				alert('load from message ' + (loadMsgOffset - 3));
+//				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
+//				alert(($('#messageList').height() / allMsgsHeight))
 			}
 		});
 		

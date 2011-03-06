@@ -60,6 +60,11 @@ class SupportTicket extends NActiveRecord
 		);
 	}
 
+	public function scopes(){
+//		return array(
+//			'limit'=>30
+//		);
+	}
 	/**
 	 * @return array relational rules.
 	 */
@@ -75,7 +80,8 @@ class SupportTicket extends NActiveRecord
 
 	public function  defaultScope() {
 		return array(
-			'order'=>'date DESC'
+			'order'=>'date DESC',
+			'limit'=>30
 		);
 	}
 	
@@ -166,5 +172,6 @@ class SupportTicket extends NActiveRecord
 		else
 			return null;
 	}
+	
 	
 }
