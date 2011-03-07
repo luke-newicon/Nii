@@ -1,7 +1,6 @@
 <?php $msgPreviewHeight=75; ?>
-<?php $msgPreviewNumber=30; ?>
+<?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
 <?php echo 'total messages ' . $total; ?>
-<h1>Support</h1>
 <style>
 	.listItem{border-bottom:1px solid #ECECEC;padding:5px 10px;cursor:pointer;height:75px;}
 	.listItem .subject{overflow:hidden;height:1.4em;}
@@ -19,12 +18,16 @@
 	
 	.scroll{overflow:auto;height:300px;}
 	#messageList{background:url('http://localhost/newicon/projects/images/message-border.png') repeat top left;}
+
+	#mClient{overflow:hidden;}
+	#email{overflow:auto;}
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
-<div class="">Center</div>
+
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;">Loading...</div></div></div>
 </div>
+
 <div class="line" id="mClient">
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
@@ -33,7 +36,7 @@
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
-			
+
 		</div>
 	</div>
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
@@ -45,7 +48,7 @@
 		<div id="messageScroll" class="scroll">
 			<?php //messageList will be as high as total number of messages  ?>
 			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;">
-				
+				<?php //$this->actionLoadMessageList(0); ?>
 			</div>
 		</div>
 	</div>
@@ -61,10 +64,30 @@
 	</div>
 </div>
 
-
 <script>
 $(function(){
 
+	$(window).stop().resize(function(){
+		resizer();
+	});
+	var resizer = function(){
+		//console.log('height:'+$('#mClient').height());
+		var paddingBottom = $('.main').padding().bottom;
+		var minHeight = 200;
+		if(!(($(window).height()-$('#mClient').position().top-paddingBottom) <= minHeight)){
+			//console.log();
+			$('#mClient').css('height',
+				($(window).height()
+					- $('#mClient').position().top
+					- paddingBottom
+				) +'px');
+			$('#messageScroll').css('height',($(window).height()-$('#messageScroll').position().top-paddingBottom)+'px');
+			$('#email').css('height',($(window).height()-$('#email').position().top-paddingBottom)+'px');
+		}
+	}
+	resizer();
+
+	
 	$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
 	$('#messageList').delegate('.listItem','click',function(){
 		$(this).parent().find('.listItem').removeClass('sel');
@@ -73,7 +96,10 @@ $(function(){
 		$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
 	});
 
-	$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList') ?>');
+	$('.popSpinner').show();
+	$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList'); ?>',function(){
+		$('.popSpinner').hide();
+	});
 	var loadedBatches = [];
 	loadedBatches[0] = 1;
 	$('#messageScroll').bind('scrollstop',function(){
@@ -106,20 +132,6 @@ $(function(){
 			});
 			loadedBatches[batchToLoad] = 1;
 		}
-		// checks if there are visible messages in the scroll portion of the window
-//			if((lastMsgPos.top - $('#messageScroll').height()) < -30){
-//				// calculate which messages to load based on the scroll position.
-//				// allMsgsHeight: the height of one batch of loaded messages
-//				// divide the scroll pane up in batches and see which batch we have scrolled to.
-//				// a batch of messages is equivelant to a page
-//
-//				var loadMsgOffset = $(this).scrollTop() / allMsgsHeight;
-//				$('.popSpinner').show();
-//
-////				alert('load from message ' + (loadMsgOffset - 3));
-////				// minus 2 tas tollerance so it does not leave a gap between new ones loaded and ones already loaded
-////				alert(($('#messageList').height() / allMsgsHeight))
-//			}
 	});
 
 });
@@ -193,4 +205,18 @@ $(function(){
     };
 
 })();
+
+/*
+ * JSizes - JQuery plugin v0.33
+ *
+ * Licensed under the revised BSD License.
+ * Copyright 2008-2010 Bram Stein
+ * All rights reserved.
+ */
+(function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
 </script>
+
+
+<!--
+
+</div>-->

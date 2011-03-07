@@ -89,7 +89,7 @@ class SupportModule extends NWebModule
 	 * The number of messages to load per page
 	 * @var int
 	 */
-	public $msgPageLimit = 30;
+	public $msgPageLimit = 5;
 	
 	public function init()
 	{

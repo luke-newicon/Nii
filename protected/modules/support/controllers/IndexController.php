@@ -4,10 +4,9 @@ class IndexController extends NController
 {
 	public function actionIndex()
 	{
-		$tickets = SupportTicket::model()->findAll();
+		//$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();
 		$this->render('index',array(
-			'tickets'=>$tickets,
 			'total'=>$total,
 		));
 	}
@@ -36,15 +35,17 @@ class IndexController extends NController
 	 */
 	public function actionLoadMessageList($offset=0)
 	{
-		NMailReader::$readOfset = $offset*SupportModule::get()->msgPageLimit;
+		$this->layout = '/layouts/ajax';
+		$limit = SupportModule::get()->msgPageLimit;
+		NMailReader::$readOfset = $offset*$limit;
 		NMailReader::readMail();
 		$total = NMailReader::countMessages();
-		$tickets = SupportTicket::model()->findAll(array('limit'=>30,'offset'=>$offset*30));
-		echo $this->render('message-list',array(
+		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
+		$this->render('message-list',array(
 			'total'=>$total,
 			'tickets'=>$tickets,
 			'offset'=>$offset,
-		), true);
+		));
 	}
 
 	public function actionLoadMessageFolders()

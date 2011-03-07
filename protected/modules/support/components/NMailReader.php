@@ -19,7 +19,7 @@ Class NMailReader extends CComponent
 {
 	public static $readLimit = 30;
 
-	public static $readOfset = 30;
+	public static $readOfset = 0;
 	
 	public static $mail;
 	
@@ -28,6 +28,8 @@ Class NMailReader extends CComponent
 	 * @return Zend_Mail_Storage_Imap 
 	 */
 	public static function connect(){
+		Yii::beginProfile('imap connect');
+		self::$readLimit = SupportModule::get()->msgPageLimit;
 		if(self::$mail ===null){
 			$support = Yii::app()->getModule('support');
 			self::$mail = new Zend_Mail_Storage_Imap(array(
@@ -38,6 +40,7 @@ Class NMailReader extends CComponent
 				'ssl'	   => $support->emailSsl
 			));
 		}
+		Yii::endProfile('imap connect');
 		return self::$mail;
 	}
 	
@@ -79,7 +82,9 @@ Class NMailReader extends CComponent
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 			if($ii >= self::$readLimit) break;
-			$e = $mail->getMessage($i);	
+			Yii::beginProfile('imap: get message');
+			$e = $mail->getMessage($i);
+			Yii::endProfile('imap: get message');
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
 			$ii++;
@@ -88,12 +93,18 @@ Class NMailReader extends CComponent
 					continue;
 				}
 			}
-			self::saveMail($e);
+			self::saveMail($e, $i);
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
 	}
-	
-	public static function saveMail(Zend_Mail_Message $e){
+
+	/**
+	 * saves a mail message
+	 *
+	 * @param Zend_Mail_Message $e
+	 * @param int $i the message position
+	 */
+	public static function saveMail(Zend_Mail_Message $e, $i){
 		// create mail message
 		$m = new SupportEmail();
 		$m->subject = mb_decode_mimeheader($e->subject);
@@ -107,8 +118,13 @@ Class NMailReader extends CComponent
 		// attachments need the mail id so save it first
 		$m->date = self::date($e);
 		$m->save();
-		self::parseParts($e, $m);
-		
+		try {
+			self::parseParts($e, $m);
+		} catch(Zend_Exception $err){
+			Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
+			$m->save();
+			return;
+		}
 		$m->save();
 
 		$t = false;
@@ -147,24 +163,31 @@ Class NMailReader extends CComponent
 	public static function parseParts($msg, &$m){
 		if($msg->isMultipart()){
 			foreach($msg as $part) {
-				$encoding = self::headerParam($part,'content-transfer-encoding');
-				if (strtok($part->contentType, ';') == 'text/html'){
+				$encoding = self::headerParam($part,'content-transfer-encoding', 'quoted-printable');
+				// check header exists
+				if(!$part->headerExists('content-type')){
+					// header does not exist... shout and scream at silly mail format person!
+
+				} elseif (strtok($part->contentType, ';') == 'text/html'){
 					$m->message_html = self::decode($part->getContent(),$encoding);
 					continue;
-				}elseif (strtok($part->contentType, ';') == 'text/plain'){
+				} elseif (strtok($part->contentType, ';') == 'text/plain'){
 					$m->message_text = self::decode($part->getContent(),$encoding);
 					continue;	
-				}elseif ($part->isMultipart()){
+				} elseif ($part->isMultipart()){
 					self::parseParts($part, $m);
-				}else{
-					self::saveAttachment($part, $m);
+				} else{
+					//ignore attachments for now.
+					//self::saveAttachment($part, $m);
 				}
 			}
 		}else{
-			$encoding = self::headerParam($msg,'content-transfer-encoding');
-			if (strtok($msg->contentType, ';') == 'text/html'){
+			$encoding = self::headerParam($msg,'content-transfer-encoding','quoted-printable');
+			if(!$msg->headerExists('content-type')){
+				// header does not exist... shout and scream at silly mail format person!
+			} elseif (strtok($msg->contentType, ';') == 'text/html'){
 				$m->message_html = self::decode($msg->getContent(),$encoding);
-			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
+			} elseif (strtok($msg->contentType, ';') == 'text/plain'){
 				$m->message_text = self::decode($msg->getContent(),$encoding);
 			}
 		}

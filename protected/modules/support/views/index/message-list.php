@@ -6,7 +6,7 @@
 <?php foreach($tickets as $i => $ticket): ?>
 	<div data-position="<?php echo $i; ?>" class="line listItem " id="<?php echo $ticket->id(); ?>">
 		<div class="unit flags">
-			<?php echo $i + ($offset*30); ?>
+			<?php //echo $i + ($offset*30); ?>
 		</div>
 		<div class="lastUnit">
 			<div class="line">
