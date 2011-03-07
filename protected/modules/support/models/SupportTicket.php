@@ -60,6 +60,11 @@ class SupportTicket extends NActiveRecord
 		);
 	}
 
+	public function scopes(){
+//		return array(
+//			'limit'=>30
+//		);
+	}
 	/**
 	 * @return array relational rules.
 	 */
@@ -75,7 +80,7 @@ class SupportTicket extends NActiveRecord
 
 	public function  defaultScope() {
 		return array(
-			'order'=>'date DESC'
+			'order'=>'date DESC',
 		);
 	}
 	
@@ -138,8 +143,21 @@ class SupportTicket extends NActiveRecord
 		$this->save();
 	}
 	
+	/**
+	 * Displays a nicely formatted from name, if no from name present falls 
+	 * back to a formatted email address. Will remove the host iinformation from email adrress
+	 * so steve@newicon.net would be displayed as steve.
+	 * @return string 
+	 */
 	public function getFrom(){
 		$f = NMailReader::splitFromHeader($this->from);
+		if(empty($f['name']) && empty($f['email'])){
+			// format raw header to remove emai host from email
+			preg_match('/(.*)@/',$this->from, $macthes);
+			if(array_key_exists(1, $macthes)){
+				return $macthes[1];
+			}
+		}
 		return $f['name'];
 	}
 	
@@ -153,5 +171,6 @@ class SupportTicket extends NActiveRecord
 		else
 			return null;
 	}
+	
 	
 }

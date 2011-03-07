@@ -28,13 +28,14 @@ CREATE TABLE IF NOT EXISTS `support_attachment` (
 
 -- --------------------------------------------------------
 
+
 --
 -- Table structure for table `support_email`
 --
 
 CREATE TABLE IF NOT EXISTS `support_email` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `to` varchar(255) NOT NULL,
+  `to` text NOT NULL,
   `from` varchar(255) NOT NULL,
   `message_id` varchar(255) NOT NULL,
   `subject` varchar(255) NOT NULL,
@@ -48,10 +49,10 @@ CREATE TABLE IF NOT EXISTS `support_email` (
   `bounced` tinyint(1) unsigned NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date` datetime NOT NULL,
+  `cc` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `support_ticket`
