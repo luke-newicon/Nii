@@ -12,8 +12,6 @@ return array(
 	// preloading 'log' component
 	'preload'=>array('log'),
 
-
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
@@ -38,6 +36,7 @@ return array(
 		'crm',
 		'kashflow',
 		'user',
+		'projects'
 	),
 
 	// application components
@@ -108,9 +107,9 @@ return array(
 			'class' => 'CFileCache',
 		),
 		
-		'viewRenderer'=>array(
-            'class'=>'CPradoViewRenderer',
-        ),
+//		'viewRenderer'=>array(
+//            'class'=>'CPradoViewRenderer',
+//        ),
 	),
 
 	// application-level parameters that can be accessed

@@ -79,7 +79,7 @@ class UserModule extends NWebModule
 	 */
 	//public $cacheEnable = false;
 	
-	public $tableUsers = '{{users}}';
+	public $tableUsers = '{{user}}';
 	public $tableProfiles = '{{nii_crm__contact}}';
 
 
