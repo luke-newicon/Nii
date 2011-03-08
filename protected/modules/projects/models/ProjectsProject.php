@@ -28,7 +28,7 @@ class ProjectsProject extends NActiveRecord
 	const COMPLETED= 'Completed';
 
 	public static function statusTypes(){
-		return array('DRAFT'=>DRAFT,'STARTED'=>STARTED,'COMPLETED'=>COMPLETED);
+		return array('DRAFT'=>self::DRAFT,'STARTED'=>self::STARTED,'COMPLETED'=>self::COMPLETED);
 	}
 
 	/**
