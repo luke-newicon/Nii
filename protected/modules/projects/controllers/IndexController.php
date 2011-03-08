@@ -50,7 +50,6 @@ class IndexController extends NController
 	 */
 	public function actionView($id)
 	{
-
 		//Projects grid
 		$modelProjectsIssue=new ProjectsIssue();
 		$modelProjectsIssue->projectId = $id;

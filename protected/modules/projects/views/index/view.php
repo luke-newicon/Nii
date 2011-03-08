@@ -24,12 +24,17 @@ $this->menu = array(
 		<div class="main">
 			<h1><?php echo $model->name; ?></h1>
 			<?php
+
+			$createdBy = null;
+			if(isset($model->createdBy->username))
+					$createdBy = ' ( '.$model->createdBy->username.' )';
+
 			$this->widget('zii.widgets.CDetailView', array(
 				'data' => $model,
 				'attributes' => array(
 					'code',
 					array('name'=>'description'),
-					array('name'=>'created','value'=>$model->created.' ( '.$model->createdBy->username.' )'),
+					array('name'=>'created','value'=>$model->created.$createdBy),
 					array('name'=>'status')),
 				'nullDisplay'=>'-'));
 			?>
