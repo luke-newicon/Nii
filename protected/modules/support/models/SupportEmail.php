@@ -150,5 +150,17 @@ class SupportEmail extends NActiveRecord
 		}
 		return preg_replace("/([^\s]{14})/"," ",$totalTxt);
 	}
+
+
+	public function cc()
+	{
+		return NMailReader::getRecipients($this->cc);
+	}
+
+	public function to()
+	{
+		return NMailReader::getRecipients($this->to);
+	}
+	
 	
 }

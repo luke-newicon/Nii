@@ -11,7 +11,7 @@ $e = $ticket->emails[0];
 	.data txtR {padding-right:5px;}
 </style>
 <div class="summaryDetails">
-	<h4><?php echo $ticket->subject; ?></h4>
+	<h4><?php echo $ticket->subject; ?> what</h4>
 	<div id="from" class="line">
 		<div class="unit">
 			<span class="icon fam-bullet-arrow-down toggleHeaderInfo"></span>
@@ -37,13 +37,21 @@ $e = $ticket->emails[0];
 				</div>
 				<div class="line">
 					<div class="unit size1of20"><span class="faded">To:</span></div>
-					<div class="lastUnit"><?php echo CHtml::encode($e->to); ?></div>
+					<div class="lastUnit"> 
+						<?php foreach($e->to() as $recip): ?>
+							<?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;,
+						<?php endforeach; ?>
+					</div>
 				</div>
 				<?php if($e->cc): ?>
-				<div class="line">
-					<div class="unit size1of20"><span class="faded">Cc:</span></div>
-					<div class="lastUnit"><?php echo CHtml::encode($e->cc); ?></div>
-				</div>
+						<div class="line">
+							<div class="unit size1of20"><span class="faded">Cc:</span></div>
+							<div class="lastUnit">
+								<?php foreach($e->cc() as $recip): ?>
+									<?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;,
+								<?php endforeach; ?>
+							</div>
+						</div>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -53,11 +61,10 @@ $e = $ticket->emails[0];
 <div id="message">
 	<script type="text/javascript">
 		$(function(){
-			$("#eframe'.<?php echo $e->id() ?>.'").load(function () {
-				alert('oi');
-				alert($(this).contents().height());
+			$("#eframe<?php echo $e->id() ?>").load(function () {
+				// make height of iframe expand to its content size
 				$(this).height($(this).contents().height());
-			})
+			});
 			$('.toggleHeaderInfo').click(function(){
 				if($('#emailHeaderSummary').is(':visible')){
 					$(this).removeClass('fam-bullet-arrow-down').addClass('fam-bullet-arrow-up');

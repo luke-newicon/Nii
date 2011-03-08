@@ -19,8 +19,7 @@ class IndexController extends NController
 		$t = SupportTicket::model()->findByPk($id);
 		$this->render('message',array('ticket'=>$t));
 	}
-	
-	
+
 	
 	public function actionEmail($id){
 		$this->layout = '/layouts/ajax';
@@ -59,19 +58,18 @@ class IndexController extends NController
 
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
-
 	}
 
-
-	public function actionSaveTest($index){
+	public function actionTestSave($index){
 		$m = new SupportEmail();
 		NMailReader::connect();
 		$msgNum = NMailReader::countMessages();
 		$msg = NMailReader::$mail->getMessage(($msgNum+1)-$index);
 		echo $msg->from . '<br/>';
+		echo CHtml::encode($msg->cc);
 		$file = Yii::app()->getRuntimePath().DS.'testEmail';
 		file_put_contents($file, $msg->getContent());
-		dp(Zend_Mime_Decode::splitHeaderField($msg->from));
+
 		foreach($msg as $part) {
 			if($part->headerExists('content-type')){
 				// split the content-type header up
@@ -89,16 +87,59 @@ class IndexController extends NController
 				// header does not exist... shout and scream at silly mail format person!
 			}
 		}
-
 		//NMailReader::getHtmlPart();
-
-	//	dp($html);
+		//dp($html);
 		$m->save();
-
 	}
 
-	public function actionLayout(){
-		$this->render('test');
-	}
-	
+	public function actionTestTo(){
+		$string = '"COLOSIMO, Antonio" <Antonio.COLOSIMO@airbus.com>,
+			"BERNARDINI, Gabriele" <Gabriele.BERNARDINI@airbus.com>,
+			"BIRD, Andrew" <Andrew.Bird2@airbus.com>,
+			"\'BIRD, Ollie\'" <birdy_o@hotmail.co.uk>,
+			"CABLE, Peter" <PETER.CABLE@airbus.com>,
+			"CAMPBELL, Lynn L" <lynn.l.campbell@airbus.com>,
+			"DAVIES, Ryan M" <Ryan.Davies@airbus.com>,
+			"de Luca, Marco" <marco.deluca@airbus.com>,
+			"DI-LECCE, Giuseppe" <GIUSEPPE.DI-LECCE@airbus.com>,
+			"DI-PISA, Corrado" <CORRADO.DI-PISA@airbus.com>,
+			"ELSEY, Christopher" <CHRISTOPHER.ELSEY@airbus.com>,
+			"EVERETT, Martin" <Martin.Everett@Airbus.com>,
+			"FORD, Jonathan" <jonathan.ford@airbus.com>,
+			"FRASER, Alistair" <alistair.fraser@airbus.com>,
+			"FROST, Terence" <Terence.Frost@Airbus.com>,
+			"GALLUCCI, Mattia" <mattia.gallucci@airbus.com>,
+			"GARAYGAY, Cecile" <CECILE.GARAYGAY@airbus.com>,
+			"GILMARTIN, Paul" <PAUL.GILMARTIN@airbus.com>,
+			"HANCOCK, Simon" <Simon.Hancock@airbus.com>,
+			"HEALEY, Mark M" <Mark.M.Healey@airbus.com>,
+			"HUMPHREY, Matthew" <matthew.humphrey@airbus.com>,
+			"KIRCHHOFF, Bjoern" <Bjoern.Kirchhoff@airbus.com>,
+			"MALISZEWSKA, Claudia C" <claudia.c.maliszewska@airbus.com>,
+			"MEHTA, Keval" <keval.mehta@airbus.com>,
+			"MELLOR, Russell" <Russell.Mellor@airbus.com>,
+			"MORRIS, James M" <James.J.Morris@airbus.com>,
+			\'Nbaghdadi\' <nbaghdadi@stirling-dynamics.com>,
+			"NEWBOUND, Alex" <ALEX.NEWBOUND@airbus.com>,
+			"PIRA-LUNA, Andres" <Andres.Pira-Luna@airbus.com>,
+			"REYNOLDS, Dylan" <DYLAN.REYNOLDS@airbus.com>,
+			"RICHARDSON, Mark" <MARK.RICHARDSON@airbus.com>,
+			"ROULLIERE, Pierre (ALTEN)" <pierre.roulliere.external@airbus.com>,
+			"\'SPENCER, Luke\'" <luke@newicon.co.uk>,
+			\'Steve\' <steve@newicon.net>,
+			"STORNAIUOLO, Salvatore" <SALVATORE.STORNAIUOLO@airbus.com>,
+			"TIPPING, Jonathan" <jonathan.tipping@airbus.com>,
+			"TONINELLI, Lorenzo" <lorenzo.toninelli@airbus.com>,
+			"VIVARELLI, Leonardo" <Leonardo.Vivarelli@airbus.com>,
+			"WILLIAMS, David R" <David.R.WILLIAMS@airbus.com>,
+			"WOMBWELL, Adrian" <Adrian.Wombwell@Airbus.com>,
+			"BAGHDADI, Nadjib (STIRLING DYNAMICS LTD)" <nadjib.baghdadi.external@airbus.com>,
+			"MAZILLIUS, Sam (EADS Iwuk)" <sam.mazillius@eads.com>,
+			<Jennifer.Griffiths@synergyhealthplc.com>,
+			silly@someone.com';
+		dp(CHtml::encode($string));
+		dp(NMailReader::getRecipients($string));
+		
+	}	
 }
+

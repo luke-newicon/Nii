@@ -291,26 +291,6 @@ Class NMailReader extends CComponent
         return $priority;
     }
 	
-	/**
-	 * This function splits a header usually in the format
-	 * "name last" <some@email.com> and returns array name=>'',email=>''
-	 * @param string $fromString
-	 * @retun array(name=>'nameValue',email=>'emailValue') 
-	 */
-	public static function splitFromHeader($fromString)
-	{
-		preg_match('/([^<]*) <(.*)>/', $fromString, $matches);
-		$name  = array_key_exists(1,$matches)?$matches[1]:'';
-		$email = array_key_exists(2,$matches)?$matches[2]:'';
-		if(empty($name) && !empty($email)){
-			
-		}
-		return array(
-			'name'=>str_replace('"','',$name),
-			'email'=>$email
-		);
-	}
-	
 	
 	public static function date(Zend_Mail_Message $mail)
 	{
@@ -331,6 +311,83 @@ Class NMailReader extends CComponent
 		$mail = self::connect();
 		return new RecursiveIteratorIterator($mail->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
 	}
+
+	/**
+	 * Parses a To, From or CC email header field
+	 * into correct name and email values
+	 * @see NMailReader::splitRecipient
+	 * @param string $string
+	 */
+	public static function getRecipients($string){
+		$contacts = str_getcsv($string);
+		//dp(CHtml::encode(print_r($contacts,true)));
+		$cArr = array();
+		foreach($contacts as $c) {
+			$cArr[] = self::splitRecipient($c);
+		}
+		return $cArr;
+	}
+
+	/**
+	 * This function splits a header usually in the format
+	 * "name last" <some@email.com> and returns array with a name and email key
+	 * It strips any double quotes and single quotes from the name attribute and generates a name
+	 * value if none is supplied by removing the host part of the email address
+	 * For example:
+	 * 
+	 * header format: '"steve obrien", <steve@newicon.net>' returns:
+	 *     name  => steve obrien
+	 *     email => steve@newicon.net
+	 *
+	 * header format: '<steve@newicon.net>' returns:
+	 *     name  => steve
+	 *     email => steve@newicon.net
+	 *
+	 * header format: 'steve@newicon.net' returns:
+	 *     name  => steve
+	 *     email => steve@newicon.net
+	 *
+	 * @param string $fromString
+	 * @retun array(name=>'nameValue',email=>'emailValue')
+	 */
+	public static function splitRecipient($string)
+	{
+		preg_match('/([^<]*) <(.*)>|<(.*)>|([^<>]*)/', $string, $matches);
+
+		$match1 = array_key_exists(1,$matches)?$matches[1]:'';
+		$match2 = array_key_exists(2,$matches)?$matches[2]:'';
+		$match3 = array_key_exists(3,$matches)?$matches[3]:'';
+		$match4 = array_key_exists(4,$matches)?$matches[4]:'';
+
+		// string is like "steve obrien" <steve@newicon.net>
+		if($match1 && $match2 && !$match3 && !$match4){
+			$email = $matches[2];
+			$name = self::removeEmailHost($matches[1]);
+		}
+
+		// string is like <steve@newicon.net>
+		if(!$match1 && !$match2 && $match3 && !$match4){
+			$email = $matches[3];
+			$name = self::removeEmailHost($email);
+		}
+
+		// string is like steve@newicon.net
+		if(!$match1 && !$match2 && !$match3 && $match4){
+			$email = $matches[4];
+			$name = self::removeEmailHost($email);
+		}
+
+		return array(
+			'name'=>trim(str_replace('"','',$name),"'"),
+			'email'=>$email
+		);
+	}
+
+	public static function removeEmailHost($email){
+		$bits = explode('@',$email);
+		return $bits[0];
+	}
+
 	
 	
 }

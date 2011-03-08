@@ -145,19 +145,12 @@ class SupportTicket extends NActiveRecord
 	
 	/**
 	 * Displays a nicely formatted from name, if no from name present falls 
-	 * back to a formatted email address. Will remove the host iinformation from email adrress
+	 * back to a formatted email address. Will remove the host information from email adrress
 	 * so steve@newicon.net would be displayed as steve.
 	 * @return string 
 	 */
 	public function getFrom(){
-		$f = NMailReader::splitFromHeader($this->from);
-		if(empty($f['name']) && empty($f['email'])){
-			// format raw header to remove emai host from email
-			preg_match('/(.*)@/',$this->from, $macthes);
-			if(array_key_exists(1, $macthes)){
-				return $macthes[1];
-			}
-		}
+		$f = NMailReader::splitRecipient($this->from);
 		return $f['name'];
 	}
 	
