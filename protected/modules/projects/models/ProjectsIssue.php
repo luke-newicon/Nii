@@ -19,8 +19,8 @@
  * @property integer $out_of_scope
  *
  * The followings are the available model relations:
- * @property User $completedBy0
- * @property User $createdBy0
+ * @property UserUser $completedBy0
+ * @property UserUser $createdBy0
  * @property ProjectsProject $project
  */
 class ProjectsIssue extends NActiveRecord
@@ -51,8 +51,8 @@ class ProjectsIssue extends NActiveRecord
 		// will receive user inputs.
 		return array(
 			array('project_id, created_by, completed_by, deleted, estimated_time, out_of_scope', 'numerical', 'integerOnly'=>true),
-			array('type', 'length', 'max'=>10),
-			array('name', 'length', 'max'=>12),
+			array('type', 'length', 'max'=>12),
+			array('name', 'length', 'max'=>50),
 			array('status', 'length', 'max'=>18),
 			array('description, created, completed', 'safe'),
 			// The following rule is used by search().
@@ -69,8 +69,8 @@ class ProjectsIssue extends NActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'completedBy0' => array(self::BELONGS_TO, 'User', 'completed_by'),
-			'createdBy0' => array(self::BELONGS_TO, 'User', 'created_by'),
+			'completedBy0' => array(self::BELONGS_TO, 'UserUser', 'completed_by'),
+			'createdBy0' => array(self::BELONGS_TO, 'UserUser', 'created_by'),
 			'project' => array(self::BELONGS_TO, 'ProjectsProject', 'project_id'),
 		);
 	}

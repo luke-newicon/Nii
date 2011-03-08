@@ -37,13 +37,47 @@ $this->menu = array(
 
 		<?php
 		$this->widget('zii.widgets.grid.CGridView', array(
-		 'dataProvider'=>$modelProjectsIssue->search(),
-		'filter'=>$modelProjectsIssue
+		'dataProvider'=>$modelProjectsIssue->search(),
+		'filter'=>$modelProjectsIssue,
+		'columns'=>array(
+		array('name'=>'id','htmlOptions'=>array('class'=>'issueId')),
+		'type',
+		array('name'=>'name', 'htmlOptions'=>array('class'=>'issueName')),
+		'description',
+		'status',
+		'project_id',
+		'created',
+		'created_by',
+		'completed',
+		'completed_by',
+		'deleted',
+		'estimated_time',
+		'out_of_scope')
 		));
 		?>
 
+		<script>
+			//Opens the view issue dialog.
+			$('.issueName').click(function() {
+				var issueId = $(this).parent().children('.issueId').html();
+				var issueName = $(this).parent().children('.issueName').html();
+				$('#issueDialog').dialog('open').html(issueId);
+				$("#issueDialog").dialog( "option", "title", issueName);
+			});
+		</script>
 
-		dd
+		<?php
+
+		$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+			'id'=>'issueDialog',
+			// additional javascript options for the dialog plugin
+			'options'=>array(
+				'title'=>'Dialog box 1',
+				'autoOpen'=>false,
+				'dialogClass'=>'notelet'
+			),
+		));
+		$this->endWidget('zii.widgets.jui.CJuiDialog');?>
 
 	</div>
 	<div class="foot"><!-- Foot --></div>

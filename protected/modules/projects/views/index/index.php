@@ -33,12 +33,6 @@ $this->widget('zii.widgets.grid.CGridView',
 
 <style>
 
-.notelet{padding:0px;}
-.ui-dialog.notelet,.ui-dialog.notelet,.ui-dialog.notelet .ui-dialog-content{-moz-border-radius:0px;-moz-box-shadow: -6px 9px 13px #BBBBBB;-webkit-box-shadow: -6px 9px 13px #BBBBBB;}
-.ui-dialog.notelet .ui-widget-header,.ui-dialog.notelet .ui-dialog-content{background-color: #FBFDDD;}
-.ui-dialog.notelet,.ui-dialog.notelet,.ui-dialog.notelet .ui-dialog-titlebar{border:none;background-image: none;}
-
-
 .grid-view .delButton, .grid-view .button-column{width:18px;}
 </style>
 
