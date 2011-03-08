@@ -129,7 +129,12 @@ class SupportEmail extends NActiveRecord
 	public function message(){
 		// TODO: implement message settings to render text or html message by default
 		if($this->message_html !== null && $this->message_html != ''){
-			return $this->message_html;
+			// TODO: purify the html output
+			$pattern = "/<(a)([^>]+)>/i";
+			$replacement = "<\\1 target=\"_blank\"\\2>";
+			$html = preg_replace($pattern,$replacement,str_replace('target="_blank"','',$this->message_html));
+			$p = new CHtmlPurifier();
+			return $p->purify($html);
 		}
 		$md = new NMarkdown();
 		return $md->transform($this->message_text);

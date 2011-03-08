@@ -14,16 +14,17 @@
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #bbb;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
 	.mod.toolbar .inner .bd {height:30px;}
-	.popSpinner{display:none;border:1px solid #333;-moz-border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
+	.popSpinner{z-index:1000;display:none;border:1px solid #333;-moz-border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
 	
-	.scroll{overflow:auto;height:300px;}
+	.scroll{overflow:auto;height:250px;}
 	#messageList{background:url('http://localhost/newicon/projects/images/message-border.png') repeat top left;}
 
 	#mClient{overflow:hidden;}
 	#email{overflow:auto;}
+	#messageFolders{overflow:auto;}
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
-
+<?php //$this->widget('application.widgets.popSpinner'); ?>
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;">Loading...</div></div></div>
 </div>
@@ -39,6 +40,7 @@
 
 		</div>
 	</div>
+	
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
@@ -47,7 +49,7 @@
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
 			<?php //messageList will be as high as total number of messages  ?>
-			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;">
+			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;position:relative;">
 				<?php //$this->actionLoadMessageList(0); ?>
 			</div>
 		</div>
@@ -74,20 +76,21 @@ $(function(){
 		//console.log('height:'+$('#mClient').height());
 		var paddingBottom = $('.main').padding().bottom;
 		var minHeight = 200;
-		if(!(($(window).height()-$('#mClient').position().top-paddingBottom) <= minHeight)){
+		var winHeight = $(window).height();
+		if(!((winHeight-$('#mClient').position().top-paddingBottom) <= minHeight)){
 			//console.log();
 			$('#mClient').css('height',
-				($(window).height()
+				(winHeight
 					- $('#mClient').position().top
 					- paddingBottom
-				) +'px');
-			$('#messageScroll').css('height',($(window).height()-$('#messageScroll').position().top-paddingBottom)+'px');
-			$('#email').css('height',($(window).height()-$('#email').position().top-paddingBottom)+'px');
+				) + 'px');
+			$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
+			$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
+			$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
 		}
 	}
 	resizer();
 
-	
 	$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
 	$('#messageList').delegate('.listItem','click',function(){
 		$(this).parent().find('.listItem').removeClass('sel');
@@ -96,7 +99,7 @@ $(function(){
 		$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
 	});
 
-	$('.popSpinner').show();
+	$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
 	$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList'); ?>',function(){
 		$('.popSpinner').hide();
 	});
@@ -110,13 +113,18 @@ $(function(){
 		$lastMsg = $('#messageList').find('.listItem:last');
 		if(!$lastMsg.length)
 			return;
-		var lastMsgPos = $lastMsg.position();
-
+		// the height of messages reminaing in the viewable portion of the scroll
+		// before new messages are loaded
+		var tollerance = 375;
+<?php Yii::log('wefwefwegwe rewqijfhbweiugfeqwiufbqweiuygfiwebfiqwvef'); ?>
 		// calculate the batch (page) to load based on the current scroll position
-		//console.log($(this).scrollTop());
-		//console.log('allmsgbath height: '+allMsgsHeight);
-		var batchToLoad = Math.floor(($(this).scrollTop() / allMsgsHeight));
-		//console.log('LOAD BATCH: ' + batchToLoad);
+		if (typeof(console) == 'object') {
+			console.log(($(this).scrollTop()+tollerance));
+			console.log('allmsgbath height: '+allMsgsHeight);
+		}
+		
+		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
+		if (typeof(console) == 'object') console.log('LOAD BATCH: ' + batchToLoad);
 		if(batchToLoad in loadedBatches){
 			//alert('LOAD BATCH: ' + batchToLoad);
 			//console.log('DO NOT LOAD BATCH: ' + batchToLoad);
@@ -127,7 +135,6 @@ $(function(){
 				success:function($msgs){
 					$('#messageList').append($msgs);
 					$('.popSpinner').hide();
-
 				}
 			});
 			loadedBatches[batchToLoad] = 1;

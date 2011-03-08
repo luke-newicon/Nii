@@ -20,7 +20,11 @@ Class NMailReader extends CComponent
 	public static $readLimit = 30;
 
 	public static $readOfset = 0;
-	
+
+	/**
+	 *
+	 * @var Zend_Mail_Storage_Imap
+	 */
 	public static $mail;
 	
 	/**
@@ -56,7 +60,7 @@ Class NMailReader extends CComponent
 		$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
 		dp($msg);
 		dp($msg->getContent());
-		
+		echo 'end of debug print output';
 		if ($msg->isMultipart()) {
 			foreach($msg as $part){
 				dp($part);
@@ -69,6 +73,11 @@ Class NMailReader extends CComponent
 				echo self::decode($msg->getContent(),$encoding);
 			}
 		}
+
+		//create a new file
+		$file = Yii::app()->getRuntimePath().DS.'testEmail';
+		file_put_contents($file, $msg);
+
 	}
 	
 	public static function readMail(){
@@ -159,38 +168,58 @@ Class NMailReader extends CComponent
 		$id = (array_key_exists(1,$matches)) ? $matches[1] : false;
 		return ($ret !== 0);
 	}
-	
+
+	/**
+	 * Save parts of a message to a record
+	 * 
+	 * @param Zend_Mail_Message $msg
+	 * @param SupportEmail $m
+	 */
 	public static function parseParts($msg, &$m){
 		if($msg->isMultipart()){
 			foreach($msg as $part) {
-				$encoding = self::headerParam($part,'content-transfer-encoding', 'quoted-printable');
-				// check header exists
-				if(!$part->headerExists('content-type')){
-					// header does not exist... shout and scream at silly mail format person!
-
-				} elseif (strtok($part->contentType, ';') == 'text/html'){
-					$m->message_html = self::decode($part->getContent(),$encoding);
-					continue;
-				} elseif (strtok($part->contentType, ';') == 'text/plain'){
-					$m->message_text = self::decode($part->getContent(),$encoding);
-					continue;	
-				} elseif ($part->isMultipart()){
-					self::parseParts($part, $m);
-				} else{
-					//ignore attachments for now.
-					//self::saveAttachment($part, $m);
-				}
+				self::ParsePart($part, $m);
 			}
 		}else{
-			$encoding = self::headerParam($msg,'content-transfer-encoding','quoted-printable');
-			if(!$msg->headerExists('content-type')){
-				// header does not exist... shout and scream at silly mail format person!
-			} elseif (strtok($msg->contentType, ';') == 'text/html'){
-				$m->message_html = self::decode($msg->getContent(),$encoding);
-			} elseif (strtok($msg->contentType, ';') == 'text/plain'){
-				$m->message_text = self::decode($msg->getContent(),$encoding);
-			}
+			self::ParsePart($msg, $m);
 		}
+	}
+
+	public static function ParsePart($part, &$m){
+		
+		// check content-type header exists
+		if($part->headerExists('content-type')){
+			// split the content-type header up
+			$contentType = Zend_Mime_Decode::splitContentType($part->contentType);
+			if ($contentType['type'] == 'text/html') {
+				$m->message_html = self::decodeContent($part, $contentType);
+			} elseif ($contentType['type'] == 'text/plain') {
+				$m->message_text = self::decodeContent($part, $contentType);
+			} elseif ($part->isMultipart()) {
+				self::parseParts($part, $m);
+			} else {
+				//self::saveAttachment($part, $m);
+			}
+		}else{
+			// header does not exist... shout and scream at silly mail format person!
+		}
+		
+	}
+
+	/**
+	 *
+	 * @param Zend_Mime_Part $part
+	 * @return string
+	 */
+	public static function decodeContent($part, $contentType){
+		$encoding = self::headerParam($part,'content-transfer-encoding', 'quoted-printable');
+		$strMsg = self::decode($part->getContent(),$encoding);
+		if(array_key_exists('charset', $contentType)){
+			$strMsg = mb_convert_encoding($strMsg, 'utf-8', $contentType['charset']);
+		}else{
+			$strMsg = mb_convert_encoding($strMsg, 'utf-8');
+		}
+		return $strMsg;
 	}
 	
 	public static function saveAttachment($part, $mail){

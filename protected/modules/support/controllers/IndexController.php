@@ -58,8 +58,44 @@ class IndexController extends NController
 
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
+
 	}
-	
+
+
+	public function actionSaveTest($index){
+		$m = new SupportEmail();
+		NMailReader::connect();
+		$msgNum = NMailReader::countMessages();
+		$msg = NMailReader::$mail->getMessage(($msgNum+1)-$index);
+		echo $msg->from . '<br/>';
+		$file = Yii::app()->getRuntimePath().DS.'testEmail';
+		file_put_contents($file, $msg->getContent());
+		dp(Zend_Mime_Decode::splitHeaderField($msg->from));
+		foreach($msg as $part) {
+			if($part->headerExists('content-type')){
+				// split the content-type header up
+				$contentType = Zend_Mime_Decode::splitContentType($part->contentType);
+				if ($contentType['type'] == 'text/html') {
+					$m->message_html = NMailReader::decodeContent($part, $contentType);
+				} elseif ($contentType['type'] == 'text/plain') {
+					$m->message_text = NMailReader::decodeContent($part, $contentType);
+				} elseif ($part->isMultipart()) {
+					self::parseParts($part, $m);
+				} else {
+					//self::saveAttachment($part, $m);
+				}
+			}else{
+				// header does not exist... shout and scream at silly mail format person!
+			}
+		}
+
+		//NMailReader::getHtmlPart();
+
+	//	dp($html);
+		$m->save();
+
+	}
+
 	public function actionLayout(){
 		$this->render('test');
 	}

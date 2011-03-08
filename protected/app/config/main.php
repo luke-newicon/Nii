@@ -101,7 +101,7 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'profile, error',
+					'categories'=>'profile, error, trace, log,system.db.CDbCommand',
 					'showInFireBug'=>true,
 				),
 			),
