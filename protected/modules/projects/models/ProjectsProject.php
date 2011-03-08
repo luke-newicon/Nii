@@ -123,7 +123,17 @@ class ProjectsProject extends NActiveRecord
 	 * @return <type>
 	 */
 	public function projectNameFilter(){
-		$n = NHtml::hilightText($this->name, $_REQUEST['ProjectsProject']['name']);
+		$n = null;
+		$projectName = null;
+		if(isset($_REQUEST['ProjectsProject']['name']))
+			$projectName = $_REQUEST['ProjectsProject']['name'];
+
+		if($projectName){
+			$_REQUEST['ProjectsProject']['name'];
+			$n = NHtml::hilightText($this->name, $_REQUEST['ProjectsProject']['name']);
+		}else{
+			$n = $this->name;
+		}
 		return '<a href="'.yii::app()->createUrl('projects/index/view/id/'.$this->id).'">'.$n.'</a>';
 	}
 

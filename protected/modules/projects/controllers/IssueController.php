@@ -50,9 +50,6 @@ class IssueController extends NController
 	 */
 	public function actionView($id)
 	{
-
-		
-
 		$this->render('view',array('projectModel'=>$this->loadModel($id)));
 	}
 
