@@ -25,6 +25,13 @@
  */
 class ProjectsIssue extends NActiveRecord
 {
+
+	/**
+	 * The id of the project which the issue/s belong to.
+	 * @var int $projectId
+	 */
+	public $projectId = null;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return ProjectsIssue the static model class
@@ -113,8 +120,8 @@ class ProjectsIssue extends NActiveRecord
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('status',$this->status,true);
-		$criteria->compare('project_id',$this->project_id);
 		$criteria->compare('created',$this->created,true);
+		$criteria->compare('project_id',$this->projectId);
 		$criteria->compare('created_by',$this->created_by);
 		$criteria->compare('completed',$this->completed,true);
 		$criteria->compare('completed_by',$this->completed_by);

@@ -32,7 +32,6 @@ $this->widget('zii.widgets.grid.CGridView',
 					'headerHtmlOptions' => array('class' => 'delButton')))));?>
 
 <style>
-
 .grid-view .delButton, .grid-view .button-column{width:18px;}
 </style>
 

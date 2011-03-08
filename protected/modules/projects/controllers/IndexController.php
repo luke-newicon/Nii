@@ -52,7 +52,9 @@ class IndexController extends NController
 	{
 
 		//Projects grid
-		$modelProjectsIssue=new ProjectsIssue('search');
+		$modelProjectsIssue=new ProjectsIssue();
+		$modelProjectsIssue->projectId = $id;
+		$modelProjectsIssue->search();
 		$modelProjectsIssue->unsetAttributes();  // clear any default values
 
 		if(isset($_GET['ProjectsProject']))

@@ -1,3 +1,4 @@
+
 <?php
 $this->breadcrumbs = array(
 	'Projects Projects' => array('index'),
@@ -39,18 +40,14 @@ $this->menu = array(
 		$this->widget('zii.widgets.grid.CGridView', array(
 		'dataProvider'=>$modelProjectsIssue->search(),
 		'filter'=>$modelProjectsIssue,
+		'emptyText'=>'There are no issues set against this project.',
 		'columns'=>array(
 		array('name'=>'id','htmlOptions'=>array('class'=>'issueId')),
 		'type',
-		array('name'=>'name', 'htmlOptions'=>array('class'=>'issueName')),
+		array('name'=>'name', 'htmlOptions'=>array('class'=>'issueNameCell') ,'value'=>'"<a href=\"#\" class=\"issueName\">".$data->name."</div>"','type'=>'html'),
 		'description',
 		'status',
-		'project_id',
 		'created',
-		'created_by',
-		'completed',
-		'completed_by',
-		'deleted',
 		'estimated_time',
 		'out_of_scope')
 		));
@@ -59,9 +56,10 @@ $this->menu = array(
 		<script>
 			//Opens the view issue dialog.
 			$('.issueName').click(function() {
-				var issueId = $(this).parent().children('.issueId').html();
-				var issueName = $(this).parent().children('.issueName').html();
-				$('#issueDialog').dialog('open').html(issueId);
+				var thisParant = $(this).parent().parent();
+				var issueId = thisParant.children('.issueId').html();
+				var issueName = thisParant.children('.issueNameCell').html();
+				$('#issueDialog').dialog('open').load('<?php echo Yii::app()->createUrl('projects/issue/view/id/1') ?>');
 				$("#issueDialog").dialog( "option", "title", issueName);
 			});
 		</script>
