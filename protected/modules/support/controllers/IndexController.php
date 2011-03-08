@@ -46,7 +46,6 @@ class IndexController extends NController
 			'tickets'=>$tickets,
 			'offset'=>$offset,
 			'limit'=>$limit,
-
 		));
 	}
 

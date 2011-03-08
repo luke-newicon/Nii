@@ -39,6 +39,12 @@ $e = $ticket->emails[0];
 					<div class="unit size1of20"><span class="faded">To:</span></div>
 					<div class="lastUnit"><?php echo CHtml::encode($e->to); ?></div>
 				</div>
+				<?php if($e->cc): ?>
+				<div class="line">
+					<div class="unit size1of20"><span class="faded">Cc:</span></div>
+					<div class="lastUnit"><?php echo CHtml::encode($e->cc); ?></div>
+				</div>
+				<?php endif; ?>
 			</div>
 		</div>
 		

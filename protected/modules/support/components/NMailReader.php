@@ -297,10 +297,14 @@ Class NMailReader extends CComponent
 	 * @param string $fromString
 	 * @retun array(name=>'nameValue',email=>'emailValue') 
 	 */
-	public static function splitFromHeader($fromString){
+	public static function splitFromHeader($fromString)
+	{
 		preg_match('/([^<]*) <(.*)>/', $fromString, $matches);
-		$name = array_key_exists(1,$matches)?$matches[1]:'';
+		$name  = array_key_exists(1,$matches)?$matches[1]:'';
 		$email = array_key_exists(2,$matches)?$matches[2]:'';
+		if(empty($name) && !empty($email)){
+			
+		}
 		return array(
 			'name'=>str_replace('"','',$name),
 			'email'=>$email
@@ -308,7 +312,8 @@ Class NMailReader extends CComponent
 	}
 	
 	
-	public static function date(Zend_Mail_Message $mail){
+	public static function date(Zend_Mail_Message $mail)
+	{
 		if($mail->headerExists('date')){
 			$date = $mail->getHeader('date');
 			if(!($unixTs = strtotime($date)))
