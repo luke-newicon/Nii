@@ -3,10 +3,8 @@ define('DS',DIRECTORY_SEPARATOR);
 // uncomment the following to define a path alias
 Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
 
-
- $urlManager = new CUrlManager();
- $JQUERY_THEMEURL = '/Nii/css/jqueryui/';
- $JQUERY_THEME = 'projectmanager';
+$JQUERY_THEMEURL = '/css/jqueryui/';
+$JQUERY_THEME = 'projectmanager';
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -144,8 +142,8 @@ return array(
                     'themeUrl' => $JQUERY_THEMEURL,
                     'theme' => $JQUERY_THEME,
                 ),
-				)
 			)
+		)
 
 		
 //		'viewRenderer'=>array(
