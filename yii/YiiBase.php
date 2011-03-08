@@ -119,7 +119,7 @@ class YiiBase
 	}
 
 	/**
-	 * @return CApplication the application singleton, null if the singleton has not been created yet.
+	 * @return CWebApplication the application singleton, null if the singleton has not been created yet.
 	 */
 	public static function app()
 	{

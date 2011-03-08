@@ -2,8 +2,6 @@
 
 class CrmModule extends NWebModule
 {
-	
-
 	/**
 	 * Display contact name: First, Last
 	 * @var boolean
@@ -39,7 +37,6 @@ class CrmModule extends NWebModule
 		));
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem('Crm', array('/crm/index/index'));
-		
 	}
 
 	/**
@@ -51,7 +48,6 @@ class CrmModule extends NWebModule
 			$this->_assetsUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('crm.assets'));
 		return $this->_assetsUrl;
 	}
-
 
 	public function install(){
 		
@@ -81,11 +77,7 @@ class CrmModule extends NWebModule
 //		}
 	}
 
-	
-
-	public function uninstall(){
-
-	}
+	public function uninstall(){}
 
 	/**
 	 *
@@ -94,5 +86,4 @@ class CrmModule extends NWebModule
 	public static function get(){
 		return yii::app()->getModule('crm');
 	}
-
 }

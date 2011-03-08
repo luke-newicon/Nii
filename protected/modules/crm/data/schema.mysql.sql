@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `crm_contact` (
   PRIMARY KEY (`id`),
   KEY `company_id` (`company_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=96 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `crm_email` (
