@@ -44,7 +44,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return "{{nii_crm__contact}}";//'{{nii_crm__contact}}';
+		return "{{crm_contact}}";//'{{crm_contact}}';
 	}
 
 	/**

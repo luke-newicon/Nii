@@ -13,7 +13,7 @@
  *
  * @author steve
  */
-class DashboardController extends NController
+class DashboardController extends NAController
 {
 	
 	

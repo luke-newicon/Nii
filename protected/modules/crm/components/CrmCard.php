@@ -29,7 +29,7 @@ Class CrmCard extends CWidget
 	
 	public function init(){
 		
-		if($this->profileUrl===null)
+		if($this->profileUrl===null && $this->contact !== null)
 			$this->profileUrl = $this->contact->getUrl();
 		$this->render('card',array('contact'=>$this->contact,'term'=>$this->term));
 	}

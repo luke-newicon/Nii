@@ -26,7 +26,6 @@
 			<div class="title"><h2><?php echo CHtml::encode(Yii::app()->name); ?></h2></div>
 			<div class="loginMenu">
 				<div class="menu menuR">
-<!--					<com:user.components.NLoginInfo />-->
 					<?php $this->widget('user.components.NLoginInfo'); ?>
 				</div>
 			</div>
@@ -45,11 +44,11 @@
 	</div>
 	<div class="body"><!-- Body -->
 		<div class="main">
-				<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>$this->menu
-			)
-		); ?>
-				<?php echo $content; ?></div>
+			<?php $this->widget('NBreadcrumbs', array(
+				'links'=>$this->breadcrumbs,
+			)); ?>
+			<?php echo $content; ?>
+		</div>		
 	</div>
 	<div class="foot"><?php // echo $this->renderPartial('core/_footer'); ?></div>
 </div>

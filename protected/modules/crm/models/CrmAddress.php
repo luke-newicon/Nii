@@ -35,7 +35,7 @@ class CrmAddress extends CrmActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__address}}';
+		return '{{crm_address}}';
 	}
 
 	/**

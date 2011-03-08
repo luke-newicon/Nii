@@ -18,9 +18,10 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
+		'application.vendors.*',
+		'application.vendors.FirePHPCore.*',
 		'modules.user.models.*',
         'modules.user.components.*',
-
 	),
 	'theme'=>'classic',
 
@@ -35,8 +36,9 @@ return array(
 		),
 		'crm',
 		'kashflow',
+		'projects',
+		'support',
 		'user',
-		'projects'
 	),
 
 	// application components
@@ -58,7 +60,6 @@ return array(
 			'defaultRoles'=>array('authenticated', 'guest'),
 		),
 		// uncomment the following to enable URLs in path-format
-
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -77,8 +78,8 @@ return array(
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=project_manager',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => '',
+			'username' => 'newicon',
+			'password' => 'bonsan',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,
@@ -98,7 +99,7 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'system.db.CDbCommand',
+					'categories'=>'profile, error',
 					'showInFireBug'=>true,
 				),
 			),

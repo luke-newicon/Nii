@@ -26,7 +26,7 @@ class CrmPhone extends CrmActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__phone}}';
+		return '{{crm_phone}}';
 	}
 
 	/**

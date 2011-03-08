@@ -26,7 +26,7 @@ class CrmEmail extends CrmActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{nii_crm__email}}';
+		return '{{crm_email}}';
 	}
 
 	/**

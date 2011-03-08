@@ -46,6 +46,7 @@ class NController extends CController
 		}
 	}
 
+	
 	public function filters()
     {
         return array(
@@ -53,5 +54,4 @@ class NController extends CController
         );
     }
 	
-
 }
