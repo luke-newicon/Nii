@@ -74,14 +74,16 @@ class SupportEmail extends NActiveRecord
 	{
 		return array(
 			'id' => 'Email',
-			'to' => 'Email To',
-			'from' => 'Email From',
+			'to' => 'To:',
+			'cc' => 'Cc:',
+			'from' => 'From:',
+			'subject' => 'Subject:',
+			'message_html' => 'Message:',
 			'message_id' => 'Email Message',
-			'subject' => 'Email Subject',
 			'headers' => 'Email Headers',
 			'template_id' => 'Email Template',
-			'message_text' => 'Email Message Text',
-			'message_html' => 'Email Message Html',
+			'message_text' => 'Message Text',
+			'message_html' => 'Message',
 			'sent' => 'Email Sent',
 			'opened' => 'Email Opened',
 			'opened_date' => 'Email Opened Date',
@@ -134,7 +136,7 @@ class SupportEmail extends NActiveRecord
 			$replacement = "<\\1 target=\"_blank\"\\2>";
 			$html = preg_replace($pattern,$replacement,str_replace('target="_blank"','',$this->message_html));
 			$p = new CHtmlPurifier();
-			return $p->purify($html);
+			return $html;//$p->purify($html);
 		}
 		$md = new NMarkdown();
 		return $md->transform($this->message_text);

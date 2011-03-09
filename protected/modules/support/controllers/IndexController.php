@@ -4,6 +4,7 @@ class IndexController extends NController
 {
 	public function actionIndex()
 	{
+		NTinyMce::registerScripts();
 		//$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();
 		$this->render('index',array(
@@ -36,8 +37,8 @@ class IndexController extends NController
 	{
 		$this->layout = '/layouts/ajax';
 		$limit = SupportModule::get()->msgPageLimit;
-		NMailReader::$readOfset = $offset*$limit;
-		NMailReader::readMail();
+//		NMailReader::$readOfset = $offset*$limit;
+//		NMailReader::readMail();
 		$total = NMailReader::countMessages();
 		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list',array(
@@ -56,6 +57,15 @@ class IndexController extends NController
 		), true);
 	}
 
+
+	public function actionReply($emailId){
+		$t = SupportTicket::model()->findByPk($emailId);
+		// get last email in conversation
+
+		echo $this->widget('support.components.NComposeMail',array('replyTo'=>$t->emails[0]),true);
+	}
+
+
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
 	}
@@ -64,11 +74,14 @@ class IndexController extends NController
 		$m = new SupportEmail();
 		NMailReader::connect();
 		$msgNum = NMailReader::countMessages();
-		$msg = NMailReader::$mail->getMessage(($msgNum+1)-$index);
+		$mail = NMailReader::$mail;
+		$index = ($msgNum+1)-$index;
+		$msg = $mail->getMessage($index);
 		echo $msg->from . '<br/>';
-		echo CHtml::encode($msg->cc);
+		if($msg->headerExists('cc'))
+			echo CHtml::encode($msg->cc);
 		$file = Yii::app()->getRuntimePath().DS.'testEmail';
-		file_put_contents($file, $msg->getContent());
+		file_put_contents($file, $mail->getRawHeader($index).$mail->getRawContent($index));
 
 		foreach($msg as $part) {
 			if($part->headerExists('content-type')){
@@ -81,7 +94,7 @@ class IndexController extends NController
 				} elseif ($part->isMultipart()) {
 					self::parseParts($part, $m);
 				} else {
-					//self::saveAttachment($part, $m);
+					// self::saveAttachment($part, $m);
 				}
 			}else{
 				// header does not exist... shout and scream at silly mail format person!
@@ -135,11 +148,11 @@ class IndexController extends NController
 			"WOMBWELL, Adrian" <Adrian.Wombwell@Airbus.com>,
 			"BAGHDADI, Nadjib (STIRLING DYNAMICS LTD)" <nadjib.baghdadi.external@airbus.com>,
 			"MAZILLIUS, Sam (EADS Iwuk)" <sam.mazillius@eads.com>,
+			steve@newicon.net,
 			<Jennifer.Griffiths@synergyhealthplc.com>,
-			silly@someone.com';
+			silly@someone.com,';
 		dp(CHtml::encode($string));
 		dp(NMailReader::getRecipients($string));
-		
 	}	
 }
 

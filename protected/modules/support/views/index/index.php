@@ -8,7 +8,7 @@
 	.listItem .from{font-weight:bold;font-size:15px;height:1.4em;overflow:hidden;}
 	.leftPanel{border-right:1px solid #ccc;width:300px;}
 	.leftMainPanel{border-right:1px solid #ccc;background-color:#f9f9f9;}
-	.flags{width:5%;}
+	.flags{width:8%;}
 	.time{font-weight:bold;color:#787878;}
 	.sel, .sel .faded, .sel .time {background-color:#999;color:#fff;}
 	.mod.toolbar {border-top:1px solid #ccc;}
@@ -55,13 +55,8 @@
 		</div>
 	</div>
 	<div id="emailBox" class="lastUnit ui-layout-center">
-		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
-			<div class="bd pas">
-				<a href="#" class="btn btnN">Reply</a>
-			</div>
-		<?php $this->endWidget(); ?>
+		<?php $this->renderPartial('_message-toolbar'); ?>
 		<div id="email">
-
 		</div>
 	</div>
 </div>
@@ -72,18 +67,19 @@ $(function(){
 	$(window).stop().resize(function(){
 		resizer();
 	});
+
+	$('body').ajaxStart(function(){
+		$('.popSpinner').show();
+	});
+	$('body').ajaxStop(function(){
+		$('.popSpinner').hide();
+	});
 	var resizer = function(){
-		//console.log('height:'+$('#mClient').height());
 		var paddingBottom = $('.main').padding().bottom;
 		var minHeight = 200;
 		var winHeight = $(window).height();
 		if(!((winHeight-$('#mClient').position().top-paddingBottom) <= minHeight)){
-			//console.log();
-			$('#mClient').css('height',
-				(winHeight
-					- $('#mClient').position().top
-					- paddingBottom
-				) + 'px');
+			$('#mClient').css('height',(winHeight - $('#mClient').position().top - paddingBottom) + 'px');
 			$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
 			$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
 			$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
@@ -92,56 +88,71 @@ $(function(){
 	resizer();
 
 	$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
+
+	var msgsLoaded = [];
 	$('#messageList').delegate('.listItem','click',function(){
 		$(this).parent().find('.listItem').removeClass('sel');
 		$(this).addClass('sel');
 		var id = $(this).attr('id');
-		$('#email').load('<?php echo NHtml::url('/support/index/message') ?>/id/'+id);
+		if(id in msgsLoaded){
+			// message has been cached into the msgsLoaded variable so lets just display that.
+			$('#email').html(msgsLoaded[id]);
+		}else{
+			$('.popSpinner').position({my:'center',at:'center',of:'#email'}).show();
+			// html not in cache so ajax it in.
+			$.get('<?php echo NHtml::url('/support/index/message') ?>/id/'+id, function(html){
+				msgsLoaded[id] = html;
+				$('#email').html(msgsLoaded[id]);
+			})
+		}
 	});
 
-	$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
-	$('#messageList').load('<?php echo NHtml::url('/support/index/loadMessageList'); ?>',function(){
-		$('.popSpinner').hide();
-	});
+
 	var loadedBatches = [];
-	loadedBatches[0] = 1;
+	var loadMessageBatch = function(batch){
+		$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
+		$.ajax({
+			url:'<?php echo NHtml::url('/support/index/loadMessageList/offset'); ?>/'+batch,
+			success:function($msgs){
+				$('#messageList').append($msgs);
+				$('.popSpinner').hide();
+			}
+		});
+		loadedBatches[batch] = 1;
+	}
+
+
+	loadMessageBatch(0);
 	$('#messageScroll').bind('scrollstop',function(){
 		var msgHeight = <?php echo $msgPreviewHeight;?>;
 		var msgNumber = <?php echo $msgPreviewNumber;?>;
 		var allMsgsHeight = msgHeight*msgNumber;
 
-		$lastMsg = $('#messageList').find('.listItem:last');
-		if(!$lastMsg.length)
-			return;
 		// the height of messages reminaing in the viewable portion of the scroll
 		// before new messages are loaded
 		var tollerance = 375;
-<?php Yii::log('wefwefwegwe rewqijfhbweiugfeqwiufbqweiuygfiwebfiqwvef'); ?>
 		// calculate the batch (page) to load based on the current scroll position
+		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
+
+		// status debug reporting
 		if (typeof(console) == 'object') {
 			console.log(($(this).scrollTop()+tollerance));
 			console.log('allmsgbath height: '+allMsgsHeight);
+			console.log('LOAD BATCH: ' + batchToLoad);
 		}
-		
-		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
-		if (typeof(console) == 'object') console.log('LOAD BATCH: ' + batchToLoad);
-		if(batchToLoad in loadedBatches){
-			//alert('LOAD BATCH: ' + batchToLoad);
-			//console.log('DO NOT LOAD BATCH: ' + batchToLoad);
-		}else{
-			$('.popSpinner').show();
-			$.ajax({
-				url:'<?php echo NHtml::url('/support/index/loadMessageList/offset'); ?>/'+batchToLoad,
-				success:function($msgs){
-					$('#messageList').append($msgs);
-					$('.popSpinner').hide();
-				}
-			});
-			loadedBatches[batchToLoad] = 1;
-		}
-	});
 
+		// if the message batch has not already been loaded send ajax request to load them in
+		if(!(batchToLoad in loadedBatches)){
+			loadMessageBatch(batchToLoad);
+		}
+	});	
 });
+
+
+
+
+
+
 
 (function(){
 

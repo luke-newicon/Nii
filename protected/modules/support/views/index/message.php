@@ -64,6 +64,8 @@ $e = $ticket->emails[0];
 			$("#eframe<?php echo $e->id() ?>").load(function () {
 				// make height of iframe expand to its content size
 				$(this).height($(this).contents().height());
+				//TODO: cache the iframe contents.
+				//$(this).contents().find('html').html();
 			});
 			$('.toggleHeaderInfo').click(function(){
 				if($('#emailHeaderSummary').is(':visible')){

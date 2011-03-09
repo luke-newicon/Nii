@@ -93,6 +93,7 @@ Class NMailReader extends CComponent
 			if($ii >= self::$readLimit) break;
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
+			$mail->noop();
 			Yii::endProfile('imap: get message');
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
@@ -314,16 +315,18 @@ Class NMailReader extends CComponent
 
 	/**
 	 * Parses a To, From or CC email header field
-	 * into correct name and email values
+	 * into correct name and email values,
+	 * Trailing commas create individual rows if the row is an empty string this is not appended to the array
 	 * @see NMailReader::splitRecipient
 	 * @param string $string
 	 */
 	public static function getRecipients($string){
 		$contacts = str_getcsv($string);
-		//dp(CHtml::encode(print_r($contacts,true)));
+		//dp($contacts,true);
 		$cArr = array();
 		foreach($contacts as $c) {
-			$cArr[] = self::splitRecipient($c);
+			if(($r = self::splitRecipient($c)))
+				$cArr[] = $r;
 		}
 		return $cArr;
 	}
@@ -347,11 +350,15 @@ Class NMailReader extends CComponent
 	 *     name  => steve
 	 *     email => steve@newicon.net
 	 *
+	 * If $string is an empty string it returns null
+	 *
 	 * @param string $fromString
 	 * @retun array(name=>'nameValue',email=>'emailValue')
 	 */
 	public static function splitRecipient($string)
 	{
+		if ($string=='') return null;
+
 		preg_match('/([^<]*) <(.*)>|<(.*)>|([^<>]*)/', $string, $matches);
 
 		$match1 = array_key_exists(1,$matches)?$matches[1]:'';
