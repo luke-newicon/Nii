@@ -18,7 +18,21 @@ class IndexController extends NController
 	public function actionMessage($id){
 		$this->layout = '/layouts/ajax';
 		$t = SupportTicket::model()->findByPk($id);
-		$this->render('message',array('ticket'=>$t));
+		$j['summary'] = $this->render('message',array('ticket'=>$t),true);
+		$e = $t->emails[0];
+		$j['content'] = $e->message();
+		echo json_encode($j);
+
+	}
+
+	/**
+	 * empty controller action called by the iframe src to display an empty page
+	 */
+	public function actionEmptyIframe(){
+		//<meta  content="text/html; charset=utf-8" http-equiv="Content-type" />
+		$this->layout = '/layouts/ajax';
+		Yii::app()->clientScript->registerMetaTag('text/html; charset=utf-8',null,'Content-type');
+		$this->render('empty');
 	}
 
 	
