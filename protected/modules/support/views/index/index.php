@@ -10,7 +10,8 @@
 	.leftMainPanel{border-right:1px solid #ccc;background-color:#f9f9f9;}
 	.flags{width:8%;}
 	.time{font-weight:bold;color:#787878;}
-	.sel, .sel .faded, .sel .time {background-color:#999;color:#fff;}
+	.sel {background-color:#999;color:#fff;}
+	.sel .faded,.sel .time{color:#ddd;}
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #bbb;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
 	.mod.toolbar .inner .bd {height:30px;}
@@ -142,16 +143,22 @@ $(function(){
 		//console.log(json.content);
 
 		$iframe.contents().find('html head').html(html);
-//		if($body.length){
-//			$iframe.contents().find('body').replaceWith($body);
-//		}else{
-//			$iframe.contents().find('body').html(json.content);
-//		}
-		var bodyAttrs = /<body (.*?)>/.exec(json.content)[1];
-		//var attrArr = /([^=]*)="([^"]*)"|\'([^\']*)\'/.exec(bodyAttrs);
-		var bodyStyle = /style="([^"]*)"/.exec(bodyAttrs)[1];
+
+		var styles = '';
+		var bodyAttrsMatch = /<body (.*?)>/.exec(json.content);
+		if(bodyAttrsMatch != null){
+			var bodyAttrs = bodyAttrsMatch[1];
+			var bodyStyleMatch = /style="([^"]*)"/.exec(bodyAttrs);
+			if(bodyStyleMatch != null){
+				styles = bodyStyleMatch[1];
+			}
+		}
 		
-		$iframe.contents().find('body').attr('style',bodyStyle);
+
+		//var attrArr = /([^=]*)="([^"]*)"|\'([^\']*)\'/.exec(bodyAttrs);
+		
+		
+		$iframe.contents().find('body').attr('style', styles);
 		$iframe.contents().find('body').html(json.content);
 		//alert($(json.content).html());
 
@@ -182,7 +189,7 @@ $(function(){
 
 		// the height of messages reminaing in the viewable portion of the scroll
 		// before new messages are loaded
-		var tollerance = 375;
+		var tollerance = 275;
 		// calculate the batch (page) to load based on the current scroll position
 		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
 
