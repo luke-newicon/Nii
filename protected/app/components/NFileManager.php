@@ -8,7 +8,7 @@
  * Often many different modules in an application want to store and upload files.
  * Changing file storage policy becomes difficult to maintain as you have to specify the new
  * file storage rules in each part of the application that involves uploading files.
- * Thus increase risk of bugs and broken functionality. Makes successfully upadting files torage
+ * Thus increase risk of bugs and broken functionality. Makes successfully upadting files storage
  * rules a very expensive and problematic task.
  *
  * The solution:
@@ -19,14 +19,14 @@
  * HOW TO USE ME!
  * There are 3 reassons you will need this function:
  *
- * 1) Adding a file uploaded to the system.
+ * 1) Adding a file uploaded to the system. :doesnt make much sense (know what you mean though)
+ *
+ * TODO: matt code examples?
+ *
+ * 2) Creating a new file based on text etc in the system. :doesnt make much sense.
  *
  *
- *
- * 2) Creating a new file based on text etc in the system.
- *
- *
- * 3) Retrieving information for one or more files.
+ * 3) Retrieving information for one or more files. (information?)
  *
  * @author steve
  *
