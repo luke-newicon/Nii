@@ -137,15 +137,22 @@ class IndexController extends NController
 		//$url = Yii::app()->getAssetManager()->publish($path);
 		//$cs = Yii::app()->getClientScript()->registerCssFile($url);
 		//General page setup
-		$this->setPageTitle('Projects');
-		//Projects grid
-		$model=new ProjectsProject('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['ProjectsProject']))
-			$model->attributes=$_GET['ProjectsProject'];
-		$this->render('index',array(
-			'model'=>$model,
-		));
+//		$this->setPageTitle('Projects');
+//		//Projects grid
+//		$model=new ProjectsProject('search');
+//		$model->unsetAttributes();  // clear any default values
+//		if(isset($_GET['ProjectsProject']))
+//			$model->attributes=$_GET['ProjectsProject'];
+//		$this->render('index',array(
+//			'model'=>$model,
+//		));
+		Yii::app()->fileManager->saveFile('test');
+
+		echo (Yii::app()->fileManager->addFile('fileName', 'fileContfdggdfgfents', 'nii'));
+		echo '<form enctype="multipart/form-data" method="post" action="http://localhost/Nii/projects/index/index">
+		<input type="file" name="file"><input type="submit" value="test"/>
+		</form>
+		';
 	}
 
 	/**

@@ -576,3 +576,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog.notelet,.ui-dialog.notelet,.ui-dialog.notelet .ui-dialog-content{-moz-border-radius:0px;-moz-box-shadow: -6px 9px 13px #BBBBBB;-webkit-box-shadow: -6px 9px 13px #BBBBBB;}
 .ui-dialog.notelet .ui-widget-header,.ui-dialog.notelet .ui-dialog-content{background-color: #FBFDDD;}
 .ui-dialog.notelet,.ui-dialog.notelet,.ui-dialog.notelet .ui-dialog-titlebar{border:none;background-image: none;}
+
+.solid.ui-tabs .ui-tabs-nav li.ui-tabs-selected,.solid.ui-tabs .ui-tabs-nav li,.solid .ui-tabs-nav {-moz-border-radius:0;}
+.solid.rounded.ui-tabs .ui-tabs-nav li.ui-tabs-selected,.solid.rounded.ui-tabs .ui-tabs-nav li,.solid.rounded.ui-tabs-nav {-moz-border-radius: 4px 4px 0 0;}
+.solid .ui-widget-header {background: none repeat scroll 0 0 transparent;border-width: 0 0 1px;}
+.solid {border: medium none;}
+.solid.ui-tabs .ui-tabs-nav li a {padding: 0.4em 1em;}

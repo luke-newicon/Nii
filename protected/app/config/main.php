@@ -1,4 +1,5 @@
 <?php
+
 define('DS',DIRECTORY_SEPARATOR);
 // uncomment the following to define a path alias
 Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
@@ -13,7 +14,7 @@ return array(
 	'name'=>'Projects!',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log','NFileManager'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -39,7 +40,7 @@ return array(
 		),
 		'crm',
 		'kashflow',
-		'projects',
+		//'projects',
 		'support',
 		'user',
 	),
@@ -143,7 +144,11 @@ return array(
                     'theme' => $JQUERY_THEME,
                 ),
 			)
-		)
+		),
+		'fileManager'=>array(
+			'class'=>'NFileManager',
+			'location'=>'/Users/matthewturner/Sites/NiiFiles/'
+		),
 
 		
 //		'viewRenderer'=>array(

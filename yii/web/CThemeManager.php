@@ -54,6 +54,7 @@ class CThemeManager extends CApplicationComponent
 	 */
 	public function getTheme($name)
 	{
+		echo $this->getBasePath().DIRECTORY_SEPARATOR.$name;
 		$themePath=$this->getBasePath().DIRECTORY_SEPARATOR.$name;
 		if(is_dir($themePath))
 		{
