@@ -1,0 +1,126 @@
+10
+
+dir
+0
+https://yii-wysiwyg.googlecode.com/svn/trunk/editor/source/kcfinder
+https://yii-wysiwyg.googlecode.com/svn
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bcad0b14-4497-fb9b-0344-4bba5a22ee34
+
+tpl
+dir
+
+
+
+add
+
+lang
+dir
+
+
+
+add
+
+js_localize.php
+file
+
+
+
+add
+
+upload
+dir
+
+
+
+add
+
+doc
+dir
+
+
+
+add
+
+themes
+dir
+
+
+
+add
+
+lib
+dir
+
+
+
+add
+
+browse.php
+file
+
+
+
+add
+
+core
+dir
+
+
+
+add
+
+upload.php
+file
+
+
+
+add
+
+.htaccess
+file
+
+
+
+add
+
+config.php
+file
+
+
+
+add
+
+js
+dir
+
+
+
+add
+
+css.php
+file
+
+
+
+add
+

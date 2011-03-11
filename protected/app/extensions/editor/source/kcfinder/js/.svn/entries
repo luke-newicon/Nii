@@ -1,0 +1,63 @@
+10
+
+dir
+0
+https://yii-wysiwyg.googlecode.com/svn/trunk/editor/source/kcfinder/js
+https://yii-wysiwyg.googlecode.com/svn
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bcad0b14-4497-fb9b-0344-4bba5a22ee34
+
+browser
+dir
+
+
+
+add
+
+jquery.drag.js
+file
+
+
+
+add
+
+helper.js
+file
+
+
+
+add
+
+jquery.js
+file
+
+
+
+add
+
+jquery.rightClick.js
+file
+
+
+
+add
+

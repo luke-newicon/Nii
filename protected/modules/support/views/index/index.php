@@ -27,7 +27,7 @@
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
 <div class="popSpinner">
-	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;">Loading...</div></div></div>
+	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
 
 <div class="line" id="mClient">
@@ -71,7 +71,7 @@
 </div>
 
 <script>
-var msgsLoaded = [];
+
 $(function(){
 
 	$(window).stop().resize(function(){
@@ -101,6 +101,7 @@ $(function(){
 
 	var $email = $('#email');
 
+	var msgsLoaded = [];
 	/**
 	 * load selected email message
 	 */

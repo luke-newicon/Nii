@@ -1,0 +1,70 @@
+10
+
+dir
+0
+https://yii-wysiwyg.googlecode.com/svn/trunk/editor/source/ckeditor/_source
+https://yii-wysiwyg.googlecode.com/svn
+add
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bcad0b14-4497-fb9b-0344-4bba5a22ee34
+
+lang
+dir
+
+
+
+add
+
+plugins
+dir
+
+
+
+add
+
+adapters
+dir
+
+
+
+add
+
+themes
+dir
+
+
+
+add
+
+skins
+dir
+
+
+
+add
+
+core
+dir
+
+
+
+add
+

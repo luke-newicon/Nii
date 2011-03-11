@@ -48,6 +48,7 @@ class Uploader extends CApplicationComponent
 {
 	private $_fileTransObj;
 	private $_fileId;
+
 	
 	/**
 	 * Optional upload directory if not set will use the default upload directory

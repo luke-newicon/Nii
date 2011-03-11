@@ -4,9 +4,10 @@ class IndexController extends NController
 {
 	public function actionIndex()
 	{
-		NTinyMce::registerScripts();
+		//NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
-		$total = NMailReader::countMessages();
+		//$total = NMailReader::countMessages();
+		$total=8000;
 		$this->render('index',array(
 			'total'=>$total,
 		));
@@ -22,7 +23,6 @@ class IndexController extends NController
 		$e = $t->emails[0];
 		$j['content'] = $e->message();
 		echo json_encode($j);
-
 	}
 
 	/**

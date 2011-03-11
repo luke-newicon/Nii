@@ -142,15 +142,14 @@ class SupportEmail extends NActiveRecord
 		return $md->transform($this->message_text);
 	}
 	
-	
+	/**
+	 * Returns a string of text representing a preview of the email
+	 * @return string
+	 */
 	public function getPreviewText(){
-		//strip silly long strings 
-		if($this->message_text){
-			$totalTxt = substr($this->message_text, 0, 500);
-		}else{
-			$totalTxt = strip_tags($this->message_html);
-		}
-		return preg_replace("/([^\s]{14})/"," ",$totalTxt);
+		// strip silly long strings
+		$totalTxt = ($this->message_text)? $this->message_text:strip_tags($this->message_html);
+		return NHtml::encode(NHtml::previewText($totalTxt, 500));
 	}
 
 

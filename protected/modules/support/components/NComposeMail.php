@@ -26,7 +26,9 @@ class NComposeMail extends NWidget
 			$model->to = $this->replyTo->from;
 			$model->from = Yii::app()->user->record->email;
 			$model->subject = $this->replyTo->subject;
-			$model->message_html = $this->replyTo->message_html;
+
+			$wroteDeatils = '<br /><br />On '.  NTime::nice($this->replyTo->date) . ' ' . CHtml::encode($this->replyTo->from) . ' wrote:';
+			$model->message_html = '<div>'.$wroteDeatils.'<blockquote type="cite">'.$this->replyTo->message_html.'</blockquote></div>';
 			$model->message_text = $this->replyTo->message_text;
 		}
 		$this->render('compose',array('model'=>$model));

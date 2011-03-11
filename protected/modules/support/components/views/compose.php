@@ -29,11 +29,49 @@
 		<?php echo CHtml::activeTextField($model, 'from',array('class'=>'input')); ?>
 	</div>
 </div>
-<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php $this->widget('application.widgets.NTinyMce',array(
-		'model'=>$model,
-		'attribute'=>'message_html',
-		'height'=>'100%',
-		'editorTemplate'=>'full'
-	)); ?>
+
+<div class="line" style="border-width:0px 0px 1px 0px; background: none;">
+
+	<?php
+	$this->widget('application.extensions.editor.CKkceditor',array(
+		"model"=>$model,                # Data-Model
+		"attribute"=>'message_html',    # Attribute in the Data-Model
+		"height"=>'400px',
+		"width"=>'100%',
+		'config'=>array(
+			'toolbar'=> array(
+				array('Bold', 'Italic', 'Underline', '-', 'Font', 'FontSize',
+					'-', 'JustifyLeft','JustifyCenter','JustifyRight', '-', 'BulletedList','NumberedList'),
+				array( 'Image', 'Link', 'Unlink', 'Anchor' )
+			),
+			//'toolbar'=>'Full',
+			'skin'=>'nii',
+			'toolbarCanCollapse'=>false
+		),
+//	['Source','-','Save','NewPage','Preview','-','Templates'],
+//    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
+//    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+//    '/',
+//    ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+//    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
+//    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+//    ['BidiLtr', 'BidiRtl'],
+//    ['Link','Unlink','Anchor'],
+//    ['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
+//    '/',
+//    ['Styles','Format','Font','FontSize'],
+//    ['TextColor','BGColor'],
+//    ['Maximize', 'ShowBlocks','-','About']
+//    ];
+//		'config'=>array('toolbar'=> array(
+//				array( 'Source', '-', 'Bold', 'Italic', 'Underline', 'Strike' ),
+//				array( 'Image', 'Link', 'Unlink', 'Anchor' )
+//			),
+//			'ui'=>'',
+
+	));
+		//"filespath"=>(!$model->isNewRecord)?Yii::app()->basePath."/../media/paquetes/".$model->idpaquete."/":"",
+		//"filesurl"=>(!$model->isNewRecord)?Yii::app()->baseUrl."/media/paquetes/".$model->idpaquete."/":"",
+	
+	?>
 </div>

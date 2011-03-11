@@ -44,6 +44,7 @@ class NHtml extends CHtml
 
 	/**
 	 * Lowercase the first leter of a string
+	 * 
 	 * @param $str
 	 * @return string
 	 */
@@ -54,6 +55,16 @@ class NHtml extends CHtml
 	}
 
 
+	/**
+	 * Takes some text and finds all occurances of $searchTerm and highlights it with 
+	 * <span class="$hilightClass"></span> 
+	 *
+	 * @param string $textToHilight
+	 * @param string $searchTerm
+	 * @param string $hilightClass
+	 * @param array $htmlOptions
+	 * @return string with highlighted text
+	 */
 	public static function hilightText($textToHilight, $searchTerm, $hilightClass='searchHilite', $htmlOptions=array())
 	{
 		if (is_array($searchTerm))
@@ -66,6 +77,28 @@ class NHtml extends CHtml
 		$search = preg_quote($searchTerm, '/');
 		return preg_replace("/($search)/i", '<span '.CHtml::renderAttributes($htmlOptions).'>$1</span>', $textToHilight);
 		
+	}
+
+	/**
+	 * breaks a large string into a smaller preview string of a defined character length
+	 * (defined by $charactersLong)
+	 *
+	 * It also breaks words longer than $wordBreakLength (defaults to 15 characters) with the $wordBreakChar
+	 * (defaults to "-")
+	 *
+	 * @param string $subject The large text to form a preview of
+	 * @param string $charactersLong The maximum number of characters to preview
+	 * @param string $wordBreakLength The maximum number of characters allowed for any one word
+	 * @param string $wordBreakChar The character to break words longer than $wordBreakLength into
+	 * @return string the formatted preview text
+	 */
+	public static function previewText($subject, $charactersLong, $wordBreakLength=15, $wordBreakChar='-'){
+		// strip silly long strings
+		$totalTxt = substr($subject, 0, $charactersLong);
+		// break words longer than 14 characters
+		$patrn = '/([^\s]{'.$wordBreakLength.'})/';
+		$txt = preg_replace($patrn,$wordBreakChar,$totalTxt);
+		return $txt;
 	}
 
 }
