@@ -35,24 +35,6 @@ $this->widget('zii.widgets.grid.CGridView',
 .grid-view .delButton, .grid-view .button-column{width:18px;}
 </style>
 
-<script>
-//	$('.project_name_link').click(function() {
-//	  $('#issueCard').dialog('open');
-//	 var itemId = ($(this).parent().siblings('.itemId').html());
-//	  $('#issueCard').dialog( "option", "title", $(this).html());
-//	  $('#issueCard').html('loading info for: '+ itemId);
-//	});
-
-	$('.update').click(function() {
-		$('#updateDialog').dialog('open');
-		var itemId = ($(this).parent().siblings('.itemId').html());
-		var name = ($(this).parent().siblings('.itemName').html());
-		 $('#updateDialog').dialog( "option", "title", name);
-		 $('#updateDialog').html('loading info for: '+ itemId);
-		 return false;
-	});
-</script>
-
 <?php
 
 $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

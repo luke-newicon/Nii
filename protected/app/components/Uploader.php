@@ -151,7 +151,8 @@ class Uploader extends CApplicationComponent
 		if($this->folderFileCheck($targetPath)===false){
 			mkdir($targetPath);
 		}
-		
+
+		$this->
 		$fileNewName = time().'_'.$fileName;
 		$filePath = $targetPath.$fileNewName;
 		file_put_contents($filePath, $fileContent);
@@ -167,6 +168,8 @@ class Uploader extends CApplicationComponent
 		$this->_setFileId($upFile->id());
 		return $this->getFileId();
 	}
+
+
 
 	/**
 	 * Sets a variable with the id of the newly uploaded file

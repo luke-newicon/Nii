@@ -1,6 +1,6 @@
 <?php
 
-class ProjectsModule extends CWebModule
+class ProjectsModule extends NWebModule
 {
 	public function init()
 	{
@@ -12,6 +12,8 @@ class ProjectsModule extends CWebModule
 			'projects.models.*',
 			'projects.components.*',
 		));
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem('Projects', array('/projects/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)

@@ -80,7 +80,23 @@ $this->menu = array(
 				'dialogClass'=>'notelet'
 			),
 		));
-		$this->endWidget('zii.widgets.jui.CJuiDialog');?>
+		$this->endWidget('zii.widgets.jui.CJuiDialog');
+
+
+		$ajaxUrl = yii::app()->createUrl('projects/index/index');
+
+		$this->widget('zii.widgets.jui.CJuiTabs', array(
+			'tabs'=>array(
+				'Dashboard'=>$this->renderPartial('test',array(),true),
+				'Issues'=>array('content'=>'Chontent for tab 2'),
+				// panel 3 contains the content rendered by a partial view
+				'AjaxTab'=>array('ajax'=>$ajaxUrl),
+			),
+			// additional javascript options for the tabs plugin
+			'options'=>array('collapsible'=>true,),
+			'htmlOptions'=>array('class'=>'solid')
+		));
+		?>
 
 	</div>
 	<div class="foot"><!-- Foot --></div>
