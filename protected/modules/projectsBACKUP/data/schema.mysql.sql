@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `projects_issue` (
   KEY `project_id` (`project_id`),
   KEY `createdby` (`created_by`),
   KEY `completedby` (`completed_by`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `projects_project` (
   `status` enum('DRAFT','STARTED','COMPLETED') NOT NULL DEFAULT 'DRAFT',
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
 -- Constraints for dumped tables

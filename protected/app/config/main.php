@@ -24,6 +24,7 @@ return array(
 		'application.validators.*',
 		'application.vendors.*',
 		'application.vendors.FirePHPCore.*',
+		'application.widgets.*',
 		'modules.user.models.*',
         'modules.user.components.*',
 	),

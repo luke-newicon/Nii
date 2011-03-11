@@ -25,4 +25,4 @@ Yii::createApplication('Nii',$config)->run();
  * debug print functionn
  * @param mixed $debugObj
  */
-function dp($debugObj){	echo '<pre>'.print_r($debugObj,true).'</pre>'; }
+function dp($debugObj){	echo '<pre>'.CHtml::encode(print_r($debugObj,true)).'</pre>'; }

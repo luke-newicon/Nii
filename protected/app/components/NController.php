@@ -39,6 +39,8 @@ class NController extends CController
 			//Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
 			Yii::app()->getClientScript()->registerCoreScript("jquery");
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
+			Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
+			
 			if(!Yii::app()->user->isGuest){
 				// if logged in use admin layout
 				$this->layout = '//layouts/loggedin';
