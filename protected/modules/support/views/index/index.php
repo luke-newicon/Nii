@@ -30,6 +30,39 @@
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
 
+
+<?php
+$this->widget('zii.widgets.jui.CJuiDialog', array(
+	'id' => 'mydialog',
+	// additional javascript options for the dialog plugin
+	'options' => array(
+		'title' => 'Dialog box 1',
+		'autoOpen' => false,
+		'width'=>'500px',
+		'buttons' => array(
+			'ok' => array(
+				'text' => 'ok'
+			),
+		),
+		'open'=>'js:function(e,ui){
+			$("#mydialog").load("'.NHtml::url('/support/index/compose').'");
+		}',
+		'resize'=>'js:function(e,ui){
+			var newHeight = $("#mydialog").height() - $("#emailWysiwyg").position().top;
+			var newWidth =  $("#mydialog").width();
+			CKEDITOR.instances["SupportComposeMail_message_html"].resize(newWidth,newHeight);
+		}'
+	),
+));
+
+
+// the link that may open the dialog
+echo CHtml::link('open dialog', '#', array(
+	'onclick' => '$("#mydialog").dialog("open"); return false;',
+));
+?>
+
+
 <div class="line" id="mClient">
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
@@ -70,6 +103,7 @@
 	</div>
 </div>
 
+
 <script>
 
 $(function(){
@@ -93,6 +127,13 @@ $(function(){
 			$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
 			$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
 			$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
+			
+			if($("#emailWysiwyg").length){
+				var newHeight = $("#email").height() -  ($("#emailWysiwyg").position().top - $("#email").position().top);
+				var newWidth =  $("#email").width()-5;
+				CKEDITOR.instances['SupportComposeMail_message_html'].resize(newWidth,newHeight);
+				$('#cke_SupportComposeMail_message_html').css('width','100%');
+			}
 		}
 	}
 	resizer();
@@ -154,11 +195,8 @@ $(function(){
 				styles = bodyStyleMatch[1];
 			}
 		}
-		
-
 		//var attrArr = /([^=]*)="([^"]*)"|\'([^\']*)\'/.exec(bodyAttrs);
-		
-		
+			
 		$iframe.contents().find('body').attr('style', styles);
 		$iframe.contents().find('body').html(json.content);
 		//alert($(json.content).html());

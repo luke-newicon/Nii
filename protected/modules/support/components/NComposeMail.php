@@ -24,7 +24,8 @@ class NComposeMail extends NWidget
 		$model = new SupportComposeMail;
 		if($this->replyTo){
 			$model->to = $this->replyTo->from;
-			$model->from = Yii::app()->user->record->email;
+			if(Yii::app()->user->record)
+				$model->from = Yii::app()->user->record->email;
 			$model->subject = $this->replyTo->subject;
 
 			$wroteDeatils = '<br /><br />On '.  NTime::nice($this->replyTo->date) . ' ' . CHtml::encode($this->replyTo->from) . ' wrote:';

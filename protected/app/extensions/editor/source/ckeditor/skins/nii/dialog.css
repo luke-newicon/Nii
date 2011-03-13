@@ -18,12 +18,9 @@ body .cke_dialog
 .cke_skin_nii .cke_dialog_body
 {
 	z-index: 1;
-	border: solid 1px #ddd;
-	padding: 5px;
+	border: 1px solid #777777;
 	background-color: #fff;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;
 
 	/* 'cke_dialog' element has been fixed positioned in all but IE6, while we
 		need it to be positioned to hold e.g. close button. */
@@ -45,12 +42,15 @@ body .cke_dialog
 
 .cke_skin_nii .cke_dialog_title
 {
-	font-weight: bold;
-	font-size: 14px;
-	padding: 3px 3px 8px;
+	background:url("images/ui-bg_highlight-soft_75_cccccc_1x100.png") repeat-x scroll 50% 50% #CCCCCC;
+	font-size: 1.1em;
+	padding: 0.4em 1em;
+	color: #666666;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #EEEEEE;
 	cursor: move;
 	position: relative;
-	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #aaa;
 }
 
 .cke_skin_nii .cke_browser_iequirks .cke_dialog_title,
@@ -69,7 +69,6 @@ body .cke_dialog
 
 .cke_skin_nii .cke_dialog_contents
 {
-	background-color: #ebebeb;
 	border: solid 1px #fff;
 	border-bottom: none;
 	overflow: auto;
@@ -86,15 +85,11 @@ body .cke_dialog
 .cke_skin_nii .cke_dialog_footer
 {
 	text-align: right;
-	background-color: #ebebeb;
-	border: solid 1px #fff;
-	border-bottom: none;
-	-moz-border-radius-bottomleft: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-webkit-border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
+	background-color: #f2f2f2;
+	border-top:1px solid #fff;
+	-moz-border-radius: 0px 0px 4px 4px;
+	-webkit-border-radius: 0px 0px 4px 4px;
+	border-radius: 0px 0px 4px 4px;
 }
 
 .cke_skin_nii .cke_rtl .cke_dialog_footer

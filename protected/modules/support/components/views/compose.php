@@ -5,39 +5,40 @@
  */
 
 ?>
+
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded')); ?>
+	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'to',array('class'=>'input')); ?>
 	</div>
 </div>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'unit size1of15 faded')); ?>
+	<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
 	</div>
 </div>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'subject', array('class'=>'unit size1of15 faded')); ?>
+	<?php echo CHtml::activeLabel($model, 'subject', array('class'=>'unit size1of15 faded','style'=>'width:60px;')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'subject',array('class'=>'input')); ?>
 	</div>
 </div>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'from', array('class'=>'unit size1of15 faded')); ?>
+	<?php echo CHtml::activeLabel($model, 'from', array('class'=>'unit size1of15 faded','style'=>'width:60px;')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'from',array('class'=>'input')); ?>
 	</div>
 </div>
 
-<div class="line" style="border-width:0px 0px 1px 0px; background: none;">
+<div id="emailWysiwyg" class="line" style="border-width:0px 0px 1px 0px; background: none;">
 
 	<?php
 	$this->widget('application.extensions.editor.CKkceditor',array(
 		"model"=>$model,                # Data-Model
-		"attribute"=>'message_html',    # Attribute in the Data-Model
-		"height"=>'400px',
+		"attribute"=>'message_html',    # Attribute in the Data-Model,
 		"width"=>'100%',
+		'height'=>'200px',
 		'config'=>array(
 			'toolbar'=> array(
 				array('Bold', 'Italic', 'Underline', '-', 'Font', 'FontSize',
@@ -46,8 +47,11 @@
 			),
 			//'toolbar'=>'Full',
 			'skin'=>'nii',
-			'toolbarCanCollapse'=>false
+			'toolbarCanCollapse'=>false,
+			'resize_enabled'=>false,
 		),
+		"filespath"=>Yii::app()->getRuntimePath(),
+		"filesurl"=>'/runtime',
 //	['Source','-','Save','NewPage','Preview','-','Templates'],
 //    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
 //    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],

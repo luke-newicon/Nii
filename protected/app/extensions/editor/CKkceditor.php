@@ -92,6 +92,7 @@ class CKkceditor extends CInputWidget {
 				'uploadDir' => realpath($this->filespath) . '/',
 			);
 		}
+		$oCKeditor->textareaAttributes = array('id'=>CHtml::getIdByName($this->name));
 		$oCKeditor->editor($this->name, isset($this->value) ? $this->value : null);
 	}
 

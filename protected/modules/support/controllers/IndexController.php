@@ -4,10 +4,10 @@ class IndexController extends NController
 {
 	public function actionIndex()
 	{
-		//NMailReader::readMail();
+		NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
-		//$total = NMailReader::countMessages();
-		$total=8000;
+		$total = NMailReader::countMessages();
+		//$total=8000;
 		$this->render('index',array(
 			'total'=>$total,
 		));
@@ -51,8 +51,8 @@ class IndexController extends NController
 	{
 		$this->layout = '/layouts/ajax';
 		$limit = SupportModule::get()->msgPageLimit;
-//		NMailReader::$readOfset = $offset*$limit;
-//		NMailReader::readMail();
+		NMailReader::$readOfset = $offset*$limit;
+		NMailReader::readMail();
 		$total = NMailReader::countMessages();
 		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list',array(
@@ -79,6 +79,9 @@ class IndexController extends NController
 		echo $this->widget('support.components.NComposeMail',array('replyTo'=>$t->emails[0]),true);
 	}
 
+	public function actionCompose(){
+		echo $this->widget('support.components.NComposeMail',array(),true);
+	}
 
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
