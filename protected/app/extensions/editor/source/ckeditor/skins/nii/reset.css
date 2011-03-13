@@ -17,7 +17,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 	border: 0;
 	background: transparent;
 	text-decoration: none;
-	font: normal normal normal 100% Sans-Serif;
 	width: auto;
 	height: auto;
 	border-collapse: collapse;
@@ -26,9 +25,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 	white-space: nowrap;
 	cursor: auto;
 	color: #000;
-
     font-size: 12px;
-    font-family: Arial,Helvetica,Tahoma,Verdana,Sans-Serif;
 }
 
 .cke_skin_nii .cke_rtl *,

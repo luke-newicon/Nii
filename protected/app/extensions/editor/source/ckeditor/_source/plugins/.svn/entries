@@ -1,574 +1,0 @@
-10
-
-dir
-0
-https://yii-wysiwyg.googlecode.com/svn/trunk/editor/source/ckeditor/_source/plugins
-https://yii-wysiwyg.googlecode.com/svn
-add
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-bcad0b14-4497-fb9b-0344-4bba5a22ee34
-
-pagebreak
-dir
-
-
-
-add
-
-placeholder
-dir
-
-
-
-add
-
-image
-dir
-
-
-
-add
-
-styles
-dir
-
-
-
-add
-
-listblock
-dir
-
-
-
-add
-
-colordialog
-dir
-
-
-
-add
-
-htmldataprocessor
-dir
-
-
-
-add
-
-panel
-dir
-
-
-
-add
-
-clipboard
-dir
-
-
-
-add
-
-menubutton
-dir
-
-
-
-add
-
-htmlwriter
-dir
-
-
-
-add
-
-menu
-dir
-
-
-
-add
-
-undo
-dir
-
-
-
-add
-
-removeformat
-dir
-
-
-
-add
-
-bidi
-dir
-
-
-
-add
-
-autogrow
-dir
-
-
-
-add
-
-colorbutton
-dir
-
-
-
-add
-
-fakeobjects
-dir
-
-
-
-add
-
-indent
-dir
-
-
-
-add
-
-dialogadvtab
-dir
-
-
-
-add
-
-horizontalrule
-dir
-
-
-
-add
-
-scayt
-dir
-
-
-
-add
-
-entities
-dir
-
-
-
-add
-
-newpage
-dir
-
-
-
-add
-
-elementspath
-dir
-
-
-
-add
-
-link
-dir
-
-
-
-add
-
-justify
-dir
-
-
-
-add
-
-dialogui
-dir
-
-
-
-add
-
-flash
-dir
-
-
-
-add
-
-dialog
-dir
-
-
-
-add
-
-iframe
-dir
-
-
-
-add
-
-stylescombo
-dir
-
-
-
-add
-
-adobeair
-dir
-
-
-
-add
-
-about
-dir
-
-
-
-add
-
-button
-dir
-
-
-
-add
-
-pastetext
-dir
-
-
-
-add
-
-basicstyles
-dir
-
-
-
-add
-
-floatpanel
-dir
-
-
-
-add
-
-domiterator
-dir
-
-
-
-add
-
-sourcearea
-dir
-
-
-
-add
-
-panelbutton
-dir
-
-
-
-add
-
-liststyle
-dir
-
-
-
-add
-
-save
-dir
-
-
-
-add
-
-editingblock
-dir
-
-
-
-add
-
-keystrokes
-dir
-
-
-
-add
-
-tab
-dir
-
-
-
-add
-
-blockquote
-dir
-
-
-
-add
-
-tableresize
-dir
-
-
-
-add
-
-list
-dir
-
-
-
-add
-
-wysiwygarea
-dir
-
-
-
-add
-
-uicolor
-dir
-
-
-
-add
-
-find
-dir
-
-
-
-add
-
-preview
-dir
-
-
-
-add
-
-div
-dir
-
-
-
-add
-
-maximize
-dir
-
-
-
-add
-
-iframedialog
-dir
-
-
-
-add
-
-filebrowser
-dir
-
-
-
-add
-
-a11yhelp
-dir
-
-
-
-add
-
-selection
-dir
-
-
-
-add
-
-enterkey
-dir
-
-
-
-add
-
-forms
-dir
-
-
-
-add
-
-table
-dir
-
-
-
-add
-
-format
-dir
-
-
-
-add
-
-print
-dir
-
-
-
-add
-
-pastefromword
-dir
-
-
-
-add
-
-wsc
-dir
-
-
-
-add
-
-templates
-dir
-
-
-
-add
-
-showborders
-dir
-
-
-
-add
-
-resize
-dir
-
-
-
-add
-
-smiley
-dir
-
-
-
-add
-
-toolbar
-dir
-
-
-
-add
-
-popup
-dir
-
-
-
-add
-
-richcombo
-dir
-
-
-
-add
-
-font
-dir
-
-
-
-add
-
-tabletools
-dir
-
-
-
-add
-
-contextmenu
-dir
-
-
-
-add
-
-showblocks
-dir
-
-
-
-add
-
-specialchar
-dir
-
-
-
-add
-
