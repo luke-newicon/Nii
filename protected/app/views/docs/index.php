@@ -13,7 +13,8 @@ fcbk! <br />
 		'1'=>array('label'=>'Some label 2')
 	),
 	'options'=>array(
-		
+		'json_url'=>NHtml::url('/docs/contactsComplete'),
+		'newel'=>true
 	)
 )); ?>
 

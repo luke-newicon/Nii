@@ -12,6 +12,7 @@
 /**
  * FBComplete Class
  * 
+ * json_url         - url to fetch json object
  * cache            - use cache
  * height           - maximum number of element shown before scroll will apear
  * newel            - show typed text like a element
@@ -74,7 +75,7 @@ class FBComplete extends CInputWidget {
 		if ($this->baseUrl === null)
 			$this->baseUrl = Yii::app()->getAssetManager()->publish($assets);
 		Yii::app()->getClientScript()->registerCssFile($this->baseUrl . '/style.css');
-		Yii::app()->getClientScript()->registerScriptFile($this->baseUrl . '/jquery.fcbk.js');
+		Yii::app()->getClientScript()->registerScriptFile($this->baseUrl . '/jquery.fcbkcomplete.js');
 	}
 
 }

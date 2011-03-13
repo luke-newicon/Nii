@@ -6,6 +6,15 @@ class DocsController extends NController
 	{
 		$this->render('index');
 	}
+	
+	public function actionContactsComplete(){
+		$this->layout = '//layouts/ajax';
+		echo json_encode(array(
+			array('key'=>'contact 1', 'value'=>'contact 1'),
+			array('key'=>'steve', 'value'=>'someone else')
+		));
+		Yii::app()->end();
+	}
 
 	// Uncomment the following methods and override them if needed
 	/*
