@@ -64,9 +64,11 @@ class FBComplete extends CInputWidget {
 
 	public function run() {
 		list($name, $id) = $this->resolveNameID();
-		echo CHtml::listBox($name, $this->value, $this->dataOptions);
+		echo '<div>';
+		echo CHtml::listBox($name, $this->value, $this->dataOptions, array('style'=>'display:none;'));
 
 		$options = CJavaScript::encode($this->options);
+		echo '</div>';
 		Yii::app()->getClientScript()->registerScript(__CLASS__ . '#' . $id, "jQuery('#{$id}').fcbkcomplete($options);");
 	}
 

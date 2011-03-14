@@ -41,10 +41,10 @@ return array(
 		),
 		'crm',
 		'kashflow',
-		//'projects',
 		'support',
 		'user',
-		'project'
+		'project',
+		'hosting',
 	),
 
 	// application components
