@@ -43,7 +43,7 @@ class NController extends CController
 			
 			if(!Yii::app()->user->isGuest){
 				// if logged in use admin layout
-				$this->layout = '//layouts/loggedin';
+				//$this->layout = '//layouts/column2';
 			}
 		}
 	}
