@@ -1,7 +1,11 @@
 <?php
+
 define('DS',DIRECTORY_SEPARATOR);
 // uncomment the following to define a path alias
- Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
+Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
+
+$JQUERY_THEMEURL = dirname($_SERVER['SCRIPT_NAME']).'/css/jqueryui';
+$JQUERY_THEME = 'projectmanager';
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -10,9 +14,7 @@ return array(
 	'name'=>'Projects!',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
-
-
+	'preload'=>array('log','NFileManager'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -20,9 +22,11 @@ return array(
 		'application.components.*',
 		'application.extensions.*',
 		'application.validators.*',
+		'application.vendors.*',
+		'application.vendors.FirePHPCore.*',
+		'application.widgets.*',
 		'modules.user.models.*',
         'modules.user.components.*',
-
 	),
 	'theme'=>'classic',
 
@@ -37,6 +41,8 @@ return array(
 		),
 		'crm',
 		'kashflow',
+		//'projects',
+		'support',
 		'user',
 	),
 
@@ -59,7 +65,6 @@ return array(
 			'defaultRoles'=>array('authenticated', 'guest'),
 		),
 		// uncomment the following to enable URLs in path-format
-
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -78,8 +83,8 @@ return array(
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=project_manager',
 			'emulatePrepare' => true,
-			'username' => 'root',
-			'password' => '',
+			'username' => 'newicon',
+			'password' => 'bonsan',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,
@@ -99,7 +104,7 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'system.db.CDbCommand',
+					'categories'=>'profile, error, trace, log,system.db.CDbCommand',
 					'showInFireBug'=>true,
 				),
 			),
@@ -107,10 +112,53 @@ return array(
 		'cache' => array(
 			'class' => 'CFileCache',
 		),
+
+		// enables theme based JQueryUI's
+        'widgetFactory' => array(
+            'widgets' => array(
+                'CJuiAutoComplete' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+                'CJuiDialog' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+                'CJuiWidget' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+				'CJuiInputWidget' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+				'CJuiTabs' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+				'CJuiWidget' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+				'CJuiButton' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+				'CJuiDatePicker' => array(
+                    'themeUrl' => $JQUERY_THEMEURL,
+                    'theme' => $JQUERY_THEME,
+                ),
+			)
+		),
+		'fileManager'=>array(
+			'class'=>'NFileManager',
+			'location'=>'/Users/matthewturner/Sites/NiiFiles/'
+		),
+
 		
-		'viewRenderer'=>array(
-            'class'=>'CPradoViewRenderer',
-        ),
+//		'viewRenderer'=>array(
+//            'class'=>'CPradoViewRenderer',
+//        ),
 	),
 
 	// application-level parameters that can be accessed

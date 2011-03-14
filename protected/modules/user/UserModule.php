@@ -47,7 +47,7 @@ class UserModule extends NWebModule
 	public $autoLogin=true;
 	
 	public $registrationUrl = array("/user/registration/index");
-	public $recoveryUrl = array("/user/recovery/recovery");
+	public $recoveryUrl = array("/user/registration/recovery");
 	public $loginUrl = array("/user/index/login");
 	public $logoutUrl = array("/user/index/logout");
 	public $profileUrl = array("/user/profile/index");
@@ -79,8 +79,8 @@ class UserModule extends NWebModule
 	 */
 	//public $cacheEnable = false;
 	
-	public $tableUsers = '{{users}}';
-	public $tableProfiles = '{{nii_crm__contact}}';
+	public $tableUsers = '{{user_user}}';
+	public $tableProfiles = '{{crm_contact}}';
 
 
 	static private $_user;
@@ -213,12 +213,12 @@ class UserModule extends NWebModule
 		}
 	}
 	
-	/**
-	 * Return safe user data.
-	 * @param user id not required
-	 * @return user object or false
-	 */
-	public function users() {
-		return User;
-	}
+//	/**
+//	 * Return safe user data.
+//	 * @param user id not required
+//	 * @return user object or false
+//	 */
+//	public function users() {
+//		return User;
+//	}
 }

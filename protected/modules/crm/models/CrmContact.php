@@ -22,13 +22,11 @@
  */
 class CrmContact extends NActiveRecord
 {
-
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
 	const TYPE_USER = 'USER';
 
 	public function init(){
-
 		$this->onAfterDelete = array($this,'deleteLinkedData');
 	}
 
@@ -46,7 +44,7 @@ class CrmContact extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return "{{nii_crm__contact}}";//'{{nii_crm__contact}}';
+		return "{{crm_contact}}";//'{{crm_contact}}';
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends NController
+class AdminController extends NAController
 {
 	public $defaultAction = 'admin';
 	

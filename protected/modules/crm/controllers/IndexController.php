@@ -1,7 +1,11 @@
 <?php
-class IndexController extends NController
+class IndexController extends NAController
 {
 
+	public function init(){
+		parent::init();
+		$this->breadcrumbs=array($this->module->id);
+	}
 	
 	public function accessRules() 
 	{
@@ -10,11 +14,8 @@ class IndexController extends NController
 				//'actions'=>array('index'),
 				'users'=>array('@'),
 			),
-			array('deny',
-				//'actions'=>array('delete'),
-				'users'=>array('?'),
-			),
         );
+		parent::accessRules();
 	}
 	
 	public function actionIndex() 
