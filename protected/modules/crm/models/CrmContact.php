@@ -498,5 +498,12 @@ class CrmContact extends NActiveRecord
 			)
 		);
 	}
+
+	public function __get($name){
+		if($name == 'name'){
+			return $this->name();
+		}
+		return parent::__get($name);
+	}
 	
 }
