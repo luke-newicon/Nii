@@ -41,7 +41,7 @@ Class KashflowModule extends NWebModule
 		));
 
 		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem('Kashflow', array('/kashflow/index/index'));
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/money_pound.png', 'Kashflow'), array('/kashflow/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)

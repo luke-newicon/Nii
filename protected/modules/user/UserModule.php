@@ -104,7 +104,7 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem('Users', array('/user/index/index'));
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
 	}
 	
 	public function getBehaviorsFor($componentName){
