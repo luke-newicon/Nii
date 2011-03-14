@@ -36,7 +36,6 @@ $this->menu=array(
 
 <h2>Tasks</h2>
 <?php
-
 $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider'=>$issues->search($model->id),
 	'filter'=>$issues,
@@ -50,13 +49,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'out_of_scope',
 		array('class'=>'CButtonColumn',
 			'updateButtonUrl'=>'"/Nii/project/task/update/id/".$data->id',
-			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id')
+			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id',
+			'template'=>'{update}{delete}'
+			)
 	)
-));
-
-
-
-
-?>
+));?>
 
 

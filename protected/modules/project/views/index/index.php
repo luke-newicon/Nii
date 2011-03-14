@@ -17,6 +17,7 @@ $this->breadcrumbs=array(
 		'description',
 		'completion_date',
 		'estimated_time',
+		'created',
 		array(
 			'class'=>'CButtonColumn',
 		),
