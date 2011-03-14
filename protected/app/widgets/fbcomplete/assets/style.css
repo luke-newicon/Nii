@@ -1,7 +1,7 @@
 /* Copyright: Guillermo Rauch <http://devthought.com/> - Distributed under MIT - Keep this message! */
 
 /* TextboxList sample CSS */
-ul.holder { margin: 0; border: 1px solid #999; overflow: hidden; height: auto !important; height: 1%; padding: 4px 5px 0; }
+ul.holder { margin: 0; overflow: hidden; height: auto !important; height: 1%; padding:0px;}
 *:first-child+html ul.holder { padding-bottom: 2px; } * html ul.holder { padding-bottom: 2px; } /* ie7 and below */
 ul.holder li { float: left; list-style-type: none; margin: 0 5px 4px 0; white-space:nowrap;}
 ul.holder li.bit-box, ul.holder li.bit-input input { font: 11px "Lucida Grande", "Verdana"; }
@@ -11,7 +11,7 @@ ul.holder li.bit-input input { width: auto; overflow:visible; margin: 0; border:
 ul.holder li.bit-input input.smallinput { width: 20px; }
 
 /* Facebook demo CSS */      
-ul.holder { width: 500px; }
+ul.holder { }
 ul.holder { margin: 0 !important }
 ul.holder li.bit-box, #apple-list ul.holder li.bit-box { padding-right: 15px; position: relative; z-index:1000;}
 #apple-list ul.holder li.bit-input { margin: 0; }

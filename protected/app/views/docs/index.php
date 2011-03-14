@@ -14,7 +14,9 @@ fcbk! <br />
 	),
 	'options'=>array(
 		'json_url'=>NHtml::url('/docs/contactsComplete'),
-		'newel'=>true
+		'newel'=>true,
+		'addontab'=>true,
+		
 	)
 )); ?>
 

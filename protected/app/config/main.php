@@ -44,6 +44,7 @@ return array(
 		//'projects',
 		'support',
 		'user',
+		'hosting',
 	),
 
 	// application components
