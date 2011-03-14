@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends NAController
 {
 	public function actionIndex()
 	{

@@ -1,4 +1,7 @@
 /* core application stylesheet */
+
+h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}
+
 body{background:#fff url("../images/top-bg.png") repeat-x left -20px;}
 .head{}
 .bigHead{height:78px}
@@ -11,7 +14,9 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -20px;}
 .title{position:absolute;left:200px;top:18px;}
 .loginMenu{position:absolute;top:0px;right:0px;width:500px;}
 
+.loginPage{width:500px;padding-top:125px;}
 
+.loginBox{border:6px solid #DDD;padding:20px;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}
 
 /**
  * faded class should be used by the application to demark 

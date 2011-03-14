@@ -12,7 +12,7 @@
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
-<body>
+<body id="mainLayout">
 
 <div class="page liquid">
 	<div class="head">
