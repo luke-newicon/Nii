@@ -42,7 +42,7 @@
 		</div>
 	</div>
 	<div class="body"><!-- Body -->
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
+		<?php $this->widget('NBreadcrumbs', array(
 			'links'=>$this->breadcrumbs,
 		)); ?>
 		<?php echo $content; ?>
