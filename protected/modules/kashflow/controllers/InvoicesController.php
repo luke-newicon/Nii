@@ -1,5 +1,5 @@
 <?php 
-Class InvoicesController extends NController
+Class InvoicesController extends NAController
 {
 	public function actionIndex(){
 		$invoices = new KashInvoices();

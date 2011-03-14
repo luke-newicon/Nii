@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends NAController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning

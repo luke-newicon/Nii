@@ -41,9 +41,10 @@ return array(
 		),
 		'crm',
 		'kashflow',
-		//'projects',
 		'support',
 		'user',
+		'project',
+		'hosting',
 	),
 
 	// application components
@@ -53,7 +54,7 @@ return array(
 			'class'=>'NWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-			'loginUrl' => array("/user/index/login"),
+			'loginUrl' => array("/user/account/login"),
 			
 		),
 		'authManager'=>array(
@@ -81,10 +82,10 @@ return array(
 		// uncomment the following to use a MySQL database
 
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=project_manager',
+			'connectionString' => 'mysql:host=localhost;dbname=nii',
 			'emulatePrepare' => true,
-			'username' => 'newicon',
-			'password' => 'bonsan',
+			'username' => 'root',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,
