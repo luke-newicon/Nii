@@ -64,19 +64,21 @@ class TaskController extends NAController {
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate($project_id) {
+	public function actionCreate($projectId) {
 		$model = new ProjectTask;
+
+		$model->project_id = $projectId;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
+
 			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->id));
+				$this->redirect(array('view', 'id' => $model->project_id));
 		}
 
-		$model->project_id = $project_id;
 
 		$this->render('create', array(
 			'model' => $model,

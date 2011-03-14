@@ -39,24 +39,6 @@
 		<?php echo $form->error($model,'estimated_time'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'tree_lft'); ?>
-		<?php echo $form->textField($model,'tree_lft'); ?>
-		<?php echo $form->error($model,'tree_lft'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'tree_rgt'); ?>
-		<?php echo $form->textField($model,'tree_rgt'); ?>
-		<?php echo $form->error($model,'tree_rgt'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'tree_level'); ?>
-		<?php echo $form->textField($model,'tree_level'); ?>
-		<?php echo $form->error($model,'tree_level'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

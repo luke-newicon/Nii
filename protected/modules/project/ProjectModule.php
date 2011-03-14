@@ -1,6 +1,6 @@
 <?php
 
-class ProjectModule extends CWebModule
+class ProjectModule extends NWebModule
 {
 	public function init()
 	{

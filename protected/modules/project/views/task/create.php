@@ -1,12 +1,8 @@
 <?php
 $this->breadcrumbs=array(
-	'Project Tasks'=>array('index'),
+	'Projects'=>array('index/index'),
+	'Projects'=>array('index/index'),
 	'Create',
-);
-
-$this->menu=array(
-	array('label'=>'List ProjectTask', 'url'=>array('index')),
-	array('label'=>'Manage ProjectTask', 'url'=>array('admin')),
 );
 ?>
 

@@ -6,18 +6,35 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List ProjectTask', 'url'=>array('index')),
-	array('label'=>'Create ProjectTask', 'url'=>array('create')),
-	array('label'=>'Update ProjectTask', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete ProjectTask', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage ProjectTask', 'url'=>array('admin')),
+	array('label'=>'Project',
+	'items'=>array(
+			array('label'=>'Create','url'=>array('create','projectId'=>$model->project_id)),
+			array('label'=>'Update', 'url'=>array('update', 'id'=>$model->id)),
+			array('label'=>'Delete', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
+		)),
+	array('label'=>'Time Record',
+	'items'=>array(
+			array('label'=>'Create','url'=>array('timeRecord/create','projectId'=>$model->project_id)),
+		)),
 );
 ?>
 
 
 <h1><?php echo $model->name; ?></h1>
 
-<?php $this->widget('zii.widgets.CDetailView', array(
+<?php
+
+//Created by column
+$createdUser = $model->createdByUserName->username;
+
+//Assigned user column
+$assignedUser = ' ';
+if($model->assigned_user)
+$assignedUser = $model->assignedToUser->username;
+
+
+
+$this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
@@ -25,10 +42,10 @@ $this->menu=array(
 		'description',
 		'project_id',
 		'created',
-		'created_by',
+		array('label'=>'Created By','value'=>$createdUser),
 		'estimated_time',
 		'out_of_scope',
-		'assigned_user',
+		array('label'=>'Assigned User','value'=>$assignedUser),
 		'sprint_id',
 	),
 )); ?>
@@ -41,7 +58,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'filter'=>$ProjectTimeRecord,
 	'columns'=>array(
 		'id',
-		'date_of_work',
+		array('name'=>'date_of_work'),
+		array('name'=>'added_by','value'=>'$data->addedByUser->username'),
 		'description',
 		'time_spent',
 		array('name'=>'type','value'=>'$data->typeInfo->name','filter'=>$ProjectTimeRecord->getTypes()),

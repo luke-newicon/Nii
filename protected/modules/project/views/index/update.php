@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	'Project Projects'=>array('index'),
+	'Projects'=>array('index'),
 	$model->name=>array('view','id'=>$model->id),
 	'Update',
 );
