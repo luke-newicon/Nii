@@ -20,13 +20,7 @@
 		<?php echo $form->textField($model,'time_spent',array('size'=>11,'maxlength'=>11)); ?>
 		<?php echo $form->error($model,'time_spent'); ?>
 	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'issue_id'); ?>
-		<?php echo $form->textField($model,'issue_id',array('size'=>11,'maxlength'=>11)); ?>
-		<?php echo $form->error($model,'issue_id'); ?>
-	</div>
-
+		<?php echo $form->hiddenField($model,'task_id',array('size'=>11,'maxlength'=>11)); ?>
 	<div class="row">
 		<?php echo $form->labelEx($model,'description'); ?>
 		<?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
