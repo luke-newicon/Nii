@@ -4,7 +4,7 @@ class RegistrationController extends NController
 {
 	public $defaultAction = 'index';
 	
-
+	public $layout = '//layouts/login';
 
 	/**
 	 * Declares class-based actions.

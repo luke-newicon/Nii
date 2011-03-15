@@ -48,11 +48,11 @@ class UserModule extends NWebModule
 	
 	public $registrationUrl = array("/user/registration/index");
 	public $recoveryUrl = array("/user/registration/recovery");
-	public $loginUrl = array("/user/index/login");
-	public $logoutUrl = array("/user/index/logout");
+	public $loginUrl = array("/user/account/login");
+	public $logoutUrl = array("/user/account/logout");
 	public $profileUrl = array("/user/profile/index");
 	public $returnUrl = array("/user/dashboard");
-	public $returnLogoutUrl = array("/user/index/login");
+	public $returnLogoutUrl = array("/user/account/login");
 	
 	public $fieldsMessage = '';
 	
@@ -104,7 +104,7 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem('Users', array('/user/index/index'));
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
 	}
 	
 	public function getBehaviorsFor($componentName){
