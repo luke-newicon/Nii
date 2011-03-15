@@ -2,7 +2,7 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'project-task-form',
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -11,7 +11,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'type'); ?>
-		<?php echo $form->textField($model,'type',array('size'=>12,'maxlength'=>12)); ?>
+		<?php echo $form->dropdownlist($model,'type',$model->getTaskTypes()); ?>
 		<?php echo $form->error($model,'type'); ?>
 	</div>
 
@@ -39,7 +39,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'out_of_scope'); ?>
-		<?php echo $form->textField($model,'out_of_scope'); ?>
+		<?php echo $form->checkbox($model,'out_of_scope'); ?>
 		<?php echo $form->error($model,'out_of_scope'); ?>
 	</div>
 
@@ -49,9 +49,21 @@
 		<?php echo $form->error($model,'assigned_user'); ?>
 	</div>
 
+	<?php
+	/** $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+    'name'=>'city',
+	'sourceUrl'=>array('user/index/'),
+	// additional javascript options for the autocomplete plugin
+    'options'=>array(
+        'minLength'=>'2',
+    ),
+));
+**/
+ ?>
+
 	<div class="row">
 		<?php echo $form->labelEx($model,'sprint_id'); ?>
-		<?php echo $form->textField($model,'sprint_id',array('size'=>11,'maxlength'=>11)); ?>
+		<?php echo $form->dropdownlist($model,'sprint_id',$model->getProjectSprints()); ?>
 		<?php echo $form->error($model,'sprint_id'); ?>
 	</div>
 

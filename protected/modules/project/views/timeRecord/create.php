@@ -1,15 +1,12 @@
 <?php
 $this->breadcrumbs=array(
-	'Project Time Records'=>array('index'),
-	'Create',
+	'Projects'=>array('index/index'),
+	$model->issue->project->name=>array('index/view','id'=>$model->issue->project->id),
+	$model->issue->name=>array('task/view','id'=>$model->task_id),
 );
 
-$this->menu=array(
-	array('label'=>'List ProjectTimeRecord', 'url'=>array('index')),
-	array('label'=>'Manage ProjectTimeRecord', 'url'=>array('admin')),
-);
 ?>
 
-<h1>Create ProjectTimeRecord</h1>
+<h1>Add Time Record</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

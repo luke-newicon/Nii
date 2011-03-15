@@ -4,13 +4,6 @@ $this->breadcrumbs=array(
 	$model->name=>array('view','id'=>$model->id),
 	'Update',
 );
-
-$this->menu=array(
-	array('label'=>'List ProjectProject', 'url'=>array('index')),
-	array('label'=>'Create ProjectProject', 'url'=>array('create')),
-	array('label'=>'View ProjectProject', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage ProjectProject', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Update ProjectProject <?php echo $model->id; ?></h1>
