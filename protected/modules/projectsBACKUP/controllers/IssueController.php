@@ -1,6 +1,6 @@
 <?php
 
-class IssueController extends NController
+class IssueController extends NAController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning

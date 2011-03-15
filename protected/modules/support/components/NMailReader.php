@@ -17,7 +17,7 @@
  */
 Class NMailReader extends CComponent
 {
-	public static $readLimit = 30;
+	public static $readLimit = 15;
 
 	public static $readOfset = 0;
 

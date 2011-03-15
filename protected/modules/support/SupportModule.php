@@ -105,7 +105,7 @@ class SupportModule extends NWebModule
 		require_once 'Zend/Loader/Autoloader.php';
 		Yii::registerAutoloader(array('Zend_Loader_Autoloader', 'autoload'));
 		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem('Support', array('/support/index/index'));
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/email.png', 'Support'), array('/support/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)

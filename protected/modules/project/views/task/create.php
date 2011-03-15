@@ -1,8 +1,8 @@
 <?php
 $this->breadcrumbs=array(
 	'Projects'=>array('index/index'),
-	'Projects'=>array('index/index'),
-	'Create',
+	$model->project->name=>array('index/view/','id'=>$model->project_id),
+	'Create'
 );
 ?>
 

@@ -2,7 +2,7 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'project-project-form',
-	'enableAjaxValidation'=>false,
+	'enableAjaxValidation'=>true,
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
@@ -29,7 +29,17 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'completion_date'); ?>
-		<?php echo $form->textField($model,'completion_date'); ?>
+
+		<?php
+			$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+			'name'=>'ProjectProject[completion_date]',
+			// additional javascript options for the date picker plugin
+			'options'=>array(
+				'showAnim'=>'fold',
+				'dateFormat'=>'yy-mm-dd'
+			),
+			'value'=>$model->completion_date,
+		));?>
 		<?php echo $form->error($model,'completion_date'); ?>
 	</div>
 

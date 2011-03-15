@@ -21,7 +21,7 @@ $this->menu=array(
 		'id',
 		'date_of_work',
 		'time_spent',
-		'issue_id',
+		'task_id',
 		'description',
 		'added',
 		'added_by',

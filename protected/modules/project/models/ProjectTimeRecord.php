@@ -5,9 +5,9 @@
  *
  * The followings are the available columns in table 'project_time_record':
  * @property string $id
- * @property string $date_of_work
- * @property string $time_spent
- * @property string $issue_id
+ * @property string $time_started
+ * @property string $time_finished
+ * @property string $task_id
  * @property string $description
  * @property string $added
  * @property integer $added_by
@@ -43,11 +43,12 @@ class ProjectTimeRecord extends NActiveRecord {
 		// will receive user inputs.
 		return array(
 			array('added_by', 'numerical', 'integerOnly' => true),
-			array('time_spent, issue_id, type', 'length', 'max' => 11),
-			array('date_of_work, description, added', 'safe'),
+			array('time_started,time_finished, task_id, type', 'length', 'max' => 11),
+			array(array('type','description'),'required'),
+			array('description, added', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, date_of_work, time_spent, issue_id, description, added, added_by, type', 'safe', 'on' => 'search'),
+			array('id, time_started,time_finished, task_id, description, added, added_by, type', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -58,7 +59,7 @@ class ProjectTimeRecord extends NActiveRecord {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'issue' => array(self::BELONGS_TO, 'ProjectTask', 'issue_id'),
+			'issue' => array(self::BELONGS_TO, 'ProjectTask', 'task_id'),
 			'addedByUser' => array(self::BELONGS_TO, 'User', 'added_by'),
 			'typeInfo' => array(self::BELONGS_TO, 'ProjectTimeRecordtype', 'type'),
 		);
@@ -70,9 +71,7 @@ class ProjectTimeRecord extends NActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'date_of_work' => 'Date Of Work',
-			'time_spent' => 'Time Spent',
-			'issue_id' => 'Issue',
+			'task_id' => 'Issue',
 			'description' => 'Description',
 			'added' => 'Added',
 			'added_by' => 'Added By',
@@ -91,9 +90,7 @@ class ProjectTimeRecord extends NActiveRecord {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('id', $this->id, true);
-		$criteria->compare('date_of_work', $this->date_of_work, true);
-		$criteria->compare('time_spent', $this->time_spent, true);
-		$criteria->compare('issue_id', $issueId);
+		$criteria->compare('task_id', $issueId);
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('added', $this->added, true);
 		$criteria->compare('added_by', $this->added_by);
@@ -108,8 +105,12 @@ class ProjectTimeRecord extends NActiveRecord {
 	 *
 	 * @return array
 	 */
-	public function getTypes() {
+	public function getTypes($includeBlankItem) {
 		$typeArray = array();
+
+		if($includeBlankItem)
+			$typeArray[''] = '-';
+		
 		$types = Yii::app()->db->createCommand()
 						->select('id, name')
 						->from('project_time_recordtype')

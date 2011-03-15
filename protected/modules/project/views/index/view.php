@@ -35,6 +35,7 @@ $this->menu=array(
 ?>
 
 <h2>Tasks</h2>
+
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider'=>$issues->search($model->id),
@@ -42,7 +43,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'columns'=>array(
 		'id',
 		array('name'=>'name','value'=>'$data->nameCol()','type'=>'html'),
-		array('name'=>'type'),
+		array('name'=>'type','value'=>'$data->getType("$data->type")','filter'=>$issues->getTaskTypes()),
 		'description',
 		'created',
 		array('name'=>'estimated_time'),

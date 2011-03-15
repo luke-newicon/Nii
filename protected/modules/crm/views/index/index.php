@@ -1,5 +1,4 @@
 <br/>
-<br/>
 
 <style>
 	.userList li,.groupList li {border-left:1px solid #ccc;border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}

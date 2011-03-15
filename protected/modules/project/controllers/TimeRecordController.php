@@ -59,18 +59,21 @@ class TimeRecordController extends NAController
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate()
+	public function actionCreate($issueId)
 	{
 		$model=new ProjectTimeRecord;
 
+		$model->task_id = $issueId;
+
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['ProjectTimeRecord']))
 		{
 			$model->attributes=$_POST['ProjectTimeRecord'];
+			$model->added_by = yii::app()->getUser()->getId();
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('task/view','id'=>$issueId));
 		}
 
 		$this->render('create',array(

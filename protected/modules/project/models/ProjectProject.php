@@ -54,6 +54,7 @@ class ProjectProject extends NActiveRecord
 		return array(
 			array('tree_lft, tree_rgt, tree_level, tree_parent, estimated_time, created_by', 'numerical', 'integerOnly'=>true),
 			array('logo', 'length', 'max'=>11),
+			array(array('name','description','code'), 'required'),
 			array('name', 'length', 'max'=>100),
 			array('code', 'length', 'max'=>50),
 			array('description, completion_date, created', 'safe'),
@@ -90,7 +91,7 @@ class ProjectProject extends NActiveRecord
 			'name' => 'Name',
 			'code' => 'Code',
 			'description' => 'Description',
-			'completion_date' => 'Estimated Completion Date',
+			'completion_date' => 'Completion Date',
 			'tree_lft' => 'Tree Lft',
 			'tree_rgt' => 'Tree Rgt',
 			'tree_level' => 'Tree Level',

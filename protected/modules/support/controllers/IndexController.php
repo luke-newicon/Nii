@@ -1,13 +1,13 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends NAController
 {
 	public function actionIndex()
 	{
-		NMailReader::readMail();
+		//NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();
-		//$total=8000;
+		$total=8000;
 		$this->render('index',array(
 			'total'=>$total,
 		));
@@ -52,7 +52,7 @@ class IndexController extends NController
 		$this->layout = '/layouts/ajax';
 		$limit = SupportModule::get()->msgPageLimit;
 		NMailReader::$readOfset = $offset*$limit;
-		NMailReader::readMail();
+		//NMailReader::readMail();
 		$total = NMailReader::countMessages();
 		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list',array(

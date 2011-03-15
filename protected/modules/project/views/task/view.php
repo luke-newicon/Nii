@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Project',
+	array('label'=>'Task',
 	'items'=>array(
 			array('label'=>'Create','url'=>array('create','projectId'=>$model->project_id)),
 			array('label'=>'Update', 'url'=>array('update', 'id'=>$model->id)),
@@ -14,7 +14,7 @@ $this->menu=array(
 		)),
 	array('label'=>'Time Record',
 	'items'=>array(
-			array('label'=>'Create','url'=>array('timeRecord/create','projectId'=>$model->project_id)),
+			array('label'=>'Create','url'=>array('timeRecord/create','issueId'=>$model->id)),
 		)),
 );
 ?>
@@ -38,7 +38,7 @@ $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'type',
+		array('label'=>'Type','value'=>$model->getType()),
 		'description',
 		'project_id',
 		'created',
@@ -48,7 +48,8 @@ $this->widget('zii.widgets.CDetailView', array(
 		array('label'=>'Assigned User','value'=>$assignedUser),
 		'sprint_id',
 	),
-)); ?>
+));
+?>
 
 <h2>Time Record</h2>
 
@@ -58,12 +59,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	'filter'=>$ProjectTimeRecord,
 	'columns'=>array(
 		'id',
-		array('name'=>'date_of_work'),
 		array('name'=>'added_by','value'=>'$data->addedByUser->username'),
 		'description',
-		'time_spent',
-		array('name'=>'type','value'=>'$data->typeInfo->name','filter'=>$ProjectTimeRecord->getTypes()),
-		'added'
+		array('name'=>'type','value'=>'$data->typeInfo->name','filter'=>$ProjectTimeRecord->getTypes(false)),
+		'added',
+		array('class'=>'CButtonColumn','template'=>'{update}{delete}')
 	)
 )); ?>
 

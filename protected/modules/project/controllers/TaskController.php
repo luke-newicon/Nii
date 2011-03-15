@@ -26,7 +26,7 @@ class TaskController extends NAController {
 		return array(
 			array('allow', // allow all users to perform 'index' and 'view' actions
 				'actions' => array('index', 'view'),
-				'users' => array('*'),
+				'users' => array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions' => array('create', 'update'),
@@ -34,7 +34,7 @@ class TaskController extends NAController {
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions' => array('admin', 'delete'),
-				'users' => array('admin'),
+				'users' => array('@'),
 			),
 			array('deny', // deny all users
 				'users' => array('*'),
@@ -70,13 +70,14 @@ class TaskController extends NAController {
 		$model->project_id = $projectId;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
+			$model->created_by = yii::app()->getUser()->getId();
 
 			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->project_id));
+				$this->redirect(array('index/view', 'id' => $model->project_id));
 		}
 
 
@@ -94,12 +95,12 @@ class TaskController extends NAController {
 		$model = $this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
 			if ($model->save())
-				$this->redirect(array('view', 'id' => $model->id));
+				$this->redirect(array('index/view', 'id' => $model->project_id));
 		}
 
 		$this->render('update', array(
@@ -119,7 +120,7 @@ class TaskController extends NAController {
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if (!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				$this->redirect(array('index/index'));
 		}
 		else
 			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');

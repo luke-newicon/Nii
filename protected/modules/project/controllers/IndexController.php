@@ -36,7 +36,7 @@ class IndexController extends NController
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -71,11 +71,12 @@ class IndexController extends NController
 		$model=new ProjectProject;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['ProjectProject']))
 		{
 			$model->attributes=$_POST['ProjectProject'];
+			$model->created_by = yii::app()->getUser()->getId();
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -95,7 +96,7 @@ class IndexController extends NController
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['ProjectProject']))
 		{
@@ -123,7 +124,7 @@ class IndexController extends NController
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				$this->redirect(array('index/index'));
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
