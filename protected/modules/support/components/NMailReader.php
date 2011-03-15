@@ -321,8 +321,8 @@ Class NMailReader extends CComponent
 	 * @param string $string
 	 */
 	public static function getRecipients($string){
-		$contacts = str_getcsv($string);
-		//dp($contacts,true);
+		$contacts = NData::getCsv($string);
+		//dp($contacts);
 		$cArr = array();
 		foreach($contacts as $c) {
 			if(($r = self::splitRecipient($c)))
