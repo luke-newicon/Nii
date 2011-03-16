@@ -30,6 +30,7 @@ class Nii extends CWebApplication
 			if (in_array($module, $exclude)) continue;
 			Yii::app()->getModule($module);
 		}
+
 		// run the application (process the request)
 		parent::run();
 	}

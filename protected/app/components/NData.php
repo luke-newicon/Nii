@@ -36,5 +36,20 @@ class NData
 		return base64_decode(strtr($base64, '-_', '+/'));
 	}
 
+	public static function getCsv($input, $delimiter=',', $enclosure='"', $escape=null, $eol=null) {
+		if (function_exists('str_getcsv')) {
+			$r = str_getcsv($csvString, $delimiter, $enclosure, $escape);
+		} else {
+			$temp = fopen("php://memory", "rw");
+			fwrite($temp, $input);
+			fseek($temp, 0);
+			$r = array();
+			while (($data = fgetcsv($temp, 0, $delimiter, $enclosure)) !== false) {
+				$r[] = $data[0];
+			}
+			fclose($temp);
+		}
+		return $r;
+	}
 
 }
