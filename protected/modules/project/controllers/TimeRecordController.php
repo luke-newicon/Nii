@@ -97,7 +97,7 @@ class TimeRecordController extends NAController
 		{
 			$model->attributes=$_POST['ProjectTimeRecord'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('task/view','id'=>$model->task_id));
 		}
 
 		$this->render('update',array(

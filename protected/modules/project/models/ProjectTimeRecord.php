@@ -43,7 +43,8 @@ class ProjectTimeRecord extends NActiveRecord {
 		// will receive user inputs.
 		return array(
 			array('added_by', 'numerical', 'integerOnly' => true),
-			array('time_started,time_finished, task_id, type', 'length', 'max' => 11),
+			array('task_id, type', 'length', 'max' => 11),
+			array('time_started,time_finished','length','max' => 20),
 			array(array('type','description'),'required'),
 			array('description, added', 'safe'),
 			// The following rule is used by search().
