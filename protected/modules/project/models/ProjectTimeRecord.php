@@ -77,6 +77,8 @@ class ProjectTimeRecord extends NActiveRecord {
 			'added' => 'Added',
 			'added_by' => 'Added By',
 			'type' => 'Type',
+			'time_started'=>'Started',
+			'time_finished'=>'Finished'
 		);
 	}
 
@@ -122,5 +124,12 @@ class ProjectTimeRecord extends NActiveRecord {
 
 		return $typeArray;
 	}
+
+	/**
+	 * Displays the stop button for a
+	 */
+//	public function stopButton(){
+//
+//	}
 
 }

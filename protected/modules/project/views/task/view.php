@@ -54,6 +54,7 @@ $this->widget('zii.widgets.CDetailView', array(
 <h2>Time Record</h2>
 
 <?php
+
 $this->widget('zii.widgets.grid.CGridView', array(
     'dataProvider'=>$ProjectTimeRecord->search($model->id),
 	'filter'=>$ProjectTimeRecord,
@@ -62,8 +63,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		array('name'=>'added_by','value'=>'$data->addedByUser->username'),
 		'description',
 		array('name'=>'type','value'=>'$data->typeInfo->name','filter'=>$ProjectTimeRecord->getTypes(false)),
-		'added',
-		array('class'=>'CButtonColumn','template'=>'{update}{delete}','updateButtonUrl'=>'"/Nii/project/TimeRecord/update/id/".$data->id')
+		'time_started',
+		array('name'=>'time_finished','value'=>'$data->time_finished'),
+		array('class'=>'CButtonColumn','template'=>'{update}{delete}','updateButtonUrl'=>'"/Nii/project/TimeRecord/update/id/".$data->id'),
 	)
 )); ?>
 

@@ -1,8 +1,9 @@
 <?php
 $this->breadcrumbs=array(
-	'Project Time Records'=>array('index'),
-	$model->id=>array('view','id'=>$model->id),
-	'Update',
+	'Projects'=>array('index/index'),
+	$model->issue->project->name=>array('index/view','id'=>$model->issue->project->id),
+	$model->issue->name=>array('task/view','id'=>$model->task_id),
+	'Update Time Record'
 );
 ?>
 
