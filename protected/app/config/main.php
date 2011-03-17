@@ -4,7 +4,7 @@ define('DS',DIRECTORY_SEPARATOR);
 // uncomment the following to define a path alias
 Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
 
-$JQUERY_THEMEURL = dirname($_SERVER['SCRIPT_NAME']).'/css/jqueryui';
+$JQUERY_THEMEURL = dirname($_SERVER['SCRIPT_NAME']).'css/jqueryui';
 $JQUERY_THEME = 'projectmanager';
 
 // This is the main Web application configuration. Any writable
