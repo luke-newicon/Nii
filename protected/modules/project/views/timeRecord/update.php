@@ -1,15 +1,9 @@
 <?php
 $this->breadcrumbs=array(
-	'Project Time Records'=>array('index'),
-	$model->id=>array('view','id'=>$model->id),
-	'Update',
-);
-
-$this->menu=array(
-	array('label'=>'List ProjectTimeRecord', 'url'=>array('index')),
-	array('label'=>'Create ProjectTimeRecord', 'url'=>array('create')),
-	array('label'=>'View ProjectTimeRecord', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage ProjectTimeRecord', 'url'=>array('admin')),
+	'Projects'=>array('index/index'),
+	$model->issue->project->name=>array('index/view','id'=>$model->issue->project->id),
+	$model->issue->name=>array('task/view','id'=>$model->task_id),
+	'Update Time Record'
 );
 ?>
 

@@ -28,10 +28,11 @@ $this->menu=array(
 		'code',
 		'description',
 		'completion_date',
-		'estimated_time',
+		array('name'=>'estimated_time','value'=>$model->estimated_time),
 		'created',
 	),
 ));
+
 ?>
 
 <h2>Tasks</h2>
@@ -47,7 +48,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'description',
 		'created',
 		array('name'=>'estimated_time'),
-		'out_of_scope',
+		array('name'=>'out_of_scope'),
 		array('class'=>'CButtonColumn',
 			'updateButtonUrl'=>'"/Nii/project/task/update/id/".$data->id',
 			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id',

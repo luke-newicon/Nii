@@ -43,7 +43,8 @@ class ProjectTimeRecord extends NActiveRecord {
 		// will receive user inputs.
 		return array(
 			array('added_by', 'numerical', 'integerOnly' => true),
-			array('time_started,time_finished, task_id, type', 'length', 'max' => 11),
+			array('task_id, type', 'length', 'max' => 11),
+			array('time_started,time_finished','length','max' => 20),
 			array(array('type','description'),'required'),
 			array('description, added', 'safe'),
 			// The following rule is used by search().
@@ -76,6 +77,8 @@ class ProjectTimeRecord extends NActiveRecord {
 			'added' => 'Added',
 			'added_by' => 'Added By',
 			'type' => 'Type',
+			'time_started'=>'Started',
+			'time_finished'=>'Finished'
 		);
 	}
 
@@ -121,5 +124,12 @@ class ProjectTimeRecord extends NActiveRecord {
 
 		return $typeArray;
 	}
+
+	/**
+	 * Displays the stop button for a
+	 */
+//	public function stopButton(){
+//
+//	}
 
 }

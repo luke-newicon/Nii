@@ -158,8 +158,6 @@ return array(
 			'class'=>'NFileManager',
 			'location'=>'/Users/matthewturner/Sites/NiiFiles/'
 		),
-
-		
 //		'viewRenderer'=>array(
 //            'class'=>'CPradoViewRenderer',
 //        ),
