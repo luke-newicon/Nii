@@ -161,5 +161,6 @@ class ProjectTask extends NActiveRecord {
 		}
 		return '<a href="' . yii::app()->createUrl('project/task/view/id/' . $this->id) . '">' . $n . '</a>';
 	}
+	
 
 }
