@@ -6,7 +6,7 @@ class IndexController extends NAController
 	{
 		//NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
-		$total = NMailReader::countMessages();
+		//$total = NMailReader::countMessages();
 		$total=8000;
 		$this->render('index',array(
 			'total'=>$total,

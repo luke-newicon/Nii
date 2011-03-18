@@ -38,7 +38,7 @@ class NData
 
 	public static function getCsv($input, $delimiter=',', $enclosure='"', $escape=null, $eol=null) {
 		if (function_exists('str_getcsv')) {
-			$r = str_getcsv($csvString, $delimiter, $enclosure, $escape);
+			$r = str_getcsv($input, $delimiter, $enclosure, $escape);
 		} else {
 			$temp = fopen("php://memory", "rw");
 			fwrite($temp, $input);
