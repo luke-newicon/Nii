@@ -86,13 +86,18 @@ class UserModule extends NWebModule
 	static private $_user;
 	static private $_admin;
 	static private $_admins;
-	
+
+
 	/**
 	 * @var array
 	 * @desc Behaviors for models
 	 */
 	public $componentBehaviors=array();
-	
+
+	public function preinit() {
+		parent::preinit();
+	}
+
 	public function init()
 	{
 		// this method is called when the module is being created

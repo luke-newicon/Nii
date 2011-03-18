@@ -15,8 +15,9 @@
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #bbb;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
 	.mod.toolbar .inner .bd {height:30px;}
-	.popSpinner{z-index:1000;display:none;border:1px solid #333;-moz-border-radius:5px;border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
 	
+	.popSpinner{z-index:1000;display:none;border:1px solid #333;-moz-border-radius:5px;border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
+
 	.scroll{overflow:auto;height:250px;}
 	#messageList{background:url('http://localhost/newicon/projects/images/message-border.png') repeat top left;}
 
