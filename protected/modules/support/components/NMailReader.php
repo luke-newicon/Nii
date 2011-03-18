@@ -54,32 +54,6 @@ Class NMailReader extends CComponent
 	}
 	
 	
-	public static function testrPrintMessage($msgIndex){
-		$mail = self::connect();
-		$msgNum = self::countMessages();
-		$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
-		dp($msg);
-		dp($msg->getContent());
-		echo 'end of debug print output';
-		if ($msg->isMultipart()) {
-			foreach($msg as $part){
-				dp($part);
-			}
-		} else {
-			$encoding = self::headerParam($msg,'content-transfer-encoding');
-			if (strtok($msg->contentType, ';') == 'text/html'){
-				echo self::decode($msg->getContent(),$encoding);
-			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
-				echo self::decode($msg->getContent(),$encoding);
-			}
-		}
-
-		//create a new file
-		$file = Yii::app()->getRuntimePath().DS.'testEmail';
-		file_put_contents($file, $msg);
-
-	}
-	
 	public static function readMail(){
 		
 		$mail = self::connect();
@@ -128,14 +102,14 @@ Class NMailReader extends CComponent
 		// attachments need the mail id so save it first
 		$m->date = self::date($e);
 		$m->save();
-		try {
-			self::parseParts($e, $m);
-		} catch(Zend_Exception $err){
-			Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
-			$m->save();
-			return;
-		}
-		$m->save();
+		//try {
+			//self::parseParts($e, $m);
+		//} catch(Zend_Exception $err){
+			//Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
+			//$m->save();
+			//return;
+		//}
+		//$m->save();
 
 		$t = false;
 		// Check the subject line for possible ID.
@@ -395,6 +369,30 @@ Class NMailReader extends CComponent
 		return $bits[0];
 	}
 
-	
+	public static function testrPrintMessage($msgIndex){
+		$mail = self::connect();
+		$msgNum = self::countMessages();
+		$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
+		dp($msg);
+		dp($msg->getContent());
+		echo 'end of debug print output';
+		if ($msg->isMultipart()) {
+			foreach($msg as $part){
+				dp($part);
+			}
+		} else {
+			$encoding = self::headerParam($msg,'content-transfer-encoding');
+			if (strtok($msg->contentType, ';') == 'text/html'){
+				echo self::decode($msg->getContent(),$encoding);
+			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
+				echo self::decode($msg->getContent(),$encoding);
+			}
+		}
+
+		//create a new file
+		$file = Yii::app()->getRuntimePath().DS.'testEmail';
+		file_put_contents($file, $msg);
+
+	}
 	
 }
