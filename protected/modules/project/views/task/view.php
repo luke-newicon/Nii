@@ -65,7 +65,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		array('name'=>'type','value'=>'$data->typeInfo->name','filter'=>$ProjectTimeRecord->getTypes(false)),
 		'time_started',
 		array('name'=>'time_finished','value'=>'$data->time_finished'),
-		array('class'=>'CButtonColumn','template'=>'{update}{delete}','updateButtonUrl'=>'"/Nii/project/TimeRecord/update/id/".$data->id'),
+		array('class'=>'CButtonColumn','template'=>'{update}{delete}','updateButtonUrl'=>'"project/TimeRecord/update/id/".$data->id'),
 	)
 )); ?>
 
