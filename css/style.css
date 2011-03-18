@@ -1,5 +1,8 @@
 /* core application stylesheet */
 
+/**
+ * What the F**K?? why?
+ */
 h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}
 
 body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
