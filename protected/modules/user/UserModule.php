@@ -87,6 +87,7 @@ class UserModule extends NWebModule
 	static private $_admin;
 	static private $_admins;
 
+	public $useCrm = false;
 
 	/**
 	 * @var array
@@ -94,7 +95,9 @@ class UserModule extends NWebModule
 	 */
 	public $componentBehaviors=array();
 
-	public function preinit() {
+	public function  preinit() {
+		if(Yii::app()->getModule('crm'))
+			$this->useCrm = true;
 		parent::preinit();
 	}
 
@@ -108,6 +111,7 @@ class UserModule extends NWebModule
 			'user.models.*',
 			'user.components.*',
 		));
+
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
 	}

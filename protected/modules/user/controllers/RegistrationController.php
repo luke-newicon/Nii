@@ -23,7 +23,11 @@ class RegistrationController extends NController
 	 */
 	public function actionIndex() {
 		$model = new RegistrationForm;
-		$contact = new CrmContact;
+		
+		$contact = null;
+		if(Yii::app()->getModule('user')->useCrm)
+			$contact = new CrmContact;
+
 		$module = $this->getModule();
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
@@ -45,10 +49,12 @@ class RegistrationController extends NController
 					$model->save();
 					
 					// if crm module installed
-					$contact->attributes = $_POST['CrmContact'];
-					$contact->type = CrmContact::TYPE_USER;
-					$contact->user_id = $model->id;
-					$contact->save();
+					if(Yii::app()->getModule('user')->useCrm){
+						$contact->attributes = $_POST['CrmContact'];
+						$contact->type = CrmContact::TYPE_USER;
+						$contact->user_id = $model->id;
+						$contact->save();
+					}
 					
 					if ($module->sendActivationMail) {
 						$activationUrl = $this->makeActivationLink($model, '/user/registration/activation');
@@ -84,6 +90,7 @@ class RegistrationController extends NController
 					}
 				}
 			}
+
 			$this->render('/user/registration',array('model'=>$model,'contact'=>$contact));
 		}		
 	}
