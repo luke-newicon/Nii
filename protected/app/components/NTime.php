@@ -63,18 +63,16 @@ class NTime {
 	 * @param string $dateString
 	 * @return string 
 	 */
-	public static function niceShorter($dateString = null){
+	public static function niceShorter($dateString = null, $class='faded'){
 		$date = self::getUnix($dateString);
 		$y = (self::isThisYear($date)) ? '' : ' Y';
-
 		if (self::isToday($date)) {
-			$ret = sprintf('<span class="time">%s</span> <span class="faded">%s</span>', date("g:i", $date), date("A", $date));
+			$ret = sprintf('<span class="time">%s</span> <span class="'.$class.'">%s</span>', date("g:i", $date), date("A", $date));
 		} elseif (self::wasYesterday($date)) {
-			$ret = '<span class="faded">Yesterday</span>';
+			$ret = '<span class="'.$class.'">Yesterday</span>';
 		} else {
-			$ret = '<span class="faded">'.date("d/m/y", $date).'</span>';
+			$ret = '<span class="'.$class.'">'.date("d/m/y", $date).'</span>';
 		}
-
 		return $ret;
 	}
 	

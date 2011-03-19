@@ -2,28 +2,43 @@
 <?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
 <?php echo 'total messages ' . $total; ?>
 <style>
-	.listItem{border-bottom:1px solid #ECECEC;padding:5px 10px;cursor:pointer;height:75px;}
-	.listItem .subject{overflow:hidden;height:1.4em;}
-	.listItem .body{overflow:hidden;height:32px;}
-	.listItem .from{font-weight:bold;font-size:15px;height:1.4em;overflow:hidden;}
-	.leftPanel{border-right:1px solid #ccc;width:300px;}
-	.leftMainPanel{border-right:1px solid #ccc;background-color:#f9f9f9;}
-	.flags{width:8%;}
-	.time{font-weight:bold;color:#787878;}
-	.sel {background-color:#999;color:#fff;}
-	.sel .faded,.sel .time{color:#ddd;}
 	.mod.toolbar {border-top:1px solid #ccc;}
-	.mod.toolbar .inner {border-bottom:1px solid #bbb;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
-	.mod.toolbar .inner .bd {height:30px;}
+	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
+	.mod.toolbar .inner .bd {height:30px;border-left:1px solid #eee}
 	
+	#mClient{overflow:hidden;}
+	
+	/** Folder column **/
+	#messageFoldersBox{width:60px;background-color:#3b4446;}
+	.leftMainPanel{background-color:#3b4446;}
+	#messageFolders{border-right:1px solid #000;}
+	
+	
+	
+	/** Message List column **/
+	#messageListBox{width:338px;}
+	/** pulls the margin to pull the scroll bar accross */
+	#messageList{margin-right:-10px;}
+	.leftPanel{width:300px;}
+	#messageScroll{border-right:1px solid #a7a7a7;}
+	.listItem{border-bottom:1px solid #d6d6d6;padding:7px 12px 5px 10px;cursor:pointer;height:73px;background:-moz-linear-gradient(center top , #fff, #f9f9f9) repeat scroll 0 0 transparent;}
+	.listItem .subject{overflow:hidden;height:1.4em;}
+	.listItem .body{overflow:hidden;height:30px;font-size:12px;}
+	.listItem .from{font-weight:bold;font-size:14px;height:1.4em;overflow:hidden;width:170px;}
+	.flags{width:8%;}
+
+
+	/** Message Read column **/
+	#email{overflow:auto;}
+	#summaryDetails{border-bottom:1px solid #ddd;padding:5px 10px;}
+	.data txtR {padding-right:5px;}
+	
+	/** Misc **/
 	.popSpinner{z-index:1000;display:none;border:1px solid #333;-moz-border-radius:5px;border-radius:5px;width:150px;height:55px;opacity:0.8;color:#fff;background-color:#666;position:absolute;top:400px;left:230px;background:-moz-linear-gradient(center top , #999, #333) repeat scroll 0 0 transparent;}
 
 	.scroll{overflow:auto;height:250px;}
-	#messageList{background:url('http://localhost/newicon/projects/images/message-border.png') repeat top left;}
-
-	#mClient{overflow:hidden;}
-	#email{overflow:auto;}
-	#messageFolders{overflow:auto;}
+	
+	.blue .faded, .blue .time {color:#6282c1;font-size:11px;}
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
@@ -119,6 +134,13 @@ $(function(){
 	$('body').ajaxStop(function(){
 		$('.popSpinner').hide();
 	});
+	
+	var scroll = $('#messageScroll').jScrollPane({
+		verticalDragMinHeight: 15,
+		verticalGutter:0,
+		hideFocus:1
+	}).data('jsp');
+
 	var resizer = function(){
 		var paddingBottom = $('.main').padding().bottom;
 		var minHeight = 200;
@@ -135,11 +157,25 @@ $(function(){
 				CKEDITOR.instances['SupportComposeMail_message_html'].resize(newWidth,newHeight);
 				$('#cke_SupportComposeMail_message_html').css('width','100%');
 			}
+			
 		}
+		scroll.reinitialise();
 	}
+	
+	
 	resizer();
+	// make scroll thumb hidden
+	$('.jspDrag').hide();
+	$('#messageScroll').delegate('.jspContainer, .listItem','mouseenter',function(){
+		$('.jspDrag').stop(1,0).fadeTo(500,0.7);
+	});
+	
+	$('#messageScroll').delegate('.jspContainer','mouseleave',function(){
+		$('.jspDrag').stop(1,0).delay(300).fadeOut(1000);
+	})
 
-	$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
+
+	//$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
 
 	var $email = $('#email');
 
@@ -149,7 +185,9 @@ $(function(){
 	 */
 	$('#messageList').delegate('.listItem','click',function(){
 		$(this).parent().find('.listItem').removeClass('sel');
+		$(this).parent().find('.listItem').removeClass('selTop');
 		$(this).addClass('sel');
+		$(this).prev('.listItem').addClass('selTop');
 		var id = $(this).attr('id');
 		// create string for array key to prevent javascript padding array to key index
 		var key = 'ID'+id;
@@ -166,7 +204,7 @@ $(function(){
 			});
 		}
 	});
-
+	
 	/**
 	 * inserts the html email content into the page
 	 * @param object json contains summary=>html content, content=>html email message content

@@ -78,6 +78,7 @@ Class NMailReader extends CComponent
 				}
 			}
 			self::saveMail($e, $i);
+			// if ($message->hasFlag(Zend_Mail_Storage::FLAG_RECENT)) {
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
 	}
@@ -102,14 +103,14 @@ Class NMailReader extends CComponent
 		// attachments need the mail id so save it first
 		$m->date = self::date($e);
 		$m->save();
-		//try {
-			//self::parseParts($e, $m);
-		//} catch(Zend_Exception $err){
-			//Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
-			//$m->save();
-			//return;
-		//}
-		//$m->save();
+		try {
+			self::parseParts($e, $m);
+		} catch(Zend_Exception $err){
+			Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
+			$m->save();
+			return;
+		}
+		$m->save();
 
 		$t = false;
 		// Check the subject line for possible ID.

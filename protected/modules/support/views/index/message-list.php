@@ -9,7 +9,7 @@
 	
 	<div data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem " id="<?php echo $ticket->id(); ?>">
 		<div class="unit flags">
-			<?php echo $i; ?>&nbsp;
+			<?php //echo $i; ?>&nbsp;
 			<?php //echo $i + ($offset*30); ?>
 		</div>
 		<div class="lastUnit">
@@ -17,9 +17,9 @@
 				<div class="unit size3of4 from">
 					<?php echo $ticket->getFrom(); ?>
 				</div>
-				<div class="lastUnit txtR">
+				<div class="lastUnit txtR blue">
 					<?php if($ticket->getRecentEmail()!==null):?>
-					<?php echo NTime::niceShorter($ticket->getRecentEmail()->date); ?>
+					<?php echo NTime::niceShorter($ticket->getRecentEmail()->date, 'faded'); ?>
 					<?php endif; ?>
 				</div>
 			</div>
