@@ -25,6 +25,7 @@ $this->menu=array(
 		'description',
 		'completion_date',
 		'estimated_time',
+		array('name'=>'recorded_time','value'=>'$data->recordedTimeCol()','type'=>'html'),
 		'created',
 		array(
 			'class'=>'CButtonColumn',

@@ -27,6 +27,8 @@
  */
 class ProjectProject extends NActiveRecord
 {
+
+    public $recorded_time;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return ProjectProject the static model class
@@ -96,7 +98,7 @@ class ProjectProject extends NActiveRecord
 			'tree_rgt' => 'Tree Rgt',
 			'tree_level' => 'Tree Level',
 			'tree_parent' => 'Tree Parent',
-			'estimated_time' => 'Estimated Time (hours)',
+			'estimated_time' => 'Estimated Project Time (hours)',
 			'created' => 'Created',
 			'created_by' => 'Created By',
 		);
@@ -113,19 +115,34 @@ class ProjectProject extends NActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('logo',$this->logo,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('code',$this->code,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('completion_date',$this->completion_date,true);
-		$criteria->compare('tree_lft',$this->tree_lft);
-		$criteria->compare('tree_rgt',$this->tree_rgt);
-		$criteria->compare('tree_level',$this->tree_level);
-		$criteria->compare('tree_parent',$this->tree_parent);
-		$criteria->compare('estimated_time',$this->estimated_time);
-		$criteria->compare('created',$this->created,true);
-		$criteria->compare('created_by',$this->created_by);
+		$criteria->join = 'left join project_task on
+		    t.id = project_task.project_id
+		    left join project_time_record on
+		    project_task.id = project_time_record.task_id';
+		$criteria->select =array(
+			't.id',
+			't.name',
+			'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
+			't.code',
+			't.description',
+			't.completion_date',
+			't.estimated_time',
+			't.created'
+		    );
+		$criteria->group='t.id';
+		$criteria->compare('t.id',$this->id,true);
+		$criteria->compare('t.logo',$this->logo,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.code',$this->code,true);
+		$criteria->compare('t.description',$this->description,true);
+		$criteria->compare('t.completion_date',$this->completion_date,true);
+		$criteria->compare('t.tree_lft',$this->tree_lft);
+		$criteria->compare('t.tree_rgt',$this->tree_rgt);
+		$criteria->compare('t.tree_level',$this->tree_level);
+		$criteria->compare('t.tree_parent',$this->tree_parent);
+		$criteria->compare('t.estimated_time',$this->estimated_time);
+		$criteria->compare('t.created',$this->created,true);
+		$criteria->compare('t.created_by',$this->created_by);
 
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria'=>$criteria,
@@ -149,5 +166,40 @@ class ProjectProject extends NActiveRecord
 			$n = $this->name;
 		}
 		return '<a href="'.yii::app()->createUrl('project/index/view/id/'.$this->id).'">'.$n.'</a>';
+	}
+
+	/**
+	 * Returns the recorded time against a project.
+	 * @return string The time in Hours:Minutes:Seconds which has been recorded against a project
+	 */
+	public function getRecordedTime(){
+	    $condition = array(
+		'join'=>'left join project_task on
+		    t.id = project_task.project_id
+		    left join project_time_record on
+		    project_task.id = project_time_record.task_id',
+		'select'=>'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time'
+	    );
+	    //$test = $this->model()->find('id = '.$this->id, $params);
+	    $test = $this->model()->findByPk($this->id, $condition);
+	    return $test->recorded_time;
+	}
+
+	/**
+	 * Returns the recorded time for a project.
+	 * @return <type>
+	 */
+	public function recordedTimeCol(){
+	    if($this->recorded_time && $this->estimated_time){
+		$recordedTimeArray = explode(':',$this->recorded_time);
+
+		if($this->estimated_time < $recordedTimeArray[0])
+		    return '<span style="color:#AC1F0F">'.$this->recorded_time.'</span>';
+		else{
+		    return '<span style="color:#0EAB11">'.$this->recorded_time.'</span>';
+		}
+	    }else{
+		return $this->recorded_time;
+	    }
 	}
 }

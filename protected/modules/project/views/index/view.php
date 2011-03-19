@@ -29,6 +29,7 @@ $this->menu=array(
 		'description',
 		'completion_date',
 		array('name'=>'estimated_time','value'=>$model->estimated_time),
+		array('label'=>'Total Recorded Time','value'=>$model->getRecordedTime()),
 		'created',
 	),
 ));
@@ -48,7 +49,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 		'description',
 		'created',
 		array('name'=>'estimated_time'),
-		array('name'=>'out_of_scope'),
+	    array('name'=>'recorded_time','filter'=>''),
+		array('name'=>'out_of_scope','value'=>'$data->outOfScopeCol()','filter'=>array('No','Yes')),
 		array('class'=>'CButtonColumn',
 			'updateButtonUrl'=>'"/Nii/project/task/update/id/".$data->id',
 			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id',

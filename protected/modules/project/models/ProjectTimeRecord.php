@@ -20,116 +20,171 @@
  */
 class ProjectTimeRecord extends NActiveRecord {
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @return ProjectTimeRecord the static model class
-	 */
-	public static function model($className=__CLASS__) {
-		return parent::model($className);
-	}
+    public $recorded_time;
+    public $name;
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName() {
-		return 'project_time_record';
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * @return ProjectTimeRecord the static model class
+     */
+    public static function model($className=__CLASS__) {
+	return parent::model($className);
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules() {
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('added_by', 'numerical', 'integerOnly' => true),
-			array('task_id, type', 'length', 'max' => 11),
-			array('time_started,time_finished','length','max' => 20),
-			array(array('type','description'),'required'),
-			array('description, added', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, time_started,time_finished, task_id, description, added, added_by, type', 'safe', 'on' => 'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+	return 'project_time_record';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations() {
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'issue' => array(self::BELONGS_TO, 'ProjectTask', 'task_id'),
-			'addedByUser' => array(self::BELONGS_TO, 'User', 'added_by'),
-			'typeInfo' => array(self::BELONGS_TO, 'ProjectTimeRecordtype', 'type'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+	// NOTE: you should only define rules for those attributes that
+	// will receive user inputs.
+	return array(
+	    array('added_by', 'numerical', 'integerOnly' => true),
+	    array('task_id, type', 'length', 'max' => 11),
+	    array('time_started,time_finished', 'length', 'max' => 20),
+	    array(array('type'), 'required'),
+	    array('description, added', 'safe'),
+	    // The following rule is used by search().
+	    // Please remove those attributes that should not be searched.
+	    array('id, time_started,time_finished, task_id, description, added, added_by, type', 'safe', 'on' => 'search'),
+	);
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels() {
-		return array(
-			'id' => 'ID',
-			'task_id' => 'Issue',
-			'description' => 'Description',
-			'added' => 'Added',
-			'added_by' => 'Added By',
-			'type' => 'Type',
-			'time_started'=>'Started',
-			'time_finished'=>'Finished'
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+	// NOTE: you may need to adjust the relation name and the related
+	// class name for the relations automatically generated below.
+	return array(
+	    'issue' => array(self::BELONGS_TO, 'ProjectTask', 'task_id'),
+	    'addedByUser' => array(self::BELONGS_TO, 'User', 'added_by'),
+	    'typeInfo' => array(self::BELONGS_TO, 'ProjectTimeRecordtype', 'type'),
+	);
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search($issueId) {
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+	return array(
+	    'id' => 'ID',
+	    'task_id' => 'Issue',
+	    'description' => 'Description',
+	    'added' => 'Added',
+	    'added_by' => 'Added By',
+	    'type' => 'Type',
+	    'time_started' => 'Started',
+	    'time_finished' => 'Finished'
+	);
+    }
 
-		$criteria = new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search($issueId) {
+	// Warning: Please modify the following code to remove attributes that
+	// should not be searched.
 
-		$criteria->compare('id', $this->id, true);
-		$criteria->compare('task_id', $issueId);
-		$criteria->compare('description', $this->description, true);
-		$criteria->compare('added', $this->added, true);
-		$criteria->compare('added_by', $this->added_by);
-		$criteria->compare('type', $this->type, true);
+	$criteria = new CDbCriteria;
 
-		return new CActiveDataProvider(get_class($this), array(
-			'criteria' => $criteria,
-		));
-	}
+	$criteria->select = array('id',
+	    'task_id',
+	    'TIMEDIFF(time_finished,time_started) as recorded_time',
+	    'description',
+	    'added',
+	    'time_started',
+	    'time_finished',
+	    'added_by',
+	    'type');
 
-	/**
-	 *
-	 * @return array
-	 */
-	public function getTypes($includeBlankItem) {
-		$typeArray = array();
+	$criteria->group = 'id';
 
-		if($includeBlankItem)
-			$typeArray[''] = '-';
-		
-		$types = Yii::app()->db->createCommand()
-						->select('id, name')
-						->from('project_time_recordtype')
-						->queryAll();
+	$criteria->compare('id', $this->id, true);
+	$criteria->compare('task_id', $issueId);
+	$criteria->compare('description', $this->description, true);
+	$criteria->compare('TIMEDIFF(time_finished,time_started)', $this->recorded_time, true);
+	$criteria->compare('added', $this->added, true);
+	$criteria->compare('added_by', $this->added_by);
+	$criteria->compare('type', $this->type, true);
 
-		foreach ($types as $type)
-			$typeArray [$type['id']] = $type['name'];
+	return new CActiveDataProvider(get_class($this), array(
+	    'criteria' => $criteria,
+	));
+    }
 
-		return $typeArray;
-	}
+       public function timeOverview($taskId) {
+	   
+	$condition = array(
+	    'select' => 'name,
+		SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
+	    'join'=>'left join nii.project_time_recordtype on
+		nii.project_time_recordtype.id  = t.type',
+	    'group'=>'t.type',
+	    'condition'=>'task_id ='.$taskId
+	);
+	return $this->model()->findAll($condition);
+    }
 
-	/**
-	 * Displays the stop button for a
-	 */
+    /**
+     *
+     * @return array
+     */
+    public function getTypes($includeBlankItem) {
+	$typeArray = array();
+
+	if ($includeBlankItem)
+	    $typeArray[''] = '-';
+
+	$types = Yii::app()->db->createCommand()
+			->select('id, name')
+			->from('project_time_recordtype')
+			->queryAll();
+
+	foreach ($types as $type)
+	    $typeArray [$type['id']] = $type['name'];
+
+	return $typeArray;
+    }
+
+//    /**
+//     * Returns the total recorded time for a task.
+//     * The type option can be used to limit the recorded time returned to only one
+//     * type of task.
+//     * @return <type>
+//     */
+//    public function RecordedTime($taskId) {
+//	if (isset($this->type)) {
+//	    $condition = array(
+//		'select' => 'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
+//		'condition' => 'task_id = "'.$taskId.'" AND type="'.$this->type.'"'
+//	    );
+//
+//	}
+//	else{
+//	    $condition = array(
+//		'select' => 'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
+//		'condition' => 'task_id = "'.$taskId.'"'
+//	    );
+//
+//	}
+//
+//	$recordedTime = $this->model()->find($condition);
+//
+//	return $recordedTime->recorded_time;
+//    }
+
+    /**
+     * Displays the stop button for a
+     */
 //	public function stopButton(){
 //
 //	}
-
 }

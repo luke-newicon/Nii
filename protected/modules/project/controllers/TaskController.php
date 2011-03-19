@@ -47,16 +47,18 @@ class TaskController extends NAController {
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionView($id) {
-
 		$taskRecord= new ProjectTimeRecord('search');
 		$taskRecord->unsetAttributes();  // clear any default values
 
 		if(isset($_GET['ProjectTimeRecord']))
 			$taskRecord->attributes= $_GET['ProjectTimeRecord'];
+		
+		$taskTimeOverview = $taskRecord->timeOverview($id);
 
 		$this->render('view', array(
 			'model' => $this->loadModel($id),
-			'ProjectTimeRecord'=>$taskRecord
+			'ProjectTimeRecord'=>$taskRecord,
+			'taskTimeOverview'=>$taskTimeOverview
 		));
 	}
 
