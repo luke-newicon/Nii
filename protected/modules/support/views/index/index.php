@@ -3,7 +3,11 @@
 <?php echo 'total messages ' . $total; ?>
 <style>
 	.mod.toolbar {border-top:1px solid #ccc;}
-	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;}
+	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#d2d2d2');
+		background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#d2d2d2));
+		background:-moz-linear-gradient(center top , #ebebeb, #d2d2d2) repeat scroll 0 0 transparent;
+	}
 	.mod.toolbar .inner .bd {height:30px;border-left:1px solid #eee}
 	
 	#mClient{overflow:hidden;}
@@ -21,7 +25,10 @@
 	#messageList{margin-right:-10px;}
 	.leftPanel{width:300px;}
 	#messageScroll{border-right:1px solid #a7a7a7;}
-	.listItem{border-bottom:1px solid #d6d6d6;padding:7px 12px 5px 10px;cursor:pointer;height:73px;background:-moz-linear-gradient(center top , #fff, #f9f9f9) repeat scroll 0 0 transparent;}
+	.listItem{border-bottom:1px solid #d6d6d6;padding:7px 12px 5px 10px;cursor:pointer;height:73px;
+			 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f9f9f9');
+			background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f9f9f9));
+			background:-moz-linear-gradient(center top , #ffffff, #f9f9f9) repeat scroll 0 0 transparent;}
 	.listItem .subject{overflow:hidden;height:1.4em;}
 	.listItem .body{overflow:hidden;height:30px;font-size:12px;}
 	.listItem .from{font-weight:bold;font-size:14px;height:1.4em;overflow:hidden;width:170px;}
