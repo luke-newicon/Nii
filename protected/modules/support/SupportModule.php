@@ -102,6 +102,14 @@ class SupportModule extends NWebModule
 			'support.components.*',
 		));
 		
+		$url = Yii::app()->assetManager->publish(Yii::getPathOfAlias('support.assets'));
+		if(!Yii::app()->getRequest()->getIsAjaxRequest()){
+			Yii::app()->clientScript->registerCssFile("$url/support.css");
+			Yii::app()->clientScript->registerCssFile("$url/jquery.jscrollpane.css");
+			Yii::app()->clientScript->registerScriptFile("$url/js/jquery.jscrollpane.min.js");
+			Yii::app()->clientScript->registerScriptFile("$url/js/jquery.mousewheel.js");
+			Yii::app()->clientScript->registerScriptFile("$url/js/jquery.mwheelIntent.js");
+		}
 		require_once 'Zend/Loader/Autoloader.php';
 		Yii::registerAutoloader(array('Zend_Loader_Autoloader', 'autoload'));
 		if(!Yii::app()->user->isGuest)

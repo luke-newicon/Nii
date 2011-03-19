@@ -6,10 +6,6 @@
  */
 $e = $ticket->emails[0];
 ?>
-<style>
-	#summaryDetails{border-bottom:1px solid #ddd;padding:0px 10px 5px 10px;}
-	.data txtR {padding-right:5px;}
-</style>
 <h4><?php echo $ticket->subject; ?></h4>
 <div id="from" class="line">
 	<div class="unit">
