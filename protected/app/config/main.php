@@ -88,7 +88,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=nii',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'localhostmysql',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,

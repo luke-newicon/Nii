@@ -52,7 +52,7 @@ $this->widget('zii.widgets.CDetailView', array(
     ),
 ));
 ?>
-
+<?php if(count($taskTimeOverview)>0):?>
 <h2>Time Overview</h2>
 <table>
     <?php foreach ($taskTimeOverview as $tests): ?>
@@ -61,6 +61,7 @@ $this->widget('zii.widgets.CDetailView', array(
         </tr>
     <?php endforeach; ?>
     </table>
+<?php endif;?>
     <h2>Time Record</h2>
 <?php
 	$this->widget('zii.widgets.grid.CGridView', array(

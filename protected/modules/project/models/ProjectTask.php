@@ -41,8 +41,11 @@ class ProjectTask extends NActiveRecord {
 	'TYPE_ACTION' => self::TYPE_ACTION
     );
 
-    public function getType() {
-	return constant('self::' . $this->type);
+    public function getType($type = null) {
+	if(!$type)
+	    return constant('self::' . $this->type);
+	else
+	    return constant('self::' . $type);
     }
 
     /**

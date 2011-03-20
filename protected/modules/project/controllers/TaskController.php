@@ -43,17 +43,18 @@ class TaskController extends NAController {
 	}
 
 	/**
-	 * Displays a particular model.
+	 * The task card and associated time record information.
 	 * @param integer $id the ID of the model to be displayed
 	 */
 	public function actionView($id) {
+		// Code used by the search function
 		$taskRecord= new ProjectTimeRecord('search');
 		$taskRecord->unsetAttributes();  // clear any default values
-
 		if(isset($_GET['ProjectTimeRecord']))
 			$taskRecord->attributes= $_GET['ProjectTimeRecord'];
-		
-		$taskTimeOverview = $taskRecord->timeOverview($id);
+
+		//Gets the time overiview stats for the task.
+		$taskTimeOverview = $taskRecord->timeOverviewTimeType($id);
 
 		$this->render('view', array(
 			'model' => $this->loadModel($id),
@@ -63,17 +64,18 @@ class TaskController extends NAController {
 	}
 
 	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * Adds a new task. This will either show the create a new task
+	 * or if no data is present then display the creation form.
+	 * @param int $projectId The if of the project which the new task should be linked to.
 	 */
 	public function actionCreate($projectId) {
 		$model = new ProjectTask;
-
 		$model->project_id = $projectId;
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
+		//Save the new task
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
 			$model->created_by = yii::app()->getUser()->getId();
@@ -82,7 +84,7 @@ class TaskController extends NAController {
 				$this->redirect(array('index/view', 'id' => $model->project_id));
 		}
 
-
+		//If not saving then renders the create form.
 		$this->render('create', array(
 			'model' => $model,
 		));

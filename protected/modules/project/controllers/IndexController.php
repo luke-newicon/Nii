@@ -53,12 +53,21 @@ class IndexController extends NController
 		$issues= new ProjectTask('search');
 		$issues->unsetAttributes();  // clear any default values
 
+		$projectProject = new ProjectProject();
+
+		$projectTimeOverviewTimeType = $projectProject->projectTimeOverviewTimeType($id);
+		$projectTimeOverviewTaskType = $projectProject->projectTimeOverviewTaskType($id);
+
+
+
 		if(isset($_GET['ProjectTask']))
 			$issues->attributes= $_GET['ProjectTask'];
 
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
-			'issues' => $issues
+			'issues' => $issues,
+		    	'projectTimeOverviewTimeType' => $projectTimeOverviewTimeType,
+			'projectTimeOverviewTaskType' => $projectTimeOverviewTaskType
 		));
 	}
 

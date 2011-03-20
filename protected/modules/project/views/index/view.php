@@ -36,6 +36,26 @@ $this->menu=array(
 
 ?>
 
+<h2>Stats</h2>
+<div>Time record types:</div>
+<table>
+    <?php foreach($projectTimeOverviewTimeType as $OverviewTimeType):?>
+    <tr>
+	<td><?php echo $OverviewTimeType->name?></td>
+	<td><?php echo $OverviewTimeType->recorded_time?></td>
+    </tr>
+    <?php endforeach;?>
+</table>
+<div>Task types:</div>
+<table>
+    <?php foreach($projectTimeOverviewTaskType as $OverviewTaskType):?>
+    <tr>
+	<td><?php echo $issues->getType($OverviewTaskType->type)?></td>
+	<td><?php echo $OverviewTaskType->recorded_time?></td>
+    </tr>
+    <?php endforeach;?>
+</table>
+
 <h2>Tasks</h2>
 
 <?php

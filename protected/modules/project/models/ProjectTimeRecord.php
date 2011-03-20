@@ -120,15 +120,20 @@ class ProjectTimeRecord extends NActiveRecord {
 	));
     }
 
-       public function timeOverview($taskId) {
-	   
+    /**
+     * Discovers the time recorded against the different time record types for a
+     * time record type. 
+     * @param int $taskId The id of the task which the time overview data should relate to.
+     * @return Array of time information for a task.
+     */
+    public function timeOverviewTimeType($taskId) {
 	$condition = array(
 	    'select' => 'name,
 		SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
-	    'join'=>'left join nii.project_time_recordtype on
+	    'join' => 'left join nii.project_time_recordtype on
 		nii.project_time_recordtype.id  = t.type',
-	    'group'=>'t.type',
-	    'condition'=>'task_id ='.$taskId
+	    'group' => 't.type',
+	    'condition' => 'task_id =' . $taskId
 	);
 	return $this->model()->findAll($condition);
     }
