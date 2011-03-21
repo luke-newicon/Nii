@@ -131,7 +131,7 @@ class ProjectTimeRecord extends NActiveRecord {
 	    'select' => 'name,
 		SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
 	    'join' => 'left join project_time_recordtype on
-		nii.project_time_recordtype.id  = t.type',
+		project_time_recordtype.id  = t.type',
 	    'group' => 't.type',
 	    'condition' => 'task_id =' . $taskId
 	);
