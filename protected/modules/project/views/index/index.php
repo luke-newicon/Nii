@@ -1,7 +1,5 @@
 <?php
-$this->breadcrumbs=array(
-	'Projects',
-);
+$this->breadcrumbs=array('Projects');
 
 $this->menu=array(
 	array('label'=>'Project',
@@ -13,14 +11,13 @@ $this->menu=array(
 ?>
 
 <h1>All Projects</h1>
-
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'project-project-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	'dataProvider'=>$project->search(),
+	'filter'=>$project,
 	'columns'=>array(
 		'id',
-		array('name'=>'name','value'=>'$data->nameFilter()','type'=>'html'),
+		array('name'=>'name','value'=>'$data->nameCol()','type'=>'html'),
 		'code',
 		'description',
 		'completion_date',

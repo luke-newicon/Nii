@@ -74,7 +74,7 @@ class TimeRecordController extends NAController
 			$model->attributes=$_POST['ProjectTimeRecord'];
 			$model->added_by = yii::app()->getUser()->getId();
 			if($model->save())
-				$this->redirect(array('task/view','id'=>$issueId));
+				$this->redirect(array('task/view','taskId'=>$issueId));
 		}
 
 		$this->render('create',array(
@@ -137,12 +137,16 @@ class TimeRecordController extends NAController
 		));
 	}
 
-	public function actionStop($id){
 
-		$model=$this->loadModel($id);
+	/**
+	 * 
+	 * @param int $recordId The id of the recorded time item to stop.
+	 */
+	public function actionStop($recordId){
+		$model=$this->loadModel($recordId);
 			$model->time_finished=date('Y-m-d H:i:s');;
 			if($model->save())
-				$this->redirect(array('task/view','id'=>$model->task_id));
+				$this->redirect(array('task/view','taskId'=>$model->task_id));
 	}
 
 	/**
