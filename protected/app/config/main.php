@@ -87,8 +87,11 @@ return array(
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=nii',
 			'emulatePrepare' => true,
+			// the next person who changes this section will get shot in the face!
+			// you can make specific config changes by putting a config.php file above the root 
+			// so it IS NOT GITTED!
 			'username' => 'root',
-			'password' => 'localhostmysql',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,

@@ -142,11 +142,30 @@ $(function(){
 		$('.popSpinner').hide();
 	});
 	
-	var scroll = $('#messageScroll').jScrollPane({
-		verticalDragMinHeight: 15,
-		verticalGutter:0,
-		hideFocus:1
-	}).data('jsp');
+	var scroll = $('#messageScroll')
+		.bind('jsp-initialised',function(event, isScrollable){
+			console.log('Handle jsp-initialised', this,
+				'isScrollable=', isScrollable);
+		})
+		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+			console.log('Handle jsp-scroll-y', this,
+				'scrollPositionY=', scrollPositionY,
+				'isAtTop=', isAtTop,
+				'isAtBottom=', isAtBottom);
+		})
+		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
+			console.log('Handle jsp-arrow-change', this,
+						'isAtTop=', isAtTop,
+						'isAtBottom=', isAtBottom,
+						'isAtLeft=', isAtLeft,
+						'isAtRight=', isAtRight);
+		})
+		.jScrollPane({
+			verticalDragMinHeight: 15,
+			verticalGutter:0,
+			hideFocus:1
+		})
+		.data('jsp');
 
 	var resizer = function(){
 		var paddingBottom = $('.main').padding().bottom;
@@ -396,6 +415,9 @@ $(function(){
 })();
 
 /*
+ * Used to determine border pixel sizes for resizing panes
+ * e.g. $('selector').border().bottom ( = integer size in pixels )
+ * 
  * JSizes - JQuery plugin v0.33
  *
  * Licensed under the revised BSD License.
