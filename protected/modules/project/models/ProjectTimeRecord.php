@@ -138,6 +138,7 @@ class ProjectTimeRecord extends NActiveRecord {
 	return $this->model()->findAll($condition);
     }
 
+	
     /**
      *
      * @return array
@@ -159,37 +160,8 @@ class ProjectTimeRecord extends NActiveRecord {
 	return $typeArray;
     }
 
-//    /**
-//     * Returns the total recorded time for a task.
-//     * The type option can be used to limit the recorded time returned to only one
-//     * type of task.
-//     * @return <type>
-//     */
-//    public function RecordedTime($taskId) {
-//	if (isset($this->type)) {
-//	    $condition = array(
-//		'select' => 'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
-//		'condition' => 'task_id = "'.$taskId.'" AND type="'.$this->type.'"'
-//	    );
-//
-//	}
-//	else{
-//	    $condition = array(
-//		'select' => 'SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
-//		'condition' => 'task_id = "'.$taskId.'"'
-//	    );
-//
-//	}
-//
-//	$recordedTime = $this->model()->find($condition);
-//
-//	return $recordedTime->recorded_time;
-//    }
-
-    /**
-     * Displays the stop button for a
-     */
-//	public function stopButton(){
-//
-//	}
+	public function stopCol(){
+		if($this->time_finished == '0000-00-00 00:00:00')
+			return chtml::link('Stop',array('TimeRecord/Stop/id/'.$this->id));
+	}
 }

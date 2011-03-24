@@ -59,7 +59,7 @@ class TaskController extends NAController {
 		$this->render('view', array(
 			'model' => $this->loadModel($id),
 			'ProjectTimeRecord'=>$taskRecord,
-			'taskTimeOverview'=>$taskTimeOverview
+			'taskTimeOverview'=>$taskTimeOverview,
 		));
 	}
 
