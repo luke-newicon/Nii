@@ -36,7 +36,24 @@ $this->menu=array(
 
 ?>
 
-<h2>Stats</h2>
+<?php
+
+$this->widget('zii.widgets.jui.CJuiTabs', array(
+    'tabs'=>array(
+        'Statistics'=>'',
+        'Tasks'=>array('ajax'=>array('task/taskList')),
+        'Attached Items'=>array('ajax'=>''),
+    ),
+    // additional javascript options for the tabs plugin
+    'options'=>array(
+        'collapsible'=>true,
+    ),
+    'htmlOptions'=>array('class'=>'solid')
+));
+
+
+?>
+<h2>Time</h2>
 <div>Time record types:</div>
 <table>
     <?php foreach($projectTimeOverviewTimeType as $OverviewTimeType):?>
@@ -55,28 +72,3 @@ $this->menu=array(
     </tr>
     <?php endforeach;?>
 </table>
-
-<h2>Tasks</h2>
-
-<?php
-$this->widget('zii.widgets.grid.CGridView', array(
-    'dataProvider'=>$issues->search($model->id),
-	'filter'=>$issues,
-	'columns'=>array(
-		'id',
-		array('name'=>'name','value'=>'$data->nameCol()','type'=>'html'),
-		array('name'=>'type','value'=>'$data->getType("$data->type")','filter'=>$issues->getTaskTypes()),
-		'description',
-		'created',
-		array('name'=>'estimated_time'),
-	    array('name'=>'recorded_time','filter'=>''),
-		array('name'=>'out_of_scope','value'=>'$data->outOfScopeCol()','filter'=>array('No','Yes')),
-		array('class'=>'CButtonColumn',
-			'updateButtonUrl'=>'"/Nii/project/task/update/id/".$data->id',
-			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id',
-			'template'=>'{update}{delete}'
-			)
-	)
-));?>
-
-

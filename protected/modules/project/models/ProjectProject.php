@@ -94,7 +94,7 @@ class ProjectProject extends NActiveRecord {
 	    'tree_rgt' => 'Tree Rgt',
 	    'tree_level' => 'Tree Level',
 	    'tree_parent' => 'Tree Parent',
-	    'estimated_time' => 'Estimated Project Time (hours)',
+	    'estimated_time' => 'Estimated Time (hours)',
 	    'created' => 'Created',
 	    'created_by' => 'Created By',
 	);

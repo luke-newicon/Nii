@@ -19,13 +19,12 @@ $this->menu=array(
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
 		array('name'=>'name','value'=>'$data->nameFilter()','type'=>'html'),
 		'code',
 		'description',
+	    'estimated_time',
+	    array('name'=>'recorded_time','value'=>'$data->recordedTimeCol()','type'=>'html'),
 		'completion_date',
-		'estimated_time',
-		array('name'=>'recorded_time','value'=>'$data->recordedTimeCol()','type'=>'html'),
 		'created',
 		array(
 			'class'=>'CButtonColumn',

@@ -1,0 +1,21 @@
+<h2>Tasks</h2>
+<?php
+$this->widget('zii.widgets.grid.CGridView', array(
+    'dataProvider'=>$issues->search($model->id),
+	'filter'=>$issues,
+	'columns'=>array(
+		'id',
+		array('name'=>'name','value'=>'$data->nameCol()','type'=>'html'),
+		array('name'=>'type','value'=>'$data->getType("$data->type")','filter'=>$issues->getTaskTypes()),
+		'description',
+		'created',
+		array('name'=>'estimated_time'),
+	    array('name'=>'recorded_time','filter'=>''),
+		array('name'=>'out_of_scope','value'=>'$data->outOfScopeCol()','filter'=>array('No','Yes')),
+		array('class'=>'CButtonColumn',
+			'updateButtonUrl'=>'"/Nii/project/task/update/id/".$data->id',
+			'deleteButtonUrl'=>'"/Nii/project/task/delete/id/".$data->id',
+			'template'=>'{update}{delete}'
+			)
+	)
+));?>
