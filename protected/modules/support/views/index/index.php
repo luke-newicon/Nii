@@ -142,11 +142,41 @@ $(function(){
 		$('.popSpinner').hide();
 	});
 	
-	var scroll = $('#messageScroll').jScrollPane({
-		verticalDragMinHeight: 15,
-		verticalGutter:0,
-		hideFocus:1
-	}).data('jsp');
+	var timer;
+	var scroll = $('#messageScroll')
+		.bind('jsp-initialised',function(event, isScrollable){
+//			console.log('Handle jsp-initialised', this,
+//				'isScrollable=', isScrollable);
+		})
+		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+//			console.log('Handle jsp-scroll-y', this,
+//				'scrollPositionY=', scrollPositionY,
+//				'isAtTop=', isAtTop,
+//				'isAtBottom=', isAtBottom);
+
+			if (timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout( function(){
+				timer = null;
+				scrollStop(scrollPositionY);
+			}, 300);
+				
+		})
+		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
+			console.log('Handle jsp-arrow-change', this,
+						'isAtTop=', isAtTop,
+						'isAtBottom=', isAtBottom,
+						'isAtLeft=', isAtLeft,
+						'isAtRight=', isAtRight);
+		})
+		.jScrollPane({
+			verticalDragMinHeight: 15,
+			verticalGutter:0,
+			hideFocus:1
+		})
+		.data('jsp');
 
 	var resizer = function(){
 		var paddingBottom = $('.main').padding().bottom;
@@ -267,7 +297,7 @@ $(function(){
 
 
 	loadMessageBatch(0);
-	$('#messageScroll').bind('scrollstop',function(){
+	var scrollStop = function(scrollY){
 		var msgHeight = <?php echo $msgPreviewHeight;?>;
 		var msgNumber = <?php echo $msgPreviewNumber;?>;
 		var allMsgsHeight = msgHeight*msgNumber;
@@ -276,11 +306,11 @@ $(function(){
 		// before new messages are loaded
 		var tollerance = 275;
 		// calculate the batch (page) to load based on the current scroll position
-		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
+		var batchToLoad = Math.floor(((scrollY + tollerance) / allMsgsHeight));
 
 		// status debug reporting
 		if (typeof(console) == 'object') {
-			console.log(($(this).scrollTop()+tollerance));
+			console.log((scrollY+tollerance));
 			console.log('allmsgbath height: '+allMsgsHeight);
 			console.log('LOAD BATCH: ' + batchToLoad);
 		}
@@ -289,7 +319,7 @@ $(function(){
 		if(!(batchToLoad in loadedBatches)){
 			loadMessageBatch(batchToLoad);
 		}
-	});
+	};
 
 	/**
 	 * Toggle the email header details
@@ -366,24 +396,20 @@ $(function(){
         setup: function() {
 
             var timer,
-                    handler = function(evt) {
+            handler = function(evt) {
+				var _self = this,
+                _args = arguments;
 
-                    var _self = this,
-                        _args = arguments;
+                if (timer) {
+					clearTimeout(timer);
+                }
 
-                    if (timer) {
-                        clearTimeout(timer);
-                    }
-
-                    timer = setTimeout( function(){
-
-                        timer = null;
-                        evt.type = 'scrollstop';
-                        jQuery.event.handle.apply(_self, _args);
-
-                    }, special.scrollstop.latency);
-
-                };
+                timer = setTimeout( function(){
+	                timer = null;
+					evt.type = 'scrollstop';
+	                jQuery.event.handle.apply(_self, _args);
+                }, special.scrollstop.latency);
+			};
 
             jQuery(this).bind('scroll', handler).data(uid2, handler);
 
@@ -396,6 +422,9 @@ $(function(){
 })();
 
 /*
+ * Used to determine border pixel sizes for resizing panes
+ * e.g. $('selector').border().bottom ( = integer size in pixels )
+ * 
  * JSizes - JQuery plugin v0.33
  *
  * Licensed under the revised BSD License.

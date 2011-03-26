@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends NAController
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -45,34 +45,27 @@ class IndexController extends NController
 	}
 
 	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
+	 * Project view page.
+	 * @param integer $projectId The ID of the project
 	 */
-	public function actionView($id)
+	public function actionView($projectId)
 	{
-		$issues= new ProjectTask('search');
-		$issues->unsetAttributes();  // clear any default values
+		$project = $this->loadModel($projectId);
 
-		$projectProject = new ProjectProject();
-
-		$projectTimeOverviewTimeType = $projectProject->projectTimeOverviewTimeType($id);
-		$projectTimeOverviewTaskType = $projectProject->projectTimeOverviewTaskType($id);
-
-
-
+		$task= new ProjectTask('search');
+		$task->unsetAttributes();  // clear any default values
 		if(isset($_GET['ProjectTask']))
-			$issues->attributes= $_GET['ProjectTask'];
-
+			$task->attributes= $_GET['ProjectTask'];
+		$task->project_id = $projectId;
+		
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-			'issues' => $issues,
-		    	'projectTimeOverviewTimeType' => $projectTimeOverviewTimeType,
-			'projectTimeOverviewTaskType' => $projectTimeOverviewTaskType
+			'project'=>$project,
+			'task' => $task,
 		));
 	}
 
 	/**
-	 * Creates a new model.
+	 * Project create page
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
@@ -89,16 +82,13 @@ class IndexController extends NController
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
+		$this->render('create',array('model'=>$model));
 	}
 
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
+	 * @param integer $id the ID of the project to be updated
 	 */
 	public function actionUpdate($id)
 	{
@@ -114,15 +104,12 @@ class IndexController extends NController
 				$this->redirect(array('view','id'=>$model->id));
 		}
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+		$this->render('update',array('model'=>$model));
 	}
 
 	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 * @param integer $id the ID of the model to be deleted
+	 * Delete a project from the system
+	 * @param integer $id the ID of the project to be deleted
 	 */
 	public function actionDelete($id)
 	{
@@ -140,33 +127,16 @@ class IndexController extends NController
 	}
 
 	/**
-	 * Lists all models.
+	 * Lists all the projects.
 	 */
 	public function actionIndex()
 	{
-		$model=new ProjectProject('search');
-		$model->unsetAttributes();  // clear any default values
+		$project=new ProjectProject('search');
+		$project->unsetAttributes();  // clear any default values
 		if(isset($_GET['ProjectProject']))
-			$model->attributes=$_GET['ProjectProject'];
+			$project->attributes=$_GET['ProjectProject'];
 
-		$this->render('index',array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Manages all models.
-	 */
-	public function actionAdmin()
-	{
-		$model=new ProjectProject('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['ProjectProject']))
-			$model->attributes=$_GET['ProjectProject'];
-
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+		$this->render('index',array('project'=>$project));
 	}
 
 	/**
@@ -174,7 +144,7 @@ class IndexController extends NController
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id)
+	private function loadModel($id)
 	{
 		$model=ProjectProject::model()->findByPk((int)$id);
 		if($model===null)

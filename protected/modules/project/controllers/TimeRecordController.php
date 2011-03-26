@@ -31,12 +31,12 @@ class TimeRecordController extends NAController
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','stop'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -64,6 +64,7 @@ class TimeRecordController extends NAController
 		$model=new ProjectTimeRecord;
 
 		$model->task_id = $issueId;
+		$model->time_started = date('Y-m-d H:i:s');
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -73,7 +74,7 @@ class TimeRecordController extends NAController
 			$model->attributes=$_POST['ProjectTimeRecord'];
 			$model->added_by = yii::app()->getUser()->getId();
 			if($model->save())
-				$this->redirect(array('task/view','id'=>$issueId));
+				$this->redirect(array('task/view','taskId'=>$issueId));
 		}
 
 		$this->render('create',array(
@@ -134,6 +135,18 @@ class TimeRecordController extends NAController
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
+	}
+
+
+	/**
+	 * 
+	 * @param int $recordId The id of the recorded time item to stop.
+	 */
+	public function actionStop($recordId){
+		$model=$this->loadModel($recordId);
+			$model->time_finished=date('Y-m-d H:i:s');;
+			if($model->save())
+				$this->redirect(array('task/view','taskId'=>$model->task_id));
 	}
 
 	/**

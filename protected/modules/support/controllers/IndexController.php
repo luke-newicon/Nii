@@ -52,8 +52,9 @@ class IndexController extends NAController
 		$this->layout = '/layouts/ajax';
 		$limit = SupportModule::get()->msgPageLimit;
 		NMailReader::$readOfset = $offset*$limit;
-		//NMailReader::readMail();
+		NMailReader::readMail();
 		$total = NMailReader::countMessages();
+		//$total = 8000;
 		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list',array(
 			'total'=>$total,

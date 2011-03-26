@@ -131,7 +131,7 @@ class SupportModule extends NWebModule
 	/**
 	 * @return SupportModule
 	 */
-	public function get(){
+	public static function get(){
 		return Yii::app()->getModule('support');
 	}
 	

@@ -43,23 +43,24 @@ class TaskController extends NAController {
 	}
 
 	/**
-	 * The task card and associated time record information.
-	 * @param integer $id the ID of the model to be displayed
+	 * Task card and associated time record information.
+	 * @param integer $taskId 
 	 */
-	public function actionView($id) {
-		// Code used by the search function
-		$taskRecord= new ProjectTimeRecord('search');
-		$taskRecord->unsetAttributes();  // clear any default values
+	public function actionView($taskId) {
+		//Time record grid information.
+		$ProjectTimeRecord= new ProjectTimeRecord('search');
+		$ProjectTimeRecord->unsetAttributes();
 		if(isset($_GET['ProjectTimeRecord']))
-			$taskRecord->attributes= $_GET['ProjectTimeRecord'];
+			$ProjectTimeRecord->attributes= $_GET['ProjectTimeRecord'];
+		$ProjectTimeRecord->task_id = $taskId;
 
-		//Gets the time overiview stats for the task.
-		$taskTimeOverview = $taskRecord->timeOverviewTimeType($id);
+		//Time overview stats for the different time types.
+		$taskTimeOverview = $ProjectTimeRecord->timeOverviewTimeType($taskId);
 
 		$this->render('view', array(
-			'model' => $this->loadModel($id),
-			'ProjectTimeRecord'=>$taskRecord,
-			'taskTimeOverview'=>$taskTimeOverview
+			'task' => $this->loadModel($taskId),
+			'ProjectTimeRecord'=>$ProjectTimeRecord,
+			'taskTimeOverview'=>$taskTimeOverview,
 		));
 	}
 
