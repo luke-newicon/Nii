@@ -61,6 +61,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	'options' => array(
 		'title' => 'Dialog box 1',
 		'autoOpen' => false,
+		'modal'=>true,
 		'width'=>'600px',
 		'buttons' => array(
 			'ok' => array(
@@ -135,9 +136,30 @@ $(function(){
 		resizer();
 	});
 	
+	
+	$.ui.plugin.add("resizable", "iframeFix", { 
+		start: function(event, ui) { 
+			var o = $(this).data('resizable').options; 
+			$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() { 
+				$('<div class="ui-resizable-iframeFix" style="background: #fff;"></div>') 
+				.css({ 
+					width: this.offsetWidth+"px", height: this.offsetHeight+"px", 
+					position: "absolute", opacity: "0.001", zIndex: 1000 
+				}) 
+				.css($(this).offset()) 
+				.appendTo("body"); 
+			}); 
+		}, 
+		stop: function(event, ui) { 
+			$("div.ui-resizable-iframeFix").each(function() { this.parentNode.removeChild(this); }); //Remove frame helpers 
+		} 
+	}); 
+				
+	
 	$('#messageListBox').resizable({
 		handles:'e',
 		minWidth: 240,
+		iframeFix:true,
 		alsoResize: '#messageScroll, #messageScroll .jspContainer, #messageScroll .jspPane',
 		stop: function(event, ui) {
 			resizer();
