@@ -29,7 +29,7 @@ class TaskController extends NAController {
 				'users' => array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions' => array('create', 'update'),
+				'actions' => array('create', 'update','taskList'),
 				'users' => array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -176,6 +176,10 @@ class TaskController extends NAController {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	public function actiontaskList(){
+	    $this->renderPartial('_grid',);
 	}
 
 }
