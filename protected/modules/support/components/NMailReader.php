@@ -32,9 +32,9 @@ Class NMailReader extends CComponent
 	 * @return Zend_Mail_Storage_Imap 
 	 */
 	public static function connect(){
-		Yii::beginProfile('imap connect');
 		self::$readLimit = SupportModule::get()->msgPageLimit;
 		if(self::$mail === null){
+			Yii::beginProfile('imap connect');
 			$support = Yii::app()->getModule('support');
 			self::$mail = new Zend_Mail_Storage_Imap(array(
 				'host'     => $support->emailHost,
@@ -43,8 +43,8 @@ Class NMailReader extends CComponent
 				'port'     => $support->emailPort,
 				'ssl'	   => $support->emailSsl
 			));
+			Yii::endProfile('imap connect');
 		}
-		Yii::endProfile('imap connect');
 		return self::$mail;
 	}
 	
@@ -66,14 +66,17 @@ Class NMailReader extends CComponent
 			if($ii >= self::$readLimit) break;
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
-			
-			$mail->noop();
 			Yii::endProfile('imap: get message');
+			$mail->noop();
+			
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
 			$ii++;
 			if($e->headerExists('message-id')){
-				if(SupportEmail::model()->find('message_id=:id',array(':id'=>$e->getHeader('message-id')))){
+				Yii::beginProfile('imap db: check message in db');
+				$emailExists = SupportEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
+				Yii::endProfile('imap db: check message in db');
+				if($emailExists){
 					continue;
 				}
 			}

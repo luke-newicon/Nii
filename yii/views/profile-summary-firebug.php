@@ -2,7 +2,13 @@
 /*<![CDATA[*/
 if(typeof(console)=='object')
 {
-	console.group("Profiling Summary Report");
+	<?php 
+		$pTitle = "Profiling Summary Report (Time: " 
+			. sprintf('%0.5f',Yii::getLogger()->getExecutionTime()) . "s," 
+			. "Memory: " . number_format(Yii::getLogger()->getMemoryUsage()/1024) . "KB)";
+	?>
+	console.group("<?php echo $pTitle; ?>");
+		
 	console.log(" count   total   average    min      max   ");
 <?php
 foreach($data as $index=>$entry)
