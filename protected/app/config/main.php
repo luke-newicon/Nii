@@ -111,9 +111,13 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'profile, error, trace, log,system.db.CDbCommand',
+					'categories'=>'error, trace, log,system.db.CDbCommand',
 					'showInFireBug'=>true,
 				),
+				array(
+                    'class'=>'CProfileLogRoute',
+					'showInFireBug'=>true,
+                ),
 			),
 		),
 		'cache' => array(

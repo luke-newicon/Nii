@@ -37,7 +37,7 @@
 
 	/** Message Read column **/
 	#email{overflow:auto;}
-	#summaryDetails{border-bottom:1px solid #ddd;padding:5px 10px;}
+	#summaryDetails{border-bottom:1px solid #ddd;padding:10px 15px;}
 	.data txtR {padding-right:5px;}
 	
 	/** Misc **/
@@ -61,6 +61,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	'options' => array(
 		'title' => 'Dialog box 1',
 		'autoOpen' => false,
+		'modal'=>true,
 		'width'=>'600px',
 		'buttons' => array(
 			'ok' => array(
@@ -134,6 +135,36 @@ $(function(){
 	$(window).stop().resize(function(){
 		resizer();
 	});
+	
+	
+	$.ui.plugin.add("resizable", "iframeFix", { 
+		start: function(event, ui) { 
+			var o = $(this).data('resizable').options; 
+			$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() { 
+				$('<div class="ui-resizable-iframeFix" style="background: #fff;"></div>') 
+				.css({ 
+					width: this.offsetWidth+"px", height: this.offsetHeight+"px", 
+					position: "absolute", opacity: "0.001", zIndex: 1000 
+				}) 
+				.css($(this).offset()) 
+				.appendTo("body"); 
+			}); 
+		}, 
+		stop: function(event, ui) { 
+			$("div.ui-resizable-iframeFix").each(function() { this.parentNode.removeChild(this); }); //Remove frame helpers 
+		} 
+	}); 
+				
+	
+	$('#messageListBox').resizable({
+		handles:'e',
+		minWidth: 240,
+		iframeFix:true,
+		alsoResize: '#messageScroll, #messageScroll .jspContainer, #messageScroll .jspPane',
+		stop: function(event, ui) {
+			resizer();
+		}
+	});
 
 	$('body').ajaxStart(function(){
 		$('.popSpinner').show();
@@ -149,11 +180,6 @@ $(function(){
 //				'isScrollable=', isScrollable);
 		})
 		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
-//			console.log('Handle jsp-scroll-y', this,
-//				'scrollPositionY=', scrollPositionY,
-//				'isAtTop=', isAtTop,
-//				'isAtBottom=', isAtBottom);
-
 			if (timer) {
 				clearTimeout(timer);
 			}
@@ -165,11 +191,11 @@ $(function(){
 				
 		})
 		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
-			console.log('Handle jsp-arrow-change', this,
-						'isAtTop=', isAtTop,
-						'isAtBottom=', isAtBottom,
-						'isAtLeft=', isAtLeft,
-						'isAtRight=', isAtRight);
+//			console.log('Handle jsp-arrow-change', this,
+//						'isAtTop=', isAtTop,
+//						'isAtBottom=', isAtBottom,
+//						'isAtLeft=', isAtLeft,
+//						'isAtRight=', isAtRight);
 		})
 		.jScrollPane({
 			verticalDragMinHeight: 15,
@@ -247,21 +273,25 @@ $(function(){
 	 * @param object json contains summary=>html content, content=>html email message content
 	 */
 	var inserMessage = function(json){
+		// mark list item as read
+		$('#messageList .listItem.sel [data-role="flag-opened"]').removeClass('icon')
 		// insert summary html
 		$email.find('#summaryDetails').html(json.summary);
+		
 		// insert email message html
 		var $iframe = $email.find('#message iframe');
 		$('.popSpinner').hide();
-		// make height of iframe expand to its content size
+		
+		// set up the headers we always want in our email iframe
 		var html = '<meta http-equiv="Content-type" content="text/html; charset=utf-8">\
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge">\
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge">\
 			<base target="_blank">\
-			<style>body {padding: 13px 20px 0px 20px;font: 13px Helvetica, Arial, Verdana, sans-serif;margin: 0px;overflow: hidden;}blockquote[type=cite] {border-left: 2px solid #003399;margin:0;padding: 0 12px 8px 12px;font-size: 12px;color: #003399;}blockquote[type=cite] blockquote[type=cite] {border-left: 2px solid #006600;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #006600}blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {border-left : 2px solid #660000;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #660000}pre {white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap; white-space: -o-pre-wrap;word-wrap: break-word;white-space: pre-wrap !important;word-wrap: normal !important;font: 13px Helvetica, Arial, Verdana, sans-serif;}</style>';
-		//console.log(json.content);
+			<style>body {padding: 15px 15px 0px;font: 13px Helvetica, Arial, Verdana, sans-serif;margin: 0px;overflow: hidden;}blockquote[type=cite] {border-left: 2px solid #003399;margin:0;padding: 0 12px 8px 12px;font-size: 12px;color: #003399;}blockquote[type=cite] blockquote[type=cite] {border-left: 2px solid #006600;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #006600}blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {border-left : 2px solid #660000;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #660000}pre {white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap; white-space: -o-pre-wrap;word-wrap: break-word;white-space: pre-wrap !important;word-wrap: normal !important;font: 13px Helvetica, Arial, Verdana, sans-serif;}</style>';
 
 		$iframe.contents().find('html head').html(html);
-
+		// we create our own body tag in the iframe as it must be present
+		// so we need to scrape any body styles from the email before adding it to the iframe
 		var styles = '';
 		var bodyAttrsMatch = /<body (.*?)>/.exec(json.content);
 		if(bodyAttrsMatch != null){
@@ -272,12 +302,12 @@ $(function(){
 			}
 		}
 		//var attrArr = /([^=]*)="([^"]*)"|\'([^\']*)\'/.exec(bodyAttrs);
-			
+		// append appropriate html email body styles to the iframe body 
 		$iframe.contents().find('body').attr('style', styles);
 		$iframe.contents().find('body').html(json.content);
-		//alert($(json.content).html());
-
-		//$iframe.contents().html(json.content);
+		// make height of iframe expand to its content size
+		$iframe.height(0);
+		//alert($iframe.contents().height());
 		$iframe.height($iframe.contents().height());
 	}
 
