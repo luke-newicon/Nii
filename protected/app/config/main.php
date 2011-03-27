@@ -91,7 +91,7 @@ return array(
 			// you can make specific config changes by putting a config.php file above the root 
 			// so it IS NOT GITTED!
 			'username' => 'root',
-			'password' => '',
+			'password' => 'localhostmysql',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,
