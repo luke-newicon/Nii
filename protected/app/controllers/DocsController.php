@@ -42,4 +42,9 @@ class DocsController extends NController
 		);
 	}
 	*/
+
+	public function actionTestToken(){
+		$this->render('test-token-input');
+	}
+
 }

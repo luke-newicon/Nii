@@ -9,17 +9,10 @@
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
 	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
 	<div class="unit lastUnit">
-		<?php $this->widget('application.widgets.fbcomplete.FBComplete', array(
+		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
-			'dataOptions'=>array(
-				'0'=>array('label'=>'Some label'),
-				'1'=>array('label'=>'Some label 2')
-			),
-			'options'=>array(
-				'json_url'=>NHtml::url('/docs/contactsComplete'),
-				'newel'=>true
-			)
+			'url'=>'http://shell.loopj.com/tokeninput/tvshows.php'
 		)); ?>
 	</div>
 </div>
