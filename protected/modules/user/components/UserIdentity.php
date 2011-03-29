@@ -72,7 +72,7 @@ class UserIdentity extends CUserIdentity
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.
 			$ui = new UserIdentity($user->email, "");
-			$ui->logInUser($user);
+			$ui->_logInUser($user);
 		}
 		return $ui;
 	}

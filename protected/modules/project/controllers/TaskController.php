@@ -82,7 +82,7 @@ class TaskController extends NAController {
 			$model->created_by = yii::app()->getUser()->getId();
 
 			if ($model->save())
-				$this->redirect(array('index/view', 'id' => $model->project_id));
+				$this->redirect(array('task/view', 'taskId' => $model->id));
 		}
 
 		//If not saving then renders the create form.
@@ -105,7 +105,7 @@ class TaskController extends NAController {
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
 			if ($model->save())
-				$this->redirect(array('index/view', 'id' => $model->project_id));
+				$this->redirect(array('task/view', 'taskId' => $model->id));
 		}
 
 		$this->render('update', array(

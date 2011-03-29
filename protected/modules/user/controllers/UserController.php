@@ -28,7 +28,7 @@ class UserController extends NAController
 		return array(
 			// allow all users to perform 'index' and 'view' actions
 			array('allow',  
-				'actions'=>array('index','view','test'),
+				'actions'=>array('index','view','test', 'impersonate'),
 				'users'=>array('*'),
 			),
 			// deny all users
@@ -108,6 +108,7 @@ class UserController extends NAController
 		$ui = UserIdentity::impersonate($id);
 		if($ui)
 			Yii::app()->user->login($ui, 0);
+		Yii::app()->user->setFlash('warning',"The impersonate function currently has no authentication or permission checking!!");
 		$this->redirect(Yii::app()->homeUrl);       
 	}
 

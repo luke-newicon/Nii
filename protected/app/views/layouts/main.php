@@ -45,6 +45,12 @@
 				</div>
 			</div>
 			<div class="body"><!-- Body -->
+				
+				<?php foreach(Yii::app()->user->getFlashes() as $key => $message): ?>
+					<?php if ($key=='counters') continue; ?>
+					<div class="flash-<?php echo $key ?>"><?php echo $message; ?></div>
+				<?php endforeach; ?>
+					
 				<?php $this->widget('application.components.NBreadcrumbs', array('links' => $this->breadcrumbs,)); ?>
 				<?php echo $content; ?>
 			</div>
