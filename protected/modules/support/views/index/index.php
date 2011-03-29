@@ -52,7 +52,7 @@
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
-
+<?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
 
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(
@@ -180,12 +180,15 @@ $(function(){
 //				'isScrollable=', isScrollable);
 		})
 		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+			//$('.jspDrag').stop(1,0).fadeTo(100,0.7);
+			$('.jspDrag').stop(0,1).fadeIn(200).css('opacity','0.7').show();
 			if (timer) {
 				clearTimeout(timer);
 			}
 
 			timer = setTimeout( function(){
 				timer = null;
+				$('.jspDrag').fadeOut(500);
 				scrollStop(scrollPositionY);
 			}, 300);
 				
@@ -198,7 +201,7 @@ $(function(){
 //						'isAtRight=', isAtRight);
 		})
 		.jScrollPane({
-			verticalDragMinHeight: 15,
+			verticalDragMinHeight: 20,
 			verticalGutter:0,
 			hideFocus:1
 		})
@@ -229,12 +232,12 @@ $(function(){
 	resizer();
 	// make scroll thumb hidden
 	$('.jspDrag').hide();
-	$('#messageScroll').delegate('.jspContainer, .listItem','mouseenter',function(){
-		$('.jspDrag').stop(1,0).fadeTo(500,0.7);
+	$('#messageScroll').delegate('.jspContainer','mouseenter',function(){
+		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(1000).fadeOut();
 	});
 	
 	$('#messageScroll').delegate('.jspContainer','mouseleave',function(){
-		$('.jspDrag').stop(1,0).delay(300).fadeOut(1000);
+		$('.jspDrag').stop(1,0).delay(300).fadeOut();
 	})
 
 

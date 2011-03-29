@@ -191,6 +191,7 @@ class IndexController extends NAController
 			silly@someone.com,';
 		dp(CHtml::encode($string));
 		dp(NMailReader::getRecipients($string));
-	}	
+	}
+
 }
 
