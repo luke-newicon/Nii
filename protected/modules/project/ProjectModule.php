@@ -17,6 +17,9 @@ class ProjectModule extends NWebModule
 		$assets = new CAssetManager;
 		$projectCss = $assets->publish($basePath.DS.'..'.DS.'modules'.DS.'project'.DS.'files');
 		yii::app()->getClientScript()->registerCssFile($projectCss.DS.'project.css');
+
+		if(!Yii::app()->user->isGuest)
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)
