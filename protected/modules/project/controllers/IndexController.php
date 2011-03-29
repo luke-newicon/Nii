@@ -76,7 +76,7 @@ class IndexController extends NAController {
 	    $model->attributes = $_POST['ProjectProject'];
 	    $model->created_by = yii::app()->getUser()->getId();
 	    if ($model->save())
-		$this->redirect(array('view', 'id' => $model->id));
+		$this->redirect(array('view', 'projectId' => $model->id));
 	}
 	$this->render('create', array('model' => $model));
     }
@@ -95,7 +95,7 @@ class IndexController extends NAController {
 	if (isset($_POST['ProjectProject'])) {
 	    $model->attributes = $_POST['ProjectProject'];
 	    if ($model->save())
-		$this->redirect(array('view', 'id' => $model->id));
+		$this->redirect(array('view', 'projectId' => $model->id));
 	}
 
 	$this->render('update', array('model' => $model));
