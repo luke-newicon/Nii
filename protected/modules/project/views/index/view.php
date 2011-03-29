@@ -47,10 +47,6 @@ $this->widget('system.web.widgets.CTabView',array('tabs'=>array(
 	  'view'=>'_taskGrid',
 	  'data'=>array('task'=>$task)
     ),
-    'files'=>array(
-          'title'=>'Files',
-          'url'=>'http://www.yiiframework.com/',
-    ),
 ),
 	'htmlOptions'=>array('class'=>'solidTabs')));
 
