@@ -38,7 +38,7 @@
 						</script>
 					</div>
 					<div class="loginMenu">
-						<div class="menu menuR">
+						<div class="menu menuR pts">
 							<?php $this->widget('user.components.NLoginInfo'); ?>
 						</div>
 					</div>
@@ -49,13 +49,6 @@
 				<?php echo $content; ?>
 			</div>
 			<div class="foot"><?php // echo $this->renderPartial('core/_footer');    ?></div>
-		</div>
-		<div class="footer">
-			<div class="logo">
-				<a href="<?php ?>">
-					<img src="<?php echo NHtml::baseUrl(); ?>/images/newicon-logo.png" />
-				</a>
-			</div>
 		</div>
 	</body>
 </html>

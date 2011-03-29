@@ -54,6 +54,9 @@ class UserController extends NAController
 	 */
 	public function actionIndex()
 	{
+		echo 'your session information:';
+		dp($_SESSION);
+		
 		$model = new User('search');
 		if(isset($_GET['User']))
 			$model->attributes=$_GET['User'];
@@ -96,7 +99,17 @@ class UserController extends NAController
 		return $this->_model;
 	}
 
-
+	/**
+	 * action allowing an admistrator with superuser permission to impersonate another user
+	 * @param int $id the user id to impersonate
+	 */
+	public function actionImpersonate($id)
+	{
+		$ui = UserIdentity::impersonate($id);
+		if($ui)
+			Yii::app()->user->login($ui, 0);
+		$this->redirect(Yii::app()->homeUrl);       
+	}
 
 
 }
