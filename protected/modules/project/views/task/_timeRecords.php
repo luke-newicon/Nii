@@ -10,6 +10,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $ProjectTimeRecord,
     'columns' => array(
 	array('name' => 'added_by', 'value' => '$data->addedByUser->username'),
+	'task_id',
 	'description',
 	array('name' => 'type', 'value' => '$data->typeInfo->name', 'filter' => $ProjectTimeRecord->getTypes(false)),
 	'time_started',
