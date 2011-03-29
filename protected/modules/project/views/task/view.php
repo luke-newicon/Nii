@@ -37,7 +37,6 @@ if (isset($task->sprint->name))
 $this->widget('zii.widgets.CDetailView', array(
 	'data' => $task,
 	'attributes' => array(
-		'id',
 		array('label' => 'Type', 'value' => $task->getType()),
 		'description',
 		array('label' => 'Project', 'value' => $task->project->name),
@@ -66,7 +65,7 @@ $this->widget('zii.widgets.CDetailView', array(
 		<h3>Quick Add</h3>
 
 <?php foreach ($ProjectTimeRecord->getTypes(false) as $typeId => $type): ?>
-<?php echo $typeId ?> <?php echo $type ?>
+	<div><?php echo chtml::link($type,array('timeRecord/quickAdd/','recordId'=>$typeId)) ?></div>
 <?php endforeach; ?>
 <?php
 			$this->widget('zii.widgets.grid.CGridView', array(

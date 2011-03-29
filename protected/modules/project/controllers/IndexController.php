@@ -135,7 +135,6 @@ class IndexController extends NAController
 		$project->unsetAttributes();  // clear any default values
 		if(isset($_GET['ProjectProject']))
 			$project->attributes=$_GET['ProjectProject'];
-
 		$this->render('index',array('project'=>$project));
 	}
 
