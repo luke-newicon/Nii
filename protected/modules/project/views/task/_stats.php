@@ -1,6 +1,6 @@
-<?php if (count($taskTimeOverview) > 0): ?>
+<?php if ($taskTime): ?>
 
-    <h2 style="text-align: center;">Total Recorded Time: <?php echo $task->getRecordedTime(); ?></h2>
+    <h2 style="text-align: center;">Total Recorded Time: <?php echo $taskTime; ?></h2>
     <div class="time_stats">
         <table>
 	<?php foreach ($taskTimeOverview as $tests): ?>
