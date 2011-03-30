@@ -14,6 +14,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	    'updateButtonUrl' => '"/Nii/project/task/update/id/".$data->id',
 	    'deleteButtonUrl' => '"/Nii/project/task/delete/id/".$data->id',
 	    'template' => '{update}{delete}','headerHtmlOptions'=>array('class'=>'topperGreyBar')
-	)
+	),
     ),
+    'emptyText'=>'There are no tasks currently associated with this project'
 )); ?>

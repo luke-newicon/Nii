@@ -50,14 +50,18 @@ Class NMailReader extends CComponent
 	
 	public static function countMessages()
 	{
-		return self::connect()->countMessages();
+		Yii::beginProfile('countMessages');
+		$count = Yii::app()->cache['countMessages'];
+		if($count === false){
+			$count = self::connect()->countMessages();
+			Yii::app()->cache->set('countMessages', $count, 3600);
+		}
+		Yii::endProfile('countMessages');
+		return $count;
 	}
 	
-	
 	public static function readMail(){
-		
 		$mail = self::connect();
-
 		// read messages Latest First.
 		$msgNum = self::countMessages();
 		$msgNum = $msgNum - self::$readOfset;
@@ -66,9 +70,8 @@ Class NMailReader extends CComponent
 			if($ii >= self::$readLimit) break;
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
-			Yii::endProfile('imap: get message');
-			$mail->noop();
 			
+			Yii::endProfile('imap: get message');
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
 			$ii++;
@@ -77,10 +80,13 @@ Class NMailReader extends CComponent
 				$emailExists = SupportEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
 				Yii::endProfile('imap db: check message in db');
 				if($emailExists){
-					continue;
+					// the email exists so emails from this point will be stored in the dtabase.
+					break;
 				}
 			}
+			Yii::beginProfile('saveMail');
 			self::saveMail($e, $i);
+			Yii::endProfile('saveMail');
 			
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
@@ -200,6 +206,7 @@ Class NMailReader extends CComponent
 	 * @return string
 	 */
 	public static function decodeContent($part, $contentType){
+		Yii::beginProfile('decodeContent');
 		$encoding = self::headerParam($part,'content-transfer-encoding', 'quoted-printable');
 		$strMsg = self::decode($part->getContent(),$encoding);
 		if(array_key_exists('charset', $contentType)){
@@ -207,6 +214,7 @@ Class NMailReader extends CComponent
 		}else{
 			$strMsg = mb_convert_encoding($strMsg, 'utf-8');
 		}
+		Yii::endProfile('decodeContent');
 		return $strMsg;
 	}
 	
@@ -282,6 +290,7 @@ Class NMailReader extends CComponent
 	
 	public static function date(Zend_Mail_Message $mail)
 	{
+		Yii::beginProfile('date');
 		if($mail->headerExists('date')){
 			$date = $mail->getHeader('date');
 			if(!($unixTs = strtotime($date)))
@@ -290,6 +299,7 @@ Class NMailReader extends CComponent
 		} else {
 			$unixTs = time();
 		}
+		Yii::beginProfile('date');
 		return date('Y-m-d H:i:s',$unixTs);
 	}
 	
@@ -308,6 +318,7 @@ Class NMailReader extends CComponent
 	 * @param string $string
 	 */
 	public static function getRecipients($string){
+		Yii::beginProfile('getRecipients');
 		$contacts = NData::getCsv($string);
 		//dp($contacts);
 		$cArr = array();
@@ -315,7 +326,9 @@ Class NMailReader extends CComponent
 			if(($r = self::splitRecipient($c)))
 				$cArr[] = $r;
 		}
+		Yii::beginProfile('getRecipients');
 		return $cArr;
+		
 	}
 
 	/**

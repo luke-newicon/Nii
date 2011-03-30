@@ -1,8 +1,8 @@
 <?php
 $this->breadcrumbs=array(
 	'Projects'=>array('index/index'),
-	$model->issue->project->name=>array('index/view','id'=>$model->issue->project->id),
-	$model->issue->name=>array('task/view','id'=>$model->task_id),
+	$model->issue->project->name=>array('index/view','projectId'=>$model->issue->project->id),
+	$model->issue->name=>array('task/view','taskId'=>$model->task_id),
 	'Add Time Record'
 );
 

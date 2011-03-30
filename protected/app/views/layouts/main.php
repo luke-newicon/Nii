@@ -38,24 +38,23 @@
 						</script>
 					</div>
 					<div class="loginMenu">
-						<div class="menu menuR">
+						<div class="menu menuR pts">
 							<?php $this->widget('user.components.NLoginInfo'); ?>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="body"><!-- Body -->
+				
+				<?php foreach(Yii::app()->user->getFlashes() as $key => $message): ?>
+					<?php if ($key=='counters') continue; ?>
+					<div class="flash-<?php echo $key ?>"><?php echo $message; ?></div>
+				<?php endforeach; ?>
+					
 				<?php $this->widget('application.components.NBreadcrumbs', array('links' => $this->breadcrumbs,)); ?>
 				<?php echo $content; ?>
 			</div>
 			<div class="foot"><?php // echo $this->renderPartial('core/_footer');    ?></div>
-		</div>
-		<div class="footer">
-			<div class="logo">
-				<a href="<?php ?>">
-					<img src="<?php echo NHtml::baseUrl(); ?>/images/newicon-logo.png" />
-				</a>
-			</div>
 		</div>
 	</body>
 </html>

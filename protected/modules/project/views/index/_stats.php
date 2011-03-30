@@ -1,4 +1,5 @@
-<h3 style="text-align: center; padding-top: 8px;">Total Recorded Time: <?php echo $project->getRecordedTime() ?></h3>
+<?php if($totalTime>0): ?>
+<h3 style="text-align: center; padding-top: 8px;">Total Recorded Time: <?php echo $totalTime ?></h3>
 <div class="line time_stats">
     <div class="unit size1of2">
 	<h5>Task Types</h5>
@@ -23,4 +24,7 @@
 	</table>
     </div>
 </div>
+<?php else: ?>
+<h3 style="text-align: center; padding-top: 8px;"> No time recorded against this project</h3>
+<?php endif; ?>
 

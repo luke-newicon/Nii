@@ -28,7 +28,7 @@ class UserController extends NAController
 		return array(
 			// allow all users to perform 'index' and 'view' actions
 			array('allow',  
-				'actions'=>array('index','view','test'),
+				'actions'=>array('index','view','test', 'impersonate'),
 				'users'=>array('*'),
 			),
 			// deny all users
@@ -54,6 +54,9 @@ class UserController extends NAController
 	 */
 	public function actionIndex()
 	{
+		echo 'your session information:';
+		dp($_SESSION);
+		
 		$model = new User('search');
 		if(isset($_GET['User']))
 			$model->attributes=$_GET['User'];
@@ -96,7 +99,18 @@ class UserController extends NAController
 		return $this->_model;
 	}
 
-
+	/**
+	 * action allowing an admistrator with superuser permission to impersonate another user
+	 * @param int $id the user id to impersonate
+	 */
+	public function actionImpersonate($id)
+	{
+		$ui = UserIdentity::impersonate($id);
+		if($ui)
+			Yii::app()->user->login($ui, 0);
+		Yii::app()->user->setFlash('warning',"The impersonate function currently has no authentication or permission checking!!");
+		$this->redirect(Yii::app()->homeUrl);       
+	}
 
 
 }

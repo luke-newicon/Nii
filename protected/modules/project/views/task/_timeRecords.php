@@ -18,6 +18,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
 	array('header' => 'Stop work', 'value' => '$data->stopCol()', 'type' => 'html'),
 	array('class' => 'CButtonColumn', 'template' => '{update}{delete}', 'updateButtonUrl' => 'yii::app()->createUrl("project/timeRecord/update/id/$data->id")',
 	    'deleteButtonUrl' => 'yii::app()->createUrl("project/timeRecord/delete/id/$data->id")'),
-    )
+    ),
 ));
 ?>

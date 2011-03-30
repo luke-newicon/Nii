@@ -40,16 +40,12 @@ $this->widget('system.web.widgets.CTabView',array('tabs'=>array(
     'tab0'=>array(
           'title'=>'Statistics',
 	  'view'=>'_stats',
-	  'data'=>array('task'=>$task,'project'=>$project)
+	  'data'=>array('task'=>$task,'project'=>$project,'totalTime'=>$project->getRecordedTime())
     ),
     'tasks'=>array(
           'title'=>'Tasks',
 	  'view'=>'_taskGrid',
 	  'data'=>array('task'=>$task)
-    ),
-    'files'=>array(
-          'title'=>'Files',
-          'url'=>'http://www.yiiframework.com/',
     ),
 ),
 	'htmlOptions'=>array('class'=>'solidTabs')));

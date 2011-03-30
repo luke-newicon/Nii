@@ -10,6 +10,8 @@ $this->breadcrumbs=array(
 	<li><?php echo CHtml::link(UserModule::t('List User'),array('index')); ?></li>
 </ul><!-- actions -->
 
+<?php echo CHtml::link('Impersonate '.$model->username,array('/user/user/impersonate', 'id'=>$model->id),array('class'=>'btn btnN')); ?>
+
 <?php 
 
 // For all users
