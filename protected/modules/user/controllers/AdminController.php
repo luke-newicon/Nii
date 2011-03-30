@@ -29,6 +29,7 @@ class AdminController extends NAController
 			),
 		);
 	}
+	
 	/**
 	 * Manages all models.
 	 */

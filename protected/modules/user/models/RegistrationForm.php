@@ -2,9 +2,10 @@
 /**
  * RegistrationForm class.
  * RegistrationForm is the data structure for keeping
- * user registration form data. It is used by the 'registration' action of 'UserController'.
+ * user registration form data. It is used by the 'registration' action of 'AccountController'.
  */
-class RegistrationForm extends User {
+class RegistrationForm extends User
+{
 	public $verifyPassword;
 	public $verifyCode;
 	

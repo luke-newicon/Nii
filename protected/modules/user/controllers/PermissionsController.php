@@ -50,7 +50,7 @@ class PermissionsController extends NAController {
 
 		if(isset($_POST['AuthItem'])){
 			$m->attributes = $_POST['AuthItem'];
-			if(($valid = $m->validate)) {
+			if(($valid = $m->validate())) {
 				Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
 			}
 			echo json_encode($valid);

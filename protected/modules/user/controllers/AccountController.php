@@ -10,7 +10,7 @@ class AccountController extends NAController {
 	public function accessRules() {
 		return CMap::mergeArray(array(
 			array('allow',
-				'actions' => array('login', 'logout'),
+				'actions' => array('login', 'logout', 'registration', 'activation', 'recovery'),
 				'users' => array('*')
 			)),
 			parent::accessRules()
