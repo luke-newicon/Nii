@@ -7,7 +7,7 @@ $this->breadcrumbs=array(
 <h1><?php echo UserModule::t("List User"); ?></h1>
 <?php if(UserModule::isAdmin()) {
 	?><ul class="actions">
-	<li><?php echo CHtml::link(UserModule::t('Manage Users'),array('/user/admin')); ?></li>
+	<li><?php echo CHtml::link(UserModule::t('Manage Users'),array('/user/admin/index')); ?></li>
 	<li><?php echo CHtml::link(UserModule::t('Manage Permissions'),array('/user/permissions')); ?></li>
 </ul><!-- actions --><?php 
 } ?>
@@ -18,7 +18,7 @@ $this->breadcrumbs=array(
 		array(
 			'name' => 'username',
 			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->username),array("user/view","id"=>$data->id))',
+			'value' => 'CHtml::link(CHtml::encode($data->username),array("/user/index/view","id"=>$data->id))',
 		),
 		array(
 			'name' => 'createtime',

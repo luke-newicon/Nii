@@ -12,11 +12,13 @@
 		<?php echo CHtml::error($model,'username'); ?>
 	</div>
 
+	<?php if($model->isNewRecord): ?>
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'password'); ?>
 		<?php echo CHtml::activePasswordField($model,'password',array('size'=>60,'maxlength'=>128)); ?>
 		<?php echo CHtml::error($model,'password'); ?>
 	</div>
+	<?php endif; ?>
 
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'email'); ?>

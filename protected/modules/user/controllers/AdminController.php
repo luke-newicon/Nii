@@ -2,8 +2,6 @@
 
 class AdminController extends NAController
 {
-	public $defaultAction = 'admin';
-	
 	private $_model;
 
 	/**
@@ -24,7 +22,6 @@ class AdminController extends NAController
 	{
 		return array(
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','create','update','view'),
 				'users'=>UserModule::getAdmins(),
 			),
 			array('deny',  // deny all users
@@ -35,7 +32,7 @@ class AdminController extends NAController
 	/**
 	 * Manages all models.
 	 */
-	public function actionAdmin()
+	public function actionIndex()
 	{
 		$model = new User('search');
 		if(isset($_GET['User']))
@@ -70,7 +67,7 @@ class AdminController extends NAController
 	 */
 	public function actionCreate()
 	{
-		$model=new User;
+		$model = new User;
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
@@ -98,9 +95,11 @@ class AdminController extends NAController
 			$model->attributes=$_POST['User'];
 			
 			if($model->validate()) {
-				$old_password = User::model()->notsafe()->findByPk($model->id);
-				if ($old_password->checkPassword($_POST['Profile']['password'])) {
-					$model->save();
+				$model->save();
+				// if we are updating our own information from this form we need to reloggin
+				if(Yii::app()->user->id == $model->id){
+					$ui = UserIdentity::impersonate($model->id);
+					Yii::app()->user->login($ui,0);
 				}
 				$this->redirect(array('view','id'=>$model->id));
 			}
@@ -109,6 +108,21 @@ class AdminController extends NAController
 		$this->render('update',array(
 			'model'=>$model,
 		));
+	}
+
+	public function actionChangePassword($id){
+		$model = $this->loadModel();
+		$cp = new UserChangePassword;
+		if(isset($_POST['UserChangePassword'])){
+			$cp->attributes=$_POST['UserChangePassword'];
+			if($cp->validate()) {
+				$model->password = $cp->password;
+				$model->cryptPassword();
+				$model->save();
+				Yii::app()->user->setFlash('success',UserModule::t("A new password has been saved."));
+			}
+		}
+		$this->render('changepassword', array('form'=>$cp,'model'=>$model));
 	}
 
 
@@ -147,6 +161,20 @@ class AdminController extends NAController
 				throw new CHttpException(404,'The requested page does not exist.');
 		}
 		return $this->_model;
+	}
+
+
+	/**
+	 * action allowing an admistrator with superuser permission to impersonate another user
+	 * @param int $id the user id to impersonate
+	 */
+	public function actionImpersonate($id)
+	{
+		$ui = UserIdentity::impersonate($id);
+		if($ui)
+			Yii::app()->user->login($ui, 0);
+		Yii::app()->user->setFlash('warning',"The impersonate function currently has no authentication or permission checking!!");
+		$this->redirect(Yii::app()->homeUrl);
 	}
 	
 }

@@ -1,6 +1,6 @@
 <?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Change Password");
 $this->breadcrumbs=array(
-	UserModule::t("Login") => array('/user/login'),
+	UserModule::t("Login") => array('/user/admin'),
 	UserModule::t("Change Password"),
 );
 ?>

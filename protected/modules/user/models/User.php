@@ -158,10 +158,14 @@ class User extends NActiveRecord
 		return ($this->password == crypt($checkPassword, $salt));
 	}
 
+	public function cryptPassword(){
+		$this->password  = crypt($this->password);
+		$this->activekey = crypt(microtime().$this->password);
+	}
+
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
-			$this->password = crypt($this->password);
-			$this->activekey=crypt(microtime().$this->password);
+			$this->cryptPassword();
 		}
 		$this->createtime=time();
 		$this->lastvisit=time();
