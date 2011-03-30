@@ -92,6 +92,15 @@ class IndexController extends NAController
 		echo $this->widget('support.components.NComposeMail',array(),true);
 	}
 
+	public function actionContacts(){
+		$q = urldecode($_GET['q']);
+		$data = array();
+		foreach(CrmContact::model()->nameLike($q)->findAll() as $c){
+			$data[] = array('id'=>$c->id, 'name'=>$c->name());
+		}
+		echo json_encode($data);
+	}
+
 	
 	public function actionTestReadBatch($batch=0){
 		NMailReader::$readLimit = 5;

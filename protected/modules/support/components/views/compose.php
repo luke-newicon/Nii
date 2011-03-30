@@ -12,7 +12,7 @@
 		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
-			'url'=>'http://shell.loopj.com/tokeninput/tvshows.php'
+			'url'=>'/support/index/contacts'
 		)); ?>
 	</div>
 </div>

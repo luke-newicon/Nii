@@ -18,10 +18,13 @@ class Mod extends CWidget
 	public $class;
 	public $id;
 	public $htmlOptions = array();
+	public $style;
 
 	public function init(){
 		if(!isset($this->htmlOptions['class']))
 			$this->htmlOptions['class'] = $this->class;
+		if(!isset($this->htmlOptions['style']))
+			$this->htmlOptions['style'] = $this->style;
 		
 		echo '<div '.CHtml::renderAttributes($this->htmlOptions).' >
 			<b class="top"><b class="tl"></b><b class="tr"></b></b>

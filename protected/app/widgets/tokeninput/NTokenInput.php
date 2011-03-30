@@ -56,7 +56,7 @@ Class NTokenInput extends CInputWidget
 				of tokens or the url to ajax the data in.');
 
 		if($this->url !== null)
-			$data = CJavaScript::encode($this->url);
+			$data = CJavaScript::encode(NHtml::url($this->url));
 		else
 			$data =  CJavaScript::encode($this->data);
 
@@ -81,6 +81,7 @@ Class NTokenInput extends CInputWidget
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input.css');
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-facebook.css');
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-mac.css');
+		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-nii.css');
 	}
 
 }

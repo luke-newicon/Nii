@@ -46,6 +46,9 @@
 	.scroll{overflow:auto;height:250px;}
 	
 	.blue .faded, .blue .time {color:#6282c1;font-size:11px;}
+	.popy{border:1px solid #000;background:#909090;box-shadow:0px 0px 10px #333;border-radius:5px;}
+	.popy .inner{box-shadow:0px 0px 0px 1px #ccc inset;border-radius:5px;}
+
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
@@ -53,6 +56,15 @@
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
 <?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
+
+
+
+<?php $this->beginWidget('application.widgets.oocss.mod',array('class'=>'mod pop','style'=>'width:450px;')); ?>
+<div class="bd pam">
+	<p>delkjgediuvgeruifhe f ef</p>
+	<p>wdfdlfhieugfhieugferf</p>
+</div>
+<?php $this->endWidget(); ?>
 
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(
@@ -181,14 +193,14 @@ $(function(){
 		})
 		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
 			//$('.jspDrag').stop(1,0).fadeTo(100,0.7);
-			$('.jspDrag').stop(0,1).fadeIn(200).css('opacity','0.7').show();
+			$('.jspDrag').stop(1,0).css('opacity','0.7').show();
 			if (timer) {
 				clearTimeout(timer);
 			}
 
 			timer = setTimeout( function(){
 				timer = null;
-				$('.jspDrag').fadeOut(500);
+				$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
 				scrollStop(scrollPositionY);
 			}, 300);
 				
@@ -233,7 +245,7 @@ $(function(){
 	// make scroll thumb hidden
 	$('.jspDrag').hide();
 	$('#messageScroll').delegate('.jspContainer','mouseenter',function(){
-		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(1000).fadeOut();
+		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
 	});
 	
 	$('#messageScroll').delegate('.jspContainer','mouseleave',function(){
