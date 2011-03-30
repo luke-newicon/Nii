@@ -31,7 +31,7 @@ class NController extends CController
 		if(Yii::app()->getRequest()->getIsAjaxRequest()){
 			$this->layout = '//layouts/ajax.php';
 			//Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
-		}else{
+		} else {
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
 			$this->coreAssets = Yii::app()->getAssetManager()->publish($path);

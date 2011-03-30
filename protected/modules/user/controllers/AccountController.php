@@ -10,10 +10,23 @@ class AccountController extends NAController {
 	public function accessRules() {
 		return CMap::mergeArray(array(
 			array('allow',
-				'actions' => array('login', 'logout', 'registration', 'activation', 'recovery'),
+				'actions' => array('login', 'logout', 'registration', 'activation', 'recovery', 'captcha'),
 				'users' => array('*')
 			)),
 			parent::accessRules()
+		);
+	}
+
+	/**
+	 * Declares class-based actions.
+	 */
+	public function actions()
+	{
+		return (isset($_POST['ajax']) && $_POST['ajax']==='registration-form')?array():array(
+			'captcha'=>array(
+				'class'=>'CCaptchaAction',
+				'backColor'=>0xFFFFFF,
+			),
 		);
 	}
 
@@ -57,18 +70,7 @@ class AccountController extends NAController {
 	}
 
 
-	/**
-	 * Declares class-based actions.
-	 */
-	public function actions()
-	{
-		return (isset($_POST['ajax']) && $_POST['ajax']==='registration-form')?array():array(
-			'captcha'=>array(
-				'class'=>'CCaptchaAction',
-				'backColor'=>0xFFFFFF,
-			),
-		);
-	}
+
 	/**
 	 * Registration user
 	 */
@@ -137,11 +139,10 @@ class AccountController extends NAController {
 							Yii::app()->user->setFlash('registration',
 								UserModule::t("Thank you for your registration. Please check your email."));
 						}
-						$this->refresh();
+						//$this->refresh();
 					}
 				}
 			}
-
 			$this->render('registration',array('model'=>$model,'contact'=>$contact));
 		}
 	}
@@ -156,9 +157,6 @@ class AccountController extends NAController {
 		if ($email&&$activekey) {
 			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find) && $find->status==1) {
-				echo $email;
-				echo $find->status;
-				echo 'NOT THIS ONE!';
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
 			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
 				$find->activekey = crypt(microtime());

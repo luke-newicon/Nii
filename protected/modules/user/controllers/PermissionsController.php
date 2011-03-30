@@ -57,9 +57,10 @@ class PermissionsController extends NAController {
 			Yii::app()->end();
 		}
 
-		$this->render('roleform',array(
+		echo $this->render('roleform',array(
 			'model'=>$m
-		));
+		), true);
+		Yii::app()->end();
 	}
 
 }
