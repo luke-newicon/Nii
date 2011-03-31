@@ -34,11 +34,17 @@ class PermissionsController extends NAController {
 
 		$roles = Yii::app()->getAuthManager()->getAuthItems(2);
 
+		$model = new AuthItem('search');
+		if(isset($_GET['AuthItem']))
+			$model->attributes = $_GET['AuthItem'];
+
 		$this->render('roles',array(
 			'roles'=>$roles,
+			'model'=>$model
 		));
 	}
 
+	
 
 	public function actionCreateRoleForm(){
 		$m = new AuthItem;
@@ -56,11 +62,23 @@ class PermissionsController extends NAController {
 			echo json_encode($valid);
 			Yii::app()->end();
 		}
-
+		
 		echo $this->render('roleform',array(
 			'model'=>$m
 		), true);
 		Yii::app()->end();
+	}
+
+	public function actionRole($id){
+
+		$role = Yii::app()->getAuthManager()->getAuthItem($id);
+		
+		if($role === null)
+			throw new CHttpException (404, 'Can find a role with this name');
+
+		$this->render('role', array(
+			'role'=>$role
+		));
 	}
 
 }

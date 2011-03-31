@@ -101,4 +101,42 @@ class NHtml extends CHtml
 		return $txt;
 	}
 
+
+	public static function popupForm($id, $title, $route, $width='400px', $onSave=''){
+		$v = Yii::app()->controller;
+		$v->beginWidget('zii.widgets.jui.CJuiDialog', array(
+			'id'=>$id,
+			// additional javascript options for the dialog plugin
+			'options'=>array(
+				'title'=>$title,
+				'autoOpen'=>false,
+				'width'=>$width,
+				'open'=>'js:function(){$("#'.$id.' .content").load("'.NHtml::url($route).'")}',
+				'buttons'=>array(
+					'save' => array(
+						'text' => 'Save',
+						'click'=>'js:function() {
+							$.post("'.NHtml::url($route).'", $("#'.$id.' form").serialize(), function(r){
+								if(r){
+									// added role
+									$("#'.$id.'").dialog("close");
+									$("#'.$id.' .content").html("Loading...");
+									'.$onSave.'
+								}
+							});
+						}'
+					),
+					'cancel' => array(
+						'text' => 'Cancel',
+						'click'=>'js:function() { $(this).dialog("close"); }'
+					),
+				),
+			),
+		));
+
+		echo '<div class="content">Loading...</div>';
+
+		$v->endWidget('zii.widgets.jui.CJuiDialog');
+	}
+
 }

@@ -10,48 +10,65 @@ $this->breadcrumbs=array(
 <h1><?php echo UserModule::t("Manage Users"); ?></h1>
 
 <?php
-$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-    'id'=>'addrole',
-    // additional javascript options for the dialog plugin
-    'options'=>array(
-        'title'=>'Create Role',
-        'autoOpen'=>false,
-		'width'=>'390px',
-		'open'=>'js:function(){$("#addrole .content").load("'.NHtml::url('/user/permissions/createRoleForm').'")}',
-		'buttons'=>array(
-			'save' => array(
-				'text' => 'Save',
-				'click'=>'js:function() {
-					$.post("'.NHtml::url('/user/permissions/createRoleForm').'", $("#authitem").serialize(), function(r){
-						if(r){
-							// added role
-							$("#addrole").dialog("close");
-							$("#addrole .content").html("Loading...");
-							// refresh roles list!
-						}
-					});
-				}'
-			),
-			'cancel' => array(
-				'text' => 'Cancel',
-				'click'=>'js:function() { $(this).dialog("close"); }'
-			),
-		),
-    ),
-));
+NHtml::popupForm('addrole', 'Create Role', '/user/permissions/createRoleForm', '380px', '$.fn.yiiGridView.update(\'authitemGrid\');');
 
-echo '<div class="content">Loading...</div>';
+//$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+//    'id'=>'addrole',
+//    // additional javascript options for the dialog plugin
+//    'options'=>array(
+//        'title'=>'Create Role',
+//        'autoOpen'=>false,
+//		'width'=>'390px',
+//		'open'=>'js:function(){$("#addrole .content").load("'.NHtml::url('/user/permissions/createRoleForm').'")}',
+//		'buttons'=>array(
+//			'save' => array(
+//				'text' => 'Save',
+//				'click'=>'js:function() {
+//					$.post("'.NHtml::url('/user/permissions/createRoleForm').'", $("#authitem").serialize(), function(r){
+//						if(r){
+//							// added role
+//							$("#addrole").dialog("close");
+//							$("#addrole .content").html("Loading...");
+//							// refresh roles list!
+//							$.fn.yiiGridView.update(\'authitemGrid\');
+//						}
+//					});
+//				}'
+//			),
+//			'cancel' => array(
+//				'text' => 'Cancel',
+//				'click'=>'js:function() { $(this).dialog("close"); }'
+//			),
+//		),
+//    ),
+//));
 
-$this->endWidget('zii.widgets.jui.CJuiDialog');
+//echo '<div class="content">Loading...</div>';
 
+//$this->endWidget('zii.widgets.jui.CJuiDialog');
+?>
+<?php
+/*
+ * possible template language helper
+ * {popup id="addrole" formRoute="$formUrl" onSave="$.fn.yiiGridView.update(\'authitemGrid\');"}
+ *	   <p>Loading...</p>
+ * {/popup}
+ */
 ?>
 
 
 
 
-Roles:
-<ul>
-<?php foreach($roles as $role): ?>
-	<li><?php echo $role->name; ?></li>
-<?php endforeach; ?>
-</ul>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'authitemGrid',
+	'dataProvider'=>$model->roles()->search(),
+	'filter'=>$model,
+	'columns'=>array(
+		array(
+			'name' => 'name',
+			'type'=>'raw',
+			'value' => 'CHtml::link(CHtml::encode($data->name),array("/user/permissions/role/","id"=>$data->name))',
+		),
+		'description',
+	),
+)); ?>

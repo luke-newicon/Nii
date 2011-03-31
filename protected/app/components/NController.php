@@ -30,13 +30,14 @@ class NController extends CController
 		parent::__construct($id, $module);
 		if(Yii::app()->getRequest()->getIsAjaxRequest()){
 			$this->layout = '//layouts/ajax.php';
-			//Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
+			// prevent jquery being added via ajax as this breaks jquery ui components that ajax in content.
+			// specifically dialog boxes! Should also add scripts that are always included
+			Yii::app()->clientScript->scriptMap=array('jquery.js'=>false, );
 		} else {
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
 			$this->coreAssets = Yii::app()->getAssetManager()->publish($path);
 			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/jquery/jquery.scrollto.js');
-			//Yii::app()->getClientScript()->registerCssFile("$path/oocss/all.css");
 			Yii::app()->getClientScript()->registerCoreScript("jquery");
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 			Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
