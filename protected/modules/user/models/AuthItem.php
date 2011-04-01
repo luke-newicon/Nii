@@ -77,6 +77,9 @@ class AuthItem extends NActiveRecord
 			$this->addError('name', Yii::t('user','An item with the name ":name" already exists.', array(':name'=>$this->name)));
 	}
 
+
+
+
 	public function scopes(){
 		return array(
 			'roles'=>array('condition'=>'type='.CAuthItem::TYPE_ROLE),
@@ -88,8 +91,8 @@ class AuthItem extends NActiveRecord
 
 	public function search(){
 
-		$criteria = new CDbCriteria();//$this->getDbCriteria();
-		
+		$criteria = $this->getDbCriteria();
+
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('description',$this->description,true);
 
@@ -99,5 +102,36 @@ class AuthItem extends NActiveRecord
 	}
 
 
+
+	/**
+	 * return the heirarchy of all auth items excluding roles
+	 * @param $role CAuthItem a role to compare all permissions to.  Will add checked to permissions existing on the role
+	 */
+	public function getPermissionsTreeData(CAuthItem $role=null){
+		$auth = Yii::app()->getAuthManager();
+		$items = $auth->getAuthItems(CAuthItem::TYPE_TASK);
+		//$a = $auth->getAuthItem($name);
+
+		$curPerms = array();
+		if($role!==null)
+			$curPerms = $role->getChildren();
+
+		$perms = array();
+		foreach($items as $r){
+			$arr = &$perms[];
+			$arr = $this->getTreeItem($r, $curPerms);
+			foreach($r->getChildren() as $r){
+				$arr['children'][] = $this->getTreeItem($r, $curPerms);
+			}
+		}
+		return $perms;
+	}
+
+	public function getTreeItem($authitem, $curPerms){
+		return array(
+			'data'=>$authitem->name,
+			'state'=> array_key_exists($authitem->name, $curPerms)?'checked':''
+		);
+	}
 
 }

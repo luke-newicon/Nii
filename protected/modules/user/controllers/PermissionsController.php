@@ -17,6 +17,10 @@
 class PermissionsController extends NAController {
 	
 	public function actionIndex() {
+		$this->render('index');
+	}
+
+	public function setupPermissions(){
 		Yii::app()->getAuthManager()->clearAll();
 
 		$auth = Yii::app()->getAuthManager();
@@ -26,20 +30,14 @@ class PermissionsController extends NAController {
 		$role = $auth->createRole('minion');
 		$role->addChild('createSomething');
 		$auth->assign('minion', Yii::app()->user->id);
-		$this->render('index');
 	}
 	
 	public function actionRoles(){
-
-
-		$roles = Yii::app()->getAuthManager()->getAuthItems(2);
-
 		$model = new AuthItem('search');
 		if(isset($_GET['AuthItem']))
 			$model->attributes = $_GET['AuthItem'];
 
 		$this->render('roles',array(
-			'roles'=>$roles,
 			'model'=>$model
 		));
 	}
@@ -70,15 +68,52 @@ class PermissionsController extends NAController {
 	}
 
 	public function actionRole($id){
+		$auth = Yii::app()->getAuthManager();
+//		$auth->clearAll();
+//
+//		$task=$auth->createTask('Posts','posts');
+//		$auth->createOperation('createPost','create a post');
+//		$auth->createOperation('readPost','read a post');
+//		$auth->createOperation('updatePost','update a post');
+//		$auth->createOperation('deletePost','delete a post');
+//
+//
+//		$task->addChild('createPost');
+//		$task->addChild('readPost');
+//		$task->addChild('updatePost');
+//		$task->addChild('deletePost');
+//
+//		$auth->createOperation('some operation','create a post');
+//
+//		$auth->createTask('some task','create a post');
+//		$auth->createRole('some role','create a post');
+//		$auth->createRole($id);
 
 		$role = Yii::app()->getAuthManager()->getAuthItem($id);
-		
+//		$role->addChild('updatePost');
+//		$role->addChild('readPost');
+//		$role->addChild('createPost');
+//		$role->addChild('updateOwnPost');
+		//dp(AuthItem::model()->getPermissionsTreeData());
+		$permissions = AuthItem::model()->getPermissionsTreeData($role);
+
 		if($role === null)
-			throw new CHttpException (404, 'Can find a role with this name');
+			throw new CHttpException (404, 'Can not find a role with this name');
 
 		$this->render('role', array(
+			'permissions'=>$permissions,
 			'role'=>$role
 		));
+	}
+
+
+	public function actionUsersInRole($role){
+		$auth = Yii::app()->getAuthManager();
+		$role = $auth->getAuthItem($role);
+
+		if($role === null)
+			throw new CHttpException (404, 'Can not find a role with this name');
+
 	}
 
 }

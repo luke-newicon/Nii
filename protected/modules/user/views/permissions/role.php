@@ -1,37 +1,25 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
+$this->breadcrumbs=array(
+	UserModule::t('Users')=>array('/user/permissions/index'),
+	UserModule::t('Permissions')=>array('/user/permissions/index'),
+	UserModule::t('Roles')=>array('/user/permissions/roles'),
+	UserModule::t('Role ' . $role->name)
+);
 ?>
 <h1>Role: <?php echo $role->name; ?></h1>
-
+<p><?php echo $role->description; ?></p>
 <?php
 $this->widget('zii.widgets.jui.CJuiTabs', array(
 	'tabs'=>array(
-		'Permissions'=>'Tree of permissions to assign',
+		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions), true),
 		'Users'=>array('content'=>'Users in this role', 'id'=>'tab2'),
-		// panel 3 contains the content rendered by a partial view
-		'AjaxTab'=>array('ajax'=>NHtml::url('/user/permissions/roles')),
 	),
 	// additional javascript options for the tabs plugin
 	'options'=>array(
 		'collapsible'=>true,
 	),
+	'htmlOptions'=>array('class'=>'solid rounded')
 ));
 ?>
-Users in this role:
 
 
-<br />
-<br />
-<br />
-<br />
-
-Permissions:
-<br />
-Super User | Not Super User
-<br />
-<br />
-Roles check box tree
