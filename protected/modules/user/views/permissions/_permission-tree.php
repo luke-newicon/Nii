@@ -1,55 +1,41 @@
-<!--
-<div id="demo1">
-<ul>
-	<li>
-		<a href="some_value_here">Node title</a>
-		 UL node only needed for children - omit if there are no children 
-		<ul>
-			<li><a href="some_value_here 1">Node title 1</a></li>
-			<li><a href="some_value_here 2">Node title 2</a>
-				<ul>
-					<li><a href="some_value_here 1">Node title 1</a></li>
-					<li><a href="some_value_here 2">Node title 2</a></li>
-				</ul>
-			</li>
-		</ul>
-
-	</li>
-</ul>
-</div>-->
-
-
+<div class="row">
+<?php echo CHtml::checkBox('superuserchk'); ?>
+&nbsp;<?php echo CHtml::label('Is Super User', 'superuserchk'); ?>
+</div>
 <?php
-// array('data'=>'node 1', 'children'=>array('node 2', 'node 3'))
 $this->Widget('application.widgets.jstree.CJsTree', array(
 	'id'=>'permissions',
 	'core'=>array('animation'=>0),
 	'json_data'=>array(
 		'data'=>$permissions
 	),
-//	'html_data'=>array(
-//		'data'=>'<div id="demo1">
-//		<ul>
-//			<li>
-//				<a href="some_value_here">Node title</a>
-//				<ul>
-//					<li><a href="some_value_here 1">Node title 1</a></li>
-//					<li><a href="some_value_here 2">Node title 2</a>
-//						<ul>
-//							<li><a href="some_value_here 1">Node title 1</a></li>
-//							<li><a href="some_value_here 2">Node title 2</a></li>
-//						</ul>
-//					</li>
-//				</ul>
-//
-//			</li>
-//		</ul>
-//		</div>'
-//	),
 	'themes'=>array('theme'=>'ni'),
 	'plugins'=>array("themes", "json_data", "checkbox"),
 ));
 ?>
 
+<!--<button id="savePerms" class="btn btnN">Save</button>-->
 
-<a href="#" onclick="jQuery('#permissions').jstree('get_checked').each(function(i, el){alert($(el).text())});return false;">get checked</a>
+<?php if($role): ?>
+	<?php $url = NHtml::url(array('/user/permissions/setRolePermission','role'=>$role->name)); ?>
+<?php else: ?>
+	<?php $url = NHtml::url('/user/permissions/setRolePermission'); ?>
+<?php endif; ?>
+
+<script>
+$(function(){
+	$('#savePerms').click(function(){
+		var perms = {}; 
+		jQuery('#permissions').jstree('get_checked').each(function(i,el){
+			perms[i] = $(el).attr('id');
+		});
+		$.post("<?php echo $url; ?>",
+			{'perms':perms}, function(){
+			
+		})
+	});
+	$('#superuserchk').click(function(){
+		$('#permissions').fadeToggle(0);
+	})
+});
+</script>

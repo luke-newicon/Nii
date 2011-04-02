@@ -47,6 +47,7 @@ class AdminController extends NAController
 
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			'model'=>$model
 		));
 	}
 

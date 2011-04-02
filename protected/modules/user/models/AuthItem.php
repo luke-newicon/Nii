@@ -130,6 +130,7 @@ class AuthItem extends NActiveRecord
 	public function getTreeItem($authitem, $curPerms){
 		return array(
 			'data'=>$authitem->name,
+			'attr'=>array('id'=>$authitem->name),
 			'state'=> array_key_exists($authitem->name, $curPerms)?'checked':''
 		);
 	}

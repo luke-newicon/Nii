@@ -1,7 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	UserModule::t('Users')=>array('/user/permissions/index'),
-	UserModule::t('Permissions')=>array('/user/permissions/index'),
+	UserModule::t('Users')=>array('/user/admin/index'),
 	UserModule::t('Roles')=>array('/user/permissions/roles'),
 	UserModule::t('Role ' . $role->name)
 );
@@ -11,7 +10,7 @@ $this->breadcrumbs=array(
 <?php
 $this->widget('zii.widgets.jui.CJuiTabs', array(
 	'tabs'=>array(
-		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions), true),
+		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions,'role'=>$role), true),
 		'Users'=>array('content'=>'Users in this role', 'id'=>'tab2'),
 	),
 	// additional javascript options for the tabs plugin
