@@ -59,7 +59,7 @@
 
 
 
-<?php $this->beginWidget('application.widgets.oocss.mod',array('class'=>'mod pop','style'=>'width:450px;')); ?>
+<?php $this->beginWidget('application.widgets.oocss.Mod',array('class'=>'mod pop','style'=>'width:450px;')); ?>
 <div class="bd pam">
 	<p>delkjgediuvgeruifhe f ef</p>
 	<p>wdfdlfhieugfhieugferf</p>
