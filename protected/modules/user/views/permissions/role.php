@@ -1,7 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	UserModule::t('Users')=>array('/user/permissions/index'),
-	UserModule::t('Permissions')=>array('/user/permissions/index'),
+	UserModule::t('Users')=>array('/user/admin/index'),
 	UserModule::t('Roles')=>array('/user/permissions/roles'),
 	UserModule::t('Role ' . $role->name)
 );

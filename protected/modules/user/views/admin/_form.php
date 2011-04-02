@@ -15,14 +15,14 @@
 	<?php if($model->isNewRecord): ?>
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'password'); ?>
-		<?php echo CHtml::activePasswordField($model,'password',array('size'=>60,'maxlength'=>128)); ?>
+		<?php echo CHtml::activePasswordField($model,'password',array('size'=>20,'maxlength'=>128)); ?>
 		<?php echo CHtml::error($model,'password'); ?>
 	</div>
 	<?php endif; ?>
 
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'email'); ?>
-		<?php echo CHtml::activeTextField($model,'email',array('size'=>60,'maxlength'=>128)); ?>
+		<?php echo CHtml::activeTextField($model,'email',array('size'=>20,'maxlength'=>128)); ?>
 		<?php echo CHtml::error($model,'email'); ?>
 	</div>
 

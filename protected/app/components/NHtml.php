@@ -115,16 +115,7 @@ class NHtml extends CHtml
 				'buttons'=>array(
 					'save' => array(
 						'text' => 'Save',
-						'click'=>'js:function() {
-							$.post("'.NHtml::url($route).'", $("#'.$id.' form").serialize(), function(r){
-								if(r){
-									// added role
-									$("#'.$id.'").dialog("close");
-									$("#'.$id.' .content").html("Loading...");
-									'.$onSave.'
-								}
-							});
-						}'
+						'click'=>$onSave,
 					),
 					'cancel' => array(
 						'text' => 'Cancel',

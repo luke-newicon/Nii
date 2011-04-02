@@ -15,10 +15,8 @@
  * @author steve
  */
 class PermissionsController extends NAController {
-	
-	public function actionIndex() {
-		$this->render('index');
-	}
+
+	public $defaultAction='roles';
 
 	public function actionSetupPermissions(){
 		Yii::app()->getAuthManager()->clearAll();
@@ -73,6 +71,11 @@ class PermissionsController extends NAController {
 	}
 	
 	public function actionRoles(){
+
+		$dummy = $this->Widget('application.widgets.jstree.CJsTree', array(
+			'id'=>'dummy',
+		), true);
+
 		$model = new AuthItem('search');
 		if(isset($_GET['AuthItem']))
 			$model->attributes = $_GET['AuthItem'];
@@ -82,7 +85,42 @@ class PermissionsController extends NAController {
 		));
 	}
 
-	
+
+	public function actionSaveRole(){
+		$m = new AuthItem;
+
+		if(isset($_POST['roleData'])){
+			parse_str($_POST['roleData'], $roleData);
+			$m->attributes = $roleData['AuthItem'];
+			if(($valid = $m->validate())) {
+				$role = Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
+				// add roles
+				$this->addRoles($role, Yii::app()->request->getPost('perms', array()));
+				echo json_encode($valid);
+				Yii::app()->end();
+			}
+		}
+
+	}
+
+	public function actionGetRoleForm($role=null){
+		$m = new AuthItem;
+		echo $this->render('roleform',array(
+			'model'=>$m,
+			'permissions'=>AuthItem::model()->getPermissionsTreeData(),
+			'role'=>false
+		), true);
+		Yii::app()->end();
+	}
+
+	public function addRoles($role, $perms){
+		if(!empty($perms)){
+			foreach($perms as $p){
+				echo 'add child: ' . $p . '<br/>';
+				$role->addChild($p);
+			}
+		}
+	}
 
 	public function actionCreateRoleForm(){
 		$m = new AuthItem;
@@ -96,14 +134,15 @@ class PermissionsController extends NAController {
 			$m->attributes = $_POST['AuthItem'];
 			if(($valid = $m->validate())) {
 				Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
+
 			}
 			echo json_encode($valid);
 			Yii::app()->end();
 		}
-		
 		echo $this->render('roleform',array(
 			'model'=>$m,
-			'permissions'=>AuthItem::model()->getPermissionsTreeData()
+			'permissions'=>AuthItem::model()->getPermissionsTreeData(),
+			'role'=>false
 		), true);
 		Yii::app()->end();
 	}
