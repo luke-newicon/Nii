@@ -11,7 +11,7 @@ $this->breadcrumbs=array(
 <?php
 $this->widget('zii.widgets.jui.CJuiTabs', array(
 	'tabs'=>array(
-		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions), true),
+		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions,'role'=>$role), true),
 		'Users'=>array('content'=>'Users in this role', 'id'=>'tab2'),
 	),
 	// additional javascript options for the tabs plugin
