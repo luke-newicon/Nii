@@ -11,7 +11,7 @@ $JQUERY_THEME = 'projectmanager';
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DS.'..',
-	'name'=>'Projects!',
+	'name'=>'Newicon',
 
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
@@ -20,7 +20,8 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
-		'application.extensions.*',
+		'ext.*',
+		'ext.nii.components.*',
 		'application.validators.*',
 		'application.vendors.*',
 		'application.vendors.FirePHPCore.*',
@@ -48,7 +49,6 @@ return array(
 		'user',
 		'project',
 		'hosting',
-                'web',
 	),
 
 	// application components

@@ -1,3 +1,10 @@
+<?php
+$this->pageTitle = 'Domains - ' . Yii::app()->name;
+$this->breadcrumbs = array(
+	'Hosting' => array('/'),
+	'Domains',
+);
+?>
 <h1>Domains</h1>
 
 <?php
@@ -6,8 +13,6 @@ $form = $this->beginWidget('CActiveForm', array(
 			'enableAjaxValidation' => true,
 		));
 ?>
-
-<?php echo $form->labelEx($model, 'domain'); ?>
 <?php echo $form->textField($model, 'domain'); ?>
 <?php echo $form->error($model, 'domain'); ?>
 
@@ -16,7 +21,7 @@ $form = $this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
 
 <?php if ($results) : ?>
-	<table>
+	<table class="data">
 		<thead>
 			<tr>
 				<th>Domain</th>
@@ -24,13 +29,13 @@ $form = $this->beginWidget('CActiveForm', array(
 			</tr>
 		</thead>
 		<tbody>
-<?php //print_r($results); ?>
-<?php foreach ($results as $result) : ?>
-		<tr>
-			<td><?php echo $result->domain; ?></td>
-			<td><?php echo $result->status; ?></td>
-		</tr>
-<?php endforeach; ?>
-	</tbody>
-</table>
+		<?php //print_r($results); ?>
+		<?php foreach ($results as $result) : ?>
+			<tr>
+				<td><?php echo $result->domain; ?></td>
+				<td><?php echo $result->status; ?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
 <?php endif; ?>

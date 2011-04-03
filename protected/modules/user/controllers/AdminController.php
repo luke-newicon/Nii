@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends NAController
+class AdminController extends AdminController
 {
 	private $_model;
 

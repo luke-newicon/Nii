@@ -1,5 +1,8 @@
 <?php
 
+Yii::import('hosting.vendors.opensrs.opensrs.*');
+require_once ('openSRS_loader.php');
+
 class HostingModule extends NWebModule
 {
 	public function init()

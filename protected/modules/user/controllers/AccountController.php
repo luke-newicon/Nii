@@ -1,6 +1,6 @@
 <?php
 
-class AccountController extends NAController {
+class AccountController extends Controller {
 
 	/**
 	 * @var string the default layout for the controller view.
