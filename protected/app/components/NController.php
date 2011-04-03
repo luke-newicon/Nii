@@ -32,7 +32,7 @@ class NController extends CController
 			$this->layout = '//layouts/ajax.php';
 			// prevent jquery being added via ajax as this breaks jquery ui components that ajax in content.
 			// specifically dialog boxes! Should also add scripts that are always included
-			Yii::app()->clientScript->scriptMap=array('jquery.js'=>false, );
+			Yii::app()->clientScript->scriptMap=array('jquery.js'=>false, 'jquery-ui.min.js'=>false);
 		} else {
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
@@ -41,11 +41,6 @@ class NController extends CController
 			Yii::app()->getClientScript()->registerCoreScript("jquery");
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 			Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
-			
-			if(!Yii::app()->user->isGuest){
-				// if logged in use admin layout
-				//$this->layout = '//layouts/column2';
-			}
 		}
 	}
 

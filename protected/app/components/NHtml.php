@@ -102,7 +102,7 @@ class NHtml extends CHtml
 	}
 
 
-	public static function popupForm($id, $title, $route, $width='400px', $onSave=''){
+	public static function popupForm($id, $title, $open, $width='400px', $onSave=''){
 		$v = Yii::app()->controller;
 		$v->beginWidget('zii.widgets.jui.CJuiDialog', array(
 			'id'=>$id,
@@ -111,7 +111,7 @@ class NHtml extends CHtml
 				'title'=>$title,
 				'autoOpen'=>false,
 				'width'=>$width,
-				'open'=>'js:function(){$("#'.$id.' .content").load("'.NHtml::url($route).'")}',
+				'open'=>$open,
 				'buttons'=>array(
 					'save' => array(
 						'text' => 'Save',

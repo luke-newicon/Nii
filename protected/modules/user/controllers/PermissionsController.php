@@ -86,9 +86,18 @@ class PermissionsController extends NAController {
 	}
 
 
-	public function actionSaveRole(){
+	public function actionSaveRole($role=null){
+
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
+			echo CActiveForm::validate($m);
+			Yii::app()->end();
+		}
+
 		$m = new AuthItem;
 
+		if ($role) {
+			$role = Yii::app()->getAuthManager()->getAuthItem($role);
+		}
 		if(isset($_POST['roleData'])){
 			parse_str($_POST['roleData'], $roleData);
 			$m->attributes = $roleData['AuthItem'];
@@ -103,12 +112,19 @@ class PermissionsController extends NAController {
 
 	}
 
-	public function actionGetRoleForm($role=null){
+	public function actionGetRoleForm(){
 		$m = new AuthItem;
+		$role = null;
+		if (isset($_POST['role'])){
+			$role = Yii::app()->getAuthManager()->getAuthItem($_POST['role']);
+			$m = new AuthItem('update');
+			$m->name = $role->name;
+			$m->description = $role->description;
+		}
 		echo $this->render('roleform',array(
 			'model'=>$m,
-			'permissions'=>AuthItem::model()->getPermissionsTreeData(),
-			'role'=>false
+			'permissions'=>AuthItem::model()->getPermissionsTreeData($role),
+			'role'=>$role
 		), true);
 		Yii::app()->end();
 	}
