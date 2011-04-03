@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NAController {
+class IndexController extends AdminController {
 
 	/**
 	 * Lists all models.

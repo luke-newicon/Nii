@@ -22,24 +22,12 @@ class NAController extends NController {
 	 * from unauthenticated users unless explicitly set 
 	 * @return array 
 	 */
-	public function accessRules(){
+	public function accessRules() {
 		return array(
 			array('deny',
-				'users'=>array('?'),
+				'users' => array('?'),
 			),
-        );
+		);
 	}
-
-
-	protected function beforeAction()
-    {
-//        if(Yii::app()->user->checkAccess(ucfirst($this->getId()) . ucfirst($this->getAction()->getId())))
-//        {
-//			return true;
-//        } else {
-//            Yii::app()->request->redirect(Yii::app()->user->returnUrl);
-//        }
-		return true;
-    }
 
 }

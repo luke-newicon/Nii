@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dashboard class file.
  *
@@ -13,12 +14,10 @@
  *
  * @author steve
  */
-class DashboardController extends NAController
-{
-	
-	
+class DashboardController extends AdminController {
 
-    public function actionIndex(){
-		$this->render('/dashboard/index',array('u'=>Yii::app()->user->record));
+	public function actionIndex() {
+		$this->render('/dashboard/index', array('u' => Yii::app()->user->record));
 	}
+
 }

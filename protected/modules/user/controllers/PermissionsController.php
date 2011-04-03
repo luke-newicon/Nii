@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class PermissionsController extends NAController {
+class PermissionsController extends AdminController {
 
 	public $defaultAction='roles';
 

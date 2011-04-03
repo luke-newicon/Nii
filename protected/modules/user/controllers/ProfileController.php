@@ -13,7 +13,7 @@
  *
  * @author steve
  */
-class ProfileController extends NAController
+class ProfileController extends AdminController
 {
 
     public function actionIndex(){
