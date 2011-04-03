@@ -24,16 +24,6 @@ $this->Widget('application.widgets.jstree.CJsTree', array(
 
 <script>
 $(function(){
-	$('#savePerms').click(function(){
-		var perms = {}; 
-		jQuery('#permissions').jstree('get_checked').each(function(i,el){
-			perms[i] = $(el).attr('id');
-		});
-		$.post("<?php echo $url; ?>",
-			{'perms':perms}, function(){
-			
-		})
-	});
 	$('#superuserchk').click(function(){
 		$('#permissions').fadeToggle(0);
 	})

@@ -12,7 +12,7 @@ $this->breadcrumbs=array(
 </ul><!-- actions --><?php
 } ?>
 
-<?php echo CHtml::link('Create Role', '#', array('onclick' => '$("#rolepop").dialog("open"); $("#rolepop .content").load("'.NHtml::url('/user/permissions/getRoleForm').'"); return false;','class'=>'btn btnN')); ?>
+<?php echo CHtml::link('Create Role', '#', array('onclick' => '$("#rolepop").dialog("open"); $("#rolepop .content").html("Loading..."); $("#rolepop .content").load("'.NHtml::url('/user/permissions/getRoleForm').'"); return false;','class'=>'btn btnN')); ?>
 
 <?php
 NHtml::popupForm('rolepop', 'Create Role', '', '500px',"js:function() {
@@ -44,7 +44,7 @@ NHtml::popupForm('rolepop', 'Create Role', '', '500px',"js:function() {
 		array(
 			'name' => 'name',
 			'type'=>'raw',
-			'value' => '"<a href=\"#\" onclick=\"jQuery(\'#rolepop\').dialog(\'open\');$(\'#rolepop .content\').load(\''.NHtml::url('/user/permissions/getRoleForm').'\',{role:\'$data->name\'});return false;\">$data->name</a>"',
+			'value' => '"<a href=\"#\" onclick=\"jQuery(\'#rolepop\').dialog(\'open\');$(\'#rolepop .content\').html(\'Loading...\');$(\'#rolepop .content\').load(\''.NHtml::url('/user/permissions/getRoleForm').'\',{role:\'$data->name\'});return false;\">$data->name</a>"',
 		),
 		'description',
 	),

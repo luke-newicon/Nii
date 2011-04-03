@@ -18,6 +18,19 @@ class PermissionsController extends NAController {
 
 	public $defaultAction='roles';
 
+	/**
+	 * Setup the authorisation heirarchy
+	 * Tasks can have child operations.
+	 * An operation will not be accessible if it does not have a parent task
+	 * Create tasks as top level heirarchy nodes.
+	 *
+	 * If you need a deeper heirarchy (deeper than two levels)
+	 * this can be achieved by added child operations. e.g.
+	 * task / operation / operation
+	 * In this implementation the GUI will not cope with tasks as children of tasks.
+	 * This does not impair functionality as the same can be achieved by using operations.
+	 *
+	 */
 	public function actionSetupPermissions(){
 		Yii::app()->getAuthManager()->clearAll();
 
@@ -69,7 +82,8 @@ class PermissionsController extends NAController {
 		$auth->assign('admin','adminD');
 		
 	}
-	
+
+
 	public function actionRoles(){
 
 		$dummy = $this->Widget('application.widgets.jstree.CJsTree', array(
@@ -85,33 +99,61 @@ class PermissionsController extends NAController {
 		));
 	}
 
+	/**
+	 * Saves a role.
+	 * This action handles both the creation of a new role and
+	 * updating an existing role.
+	 * Important Note:
+	 * When creating a new role the role name must be unique and the AuthItem model
+	 * has a specific validation rule to check if the role name already exists. This is linked
+	 * to the insert model scenario as during update the role name will exist and we still want
+	 * the model to validate
+	 */
+	public function actionSaveRole(){
+		// roleData is passed as a query string so we need to make this sensible
+		// This also makes the ajax validate method work
+		if(isset($_POST['roleData'])){
+			parse_str($_POST['roleData'], $roleData);
+			$_POST['AuthItem'] = $roleData['AuthItem'];
+		}
 
-	public function actionSaveRole($role=null){
+		$m = new AuthItem($roleData['roleScenario']);
+		$m->attributes = $_POST['AuthItem'];
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
 			echo CActiveForm::validate($m);
 			Yii::app()->end();
 		}
 
-		$m = new AuthItem;
-
-		if ($role) {
-			$role = Yii::app()->getAuthManager()->getAuthItem($role);
-		}
-		if(isset($_POST['roleData'])){
-			parse_str($_POST['roleData'], $roleData);
-			$m->attributes = $roleData['AuthItem'];
-			if(($valid = $m->validate())) {
+		// will only validate successfully on insert if role does not already exist.
+		// will validate successfully on update if role exists
+		if(($valid = $m->validate())) {
+			// if role does not exist create a new one.
+			$role = Yii::app()->getAuthManager()->getAuthItem($roleData['roleOldName']);
+			if($role === null){
 				$role = Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
-				// add roles
-				$this->addRoles($role, Yii::app()->request->getPost('perms', array()));
-				echo json_encode($valid);
-				Yii::app()->end();
+			}else{
+				$role->name = $m->name;
+				$role->description = $m->description;
+				Yii::app()->getAuthManager()->saveAuthItem($role, $roleData['roleOldName']);
+				$role = Yii::app()->getAuthManager()->getAuthItem($m->name);
 			}
+			// add roles
+			$this->addRoles($role, Yii::app()->request->getPost('perms', array()));
+			echo json_encode($valid);
+			Yii::app()->end();
 		}
-
 	}
 
+	/**
+	 * used to get the role form
+	 * mainly called by ajax to display form in popup window
+	 * If passed a post variable of role with the role name it will load an update form
+	 * if no role variable passed it will load a new create form
+	 * Note: the models scenario is used to instruct the form whether it is an update or create form
+	 * The models scenario is then stored in a hidden form field caled roleScenario this allows the
+	 * saveRole action to know whether to insert or update.
+	 */
 	public function actionGetRoleForm(){
 		$m = new AuthItem;
 		$role = null;
@@ -129,98 +171,32 @@ class PermissionsController extends NAController {
 		Yii::app()->end();
 	}
 
-	public function addRoles($role, $perms){
-		if(!empty($perms)){
-			foreach($perms as $p){
-				echo 'add child: ' . $p . '<br/>';
-				$role->addChild($p);
-			}
-		}
-	}
-
-	public function actionCreateRoleForm(){
-		$m = new AuthItem;
-
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
-			echo CActiveForm::validate($m);
-			Yii::app()->end();
-		}
-
-		if(isset($_POST['AuthItem'])){
-			$m->attributes = $_POST['AuthItem'];
-			if(($valid = $m->validate())) {
-				Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
-
-			}
-			echo json_encode($valid);
-			Yii::app()->end();
-		}
-		echo $this->render('roleform',array(
-			'model'=>$m,
-			'permissions'=>AuthItem::model()->getPermissionsTreeData(),
-			'role'=>false
-		), true);
-		Yii::app()->end();
-	}
-	
-	public function actionSetRolePermission($role)
-	{
-		$auth = Yii::app()->getAuthManager();
-		$role = $auth->getAuthItem($role);
-		// remove all permission from role
+	/**
+	 * Adds permissions to a role
+	 * Does not respect the heirarchy and adds all permissions as direct children of the role.
+	 * Meaning all permissions can be easily removed from a role by using $role->getChildren
+	 * which will return all of the roles permissions
+	 *
+	 * @param CAuthItem $role
+	 * @param array $perms array of authitem names
+	 */
+	public function addRoles(CAuthItem $role, $perms){
 		foreach($role->getChildren() as $r){
 			$role->removeChild($r->name);
 		}
-		
-		$perms = Yii::app()->request->getPost('perms', array());
 		if(!empty($perms)){
 			foreach($perms as $p){
-				echo 'add child: ' . $p . '<br/>';
+				//echo 'add child: ' . $p . '<br/>';
 				$role->addChild($p);
 			}
 		}
 	}
 
-	public function actionRole($id){
-		$auth = Yii::app()->getAuthManager();
-//		$auth->clearAll();
-//
-//		$task=$auth->createTask('Posts','posts');
-//		$auth->createOperation('createPost','create a post');
-//		$auth->createOperation('readPost','read a post');
-//		$auth->createOperation('updatePost','update a post');
-//		$auth->createOperation('deletePost','delete a post');
-//
-//
-//		$task->addChild('createPost');
-//		$task->addChild('readPost');
-//		$task->addChild('updatePost');
-//		$task->addChild('deletePost');
-//
-//		$auth->createOperation('some operation','create a post');
-//
-//		$auth->createTask('some task','create a post');
-//		$auth->createRole('some role','create a post');
-//		$auth->createRole($id);
-
-		$role = Yii::app()->getAuthManager()->getAuthItem($id);
-//		$role->addChild('updatePost');
-//		$role->addChild('readPost');
-//		$role->addChild('createPost');
-//		$role->addChild('updateOwnPost');
-		//dp(AuthItem::model()->getPermissionsTreeData());
-		$permissions = AuthItem::model()->getPermissionsTreeData($role);
-
-		if($role === null)
-			throw new CHttpException (404, 'Can not find a role with this name');
-
-		$this->render('role', array(
-			'permissions'=>$permissions,
-			'role'=>$role
-		));
-	}
-
-
+	/**
+	 * action not yet used!
+	 * intended to show a page listing the users belonging to a particular role.
+	 * @param string $role
+	 */
 	public function actionUsersInRole($role){
 		$auth = Yii::app()->getAuthManager();
 		$role = $auth->getAuthItem($role);
