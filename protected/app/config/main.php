@@ -48,6 +48,7 @@ return array(
 		'user',
 		'project',
 		'hosting',
+                'web',
 	),
 
 	// application components
@@ -91,7 +92,7 @@ return array(
 			// you can make specific config changes by putting a config.php file above the root 
 			// so it IS NOT GITTED!
 			'username' => 'root',
-			'password' => 'localhostmysql',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,
