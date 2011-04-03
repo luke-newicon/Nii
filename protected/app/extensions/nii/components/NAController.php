@@ -30,4 +30,16 @@ class NAController extends NController {
         );
 	}
 
+
+	protected function beforeAction()
+    {
+//        if(Yii::app()->user->checkAccess(ucfirst($this->getId()) . ucfirst($this->getAction()->getId())))
+//        {
+//			return true;
+//        } else {
+//            Yii::app()->request->redirect(Yii::app()->user->returnUrl);
+//        }
+		return true;
+    }
+
 }
