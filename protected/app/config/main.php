@@ -11,7 +11,7 @@ $JQUERY_THEME = 'projectmanager';
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DS.'..',
-	'name'=>'Projects!',
+	'name'=>'Newicon',
 
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
@@ -20,7 +20,8 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
-		'application.extensions.*',
+		'ext.*',
+		'ext.nii.components.*',
 		'application.validators.*',
 		'application.vendors.*',
 		'application.vendors.FirePHPCore.*',
@@ -91,7 +92,7 @@ return array(
 			// you can make specific config changes by putting a config.php file above the root 
 			// so it IS NOT GITTED!
 			'username' => 'root',
-			'password' => 'localhostmysql',
+			'password' => '',
 			'charset' => 'utf8',
 			'tablePrefix' =>'',
 			//'schemaCachingDuration' => 3600,

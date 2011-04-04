@@ -1,5 +1,5 @@
 <?php
-class IndexController extends NAController
+class IndexController extends AdminController
 {
 
 	public function init(){

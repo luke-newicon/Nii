@@ -328,21 +328,26 @@ class CrmContact extends NActiveRecord
 			$q = "($col1 like :t0 or $col2 like :t0)";
 		} else {
 			// as soon as there is a space assume firstname *space* lastname
+//			$name = explode(' ', $term);
+//			$t1 = trim($name[0]);
+//			$q = "$col1 like :t1";
+//			$p[':t1'] = "%$t1%";
+//
+//			if(array_key_exists(1, $name)){
+//				$t2 = trim($name[1]);
+//				$q .=  " and $col2 LIKE :t2";
+//				$p[':t2'] = "%$t2%";
+//			}
+//
+//			$q = "($q) ";
 			$name = explode(' ', $term);
-			$t1 = trim($name[0]); 
-			$q = "$col1 like :t1";
+			$t1 = trim($name[0]);
+			$t2 = array_key_exists(1, $name) ? trim($name[1]) : '';
 			$p[':t1'] = "%$t1%";
-
-			if(array_key_exists(1, $name)){
-				$t2 = trim($name[1]);
-				$q .=  " and $col2 LIKE :t2";
-				$p[':t2'] = "%$t2%";
-			}
-			
-			$q = "($q) ";
+			$p[':t2'] = "%$t2%";
+			$q = "($col1 like :t1 AND $col2 like :t2) or ($col1 like :t2 AND $col2 like :t1)";
 		}
 		$q .= " or company like :t0";
-
 		$this->getDbCriteria()->mergeWith(array(
 			'condition'=>$q,
 			'params'=>$p,

@@ -1,12 +1,7 @@
 <?php
 
-class TaskController extends NAController {
+class TaskController extends AdminController {
 
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
-	public $layout = '//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -82,7 +77,7 @@ class TaskController extends NAController {
 			$model->created_by = yii::app()->getUser()->getId();
 
 			if ($model->save())
-				$this->redirect(array('index/view', 'id' => $model->project_id));
+				$this->redirect(array('task/view', 'taskId' => $model->id));
 		}
 
 		//If not saving then renders the create form.
@@ -105,7 +100,7 @@ class TaskController extends NAController {
 		if (isset($_POST['ProjectTask'])) {
 			$model->attributes = $_POST['ProjectTask'];
 			if ($model->save())
-				$this->redirect(array('index/view', 'id' => $model->project_id));
+				$this->redirect(array('task/view', 'taskId' => $model->id));
 		}
 
 		$this->render('update', array(

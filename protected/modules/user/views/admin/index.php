@@ -1,20 +1,22 @@
 <?php
 $this->breadcrumbs=array(
-	UserModule::t('Users')=>array('admin'),
+	UserModule::t('Users')=>array('/user/admin/index'),
 	UserModule::t('Manage'),
 );
 ?>
 <h1><?php echo UserModule::t("Manage Users"); ?></h1>
 
-<?php echo $this->renderPartial('_menu', array(
-		'list'=> array(
-			CHtml::link(UserModule::t('Create User'),array('create')),
-		),
-	));
-?>
+<?php if(UserModule::isAdmin()) {
+	?><ul class="actions">
+	<li><?php echo CHtml::link(UserModule::t('Manage Roles'),array('/user/permissions/roles')); ?></li>
+</ul><!-- actions --><?php
+} ?>
+
+<a class="btn btnN" href="<?php echo NHtml::url('/user/admin/create'); ?>">Add User</a>
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$dataProvider,
+	'filter'=>$model,
 	'columns'=>array(
 		array(
 			'name' => 'id',

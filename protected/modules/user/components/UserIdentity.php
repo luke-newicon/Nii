@@ -8,6 +8,9 @@
 class UserIdentity extends CUserIdentity
 {
 	private $_id;
+	
+	private $_user;
+	
 	const ERROR_EMAIL_INVALID=3;
 	const ERROR_STATUS_NOTACTIV=4;
 	const ERROR_STATUS_BAN=5;
@@ -23,32 +26,56 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
 		if (strpos($this->username,"@")) {
-			$user=User::model()->notsafe()->findByAttributes(array('email'=>$this->username));
+			$this->_user=User::model()->notsafe()->findByAttributes(array('email'=>$this->username));
 		} else {
-			$user=User::model()->notsafe()->findByAttributes(array('username'=>$this->username));
+			$this->_user=User::model()->notsafe()->findByAttributes(array('username'=>$this->username));
 		}
-		if($user===null)
+		if($this->_user===null)
 			if (strpos($this->username,"@")) {
 				$this->errorCode=self::ERROR_EMAIL_INVALID;
 			} else {
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
 			
-		else if(!$user->checkPassword($this->password))
+		else if(!$this->_user->checkPassword($this->password))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
-		else if($user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
+		else if($this->_user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
 			$this->errorCode=self::ERROR_STATUS_NOTACTIV;
-		else if($user->status==-1)
+		else if($this->_user->status==-1)
 			$this->errorCode=self::ERROR_STATUS_BAN;
 		else {
-			$this->_id=$user->id;
-			$this->username=$user->username;
-			$this->errorCode=self::ERROR_NONE;
+			$this->_loginUser($this->_user);
 		}
 		return !$this->errorCode;
 	}
 
-
+	protected function _loginUser($user)
+	{
+		if($user){
+			$this->_user = $user;
+			$this->_id = $this->_user->id;
+			$this->username = $this->_user->username;
+            $this->errorCode = self::ERROR_NONE;
+		}
+	}
+	
+	/**
+	 * Allows administrator to impersonate another user
+	 * @param type $userId
+	 * @return UserIdentity 
+	 */
+	public static function impersonate($userId)
+	{
+		$ui = null;
+		$user = User::model()->findByPk($userId);
+		if($user)
+		{   
+			//TODO: add another check here to ensure currently logged in user has permission to do this.
+			$ui = new UserIdentity($user->email, "");
+			$ui->_logInUser($user);
+		}
+		return $ui;
+	}
 
    /**
     * @return integer the ID of the user record

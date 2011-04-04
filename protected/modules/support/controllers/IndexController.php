@@ -1,6 +1,6 @@
 <?php
 
-class IndexController extends NAController
+class IndexController extends AdminController
 {
 	public function actionIndex()
 	{
@@ -90,6 +90,15 @@ class IndexController extends NAController
 
 	public function actionCompose(){
 		echo $this->widget('support.components.NComposeMail',array(),true);
+	}
+
+	public function actionContacts(){
+		$q = urldecode($_GET['q']);
+		$data = array();
+		foreach(CrmContact::model()->nameLike($q)->findAll() as $c){
+			$data[] = array('id'=>$c->id, 'name'=>$c->name());
+		}
+		echo json_encode($data);
 	}
 
 	

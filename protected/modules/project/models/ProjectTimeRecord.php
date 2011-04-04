@@ -110,7 +110,9 @@ class ProjectTimeRecord extends NActiveRecord {
 
 		$criteria->order ='time_started desc';
 
-		$criteria->compare('task_id', $this->id);
+		// Although the task_id column is not visible this line is still needed
+		// to enable the system to only display records which belong to a certain tasks.
+		$criteria->compare('task_id', $this->task_id);
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('TIMEDIFF(time_finished,time_started)', $this->recorded_time, true);
 		$criteria->compare('added', $this->added, true);

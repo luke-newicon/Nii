@@ -1,3 +1,5 @@
-<?php $this->pageTitle=Yii::app()->name; ?>
-
-<h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
+<?php
+$this->pageTitle=Yii::app()->name;
+$this->breadcrumbs=array();
+?>
+<h1>Welcome to Newicon</h1>

@@ -54,7 +54,7 @@ $this->widget('system.web.widgets.CTabView',array('tabs'=>array(
     'stats'=>array(
           'title'=>'Statistics',
 	  'view'=>'_stats',
-	  'data'=>array('taskTimeOverview'=>$taskTimeOverview,'task'=>$task)
+	  'data'=>array('taskTimeOverview'=>$taskTimeOverview,'task'=>$task,'taskTime'=>$task->getRecordedTime())
     ),
     'tab0'=>array(
           'title'=>'Time',

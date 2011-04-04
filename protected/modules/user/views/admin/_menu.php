@@ -6,5 +6,4 @@
 	}
 ?>
 	<li><?php echo CHtml::link(UserModule::t('List User'),array('/user')); ?></li>
-	<li><?php echo CHtml::link(UserModule::t('Manage User'),array('admin')); ?></li>
 </ul><!-- actions -->
