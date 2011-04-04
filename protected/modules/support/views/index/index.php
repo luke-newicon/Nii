@@ -37,7 +37,7 @@
 
 	/** Message Read column **/
 	#email{overflow:auto;}
-	#summaryDetails{border-bottom:1px solid #ddd;padding:5px 10px;}
+	#summaryDetails{border-bottom:1px solid #ddd;padding:10px 15px;}
 	.data txtR {padding-right:5px;}
 	
 	/** Misc **/
@@ -52,7 +52,7 @@
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
-
+<?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
 
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(
@@ -61,6 +61,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	'options' => array(
 		'title' => 'Dialog box 1',
 		'autoOpen' => false,
+		'modal'=>true,
 		'width'=>'600px',
 		'buttons' => array(
 			'ok' => array(
@@ -134,6 +135,36 @@ $(function(){
 	$(window).stop().resize(function(){
 		resizer();
 	});
+	
+	
+	$.ui.plugin.add("resizable", "iframeFix", { 
+		start: function(event, ui) { 
+			var o = $(this).data('resizable').options; 
+			$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() { 
+				$('<div class="ui-resizable-iframeFix" style="background: #fff;"></div>') 
+				.css({ 
+					width: this.offsetWidth+"px", height: this.offsetHeight+"px", 
+					position: "absolute", opacity: "0.001", zIndex: 1000 
+				}) 
+				.css($(this).offset()) 
+				.appendTo("body"); 
+			}); 
+		}, 
+		stop: function(event, ui) { 
+			$("div.ui-resizable-iframeFix").each(function() { this.parentNode.removeChild(this); }); //Remove frame helpers 
+		} 
+	}); 
+				
+	
+	$('#messageListBox').resizable({
+		handles:'e',
+		minWidth: 240,
+		iframeFix:true,
+		alsoResize: '#messageScroll, #messageScroll .jspContainer, #messageScroll .jspPane',
+		stop: function(event, ui) {
+			resizer();
+		}
+	});
 
 	$('body').ajaxStart(function(){
 		$('.popSpinner').show();
@@ -142,11 +173,39 @@ $(function(){
 		$('.popSpinner').hide();
 	});
 	
-	var scroll = $('#messageScroll').jScrollPane({
-		verticalDragMinHeight: 15,
-		verticalGutter:0,
-		hideFocus:1
-	}).data('jsp');
+	var timer;
+	var scroll = $('#messageScroll')
+		.bind('jsp-initialised',function(event, isScrollable){
+//			console.log('Handle jsp-initialised', this,
+//				'isScrollable=', isScrollable);
+		})
+		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+			//$('.jspDrag').stop(1,0).fadeTo(100,0.7);
+			$('.jspDrag').stop(0,1).fadeIn(200).css('opacity','0.7').show();
+			if (timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout( function(){
+				timer = null;
+				$('.jspDrag').fadeOut(500);
+				scrollStop(scrollPositionY);
+			}, 300);
+				
+		})
+		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
+//			console.log('Handle jsp-arrow-change', this,
+//						'isAtTop=', isAtTop,
+//						'isAtBottom=', isAtBottom,
+//						'isAtLeft=', isAtLeft,
+//						'isAtRight=', isAtRight);
+		})
+		.jScrollPane({
+			verticalDragMinHeight: 20,
+			verticalGutter:0,
+			hideFocus:1
+		})
+		.data('jsp');
 
 	var resizer = function(){
 		var paddingBottom = $('.main').padding().bottom;
@@ -173,12 +232,12 @@ $(function(){
 	resizer();
 	// make scroll thumb hidden
 	$('.jspDrag').hide();
-	$('#messageScroll').delegate('.jspContainer, .listItem','mouseenter',function(){
-		$('.jspDrag').stop(1,0).fadeTo(500,0.7);
+	$('#messageScroll').delegate('.jspContainer','mouseenter',function(){
+		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(1000).fadeOut();
 	});
 	
 	$('#messageScroll').delegate('.jspContainer','mouseleave',function(){
-		$('.jspDrag').stop(1,0).delay(300).fadeOut(1000);
+		$('.jspDrag').stop(1,0).delay(300).fadeOut();
 	})
 
 
@@ -217,21 +276,25 @@ $(function(){
 	 * @param object json contains summary=>html content, content=>html email message content
 	 */
 	var inserMessage = function(json){
+		// mark list item as read
+		$('#messageList .listItem.sel [data-role="flag-opened"]').removeClass('icon')
 		// insert summary html
 		$email.find('#summaryDetails').html(json.summary);
+		
 		// insert email message html
 		var $iframe = $email.find('#message iframe');
 		$('.popSpinner').hide();
-		// make height of iframe expand to its content size
+		
+		// set up the headers we always want in our email iframe
 		var html = '<meta http-equiv="Content-type" content="text/html; charset=utf-8">\
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge">\
 			<meta http-equiv="X-UA-Compatible" content="IE=Edge">\
 			<base target="_blank">\
-			<style>body {padding: 13px 20px 0px 20px;font: 13px Helvetica, Arial, Verdana, sans-serif;margin: 0px;overflow: hidden;}blockquote[type=cite] {border-left: 2px solid #003399;margin:0;padding: 0 12px 8px 12px;font-size: 12px;color: #003399;}blockquote[type=cite] blockquote[type=cite] {border-left: 2px solid #006600;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #006600}blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {border-left : 2px solid #660000;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #660000}pre {white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap; white-space: -o-pre-wrap;word-wrap: break-word;white-space: pre-wrap !important;word-wrap: normal !important;font: 13px Helvetica, Arial, Verdana, sans-serif;}</style>';
-		//console.log(json.content);
+			<style>body {padding: 15px 15px 0px;font: 13px Helvetica, Arial, Verdana, sans-serif;margin: 0px;overflow: hidden;}blockquote[type=cite] {border-left: 2px solid #003399;margin:0;padding: 0 12px 8px 12px;font-size: 12px;color: #003399;}blockquote[type=cite] blockquote[type=cite] {border-left: 2px solid #006600;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #006600}blockquote[type=cite] blockquote[type=cite] blockquote[type=cite] {border-left : 2px solid #660000;margin:0;padding: 0 12px 0 12px;font-size: 12px;color: #660000}pre {white-space: pre-wrap; white-space: -moz-pre-wrap;white-space: -pre-wrap; white-space: -o-pre-wrap;word-wrap: break-word;white-space: pre-wrap !important;word-wrap: normal !important;font: 13px Helvetica, Arial, Verdana, sans-serif;}</style>';
 
 		$iframe.contents().find('html head').html(html);
-
+		// we create our own body tag in the iframe as it must be present
+		// so we need to scrape any body styles from the email before adding it to the iframe
 		var styles = '';
 		var bodyAttrsMatch = /<body (.*?)>/.exec(json.content);
 		if(bodyAttrsMatch != null){
@@ -242,12 +305,12 @@ $(function(){
 			}
 		}
 		//var attrArr = /([^=]*)="([^"]*)"|\'([^\']*)\'/.exec(bodyAttrs);
-			
+		// append appropriate html email body styles to the iframe body 
 		$iframe.contents().find('body').attr('style', styles);
 		$iframe.contents().find('body').html(json.content);
-		//alert($(json.content).html());
-
-		//$iframe.contents().html(json.content);
+		// make height of iframe expand to its content size
+		$iframe.height(0);
+		//alert($iframe.contents().height());
 		$iframe.height($iframe.contents().height());
 	}
 
@@ -267,7 +330,7 @@ $(function(){
 
 
 	loadMessageBatch(0);
-	$('#messageScroll').bind('scrollstop',function(){
+	var scrollStop = function(scrollY){
 		var msgHeight = <?php echo $msgPreviewHeight;?>;
 		var msgNumber = <?php echo $msgPreviewNumber;?>;
 		var allMsgsHeight = msgHeight*msgNumber;
@@ -276,11 +339,11 @@ $(function(){
 		// before new messages are loaded
 		var tollerance = 275;
 		// calculate the batch (page) to load based on the current scroll position
-		var batchToLoad = Math.floor((($(this).scrollTop() + tollerance) / allMsgsHeight));
+		var batchToLoad = Math.floor(((scrollY + tollerance) / allMsgsHeight));
 
 		// status debug reporting
 		if (typeof(console) == 'object') {
-			console.log(($(this).scrollTop()+tollerance));
+			console.log((scrollY+tollerance));
 			console.log('allmsgbath height: '+allMsgsHeight);
 			console.log('LOAD BATCH: ' + batchToLoad);
 		}
@@ -289,7 +352,7 @@ $(function(){
 		if(!(batchToLoad in loadedBatches)){
 			loadMessageBatch(batchToLoad);
 		}
-	});
+	};
 
 	/**
 	 * Toggle the email header details
@@ -366,24 +429,20 @@ $(function(){
         setup: function() {
 
             var timer,
-                    handler = function(evt) {
+            handler = function(evt) {
+				var _self = this,
+                _args = arguments;
 
-                    var _self = this,
-                        _args = arguments;
+                if (timer) {
+					clearTimeout(timer);
+                }
 
-                    if (timer) {
-                        clearTimeout(timer);
-                    }
-
-                    timer = setTimeout( function(){
-
-                        timer = null;
-                        evt.type = 'scrollstop';
-                        jQuery.event.handle.apply(_self, _args);
-
-                    }, special.scrollstop.latency);
-
-                };
+                timer = setTimeout( function(){
+	                timer = null;
+					evt.type = 'scrollstop';
+	                jQuery.event.handle.apply(_self, _args);
+                }, special.scrollstop.latency);
+			};
 
             jQuery(this).bind('scroll', handler).data(uid2, handler);
 
@@ -396,6 +455,9 @@ $(function(){
 })();
 
 /*
+ * Used to determine border pixel sizes for resizing panes
+ * e.g. $('selector').border().bottom ( = integer size in pixels )
+ * 
  * JSizes - JQuery plugin v0.33
  *
  * Licensed under the revised BSD License.

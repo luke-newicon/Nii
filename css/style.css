@@ -1,8 +1,5 @@
 /* core application stylesheet */
 
-/**
- * What the F**K?? why?
- */
 h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}
 
 body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
@@ -16,7 +13,7 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 .mainMenu img{margin:7px;}
 
 .leftCol{width:150px;padding:10px;margin-right:10px;}
-.main{padding:10px;}
+.main{}
 .title{position:absolute;left:200px;top:18px;}
 .loginMenu{position:absolute;top:0px;right:0px;width:500px;}
 
@@ -29,7 +26,7 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
  * text that is not as important as normal body text 
  * A good example would be displaying model data
  * name: Steven O'Brien The name label could have a faded class applied as it is less important information. 
- * typically the class will often make the text slightly less visible.
+ * typically the class will often make the text slightly less visible. or maybe a more appriopriate name would be .label
  * @Todo: move into oocss core
  */
 .faded{color:#787878;}

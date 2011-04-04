@@ -52,7 +52,7 @@ class ProjectTimeRecord extends NActiveRecord {
 			array('description, added', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, time_started,time_finished, task_id, description, added, added_by, type', 'safe', 'on' => 'search'),
+			array('id, name, time_started,time_finished, task_id, description, added, added_by, type', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -114,7 +114,7 @@ class ProjectTimeRecord extends NActiveRecord {
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('TIMEDIFF(time_finished,time_started)', $this->recorded_time, true);
 		$criteria->compare('added', $this->added, true);
-		$criteria->compare('added_by', $this->added_by);
+		$criteria->compare('name', $this->added_by);
 		$criteria->compare('type', $this->type, true);
 
 		return new CActiveDataProvider(get_class($this), array(

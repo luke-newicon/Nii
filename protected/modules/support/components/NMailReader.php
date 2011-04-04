@@ -32,9 +32,9 @@ Class NMailReader extends CComponent
 	 * @return Zend_Mail_Storage_Imap 
 	 */
 	public static function connect(){
-		Yii::beginProfile('imap connect');
 		self::$readLimit = SupportModule::get()->msgPageLimit;
-		if(self::$mail ===null){
+		if(self::$mail === null){
+			Yii::beginProfile('imap connect');
 			$support = Yii::app()->getModule('support');
 			self::$mail = new Zend_Mail_Storage_Imap(array(
 				'host'     => $support->emailHost,
@@ -43,8 +43,8 @@ Class NMailReader extends CComponent
 				'port'     => $support->emailPort,
 				'ssl'	   => $support->emailSsl
 			));
+			Yii::endProfile('imap connect');
 		}
-		Yii::endProfile('imap connect');
 		return self::$mail;
 	}
 	
@@ -59,7 +59,6 @@ Class NMailReader extends CComponent
 		$mail = self::connect();
 
 		// read messages Latest First.
-		// should limit results:
 		$msgNum = self::countMessages();
 		$msgNum = $msgNum - self::$readOfset;
 		$ii = 0;
@@ -67,18 +66,22 @@ Class NMailReader extends CComponent
 			if($ii >= self::$readLimit) break;
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
-			$mail->noop();
 			Yii::endProfile('imap: get message');
+			$mail->noop();
+			
 			// check we have not already processed the email
 			// TODO: if system is set to not delete from server. (implement delete message if it is)
 			$ii++;
 			if($e->headerExists('message-id')){
-				if(SupportEmail::model()->find('message_id=:id',array(':id'=>$e->getHeader('message-id')))){
+				Yii::beginProfile('imap db: check message in db');
+				$emailExists = SupportEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
+				Yii::endProfile('imap db: check message in db');
+				if($emailExists){
 					continue;
 				}
 			}
 			self::saveMail($e, $i);
-			// if ($message->hasFlag(Zend_Mail_Storage::FLAG_RECENT)) {
+			
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
 	}
@@ -97,11 +100,20 @@ Class NMailReader extends CComponent
 		$m->from = $e->from;
 		$m->to = $e->to;
 		$m->message_id = $e->getHeader('message-id');
+		
 		if(isset($e->cc))
 			$m->cc = $e->cc;
 		// add message and attachments to email
 		// attachments need the mail id so save it first
 		$m->date = self::date($e);
+		
+		if (!$e->hasFlag(Zend_Mail_Storage::FLAG_SEEN)) {
+			//must be recent.
+		}else{
+			//flag seen so mark as opened
+			$m->opened = 1;
+		}
+		
 		$m->save();
 		try {
 			self::parseParts($e, $m);
@@ -394,6 +406,11 @@ Class NMailReader extends CComponent
 		$file = Yii::app()->getRuntimePath().DS.'testEmail';
 		file_put_contents($file, $msg);
 
+	}
+	
+	public static function countInbox(){
+		$imap =  self::connect();
+		echo $imap->countMessages() - $imap->countMessages(Zend_Mail_Storage::FLAG_SEEN);
 	}
 	
 }

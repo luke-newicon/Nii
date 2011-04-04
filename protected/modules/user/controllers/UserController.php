@@ -95,8 +95,4 @@ class UserController extends NAController
 		}
 		return $this->_model;
 	}
-
-
-
-
 }

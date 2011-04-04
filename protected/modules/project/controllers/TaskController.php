@@ -29,7 +29,7 @@ class TaskController extends NAController {
 				'users' => array('@'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions' => array('create', 'update'),
+				'actions' => array('create', 'update', 'TaskList', 'TaskStats'),
 				'users' => array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -44,14 +44,14 @@ class TaskController extends NAController {
 
 	/**
 	 * Task card and associated time record information.
-	 * @param integer $taskId 
+	 * @param integer $taskId
 	 */
 	public function actionView($taskId) {
 		//Time record grid information.
-		$ProjectTimeRecord= new ProjectTimeRecord('search');
+		$ProjectTimeRecord = new ProjectTimeRecord('search');
 		$ProjectTimeRecord->unsetAttributes();
-		if(isset($_GET['ProjectTimeRecord']))
-			$ProjectTimeRecord->attributes= $_GET['ProjectTimeRecord'];
+		if (isset($_GET['ProjectTimeRecord']))
+			$ProjectTimeRecord->attributes = $_GET['ProjectTimeRecord'];
 		$ProjectTimeRecord->task_id = $taskId;
 
 		//Time overview stats for the different time types.
@@ -59,8 +59,8 @@ class TaskController extends NAController {
 
 		$this->render('view', array(
 			'task' => $this->loadModel($taskId),
-			'ProjectTimeRecord'=>$ProjectTimeRecord,
-			'taskTimeOverview'=>$taskTimeOverview,
+			'ProjectTimeRecord' => $ProjectTimeRecord,
+			'taskTimeOverview' => $taskTimeOverview,
 		));
 	}
 
@@ -160,8 +160,10 @@ class TaskController extends NAController {
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id) {
-		$model = ProjectTask::model()->findByPk((int) $id);
+	public function loadModel($id, $modelName = 'ProjectTask') {
+
+		$model = CActiveRecord::model($modelName)->findByPk((int) $id);
+
 		if ($model === null)
 			throw new CHttpException(404, 'The requested page does not exist.');
 		return $model;
@@ -176,6 +178,34 @@ class TaskController extends NAController {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	/**
+	 * Returns the task grid which relates to a specified project.
+	 * If the project Id is not set then the grid of tasks for all projects is
+	 * returned.
+	 * @param int $projectId The id of the project which the task list grid
+	 * should relate to
+	 */
+	public function actionTaskList($projectId = null) {
+
+		$task = new ProjectTask();
+		if ($projectId)
+			$task->project_id = $projectId;
+		$task->search();
+
+		$task->unsetAttributes();  // clear any default values
+		if (isset($_GET['ProjectTask']))
+			$task->attributes = $_GET['ProjectTask'];
+
+		$this->renderPartial('_grid', array('task' => $task));
+	}
+
+	public function actionTaskStats($projectId) {
+		$task = new ProjectTask();
+		$this->renderPartial('_stats', array('project' => $this->loadModel($projectId, 'ProjectProject'),
+			'task' => $task
+		));
 	}
 
 }

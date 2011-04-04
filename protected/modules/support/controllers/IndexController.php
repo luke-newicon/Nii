@@ -21,6 +21,10 @@ class IndexController extends NAController
 		$t = SupportTicket::model()->findByPk($id);
 		$j['summary'] = $this->render('message',array('ticket'=>$t),true);
 		$e = $t->emails[0];
+		if($e->opened == 0){
+			$e->opened = 1;
+			$e->save();
+		}	
 		$j['content'] = $e->message();
 		echo json_encode($j);
 	}
@@ -35,11 +39,15 @@ class IndexController extends NAController
 		$this->render('empty');
 	}
 
-	
+	// not really used at the moment!
 	public function actionEmail($id){
 		$this->layout = '/layouts/ajax';
 		if(($e = SupportEmail::model()->findByPk($id)) === null)
 			throw new CHttpException(404, 'Can not find the email message in the database');
+		if($e->opened == 0){
+			$e->opened = 1;
+			$e->save();
+		}	
 		$this->render('email',array('e'=>$e));
 	}
 
@@ -52,8 +60,9 @@ class IndexController extends NAController
 		$this->layout = '/layouts/ajax';
 		$limit = SupportModule::get()->msgPageLimit;
 		NMailReader::$readOfset = $offset*$limit;
-		//NMailReader::readMail();
+		NMailReader::readMail();
 		$total = NMailReader::countMessages();
+		//$total = 8000;
 		$tickets = SupportTicket::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list',array(
 			'total'=>$total,
@@ -83,6 +92,14 @@ class IndexController extends NAController
 		echo $this->widget('support.components.NComposeMail',array(),true);
 	}
 
+	
+	public function actionTestReadBatch($batch=0){
+		NMailReader::$readLimit = 5;
+		NMailReader::$readOfset=$batch;
+		NMailReader::readMail();
+	}
+
+	
 	public function actionTest($index){
 		NMailReader::testrPrintMessage($index);
 	}
@@ -122,6 +139,10 @@ class IndexController extends NAController
 		$m->save();
 	}
 
+	public function actionTestInboxCount(){
+		NMailReader::countInbox();
+	}
+	
 	public function actionTestTo(){
 		$string = '"COLOSIMO, Antonio" <Antonio.COLOSIMO@airbus.com>,
 			"BERNARDINI, Gabriele" <Gabriele.BERNARDINI@airbus.com>,
@@ -170,6 +191,7 @@ class IndexController extends NAController
 			silly@someone.com,';
 		dp(CHtml::encode($string));
 		dp(NMailReader::getRecipients($string));
-	}	
+	}
+
 }
 

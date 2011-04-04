@@ -87,6 +87,9 @@ return array(
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=nii',
 			'emulatePrepare' => true,
+			// the next person who changes this section will get shot in the face!
+			// you can make specific config changes by putting a config.php file above the root 
+			// so it IS NOT GITTED!
 			'username' => 'root',
 			'password' => 'localhostmysql',
 			'charset' => 'utf8',
@@ -108,9 +111,13 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'profile, error, trace, log,system.db.CDbCommand',
+					'categories'=>'error, trace, log,system.db.CDbCommand',
 					'showInFireBug'=>true,
 				),
+				array(
+                    'class'=>'CProfileLogRoute',
+					'showInFireBug'=>true,
+                ),
 			),
 		),
 		'cache' => array(

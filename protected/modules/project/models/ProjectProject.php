@@ -94,7 +94,7 @@ class ProjectProject extends NActiveRecord {
 			'tree_rgt' => 'Tree Rgt',
 			'tree_level' => 'Tree Level',
 			'tree_parent' => 'Tree Parent',
-			'estimated_time' => 'Estimated Project Time (hours)',
+			'estimated_time' => 'Estimated Time (hours)',
 			'created' => 'Created',
 			'created_by' => 'Created By',
 		);
@@ -159,7 +159,7 @@ class ProjectProject extends NActiveRecord {
 	 * type for a specified time record type.
 	 * @return array
 	 */
-	public function projectTimeOverviewTimeType() {
+	public function timeOverviewTimeType() {
 		$condition = array(
 			'select' => 'project_time_recordtype.name,
 		SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',
@@ -179,7 +179,7 @@ class ProjectProject extends NActiveRecord {
 	 * The amount of time spent on each task type
 	 * @return array
 	 */
-	public function projectTimeOverviewTaskType() {
+	public function timeOverviewTaskType() {
 		$condition = array(
 			'select' => 'project_task.type,
 		SEC_TO_TIME(sum(TIME_TO_SEC(TIMEDIFF(time_finished,time_started)))) as recorded_time',

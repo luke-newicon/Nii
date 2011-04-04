@@ -12,6 +12,11 @@ class ProjectModule extends NWebModule
 			'project.models.*',
 			'project.components.*',
 		));
+
+		$basePath = yii::app()->getBasePath();
+		$assets = new CAssetManager;
+		$projectCss = $assets->publish($basePath.DS.'..'.DS.'modules'.DS.'project'.DS.'files');
+		yii::app()->getClientScript()->registerCssFile($projectCss.DS.'project.css');
 	}
 
 	public function beforeControllerAction($controller, $action)

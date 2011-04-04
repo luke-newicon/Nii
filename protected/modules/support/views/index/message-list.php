@@ -9,8 +9,8 @@
 	
 	<div data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem " id="<?php echo $ticket->id(); ?>">
 		<div class="unit flags">
-			<?php //echo $i; ?>&nbsp;
-			<?php //echo $i + ($offset*30); ?>
+			<?php $icon = ($ticket->getRecentEmail()->opened) ?'':'icon fam-email'; ?>
+			<span data-role="flag-opened" class="<?php echo $icon; ?>">&nbsp;</span>
 		</div>
 		<div class="lastUnit">
 			<div class="line" style="height:21px;">
