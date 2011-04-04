@@ -2,7 +2,6 @@
 
 class IndexController extends AdminController {
 
-
 	/**
 	 * @return array action filters
 	 */
