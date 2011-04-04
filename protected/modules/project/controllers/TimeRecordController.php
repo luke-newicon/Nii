@@ -1,6 +1,6 @@
 <?php
 
-class TimeRecordController extends AdminController
+class TimeRecordController extends AController
 {
 
 	/**

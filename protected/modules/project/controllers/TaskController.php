@@ -1,6 +1,6 @@
 <?php
 
-class TaskController extends AdminController {
+class TaskController extends AController {
 
 
 	/**

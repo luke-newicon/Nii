@@ -1,6 +1,6 @@
 <?php
 
-class DetailController extends AdminController
+class DetailController extends AController
 {
 	public function actionIndex($id=null){
 		if(!$c = CrmContact::model()->findByPk($id))

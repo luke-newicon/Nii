@@ -19,11 +19,6 @@ $this->breadcrumbs=array(
 	'filter'=>$model,
 	'columns'=>array(
 		array(
-			'name' => 'id',
-			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->id),array("admin/update","id"=>$data->id))',
-		),
-		array(
 			'name' => 'username',
 			'type'=>'raw',
 			'value' => 'CHtml::link(CHtml::encode($data->username),array("admin/view","id"=>$data->id))',

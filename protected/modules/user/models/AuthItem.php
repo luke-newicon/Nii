@@ -103,7 +103,8 @@ class AuthItem extends NActiveRecord
 
 
 	/**
-	 * return the heirarchy of all auth items excluding roles
+	 * return the heirarchy of all auth items excluding roles.
+	 *
 	 * @param $role CAuthItem a role to compare all permissions to.  Will add checked to permissions existing on the role
 	 */
 	public function getPermissionsTreeData(CAuthItem $role=null){
@@ -116,11 +117,11 @@ class AuthItem extends NActiveRecord
 			$curPerms = $role->getChildren();
 
 		$perms = array();
-		foreach($items as $r){
+		foreach($items as $a){
 			$arr = &$perms[];
-			$arr = $this->getTreeItem($r, $curPerms);
-			foreach($r->getChildren() as $r){
-				$arr['children'][] = $this->getTreeItem($r, $curPerms);
+			$arr = $this->getTreeItem($a, $curPerms);
+			foreach($a->getChildren() as $a){
+				$arr['children'][] = $this->getTreeItem($a, $curPerms);
 			}
 		}
 		return $perms;

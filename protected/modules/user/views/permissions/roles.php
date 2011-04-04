@@ -15,16 +15,21 @@ $this->breadcrumbs=array(
 <?php echo CHtml::link('Create Role', '#', array('onclick' => '$("#rolepop").dialog("open"); $("#rolepop .content").html("Loading..."); $("#rolepop .content").load("'.NHtml::url('/user/permissions/getRoleForm').'"); return false;','class'=>'btn btnN')); ?>
 
 <?php
-NHtml::popupForm('rolepop', 'Create Role', '', '500px',"js:function() {
-	var perms = {};
-	jQuery('#permissions').jstree('get_checked').each(function(i,el){
-		perms[i] = $(el).attr('id');
-	});
-	var data = {
-		'roleData':$('#rolepop form').serialize(),
-		'perms':perms
+NHtml::popupForm('rolepop', 'Role', '', '500px',"js:function() {
+	var permsObj = {
+		perms:[]
 	};
-	$.post('".NHtml::url('/user/permissions/saveRole')."', $.param(data), function(r){
+	jQuery('#permissions').jstree('get_checked').each(function(i,el){
+		permsObj.perms[i] = $(el).attr('id');
+	});
+
+	var data = $('#rolepop form').serialize() + '&' + $.param(permsObj);
+	//var data = {
+	//	'roleData':$('#rolepop form').serialize(),
+	//	'perms':perms
+	//};
+	//alert($.param(perms));
+	$.post('".NHtml::url('/user/permissions/saveRole')."', data, function(r){
 		if(r){
 			// added role
 			$('#rolepop').dialog('close');

@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class DashboardController extends AdminController {
+class DashboardController extends AController {
 
 	public function actionIndex() {
 		$this->render('/dashboard/index', array('u' => Yii::app()->user->record));

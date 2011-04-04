@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class PermissionsController extends AdminController {
+class PermissionsController extends AController {
 
 	public $defaultAction='roles';
 
@@ -37,6 +37,8 @@ class PermissionsController extends AdminController {
 		$auth = Yii::app()->getAuthManager();
 		$auth->createRole('authenticated', 'Authenticated user', 'return !Yii::app()->user->isGuest;');
 		$auth->createRole('guest', 'Guest user', 'return Yii::app()->user->isGuest;');
+
+
 		$auth->createOperation('createSomething');
 		$role = $auth->createRole('minion');
 		$role->addChild('createSomething');
@@ -57,7 +59,8 @@ class PermissionsController extends AdminController {
 		$posts->addChild('updatePost');
 		$posts->addChild('updateOwnPost');
 		$posts->addChild('deletePost');
-	
+
+
 
 		$role=$auth->createRole('reader');
 		$role->addChild('readPost');
@@ -110,14 +113,8 @@ class PermissionsController extends AdminController {
 	 * the model to validate
 	 */
 	public function actionSaveRole(){
-		// roleData is passed as a query string so we need to make this sensible
-		// This also makes the ajax validate method work
-		if(isset($_POST['roleData'])){
-			parse_str($_POST['roleData'], $roleData);
-			$_POST['AuthItem'] = $roleData['AuthItem'];
-		}
 
-		$m = new AuthItem($roleData['roleScenario']);
+		$m = new AuthItem($_POST['roleScenario']);
 		$m->attributes = $_POST['AuthItem'];
 
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
@@ -129,13 +126,13 @@ class PermissionsController extends AdminController {
 		// will validate successfully on update if role exists
 		if(($valid = $m->validate())) {
 			// if role does not exist create a new one.
-			$role = Yii::app()->getAuthManager()->getAuthItem($roleData['roleOldName']);
+			$role = Yii::app()->getAuthManager()->getAuthItem($_POST['roleOldName']);
 			if($role === null){
 				$role = Yii::app()->getAuthManager()->createAuthItem($m->name, 2, $m->description);
 			}else{
 				$role->name = $m->name;
 				$role->description = $m->description;
-				Yii::app()->getAuthManager()->saveAuthItem($role, $roleData['roleOldName']);
+				Yii::app()->getAuthManager()->saveAuthItem($role, $_POST['roleOldName']);
 				$role = Yii::app()->getAuthManager()->getAuthItem($m->name);
 			}
 			// add roles
@@ -195,6 +192,7 @@ class PermissionsController extends AdminController {
 	/**
 	 * action not yet used!
 	 * intended to show a page listing the users belonging to a particular role.
+	 *
 	 * @param string $role
 	 */
 	public function actionUsersInRole($role){

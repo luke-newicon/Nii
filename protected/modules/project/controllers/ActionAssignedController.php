@@ -1,6 +1,6 @@
 <?php
 
-class ActionAssignedController extends AdminController
+class ActionAssignedController extends AController
 {
 
 	/**

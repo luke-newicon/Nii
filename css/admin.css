@@ -1,6 +1,6 @@
 /* core application stylesheet */
 
-h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote {margin:0px 0px 10px;}
+/*h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media {margin:0px 0px 10px;}*/
 
 body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 .head{}
@@ -11,6 +11,10 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 .mainMenu li{margin:8px;list-style:none;float:left;}
 .mainMenu a{display:block;background:#FFFFFF;width:32px;height:32px;border:4px solid #AAA;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}
 .mainMenu img{margin:7px;}
+
+
+/** fix yii buttons in grid **/
+.button-column img {display: inline;}
 
 .leftCol{width:150px;padding:10px;margin-right:10px;}
 .title{position:absolute;left:200px;top:18px;}
