@@ -2,7 +2,6 @@
 
 class IndexController extends AController {
 
-
 	/**
 	 * @return array action filters
 	 */

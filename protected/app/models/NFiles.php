@@ -134,7 +134,7 @@ class NFiles extends NActiveRecord
 	 * @param string $file_path The pat to the file on the file system.
 	 * @return int/boolean the id of the file on sucess or false on faliure.
 	 */
-	public function addNewFile($fileId,$description,$original_name,$filled_name,$size,$mime,$file_path){
+	public function addNewFile($fileId,$description,$original_name,$filled_name,$size,$mime,$file_path,$category){
 		$this->fileId= $fileId;
 		$this->description = $description;
 		$this->original_name = $original_name;

@@ -303,5 +303,3 @@ class NFileManager extends CApplicationComponent {
 	}
 
 }
-
-?>
