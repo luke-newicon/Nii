@@ -152,6 +152,16 @@ class PermissionsController extends AController {
 	 * saveRole action to know whether to insert or update.
 	 */
 	public function actionGetRoleForm(){
+		
+		if(isset($_POST['roleScenario']) && isset($_POST['AuthItem'])){
+			$m = new AuthItem($_POST['roleScenario']);
+			$m->attributes = $_POST['AuthItem'];
+			if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
+				echo CActiveForm::validate($m);
+				Yii::app()->end();
+			}
+		}
+		
 		$m = new AuthItem;
 		$role = null;
 		if (isset($_POST['role'])){

@@ -4,6 +4,8 @@ class IndexController extends AController
 
 	public function init(){
 		parent::init();
+		$url = CrmModule::get()->getAssetsUrl();
+		Yii::app()->getClientScript()->registerCssFile("$url/crm.css");
 		$this->breadcrumbs=array($this->module->id);
 	}
 	
@@ -132,11 +134,10 @@ class IndexController extends AController
 	public function actionLookupCompany() 
 	{
 		$t = $this->getRequest()->getParam('term', '');
-		$c = new Nworx_Crm_Model_Contacts();
-		$cs = $c->select()->where('contact_company like ?', "%$t%")->go();
+		$cs = CrmContact::model()->companies()->nameLike($t)->findAll();
 		$arr = array();
 		foreach ($cs as $c) {
-			$l = Newicon_Html::hilightText($c->contact_company, $t);
+			$l = NHtml::hilightText($c->company, $t);
 			$arr[] = array('label' => $l, 'value' => $c->contact_company);
 		}
 		echo CJSON::encode($arr);

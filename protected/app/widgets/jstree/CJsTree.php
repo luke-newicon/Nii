@@ -49,13 +49,7 @@ class CJsTree extends CWidget
 	 * from this data.
 	 */
 	public $data;
-	/**
-	 * @var mixed the CSS file used for the widget. Defaults to null, meaning
-	 * using the default CSS file included together with the widget.
-	 * If false, no CSS file will be used. Otherwise, the specified CSS file
-	 * will be included when using this widget.
-	 */
-	public $cssFile;
+
 	/**
 	 * @var string|array the URL to which the treeview can be dynamically loaded (in AJAX).
 	 * See {@link CHtml::normalizeUrl} for possible URL formats.
@@ -126,21 +120,18 @@ class CJsTree extends CWidget
         // jstree should make this automatically (see line 211),
         // but this does not work if script is loaded
         // dynamically with renderPartial into jQuery/UI dialog
-//        if (!isset($this->options['ui'])) $this->options['ui'] = array();
-//        if (!isset($this->options['themes']['theme'])) $this->options['themes']['theme'] = 'default';
-//        if (!isset($this->options['themes']['url'])) $this->options['themes']['url'] =
-//             $this->baseUrl.'/themes/'.$this->options['themes']['theme'].'/style.css';
+        //if (!isset($this->options['ui'])) $this->options['ui'] = array();
+
+        if (!isset($this->themes['theme'])) $this->themes['theme'] = 'default';
+        if (!isset($this->themes['url'])) $this->themes['url'] =
+             $this->baseUrl.'/themes/'.$this->themes['theme'].'/style.css';
 
         $options=$this->getClientOptions();
         $options=$options===array()?'{}' : CJavaScript::encode($options);
 
 
-
-        //$cs->registerScript('Yii.CJsTree#'.$id,"$(function () { $(\"#{$id}\").tree($options); });");
+		$cs->registerCssFile($this->baseUrl.'/themes/'.$this->themes['theme'].'/style.css');
         $cs->registerScript('Yii.CJsTree#'.$id,"jQuery(\"#{$id}\").jstree($options);");
-
-        if($this->cssFile !== null && $this->cssFile !== false)
-            $cs->registerCssFile($this->cssFile);
     }
 
 
