@@ -36,6 +36,7 @@ class AuthItem extends NActiveRecord
 	public function rules() {
 		return array(
 			array('name', 'nameIsAvailable', 'on'=>'insert'),
+			array('name', 'required'),
 			array('name', 'length', 'max'=>64, 'min'=>1),
 			array('description', 'safe'),
 			array('name, description, type', 'safe', 'on'=>'search'),

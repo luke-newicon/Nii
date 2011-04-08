@@ -52,7 +52,9 @@ class PermissionsController extends AController {
 		$auth->createOperation('deletePost','delete a post');
 		$bizRule='return Yii::app()->user->id==$params["post"]->authID;';
 		$auth->createOperation('updateOwnPost','update a post by author himself',$bizRule);
-		
+
+		Yii::app()->user->checkPermission('readPost');
+
 		$posts = $auth->createTask('Posts','Manage Posts');
 		$posts->addChild('createPost');
 		$posts->addChild('readPost');
@@ -89,9 +91,11 @@ class PermissionsController extends AController {
 
 	public function actionRoles(){
 
-		$dummy = $this->Widget('application.widgets.jstree.CJsTree', array(
-			'id'=>'dummy',
-		), true);
+//		$dummy = $this->Widget('application.widgets.jstree.NJsTree', array(
+//			'id'=>'dummy',
+//		), true);
+
+
 
 		$model = new AuthItem('search');
 		if(isset($_GET['AuthItem']))
@@ -156,10 +160,8 @@ class PermissionsController extends AController {
 		if(isset($_POST['roleScenario']) && isset($_POST['AuthItem'])){
 			$m = new AuthItem($_POST['roleScenario']);
 			$m->attributes = $_POST['AuthItem'];
-			if (isset($_POST['ajax']) && $_POST['ajax'] === 'authitem') {
-				echo CActiveForm::validate($m);
-				Yii::app()->end();
-			}
+
+			$this->performAjaxValidation($m, 'authitem');
 		}
 		
 		$m = new AuthItem;
@@ -179,6 +181,7 @@ class PermissionsController extends AController {
 	}
 
 	/**
+	 * Called by actionSaveRole
 	 * Adds permissions to a role
 	 * Does not respect the heirarchy and adds all permissions as direct children of the role.
 	 * Meaning all permissions can be easily removed from a role by using $role->getChildren

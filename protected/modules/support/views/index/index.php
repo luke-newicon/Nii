@@ -58,14 +58,6 @@
 <?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
 
 
-
-<?php $this->beginWidget('application.widgets.oocss.Mod',array('class'=>'mod pop','style'=>'width:450px;')); ?>
-<div class="bd pam">
-	<p>delkjgediuvgeruifhe f ef</p>
-	<p>wdfdlfhieugfhieugferf</p>
-</div>
-<?php $this->endWidget(); ?>
-
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(
 	'id' => 'mydialog',

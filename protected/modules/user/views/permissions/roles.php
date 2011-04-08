@@ -14,6 +14,7 @@ $this->breadcrumbs=array(
 
 <?php echo CHtml::link('Create Role', '#', array('onclick' => '$("#rolepop").dialog("open"); $("#rolepop .content").html("Loading..."); $("#rolepop .content").load("'.NHtml::url('/user/permissions/getRoleForm').'"); return false;','class'=>'btn btnN')); ?>
 
+
 <?php
 NHtml::popupForm('rolepop', 'Role', '', '500px',"js:function() {
 	var permsObj = {
@@ -54,3 +55,17 @@ NHtml::popupForm('rolepop', 'Role', '', '500px',"js:function() {
 		'description',
 	),
 )); ?>
+
+<?php
+//$this->widget('zii.widgets.jui.CJuiTabs', array(
+//	'tabs'=>array(
+//		'role'=>$this->renderPartial('_role-form', array('model'=>$model, 'role'=>$role), true),
+//		'Permissions'=>$this->renderPartial('_permission-tree', array('permissions'=>$permissions,'role'=>$role), true),
+//	),
+//	// additional javascript options for the tabs plugin
+//	'options'=>array(
+//		'collapsible'=>false,
+//	),
+//	'htmlOptions'=>array('class'=>'solid rounded')
+//));
+?>

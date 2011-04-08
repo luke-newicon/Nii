@@ -1,11 +1,11 @@
 <?php
 /**
- * CJsTree displays a tree view of hierarchical data.
+ * NJsTree displays a tree view of hierarchical data.
  *
  * It encapsulates the excellent jsTree component based on CTreeView widget.
  * ({@link http://www.jstree.com/}).
  *
- * To use CJsTree, simply sets {@link data} to the data that you want
+ * To use NJsTree, simply sets {@link data} to the data that you want
  * to present and you are there.
  * @link http://www.yiiframework.com/extension/jstree/#doc Documentation
 
@@ -25,7 +25,7 @@
  * 2009-06-06: Shocky Han <shokyhan@gmail.com>
  * * initial release
 */
-class CJsTree extends CWidget
+class NJsTree extends CWidget
 {
 
 	public $id;
@@ -131,7 +131,7 @@ class CJsTree extends CWidget
 
 
 		$cs->registerCssFile($this->baseUrl.'/themes/'.$this->themes['theme'].'/style.css');
-        $cs->registerScript('Yii.CJsTree#'.$id,"jQuery(\"#{$id}\").jstree($options);");
+        $cs->registerScript('Yii.NJsTree#'.$id,"jQuery(\"#{$id}\").jstree($options);");
     }
 
 
