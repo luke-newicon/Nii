@@ -1,5 +1,5 @@
 <?php 
-Class QuotesController extends AdminController
+Class QuotesController extends AController
 {
 	public function actionIndex(){
 		$quotes = new KashQuotes();

@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTimeRecordtypeController extends AdminController
+class ProjectTimeRecordtypeController extends AController
 {
 
 	/**

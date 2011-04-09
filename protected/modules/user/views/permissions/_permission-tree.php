@@ -3,7 +3,7 @@
 &nbsp;<?php echo CHtml::label('Is Super User', 'superuserchk'); ?>
 </div>
 <?php
-$this->Widget('application.widgets.jstree.CJsTree', array(
+$this->Widget('application.widgets.jstree.NJsTree', array(
 	'id'=>'permissions',
 	'core'=>array('animation'=>0),
 	'json_data'=>array(
@@ -16,11 +16,7 @@ $this->Widget('application.widgets.jstree.CJsTree', array(
 
 <!--<button id="savePerms" class="btn btnN">Save</button>-->
 
-<?php if($role): ?>
-	<?php $url = NHtml::url(array('/user/permissions/setRolePermission','role'=>$role->name)); ?>
-<?php else: ?>
-	<?php $url = NHtml::url('/user/permissions/setRolePermission'); ?>
-<?php endif; ?>
+
 
 <script>
 $(function(){

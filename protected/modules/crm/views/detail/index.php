@@ -20,26 +20,38 @@
 		<?php endif; ?>
 	</div>
 </div>
+<?php if($contact->emails): ?>
+<h4>Email</h4>
+<?php endif; ?>
 <ul>
 <?php foreach($contact->emails as $email): ?>
-	<li><span class="icon fam-email"></span> <?php echo $email->address; ?> <?php if ($email->label!=''): ?><span class="labelTag"><?php echo $email->label; ?></span><?php endif; ?></li>
+	<li><span class="icon fam-email">&nbsp;</span> <?php echo $email->address; ?> <?php if ($email->label!=''): ?><span class="labelTag"><?php echo $email->label; ?></span><?php endif; ?></li>
 <?php endforeach; ?>
 </ul>
+<?php if($contact->phones): ?>
+<h4>Phone</h4>
+<?php endif; ?>
 <ul>
 <?php foreach($contact->phones as $phone): ?>
-	<li><span class="icon fam-phone"></span> <?php echo $phone->number; ?> <?php if ($phone->label!=''): ?><span class="labelTag"><?php echo $phone->label; ?></span><?php endif; ?> </li>
+	<li><span class="icon fam-phone">&nbsp;</span> <?php echo $phone->number; ?> <?php if ($phone->label!=''): ?><span class="labelTag"><?php echo $phone->label; ?></span><?php endif; ?> </li>
 <?php endforeach; ?>
 </ul>
+<?php if($contact->websites): ?>
+<h4>Websites</h4>
+<?php endif; ?>
 <ul>
 <?php foreach($contact->websites as $web): ?>
-	<li><span class="icon fam-page-white-world"></span> <?php echo $web->address; ?> <?php if ($web->label!=''): ?><span class="labelTag"><?php echo $web->label; ?></span><?php endif; ?> </li>
+	<li><span class="icon fam-page-white-world">&nbsp;</span> <?php echo $web->address; ?> <?php if ($web->label!=''): ?><span class="labelTag"><?php echo $web->label; ?></span><?php endif; ?> </li>
 <?php endforeach; ?>
 </ul>
+<?php if($contact->addresses): ?>
+<h4>Address</h4>
+<?php endif; ?>
 <ul>
 <?php foreach($contact->addresses as $address): ?>
 	<li class="line">
 		<div class="unit" style="width:26px;">
-			<span class="icon fam-house"></span>
+			<span class="icon fam-house">&nbsp;</span>
 		</div>
 		<address class="lastUnit">
 			<?php echo $address->address(); ?>

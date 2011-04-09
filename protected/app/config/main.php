@@ -5,7 +5,7 @@ define('DS',DIRECTORY_SEPARATOR);
 Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
 
 $JQUERY_THEMEURL = rtrim(dirname($_SERVER['SCRIPT_NAME']),'/').'/css/jqueryui';
-$JQUERY_THEME = 'projectmanager';
+$JQUERY_THEME = 'nii';
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -112,7 +112,7 @@ return array(
 				),
 				array(
 					'class'=>'CWebLogRoute',
-					'categories'=>'error, trace, log,system.db.CDbCommand',
+					'categories'=>'error, trace',
 					'showInFireBug'=>true,
 				),
 				array(

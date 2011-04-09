@@ -32,15 +32,18 @@ class NController extends CController
 			$this->layout = '//layouts/ajax.php';
 			// prevent jquery being added via ajax as this breaks jquery ui components that ajax in content.
 			// specifically dialog boxes! Should also add scripts that are always included
-			Yii::app()->clientScript->scriptMap=array('jquery.js'=>false);
+			Yii::app()->clientScript->scriptMap=array(
+				'jquery.js'=>false,
+				'jquery-ui.css'=>false);
 		} else {
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
 			$this->coreAssets = Yii::app()->getAssetManager()->publish($path);
+			Yii::app()->getClientScript()->registerCssFile(NHtml::baseUrl()."css/jqueryui/nii/jquery-ui.css");
+
 			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/jquery/jquery.scrollto.js');
-			Yii::app()->getClientScript()->registerCoreScript("jquery");
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
-			Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
+			//Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
 		}
 	}
 
@@ -51,5 +54,16 @@ class NController extends CController
             'accessControl',
         );
     }
+
+	public function performAjaxValidation($model, $formName){
+		if (isset($_POST['ajax']) && $_POST['ajax'] === $formName) {
+			if(isset($_REQUEST['callback'])){
+				echo $_REQUEST['callback'].'('.CActiveForm::validate($model).')';
+			}else{
+				echo CActiveForm::validate($model);
+			}
+			Yii::app()->end();
+		}
+	}
 	
 }

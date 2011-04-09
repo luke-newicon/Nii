@@ -3,7 +3,7 @@
 <style>
 	.userList li,.groupList li {border-left:1px solid #ccc;border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
-	.userList li.selected,.groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
+	.groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
 	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	
@@ -37,6 +37,9 @@
 	.groupList{background-color:#fff;}
 	.groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
 	.inputBox{position:relative;}
+	.userList{margin-right:-15px;}
+
+
 </style>
 
 <div id="contactBook" class="line contactBook noBull">
@@ -78,12 +81,12 @@
 				<a href="" class="showTip btn btnN btnToolbar addContact btnFlat" title="Add Contact">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
 			</div>
 		</div>
-		<ul id="alphaSearch" class="man" style="float:left;width:20px" >
+<!--		<ul id="alphaSearch" class="man" style="float:left;width:20px" >
 			<?php foreach(range('A','Z') as $l): ?>
 			<li class="txtC alpha"><a href="#<?php echo $l; ?>"><?php echo $l; ?></a></li>
 			<?php endforeach; ?>
 			<li class="txtC alpha"><a href="#">#</a></li>
-		</ul>
+		</ul>-->
 		<div id="userListScroll" style="height:550px;overflow-y:auto;">
 			<?php echo $this->renderPartial('_user-list',array('contacts'=>$contacts,'term'=>$term)); ?>
 		</div> 
@@ -101,9 +104,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-
-
-
 
 
 ;(function($){
@@ -180,6 +180,40 @@
 })(jQuery);
 
 $(function(){
+
+	var timer;
+	var scroll = $('#userListScroll')
+		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+			//$('.jspDrag').stop(1,0).fadeTo(100,0.7);
+			$('.jspDrag').stop(1,0).css('opacity','0.7').show();
+			if (timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout( function(){
+				timer = null;
+				$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
+				//scrollStop(scrollPositionY);
+			}, 300);
+
+		})
+		.jScrollPane({
+			verticalDragMinHeight: 20,
+			verticalGutter:0,
+			hideFocus:1
+		})
+		.data('jsp');
+		
+	$('.jspDrag').hide();
+	$('#userListScroll').delegate('.jspContainer','mouseenter',function(){
+		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
+	});
+	$('#userListScroll').delegate('.jspContainer','mouseleave',function(){
+		$('.jspDrag').stop(1,0).delay(300).fadeOut();
+	});
+
+
+
 	$('.contactBook').delegate('.userList li.contact','click',function(){
 		$(this).parent().find('.selected').removeClass('selected');
 		$(this).addClass('selected');

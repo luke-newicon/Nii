@@ -1,7 +1,6 @@
 <?php
 
-class IndexController extends AdminController {
-
+class IndexController extends AController {
 
 	/**
 	 * @return array action filters

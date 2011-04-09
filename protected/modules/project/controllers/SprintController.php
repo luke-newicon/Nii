@@ -1,6 +1,6 @@
 <?php
 
-class SprintController extends AdminController
+class SprintController extends AController
 {
 
 	/**

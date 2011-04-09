@@ -1,5 +1,5 @@
 <?php 
-Class SuppliersController extends AdminController
+Class SuppliersController extends AController
 {
 	public function actionIndex(){
 		$suppliers = new KashSuppliers();

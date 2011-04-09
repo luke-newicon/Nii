@@ -1,5 +1,5 @@
 <?php 
-Class CustomersController extends AdminController
+Class CustomersController extends AController
 {
 	public function actionIndex(){
 		$customers = new KashCustomers();

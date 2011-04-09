@@ -1,5 +1,5 @@
 <?php 
-Class ReceiptsController extends AdminController
+Class ReceiptsController extends AController
 {
 	public function actionIndex(){
 		$receipts = new KashPurchases();
