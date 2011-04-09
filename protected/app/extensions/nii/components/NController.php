@@ -43,7 +43,7 @@ class NController extends CController
 
 			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/jquery/jquery.scrollto.js');
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
-			Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
+			//Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
 		}
 	}
 

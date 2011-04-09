@@ -16,11 +16,7 @@ $this->Widget('application.widgets.jstree.NJsTree', array(
 
 <!--<button id="savePerms" class="btn btnN">Save</button>-->
 
-<?php if($role): ?>
-	<?php $url = NHtml::url(array('/user/permissions/setRolePermission','role'=>$role->name)); ?>
-<?php else: ?>
-	<?php $url = NHtml::url('/user/permissions/setRolePermission'); ?>
-<?php endif; ?>
+
 
 <script>
 $(function(){
