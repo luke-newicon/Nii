@@ -2,6 +2,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'authitem',
 	'enableAjaxValidation'=>true,
+	'enableClientValidation'=>true,
 	'focus'=>array($model,'name'),
 )); ?>
 

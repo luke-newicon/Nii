@@ -1,10 +1,16 @@
 <div class="form">
 
 <?php echo CHtml::beginForm('','post',array('enctype'=>'multipart/form-data')); ?>
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'id'=>'user',
+	'enableAjaxValidation'=>true,
+	'enableClientValidation'=>true,
+	'focus'=>array($model,'name'),
+)); ?>
 
 	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 
-	<?php echo CHtml::errorSummary(array($model)); ?>
+	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
 		<?php echo CHtml::activeLabelEx($model,'username'); ?>
@@ -42,6 +48,6 @@
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
 
-<?php echo CHtml::endForm(); ?>
+<?php $this->endWidget(); ?>
 
 </div><!-- form -->
