@@ -178,7 +178,7 @@ class UserModule extends NWebModule
 	}
 
 	/**
-	 * Return admins.
+	 * Return admins. All (superusers)
 	 * @return array syperusers names
 	 */	
 	public static function getAdmins() {
