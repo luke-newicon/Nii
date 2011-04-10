@@ -104,7 +104,9 @@ Class NMailReader extends CComponent
 		$m->subject = mb_decode_mimeheader($e->subject);
 		$m->headers = CJavaScript::encode($e->getHeaders());
 		$m->from = $e->from;
-		$m->to = $e->to;
+		
+		
+		$m->to = self::headerParam($e, 'to', '');
 		$m->message_id = $e->getHeader('message-id');
 		
 		if(isset($e->cc))

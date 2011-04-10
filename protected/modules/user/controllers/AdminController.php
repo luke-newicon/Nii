@@ -51,6 +51,30 @@ class AdminController extends AController
 		));
 	}
 
+	public function actionRoles($id){
+		$auth = Yii::app()->getAuthManager();
+		$roles = $auth->getAuthItems(CAuthItem::TYPE_ROLE);
+		$this->render('roles',array(
+			'roles'=>$roles
+		));
+	}
+	
+	public function actionAssignRoles(){
+		if(isset($_POST['roles'])){
+			// loop through all roles
+			$auth = Yii::app()->getAuthManager();
+			foreach($auth->getAuthItems(CAuthItem::TYPE_ROLE) as $role){
+				$auth->revoke($role->name, Yii::app()->user->id);
+				echo 'check role: ' . $role->name;
+				$postRoles = $_POST['roles'];
+				if(array_key_exists($role->name,  $postRoles)){
+					echo 'add role: ' . $role->name;
+					// add this role to the user
+					$auth->assign($role->name, Yii::app()->user->id);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Displays a particular model.
@@ -146,6 +170,8 @@ class AdminController extends AController
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
+	
+	
 	
 	
 	/**
