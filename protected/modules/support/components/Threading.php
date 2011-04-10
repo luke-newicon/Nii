@@ -16,85 +16,116 @@
  */
 class Threading extends CComponent
 {
+	/**
+	 * message_id => Container
+	 * @var array
+	 */
 	public $idTable = array();
 	
 	public function parseMessagesIntoThreads(){
+		
+		$this->createIdTable();
+		
+		
+		
+	}
+	
+	
+	public function createIdTable(){
 		foreach(SupportEmail::model()->findAll() as $msg){
-			if(array_key_exists($msg->message_id, $this->idTable)){
-				// ensure container is empty 
-				$c = $this->idTable[$msg->message_id];
-				if($c instanceof Container && $c->isEmpty()){
-					$c->message = new Message($msg);
-				}
-			} else {
-				$this->idTable[$msg->message_id] = new Message($msg);
-			}
+			
+			$parnetCont = $this->getContainerById($msg->message_id);
+			// check container is empty
+			if($parnetCont->isEmpty())
+				$parnetCont->message = new Message($msg);	
+			
 			// For each element in the message's References field:
-			$msg = $this->idTable[$msg->message_id];
-			foreach($msg->references as $refId){
-				//Find a Container object for the given Message-ID:
+			$prev = null;
+			foreach($parnetCont->message->references as $refId){
+				// Find a Container object for the given Message-ID:
 				//	If there's one in id_table use that;
-				//	Otherwise, make (and index) one with a null Message.
-				if(array_key_exists($refId, $this->idTable)){
-					$refMsg = $this->idTable[$refId];
-				} else {
-					$this->idTable[$refId] = new Message();
-				}
+				$container = $this->getContainerById($refId);
+				
 				
 				// Link the References field's Containers together in the order implied by the References header.
 				// - If they are already linked, don't change the existing links.
 				// - Do not add a link if adding that link would introduce a loop: that is, 
 				//	 before asserting A->B, search down the children of B to see if A is reachable, 
 				//	 and also search down the children of A to see if B is reachable. 
-				//	 If either is already reachable as a child of the other, don't add the link.			
+				//	 If either is already reachable as a child of the other, don't add the link.
+				# * container is not linked yet (has no parent)
+				# * don't create loop
+				if ($prev && $container->parent && !$container->hasDescendant($prev)){
+					$prev->addChild($container);
+				}
+				$prev = $container;
 			}
+			
+			// C: Set the parent of this message to be the last element in References
+			if ($prev && !$parnetCont->hasDescendant($prev))
+				$prev->addChild($parnetCont) ;
 		}
-		
+	}
+	
+	public function getContainerById($id){
+		# if id_table contains empty container for message id
+		return array_key_exists($id,$this->idTable) ? $this->idTable[$id] : $this->createContainer($id);
+	}
+	
+	public function createContainer($id){
+		$c = new Container;
+		// Index the Container by Message-ID in id_table.
+		$this->idTable[$id] = $c;
+		return $c;
 	}
 	
 	
 }
 
-class Message extends CComponent
+class Message
 {
 	public function __construct($msg=null) {
 		if ($msg!==null){
-			$this->_msg = $msg;
+			//$this->_msg = $msg;
 			$this->subject = $msg->subject;
 			$this->message_id = $msg->message_id;
-			$this->processReferences();
+			$this->processReferences($msg);
 		}
 	}
 	/**
 	 *
 	 * @var SupportEmail 
 	 */
-	public $_msg;
+	//public $_msg;
 	public $subject;
 	public $message_id;	 // the ID of this message
 	public $references = array();
 	
-	public function processReferences()
+	public function processReferences($msg)
 	{
-		$headers = json_decode($this->_msg->headers);
+		Yii::beginProfile('unserialize');
+		$headers = unserialize($msg->headers);
+		Yii::endProfile('unserialize');
+		if(empty($headers)) return false;
 		if(array_key_exists('references', $headers)){
 			// msg id's are seperated by spaces.
-			if(($refs = explode(' ', $headers['references'])))
+			$refs = explode(' ', trim($headers['references']));
+			if($refs)
 				$this->references = $refs;
 		}
 		if(array_key_exists('in-reply-to', $headers)){
 			// can contain absolute junk as valid data.
 			// lets try n find message ids
-			preg_match('/(<.*>)/', $headers['in-reply-to'], $matches);
-			if(array_key_exists(1,$matches)){
-				$this->references[] = $matches[1];
-			}
+			preg_match('(<[^<>]+>)', $headers['in-reply-to'], $matches);
+			if(!empty($matches))
+				$this->references[] = $matches[0];
 		}
 	}
 	
 }
-class Container extends CComponent
+class Container
 {
+	public static $count=0;
 	/**
 	 * @var message 
 	 */
@@ -106,13 +137,54 @@ class Container extends CComponent
 	/**
 	 * @var Container 
 	 */
-	public $child;	 // first child
+	public $children=array();	 // first child
+		
 	/**
 	 * @var Container 
 	 */
 	public $next;
 	
+	private $_id;
+	
+	public function __construct(){
+		self::$count++;
+	}
+	
+	
+	public function getId(){
+		if($this->_id === null)
+			$this->_id = self::$count;
+		return $this->_id;
+	}
+	
 	public function isEmpty(){
 		return ($this->message===null);
 	}
+	
+	public function hasDescendant($container){
+		if ($this == $container)
+			return true;
+		if (empty($this->children))
+			return false;
+		foreach($this->children as $c){
+			if($c->hasDescendant($container))
+				return true;
+		}
+		return false;
+	}
+	
+	public function addChild($child){
+		if($child->parent !== null)
+			$child->parent->removeChild($child);
+		$id = $child->getId();
+		$this->children[$id] = $child;
+		$child->parent = $this;
+	}
+	
+	public function removeChild($child){
+		$id = $child->getId();
+		unset($this->children[$id]);
+		$child->parent = null;
+	}
+	
 }

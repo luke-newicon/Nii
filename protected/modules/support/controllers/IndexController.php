@@ -202,5 +202,41 @@ class IndexController extends AController
 		dp(NMailReader::getRecipients($string));
 	}
 
+	
+	public function actionTestThread(){
+		
+//		$e = SupportEmail::model()->findByPk(21);
+//		$headers = mb_convert_encoding($e->headers, 'utf-8');
+//		dp($headers);
+//		dp(CJSON::decode("$headers"));
+//		echo (json_decode("$headers")===false)?'FALSE':'MUST BE NULL';
+		$thread = new Threading;
+		
+		$thread->parseMessagesIntoThreads();
+		dp($thread->idTable);
+//		Yii::beginProfile('loop');
+//		foreach(SupportEmail::model()->findAll() as $e){
+//			if(empty($e->headers))
+//				continue;
+//			Yii::beginProfile('CJSON');
+//			$headers = CJSON::decode($e->headers);
+//			Yii::endProfile('CJSON');
+//			//dp($headers);
+//			
+//			if(empty($headers) || !array_key_exists('in-reply-to', $headers))
+//				continue;
+//			Yii::beginProfile('MATCH');
+//			preg_match('(<[^<>]+>)', $headers['in-reply-to'], $matches);
+//			Yii::endProfile('MATCH');
+//			dp($matches);
+//		}
+//		Yii::endProfile('loop');
+	}
+	
+	public function actionImportMsgs($offset=0){
+		Yii::app()->getModule('support')->msgPageLimit = 100;
+		NMailReader::$readOfset = $offset;
+		NMailReader::readMail();
+	}
 }
 

@@ -61,6 +61,7 @@ Class NMailReader extends CComponent
 	}
 	
 	public static function readMail(){
+		
 		$mail = self::connect();
 		// read messages Latest First.
 		$msgNum = self::countMessages();
@@ -84,9 +85,9 @@ Class NMailReader extends CComponent
 					break;
 				}
 			}
-			Yii::beginProfile('saveMail');
+			//Yii::beginProfile('saveMail');
 			self::saveMail($e, $i);
-			Yii::endProfile('saveMail');
+			//Yii::endProfile('saveMail');
 			
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
@@ -102,7 +103,7 @@ Class NMailReader extends CComponent
 		// create mail message
 		$m = new SupportEmail();
 		$m->subject = mb_decode_mimeheader($e->subject);
-		$m->headers = CJavaScript::encode($e->getHeaders());
+		$m->headers = serialize($e->getHeaders());
 		$m->from = $e->from;
 		
 		
@@ -126,6 +127,7 @@ Class NMailReader extends CComponent
 		try {
 			self::parseParts($e, $m);
 		} catch(Zend_Exception $err){
+			echo 'ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage();
 			Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
 			$m->save();
 			return;
