@@ -22,7 +22,14 @@ class Threading extends CComponent
 	 */
 	public $idTable = array();
 
+	/**
+	 *
+	 * @var CList
+	 */
 	public $rootSet = array();
+
+
+	public $subjectTable = array();
 	
 	public function parseMessagesIntoThreads(){
 
@@ -33,58 +40,47 @@ class Threading extends CComponent
 		// 3. discard idtable
 		$this->idTable=array();
 
-		//$this->pruneEmptyContainers();
+		$this->pruneRecursive($this->rootSet);
 
+		$this->groupBySubject();
 		
 	}
 
-	public function pruneEmptyContainers(){
-
-		foreach($this->rootSet as $k=>$c){
-			if($this->hasChildren()){
-				$this->pruneRecursive($c);
-			}
-		}
-	}
 
 	public function pruneRecursive($parent){
 		foreach($parent->children as $c){
 			$this->pruneRecursive($c);
+			if($c->message===null && empty($c->children)){
+				// no message and no children: nuke
+				$this->rootSet->removeChild($c);
+			} else if ($c->message===null && !empty($c->children)){
+				// promote children dont promote if they would become children of the root
+				// if we are on a root node then it wont have a parent. We dont want to promote children above these.
+				if ($c->parent!==null && count($c->children)==1) {
+					$this->promoteChildrenToCurrent($parent, $c);
+				} elseif($c->parent!==null && count($c->children) > 1) {
+					// don't promote children
+				} else{
+					$this->promoteChildrenToCurrent($parent, $c);
+				}
+			}
 		}
+	}
 
-		if($c->message===null && empty($c->children)){
-			// no message and no children: nuke
-			unset($this->rootSet[$k]);
-		} else if ($c->message===null && !empty($c->children)){
-			// promote children
-		}
-
-		 # If it is a dummy message with NO children, delete it.
-		 //
-//        if dummy_message_without_children?(container)
-//          # delete container
-//          parent.remove_child(container)
-//        # If it is a dummy message with children, delete it
-//        elsif container.dummy? #&& ( not container.children.empty? )
-//          # Do not promote the children if doing so would make them
-//          # children of the root, unless there is only one child.
-//          if root?(parent) && container.children.size == 1
-//            promote_container_children_to_current_level(parent, container)
-//          elsif root?(parent) && container.children.size > 1
-//            # do not promote its children
-//          else
-//            promote_container_children_to_current_level(parent, container)
-//          end
-//        end
-//      end
+	public function promoteChildrenToCurrent(Container $parent, Container $child){
+		foreach($child->children as $c)
+			$parent->addChild($c);
+		$parent->removeChild($child);
 	}
 
 	public function findRootSet(){
-		foreach($this->idTable as $k=>$c){
+		$this->rootSet = new Container;
+		foreach($this->idTable as $c){
 			if(!$c->hasParent()){
-				$id = $c->getId();
-				$this->rootSet[$id] = $c;
+				//$this->rootSet[$k] = $c;
+				$this->rootSet->addChild($c);
 			}
+
 		}
 	}
 	
@@ -96,7 +92,7 @@ class Threading extends CComponent
 			// check container is empty
 			if($parnetCont->isEmpty())
 				$parnetCont->message = new Message($msg);	
-			
+
 			// For each element in the message's References field:
 			$prev = null;
 			foreach($parnetCont->message->references as $refId){
@@ -113,7 +109,7 @@ class Threading extends CComponent
 				//	 If either is already reachable as a child of the other, don't add the link.
 				# * container is not linked yet (has no parent)
 				# * don't create loop
-				if ($prev && $container->parent && !$container->hasDescendant($prev)){
+				if ($prev && !$container->hasDescendant($prev) && !$prev->hasDescendant($container)){
 					$prev->addChild($container);
 				}
 				$prev = $container;
@@ -137,7 +133,14 @@ class Threading extends CComponent
 		return $c;
 	}
 	
-	
+	public function groupBySubject() {
+		foreach($this->rootSet as $c){
+			if($c->hasMessage()){
+				$c->message->subject;
+			}
+		}
+	}
+
 }
 
 class Message
@@ -207,6 +210,8 @@ class Container
 	
 	public function __construct(){
 		self::$count++;
+		//assign the unique id to this new object IMPORTANT STEP!
+		$this->getId();
 	}
 	
 	
@@ -226,6 +231,10 @@ class Container
 	public function hasChildren(){
 		return !empty($this->children);
 	}
+
+	public function hasMessage(){
+		return !empty($this->message);
+	}
 	
 	public function hasDescendant($container){
 		if ($this == $container)
@@ -243,8 +252,9 @@ class Container
 		if($child->parent !== null)
 			$child->parent->removeChild($child);
 		$id = $child->getId();
-		$this->children[$id] = $child;
 		$child->parent = $this;
+		$this->children[$id] = $child;
+		
 	}
 	
 	public function removeChild($child){

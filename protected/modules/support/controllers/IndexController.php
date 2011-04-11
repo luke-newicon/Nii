@@ -239,5 +239,28 @@ class IndexController extends AController
 		NMailReader::readMail();
 	}
 
+
+	public function actionThreadMsgs(){
+		$thread = new Threading;
+		$thread->parseMessagesIntoThreads();
+		$this->printChildren($thread->rootSet);
+		
+	}
+
+	public function printChildren($c, $indent=0){
+		if($c->hasChildren()){
+			foreach($c->children as $c){
+				echo '<blockquote>';
+				if($c->message!=null){
+					$e = SupportEmail::model()->findByPk($c->message->dbId);
+
+					echo $e->message_text;
+				}
+				$this->printChildren($c, $indent++);
+				echo '</blockquote>';
+			}
+		}
+	}
+
 }
 
