@@ -19,6 +19,8 @@
  * @property integer $bounced
  * @property string $created
  * @property string $date
+ * @property string $references
+ * @property string $replyto
  */
 class SupportEmail extends NActiveRecord
 {
