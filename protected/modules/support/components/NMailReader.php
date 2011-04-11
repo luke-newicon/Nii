@@ -437,5 +437,21 @@ Class NMailReader extends CComponent
 		$imap =  self::connect();
 		echo $imap->countMessages() - $imap->countMessages(Zend_Mail_Storage::FLAG_SEEN);
 	}
+
+	/**
+	 * Takes a subject string and removes Re: and Fwd: strings
+	 * e.g. fwd: Re: Re[2]: re: My crazy subject
+	 * will return only "My crazy subject"
+	 * @param string $subject
+	 * @return string
+	 */
+	public static function normalizeSubject($subject){
+		// strip things to form base subject representation
+		// matches re: re[5]: fwd[3]:
+		$pattern = '/((Re|Fwd)(\[[\d+]\])?:(\s)?)*(.*)/i';
+		preg_match($pattern, trim($subject), $matches);
+		//dp($matches);
+		return (array_key_exists(5, $matches)) ? $matches[5] : $subject;
+	}
 	
 }

@@ -132,11 +132,39 @@ class Threading extends CComponent
 		$this->idTable[$id] = $c;
 		return $c;
 	}
-	
+
+	/**
+	 * Find the subject of that sub-tree:
+	 * If there is a message in the Container, the subject is the subject of that message.
+	 * If there is no message in the Container, then the Container will have at least one child Container,
+	 * and that Container will have a message. Use the subject of that message instead.
+	 * Strip ``Re:'', ``RE:'', ``RE[5]:'', ``Re: Re[4]: Re:'' and so on.
+	 * If the subject is now "", give up on this Container.
+	 * Add this Container to the subject_table if:
+	 * - There is no container in the table with this subject, or
+	 * - This one is an empty container and the old one is not: the empty one is more interesting as a root,
+	 *   so put it in the table instead.
+	 * - The container in the table has a ``Re:'' version of this subject,
+	 *   and this container has a non-``Re:'' version of this subject.
+	 *   The non-re version is the more interesting of the two.
+	 */
 	public function groupBySubject() {
-		foreach($this->rootSet as $c){
-			if($c->hasMessage()){
-				$c->message->subject;
+		foreach($this->rootSet->children as $c){
+			$subject = NMailReader::normalizeSubject($c->getSubject());
+
+			if($subject == '')
+				continue;
+
+			if(!array_key_exists($subject,$this->subjectTable)){
+				$this->subjectTable[$subject] = $c;
+			} else {
+				// This one is an empty container and the old one is not: the empty one is more interesting as a root,
+				// so put it in the table instead.
+				if(($this->subjectTable[$subject]->hasMessage() && !$c->hasMessage())
+				|| ($this->subjectTable[$subject]->isReOrFwd() && !$c->isReOrFwd())){
+
+					$this->subjectTable[$subject] = $c;
+				}
 			}
 		}
 	}
@@ -229,7 +257,7 @@ class Container
 		return ($this->parent !== null);
 	}
 	public function hasChildren(){
-		return !empty($this->children);
+		return count($this->children);
 	}
 
 	public function hasMessage(){
@@ -262,5 +290,32 @@ class Container
 		unset($this->children[$id]);
 		$child->parent = null;
 	}
-	
+
+	private $_subject = null;
+	public function getSubject()
+	{
+		if($this->_subject === null){
+			if($this->hasMessage()){
+				$this->_subject = $this->message->subject;
+			}else{
+				if($this->hasChildren()){
+					// dp($this->children);
+					echo ($this->hasChildren()) ? 'children_true': 'children_false';
+					$children = $this->children;
+					$c = reset($children);
+					$this->_subject = $c->message->subject;
+				}
+			}
+			if($this->_subject === null)
+				$this->_subject = '';
+		}
+
+		return $this->_subject;
+	}
+
+	public function isReOrFwd(){
+		$pattern = '/^(Re|Fwd)/i';
+		return preg_match($pattern, $this->getSubject());
+	}
+
 }

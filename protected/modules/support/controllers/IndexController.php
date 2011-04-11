@@ -243,7 +243,8 @@ class IndexController extends AController
 	public function actionThreadMsgs(){
 		$thread = new Threading;
 		$thread->parseMessagesIntoThreads();
-		$this->printChildren($thread->rootSet);
+		dp($thread->subjectTable);
+		//$this->printChildren($thread->rootSet);
 		
 	}
 
@@ -260,6 +261,12 @@ class IndexController extends AController
 				echo '</blockquote>';
 			}
 		}
+	}
+
+
+	public function actionTestSubject(){
+		//Fwd: Re[3]: Re: Re: Mysd car re: sdjhsdf
+		echo NMailReader::normalizeSubject('Fwd: Re[3]: Re: Re: Mysd car re: sdjhsdf');
 	}
 
 }
