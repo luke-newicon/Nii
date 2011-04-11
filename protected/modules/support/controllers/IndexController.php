@@ -109,8 +109,8 @@ class IndexController extends AController
 	}
 
 	
-	public function actionTest($index){
-		NMailReader::testrPrintMessage($index);
+	public function actionTest($index, $actualId=0){
+		NMailReader::testrPrintMessage($index, $actualId);
 	}
 
 	public function actionTestSave($index){
@@ -203,7 +203,7 @@ class IndexController extends AController
 	}
 
 	
-	public function actionTestThread(){
+	public function actionThreading(){
 		
 //		$e = SupportEmail::model()->findByPk(21);
 //		$headers = mb_convert_encoding($e->headers, 'utf-8');
@@ -213,7 +213,7 @@ class IndexController extends AController
 		$thread = new Threading;
 		
 		$thread->parseMessagesIntoThreads();
-		dp($thread->idTable);
+		dp($thread->rootSet);
 //		Yii::beginProfile('loop');
 //		foreach(SupportEmail::model()->findAll() as $e){
 //			if(empty($e->headers))
@@ -233,10 +233,11 @@ class IndexController extends AController
 //		Yii::endProfile('loop');
 	}
 	
-	public function actionImportMsgs($offset=0){
-		Yii::app()->getModule('support')->msgPageLimit = 100;
+	public function actionImport($offset=0){
+		Yii::app()->getModule('support')->msgPageLimit = 250;
 		NMailReader::$readOfset = $offset;
 		NMailReader::readMail();
 	}
+
 }
 

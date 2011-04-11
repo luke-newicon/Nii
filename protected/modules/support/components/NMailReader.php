@@ -102,10 +102,11 @@ Class NMailReader extends CComponent
 	public static function saveMail(Zend_Mail_Message $e, $i){
 		// create mail message
 		$m = new SupportEmail();
-		$m->subject = mb_decode_mimeheader($e->subject);
+		$m->subject = mb_decode_mimeheader(self::headerParam($e, 'subject', ''));
 		$m->headers = serialize($e->getHeaders());
+		$m->references = self::headerParam($e, 'references', '');
+		$m->in_reply_to = self::headerParam($e, 'in-reply-to', '');
 		$m->from = $e->from;
-		
 		
 		$m->to = self::headerParam($e, 'to', '');
 		$m->message_id = $e->getHeader('message-id');
@@ -127,10 +128,11 @@ Class NMailReader extends CComponent
 		try {
 			self::parseParts($e, $m);
 		} catch(Zend_Exception $err){
-			echo 'ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage();
-			Yii::log('ERROR parsing mail parts of message id: '.$i.': ' . $err->getMessage(),'error');
 			$m->save();
-			return;
+			echo 'ERROR parsing mail parts of message index: '.$i.' <br/> message id: '.$m->message_id.' <br/> db id : '.$m->id().' <br/> error : ' . $err->getMessage();
+			Yii::log('ERROR parsing mail parts of message index: '.$i.': message id: '.$m->message_id.' : ' . $err->getMessage(),'error');
+			// TODO: write code to try and salvage message content
+			//return;
 		}
 		$m->save();
 
@@ -399,26 +401,32 @@ Class NMailReader extends CComponent
 		return $bits[0];
 	}
 
-	public static function testrPrintMessage($msgIndex){
+	public static function testrPrintMessage($msgIndex, $actualId=false){
 		$mail = self::connect();
-		$msgNum = self::countMessages();
-		$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
-		dp($msg);
-		dp($msg->getContent());
-		echo 'end of debug print output';
-		if ($msg->isMultipart()) {
-			foreach($msg as $part){
-				dp($part);
+		try{
+			$msgNum = self::countMessages();
+			if(!$actualId)
+				$msg = $mail->getMessage(($msgNum+1)-$msgIndex);
+			else
+				$msg = $mail->getMessage($msgIndex);
+			dp($msg);
+			dp($msg->getContent());
+			echo 'end of debug print output';
+			if ($msg->isMultipart()) {
+				foreach($msg as $part){
+					dp($part);
+				}
+			} else {
+				$encoding = self::headerParam($msg,'content-transfer-encoding');
+				if (strtok($msg->contentType, ';') == 'text/html'){
+					echo self::decode($msg->getContent(),$encoding);
+				}elseif (strtok($msg->contentType, ';') == 'text/plain'){
+					echo self::decode($msg->getContent(),$encoding);
+				}
 			}
-		} else {
-			$encoding = self::headerParam($msg,'content-transfer-encoding');
-			if (strtok($msg->contentType, ';') == 'text/html'){
-				echo self::decode($msg->getContent(),$encoding);
-			}elseif (strtok($msg->contentType, ';') == 'text/plain'){
-				echo self::decode($msg->getContent(),$encoding);
-			}
+		}catch(Exception $e){
+			echo '<br/>ERROR: ' . $e->getMessage();
 		}
-
 		//create a new file
 		$file = Yii::app()->getRuntimePath().DS.'testEmail';
 		file_put_contents($file, $msg);

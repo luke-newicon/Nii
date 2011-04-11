@@ -21,13 +21,71 @@ class Threading extends CComponent
 	 * @var array
 	 */
 	public $idTable = array();
+
+	public $rootSet = array();
 	
 	public function parseMessagesIntoThreads(){
-		
+
+		// 1.
 		$this->createIdTable();
+		// 2. find root set with no parents
+		$this->findRootSet();
+		// 3. discard idtable
+		$this->idTable=array();
+
+		//$this->pruneEmptyContainers();
+
 		
-		
-		
+	}
+
+	public function pruneEmptyContainers(){
+
+		foreach($this->rootSet as $k=>$c){
+			if($this->hasChildren()){
+				$this->pruneRecursive($c);
+			}
+		}
+	}
+
+	public function pruneRecursive($parent){
+		foreach($parent->children as $c){
+			$this->pruneRecursive($c);
+		}
+
+		if($c->message===null && empty($c->children)){
+			// no message and no children: nuke
+			unset($this->rootSet[$k]);
+		} else if ($c->message===null && !empty($c->children)){
+			// promote children
+		}
+
+		 # If it is a dummy message with NO children, delete it.
+		 //
+//        if dummy_message_without_children?(container)
+//          # delete container
+//          parent.remove_child(container)
+//        # If it is a dummy message with children, delete it
+//        elsif container.dummy? #&& ( not container.children.empty? )
+//          # Do not promote the children if doing so would make them
+//          # children of the root, unless there is only one child.
+//          if root?(parent) && container.children.size == 1
+//            promote_container_children_to_current_level(parent, container)
+//          elsif root?(parent) && container.children.size > 1
+//            # do not promote its children
+//          else
+//            promote_container_children_to_current_level(parent, container)
+//          end
+//        end
+//      end
+	}
+
+	public function findRootSet(){
+		foreach($this->idTable as $k=>$c){
+			if(!$c->hasParent()){
+				$id = $c->getId();
+				$this->rootSet[$id] = $c;
+			}
+		}
 	}
 	
 	
@@ -87,6 +145,7 @@ class Message
 	public function __construct($msg=null) {
 		if ($msg!==null){
 			//$this->_msg = $msg;
+			$this->dbId = $msg->id;
 			$this->subject = $msg->subject;
 			$this->message_id = $msg->message_id;
 			$this->processReferences($msg);
@@ -97,26 +156,26 @@ class Message
 	 * @var SupportEmail 
 	 */
 	//public $_msg;
+	public $dbId;
 	public $subject;
 	public $message_id;	 // the ID of this message
 	public $references = array();
 	
 	public function processReferences($msg)
 	{
-		Yii::beginProfile('unserialize');
-		$headers = unserialize($msg->headers);
-		Yii::endProfile('unserialize');
-		if(empty($headers)) return false;
-		if(array_key_exists('references', $headers)){
+		$references = $msg->references;
+		$replyTo = $msg->in_reply_to;
+
+		if(!empty($references)){
 			// msg id's are seperated by spaces.
-			$refs = explode(' ', trim($headers['references']));
+			$refs = explode(' ', trim($references));
 			if($refs)
 				$this->references = $refs;
 		}
-		if(array_key_exists('in-reply-to', $headers)){
+		if(!empty($replyTo)){
 			// can contain absolute junk as valid data.
 			// lets try n find message ids
-			preg_match('(<[^<>]+>)', $headers['in-reply-to'], $matches);
+			preg_match('(<[^<>]+>)', $replyTo, $matches);
 			if(!empty($matches))
 				$this->references[] = $matches[0];
 		}
@@ -159,6 +218,13 @@ class Container
 	
 	public function isEmpty(){
 		return ($this->message===null);
+	}
+
+	public function hasParent(){
+		return ($this->parent !== null);
+	}
+	public function hasChildren(){
+		return !empty($this->children);
 	}
 	
 	public function hasDescendant($container){

@@ -9,7 +9,7 @@
 	
 	<div data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem " id="<?php echo $ticket->id(); ?>">
 		<div class="unit flags">
-			<?php $icon = ($ticket->getRecentEmail()->opened) ?'':'icon fam-email'; ?>
+			<?php $icon = ($ticket->getRecentEmail()===null || $ticket->getRecentEmail()->opened) ?'':'icon fam-email'; ?>
 			<span data-role="flag-opened" class="<?php echo $icon; ?>">&nbsp;</span>
 		</div>
 		<div class="lastUnit">

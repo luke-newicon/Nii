@@ -109,6 +109,7 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
+					'categories'=>'error'
 				),
 				array(
 					'class'=>'CWebLogRoute',
