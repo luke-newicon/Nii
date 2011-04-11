@@ -2,7 +2,8 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'authitem',
 	'enableAjaxValidation'=>true,
-	//'focus'=>array($model,'name'),
+	'enableClientValidation'=>true,
+	'focus'=>array($model,'name'),
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>

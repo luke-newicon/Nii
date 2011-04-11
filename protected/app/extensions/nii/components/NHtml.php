@@ -102,27 +102,28 @@ class NHtml extends CHtml
 	}
 
 
-	public static function popupForm($id, $title, $open, $width='400px', $onSave=''){
+	public static function popupForm($id, $title, $open, $width='400px', $onSave='', $dialogOptions=array()){
 		$v = Yii::app()->controller;
+		$options = CMap::mergeArray(array(
+			'title'=>$title,
+			'autoOpen'=>false,
+			'width'=>$width,
+			'open'=>$open,
+			'buttons'=>array(
+				'save' => array(
+					'text' => 'Save',
+					'click'=>$onSave,
+				),
+				'cancel' => array(
+					'text' => 'Cancel',
+					'click'=>'js:function() { $(this).dialog("close"); }'
+				),
+			),
+		), $dialogOptions);
 		$v->beginWidget('zii.widgets.jui.CJuiDialog', array(
 			'id'=>$id,
 			// additional javascript options for the dialog plugin
-			'options'=>array(
-				'title'=>$title,
-				'autoOpen'=>false,
-				'width'=>$width,
-				'open'=>$open,
-				'buttons'=>array(
-					'save' => array(
-						'text' => 'Save',
-						'click'=>$onSave,
-					),
-					'cancel' => array(
-						'text' => 'Cancel',
-						'click'=>'js:function() { $(this).dialog("close"); }'
-					),
-				),
-			),
+			'options'=>$options
 		));
 
 		echo '<div class="content">Loading...</div>';

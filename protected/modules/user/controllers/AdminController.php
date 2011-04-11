@@ -4,15 +4,7 @@ class AdminController extends AController
 {
 	private $_model;
 
-	/**
-	 * @return array action filters
-	 */
-	public function filters()
-	{
-		return CMap::mergeArray(parent::filters(),array(
-			'accessControl', // perform access control for CRUD operations
-		));
-	}
+
 	/**
 	 * Specifies the access control rules.
 	 * This method is used by the 'accessControl' filter.
@@ -22,12 +14,21 @@ class AdminController extends AController
 	{
 		return array(
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'users'=>UserModule::getAdmins(),
+				'expression'=>'$user->checkAccessToRoute()',
+				'actions'=>array('test')
+			),
+			array('allow',
+				'actions'=>array('index','roles','assignRoles','view','create','update','changePassword','delete','impersonate'),
+				'users'=>UserModule::getAdmins()
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
 		);
+	}
+	
+	public function actionTest(){
+		echo 'you have access!';
 	}
 	
 	/**
@@ -51,6 +52,34 @@ class AdminController extends AController
 		));
 	}
 
+	public function actionRoles($id){
+		$auth = Yii::app()->getAuthManager();
+		$user = User::model()->findByPk($id);
+		if ($user===null)
+			throw new CHttpException(404, 'No user found');
+		$roles = $auth->getAuthItems(CAuthItem::TYPE_ROLE);
+		$userRoles = $auth->getAuthItems(CAuthItem::TYPE_ROLE, $id);
+		$this->render('roles',array(
+			'roles'=>$roles,
+			'userRoles'=>$userRoles,
+			'model'=>$user
+		));
+	}
+	
+	public function actionAssignRoles($userId){
+		if(isset($_POST['roles'])){
+			// loop through all roles
+			$auth = Yii::app()->getAuthManager();
+			foreach($auth->getAuthItems(CAuthItem::TYPE_ROLE) as $role){
+				$auth->revoke($role->name, $userId);
+				$postRoles = $_POST['roles'];
+				if(array_key_exists($role->name,  $postRoles)){
+					// add this role to the user
+					$auth->assign($role->name, $userId);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Displays a particular model.
@@ -148,6 +177,8 @@ class AdminController extends AController
 	}
 	
 	
+	
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -172,11 +203,14 @@ class AdminController extends AController
 	 */
 	public function actionImpersonate($id)
 	{
-		$ui = UserIdentity::impersonate($id);
-		if($ui)
-			Yii::app()->user->login($ui, 0);
-		Yii::app()->user->setFlash('warning',"The impersonate function currently has no authentication or permission checking!!");
-		$this->redirect(Yii::app()->homeUrl);
+		// lets double check the current user is a superuser
+		if(Yii::app()->user->record->superuser){
+			$ui = UserIdentity::impersonate($id);
+			if($ui)
+				Yii::app()->user->login($ui, 0);
+			Yii::app()->user->setFlash('warning',"You are impersonating user: " .Yii::app()->user->name);
+			$this->redirect(Yii::app()->homeUrl);
+		}
 	}
 	
 }

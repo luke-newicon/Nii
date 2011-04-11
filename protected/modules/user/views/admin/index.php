@@ -14,6 +14,37 @@ $this->breadcrumbs=array(
 
 <a class="btn btnN" href="<?php echo NHtml::url('/user/admin/create'); ?>">Add User</a>
 
+<?php echo CHtml::link('Create a new user', '#', 
+		array('onclick' => '$("#userpop").dialog("open"); $("#userpop .content").html("Loading...");
+ $("#userpop .content").load("'.NHtml::url('/user/admin/create').'"); return false;			
+','class'=>'btn btnN')); ?>
+<?php
+NHtml::popupForm('userpop', 'Role', '', '500px',"js:function() {
+	var permsObj = {
+		perms:[]
+	};
+	jQuery('#permissions').jstree('get_checked').each(function(i,el){
+		permsObj.perms[i] = $(el).attr('id');
+	});
+
+	var data = $('#rolepop form').serialize() + '&' + $.param(permsObj);
+	//var data = {
+	//	'roleData':$('#rolepop form').serialize(),
+	//	'perms':perms
+	//};
+	//alert($.param(perms));
+	$.post('".NHtml::url('/user/permissions/saveRole')."', data, function(r){
+		if(r){
+			// added role
+			$('#rolepop').dialog('close');
+			$('#rolepop .content').html('Loading...');
+			$.fn.yiiGridView.update('authitemGrid');
+		}
+	});
+}", array('height'=>'475'));
+?>
+
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$dataProvider,
 	'filter'=>$model,
@@ -21,7 +52,7 @@ $this->breadcrumbs=array(
 		array(
 			'name' => 'username',
 			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->username),array("admin/view","id"=>$data->id))',
+			'value' => 'CHtml::link(CHtml::encode($data->username), array("admin/view","id"=>$data->id))',
 		),
 		array(
 			'name'=>'email',

@@ -135,5 +135,7 @@ class AuthItem extends NActiveRecord
 			'state'=> array_key_exists($authitem->name, $curPerms)?'checked':''
 		);
 	}
+	
+
 
 }

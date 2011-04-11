@@ -31,7 +31,7 @@ class PermissionsController extends AController {
 	 * This does not impair functionality as the same can be achieved by using operations.
 	 *
 	 */
-	public function actionSetupPermissions(){
+	public function actionSetup(){
 		Yii::app()->getAuthManager()->clearAll();
 
 		$auth = Yii::app()->getAuthManager();
@@ -53,7 +53,7 @@ class PermissionsController extends AController {
 		$bizRule='return Yii::app()->user->id==$params["post"]->authID;';
 		$auth->createOperation('updateOwnPost','update a post by author himself',$bizRule);
 
-		Yii::app()->user->checkPermission('readPost');
+		//Yii::app()->user->checkAccess('readPost');
 
 		$posts = $auth->createTask('Posts','Manage Posts');
 		$posts->addChild('createPost');
@@ -81,10 +81,9 @@ class PermissionsController extends AController {
 		$role->addChild('author');
 		$role->addChild('deletePost');
 
-		$auth->assign('reader','readerA');
-		$auth->assign('author','authorB');
-		$auth->assign('editor','editorC');
-		$auth->assign('admin','adminD');
+		$auth->createOperation('user/admin/test', 'user admin test');
+		$uTask = $auth->createTask('user/admin','User management');
+		$uTask->addChild('user/admin/test');
 		
 	}
 
