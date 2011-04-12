@@ -49,6 +49,9 @@ return array(
 		'user',
 		'project',
 		'hosting',
+		'dev'=>array(
+			'modules'=>array('kanban')
+		),
 	),
 
 	// application components

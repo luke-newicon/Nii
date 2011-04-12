@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexController class file.
+ * Kanban class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,13 +9,12 @@
  */
 
 /**
- * Description of IndexController
+ * Description of Kanban
  *
  * @author steve
  */
-class IndexController extends NController
+class KanbanModule extends NWebModule
 {
-	public function actionIndex(){
-		echo 'hello';
-	}
+    //put your code here
+	
 }
