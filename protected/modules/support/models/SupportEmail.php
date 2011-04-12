@@ -165,5 +165,15 @@ class SupportEmail extends NActiveRecord
 		return NMailReader::getRecipients($this->to);
 	}
 	
+	/**
+	 * Displays a nicely formatted from name, if no from name present falls 
+	 * back to a formatted email address. Will remove the host information from email adrress
+	 * so steve@newicon.net would be displayed as steve.
+	 * @return string 
+	 */
+	public function getFrom(){
+		$f = NMailReader::splitRecipient($this->from);
+		return $f['name'];
+	}
 	
 }

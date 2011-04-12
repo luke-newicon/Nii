@@ -70,6 +70,7 @@ Class NMailReader extends CComponent
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 			if($ii >= self::$readLimit) break;
+			usleep(200);
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
 			

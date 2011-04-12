@@ -1,6 +1,5 @@
 <?php $msgPreviewHeight=75; ?>
 <?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
-<?php echo 'total messages ' . $total; ?>
 <style>
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;
@@ -55,7 +54,7 @@
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
-<?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
+<?php //$this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
 
 
 <?php
@@ -66,7 +65,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 		'title' => 'Dialog box 1',
 		'autoOpen' => false,
 		'modal'=>true,
-		'width'=>'600px',
+		'width'=>'600',
 		'buttons' => array(
 			'ok' => array(
 				'text' => 'ok'
@@ -83,11 +82,6 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	),
 ));
 
-
-// the link that may open the dialog
-echo CHtml::link('open dialog', '#', array(
-	'onclick' => '$("#mydialog").dialog("open"); return false;',
-));
 ?>
 
 
@@ -95,7 +89,12 @@ echo CHtml::link('open dialog', '#', array(
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;
+				&nbsp; <?php
+				//// the link that may open the dialog
+				echo CHtml::link('open dialog', '#', array(
+					'onclick' => '$("#mydialog").dialog("open"); return false;',
+				));
+				?>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
@@ -268,7 +267,7 @@ $(function(){
 		}else{
 			$('.popSpinner').position({my:'center',at:'center',of:$email}).show();
 			// html not in cache so ajax it in.
-			$.getJSON('<?php echo NHtml::url('/support/index/message') ?>/id/'+id, function(json){
+			$.getJSON('<?php echo SupportModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
 				msgsLoaded[key] = json;
 				inserMessage(json);
 			});
@@ -323,7 +322,7 @@ $(function(){
 	var loadMessageBatch = function(batch){
 		$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
 		$.ajax({
-			url:'<?php echo NHtml::url('/support/index/loadMessageList/offset'); ?>/'+batch,
+			url:'<?php echo SupportModule::getLoadMessageListUrl(); ?>/'+batch,
 			success:function($msgs){
 				$('#messageList').append($msgs);
 				$('.popSpinner').hide();

@@ -31,6 +31,8 @@ class Threading extends CComponent
 
 	public $subjectTable = array();
 	
+	public $threads = array();
+	
 	public function parseMessagesIntoThreads(){
 
 		// 1.
@@ -43,6 +45,8 @@ class Threading extends CComponent
 		$this->pruneRecursive($this->rootSet);
 
 		$this->groupBySubject();
+		
+		$this->order();
 		
 	}
 
@@ -85,7 +89,7 @@ class Threading extends CComponent
 	
 	
 	public function createIdTable(){
-		foreach(SupportEmail::model()->findAll() as $msg){
+		foreach(SupportEmail::model()->findAll(array('limit'=>500)) as $msg){
 			
 			$parnetCont = $this->getContainerById($msg->message_id);
 			// check container is empty
@@ -177,7 +181,7 @@ class Threading extends CComponent
 					$c->addChild($child);
 				}
 				// remove?
-				$container->parent->removeChild($container);
+				//$container->parent->removeChild($container);
 			}
 			// If one container is a empty and the other is not, make the non-empty one be a child of the empty,
 			// and a sibling of the other ``real'' messages with the same subject (the empty's children.)
@@ -239,6 +243,10 @@ class Threading extends CComponent
 				}
 			}
 		}
+	}
+	
+	public function order(){
+		$this->threads = array_values($this->subjectTable);
 	}
 
 }
@@ -357,6 +365,7 @@ class Container
 		
 	}
 	
+	
 	public function removeChild($child){
 		$id = $child->getId();
 		unset($this->children[$id]);
@@ -367,24 +376,14 @@ class Container
 	public function getSubject()
 	{
 		if($this->_subject === null){
-			if($this->hasMessage()){
-				$this->_subject = $this->message->subject;
+			if (($msg = $this->getMessage())){
+				$this->_subject = $msg->subject;
 			}else{
-				if($this->hasChildren()){
-					// dp($this->children);
-					//echo ($this->hasChildren()) ? 'children_true': 'children_false';
-					$children = $this->children;
-					$c = reset($children);
-					if($c->hasMessage())
-						$this->_subject = $c->message->subject;
-					else
-						//shouldnt happen!
-						$this->_subject = '';
-						//echo 'shouldnt happen!';
-				}
-			}
-			if($this->_subject === null)
+				$this->parent = null;
+				//dp($this); // ignore these ones will be picced up later
+				//echo 'shouldnt happen!';
 				$this->_subject = '';
+			}
 		}
 
 		return $this->_subject;
@@ -406,5 +405,38 @@ class Container
 		}
 		return $this->_isReOrFwd;
 	}
+	
+	private $_rootMessage;
+	public function getMessage(){
+		if($this->_rootMessage === null){
+			if($this->hasMessage()){
+				$this->_rootMessage = $this->message;
+			}else{
+				if($this->hasChildren()){
+					$children = $this->children;
+					$c = reset($children);
+					if($c->hasMessage()){
+						$this->_rootMessage = $c->message;
+					}
+				}
+			}
+		}
+		return $this->_rootMessage;
+	}
 
+	private $_dbEmail;
+	public function getEmail(){
+		if ($this->_dbEmail === null){
+			$msg = $this->getMessage();
+			if($msg){
+				$this->_dbEmail = SupportEmail::model()->findByPk($msg->dbId);
+			}
+		}
+		return $this->_dbEmail;
+	}
+	
+	public function msgCount(){
+		return count($this->children);
+	}
+	
 }

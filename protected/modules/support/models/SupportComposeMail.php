@@ -21,11 +21,13 @@ class SupportComposeMail  extends CFormModel
 	public $from;
 	public $message_html;
 	public $message_text;
-
+	public $bcc;
+	
 	public function attributeLabels() {
 		return array(
 			'to'=>'To:',
 			'cc'=>'Cc:',
+			'bcc'=>'Bcc:',
 			'subject'=>'Subject:',
 			'from'=>'From:',
 			'message_html'=>'Message:',

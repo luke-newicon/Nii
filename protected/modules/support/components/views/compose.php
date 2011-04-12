@@ -7,6 +7,7 @@
 ?>
 
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
+	<div id="ccMore" class="unit" style="width:20px;" onclick="$('.ccFields').toggle();">></div>
 	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
 	<div class="unit lastUnit">
 		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
@@ -16,10 +17,18 @@
 		)); ?>
 	</div>
 </div>
-<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
-	<div class="unit lastUnit">
-		<?php echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
+<div class="ccFields" style="display:none;">
+	<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
+		<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'mll unit size1of15 faded','style'=>'width:30px;')); ?>
+		<div class="unit lastUnit">
+			<?php echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
+		</div>
+	</div>
+	<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
+		<?php echo CHtml::activeLabel($model, 'bcc', array('class'=>'mll unit size1of15 faded','style'=>'width:30px;')); ?>
+		<div class="unit lastUnit">
+			<?php echo CHtml::activeTextField($model, 'bcc',array('class'=>'input')); ?>
+		</div>
 	</div>
 </div>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
@@ -28,12 +37,12 @@
 		<?php echo CHtml::activeTextField($model, 'subject',array('class'=>'input')); ?>
 	</div>
 </div>
-<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
+<!--<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
 	<?php echo CHtml::activeLabel($model, 'from', array('class'=>'unit size1of15 faded','style'=>'width:60px;')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'from',array('class'=>'input')); ?>
 	</div>
-</div>
+</div>-->
 
 <div id="emailWysiwyg" class="line" style="border-width:0px 0px 1px 0px; background: none;">
 
