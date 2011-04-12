@@ -236,6 +236,7 @@ class IndexController extends AController
 	public function actionImport($offset=0){
 		Yii::app()->getModule('support')->msgPageLimit = 250;
 		NMailReader::$readOfset = $offset;
+		NMailReader::$breakIfExists = false;
 		NMailReader::readMail();
 	}
 

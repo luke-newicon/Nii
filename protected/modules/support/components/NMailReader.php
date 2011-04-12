@@ -21,6 +21,7 @@ Class NMailReader extends CComponent
 
 	public static $readOfset = 0;
 
+	public static $breakIfExists = true;
 	/**
 	 *
 	 * @var Zend_Mail_Storage_Imap
@@ -60,7 +61,7 @@ Class NMailReader extends CComponent
 		return $count;
 	}
 	
-	public static function readMail(){
+	public static function readMail($breakIfExists=true){
 		
 		$mail = self::connect();
 		// read messages Latest First.
@@ -80,10 +81,12 @@ Class NMailReader extends CComponent
 				Yii::beginProfile('imap db: check message in db');
 				$emailExists = SupportEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
 				Yii::endProfile('imap db: check message in db');
-				if($emailExists){
-					// the email exists so emails from this point will be stored in the dtabase.
-					break;
-				}
+
+				if($emailExists)
+					if(self::$breakIfExists)
+						break;
+					else
+						continue;
 			}
 			//Yii::beginProfile('saveMail');
 			self::saveMail($e, $i);
@@ -103,7 +106,7 @@ Class NMailReader extends CComponent
 		// create mail message
 		$m = new SupportEmail();
 		$m->subject = mb_decode_mimeheader(self::headerParam($e, 'subject', ''));
-		$m->headers = serialize($e->getHeaders());
+		//$m->headers = serialize($e->getHeaders());
 		$m->references = self::headerParam($e, 'references', '');
 		$m->in_reply_to = self::headerParam($e, 'in-reply-to', '');
 		$m->from = $e->from;
@@ -125,6 +128,7 @@ Class NMailReader extends CComponent
 		}
 		
 		$m->save();
+		Yii::beginProfile('parse parts');
 		try {
 			self::parseParts($e, $m);
 		} catch(Zend_Exception $err){
@@ -134,6 +138,7 @@ Class NMailReader extends CComponent
 			// TODO: write code to try and salvage message content
 			//return;
 		}
+		Yii::endProfile('parse parts');
 		$m->save();
 
 		$t = false;
@@ -301,11 +306,14 @@ Class NMailReader extends CComponent
 			$date = $mail->getHeader('date');
 			if(!($unixTs = strtotime($date)))
 				//can not read the date make the date the current date.
+				//Yii::beginProfile('cannot read the date!');
 				$unixTs = time();
+				//Yii::endProfile('cannot read the date!');
+				//FB::log('can not read the date');
 		} else {
 			$unixTs = time();
 		}
-		Yii::beginProfile('date');
+		Yii::endProfile('date');
 		return date('Y-m-d H:i:s',$unixTs);
 	}
 	

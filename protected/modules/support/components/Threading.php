@@ -46,7 +46,6 @@ class Threading extends CComponent
 		
 	}
 
-
 	public function pruneRecursive($parent){
 		foreach($parent->children as $c){
 			$this->pruneRecursive($c);
@@ -133,6 +132,76 @@ class Threading extends CComponent
 		return $c;
 	}
 
+
+
+	/**
+	 * Now the subject_table is populated with one entry for each subject which occurs in the root set.
+	 * Now iterate over the root set, and gather together the difference.
+	 * For each Container in the root set:
+	 * - Find the subject of this Container (as above.)
+	 * - Look up the Container of that subject in the table.
+	 * - If it is null, or if it is this container, continue.
+	 *
+	 * - Otherwise, we want to group together this Container and the one in the table. There are a few possibilities:
+	 *    - If both are dummies, append one's children to the other, and remove the now-empty container.
+	 *    - If one container is a empty and the other is not, make the non-empty one be a child of the empty,
+	 *      and a sibling of the other ``real'' messages with the same subject (the empty's children.)
+	 *    - If that container is a non-empty, and that message's subject does not begin with ``Re:'',
+	 *      but this message's subject does, then make this be a child of the other.
+	 *    - If that container is a non-empty, and that message's subject begins with ``Re:'',
+	 *      but this message's subject does not, then make that be a child of this one -- they were misordered.
+	 *      (This happens somewhat implicitly, since if there are two messages, one with Re: and one without,
+	 *      the one without will be in the hash table, regardless of the order in which they were seen.)
+	 *    - Otherwise, make a new empty container and make both msgs be a child of it.
+	 *      This catches the both-are-replies and neither-are-replies cases,
+	 *      and makes them be siblings instead of asserting a hierarchical relationship which might not be true.
+	 *
+	 * (People who reply to messages without using ``Re:'' and without using a References line will break this slightly. Those people suck.)
+	 * (It has occurred to me that taking the date or message number into account would be one way of
+	 * resolving some of the ambiguous cases, but that's not altogether straightforward either.)
+	 */
+	public function groupBySubject() {
+		$this->createSubjectTable();
+		foreach($this->rootSet->children as $container){
+			$subject = $container->getSubjectNormalized();
+			if(!array_key_exists($subject, $this->subjectTable))
+				continue;
+
+			if($this->subjectTable[$subject] == $container)
+				continue;
+			
+			$c = $this->subjectTable[$subject];
+			// If both are dummies, append one's children to the other, and remove the now-empty container.
+			if(!$c->hasMessage() && !$container->hasMessage()){
+				foreach($container->children as $child){
+					$c->addChild($child);
+				}
+				// remove?
+				$container->parent->removeChild($container);
+			}
+			// If one container is a empty and the other is not, make the non-empty one be a child of the empty,
+			// and a sibling of the other ``real'' messages with the same subject (the empty's children.)
+			elseif (!$c->hasMessage() && $container->hasMessage()){
+				$c->addChild($container);
+
+			}
+			// If that container is a non-empty, and that message's subject begins with ``Re:'',
+			// but this message's subject does not, then make that be a child of this one -- they were misordered.
+			// (This happens somewhat implicitly, since if there are two messages, one with Re: and one without,
+			// the one without will be in the hash table, regardless of the order in which they were seen.)
+			elseif(!$c->isReOrFwd() && $container->isReOrFwd()) {
+				$c->addChild($container);
+			}
+
+			else {
+				$newC = new Container;
+				$newC->addChild($c);
+				$newC->addChild($container);
+				$this->subjectTable[$subject] = $newC;
+			}
+		}
+	}
+
 	/**
 	 * Find the subject of that sub-tree:
 	 * If there is a message in the Container, the subject is the subject of that message.
@@ -148,21 +217,24 @@ class Threading extends CComponent
 	 *   and this container has a non-``Re:'' version of this subject.
 	 *   The non-re version is the more interesting of the two.
 	 */
-	public function groupBySubject() {
+	public function createSubjectTable(){
 		foreach($this->rootSet->children as $c){
-			$subject = NMailReader::normalizeSubject($c->getSubject());
 
+			$subject = $c->getSubjectNormalized();
+			//echo "$subject <br/>";
 			if($subject == '')
 				continue;
 
 			if(!array_key_exists($subject,$this->subjectTable)){
+				$c->parent = null;
 				$this->subjectTable[$subject] = $c;
 			} else {
 				// This one is an empty container and the old one is not: the empty one is more interesting as a root,
 				// so put it in the table instead.
+
 				if(($this->subjectTable[$subject]->hasMessage() && !$c->hasMessage())
 				|| ($this->subjectTable[$subject]->isReOrFwd() && !$c->isReOrFwd())){
-
+					$c->parent = null;
 					$this->subjectTable[$subject] = $c;
 				}
 			}
@@ -300,10 +372,15 @@ class Container
 			}else{
 				if($this->hasChildren()){
 					// dp($this->children);
-					echo ($this->hasChildren()) ? 'children_true': 'children_false';
+					//echo ($this->hasChildren()) ? 'children_true': 'children_false';
 					$children = $this->children;
 					$c = reset($children);
-					$this->_subject = $c->message->subject;
+					if($c->hasMessage())
+						$this->_subject = $c->message->subject;
+					else
+						//shouldnt happen!
+						$this->_subject = '';
+						//echo 'shouldnt happen!';
 				}
 			}
 			if($this->_subject === null)
@@ -313,9 +390,21 @@ class Container
 		return $this->_subject;
 	}
 
+	private $_subjectNormalized;
+	public function getSubjectNormalized(){
+		if($this->_subjectNormalized === null){
+			$this->_subjectNormalized = NMailReader::normalizeSubject($this->getSubject());
+		}
+		return $this->_subjectNormalized;
+	}
+
+	private $_isReOrFwd;
 	public function isReOrFwd(){
-		$pattern = '/^(Re|Fwd)/i';
-		return preg_match($pattern, $this->getSubject());
+		if($this->_isReOrFwd === null){
+			$pattern = '/^(Re|Fwd)/i';
+			$this->_isReOrFwd = preg_match($pattern, $this->getSubject());
+		}
+		return $this->_isReOrFwd;
 	}
 
 }
