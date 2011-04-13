@@ -15,8 +15,10 @@ $(function(){
 	 */
 	$('.reply').click(function(){
 		$('#reply').show();
-		var id = $('#messageList .sel').attr('id');
-		$('#email').load('<?php echo NHtml::url('/support/index/reply/emailId') ?>/'+id);
+		var id = $('#messageList .sel').data('id');
+		$('#email').load('<?php echo NHtml::url('/support/index/reply/emailId') ?>/'+id, function(){
+			$('#composeMail').removeAttr('style');
+		});
 	});
 
 });

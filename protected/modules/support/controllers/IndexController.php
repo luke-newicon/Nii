@@ -112,10 +112,10 @@ class IndexController extends AController
 
 
 	public function actionReply($emailId){
-		$t = SupportTicket::model()->findByPk($emailId);
+		$e = SupportEmail::model()->findByPk($emailId);
 		// get last email in conversation
 
-		echo $this->widget('support.components.NComposeMail',array('replyTo'=>$t->emails[0]),true);
+		echo $this->widget('support.components.NComposeMail',array('replyTo'=>$e),true);
 	}
 
 	public function actionCompose(){

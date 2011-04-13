@@ -47,7 +47,7 @@
 <div id="emailWysiwyg" class="line" style="border-width:0px 0px 1px 0px; background: none;">
 
 	<?php
-	$this->widget('application.extensions.editor.CKkceditor',array(
+	$this->widget('application.widgets.editor.CKkceditor',array(
 		"model"=>$model,                # Data-Model
 		"attribute"=>'message_html',    # Attribute in the Data-Model,
 		"width"=>'100%',
@@ -62,6 +62,7 @@
 			'skin'=>'nii',
 			'toolbarCanCollapse'=>false,
 			'resize_enabled'=>false,
+			'bodyId'=>'composeMail'
 		),
 		"filespath"=>Yii::app()->getRuntimePath(),
 		"filesurl"=>'/runtime',
