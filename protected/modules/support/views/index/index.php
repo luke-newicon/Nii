@@ -54,8 +54,9 @@
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
-<?php //$this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
-
+<div style="display:none;">
+<?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
+</div>
 
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(

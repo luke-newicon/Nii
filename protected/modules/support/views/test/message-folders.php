@@ -11,6 +11,6 @@
 	<?php if (!$folder->isSelectable()): ?>
 
 	<?php else: ?>
-		<div><?php echo htmlspecialchars($localName) ?></div>
+		<div><?php echo htmlspecialchars($localName) . ' - ' . $folder; ?></div>
 	<?php endif; ?>
 <?php endforeach; ?>

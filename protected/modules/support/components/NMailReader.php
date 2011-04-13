@@ -27,7 +27,10 @@ Class NMailReader extends CComponent
 	 * @var Zend_Mail_Storage_Imap
 	 */
 	public static $mail;
-	
+
+
+	public static $folder = 'INBOX';
+
 	/**
 	 *
 	 * @return Zend_Mail_Storage_Imap 
@@ -35,6 +38,7 @@ Class NMailReader extends CComponent
 	public static function connect(){
 		self::$readLimit = SupportModule::get()->msgPageLimit;
 		if(self::$mail === null){
+			// mail could be cached
 			Yii::beginProfile('imap connect');
 			$support = Yii::app()->getModule('support');
 			self::$mail = new Zend_Mail_Storage_Imap(array(
@@ -44,6 +48,7 @@ Class NMailReader extends CComponent
 				'port'     => $support->emailPort,
 				'ssl'	   => $support->emailSsl
 			));
+			self::$mail->selectFolder(self::$folder);
 			Yii::endProfile('imap connect');
 		}
 		return self::$mail;
@@ -52,10 +57,10 @@ Class NMailReader extends CComponent
 	public static function countMessages()
 	{
 		Yii::beginProfile('countMessages');
-		$count = Yii::app()->cache['countMessages'];
+		$count = Yii::app()->cache[self::$folder.'_countMessages'];
 		if($count === false){
 			$count = self::connect()->countMessages();
-			Yii::app()->cache->set('countMessages', $count, 3600);
+			Yii::app()->cache->set(self::$folder.'_countMessages', $count, 3600);
 		}
 		Yii::endProfile('countMessages');
 		return $count;
@@ -69,8 +74,9 @@ Class NMailReader extends CComponent
 		$msgNum = $msgNum - self::$readOfset;
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
+
 			if($ii >= self::$readLimit) break;
-			usleep(200);
+			usleep(100);
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);
 			
@@ -92,7 +98,7 @@ Class NMailReader extends CComponent
 			//Yii::beginProfile('saveMail');
 			self::saveMail($e, $i);
 			//Yii::endProfile('saveMail');
-			
+
 			//$mail->setFlags($i,array(Zend_Mail_Storage::FLAG_SEEN));
 		}
 	}
@@ -373,7 +379,6 @@ Class NMailReader extends CComponent
 	public static function splitRecipient($string)
 	{
 		if ($string=='') return null;
-
 		preg_match('/([^<]*) <(.*)>|<(.*)>|([^<>]*)/', $string, $matches);
 
 		$match1 = array_key_exists(1,$matches)?$matches[1]:'';

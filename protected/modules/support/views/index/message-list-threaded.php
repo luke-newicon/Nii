@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<div class="lastUnit txtC">
-					<?php if($container->msgCount() > 0): ?>
+					<?php if($container->msgCount() > 1): ?>
 					<span style="color:white;background:none repeat scroll 0 0 rgba(82, 82, 82, 0.5);border-radius:5px;-moz-border-radius:3px;padding:0px 3px;"><?php echo $container->msgCount(); ?></span>
 					<?php endif; ?>
 				</div>

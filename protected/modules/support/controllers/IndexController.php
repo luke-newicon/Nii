@@ -142,6 +142,7 @@ class IndexController extends AController
 		Yii::app()->getModule('support')->msgPageLimit = 250;
 		NMailReader::$readOfset = $offset;
 		NMailReader::$breakIfExists = false;
+		NMailReader::$folder = '[Google Mail]/Sent Mail';
 		NMailReader::readMail();
 	}
 

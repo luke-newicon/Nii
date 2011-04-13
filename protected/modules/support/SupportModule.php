@@ -89,13 +89,13 @@ class SupportModule extends NWebModule
 	 * The number of messages to load per page
 	 * @var int
 	 */
-	public $msgPageLimit = 15;
+	public $msgPageLimit = 30;
 	
 	/**
 	 * whether to display messages in conversation threads.
 	 * @var boolean
 	 */
-	public $threading = true;
+	public $threading = false;
 	
 	public function init()
 	{

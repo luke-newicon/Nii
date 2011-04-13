@@ -37,7 +37,7 @@
 					<?php endforeach; ?>
 				</div>
 			</div>
-			<?php if($e->cc): ?>
+			<?php if($email->cc): ?>
 					<div class="line">
 						<div class="unit size1of20"><span class="faded">Cc:</span></div>
 						<div class="lastUnit">
