@@ -33,6 +33,20 @@ class Threading extends CComponent
 	
 	public $threads = array();
 	
+	/**
+	 * when an instance is created a large array containing threads is created, 
+	 * this is then cached with a unique id
+	 * so that guis can loook up correct message threads based on position
+	 * using this cache.
+	 * @var type 
+	 */
+	public static $cacheId;
+	
+	public function __construct(){
+		self::$cacheId = '[thread_'.time().']';
+	}
+	
+	
 	public function parseMessagesIntoThreads(){
 
 		// 1.
@@ -246,6 +260,7 @@ class Threading extends CComponent
 	}
 	
 	public function order(){
+		//Yii::app()->cache->set(self::$cacheId, $value)
 		$this->threads = array_values($this->subjectTable);
 	}
 
@@ -424,7 +439,14 @@ class Container
 		return $this->_rootMessage;
 	}
 
+	/**
+	 * @var CActiveRecord
+	 */
 	private $_dbEmail;
+	/**
+	 *
+	 * @return CActiveRecord
+	 */
 	public function getEmail(){
 		if ($this->_dbEmail === null){
 			$msg = $this->getMessage();
@@ -439,4 +461,18 @@ class Container
 		return count($this->children);
 	}
 	
+	/**
+	 * gets a unique id for this container so it can be referenced later
+	 */
+	public function getLookupId(){
+		return CHtml::encode($this->getSubjectNormalized());
+	}
+	
+	public function markAsOpened(){
+		if($this->getEmail()->opened == 0){
+			$this->getEmail()->opened = 1;
+			$this->getEmail()->save();
+		}
+	}
+
 }

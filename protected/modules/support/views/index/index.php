@@ -257,7 +257,7 @@ $(function(){
 		$(this).parent().find('.listItem').removeClass('selTop');
 		$(this).addClass('sel');
 		$(this).prev('.listItem').addClass('selTop');
-		var id = $(this).attr('id');
+		var id = $(this).data('id');
 		// create string for array key to prevent javascript padding array to key index
 		var key = 'ID'+id;
 

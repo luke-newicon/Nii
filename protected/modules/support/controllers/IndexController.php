@@ -30,15 +30,20 @@ class IndexController extends AController
 	/**
 	 * Display the email message it must use an iframe to achieve this called from ajax
 	 */
-	public function actionMessageThreaded($id){
+	public function actionMessageThread($id){
+		// $id is now the normalized subject
+		$threading = new Threading;
+		$threading->parseMessagesIntoThreads();
+		
 		$this->layout = '/layouts/ajax';
-		$e = SupportEmail::model()->findByPk($id);
-		$j['summary'] = $this->render('message',array('email'=>$e),true);
-		if($e->opened == 0){
-			$e->opened = 1;
-			$e->save();
-		}	
-		$j['content'] = $e->message();
+		$thread = $threading->subjectTable[$id];
+		//$e = SupportEmail::model()->findByPk($id);
+		$j['summary'] = $this->render('message-thread',array('container'=>$thread),true);
+		// make this work
+		
+		$thread->markAsOpened();
+	
+		$j['content'] = $thread->getEmail()->message();
 		echo json_encode($j);
 	}
 

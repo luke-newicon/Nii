@@ -3,13 +3,14 @@
  * Displays the list of of messages
  */
 ?>
-<?php for($i=$offset; $i < $limit; $i++): ?>
-	<?php $dataPos = $i + ($offset*$limit); echo $i;?>
+
+<?php for($i=$offset; $i < ($offset+$limit); $i++): ?>
+	<?php $dataPos = $i; ?>
 	<?php $container = $threads[$i]; ?>
 	<?php $email = $container->getEmail(); ?>
 	<?php $bg = ($i == ($limit-1)) ? 'background-color:#ff0000;':''; ?>
 	<?php $email = $container->getEmail(); ?>
-	<div data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem " id="<?php //echo $email->id(); ?>">
+	<div data-id="<?php echo $container->getLookupId(); ?>" data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem ">
 		<div class="unit flags">
 			<?php $icon = ($email->opened) ?'':'icon fam-email'; ?>
 			<span data-role="flag-opened" class="<?php echo $icon; ?>">&nbsp;</span>

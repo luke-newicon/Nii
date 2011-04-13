@@ -7,7 +7,7 @@
 	<?php $dataPos = $i + ($offset*$limit); ?>
 	<?php $bg = ($i == ($limit-1)) ? 'background-color:#ff0000;':''; ?>
 	
-	<div data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem " id="<?php echo $email->id(); ?>">
+	<div data-id="<?php echo $email->id(); ?>" data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem">
 		<div class="unit flags">
 			<?php $icon = ($email->opened) ?'':'icon fam-email'; ?>
 			<span data-role="flag-opened" class="<?php echo $icon; ?>">&nbsp;</span>
