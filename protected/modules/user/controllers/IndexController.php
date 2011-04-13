@@ -6,7 +6,8 @@ class IndexController extends AController {
 	 * Lists all models.
 	 */
 	public function actionIndex() {
-		$model = new User('search');
+		$user = UserModule::get()->userClass;
+		$model = new $user('search');
 		if (isset($_GET['User']))
 			$model->attributes = $_GET['User'];
 		$this->render('index', array(
@@ -15,7 +16,7 @@ class IndexController extends AController {
 	}
 
 	public function actionView($id){
-		$model = User::model()->findbyPk($id);
+		$model = UserModule::userModel()->findbyPk($id);
 
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');

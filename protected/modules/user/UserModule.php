@@ -53,21 +53,12 @@ class UserModule extends NWebModule
 	public $profileUrl = array("/user/profile/index");
 	public $returnUrl = array("/user/dashboard");
 	public $returnLogoutUrl = array("/user/account/login");
-	
+
+	public $userClass = 'User';
+
 	public $fieldsMessage = '';
 	
-	/**
-	 * @var array
-	 * @desc User model relation from other models
-	 * @see http://www.yiiframework.com/doc/guide/database.arr
-	 */
-	public $relations = array();
 	
-	/**
-	 * @var array
-	 * @desc Profile model relation from other models
-	 */
-	public $profileRelations = array();
 	
 	/**
 	 * @var boolean
@@ -183,7 +174,7 @@ class UserModule extends NWebModule
 	 */	
 	public static function getAdmins() {
 		if (!self::$_admins) {
-			$admins = User::model()->active()->superuser()->findAll();
+			$admins = UserModule::userModel()->active()->superuser()->findAll();
 			$return_name = array();
 			foreach ($admins as $admin)
 				array_push($return_name,$admin->username);
@@ -204,30 +195,41 @@ class UserModule extends NWebModule
 	}
 	
 	/**
-	 * Return safe user data.
+	 * Return safe user data as a CActiveRecord class of User or defined parent class (defined in UserModule::userClass)
 	 * @param user id not required
-	 * @return user object or false
+	 * @return user object or null
 	 */
 	public static function user($id=0) {
 		if ($id) 
-			return User::model()->active()->findbyPk($id);
+			return UserModule::userModel()->active()->findbyPk($id);
 		else {
 			if(Yii::app()->user->isGuest) {
 				return false;
 			} else {
 				if (!self::$_user)
-					self::$_user = User::model()->active()->findbyPk(Yii::app()->user->id);
+					self::$_user = UserModule::userModel()->active()->findbyPk(Yii::app()->user->id);
 				return self::$_user;
 			}
 		}
 	}
+
+	/**
+	 * get the static instance of the user class
+	 * equivelent of UserModule::userModel() however it allows one to use a different extended class other than User
+	 * This class is defined by userClass property
+	 * @return User
+	 */
+	public static function userModel(){
+		$class = Yii::app()->getModule('user')->userClass;
+		return NActiveRecord::model($class);
+	}
+
+	/**
+	 *
+	 * @return UserModule
+	 */
+	public static function get(){
+		return Yii::app()->getModule('user');
+	}
 	
-//	/**
-//	 * Return safe user data.
-//	 * @param user id not required
-//	 * @return user object or false
-//	 */
-//	public function users() {
-//		return User;
-//	}
 }

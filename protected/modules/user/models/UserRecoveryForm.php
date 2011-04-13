@@ -37,11 +37,11 @@ class UserRecoveryForm extends CFormModel {
 		if(!$this->hasErrors())  // we only want to authenticate when no input errors
 		{
 			if (strpos($this->login_or_email,"@")) {
-				$user=User::model()->findByAttributes(array('email'=>$this->login_or_email));
+				$user=UserModule::userModel()->findByAttributes(array('email'=>$this->login_or_email));
 				if ($user)
 					$this->user_id=$user->id;
 			} else {
-				$user=User::model()->findByAttributes(array('username'=>$this->login_or_email));
+				$user=UserModule::userModel()->findByAttributes(array('username'=>$this->login_or_email));
 				if ($user)
 					$this->user_id=$user->id;
 			}

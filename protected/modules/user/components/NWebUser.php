@@ -30,7 +30,7 @@ class NWebUser extends CWebUser
 		if($this->getId() === null)
 			return null;
 		if($this->_user === null){
-			$this->_user = User::model()->findByPk($this->getId());
+			$this->_user = UserModule::userModel()->findByPk($this->getId());
 		}
 		return $this->_user;
 	}
@@ -70,5 +70,7 @@ class NWebUser extends CWebUser
 		$route = Yii::app()->controller->getRoute();
 		return Yii::app()->user->checkAccess($route);	
 	}
+
+	
 
 }

@@ -36,7 +36,8 @@ class AdminController extends AController
 	 */
 	public function actionIndex()
 	{
-		$model = new User('search');
+		$user = UserModule::get()->userClass;
+		$model = new $user('search');
 		if(isset($_GET['User']))
 			$model->attributes = $_GET['User'];
 
@@ -54,7 +55,7 @@ class AdminController extends AController
 
 	public function actionRoles($id){
 		$auth = Yii::app()->getAuthManager();
-		$user = User::model()->findByPk($id);
+		$user = UserModule::userModel()->findByPk($id);
 		if ($user===null)
 			throw new CHttpException(404, 'No user found');
 		$roles = $auth->getAuthItems(CAuthItem::TYPE_ROLE);
@@ -98,7 +99,8 @@ class AdminController extends AController
 	 */
 	public function actionCreate()
 	{
-		$model = new User;
+		$user = UserModule::get()->userClass;
+		$model = new $user;
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
@@ -147,8 +149,8 @@ class AdminController extends AController
 		if(isset($_POST['UserChangePassword'])){
 			$cp->attributes=$_POST['UserChangePassword'];
 			if($cp->validate()) {
-				$model->password = $cp->password;
-				$model->cryptPassword();
+				$model->password = $model->cryptPassword($cp->password);
+				$model->activekey = $model->cryptPassword(microtime().$cp->password);
 				$model->save();
 				Yii::app()->user->setFlash('success',UserModule::t("A new password has been saved."));
 			}
@@ -189,7 +191,7 @@ class AdminController extends AController
 		if($this->_model===null)
 		{
 			if(isset($_GET['id']))
-				$this->_model=User::model()->notsafe()->findbyPk($_GET['id']);
+				$this->_model=UserModule::userModel()->notsafe()->findbyPk($_GET['id']);
 			if($this->_model===null)
 				throw new CHttpException(404,'The requested page does not exist.');
 		}

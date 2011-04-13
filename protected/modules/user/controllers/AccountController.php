@@ -64,7 +64,7 @@ class AccountController extends Controller {
 	}
 
 	private function lastVisit() {
-		$lastVisit = User::model()->notsafe()->findByPk(Yii::app()->user->id);
+		$lastVisit = UserModule::userModel()->notsafe()->findByPk(Yii::app()->user->id);
 		$lastVisit->lastvisit = time();
 		$lastVisit->save();
 	}
@@ -155,7 +155,7 @@ class AccountController extends Controller {
 		$email = NData::base64UrlDecode($_GET['e']);
 		$activekey = $_GET['activekey'];
 		if ($email&&$activekey) {
-			$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
+			$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find) && $find->status==1) {
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
 			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
@@ -230,7 +230,7 @@ class AccountController extends Controller {
 			$activekey = ((isset($_GET['activekey']))?$_GET['activekey']:'');
 			if ($email&&$activekey) {
 				$form2 = new UserChangePassword;
-				$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
+				$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
 				if (isset($find) && $this->checkActivationKey($find, $activekey)) {
 					if(isset($_POST['UserChangePassword'])) {
 						$form2->attributes=$_POST['UserChangePassword'];
@@ -253,7 +253,7 @@ class AccountController extends Controller {
 				if(isset($_POST['UserRecoveryForm'])) {
 					$form->attributes=$_POST['UserRecoveryForm'];
 					if($form->validate()) {
-						$user = User::model()->notsafe()->findbyPk($form->user_id);
+						$user = UserModule::userModel()->notsafe()->findbyPk($form->user_id);
 						$activation_url = $this->makeActivationLink($user, '/user/registration/recovery');
 
 						$subject = UserModule::t("You have requested password recovery from {site_name}",array('{site_name}'=>Yii::app()->name));

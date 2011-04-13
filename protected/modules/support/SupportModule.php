@@ -95,7 +95,7 @@ class SupportModule extends NWebModule
 	 * whether to display messages in conversation threads.
 	 * @var boolean
 	 */
-	public $threading = false;
+	public $threading = true;
 	
 	public function init()
 	{

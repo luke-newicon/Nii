@@ -47,7 +47,7 @@
 	.blue .faded, .blue .time {color:#6282c1;font-size:11px;}
 	.popy{border:1px solid #000;background:#909090;box-shadow:0px 0px 10px #333;border-radius:5px;}
 	.popy .inner{box-shadow:0px 0px 0px 1px #ccc inset;border-radius:5px;}
-
+	.threadNumber{background: none repeat scroll 0 0 rgba(82, 82, 82, 0.5); border-radius: 3px 3px 3px 3px;color: white;font-size: 10px;padding: 1px 3px 0;text-shadow: 0 1px 0 #999999;}
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
