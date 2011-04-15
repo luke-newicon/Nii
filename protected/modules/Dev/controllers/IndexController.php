@@ -18,4 +18,8 @@ class IndexController extends Controller
 	public function actionIndex(){
 		
 	}
+
+	public function actionApe(){
+		$this->render('ape');
+	}
 }
