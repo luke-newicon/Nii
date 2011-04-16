@@ -5,8 +5,8 @@
  */
 
 ?>
-<script type="text/javascript" language="javascript" src="../../Clients/JavaScript.js"></script>
-<script type="text/javascript" language="javascript" src="../config.js"></script>
+<script type="text/javascript" language="javascript" src="/ape/JavaScript.js"></script>
+<script type="text/javascript" language="javascript" src="/ape/config.js"></script>
 <div id="wrapper">
 
 		Change Background Color:
