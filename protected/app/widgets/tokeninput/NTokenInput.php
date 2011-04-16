@@ -79,9 +79,10 @@ Class NTokenInput extends CInputWidget
 
 		Yii::app()->clientScript->registerScriptFile($this->assetUrl . '/src/jquery.tokeninput.js');
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input.css');
-		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-facebook.css');
-		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-mac.css');
-		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-nii.css');
+//		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-facebook.css');
+//		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-mac.css');
+		$theme = $this->theme;
+		Yii::app()->clientScript->registerCssFile($this->assetUrl . "/styles/token-input-$theme.css");
 	}
 
 }
