@@ -22,4 +22,31 @@ class IndexController extends Controller
 	public function actionApe(){
 		$this->render('ape');
 	}
+	
+	public function actionTalkToApe($message){
+		$APEserver = 'http://ape.newicon.org:6969/?';
+		$APEPassword = 'testpasswd';
+
+		$cmd = array(array( 
+		  'cmd' => 'inlinepush', 
+		  'params' =>  array( 
+			  'password'  => $APEPassword, 
+			  'raw'       => 'data', 
+			  'channel'   => 'sysmsg', 
+			  //Note: data can't be a string 
+			  'data'      => array( 
+				  'msg' => $message
+			  ) 
+		   ) 
+		)); 
+
+		var_dump($APEserver.rawurlencode(json_encode($cmd)));
+		$data = file_get_contents($APEserver.rawurlencode(json_encode($cmd))); 
+
+		if ($data == 'OK') {
+			echo 'Message sent!';
+		} else {
+			echo 'Error sending message, server response is : <pre>'.$data.'</pre>';
+		}
+	}
 }
