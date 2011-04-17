@@ -156,7 +156,7 @@ class IndexController extends AController
 		$model->attributes = $_POST['SupportComposeMail'];
 		
 		$mail = new Zend_Mail();
-		$md = new NMarkdown;
+
 		$mail->setBodyText(strip_tags($model->message_html));
 		$mail->setBodyHtml($model->message_html);
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
@@ -165,11 +165,10 @@ class IndexController extends AController
 		
 		if(strpos($model->to, ',')){
 			$to = explode(',',$model->to);
-			
 			foreach($to as $t)
-				$mail->addTo(SupportEmail::sendAddress($t));
+				$mail->addTo(SupportEmail::getContact($t));
 		}else{
-			$mail->addTo(SupportEmail::sendAddress($model->to));
+			$mail->addTo(SupportEmail::getContact($model->to));
 		}
 		
 		$mail->setSubject($model->subject);

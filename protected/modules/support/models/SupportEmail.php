@@ -186,7 +186,16 @@ class SupportEmail extends NActiveRecord
 			$c = CrmContact::model()->findByPk($idOrEmail);
 		}else{
 			// assume email text string
-			
+			// ok so if our lookup is any good then
+			// this string should not be any users details
+			// OR an email that currently exists in the system and
+			// is attached to a contact.......
+			// ... so lets add it.
+			$c = new CrmContact;
+			$c->first_name = NMailReader::removeEmailHost($idOrEmail);
+			$c->save();
+			$c->saveEmailAddress($idOrEmail);
+
 		}
 			
 	}
