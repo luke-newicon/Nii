@@ -157,6 +157,7 @@ class IndexController extends AController
 		$mail->setBodyText(strip_tags($model->message_html));
 		$mail->setBodyHtml($model->message_html);
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
+		echo $model->message_html;
 		echo $model->to;
 		if(strpos($model->to, ',')){
 			$to = explode(',',$model->to);
