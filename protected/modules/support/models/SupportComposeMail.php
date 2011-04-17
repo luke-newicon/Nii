@@ -25,7 +25,7 @@ class SupportComposeMail  extends CFormModel
 	
 	public function rules() {
 		return array(
-			array('to, cc, bcc, subject, from, ,essage_html, message_text', 'safe'),
+			array('to, cc, bcc, subject, from, message_html, message_text', 'safe'),
 		);
 	}
 	
