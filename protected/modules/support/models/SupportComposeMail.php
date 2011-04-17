@@ -23,6 +23,12 @@ class SupportComposeMail  extends CFormModel
 	public $message_text;
 	public $bcc;
 	
+	public function rules() {
+		return array(
+			array('to, cc, bcc, subject, from, ,essage_html, message_text', 'safe'),
+		);
+	}
+	
 	public function attributeLabels() {
 		return array(
 			'to'=>'To:',

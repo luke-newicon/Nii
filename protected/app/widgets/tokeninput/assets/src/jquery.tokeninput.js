@@ -322,11 +322,6 @@ $.TokenList = function (input, url_or_data, settings) {
     // Private functions
     //
 	function resize_input(e) {
-//		if(settings.addNewTokens && e.type === "keyup" && e.keyCode === 13){
-//			insert_token(input_val,input_val);
-//			input_box.val("");
-//            return;
-//        }
         if(input_val === (input_val = input_box.val())) {return;}
 
         // Enter new content into resizer and resize input accordingly

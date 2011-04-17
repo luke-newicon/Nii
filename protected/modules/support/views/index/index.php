@@ -16,8 +16,6 @@
 	.leftMainPanel{background-color:#3b4446;}
 	#messageFolders{border-right:1px solid #000;}
 	
-	
-	
 	/** Message List column **/
 	#messageListBox{width:338px;}
 	/** pulls the margin to pull the scroll bar accross */
@@ -68,8 +66,15 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 		'modal'=>true,
 		'width'=>'600',
 		'buttons' => array(
-			'ok' => array(
-				'text' => 'ok'
+			'send' => array(
+				'text' => 'send',
+				'click'=>'js:function(){
+					for (instance in CKEDITOR.instances )
+					  CKEDITOR.instances[instance].updateElement();
+					$.post("'.NHtml::url('/support/index/send').'",$("#mydialog form").serialize(),function(){
+						//$("#mydialog").dialog("close");
+					});
+				}'
 			),
 		),
 		'open'=>'js:function(e,ui){
@@ -90,12 +95,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp; <?php
-				//// the link that may open the dialog
-				echo CHtml::link('open dialog', '#', array(
-					'onclick' => '$("#mydialog").dialog("open"); return false;',
-				));
-				?>
+				&nbsp; 
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
@@ -106,7 +106,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;<a href="#" id="newMsg" class="btn btnN">new msg</a><a href="#" id="newMsg2" class="btn btnN">new msg2</a>
+				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a><a href="#" id="newMsg" class="btn btnN">new msg</a><a href="#" id="newMsg2" class="btn btnN">new msg2</a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
@@ -136,7 +136,8 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	</div>
 </div>
 
-
+<script type="text/javascript" language="javascript" src="<?php echo NHtml::url('/'); ?>/ape/JavaScript.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo NHtml::url('/'); ?>/ape/config.js"></script>
 <script>
 
 $(function(){
@@ -430,6 +431,50 @@ $(function(){
 	});
 	
 	
+	
+	
+	
+	
+	//    _     ___   __
+	//   / \   |   | |
+	//  /___\  |___| |--
+	// /     \ |     |__
+	// -------------------
+	
+//	var client = new APE.Client();
+// 
+//	//1) Load APE Core
+//	client.load();
+//
+//	//2) Intercept 'load' event. This event is fired when the Core is loaded and ready to connect to APE Server
+//	client.addEvent('load', function() {
+//		//3) Call core start function to connect to APE Server, and prompt the user for a nickname
+//		client.core.start({"name": prompt('Your name?')});
+//		//1) join 'testChannel'
+//
+//
+//	});
+//
+//	//4) Listen to the ready event to know when your client is connected
+//	client.addEvent('ready', function() {
+//
+//		 console.log('Your client is now connected');
+//		//1) join 'testChannel'
+//		client.core.join('sysmsg');
+//
+//		//2) Intercept multiPipeCreate event
+//		client.addEvent('multiPipeCreate', function(pipe, options) {
+//		//3) Send the message on the pipe
+//		pipe.send('Hello world!');
+//			console.log('Sending Hello world');
+//		});
+//
+//		//4) Intercept receipt of the new message.
+//		client.onRaw('data', function(raw, pipe) {
+//			console.log('Receiving : ' + unescape(raw.data.msg));
+//		});
+//	});
+	
 });
 
 
@@ -447,6 +492,8 @@ $(function(){
  */
 (function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
 </script>
+
+
 
 
 <!--

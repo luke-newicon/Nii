@@ -1,45 +1,55 @@
 <?php
 /* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Displays the compose email message form
  */
-
+$form=$this->beginWidget('CActiveForm', array(
+	'id'=>'compose-email',
+	'enableAjaxValidation'=>false,
+));
 ?>
-
+<form>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<div id="ccMore" class="unit" style="width:20px;" onclick="$('.ccFields').toggle();">></div>
-	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
-	<div class="lastUnit">
+	<div id="ccMore" class="unit" style="width:20px;" ><a onclick="$('.ccFields').toggle();return false;" href="#">&gt;</a></div>
+	<div class="unit txtR prs" style="width:35px;">
+		<?php echo CHtml::activeLabel($model, 'to', array('class'=>'faded')); ?>
+	</div>
+	<div class="unit">
 		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
 			'url'=>'/support/index/contacts',
-			'options'=>array('hintText'=>'')
+			'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 		)); ?>
 	</div>
 </div>
 <div class="ccFields" style="display:none;">
 	<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-		<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'mll unit size1of15 faded','style'=>'width:30px;')); ?>
-		<div class="unit lastUnit">
+		<div class="unit txtR prs" style="width:55px;">
+			<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'mll faded')); ?>
+		</div>
+		<div class="unit">
 			<?php echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
 		</div>
 	</div>
 	<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-		<?php echo CHtml::activeLabel($model, 'bcc', array('class'=>'mll unit size1of15 faded','style'=>'width:30px;')); ?>
-		<div class="unit lastUnit">
+		<div class="unit txtR prs" style="width:55px;">
+			<?php echo CHtml::activeLabel($model, 'bcc', array('class'=>' faded')); ?>
+		</div>
+		<div class="unit">
 			<?php echo CHtml::activeTextField($model, 'bcc',array('class'=>'input')); ?>
 		</div>
 	</div>
 </div>
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'subject', array('class'=>'unit size1of15 faded','style'=>'width:60px;')); ?>
-	<div class="unit lastUnit">
+	<div class="unit txtR prs" style="width:55px;">
+		<?php echo CHtml::activeLabel($model, 'subject', array('class'=>'faded')); ?>
+	</div>
+	<div class="lastUnit" style="padding-top:1px;">
 		<?php echo CHtml::activeTextField($model, 'subject',array('class'=>'input')); ?>
 	</div>
 </div>
 <!--<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
-	<?php echo CHtml::activeLabel($model, 'from', array('class'=>'unit size1of15 faded','style'=>'width:60px;')); ?>
+	<?php echo CHtml::activeLabel($model, 'from', array('class'=>'unit size1of15 faded')); ?>
 	<div class="unit lastUnit">
 		<?php echo CHtml::activeTextField($model, 'from',array('class'=>'input')); ?>
 	</div>
@@ -94,3 +104,4 @@
 	
 	?>
 </div>
+<?php $this->endWidget(); ?>

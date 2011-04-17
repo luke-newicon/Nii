@@ -147,7 +147,28 @@ class IndexController extends AController
 	}
 
 
-	
+	public function actionSend(){
+		// lets hack this in for now...
+		$model = new SupportComposeMail();
+		$model->attributes = $_POST['SupportComposeMail'];
+		
+		$mail = new Zend_Mail();
+		$md = new NMarkdown;
+		$mail->setBodyText(strip_tags($model->message_html));
+		$mail->setBodyHtml($model->message_html);
+		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
+		echo $model->to;
+		if(strpos($model->to, ',')){
+			$to = explode(',',$model->to);
+			foreach($to as $t)
+				$mail->addTo($t);
+		}else{
+			$mail->addTo($model->to);
+		}
+		
+		$mail->setSubject($model->subject);
+		$mail->send();
+	}
 
 }
 
