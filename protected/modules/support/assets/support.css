@@ -7,4 +7,4 @@
 */
 #messageList{background:url('images/message-border.png') repeat top left;}
 #messageList .listItem.selTop{border-bottom:1px solid #aaa;}
-#messageList .listItem.sel{background:url('images/msg-listitem-sel.png') repeat-x top left;border-bottom:1px solid #b7babb}
+#messageList .listItem.sel{background:url('images/msg-list-item-sel.png') repeat-x top left;border-bottom:1px solid #b7babb}

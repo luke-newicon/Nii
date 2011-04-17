@@ -30,29 +30,29 @@
 			Column1
 		</div>
 		<div class="cbd">
-			<div class="thing">
-				a
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Bob Obrien</div>
 			</div>
-			<div class="thing">
-				b
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Bill Obrien</div>
 			</div>
-			<div class="thing">
-				c
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Barry Obrien</div>
 			</div>
-			<div class="thing">
-				d
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Barney Obrien</div>
 			</div>
-			<div class="thing">
-				e
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Billy Obrien</div>
 			</div>
-			<div class="thing">
-				f
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Boris Obrien</div>
 			</div>
-			<div class="thing">
-				g
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Ben Obrien</div>
 			</div>
-			<div class="thing">
-				h
+			<div class="thing line">
+				<div class="unit prs"><?php $this->widget('crm.components.Gravatar',array('size'=>25,'email'=>'steve@newicon.net')); ?></div><div class="lastUnit"> Bauldric Obrien</div>
 			</div>
 		</div>
 	</div>

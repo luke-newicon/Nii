@@ -176,6 +176,19 @@ class SupportEmail extends NActiveRecord
 		return $f['name'];
 	}
 	
-	
+	/**
+	 * gets the correct contact based on either an id or an email
+	 * @param type $idOrEmail 
+	 */
+	public static function getContact($idOrEmail){
+		if(is_numeric($idOrEmail)){
+			// assume id
+			$c = CrmContact::model()->findByPk($idOrEmail);
+		}else{
+			// assume email text string
+			
+		}
+			
+	}
 	
 }

@@ -125,8 +125,11 @@ class IndexController extends AController
 	public function actionContacts(){
 		$q = urldecode($_GET['q']);
 		$data = array();
-		foreach(CrmContact::model()->nameLike($q)->findAll() as $c){
-			$data[] = array('id'=>$c->id, 'name'=>$c->name());
+		foreach(CrmContact::model()->nameLike($q)->findAll(array('limit'=>20)) as $c){
+			// only add people to the dropdown that have email addresses
+			//if($email = $c->getPrimaryEmail()){
+				$data[] = array('id'=>$c->id, 'name'=>$c->name());
+			//}	
 		}
 		echo json_encode($data);
 	}
@@ -159,12 +162,14 @@ class IndexController extends AController
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
 		echo $model->message_html;
 		echo $model->to;
+		
 		if(strpos($model->to, ',')){
 			$to = explode(',',$model->to);
+			
 			foreach($to as $t)
-				$mail->addTo($t);
+				$mail->addTo(SupportEmail::sendAddress($t));
 		}else{
-			$mail->addTo($model->to);
+			$mail->addTo(SupportEmail::sendAddress($model->to));
 		}
 		
 		$mail->setSubject($model->subject);

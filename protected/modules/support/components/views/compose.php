@@ -28,7 +28,13 @@ $form=$this->beginWidget('CActiveForm', array(
 			<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'mll faded')); ?>
 		</div>
 		<div class="unit">
-			<?php echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
+			<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
+				'model'=>$model,
+				'attribute'=>'cc',
+				'url'=>'/support/index/contacts',
+				'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
+			)); ?>
+			<?php //echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
 		</div>
 	</div>
 	<div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
@@ -36,7 +42,13 @@ $form=$this->beginWidget('CActiveForm', array(
 			<?php echo CHtml::activeLabel($model, 'bcc', array('class'=>' faded')); ?>
 		</div>
 		<div class="unit">
-			<?php echo CHtml::activeTextField($model, 'bcc',array('class'=>'input')); ?>
+			<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
+				'model'=>$model,
+				'attribute'=>'bcc',
+				'url'=>'/support/index/contacts',
+				'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
+			)); ?>
+			<?php // echo CHtml::activeTextField($model, 'bcc',array('class'=>'input')); ?>
 		</div>
 	</div>
 </div>

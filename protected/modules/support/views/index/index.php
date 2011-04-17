@@ -106,7 +106,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a><a href="#" id="newMsg" class="btn btnN">new msg</a><a href="#" id="newMsg2" class="btn btnN">new msg2</a>
+				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a><a href="#" id="newMsg" class="btn btnN">m1</a><a href="#" id="newMsg2" class="btn btnN">m2</a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">

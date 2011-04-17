@@ -377,7 +377,6 @@ $.TokenList = function (input, url_or_data, settings) {
 			// not in the list but we want to add it
 			//insert_token(input_val,input_val);
 			// create correct data variable
-			alert(input_val);
 			li_data = {'id':input_val,'name':input_val}
 		} else {
 			li_data = $.data(item.get(0), "tokeninput");
