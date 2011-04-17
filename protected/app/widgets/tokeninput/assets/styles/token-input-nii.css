@@ -1,7 +1,6 @@
 /* Example tokeninput style #2: nii style */
 ul.token-input-list-nii {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;  
     height: 1%;
     width: 400px;
     cursor: text;
@@ -13,22 +12,23 @@ ul.token-input-list-nii {
     padding: 0;
     list-style-type: none;
     clear: left;
+	margin-bottom:-10px;
 }
 
 ul.token-input-list-nii li input {
     border: 0;
     width: 100px;
-    padding: 3px 8px;
+    padding: 0px;
     background-color: transparent;
     margin: 2px 0;
     -webkit-appearance: caret;
 }
 
-li.token-input-token-nii {
+.token-input-token-nii {
     overflow: hidden; 
     height: auto !important; 
     height: 15px;
-    margin: 3px;
+    margin: 0px 5px 5px 0px;
     padding: 1px 3px;
     background-color: #eff2f7;
     color: #000;
@@ -62,7 +62,7 @@ li.token-input-selected-token-nii {
 }
 
 li.token-input-input-token-nii {
-    float: left;
+	float:left;
     margin: 0;
     padding: 0;
     list-style-type: none;

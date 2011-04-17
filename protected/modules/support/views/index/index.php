@@ -1,4 +1,4 @@
-<?php $msgPreviewHeight=75; ?>
+<?php $msgPreviewHeight=86; ?>
 <?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
 <style>
 	.mod.toolbar {border-top:1px solid #ccc;}
@@ -106,26 +106,31 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;
+				&nbsp;<a href="#" id="newMsg" class="btn btnN">new msg</a><a href="#" id="newMsg2" class="btn btnN">new msg2</a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
 			<?php //messageList will be as high as total number of messages  ?>
 			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;position:relative;">
-				<?php //$this->actionLoadMessageList(0); ?>
+				<div id="newMessages"></div>
+			<?php //$this->actionLoadMessageList(0); ?>
 			</div>
 		</div>
 	</div>
 	<div id="emailBox" class="lastUnit ui-layout-center">
 		<?php $this->renderPartial('_message-toolbar'); ?>
 		<div id="email">
-			<div id="summaryDetails">
-				<!-- Display the email summary information from, to, subject etc -->
+			<div id="reply">
 			</div>
-			<div id="message">
-				<iframe style="width:100%;height:100%;border:0px none;margin:0px;padding:0px;" width="100%" frameborder="0" scrolling="no"
-						src="<?php echo NHtml::url('/support/index/emptyIframe'); ?>">
-				</iframe>
+			<div id="emailView">
+				<div id="summaryDetails">
+					<!-- Display the email summary information from, to, subject etc -->
+				</div>
+				<div id="message">
+					<iframe style="width:100%;height:100%;border:0px none;margin:0px;padding:0px;" width="100%" frameborder="0" scrolling="no"
+							src="<?php echo NHtml::url('/support/index/emptyIframe'); ?>">
+					</iframe>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -139,7 +144,6 @@ $(function(){
 	$(window).stop().resize(function(){
 		resizer();
 	});
-	
 	
 	$.ui.plugin.add("resizable", "iframeFix", { 
 		start: function(event, ui) { 
@@ -194,7 +198,7 @@ $(function(){
 				timer = null;
 				$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
 				scrollStop(scrollPositionY);
-			}, 300);
+			}, 500);
 				
 		})
 		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
@@ -254,14 +258,15 @@ $(function(){
 	 * load selected email message
 	 */
 	$('#messageList').delegate('.listItem','click',function(){
-		$(this).parent().find('.listItem').removeClass('sel');
-		$(this).parent().find('.listItem').removeClass('selTop');
+		$('#messageList').find('.listItem').removeClass('sel').removeClass('selTop');
+		$('#emailView').show();
+		$('#reply').hide();
 		$(this).addClass('sel');
 		$(this).prev('.listItem').addClass('selTop');
 		var id = $(this).data('id');
 		// create string for array key to prevent javascript padding array to key index
 		var key = 'ID'+id;
-
+		
 		if(key in msgsLoaded){
 			// message has been cached into the msgsLoaded variable so lets just display that.
 			inserMessage(msgsLoaded[key]);
@@ -271,6 +276,7 @@ $(function(){
 			$.getJSON('<?php echo SupportModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
 				msgsLoaded[key] = json;
 				inserMessage(json);
+				resizer();
 			});
 		}
 	});
@@ -326,6 +332,11 @@ $(function(){
 			url:'<?php echo SupportModule::getLoadMessageListUrl(); ?>/'+batch,
 			success:function($msgs){
 				$('#messageList').append($msgs);
+				//now ajust position to take into account any new emails
+				var $msgList = $('#messageList .mesageContainer:last');
+				var newMsgHeight = $('#newMessages .listItem').length*<?php echo $msgPreviewHeight; ?>;
+				var newTop = parseFloat($msgList.css('top'))+newMsgHeight;
+				$msgList.css('top',newTop+'px');
 				$('.popSpinner').hide();
 			}
 		});
@@ -372,6 +383,53 @@ $(function(){
 			$('#emailHeaderDetail').hide();
 		}
 	});
+	
+	
+	
+	///// tests
+	$('#newMsg').click(function(){
+		// recieved a new message from server push
+		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">DMG</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">End-to-End Control of Campaign Results - DMG connect April 2011<br></div><div class="body faded">Use this link to view a web version. To unsubscribe from this mailing list click here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
+		// make room for new msg.
+		addNewMessage(email);
+
+		
+	});
+	
+	$('#newMsg2').click(function(){
+		// recieved a new message from server push
+		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">Steve OB1</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">Important subject!<br></div><div class="body faded">fgg reg  lorum iposu,. ck here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
+		// make room for new msg.
+		
+		addNewMessage(email);
+
+		
+	});
+	
+	var addNewMessage = function(msg){
+		var $ml = $('#messageList');
+		var $nm = $ml.find('#newMessages');
+		$(msg).prependTo($nm).css('top','-86px');
+		$nm.find('.listItem').css('position','absolute').animate({top:'+=<?php echo $msgPreviewHeight; ?>'}, 500);
+		$ml.find('.mesageContainer').animate({top:'+=<?php echo $msgPreviewHeight; ?>'}, 500, function() {
+			$ml.height($ml.height()+<?php echo $msgPreviewHeight; ?>);
+		});
+	}
+	
+	/**
+	 * buttons
+	 */
+	$('.reply').click(function(){
+		$('#reply').show();
+		var id = $('#messageList .sel').data('id');
+		$('#emailView').hide();
+		$('#reply').load('<?php echo NHtml::url('/support/index/reply/emailId') ?>/'+id, function(){
+			$('#composeMail').removeAttr('style');
+			//resizer();
+		});
+	});
+	
+	
 });
 
 

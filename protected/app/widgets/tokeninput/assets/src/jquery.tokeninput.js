@@ -24,6 +24,7 @@ var DEFAULT_SETTINGS = {
     queryParam: "q",
     tokenDelimiter: ",",
     preventDuplicates: false,
+	addNewTokens: true,
     prePopulate: null,
     animateDropdown: true,
     onResult: null,
@@ -214,9 +215,9 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                  if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item));
-                    return false;
+                  if(selected_dropdown_item || settings.addNewTokens) {
+						add_token($(selected_dropdown_item));
+						return false;
                   }
                   break;
 
@@ -320,8 +321,12 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Private functions
     //
-
-    function resize_input() {
+	function resize_input(e) {
+//		if(settings.addNewTokens && e.type === "keyup" && e.keyCode === 13){
+//			insert_token(input_val,input_val);
+//			input_box.val("");
+//            return;
+//        }
         if(input_val === (input_val = input_box.val())) {return;}
 
         // Enter new content into resizer and resize input accordingly
@@ -372,7 +377,15 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-        var li_data = $.data(item.get(0), "tokeninput");
+		var li_data;
+		if(!item.length && settings.addNewTokens){
+			// not in the list but we want to add it
+			//insert_token(input_val,input_val);
+			// create correct data variable
+			li_data = {'id':input_val,'name':input_val}
+		} else {
+			li_data = $.data(item.get(0), "tokeninput");
+		}
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates

@@ -77,7 +77,7 @@ class SupportModule extends NWebModule
 	 * run periodically.
 	 * @property boolean
 	 */
-	public $autoCron = true;
+	public $autoCron = false;
 	
 	/**
 	 * The text to prepend the subject ticket id with
@@ -95,7 +95,7 @@ class SupportModule extends NWebModule
 	 * whether to display messages in conversation threads.
 	 * @var boolean
 	 */
-	public $threading = true;
+	public $threading = false;
 	
 	public function init()
 	{

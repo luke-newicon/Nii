@@ -3,11 +3,13 @@
  * Displays the list of of messages
  */
 ?>
+<?php $dataPos = ($offset*$limit); ?>
+<div class="mesageContainer" data-offset="<?php echo $offset; ?>" style="position:absolute;top:<?php echo ($dataPos*86); ?>px;">
 <?php foreach($emails as $i => $email): ?>
 	<?php $dataPos = $i + ($offset*$limit); ?>
-	<?php $bg = ($i == ($limit-1)) ? 'background-color:#ff0000;':''; ?>
+	<?php //$bg = ($i == ($limit-1)) ? 'background-color:#ff0000;':''; ?>
 	
-	<div data-id="<?php echo $email->id(); ?>" data-position="<?php echo $dataPos; ?>" style="<?php echo $bg; ?>position:absolute;top:<?php echo ($dataPos*86); ?>px;" class="line listItem">
+	<div data-id="<?php echo $email->id(); ?>" data-position="<?php echo $dataPos; ?>" style="" class="line listItem">
 		<div class="unit flags">
 			<?php $icon = ($email->opened) ?'':'icon fam-email'; ?>
 			<span data-role="flag-opened" class="<?php echo $icon; ?>">&nbsp;</span>
@@ -30,3 +32,4 @@
 		</div>
 	</div>
 <?php endforeach; ?>
+</div>

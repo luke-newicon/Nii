@@ -9,11 +9,12 @@
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
 	<div id="ccMore" class="unit" style="width:20px;" onclick="$('.ccFields').toggle();">></div>
 	<?php echo CHtml::activeLabel($model, 'to', array('class'=>'unit size1of15 faded','style'=>'width:30px;')); ?>
-	<div class="unit lastUnit">
+	<div class="lastUnit">
 		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
-			'url'=>'/support/index/contacts'
+			'url'=>'/support/index/contacts',
+			'options'=>array('hintText'=>'')
 		)); ?>
 	</div>
 </div>
