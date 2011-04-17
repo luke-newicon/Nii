@@ -72,11 +72,9 @@ class User extends NActiveRecord
 	 */
 	public function relations()
 	{
-		$relations = array(
+		return array(
 			'contact'=>array(self::HAS_ONE, 'CrmContact', 'user_id'),
 		);
-		if (isset(Yii::app()->getModule('user')->relations)) $relations = array_merge($relations,Yii::app()->getModule('user')->relations);
-		return $relations;
 	}
 
 	/**
@@ -158,14 +156,18 @@ class User extends NActiveRecord
 		return ($this->password == crypt($checkPassword, $salt));
 	}
 
-	public function cryptPassword(){
-		$this->password  = crypt($this->password);
-		$this->activekey = crypt(microtime().$this->password);
+
+
+	public function cryptPassword($password){
+		return crypt($password);
+		//$this->password  = crypt($this->password);
+		//$this->activekey = crypt(microtime().$this->password);
 	}
 
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
-			$this->cryptPassword();
+			$this->password = $this->cryptPassword($this->password);
+			$this->activekey = $this->cryptPassword(microtime().$this->password);
 		}
 		$this->createtime=time();
 		$this->lastvisit=time();
@@ -188,7 +190,7 @@ class User extends NActiveRecord
 	}
 
 	public static function getCurrentUser(){
-		return User::model()->findByPk(Yii::app()->user->getId());
+		return UserModule::userModel()->findByPk(Yii::app()->user->getId());
 	}
 
 

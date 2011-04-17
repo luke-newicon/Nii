@@ -19,6 +19,8 @@
  * @property integer $bounced
  * @property string $created
  * @property string $date
+ * @property string $references
+ * @property string $replyto
  */
 class SupportEmail extends NActiveRecord
 {
@@ -163,5 +165,30 @@ class SupportEmail extends NActiveRecord
 		return NMailReader::getRecipients($this->to);
 	}
 	
+	/**
+	 * Displays a nicely formatted from name, if no from name present falls 
+	 * back to a formatted email address. Will remove the host information from email adrress
+	 * so steve@newicon.net would be displayed as steve.
+	 * @return string 
+	 */
+	public function getFrom(){
+		$f = NMailReader::splitRecipient($this->from);
+		return $f['name'];
+	}
+	
+	/**
+	 * gets the correct contact based on either an id or an email
+	 * @param type $idOrEmail 
+	 */
+	public static function getContact($idOrEmail){
+		if(is_numeric($idOrEmail)){
+			// assume id
+			$c = CrmContact::model()->findByPk($idOrEmail);
+		}else{
+			// assume email text string
+			
+		}
+			
+	}
 	
 }

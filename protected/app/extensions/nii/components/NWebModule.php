@@ -18,7 +18,13 @@ class NWebModule extends CWebModule
     public $defaultController = 'index';
 	
 	public static $items = array();
-
+	
+	/**
+	 * stores the module.assets url
+	 * @var type 
+	 */
+	private $_assetsUrl;
+	
 	/**
 	 *
 	 * @param $label string, required, specifies the menu item label. When {@link encodeLabel} is true, the label
@@ -41,5 +47,17 @@ class NWebModule extends CWebModule
 		self::$items = array_merge(self::$items, array($arr));
 	}
 
+	
+	/**
+	 * Will publish a modules asset folder and return the url
+	 * the assets folder should be in the root level of the module e.g. modules/user/asssets
+	 * @return string the base URL to modules assets folder
+	 */
+	public function getAssetsUrl()
+	{
+		if($this->_assetsUrl===null)
+			$this->_assetsUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias($this->getName().'.assets'));
+		return $this->_assetsUrl;
+	}
 
 }

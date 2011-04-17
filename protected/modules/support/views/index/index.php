@@ -1,6 +1,5 @@
-<?php $msgPreviewHeight=75; ?>
+<?php $msgPreviewHeight=86; ?>
 <?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
-<?php echo 'total messages ' . $total; ?>
 <style>
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;
@@ -16,8 +15,6 @@
 	#messageFoldersBox{width:60px;background-color:#3b4446;}
 	.leftMainPanel{background-color:#3b4446;}
 	#messageFolders{border-right:1px solid #000;}
-	
-	
 	
 	/** Message List column **/
 	#messageListBox{width:338px;}
@@ -48,15 +45,16 @@
 	.blue .faded, .blue .time {color:#6282c1;font-size:11px;}
 	.popy{border:1px solid #000;background:#909090;box-shadow:0px 0px 10px #333;border-radius:5px;}
 	.popy .inner{box-shadow:0px 0px 0px 1px #ccc inset;border-radius:5px;}
-
+	.threadNumber{background: none repeat scroll 0 0 rgba(82, 82, 82, 0.5); -webkit-border-radius:3px;-moz-border-radius:3px;border-radius: 3px;color: white;font-size: 10px;padding: 1px 3px;text-shadow: 0 1px 0 #888;}
 </style>
 <script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
+<div style="display:none;">
 <?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
-
+</div>
 
 <?php
 $this->widget('zii.widgets.jui.CJuiDialog', array(
@@ -66,10 +64,17 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 		'title' => 'Dialog box 1',
 		'autoOpen' => false,
 		'modal'=>true,
-		'width'=>'600px',
+		'width'=>'600',
 		'buttons' => array(
-			'ok' => array(
-				'text' => 'ok'
+			'send' => array(
+				'text' => 'send',
+				'click'=>'js:function(){
+					for (instance in CKEDITOR.instances )
+					  CKEDITOR.instances[instance].updateElement();
+					$.post("'.NHtml::url('/support/index/send').'",$("#mydialog form").serialize(),function(){
+						//$("#mydialog").dialog("close");
+					});
+				}'
 			),
 		),
 		'open'=>'js:function(e,ui){
@@ -83,11 +88,6 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	),
 ));
 
-
-// the link that may open the dialog
-echo CHtml::link('open dialog', '#', array(
-	'onclick' => '$("#mydialog").dialog("open"); return false;',
-));
 ?>
 
 
@@ -95,7 +95,7 @@ echo CHtml::link('open dialog', '#', array(
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;
+				&nbsp; 
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
@@ -106,32 +106,38 @@ echo CHtml::link('open dialog', '#', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;
+				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a><a href="#" id="newMsg" class="btn btnN">m1</a><a href="#" id="newMsg2" class="btn btnN">m2</a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
 			<?php //messageList will be as high as total number of messages  ?>
 			<div id="messageList" style="height:<?php echo $total*$msgPreviewHeight; ?>px;position:relative;">
-				<?php //$this->actionLoadMessageList(0); ?>
+				<div id="newMessages"></div>
+			<?php //$this->actionLoadMessageList(0); ?>
 			</div>
 		</div>
 	</div>
 	<div id="emailBox" class="lastUnit ui-layout-center">
 		<?php $this->renderPartial('_message-toolbar'); ?>
 		<div id="email">
-			<div id="summaryDetails">
-				<!-- Display the email summary information from, to, subject etc -->
+			<div id="reply">
 			</div>
-			<div id="message">
-				<iframe style="width:100%;height:100%;border:0px none;margin:0px;padding:0px;" width="100%" frameborder="0" scrolling="no"
-						src="<?php echo NHtml::url('/support/index/emptyIframe'); ?>">
-				</iframe>
+			<div id="emailView">
+				<div id="summaryDetails">
+					<!-- Display the email summary information from, to, subject etc -->
+				</div>
+				<div id="message">
+					<iframe style="width:100%;height:100%;border:0px none;margin:0px;padding:0px;" width="100%" frameborder="0" scrolling="no"
+							src="<?php echo NHtml::url('/support/index/emptyIframe'); ?>">
+					</iframe>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-
+<script type="text/javascript" language="javascript" src="<?php echo NHtml::url('/'); ?>/ape/JavaScript.js"></script>
+<script type="text/javascript" language="javascript" src="<?php echo NHtml::url('/'); ?>/ape/config.js"></script>
 <script>
 
 $(function(){
@@ -139,7 +145,6 @@ $(function(){
 	$(window).stop().resize(function(){
 		resizer();
 	});
-	
 	
 	$.ui.plugin.add("resizable", "iframeFix", { 
 		start: function(event, ui) { 
@@ -194,7 +199,7 @@ $(function(){
 				timer = null;
 				$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
 				scrollStop(scrollPositionY);
-			}, 300);
+			}, 500);
 				
 		})
 		.bind('jsp-arrow-change', function(event, isAtTop, isAtBottom, isAtLeft, isAtRight){
@@ -254,23 +259,25 @@ $(function(){
 	 * load selected email message
 	 */
 	$('#messageList').delegate('.listItem','click',function(){
-		$(this).parent().find('.listItem').removeClass('sel');
-		$(this).parent().find('.listItem').removeClass('selTop');
+		$('#messageList').find('.listItem').removeClass('sel').removeClass('selTop');
+		$('#emailView').show();
+		$('#reply').hide();
 		$(this).addClass('sel');
 		$(this).prev('.listItem').addClass('selTop');
-		var id = $(this).attr('id');
+		var id = $(this).data('id');
 		// create string for array key to prevent javascript padding array to key index
 		var key = 'ID'+id;
-
+		
 		if(key in msgsLoaded){
 			// message has been cached into the msgsLoaded variable so lets just display that.
 			inserMessage(msgsLoaded[key]);
 		}else{
 			$('.popSpinner').position({my:'center',at:'center',of:$email}).show();
 			// html not in cache so ajax it in.
-			$.getJSON('<?php echo NHtml::url('/support/index/message') ?>/id/'+id, function(json){
+			$.getJSON('<?php echo SupportModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
 				msgsLoaded[key] = json;
 				inserMessage(json);
+				resizer();
 			});
 		}
 	});
@@ -323,9 +330,14 @@ $(function(){
 	var loadMessageBatch = function(batch){
 		$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
 		$.ajax({
-			url:'<?php echo NHtml::url('/support/index/loadMessageList/offset'); ?>/'+batch,
+			url:'<?php echo SupportModule::getLoadMessageListUrl(); ?>/'+batch,
 			success:function($msgs){
 				$('#messageList').append($msgs);
+				//now ajust position to take into account any new emails
+				var $msgList = $('#messageList .mesageContainer:last');
+				var newMsgHeight = $('#newMessages .listItem').length*<?php echo $msgPreviewHeight; ?>;
+				var newTop = parseFloat($msgList.css('top'))+newMsgHeight;
+				$msgList.css('top',newTop+'px');
 				$('.popSpinner').hide();
 			}
 		});
@@ -372,91 +384,101 @@ $(function(){
 			$('#emailHeaderDetail').hide();
 		}
 	});
+	
+	
+	
+	///// tests
+	$('#newMsg').click(function(){
+		// recieved a new message from server push
+		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">DMG</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">End-to-End Control of Campaign Results - DMG connect April 2011<br></div><div class="body faded">Use this link to view a web version. To unsubscribe from this mailing list click here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
+		// make room for new msg.
+		addNewMessage(email);
+
+		
+	});
+	
+	$('#newMsg2').click(function(){
+		// recieved a new message from server push
+		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">Steve OB1</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">Important subject!<br></div><div class="body faded">fgg reg  lorum iposu,. ck here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
+		// make room for new msg.
+		
+		addNewMessage(email);
+
+		
+	});
+	
+	var addNewMessage = function(msg){
+		var $ml = $('#messageList');
+		var $nm = $ml.find('#newMessages');
+		$(msg).prependTo($nm).css('top','-86px');
+		$nm.find('.listItem').css('position','absolute').animate({top:'+=<?php echo $msgPreviewHeight; ?>'}, 500);
+		$ml.find('.mesageContainer').animate({top:'+=<?php echo $msgPreviewHeight; ?>'}, 500, function() {
+			$ml.height($ml.height()+<?php echo $msgPreviewHeight; ?>);
+		});
+	}
+	
+	/**
+	 * buttons
+	 */
+	$('.reply').click(function(){
+		$('#reply').show();
+		var id = $('#messageList .sel').data('id');
+		$('#emailView').hide();
+		$('#reply').load('<?php echo NHtml::url('/support/index/reply/emailId') ?>/'+id, function(){
+			$('#composeMail').removeAttr('style');
+			//resizer();
+		});
+	});
+	
+	
+	
+	
+	
+	
+	//    _     ___   __
+	//   / \   |   | |
+	//  /___\  |___| |--
+	// /     \ |     |__
+	// -------------------
+	
+//	var client = new APE.Client();
+// 
+//	//1) Load APE Core
+//	client.load();
+//
+//	//2) Intercept 'load' event. This event is fired when the Core is loaded and ready to connect to APE Server
+//	client.addEvent('load', function() {
+//		//3) Call core start function to connect to APE Server, and prompt the user for a nickname
+//		client.core.start({"name": prompt('Your name?')});
+//		//1) join 'testChannel'
+//
+//
+//	});
+//
+//	//4) Listen to the ready event to know when your client is connected
+//	client.addEvent('ready', function() {
+//
+//		 console.log('Your client is now connected');
+//		//1) join 'testChannel'
+//		client.core.join('sysmsg');
+//
+//		//2) Intercept multiPipeCreate event
+//		client.addEvent('multiPipeCreate', function(pipe, options) {
+//		//3) Send the message on the pipe
+//		pipe.send('Hello world!');
+//			console.log('Sending Hello world');
+//		});
+//
+//		//4) Intercept receipt of the new message.
+//		client.onRaw('data', function(raw, pipe) {
+//			console.log('Receiving : ' + unescape(raw.data.msg));
+//		});
+//	});
+	
 });
 
 
 
-
-
-//
-//
-//
-//
-//
-//
-//
-//
-//////////////////////////////////////////////////////////////
-/////////////// libraries to include /////////////////////////
-//////////////////////////////////////////////////////////////
-//
-//
-//
-//(function(){
-//
-//    var special = jQuery.event.special,
-//        uid1 = 'D' + (+new Date()),
-//        uid2 = 'D' + (+new Date() + 1);
-//
-//    special.scrollstart = {
-//        setup: function() {
-//
-//            var timer,
-//                handler =  function(evt) {
-//
-//                    var _self = this,
-//                        _args = arguments;
-//
-//                    if (timer) {
-//                        clearTimeout(timer);
-//                    } else {
-//                        evt.type = 'scrollstart';
-//                        jQuery.event.handle.apply(_self, _args);
-//                    }
-//
-//                    timer = setTimeout( function(){
-//                        timer = null;
-//                    }, special.scrollstop.latency);
-//
-//                };
-//
-//            jQuery(this).bind('scroll', handler).data(uid1, handler);
-//
-//        },
-//        teardown: function(){
-//            jQuery(this).unbind( 'scroll', jQuery(this).data(uid1) );
-//        }
-//    };
-//
-//    special.scrollstop = {
-//        latency: 300,
-//        setup: function() {
-//
-//            var timer,
-//            handler = function(evt) {
-//				var _self = this,
-//                _args = arguments;
-//
-//                if (timer) {
-//					clearTimeout(timer);
-//                }
-//
-//                timer = setTimeout( function(){
-//	                timer = null;
-//					evt.type = 'scrollstop';
-//	                jQuery.event.handle.apply(_self, _args);
-//                }, special.scrollstop.latency);
-//			};
-//
-//            jQuery(this).bind('scroll', handler).data(uid2, handler);
-//
-//        },
-//        teardown: function() {
-//            jQuery(this).unbind( 'scroll', jQuery(this).data(uid2) );
-//        }
-//    };
-//
-//})();
 
 /*
  * Used to determine border pixel sizes for resizing panes
@@ -470,6 +492,8 @@ $(function(){
  */
 (function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
 </script>
+
+
 
 
 <!--

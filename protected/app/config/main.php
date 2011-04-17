@@ -49,6 +49,9 @@ return array(
 		'user',
 		'project',
 		'hosting',
+		'dev'=>array(
+			'modules'=>array('kanban')
+		),
 	),
 
 	// application components
@@ -103,12 +106,28 @@ return array(
 			// use 'site/error' action to display errors
             'errorAction'=>'site/error',
         ),
+		'image'=>array(
+          'class'=>'ext.nii.components.NImage',
+            // GD or ImageMagick
+            'driver'=>'GD',
+            // ImageMagick setup path
+            'params'=>array('directory'=>'/Applications/XAMPP/xamppfiles/bin'),
+			// An array of different sizes which can be reffered to throughout the program
+			'thumbs'=>array(
+				'grid'=>array('x'=>30,'y'=>30),
+				'tiny'=>array('x'=>40,'y'=>40),
+				'small'=>array('x'=>200,'y'=>200),
+				'medium'=>array('x'=>900,'y'=>900),
+			),
+			'notFoundImage'=>'NoPhoto.png'
+        ),
 
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
+					'categories'=>'error'
 				),
 				array(
 					'class'=>'CWebLogRoute',

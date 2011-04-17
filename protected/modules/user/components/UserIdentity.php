@@ -26,9 +26,9 @@ class UserIdentity extends CUserIdentity
 	public function authenticate()
 	{
 		if (strpos($this->username,"@")) {
-			$this->_user=User::model()->notsafe()->findByAttributes(array('email'=>$this->username));
+			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$this->username));
 		} else {
-			$this->_user=User::model()->notsafe()->findByAttributes(array('username'=>$this->username));
+			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('username'=>$this->username));
 		}
 		if($this->_user===null)
 			if (strpos($this->username,"@")) {
@@ -67,7 +67,7 @@ class UserIdentity extends CUserIdentity
 	public static function impersonate($userId)
 	{
 		$ui = null;
-		$user = User::model()->findByPk($userId);
+		$user = UserModule::userModel()->findByPk($userId);
 		if($user)
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.

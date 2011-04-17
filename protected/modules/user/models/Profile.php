@@ -48,13 +48,9 @@ class Profile extends NiiActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		$relations = array(
+		return array(
 			'user'=>array(self::HAS_ONE, 'User', 'id'),
 		);
-		if (isset(Yii::app()->getModule('user')->profileRelations)) $relations = array_merge($relations,Yii::app()->getModule('user')->profileRelations);
-		return $relations;
 	}
 
 	

@@ -34,7 +34,8 @@ class NController extends CController
 			// specifically dialog boxes! Should also add scripts that are always included
 			Yii::app()->clientScript->scriptMap=array(
 				'jquery.js'=>false,
-				'jquery-ui.css'=>false);
+				'jquery-ui.css'=>false
+			);
 		} else {
 			// include my scripts!
 			$path = Yii::getPathOfAlias('application.extensions.scripts');
@@ -57,11 +58,7 @@ class NController extends CController
 
 	public function performAjaxValidation($model, $formName){
 		if (isset($_POST['ajax']) && $_POST['ajax'] === $formName) {
-			if(isset($_REQUEST['callback'])){
-				echo $_REQUEST['callback'].'('.CActiveForm::validate($model).')';
-			}else{
-				echo CActiveForm::validate($model);
-			}
+			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}

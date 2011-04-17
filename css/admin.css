@@ -4,7 +4,7 @@
 
 body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 .head{}
-.bigHead{height:78px}
+/*.bigHead{height:78px}*/
 .page{position:relative;}
 .mainMenu{height:56px;overflow:hidden;position:relative;}
 .mainMenu ul{margin:0px;display:inline-block;position:absolute;background:#000000;height:56px;width:56px;}

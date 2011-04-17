@@ -50,7 +50,10 @@ CREATE TABLE IF NOT EXISTS `support_email` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date` datetime NOT NULL,
   `cc` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `references` text,
+  `in_reply_to` varchar(255),
+  PRIMARY KEY (`id`),
+  KEY `message_id` (`message_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 

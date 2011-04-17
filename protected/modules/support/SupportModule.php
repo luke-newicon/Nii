@@ -77,7 +77,7 @@ class SupportModule extends NWebModule
 	 * run periodically.
 	 * @property boolean
 	 */
-	public $autoCron = true;
+	public $autoCron = false;
 	
 	/**
 	 * The text to prepend the subject ticket id with
@@ -89,7 +89,13 @@ class SupportModule extends NWebModule
 	 * The number of messages to load per page
 	 * @var int
 	 */
-	public $msgPageLimit = 15;
+	public $msgPageLimit = 30;
+	
+	/**
+	 * whether to display messages in conversation threads.
+	 * @var boolean
+	 */
+	public $threading = false;
 	
 	public function init()
 	{
@@ -138,5 +144,20 @@ class SupportModule extends NWebModule
 	public function install(){
 		
 	}
+	
+	public function getLoadMessageListUrl(){
+		if(self::get()->threading)
+			echo NHtml::url('/support/index/loadMessageListThreaded/offset');
+		else
+			echo NHtml::url('/support/index/loadMessageList/offset');
+	}
+	
+	public function getLoadMessageUrl(){
+		if(self::get()->threading)
+			echo NHtml::url('/support/index/messageThread');
+		else
+			echo NHtml::url('/support/index/message');
+	}
+	
 	
 }

@@ -14,7 +14,8 @@
  *
  * @author steve
  */
-class NWebUser extends CWebUser {
+class NWebUser extends CWebUser 
+{
 
 	private $_user;
 	
@@ -29,7 +30,7 @@ class NWebUser extends CWebUser {
 		if($this->getId() === null)
 			return null;
 		if($this->_user === null){
-			$this->_user = User::model()->findByPk($this->getId());
+			$this->_user = UserModule::userModel()->findByPk($this->getId());
 		}
 		return $this->_user;
 	}
@@ -47,5 +48,29 @@ class NWebUser extends CWebUser {
 		}
 		return $this->_contact;
 	}
+	
+	/**
+	 * overrides default behaviour to always return true if user has super powers
+	 * i.e. is a superuser
+	 * @see CWebUser::checkAccess
+	 * @param type $operation
+	 * @param type $params
+	 * @param type $allowCaching 
+	 */
+	public function checkAccess($operation, $params = array(), $allowCaching = true) 
+	{
+		if ($this->record==null)
+			return false;
+		if($this->record->superuser)
+			return true;
+		return parent::checkAccess($operation, $params, $allowCaching);
+	}
+	
+	public function checkAccessToRoute(){
+		$route = Yii::app()->controller->getRoute();
+		return Yii::app()->user->checkAccess($route);	
+	}
+
+	
 
 }
