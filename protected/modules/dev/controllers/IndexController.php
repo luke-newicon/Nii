@@ -20,6 +20,9 @@ class IndexController extends Controller
 	}
 
 	public function actionApe(){
+		$url = $this->getModule()->getAssetsUrl();
+		Yii::app()->clientScript->registerScriptFile("$url/ape/JavaScript.js");
+		Yii::app()->clientScript->registerScriptFile("$url/ape/config.js");
 		$this->render('ape');
 	}
 	
