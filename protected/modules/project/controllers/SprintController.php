@@ -2,7 +2,7 @@
 
 class SprintController extends AController
 {
-
+	public $layout = 'project';
 	/**
 	 * @return array action filters
 	 */

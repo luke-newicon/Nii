@@ -3,6 +3,7 @@
 class ProjectTimeRecordtypeController extends AController
 {
 
+	public $layout = 'project';
 	/**
 	 * @return array action filters
 	 */

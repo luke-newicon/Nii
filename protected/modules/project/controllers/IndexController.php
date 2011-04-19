@@ -2,6 +2,7 @@
 
 class IndexController extends AController {
 
+	public $layout = 'project';
 	/**
 	 * @return array action filters
 	 */

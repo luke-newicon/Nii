@@ -2,7 +2,7 @@
 
 class ProjectAssignedController extends AController {
 
-
+	public $layout = 'project';
     /**
      * @return array action filters
      */

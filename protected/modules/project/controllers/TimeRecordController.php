@@ -2,7 +2,7 @@
 
 class TimeRecordController extends AController
 {
-
+	public $layout = 'project';
 	/**
 	 * @return array action filters
 	 */
