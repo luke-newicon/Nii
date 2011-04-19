@@ -25,13 +25,13 @@
  *
  * 2) Creating a new file based on text etc in the system. :doesnt make much sense.
  *
- *
  * 3) Retrieving information for one or more files. (information?)
  *
  * @author steve
- *
+ * @version 1.0
  */
 Yii::import('application.vendors.Zend.File.*');
+require('Zend/File/Transfer/Adapter/Http.php');
 
 /**
  * Stores and retrieves files from the system.
@@ -47,12 +47,15 @@ class NFileManager extends CApplicationComponent {
 	 */
 	public $location;
 	public $_fileTransObj;
-	public $_fileId;
+	public $_id;
 	public $fileHandlerClass = 'NFileHandler';
 	public $fileNameTemplate = '{timestamp}.{filename}';
 
 	public function __construct() {
 		$this->_fileTransObj = new Zend_File_Transfer_Adapter_Http();
+
+		//Stops a double directory seperator from appearing in the location.
+		$this->location = rtrim($this->location, DIRECTORY_SEPARATOR);
 	}
 
 	/**
@@ -66,35 +69,40 @@ class NFileManager extends CApplicationComponent {
 	 * @return int id to refer to the file, or boolean false if upload failed.
 	 */
 	public function saveFile($area='core') {
+
 		if (!empty($_FILES)) {
-			try {
-				$targetPath = $this->location . $area . DS;
-				$this->locationCheck($targetPath);
 
-				$up = $this->getFileTransObj();
+			$targetPath = $this->location . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
 
-				$origFileName = $up->getFileName(null, false);
+			$this->locationCheck($targetPath);
 
-				$up->addFilter('rename', array('target' => $targetPath . time() . '_' . $origFileName));
-				$up->receive();
-				$info = $up->getFileInfo();
-				$upFile = new NFiles();
+			$up = $this->getFileTransObj();
 
-				$upFile->original_name = $origFileName;
-				$upFile->filed_name = $up->getFileName(null, false);
-				$upFile->size = $up->getFileSize();
-				$upFile->mime = $up->getMimeType();
-				$upFile->file_path = $up->getFileName();
-				$upFile->category = $area;
-				$upFile->save();
-				$this->_setFileId($upFile->fileId);
-				return $this->_getFileId();
-			} catch (Zend_File_Transfer_Exception $e) {
-				return false;
-			}
+			$origFileName = $up->getFileName(null, false);
+
+			$filedName = time() . '_' . $origFileName;
+
+			$up->addFilter('rename', array('target' => $targetPath . $filedName));
+			$up->receive();
+			$info = $up->getFileInfo();
+			$upFile = new NFiles();
+
+			if ($filedName)
+				$uploadedFileName = $filedName;
+			else
+				$uploadedFileName = $up->getFileName(null, false);
+
+			$upFile->addNewFile('', $up->getFileName(null, false), $uploadedFileName, $up->getFileSize(), $up->getMimeType(), $up->getFileName(), $area);
+
+			$this->_setid($upFile->id);
+			return $this->_getid();
 		}
 	}
 
+	/**
+	 * Checks to see if the upload location is accessible.
+	 * @param string $targetPath The path to check
+	 */
 	private function locationCheck($targetPath) {
 		//If base folder cannot be found then throws an error
 		if ($this->folderFileCheck($this->location) == false) {
@@ -120,9 +128,10 @@ class NFileManager extends CApplicationComponent {
 	 *
 	 * <div>EXAMPLES<div>
 	 * getFile(1);
-	 * will return information for one file.
+	 * will return information for one file. or many if array specified
 	 *
-	 * returns
+	 * @param array of file information or null
+	 * @returns array of file information or null
 	 *
 	 * array(
 	 * 		0 => array(
@@ -138,13 +147,13 @@ class NFileManager extends CApplicationComponent {
 	 * 		)
 	 * )
 	 *
-	 * @param array of file information or null
+	 *
 	 */
-	public function getFile($fileIds) {
-		$arr = $this->getFileInformation($fileIds);
-		if (empty($arr))
+	public function getFile($id) {
+		$fileInformation = $this->getFiles($id);
+		if (is_array($fileInformation) && !array_key_exists(0, $fileInformation))
 			return null;
-		return $arr[0];
+		return $fileInformation[0];
 	}
 
 	/**
@@ -171,43 +180,37 @@ class NFileManager extends CApplicationComponent {
 		$fileNewName = time() . $fileName;
 
 		//$status = file_put_contents($this->location.$fileNewName,$fileContents);
-		$filePath = rtrim($this->location, DS);
-		$targetPath = $filePath . DS . $area . DS;
+		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
+		$targetPath = $filePath . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
 
 		$this->locationCheck($targetPath);
 
 		$status = file_put_contents($targetPath . $fileNewName . '.txt', $fileContents);
 
 		$newFile = new NFiles();
-		$newFile->original_name = $fileName;
-		$newFile->filed_name = $fileNewName;
-		$newFile->size = filesize($filePath);
-		$newFile->mime = CFileHelper::getMimeType($filePath);
-		$newFile->file_path = $filePath;
-		$newFile->category = $area;
-		$newFile->save();
+		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $area);
 
-		$this->_setFileId($newFile->fileId);
-		return $this->_getFileId();
+		$this->_setid($newFile->id);
+		return $this->_getid();
 	}
 
 	/**
 	 * Remove a file from the system
-	 * @param int or array $fileIds File id/s to mark as deleted.
+	 * @param int or array $ids File id/s to mark as deleted.
 	 * @param boolean $deleteFile Whether or not to remove the file from the system.
 	 */
-	public function deleteFiles($fileIds, $deleteFile = false) {
+	public function deleteFiles($ids, $deleteFile = false) {
 
 		// If only marking the file as deleted then updates the table to show the file as deleted.
 		// If the file is to be removed from the file system then there is no point in leaving an
 		// orphan record in the database. The records are deleted along with the file.
 		if (!$deleteFile) {
-			NFiles::model()->updateByPk($fileIds, array('deleted' => 1));
+			NFiles::model()->updateByPk($ids, array('deleted' => 1));
 		} else {
 
 			//CODE TO DELETE FILE FROM THE SYSTEM HERE!!!!!!1
 			//removes the unneeded records from the database.
-			NFiles::model()->deleteByPk($fileIds);
+			NFiles::model()->deleteByPk($ids);
 		}
 	}
 
@@ -215,16 +218,16 @@ class NFileManager extends CApplicationComponent {
 	 * Sets a variable with the id of the newly uploaded file
 	 * @param int $id The id of the newly uploaded file.
 	 */
-	private function _setFileId($id) {
-		$this->_fileId = $id;
+	private function _setid($id) {
+		$this->_id = $id;
 	}
 
 	/**
 	 * Returns the id of the file which has just been uploaded.
 	 * @return string.
 	 */
-	private function _getFileId() {
-		return $this->_fileId;
+	private function _getid() {
+		return $this->_id;
 	}
 
 	/**
@@ -258,36 +261,41 @@ class NFileManager extends CApplicationComponent {
 	 */
 	public function getFiles($ids) {
 
-		// Sets up the function
-		$fileIds = null;
-
 		// Searches the database for the file ids.
-		$files = NFile::model()->findAllByAttributes(array('id' => $ids));
+		$files = NFiles::model()->findAllByPk($ids);
+
 
 		// If no results can be found then returns null.
-		if (count($files == 0))
+		if (count($files) == 0)
 			return null;
 
 		// This will contain the information on the files which will be returned to the user.
 		$fileInformation = array();
 
+
 		// Each result which is found is added to an array which can then be outputted.
-		foreach ($files as $result) {
-			$fileInformation[$result->id]['fileId'] = $result->fileId;
-			$fileInformation[$result->id]['description'] = $result->description;
-			$fileInformation[$result->id]['uploaded_by'] = $result->uploaded_by;
-			$fileInformation[$result->id]['uploaded'] = $result->uploaded;
-			$fileInformation[$result->id]['original_name'] = $result->original_name;
-			$fileInformation[$result->id]['filed_name'] = $result->filed_name;
-			$fileInformation[$result->id]['size'] = $result->size;
-			$fileInformation[$result->id]['mime'] = $result->mime;
-			$fileInformation[$result->id]['file_path'] = $result->file_path;
+		foreach ($files as $id => $result) {
+			$fileInformation[$id]['id'] = $result->id;
+			$fileInformation[$id]['description'] = $result->description;
+			$fileInformation[$id]['uploaded_by'] = $result->uploaded_by;
+			$fileInformation[$id]['uploaded'] = $result->uploaded;
+			$fileInformation[$id]['original_name'] = $result->original_name;
+			$fileInformation[$id]['filed_name'] = $result->filed_name;
+			$fileInformation[$id]['size'] = $result->size;
+			$fileInformation[$id]['mime'] = $result->mime;
+			$fileInformation[$id]['file_path'] = $result->file_path;
+			$fileInformation[$id]['category'] = $result->category;
 		}
 		return $fileInformation;
 	}
 
 	private function setLocation($location) {
 		$this->location = $location;
+	}
+
+	// Returns the base file location.
+	public function getBaseLocation(){
+		return $this->location;
 	}
 
 	/**
@@ -299,6 +307,70 @@ class NFileManager extends CApplicationComponent {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	/**
+	 * Loads a file from where it is stored outside of the document root and outputs the information to screen.
+	 * @param int $id The uploader id of the file to display.
+	 * @param boolean $renderInPage wether or not to render the file in page. The default is false
+	 * @param string $customName A custom name to call the file when downloading. Please include the file extension.
+	 * optional uses original_name if null
+	 * @returns void | false on error
+	 * @see NFileManager::displayFileData
+	 */
+	public function displayFile($id, $name=null, $makeDownload=false) {
+
+		//retrives file information.
+		$file = $this->getFile($id);
+
+		//Displays an error message if the supplied id search returns no rows.
+		if (count($file) === 0) {
+			return false;
+		}
+
+		if(!$name)
+			$name = $file->filed_name;
+
+		//Stores the location of the file as a variable
+		$fileLocation = $this->location . $file['category'] . DIRECTORY_SEPARATOR . $file['filed_name'];
+		$data = file_get_contents($fileLocation);
+		$this->displayFileData($data, $file['mime'], $name, $makeDownload);
+	}
+
+	/**
+	 * Outputs file data to the screen
+	 * @param string $data
+	 * @param string $mimeType
+	 * @param <type> $name
+	 * @param <type> $makeDownload
+	 */
+	public function displayFileData($data, $mimeType, $name=null, $makeDownload=false) {
+		if ($data) {
+			header('Content-Type:' . $mimeType);
+			if ($name === null) {
+				$name = md5(date('Y-m-d h:i:s', time()));
+			}
+			//tells browser to download file if render in page is set to false.
+			//Extra lines are needed to get the file name to correctly download in IE7/7.
+			if ($makeDownload) {
+				//Replaces all spaces with underscores which solves the problem of spaces being used in file names
+				$safeName = str_replace('.', '_', $name);
+				$safeName = str_replace('%20', '_', $safeName);
+				//Needs to go last, this adds the file extension to the end of the file.
+				$safeName = $safeName . '.' . pathinfo($name, PATHINFO_EXTENSION);
+				header('Content-Disposition: attachment; filename=' . $safeName);
+
+				header("Pragma: public");
+				header("Expires: 0");
+				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			}
+			echo $data;
+
+			//Once the file has been read, this code stops anything else from being rendered onto the bottom of it.
+			Yii::app()->end();
+		} else {
+			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}
 	}
 
