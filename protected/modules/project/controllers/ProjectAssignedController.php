@@ -143,21 +143,21 @@ class ProjectAssignedController extends AController {
      * @param integer the ID of the model to be loaded
      */
     public function loadModel($id) {
-	$model = ProjectProjectAssigned::model()->findByPk((int) $id);
-	if ($model === null)
-	    throw new CHttpException(404, 'The requested page does not exist.');
-	return $model;
+		$model = ProjectProjectAssigned::model()->findByPk((int) $id);
+		if ($model === null)
+			throw new CHttpException(404, 'The requested page does not exist.');
+		return $model;
     }
 
     /**
      * Performs the AJAX validation.
      * @param CModel the model to be validated
      */
-    protected function performAjaxValidation($model) {
-	if (isset($_POST['ajax']) && $_POST['ajax'] === 'project-project-assigned-form') {
-	    echo CActiveForm::validate($model);
-	    Yii::app()->end();
-	}
+    public function performAjaxValidation($model) {
+		if (isset($_POST['ajax']) && $_POST['ajax'] === 'project-project-assigned-form') {
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
     }
 
 }

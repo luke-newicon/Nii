@@ -168,7 +168,7 @@ class TaskController extends AController {
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
 	 */
-	protected function performAjaxValidation($model) {
+	public function performAjaxValidation($model) {
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'project-task-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
