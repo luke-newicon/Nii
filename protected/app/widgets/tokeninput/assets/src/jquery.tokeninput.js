@@ -390,7 +390,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === li_data.id) {
+                 if(existing_data && existing_data.id === li_data.id) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -532,6 +532,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.searchingText) {
             dropdown.html("<p>"+settings.searchingText+"</p>");
             show_dropdown();
+			selected_dropdown_item = null;
         }
     }
 

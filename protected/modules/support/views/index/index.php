@@ -175,13 +175,13 @@ $(function(){
 		}
 	});
 
-	$('body').ajaxStart(function(){
-		$('.popSpinner').show();
-	});
-	$('body').ajaxStop(function(){
-		$('.popSpinner').hide();
-	});
-	
+//	$('body').ajaxStart(function(){
+//		$('.popSpinner').show();
+//	});
+//	$('body').ajaxStop(function(){
+//		$('.popSpinner').hide();
+//	});
+//
 	var timer;
 	var scroll = $('#messageScroll')
 		.bind('jsp-initialised',function(event, isScrollable){
@@ -272,7 +272,7 @@ $(function(){
 			// message has been cached into the msgsLoaded variable so lets just display that.
 			inserMessage(msgsLoaded[key]);
 		}else{
-			$('.popSpinner').position({my:'center',at:'center',of:$email}).show();
+			$('.popSpinner').show().position({my:'center',at:'center',of:$email}).show();
 			// html not in cache so ajax it in.
 			$.getJSON('<?php echo SupportModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
 				msgsLoaded[key] = json;
@@ -328,7 +328,7 @@ $(function(){
 
 	var loadedBatches = [];
 	var loadMessageBatch = function(batch){
-		$('.popSpinner').position({my:'center',at:'center',of:'#messageScroll'}).show();
+		$('.popSpinner').show().position({my:'center',at:'center',of:'#messageScroll'}).show();
 		$.ajax({
 			url:'<?php echo SupportModule::getLoadMessageListUrl(); ?>/'+batch,
 			success:function($msgs){
