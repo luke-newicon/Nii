@@ -373,7 +373,6 @@ $.TokenList = function (input, url_or_data, settings) {
     // Add a token to the token list based on user input
     function add_token (item) {
 		var li_data;
-		alert('additem:' + item.length);
 		if(!item.length && settings.addNewTokens){
 			// not in the list but we want to add it
 			//insert_token(input_val,input_val);

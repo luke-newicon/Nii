@@ -110,7 +110,6 @@ class IndexController extends AController
 		));
 	}
 
-
 	public function actionReply($emailId){
 		$e = SupportEmail::model()->findByPk($emailId);
 		// get last email in conversation
@@ -125,21 +124,15 @@ class IndexController extends AController
 	public function actionContacts(){
 		$q = urldecode($_GET['q']);
 		$data = array();
+		//$data[] = array('id'=>$_GET['q'], 'name'=>$_GET['q']);
 		foreach(CrmContact::model()->nameLike($q)->findAll(array('limit'=>20)) as $c){
 			// only add people to the dropdown that have email addresses
 			//if($email = $c->getPrimaryEmail()){
-				$data[] = array('id'=>$c->id, 'name'=>$c->name());
+				$data[] = array('id'=>$c->id, 'name'=>$c->name().' &lt;'.$c->getPrimaryEmail().'&gt;');
 			//}	
 		}
 		echo json_encode($data);
 	}
-
-	
-	
-
-	
-
-	
 	
 	public function actionImport($offset=0){
 		Yii::app()->getModule('support')->msgPageLimit = 250;
