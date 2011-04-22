@@ -121,15 +121,19 @@ class IndexController extends AController
 		echo $this->widget('support.components.NComposeMail',array(),true);
 	}
 
-	public function actionContacts(){
+	public function actionContacts($q){
 		$q = urldecode($_GET['q']);
+		// escape % and _ characters
+		$q = strtr($q, array('%'=>'\%', '_'=>'\_'));
+		$nl = CrmContact::model()->nameLikeQuery($q);
+		CrmEmail::model()->with('contact')
+			->getDbCriteria()
+			->addCondition('address like :q')
+			->addCondition($nl['condition'], 'OR')
+			->params = array_merge($nl['params'],array(':q'=>"%$q%"));
 		$data = array();
-		//$data[] = array('id'=>$_GET['q'], 'name'=>$_GET['q']);
-		foreach(CrmContact::model()->nameLike($q)->findAll(array('limit'=>20)) as $c){
-			// only add people to the dropdown that have email addresses
-			//if($email = $c->getPrimaryEmail()){
-				$data[] = array('id'=>$c->id, 'name'=>$c->name().' &lt;'.$c->getPrimaryEmail().'&gt;');
-			//}	
+		foreach(CrmEmail::model()->findAll(array('limit'=>20)) as $c){
+			$data[] = array('id'=>$c->contact->id, 'name'=>$c->contact->name().' &lt;'.$c->address.'&gt;');
 		}
 		echo json_encode($data);
 	}

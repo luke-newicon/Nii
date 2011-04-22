@@ -32,7 +32,8 @@ class CrmContact extends NActiveRecord
 
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return CrmContacts the static model class
+	 * 
+	 * @return CrmContact
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -105,8 +106,6 @@ class CrmContact extends NActiveRecord
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
 
 		$criteria=new CDbCriteria;
 
@@ -314,8 +313,17 @@ class CrmContact extends NActiveRecord
 		return $this;
 	}
 
+	/**
+	 * name and company search scope
+	 * @param string $term
+	 * @return CrmContact 
+	 */
+	public function nameLike($term='', $useAnd=true){
+		$this->getDbCriteria()->mergeWith($this->nameLikeQuery($term),$useAnd);
+		return $this;
+	}
 	
-	public function nameLike($term=''){
+	public function nameLikeQuery($term){
 		if($term=='')
 			return $this;
 		if(Yii::app()->getModule('crm')->displayOrderFirstLast){
@@ -328,31 +336,30 @@ class CrmContact extends NActiveRecord
 			$q = "($col1 like :t0 or $col2 like :t0)";
 		} else {
 			// as soon as there is a space assume firstname *space* lastname
-//			$name = explode(' ', $term);
-//			$t1 = trim($name[0]);
-//			$q = "$col1 like :t1";
-//			$p[':t1'] = "%$t1%";
-//
-//			if(array_key_exists(1, $name)){
-//				$t2 = trim($name[1]);
-//				$q .=  " and $col2 LIKE :t2";
-//				$p[':t2'] = "%$t2%";
-//			}
-//
-//			$q = "($q) ";
 			$name = explode(' ', $term);
 			$t1 = trim($name[0]);
 			$t2 = array_key_exists(1, $name) ? trim($name[1]) : '';
 			$p[':t1'] = "%$t1%";
 			$p[':t2'] = "%$t2%";
+			
 			$q = "($col1 like :t1 AND $col2 like :t2) or ($col1 like :t2 AND $col2 like :t1)";
 		}
 		$q .= " or company like :t0";
-		$this->getDbCriteria()->mergeWith(array(
+		return array(
 			'condition'=>$q,
 			'params'=>$p,
-			'limit'=>200
-		));
+		);
+	}
+	
+	public function emailLike($email, $useAnd=true){
+		$this->getDbCriteria()->mergeWith(array(
+			'with'=>array('emails'=>array(
+				// only get user if has an email
+				'joinType'=>'INNER JOIN')
+			),
+			'condition'=>'address like :q',
+			'params'=>array(':q'=>"%$email%"),
+		),$useAnd);
 		return $this;
 	}
 

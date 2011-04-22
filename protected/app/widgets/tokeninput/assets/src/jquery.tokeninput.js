@@ -379,8 +379,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-        var li_data = $.data(item.get(0), "tokeninput");
-		if(li_data == undefined){
+		li_data = undefined;
+		console.log(item.get(0))
+		if(item.get(0) !== undefined)
+			var li_data = $.data(item.get(0), "tokeninput");
+		if(li_data === undefined){
 			li_data = {'id':input_val, 'name':input_val};
 		}
 		console.log(li_data);
@@ -552,7 +555,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
     }
 
     // Populate the results dropdown with some results
