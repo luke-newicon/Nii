@@ -24,12 +24,13 @@ var DEFAULT_SETTINGS = {
     queryParam: "q",
     tokenDelimiter: ",",
     preventDuplicates: false,
-	addNewTokens: true,
     prePopulate: null,
+    processPrePopulate: false,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+	addNewTokens:true
 };
 
 // Default classes to use when theming
@@ -90,7 +91,7 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string") {
+    if(typeof(url_or_data) === "string") {
         // Set the url to query against
         settings.url = url_or_data;
 
@@ -102,7 +103,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
             }
         }
-    } else if($.type(url_or_data) === "array") {
+    } else if(typeof(url_or_data) === "object") {
         // Set the local data to search through
         settings.local_data = url_or_data;
     }
@@ -215,10 +216,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-					if(selected_dropdown_item || settings.addNewTokens) {
-						add_token($(selected_dropdown_item));
-						return false;
-					}
+                  if(selected_dropdown_item || settings.addNewTokens) {
+                    add_token($(selected_dropdown_item));
+                    return false;
+                  }
                   break;
 
                 case KEY.ESCAPE:
@@ -247,6 +248,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
+    var selected_token_index = 0;
     var selected_dropdown_item = null;
 
     // The list to store the token items in
@@ -309,7 +311,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Pre-populate list if items exist
     hidden_input.val("");
-    li_data = settings.prePopulate || hidden_input.data("pre");
+    var li_data = settings.prePopulate || hidden_input.data("pre");
+    if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
+        li_data = settings.onResult.call(hidden_input, li_data);
+    }
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
@@ -321,7 +326,8 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Private functions
     //
-	function resize_input(e) {
+
+    function resize_input() {
         if(input_val === (input_val = input_box.val())) {return;}
 
         // Enter new content into resizer and resize input accordingly
@@ -339,7 +345,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(id, value) {
-        var this_token = $("<li><p>"+ value +"</p> </li>")
+        var this_token = $("<li><p>"+ value +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
@@ -357,7 +363,8 @@ $.TokenList = function (input, url_or_data, settings) {
         $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
-        saved_tokens.push(token_data);
+        saved_tokens = saved_tokens.slice(0,selected_token_index).concat([token_data]).concat(saved_tokens.slice(selected_token_index));
+        selected_token_index++;
 
         // Update the hidden input
         var token_ids = $.map(saved_tokens, function (el) {
@@ -372,16 +379,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-		var li_data;
-		alert('additem:' + item.length);
-		if(!item.length && settings.addNewTokens){
-			// not in the list but we want to add it
-			//insert_token(input_val,input_val);
-			// create correct data variable
-			li_data = {'id':input_val,'name':input_val}
-		} else {
-			li_data = $.data(item.get(0), "tokeninput");
+        var li_data = $.data(item.get(0), "tokeninput");
+		if(li_data == undefined){
+			li_data = {'id':input_val, 'name':input_val};
 		}
+		console.log(li_data);
+
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -390,7 +393,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                 if(existing_data && existing_data.id === li_data.id) {
+                if(existing_data && existing_data.id === li_data.id) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -424,7 +427,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
-            callback(li_data);
+            callback.call(hidden_input,li_data);
         }
     }
 
@@ -447,10 +450,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
         if(position === POSITION.BEFORE) {
             input_token.insertBefore(token);
+            selected_token_index--;
         } else if(position === POSITION.AFTER) {
             input_token.insertAfter(token);
+            selected_token_index++;
         } else {
             input_token.appendTo(token_list);
+            selected_token_index = token_count;
         }
 
         // Show the input box and give it focus again
@@ -478,6 +484,9 @@ $.TokenList = function (input, url_or_data, settings) {
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = settings.onDelete;
 
+        var index = token.prevAll().length;
+        if(index > selected_token_index) index--;
+
         // Delete the token
         token.remove();
         selected_token = null;
@@ -486,9 +495,8 @@ $.TokenList = function (input, url_or_data, settings) {
         input_box.focus();
 
         // Remove this token from the saved list
-        saved_tokens = $.grep(saved_tokens, function (val) {
-            return (val.id !== token_data.id);
-        });
+        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
         var token_ids = $.map(saved_tokens, function (el) {
@@ -507,7 +515,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Execute the onDelete callback if defined
         if($.isFunction(callback)) {
-            callback(token_data);
+            callback.call(hidden_input,token_data);
         }
     }
 
@@ -532,7 +540,6 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.searchingText) {
             dropdown.html("<p>"+settings.searchingText+"</p>");
             show_dropdown();
-			selected_dropdown_item = null;
         }
     }
 
@@ -545,7 +552,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
 
     // Populate the results dropdown with some results
@@ -671,7 +678,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Attach the success callback
                 ajax_params.success = function(results) {
                   if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(this, results);
+                      results = settings.onResult.call(hidden_input, results);
                   }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
@@ -689,6 +696,10 @@ $.TokenList = function (input, url_or_data, settings) {
                     return row.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
+                if($.isFunction(settings.onResult)) {
+                    results = settings.onResult.call(hidden_input, results);
+                }
+                cache.add(query, results);
                 populate_dropdown(query, results);
             }
         }
