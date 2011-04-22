@@ -2,8 +2,12 @@
 
 class IndexController extends AController
 {
+	
 	public function actionIndex()
 	{
+		$url = $this->getModule('dev')->getAssetsUrl();
+		Yii::app()->clientScript->registerScriptFile("$url/ape/JavaScript.js");
+		Yii::app()->clientScript->registerScriptFile("$url/ape/config.js");
 		//NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();
@@ -80,7 +84,11 @@ class IndexController extends AController
 		//NMailReader::$readOfset = $offset*$limit;
 		//NMailReader::readMail();
 		$total = NMailReader::countMessages();
-		$emails = SupportEmail::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
+		$emails = SupportEmail::model()->findAll(array(
+			'limit'=>$limit,
+			'offset'=>$offset*$limit,
+			'order'=>'date DESC, id DESC'
+		));
 		$this->render('message-list',array(
 			'total'=>$total,
 			'emails'=>$emails,
@@ -139,7 +147,7 @@ class IndexController extends AController
 	}
 	
 	public function actionImport($offset=0){
-		Yii::app()->getModule('support')->msgPageLimit = 250;
+		NMailReader::$readLimit = 250;
 		NMailReader::$readOfset = $offset;
 		NMailReader::$breakIfExists = false;
 		NMailReader::$folder = '[Google Mail]/Sent Mail';
@@ -170,6 +178,37 @@ class IndexController extends AController
 		
 		$mail->setSubject($model->subject);
 		$mail->send();
+	}
+	
+	
+	public function actionCheckMail($id){
+		NMailReader::$readLimit = 5;
+		NMailReader::$forceCountRefresh = true;
+		NMailReader::readMail();
+		// need to know where i am. whats currently displaying?
+		// check to see if new emails exist in the db
+		// the id is the id of the latest email displaying.
+		$r = SupportEmail::model()->findAll(array(
+			'limit'=>30,
+			'order'=>'date DESC, id DESC',
+		));
+		// loop through the latest db results if the id is the same as the 
+		// one currently showing we are up to date, if not it must be new add it to the newMsg array
+		$newMsgs = array();
+		foreach($r as $i => $e){
+			//echo $e->id();
+			if($e->id == $id)
+				break;
+			
+			$newMsgs[] = $this->renderPartial(
+				'_message-list-item', 
+				array('email'=>$e,'dataPos'=>$i),
+				true
+			);
+		}
+		// we need the messages to be shown the latest first.
+		$ret = array_reverse($newMsgs);
+		echo json_encode($ret);
 	}
 
 }

@@ -234,4 +234,5 @@ class TestController extends AController
 		/* close the connection */
 		imap_close($inbox);
 	}
+	
 }

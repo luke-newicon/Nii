@@ -17,7 +17,7 @@
  */
 Class NMailReader extends CComponent
 {
-	public static $readLimit = 15;
+	public static $readLimit;
 
 	public static $readOfset = 0;
 
@@ -30,13 +30,14 @@ Class NMailReader extends CComponent
 
 
 	public static $folder = 'INBOX';
+	
+	public static $forceCountRefresh = false;
 
 	/**
 	 *
 	 * @return Zend_Mail_Storage_Imap 
 	 */
 	public static function connect(){
-		self::$readLimit = SupportModule::get()->msgPageLimit;
 		if(self::$mail === null){
 			// mail could be cached
 			Yii::beginProfile('imap connect');
@@ -58,12 +59,18 @@ Class NMailReader extends CComponent
 	{
 		Yii::beginProfile('countMessages');
 		$count = Yii::app()->cache[self::$folder.'_countMessages'];
-		if($count === false){
+		if($count === false || self::$forceCountRefresh){
 			$count = self::connect()->countMessages();
 			Yii::app()->cache->set(self::$folder.'_countMessages', $count, 3600);
 		}
 		Yii::endProfile('countMessages');
 		return $count;
+	}
+	
+	public static function getReadLimit(){
+		if(self::$readLimit === null)
+			self::$readLimit = SupportModule::get()->msgPageLimit;
+		return self::$readLimit;
 	}
 	
 	public static function readMail($breakIfExists=true){
@@ -75,7 +82,7 @@ Class NMailReader extends CComponent
 		$ii = 0;
 		for($i=$msgNum; $i>0; $i--){
 
-			if($ii >= self::$readLimit) break;
+			if($ii >= self::getReadLimit()) break;
 			usleep(100);
 			Yii::beginProfile('imap: get message');
 			$e = $mail->getMessage($i);

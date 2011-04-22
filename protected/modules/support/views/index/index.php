@@ -47,7 +47,6 @@
 	.popy .inner{box-shadow:0px 0px 0px 1px #ccc inset;border-radius:5px;}
 	.threadNumber{background: none repeat scroll 0 0 rgba(82, 82, 82, 0.5); -webkit-border-radius:3px;-moz-border-radius:3px;border-radius: 3px;color: white;font-size: 10px;padding: 1px 3px;text-shadow: 0 1px 0 #888;}
 </style>
-<script type="text/javascript" src="http://localhost/newicon/projects/jquery.layout.min-1.2.0.js"></script>
 <?php //$this->widget('application.widgets.popSpinner'); ?>
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
@@ -106,7 +105,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
-				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a><a href="#" id="newMsg" class="btn btnN">m1</a><a href="#" id="newMsg2" class="btn btnN">m2</a>
+				&nbsp;<a href="#" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil">compose</span></a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
@@ -385,27 +384,7 @@ $(function(){
 		}
 	});
 	
-	
-	
-	///// tests
-	$('#newMsg').click(function(){
-		// recieved a new message from server push
-		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">DMG</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">End-to-End Control of Campaign Results - DMG connect April 2011<br></div><div class="body faded">Use this link to view a web version. To unsubscribe from this mailing list click here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
-		// make room for new msg.
-		addNewMessage(email);
 
-		
-	});
-	
-	$('#newMsg2').click(function(){
-		// recieved a new message from server push
-		var email = '<div class="line listItem" style="" data-position="2" data-id="3"><div class="unit flags"><span class="" data-role="flag-opened">&nbsp;</span></div><div class="lastUnit"><div style="height: 21px;" class="line"><div class="unit size3of4 from">Steve OB1</div><div class="lastUnit txtR blue"><span class="faded">12/04/11</span></div></div><div class="subject">Important subject!<br></div><div class="body faded">fgg reg  lorum iposu,. ck here. April 2011 IssueHome | View online | Subscribe | </div></div></div>'
-		// make room for new msg.
-		
-		addNewMessage(email);
-
-		
-	});
 	
 	var addNewMessage = function(msg){
 		var $ml = $('#messageList');
@@ -430,51 +409,67 @@ $(function(){
 		});
 	});
 	
+	var checkMail = function(time){
+		time = (time==undefined) ? 10000 : time;
+		setTimeout( function(){
+			doCheckMail(time)
+		},time);
+	}
+	var doCheckMail = function(time){
+		var id = $('#messageList .listItem:first').data('id');
+		$.getJSON("<?php echo NHtml::url('/support/index/checkMail'); ?>/id/"+id, function(r){
+			jQuery.each(r, function(index, itemData) {
+				addNewMessage(itemData);
+			});
+			checkMail(time);
+		});
+	}
+	checkMail(5000);
 	
 	
 	
 	
 	
-	//    _     ___   __
-	//   / \   |   | |
-	//  /___\  |___| |--
-	// /     \ |     |__
-	// -------------------
 	
-//	var client = new APE.Client();
-// 
-//	//1) Load APE Core
-//	client.load();
+//    _     ___   __
+//   / \   |   | |
+//  /___\  |___| |--
+// /     \ |     |__
+// -------------------
+//	
+//var client = new APE.Client();
+//// 
+////	//1) Load APE Core
+//client.load();
+////
+////	//2) Intercept 'load' event. This event is fired when the Core is loaded and ready to connect to APE Server
+//client.addEvent('load', function() {
+//	//3) Call core start function to connect to APE Server, and prompt the user for a nickname
+//	client.core.start({"name": prompt('Your name?')});
+//	//1) join 'testChannel'
 //
-//	//2) Intercept 'load' event. This event is fired when the Core is loaded and ready to connect to APE Server
-//	client.addEvent('load', function() {
-//		//3) Call core start function to connect to APE Server, and prompt the user for a nickname
-//		client.core.start({"name": prompt('Your name?')});
-//		//1) join 'testChannel'
 //
+//});
+////
+////	//4) Listen to the ready event to know when your client is connected
+//client.addEvent('ready', function() {
 //
+//	 console.log('Your client is now connected');
+//	//1) join 'testChannel'
+//	client.core.join('sysmsg');
+//
+//	//2) Intercept multiPipeCreate event
+//	client.addEvent('multiPipeCreate', function(pipe, options) {
+//	//3) Send the message on the pipe
+//	pipe.send('Hello world!');
+//		console.log('Sending Hello world');
 //	});
 //
-//	//4) Listen to the ready event to know when your client is connected
-//	client.addEvent('ready', function() {
-//
-//		 console.log('Your client is now connected');
-//		//1) join 'testChannel'
-//		client.core.join('sysmsg');
-//
-//		//2) Intercept multiPipeCreate event
-//		client.addEvent('multiPipeCreate', function(pipe, options) {
-//		//3) Send the message on the pipe
-//		pipe.send('Hello world!');
-//			console.log('Sending Hello world');
-//		});
-//
-//		//4) Intercept receipt of the new message.
-//		client.onRaw('data', function(raw, pipe) {
-//			console.log('Receiving : ' + unescape(raw.data.msg));
-//		});
+//	//4) Intercept receipt of the new message.
+//	client.onRaw('data', function(raw, pipe) {
+//		console.log('Receiving : ' + unescape(raw.data.msg));
 //	});
-	
+//});
 });
 
 
