@@ -3,7 +3,7 @@
 define('DS',DIRECTORY_SEPARATOR);
 // uncomment the following to define a path alias
 Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
-
+Yii::setPathOfAlias('nii', Yii::getPathOfAlias('modules.nii'));
 $JQUERY_THEMEURL = rtrim(dirname($_SERVER['SCRIPT_NAME']),'/').'/css/jqueryui';
 $JQUERY_THEME = 'nii';
 
@@ -21,7 +21,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'ext.*',
-		'ext.nii.components.*',
+		'modules.nii.components.*',
 		'application.validators.*',
 		'application.vendors.*',
 		'application.vendors.FirePHPCore.*',

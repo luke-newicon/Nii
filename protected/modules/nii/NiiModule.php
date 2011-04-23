@@ -10,5 +10,7 @@
 
 class NiiModule extends NWebModule
 {
-	
+	public function init(){
+		
+	}
 }
