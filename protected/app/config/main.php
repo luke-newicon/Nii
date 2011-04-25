@@ -52,6 +52,7 @@ return array(
 		'dev'=>array(
 			'modules'=>array('kanban')
 		),
+		'nii'
 	),
 
 	// application components

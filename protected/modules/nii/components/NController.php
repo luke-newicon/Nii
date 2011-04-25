@@ -38,14 +38,13 @@ class NController extends CController
 			);
 		} else {
 			// include my scripts!
-			$path = Yii::getPathOfAlias('application.extensions.scripts');
-			$this->coreAssets = Yii::app()->getAssetManager()->publish($path);
-			Yii::app()->getClientScript()->registerCssFile(NHtml::baseUrl()."css/jqueryui/nii/jquery-ui.css");
+			$this->coreAssets = Yii::app()->getModule('nii')->getAssetsUrl();
+			Yii::app()->getClientScript()->registerCssFile($this->coreAssets."/jqueryui/nii/jquery-ui.css");
 
-			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/jquery/jquery.scrollto.js');
+			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/js/jquery.scrollto.js');
 			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
-			//Yii::app()->getClientScript()->registerCoreScript("ajaxqueue");
 		}
+
 	}
 
 	
