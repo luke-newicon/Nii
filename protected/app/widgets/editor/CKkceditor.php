@@ -50,7 +50,7 @@ class CKkceditor extends CInputWidget {
 	public $name;
 
 	public function init() {
-		$dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'source';
+		$dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';
 		$this->_baseurl = Yii::app()->getAssetManager()->publish($dir);
 		$this->kcFinderPath = $this->_baseurl . "/kcfinder/";
 		parent::init();

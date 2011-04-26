@@ -450,7 +450,8 @@ client.addEvent('load', function() {
 
 
 });
-//
+
+
 //	//4) Listen to the ready event to know when your client is connected
 client.addEvent('ready', function() {
 
