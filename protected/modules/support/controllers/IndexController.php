@@ -5,7 +5,7 @@ class IndexController extends AController
 	
 	public function actionIndex()
 	{
-		$url = $this->getModule('dev')->getAssetsUrl();
+		$url = Yii::app()->getModule('dev')->getAssetsUrl();
 		Yii::app()->clientScript->registerScriptFile("$url/ape/JavaScript.js");
 		Yii::app()->clientScript->registerScriptFile("$url/ape/config.js");
 		//NMailReader::readMail();

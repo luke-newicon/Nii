@@ -55,6 +55,7 @@ class NWebModule extends CWebModule
 	 */
 	public function getAssetsUrl()
 	{
+		echo $this->getName();
 		if($this->_assetsUrl===null)
 			$this->_assetsUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias($this->getName().'.assets'));
 		return $this->_assetsUrl;
