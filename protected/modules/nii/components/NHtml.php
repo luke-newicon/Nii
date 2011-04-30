@@ -39,6 +39,9 @@ class NHtml extends CHtml
 	}
 
 	public static function baseUrl(){
+		if(isset(Yii::app()->params['baseUrl'])){
+			return Yii::app()->params['baseUrl'];
+		}
 		return Yii::app()->request->baseUrl;
 	}
 
