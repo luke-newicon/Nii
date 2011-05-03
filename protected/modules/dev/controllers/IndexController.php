@@ -26,8 +26,15 @@ class IndexController extends Controller
 		$this->render('ape');
 	}
 	
-	public function actionTalkToApe($message){
-		$APEserver = 'http://ape.newicon.org:6969/?';
+	public function actionTalkToApe($message, $channel='sysmsg'){
+		$host = Yii::app()->request->getHostInfo();
+		// are we on local test server?
+		if(strpos($host, 'local.ape-project.org') ){
+			$APEserver = 'http://local.ape-project.org:6969/?';
+		}else{
+			$APEserver = 'http://ape.newicon.org:6969/?';
+		}
+		
 		$APEPassword = 'testpasswd';
 
 		$cmd = array(array( 
@@ -35,7 +42,7 @@ class IndexController extends Controller
 		  'params' =>  array( 
 			  'password'  => $APEPassword, 
 			  'raw'       => 'data', 
-			  'channel'   => 'sysmsg', 
+			  'channel'   => $channel, 
 			  //Note: data can't be a string 
 			  'data'      => array( 
 				  'msg' => $message
@@ -43,14 +50,10 @@ class IndexController extends Controller
 		   ) 
 		)); 
 
-		var_dump($APEserver.rawurlencode(json_encode($cmd)));
+		
 		$data = file_get_contents($APEserver.rawurlencode(json_encode($cmd))); 
-
-		if ($data == 'OK') {
-			echo 'Message sent!';
-		} else {
-			echo 'Error sending message, server response is : <pre>'.$data.'</pre>';
-		}
+		var_dump($APEserver.rawurlencode(json_encode($cmd)));
+		echo $data;
 	}
 	
 	public function actionWebcam(){
