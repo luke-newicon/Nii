@@ -71,4 +71,8 @@ class IndexController extends Controller
 			echo "Encoded JPEG information not received.";
 		}
 	}
+	
+	public function actionInstall(){
+		Yii::app()->install();
+	}
 }

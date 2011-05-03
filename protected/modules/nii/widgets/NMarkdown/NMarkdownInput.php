@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Show a markdown input textarea,
+ * Transforms a typical textarea to have a preview button displaying markdown rendered
+ * output for the textarea's text.
+ * 
+ * !!! TODO: add view to tidy up code.
+ * !!! TODO: indentation?!?
+ * !!! TODO: console.log statements will break all browsers except firefox!
+ * !!! TODO: make containing foler lowercase
+ */
 class NMarkdownInput extends CInputWidget {
 
 	public $htmlOptions;

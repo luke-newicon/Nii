@@ -159,5 +159,7 @@ class SupportModule extends NWebModule
 			echo NHtml::url('/support/index/message');
 	}
 	
-	
+	public function install(){
+		SupportEmail::install();
+	}
 }
