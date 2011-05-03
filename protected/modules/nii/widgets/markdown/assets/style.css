@@ -1,12 +1,16 @@
-/** Editor **/
-.btn.active {background: -moz-linear-gradient(center top , #CCC, #FFF) repeat scroll 0 0 #CCC;
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCC', endColorstr='#FFF');
-background:-webkit-gradient(linear, center top, center bottom, from(#ccc), to(#FFF));
-}
 .NTextareaMarkdown{padding:10px;}
+.NTextareaMarkdown .buttons .btn.btnN.btnToolbar {
+    padding: 5px;
+}
 .NTextareaMarkdown .buttons{margin-bottom:2px;}
 .NTextareaMarkdown .input,.NTextareaMarkdown{border:1px solid #CCC;}
 .NTextareaMarkdown .buttons .help_button{margin: 7px;}
 
 /** Markdown Formatting **/
 blockquote {background: none repeat scroll 0 0 #EEE;border: 1px dotted;margin: 10px;padding: 10px;}
+
+
+/** Editor **/
+.btn.active {background: -moz-linear-gradient(center top , #CCC, #FFF) repeat scroll 0 0 #CCC;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#CCC', endColorstr='#FFF');
+background:-webkit-gradient(linear, center top, center bottom, from(#ccc), to(#FFF));}

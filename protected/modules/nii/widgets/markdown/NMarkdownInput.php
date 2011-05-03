@@ -1,23 +1,33 @@
 <?php
-
 /**
  * Show a markdown input textarea,
  * Transforms a typical textarea to have a preview button displaying markdown rendered
  * output for the textarea's text.
- * 
- * !!! TODO: console.log statements will break all browsers except firefox!
  */
 class NMarkdownInput extends CInputWidget
 {
 	/**
-	 * route to a controller action that implements the markdownPreview action
+	 * Route to a controller action that implements the markdownPreview action
 	 * @var array
 	 */
 	public $action = 'nii/index/markdownPreview';
 
+	/**
+	 * The classes to be applied to the edit button
+	 * @var string
+	 */
 	public $editButtonClass = 'btn btnN btnToolbar btnToolbarLeft';
+
+	/**
+	 * The classes to be applied to the preview button
+	 * @var string
+	 */
 	public $previewButtonClass = 'btn btnN btnToolbar btnToolbarRight';
 
+	/**
+	 * Options to be applied to the text area
+	 * @var array
+	 */
 	public $htmlOptions = array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;');
 
 	public function run() {
