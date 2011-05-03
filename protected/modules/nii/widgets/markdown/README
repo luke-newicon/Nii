@@ -1,0 +1,24 @@
+INSTALLATION
+================================================================================
+1) Copy the markdown folder into the desired location in your application. All
+examples/default settings provided below assume that you have placed it in the application's widgets
+folder(ROOT_DIR/app/widgets).
+
+2) Add the following lines to a controller's action function you would
+like the AJAX to go to when previewing.
+'markdownPreview'=>'application.widgets.markdown.NMarkdownAction'
+
+3)Open the NMarkdownInput.php which can be found in the base of the widget folder
+and alter line 27 so that it links to the action created in the previous step. The default
+setting assumes that the widgets ajaxing will be placed in the default action of the site
+controller.
+
+USING THE PLUGIN
+================================================================================
+The plugin can be attached to a database field or run with a supplied name and value:
+
+1) Using with a database field
+$this->widget('application.widgets.markdown.NMarkdownInput',array('model'=>$model,'attribute'=>'description','htmlOptions'=>array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;')));
+
+2) Using with a supplied name and value
+$this->widget('modules.nii.widgets.markdown.NMarkdownInput',array('value'=>'tests','name'=>'test','htmlOptions'=>array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;')));

@@ -141,10 +141,6 @@ class SupportModule extends NWebModule
 		return Yii::app()->getModule('support');
 	}
 	
-	public function install(){
-		
-	}
-	
 	public function getLoadMessageListUrl(){
 		if(self::get()->threading)
 			echo NHtml::url('/support/index/loadMessageListThreaded/offset');

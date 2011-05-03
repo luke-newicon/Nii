@@ -33,7 +33,10 @@ class SiteController extends Controller {
 	}
 
 	public function actionSystems() {
-		$this->render('systems');
+		$ProjectTask  = new ProjectTask();
+		$this->render('systems',array(
+			'projectTask'=>$ProjectTask->model()->findByPk(36),
+		));
 	}
 
 	public function actionBlog() {
