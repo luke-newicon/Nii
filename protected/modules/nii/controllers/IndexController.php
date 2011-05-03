@@ -11,15 +11,10 @@
  */
 class IndexController extends NController
 {
-    //put your code here
-
-
 	public function actions(){
 		return array(
-			'markdownPreview'=>'application.modules.nii.widgets.NMarkdown.NMarkdownAction'
+			'markdownPreview'=>'modules.nii.widgets.markdown.NMarkdownAction'
 		);
 	}
-	
-
 }
 ?>

@@ -22,9 +22,7 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'description'); ?>
-		<?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
-		<?php echo $form->error($model,'description'); ?>
+		<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',array('model'=>$model,'attribute'=>'description','htmlOptions'=>array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;'))); ?>
 	</div>
 
 	<div class="row">
