@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Returns the preview window for the markdown widget
  * @author Matt Turner

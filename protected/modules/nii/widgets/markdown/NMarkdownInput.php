@@ -31,6 +31,7 @@ class NMarkdownInput extends CInputWidget
 	public $htmlOptions = array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;');
 
 	public function run() {
+		// The location of the markdown widgets asset folder
 		$assetLocation = dirname(__FILE__) . DIRECTORY_SEPARATOR. 'assets';
 
 		// The location the system ajax's to for its prview
