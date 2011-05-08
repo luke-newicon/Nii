@@ -51,7 +51,8 @@ class NOneRequiredValidator extends CValidator
 		}
 		// if we get this far then all of the attributes are empty.
 		foreach($this->attributes as $attribute){
-			$this->addError($object, $attribute, 'At least one of these fields is required ');
+			$message=$this->message!==null?$this->message:Yii::t('yii','At least one of these fields is required.');
+			$this->addError($object, $attribute, $message);
 		}
 		
 	}

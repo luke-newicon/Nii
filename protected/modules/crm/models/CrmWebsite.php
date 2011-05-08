@@ -90,4 +90,26 @@ class CrmWebsite extends CrmActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'contact_id'=>'int',
+				'address'=>'string',
+				'label'=>'string',
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_website_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
+			)
+		);
+	}
+	
 }

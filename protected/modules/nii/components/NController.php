@@ -55,7 +55,7 @@ class NController extends CController
         );
     }
 
-	public function performAjaxValidation($model, $formName){
+	protected function performAjaxValidation($model, $formName){
 		if (isset($_POST['ajax']) && $_POST['ajax'] === $formName) {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

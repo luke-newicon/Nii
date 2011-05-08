@@ -424,4 +424,30 @@ class CrmAddress extends CrmActiveRecord
 		);
 	}
 
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'lines'=>'text',
+				'city'=>'string',
+				'postcode'=>'string',
+				'county'=>'string',
+				'country_id'=>'int',
+				'label'=>'string',
+				'contact_id'=>'int',
+				'verified'=>'boolean'
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_address_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
+			)
+		);
+	}
+	
 }

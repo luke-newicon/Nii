@@ -49,6 +49,9 @@ class IndexController extends AController
 			if(isset($_POST[$modelName])){
 				if(isset($_POST[$modelName][0])){
 					// tabular input
+					// has many of the models for example 3 email addresses
+					// CrmEmail[0][address] = 'steve@newicon.net'
+					// CrmEmail[1][address] = 'luke@newicon.net'
 					foreach($_POST[$modelName] as $i=>$post){
 						$model = new $modelName;
 						$model->attributes=$_POST[$modelName][$i];

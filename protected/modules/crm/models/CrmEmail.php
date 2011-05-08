@@ -118,5 +118,26 @@ class CrmEmail extends CrmActiveRecord
 		return array_merge($tmp, array_combine(array_keys($defaultsArray), array_values($defaultsArray)));
 	}
 
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'contact_id'=>'int',
+				'address'=>'string',
+				'label'=>'string',
+				'verified'=>'boolean'
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_email_contact','contact_id','crm_contact','id','CASCADE','CASCADE')
+			)
+		);
+	}
 
 }

@@ -24,7 +24,7 @@ class DomainController extends Controller {
 		$model = new DomainLookup;
 
 		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
+		$this->performAjaxValidation($model, 'domain-lookup-form');
 
 		$results = '';
 		if (isset($_POST['DomainLookup'])) {
@@ -43,17 +43,6 @@ class DomainController extends Controller {
 		}
 
 		$this->render('lookup', array('results' => $results, 'model' => $model));
-	}
-
-	/**
-	 * Performs the AJAX validation.
-	 * @param CModel the model to be validated
-	 */
-	protected function performAjaxValidation($model) {
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'domain-lookup-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
 	}
 
 }

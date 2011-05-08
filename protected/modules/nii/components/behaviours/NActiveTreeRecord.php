@@ -2,11 +2,11 @@
 
 /**
  * The Nii tree table plugin
- * Should move to components
  *
  * @version 0.1
  */
-class TreeTable extends CActiveRecordBehavior {
+class NActiveTreeRecord extends CActiveRecordBehavior 
+{
 
 	/**
 	 * The left column name
