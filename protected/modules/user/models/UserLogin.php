@@ -34,7 +34,7 @@ class UserLogin extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'rememberMe'=>UserModule::t("Remember me next time"),
+			'rememberMe'=>UserModule::t("Remember me next time on this computer"),
 			'username'=>UserModule::t("username or email"),
 			'password'=>UserModule::t("password"),
 		);
@@ -46,6 +46,7 @@ class UserLogin extends CFormModel
 	 */
 	public function authenticate($attribute,$params)
 	{
+		
 		if(!$this->hasErrors())  // we only want to authenticate when no input errors
 		{
 			$identity=new UserIdentity($this->username,$this->password);
@@ -63,13 +64,18 @@ class UserLogin extends CFormModel
 					$this->addError("username",UserModule::t("Username is incorrect."));
 					break;
 				case UserIdentity::ERROR_STATUS_NOTACTIV:
-					$this->addError("status",UserModule::t("You account is not activated."));
+					$this->addError("username",UserModule::t("Your account is not activated."));
 					break;
 				case UserIdentity::ERROR_STATUS_BAN:
-					$this->addError("status",UserModule::t("You account is blocked."));
+					$this->addError("username",UserModule::t("Your account is blocked."));
 					break;
 				case UserIdentity::ERROR_PASSWORD_INVALID:
 					$this->addError("password",UserModule::t("Password is incorrect."));
+					break;
+				case UserIdentity::ERROR_DOMAIN:
+					$domain = $identity->getSubDomain();
+					Yii::app()->user->setFlash('error','You don\'t have access to the web address "'.Yii::app()->getSubDomain().'", check the address before trying again... try... '.$domain.' ');
+					$this->addError("username",UserModule::t("You do not have access to this address, ."));
 					break;
 			}
 		}

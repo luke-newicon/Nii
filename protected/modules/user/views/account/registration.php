@@ -16,6 +16,7 @@ $this->breadcrumbs=array(
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'registration-form',
 	'enableAjaxValidation'=>true,
+	'enableClientValidation'=>true,
 	'htmlOptions' => array('enctype'=>'multipart/form-data'),
 )); ?>
 
@@ -23,12 +24,14 @@ $this->breadcrumbs=array(
 
 	<?php echo $form->errorSummary(array($model)); ?>
 
-	<div class="row">
-	<?php echo $form->labelEx($model,'username'); ?>
-	<?php echo $form->textField($model,'username'); ?>
-	<?php echo $form->error($model,'username'); ?>
-	</div>
-
+	<?php if(UserModule::get()->showUsernameField): ?>
+		<div class="row">
+		<?php echo $form->labelEx($model,'username'); ?>
+		<?php echo $form->textField($model,'username'); ?>
+		<?php echo $form->error($model,'username'); ?>
+		</div>
+	<?php endif; ?>
+	
 	<div class="row">
 	<?php echo $form->labelEx($model,'email'); ?>
 	<?php echo $form->textField($model,'email'); ?>
@@ -36,7 +39,7 @@ $this->breadcrumbs=array(
 	</div>
 
 	<?php  // show fields from linked CRM module ?>
-	<?php if($contact): ?>
+	<?php if(UserModule::get()->useCrm): ?>
 		<div class="row">
 		<?php echo $form->labelEx($contact,'first name'); ?>
 		<?php echo $form->textField($contact,'first_name'); ?>
@@ -78,6 +81,24 @@ $this->breadcrumbs=array(
 		<p class="hint"><?php echo UserModule::t("Please enter the letters as they are shown in the image above."); ?>
 		<br/><?php echo UserModule::t("Letters are not case-sensitive."); ?></p>
 	</div>
+	<?php endif; ?>
+	
+	<?php if(UserModule::get()->domain): ?>
+		<h2>Select your site address!</h2>
+		<div class="row">
+			https://<?php echo $form->textField($domain,'domain'); ?>.spannerguides.com
+			<?php echo $form->error($domain,'domain'); ?>
+		</div>
+	<?php endif; ?>
+		
+		
+	<?php if(UserModule::get()->termsRequired): ?>
+		<h2>Terms</h2>
+		<div class="row">
+			<?php echo $form->checkBox($model,'terms'); ?>
+			<label for="<?php echo CHtml::activeId($model,'terms'); ?>" style="display:inline;font-weight:normal;">I have read and accept the </label><a href="#">terms and conditions</a>
+			<?php echo $form->error($model,'terms'); ?>
+		</div>
 	<?php endif; ?>
 
 	<div class="row submit">

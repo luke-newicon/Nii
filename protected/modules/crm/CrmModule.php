@@ -38,32 +38,22 @@ class CrmModule extends NWebModule
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'CRM'), array('/crm/index/index'));
 	}
 
+
 	public function install(){
 		
-		$auth=Yii::app()->authManager;
-		$auth->createTask('createSomething','create a something');
-		$auth->createTask('createContact','create a new contact record');
-		
-		$auth->getAuthItem('authenticated')
-			->addChild('createSomething','create a something');
-		
-		
-//		//echo 'hello?';
-//		$sqlFile = Yii::getPathOfAlias('crm.data').DS.'schema.mysql.sql';
-//		$sql = file_get_contents($sqlFile);
-//		dp($sql);
-//		$c = new CrmContact('install');
+//		$auth=Yii::app()->authManager;
+//		$auth->createTask('createSomething','create a something');
+//		$auth->createTask('createContact','create a new contact record');
 //		
-//		$def = $c->definition();
-//		dp($def);
-//		Yii::app()->db->createCommand()->createTable(
-//			$c->tableName(), 
-//			$def['columns'],
-//			$def['extra']
-//		);
-//		foreach($def['keys'] as $i=>$v){
-//			Yii::app()->db->createCommand()->createIndex($v[0], $c->tableName(), $v[1]);
-//		}
+//		$auth->getAuthItem('authenticated')
+//			->addChild('createSomething','create a something');
+		
+		CrmContact::install();
+		CrmAddress::install();
+		CrmEmail::install();
+		CrmPhone::install();
+		CrmWebsite::install();
+		//$this->runMySql();
 	}
 
 	public function uninstall(){}

@@ -14,6 +14,7 @@ class UserIdentity extends CUserIdentity
 	const ERROR_EMAIL_INVALID=3;
 	const ERROR_STATUS_NOTACTIV=4;
 	const ERROR_STATUS_BAN=5;
+	const ERROR_DOMAIN=6;
 	
 	/**
 	 * Authenticates a user.
@@ -44,6 +45,16 @@ class UserIdentity extends CUserIdentity
 		else if($this->_user->status==-1)
 			$this->errorCode=self::ERROR_STATUS_BAN;
 		else {
+			// if user module set up for subdomain apps then we need to add 
+			// an extra check
+			if(UserModule::get()->domain){
+				if($this->_user->domain != Yii::app()->getSubDomain()){
+					//echo 'errord domain';
+					$this->errorCode=self::ERROR_DOMAIN;
+					return !$this->errorCode;
+				}
+			}
+			
 			$this->_loginUser($this->_user);
 		}
 		return !$this->errorCode;
@@ -83,5 +94,12 @@ class UserIdentity extends CUserIdentity
 	public function getId()
 	{
 		return $this->_id;
+	}
+	
+	public function getSubDomain(){
+		if($this->_user !==null){
+			return $this->_user->domain;
+		}
+		return null;
 	}
 }

@@ -17,7 +17,7 @@
  * @property $bizRule;
  * @property $data;
  */
-class AuthItemAssign extends NActiveRecord
+class AuthAssignment extends NActiveRecord
 {
 
 	/**
@@ -97,6 +97,24 @@ class AuthItemAssign extends NActiveRecord
 //			'criteria'=>$criteria,
 //		));
 	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
 
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'itemname'=>'varchar(64) not null',
+				'userid'=>'varchar(64) not null',
+				'bizrule'=>'text',
+				'data'=>'text',
+				0=>'PRIMARY KEY (itemname,userid)',
+			),
+//			'foreignKeys'=>array(
+//				array('itemname','auth_item','name','CASCADE','CASCADE')
+//			)
+		);
+	}
 
 }

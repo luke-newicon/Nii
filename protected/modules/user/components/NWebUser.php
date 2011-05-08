@@ -71,6 +71,19 @@ class NWebUser extends CWebUser
 		return Yii::app()->user->checkAccess($route);	
 	}
 
+	public function getName(){
+		if($this->getIsGuest()){
+			return $this->guestName;
+		}else{
+			if($this->record !== null){
+				if($this->record->username !== null)
+					return $this->record->username;
+				else
+					return $this->record->email;
+			}
+			throw new CException('No record found for the logged in user');
+		}
+	}
 	
 
 }

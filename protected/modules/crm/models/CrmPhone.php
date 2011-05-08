@@ -95,6 +95,17 @@ class CrmPhone extends CrmActiveRecord
 		));
 	}
 	
+	public static function getPhoneLabels(){
+		return self::getLabels(__CLASS__,array(
+			'Home'=>array('title'=>''),
+			'Mobile'=>array('title'=>''),
+			'Work'=>array('title'=>''),
+			'Tel'=>array('title'=>''),
+			'Fax'=>array('title'=>'')
+		));
+	}
+	
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}

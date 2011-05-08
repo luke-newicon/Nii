@@ -69,3 +69,10 @@ create table auth_assignment
    primary key (itemname,userid),
    foreign key (itemname) references auth_item (name) on delete cascade on update cascade
 );
+
+DROP TABLE IF EXISTS `user_appdomain`;
+CREATE TABLE IF NOT EXISTS `user_appdomain` (
+  `domain` varchar(250) NOT NULL,
+  PRIMARY KEY (`domain`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

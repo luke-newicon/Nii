@@ -8,12 +8,11 @@ class AccountController extends Controller {
 	public $layout = '//layouts/login';
 
 	public function accessRules() {
-		return CMap::mergeArray(array(
+		return array(
 			array('allow',
-				'actions' => array('login', 'logout', 'registration', 'activation', 'recovery', 'captcha'),
+				'actions' => array('login', 'logout', 'registration','activation', 'recovery', 'captcha'),
 				'users' => array('*')
-			)),
-			parent::accessRules()
+			),
 		);
 	}
 
@@ -41,11 +40,11 @@ class AccountController extends Controller {
 				$model->attributes = $_POST['UserLogin'];
 				// validate user input and redirect to previous page if valid
 				if ($model->validate()) {
-					$this->lastVisit();
-					if (strpos(Yii::app()->user->returnUrl, '/index.php') !== false)
-						$this->redirect(Yii::app()->getModule('user')->returnUrl);
-					else
-						$this->redirect(Yii::app()->getModule('user')->returnUrl);
+					// add last visit;
+					$user = UserModule::userModel()->notsafe()->findByPk(Yii::app()->user->id);
+					$user->lastvisit = time();
+					$user->save();
+					$this->redirect(Yii::app()->getModule('user')->returnUrl);
 				}
 			}
 			// display the login form
@@ -63,55 +62,74 @@ class AccountController extends Controller {
 		$this->redirect(Yii::app()->getModule('user')->returnLogoutUrl);
 	}
 
-	private function lastVisit() {
-		$lastVisit = UserModule::userModel()->notsafe()->findByPk(Yii::app()->user->id);
-		$lastVisit->lastvisit = time();
-		$lastVisit->save();
-	}
-
 
 
 	/**
 	 * Registration user
 	 */
 	public function actionRegistration() {
-		$model = new RegistrationForm;
-
+		$userModule = UserModule::get();
+		// array of models to validate
+		$models = array();
+		
+		$user = new RegistrationForm;
+		
+		$domain = new AppDomain;
 		$contact = null;
-		if(Yii::app()->getModule('user')->useCrm)
+		// populate array of models to validate
+		$models[] = $user;
+		if($userModule->useCrm){
 			$contact = new CrmContact;
-
-		$module = $this->getModule();
+			$models[] = $contact;
+		}		
+		if($userModule->domain) 
+			$models[] = $domain;
+		
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
-		{
-			echo CActiveForm::validate(array($model,$contact));
+		{	
+			echo CActiveForm::validate($models);
 			Yii::app()->end();
 		}
 
 		if (Yii::app()->user->id) {
-			$this->redirect($module->profileUrl);
+			$this->redirect($userModule->profileUrl);
 		} else {
 			if(isset($_POST['RegistrationForm'])) {
-				$model->attributes=$_POST['RegistrationForm'];
-				if($model->validate())
+				// validate all models enabled
+				// i want validate to be called on all models 
+				// but if any one is false i want valid to be false
+				$valid = array();
+				foreach($models as $model){
+					$model->attributes=$_POST[get_class($model)];
+					$valid[] = $model->validate();
+				}
+				// if any of the models failed validation
+				if(!in_array(false, $valid))
 				{
-					$model->createtime=time();
-					$model->superuser=0;
-					$model->status=(($module->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
-					$model->save();
+					$user->createtime=time();
+					$user->superuser=0;
+					$user->status=(($userModule->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
+					
+					// prossess domain
+					if($userModule->domain){
+						$domain->save();
+						$user->domain = $domain->domain;
+					}
+					
+					$user->save();
 
 					// if crm module installed
-					if(Yii::app()->getModule('user')->useCrm){
-						$contact->attributes = $_POST['CrmContact'];
+					if($userModule->useCrm){
 						$contact->type = CrmContact::TYPE_USER;
-						$contact->user_id = $model->id;
+						$contact->user_id = $user->id;
 						$contact->save();
 					}
+					
 
-					if ($module->sendActivationMail) {
-						$activationUrl = $this->makeActivationLink($model, '/user/registration/activation');
-						UserModule::sendMail($model->email,
+					if ($userModule->sendActivationMail) {
+						$activationUrl = $this->makeActivationLink($user, '/user/registration/activation');
+						UserModule::sendMail($user->email,
 							UserModule::t("You registered from {site_name}",
 								array('{site_name}'=>Yii::app()->name)),
 							UserModule::t("Please activate you account go to {activation_url}",
@@ -119,20 +137,20 @@ class AccountController extends Controller {
 					}
 
 					// if users can login imediately after registration
-					if (($module->loginNotActive ||($module->activeAfterRegister && $module->sendActivationMail==false)) && $module->autoLogin) {
-						$identity=new UserIdentity($model->username,$soucePassword);
+					if (($userModule->loginNotActive ||($userModule->activeAfterRegister && $userModule->sendActivationMail==false)) && $userModule->autoLogin) {
+						$identity=new UserIdentity($user->username,$soucePassword);
 						$identity->authenticate();
 						Yii::app()->user->login($identity,0);
-						$this->redirect($module->returnUrl);
+						$this->redirect($userModule->returnUrl);
 					} else {
-						if (!$module->activeAfterRegister && !$module->sendActivationMail) {
+						if (!$userModule->activeAfterRegister && !$userModule->sendActivationMail) {
 							Yii::app()->user->setFlash('registration',
 								UserModule::t("Thank you for your registration. Contact Admin to activate your account."));
-						} elseif($module->activeAfterRegister && $module->sendActivationMail==false) {
+						} elseif($userModule->activeAfterRegister && $userModule->sendActivationMail==false) {
 							Yii::app()->user->setFlash('registration',
 								UserModule::t("Thank you for your registration. Please {{login}}.",
-									array('{{login}}'=>CHtml::link(UserModule::t('Login'),$module->loginUrl))));
-						} elseif($module->loginNotActive) {
+									array('{{login}}'=>CHtml::link(UserModule::t('Login'),$userModule->loginUrl))));
+						} elseif($userModule->loginNotActive) {
 							Yii::app()->user->setFlash('registration',
 								UserModule::t("Thank you for your registration. Please check your email or login."));
 						} else {
@@ -141,12 +159,16 @@ class AccountController extends Controller {
 						}
 						//$this->refresh();
 					}
+					// call external events!
+					$e = new CEvent($this, array('user'=>$user));
+					$userModule->onRegistrationComplete($e);
 				}
 			}
-			$this->render('registration',array('model'=>$model,'contact'=>$contact));
+			$this->render('registration',array('model'=>$user,'contact'=>$contact,'domain'=>$domain));
 		}
 	}
 
+	
 
 	/**
 	 * Activattion link for user account
@@ -157,12 +179,14 @@ class AccountController extends Controller {
 		if ($email&&$activekey) {
 			$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
 			if (isset($find) && $find->status==1) {
-			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is active.")));
+			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is active.")));
 			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
-			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("You account is activated.")));
+			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is activated.")));
+				$e = new CEvent($this, array('user'=>$user));
+				UserModule::get()->onActivation($e);
 			} else {
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Incorrect activation URL.")));
 			}

@@ -91,6 +91,17 @@ class CrmWebsite extends CrmActiveRecord
 		));
 	}
 	
+	public static function getWebsiteLabels(){
+		return self::getLabels(__CLASS__,array(
+			'Website'=>array('title'=>'Enter a web address'),
+			'Facebook'=>array('title'=>'Enter a Facebook profile address e.g. "http://www.facebook.com/markzuckerberg"'),
+			'LinkedIn'=>array('title'=>'Enter a Linkedin profile address like "http://www.linkedin.com/in/profilename" or "http://www.linkedin.com/compnay/newicon"'),
+			'Twitter'=>array('title'=>'Enter a twitter username e.g. "newicon"'),
+			'Blog'=>array('title'=>'')
+		));
+	}
+	
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
