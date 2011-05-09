@@ -30,4 +30,34 @@ class CrmActiveRecord extends NActiveRecord
 		}
 		return $ret;
 	}
+	
+	/**
+	 * get all labels using distinct from table and merge with $preSetArray
+	 * 
+	 * @param string $className
+	 * @param array $preSetArray array('Home'=>array('title'=>''),'Work'=>array('title'=>''))
+	 * @return array 
+	 */
+	public static function getLabels($className, $preSetArray){
+		return self::labelArray(
+			self::model($className)->cmd()->selectDistinct('label')->queryAll(),
+			$preSetArray
+		);
+	}
+	
+	/**
+	 * merge two arrays and return in format suitable for popup list
+	 * @param type $rowset
+	 * @param type $defaultsArray
+	 * @return type 
+	 */
+	public static function labelArray($rowset, $defaultsArray){
+		$tmp=array();
+		foreach($rowset as $l){
+			if(empty($l->label)) continue;
+			$tmp[$l->label] = $l->label;
+		}
+		return array_merge($tmp, array_combine(array_keys($defaultsArray), array_values($defaultsArray)));
+	}
+	
 }

@@ -57,29 +57,54 @@ class UserModule extends NWebModule
 	public $userClass = 'User';
 
 	public $fieldsMessage = '';
-	
-	
-	
-	/**
-	 * @var boolean
-	 */
-	public $captcha = array('registration'=>true);
-	
-	/**
-	 * @var boolean
-	 */
-	//public $cacheEnable = false;
+
 	
 	public $tableUsers = '{{user_user}}';
 	public $tableProfiles = '{{crm_contact}}';
 
+	/**
+	 * Whether a user must proide a unique username
+	 * @var boolean 
+	 */
+	public $usernameRequired = true;
+	
+	/**
+	 * Whether to show the username input field on user registration
+	 * @var boolean 
+	 */
+	public $showUsernameField = true;
+	
+	/**
+	 * Whether to make the app user module domain specific 
+	 * (also adds required domain field to the user signup form)
+	 * @var boolean 
+	 */
+	public $domain = false;
+	
+	/**
+	 * on registration the user must accept terms
+	 * to complete, if this is false, the terms option will not appear.
+	 * @var type 
+	 */
+	public $termsRequired = true;
 
+	
+	/**
+	 * use captcha on registration form
+	 * @var boolean
+	 */
+	public $registrationCaptcha = true;
+
+	/**
+	 * This is set to false automatically if the CRM module is not loaded
+	 * @var type 
+	 */
+	public $useCrm = true;
+	
 	static private $_user;
 	static private $_admin;
 	static private $_admins;
-
-	public $useCrm = false;
-
+	
 	/**
 	 * @var array
 	 * @desc Behaviors for models
@@ -87,8 +112,8 @@ class UserModule extends NWebModule
 	public $componentBehaviors=array();
 
 	public function  preinit() {
-		if(Yii::app()->getModule('crm'))
-			$this->useCrm = true;
+		if(Yii::app()->getModule('crm') === null)
+			$this->useCrm = false;
 		parent::preinit();
 	}
 
@@ -145,9 +170,7 @@ class UserModule extends NWebModule
 	public static function doCaptcha($place = '') {
 		if(!extension_loaded('gd'))
 			return false;
-		if (in_array($place, Yii::app()->getModule('user')->captcha))
-			return Yii::app()->getModule('user')->captcha[$place];
-		return false;
+		return Yii::app()->getModule('user')->registrationCaptcha;
 	}
 	
 	/**
@@ -187,11 +210,12 @@ class UserModule extends NWebModule
 	 * Send mail method
 	 */
 	public static function sendMail($email,$subject,$message) {
-    	$adminEmail = Yii::app()->params['adminEmail'];
-	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
-	    $message = wordwrap($message, 70);
-	    $message = str_replace("\n.", "\n..", $message);
-	    return mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
+//    	$adminEmail = Yii::app()->params['adminEmail'];
+//	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
+//	    $message = wordwrap($message, 70);
+//	    $message = str_replace("\n.", "\n..", $message);
+//	    return mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
+		return true;
 	}
 	
 	/**
@@ -230,6 +254,45 @@ class UserModule extends NWebModule
 	 */
 	public static function get(){
 		return Yii::app()->getModule('user');
+	}
+	
+	
+	/**
+	 * EVENTS ... events ROCK!
+	 */
+	
+	
+	/**
+	 * When a user finishes successfull registration.
+	 * This is when registration form has been successfully completed
+	 * and the user added to the database
+	 * @param CEvent $event contains a user parameter with the user active record
+	 * object in it.
+	 */
+	public function onRegistrationComplete($event){
+		$this->raiseEvent('onRegistrationComplete', $event);
+	}
+	
+	
+	/**
+	 *
+	 * @param type $event 
+	 */
+	public function onActivation($event){
+		$this->raiseEvent('onActivation', $event);
+	}
+	
+	
+	public function install(){
+		AuthItem::install();
+		AuthAssignment::install();
+		AuthItemChild::install();
+		User::install();
+		if($this->domain){
+			AppDomain::install();
+			AppUserDomain::install();
+		}
+		//$this->runMySql();
 	}
 	
 }

@@ -56,6 +56,7 @@ class CrmContact extends NActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('first_name, last_name', 'nii.components.validators.NOneRequiredValidator', 'message'=>'You must enter a first or last name'),
 			array('title', 'length', 'max'=>50),
 			array('first_name, last_name, company', 'length', 'max'=>250),
 			array('company_id', 'length', 'max'=>11),
@@ -516,6 +517,29 @@ class CrmContact extends NActiveRecord
 			return $this->name();
 		}
 		return parent::__get($name);
+	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+	
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'title'=>'string',
+				'first_name'=>'string',
+				'last_name'=>'string',
+				'company'=>'string',
+				'type'=>"enum('CONTACT','COMPANY','USER') NOT NULL DEFAULT 'CONTACT'",
+				'company_id'=>'int',
+				'user_id'=>'int'
+			),
+			'keys'=>array(
+				array('company_id'),
+				array('user_id')
+			)
+		);
 	}
 	
 }

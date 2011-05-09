@@ -81,7 +81,7 @@ class NFileManager extends CApplicationComponent {
 			$origFileName = $up->getFileName(null, false);
 
 			$filedName = time() . '_' . $origFileName;
-
+			
 			$up->addFilter('rename', array('target' => $targetPath . $filedName));
 			$up->receive();
 			$info = $up->getFileInfo();

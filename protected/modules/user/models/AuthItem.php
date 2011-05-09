@@ -136,6 +136,23 @@ class AuthItem extends NActiveRecord
 		);
 	}
 	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+	
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'name'=>'varchar(64) not null',
+				'type'=>'int not null',
+				'description'=>'text',
+				'bizRule'=>'text',
+				'data'=>'text',
+				0=>'PRIMARY KEY (name)',
+			),
+		);
+	}
+	
 
 
 }

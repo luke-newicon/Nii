@@ -55,7 +55,7 @@ class User extends NActiveRecord
 			array('superuser', 'in', 'range'=>array(0,1)),
 			array('username, email, createtime, lastvisit, superuser, status', 'required'),
 			array('createtime, lastvisit, superuser, status', 'numerical', 'integerOnly'=>true),
-			array('username', 'safe', 'on'=>'search'),
+			array('username, domain', 'safe', 'on'=>'search'),
 		):((Yii::app()->user->id==$this->id)?array(
 			array('username, email', 'required'),
 			array('username', 'length', 'max'=>20, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
@@ -63,7 +63,7 @@ class User extends NActiveRecord
 			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
 			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
 			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-			array('username', 'safe', 'on'=>'search'),
+			array('username, domain', 'safe', 'on'=>'search'),
 		):array()));
 	}
 
@@ -113,7 +113,7 @@ class User extends NActiveRecord
                 'condition'=>'superuser=1',
             ),
             'notsafe'=>array(
-            	'select' => 'id, username, password, email, activekey, createtime, lastvisit, superuser, status',
+            	'select' => 'id, username, password, email, activekey, createtime, lastvisit, superuser, status, domain',
             ),
         );
     }
@@ -121,7 +121,7 @@ class User extends NActiveRecord
 	public function defaultScope()
     {
         return array(
-            'select' => 'id, username, email, createtime, lastvisit, superuser, status',
+            'select' => 'id, username, email, createtime, lastvisit, superuser, status, domain',
         );
     }
 	
@@ -191,6 +191,34 @@ class User extends NActiveRecord
 
 	public static function getCurrentUser(){
 		return UserModule::userModel()->findByPk(Yii::app()->user->getId());
+	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+	
+	public function schema() {
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'username'=>'string',
+				'password'=>'string NOT NULL',
+				'email'=>'string NOT NULL',
+				'activekey'=>'string NOT NULL',
+				'createtime'=>'int',
+				'lastvisit'=>'int',
+				'superuser'=>'boolean NOT NULL DEFAULT 0',
+				'status'=>'boolean NOT NULL DEFAULT 0',
+				'domain'=>'string'
+			),
+			'keys'=>array(
+				array('username', 'username', true),
+				array('email', 'email', true),
+				array('status'),
+				array('superuser'),
+				array('domain')
+			)
+		);
 	}
 
 

@@ -97,26 +97,35 @@ class CrmEmail extends CrmActiveRecord
 	}
 
 
+	
 	public static function getEmailLabels(){
-		return self::labelArray(
-			self::model()->cmd()->selectDistinct('label')->queryAll(),
-			array(
-				'Home'=>array('title'=>''),
-				'Work'=>array('title'=>''),
-				'Other'=>array('title'=>'')
+		return self::getLabels(__CLASS__,array(
+			'Home'=>array('title'=>''),
+			'Work'=>array('title'=>''),
+			'Other'=>array('title'=>'')
+		));
+	}
+
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'contact_id'=>'int',
+				'address'=>'string',
+				'label'=>'string',
+				'verified'=>'boolean'
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_email_contact','contact_id','crm_contact','id','CASCADE','CASCADE')
 			)
 		);
 	}
-
-
-	public static function labelArray($rowset, $defaultsArray){
-		$tmp=array();
-		foreach($rowset as $l){
-			if(empty($l->label)) continue;
-			$tmp[$l->label] = $l->label;
-		}
-		return array_merge($tmp, array_combine(array_keys($defaultsArray), array_values($defaultsArray)));
-	}
-
 
 }

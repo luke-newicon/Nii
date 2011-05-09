@@ -90,4 +90,37 @@ class CrmWebsite extends CrmActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public static function getWebsiteLabels(){
+		return self::getLabels(__CLASS__,array(
+			'Website'=>array('title'=>'Enter a web address'),
+			'Facebook'=>array('title'=>'Enter a Facebook profile address e.g. "http://www.facebook.com/markzuckerberg"'),
+			'LinkedIn'=>array('title'=>'Enter a Linkedin profile address like "http://www.linkedin.com/in/profilename" or "http://www.linkedin.com/compnay/newicon"'),
+			'Twitter'=>array('title'=>'Enter a twitter username e.g. "newicon"'),
+			'Blog'=>array('title'=>'')
+		));
+	}
+	
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'contact_id'=>'int',
+				'address'=>'string',
+				'label'=>'string',
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_website_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
+			)
+		);
+	}
+	
 }

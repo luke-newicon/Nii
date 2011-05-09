@@ -34,7 +34,7 @@
 		<div class="media man size23of25">
 			<?php if(isset($c) && $c != false): ?>
 				<a href="#" class="img prm">
-					<?php $this->widget('crm.components.CrmImage',array('contact'=>$c,'size'=>70)); ?>
+					<?php $this->widget('crm.components.CrmImage',array('contact'=>$c,'size'=>70, 'edit'=>true)); ?>
 				</a>
 			<?php endif;?>	
 			<div class="bd">
@@ -42,7 +42,7 @@
 				<div class="inputBox multiInput">
 					<div class="noHighlight noBorder">
 						<div class="inputBox">
-							<?php echo $form->textField($c,'company',array('class'=>'input')); ?>
+							<?php echo $form->textField($c,'company',array('class'=>'input','placeholder'=>'company')); ?>
 							<?php echo $form->error($c,'company'); ?>
 						</div>
 					</div>
@@ -57,7 +57,7 @@
 						<div class="unit leftBorderOnly cornerOff" style="width:39%;">
 							<div class="inputContainer">
 								<div class="inputBox">
-									<?php echo $form->textField($c,'first_name',array('class'=>'input')); ?>
+									<?php echo $form->textField($c,'first_name',array('class'=>'input','placeholder'=>'first name')); ?>
 									<?php echo $form->error($c,'first_name'); ?>
 								</div>
 							</div>
@@ -65,7 +65,7 @@
 						<div class="lastUnit leftBorderOnly cornerLeftOff">
 							<div class="inputContainer">
 								<div class="inputBox">
-									<?php echo $form->textField($c,'last_name',array('class'=>'input')); ?>
+									<?php echo $form->textField($c,'last_name',array('class'=>'input','placeholder'=>'last name')); ?>
 									<?php echo $form->error($c,'last_name'); ?>
 								</div>
 							</div>
@@ -75,7 +75,7 @@
 						<div class="lastUnit topBorderOnly cornerTopOff">
 							<div class="inputContainer">
 								<div class="inputBox">
-									<?php echo $form->textField($c,'company',array('class'=>'input')); ?>
+									<?php echo $form->textField($c,'company',array('class'=>'input','placeholder'=>'company')); ?>
 									<?php echo $form->error($c,'company'); ?>
 								</div>
 							</div>
@@ -160,23 +160,24 @@
 </div>
 <div id="phone" class="popmenu ui-corner-all">
 	<ul>
-		<?php //foreach($f->getPhoneLabels() as $k=>$l): ?>
-			<li><a href="#" title="<?php //echo NPage::encode($l['title']); ?>"><?php //echo $k; ?></a></li>
-		<?php //endforeach; ?>
+		<?php foreach(CrmPhone::getPhoneLabels() as $k=>$l): ?>
+			<li><a href="#" title="<?php echo CHtml::encode($l['title']); ?>"><?php echo $k; ?></a></li>
+		<?php endforeach; ?>
 	</ul>
 </div>
 <div id="website" class="popmenu ui-corner-all">
 	<ul>
-		<?php //foreach($f->getWebsiteLabels() as $k=>$l): ?>
-			<li><a href="#" title="<?php //echo NPage::encode($l['title']); ?>"><?php //echo $k; ?></a></li>
-		<?php //endforeach; ?>
+		<?php foreach(CrmWebsite::getWebsiteLabels() as $k=>$l): ?>
+		
+			<li><a href="#" title="<?php echo CHtml::encode($l['title']); ?>"><?php echo $k; ?></a></li>
+		<?php endforeach; ?>
 	</ul>
 </div>
 <div id="address" class="popmenu ui-corner-all">
 	<ul>
-		<?php //foreach($f->getAddressLabels() as $k=>$l): ?>
-		<li><a href="#" title="<?php //echo NPage::encode($l['title']); ?>"><?php //echo $k; ?></a></li>
-		<?php //endforeach; ?>
+		<?php foreach(CrmAddress::getAddressLabels() as $k=>$l): ?>
+		<li><a href="#" title="<?php echo CHtml::encode($l['title']); ?>"><?php echo $k; ?></a></li>
+		<?php endforeach; ?>
 	</ul>
 </div>
 <?php $this->endWidget(); ?>

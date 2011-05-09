@@ -7,7 +7,15 @@ class IndexController extends AController
 	{
 		$url = Yii::app()->getModule('dev')->getAssetsUrl();
 		Yii::app()->clientScript->registerScriptFile("$url/ape/JavaScript.js");
-		Yii::app()->clientScript->registerScriptFile("$url/ape/config.js");
+		$host = Yii::app()->request->getHostInfo();
+		// are we on local test server?
+		if(strpos($host, 'local.ape-project.org') ){
+			Yii::app()->clientScript->registerScriptFile("$url/ape/config_local.js");
+		}else{
+			Yii::app()->clientScript->registerScriptFile("$url/ape/config.js");
+		}
+		
+		
 		//NMailReader::readMail();
 		//$tickets = SupportTicket::model()->findAll();
 		$total = NMailReader::countMessages();

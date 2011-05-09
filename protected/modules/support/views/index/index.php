@@ -457,7 +457,7 @@ client.addEvent('ready', function() {
 
 	 console.log('Your client is now connected');
 	//1) join 'testChannel'
-	client.core.join('sysmsg');
+	client.core.join(['sysmsg','emails']);
 
 	//2) Intercept multiPipeCreate event
 	client.addEvent('multiPipeCreate', function(pipe, options) {
@@ -468,7 +468,8 @@ client.addEvent('ready', function() {
 
 	//4) Intercept receipt of the new message.
 	client.onRaw('data', function(raw, pipe) {
-		console.log('Receiving : ' + unescape(raw.data.msg));
+		
+		console.log('Receiving : ' + unescape(raw));
 	});
 });
 

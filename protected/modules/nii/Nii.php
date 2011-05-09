@@ -43,7 +43,6 @@ class Nii extends CWebApplication
 		// initialise modules
 		$this->getNiiModules();
 		
-		$this->install();
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
 		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
@@ -66,7 +65,7 @@ class Nii extends CWebApplication
 		foreach(Yii::app()->getModules() as $module=>$v){
 			if (in_array($module, $exclude)) continue;
 			$module = Yii::app()->getModule($module);
-			if($m instanceOf NWebModule)
+			if($module instanceOf NWebModule)
 				$m[] = $module;
 		}
 		return $m;
@@ -74,8 +73,9 @@ class Nii extends CWebApplication
 	
 	
 	public function install(){
-		foreach($this->getNiiModules() as $m)
+		foreach($this->getNiiModules() as $m){
 			$m->install();
+		}
 	}
 	
 	/**
@@ -84,22 +84,21 @@ class Nii extends CWebApplication
 	 */
 	public function registrationComplete($event){
 		$this->createApp($event->params['user']->domain);
+		
+		// add signed up user to own db user table
 	}
 	
-	public function createApp($subdomain, $dbPrefix='spanner_'){
-		
+	public function createApp($subdomain){
+		$this->subDomain = $subdomain;
+		$dbName = $this->getMyDbName();
 		// install new database with the name of the subdomain .. like spanner_subdomain
-		$sql = "CREATE DATABASE `$dbPrefix$subdomain`";
+		$sql = "CREATE DATABASE `$dbName`";
 		$cmd = Yii::app()->db->createCommand($sql);
 		$cmd->execute();
 		
 		// install the tables and run each modules install
-		$db = Yii::app()->getMyDb($subdomain);
-		$db->createCommand()->createTable('test', array(
-			'id'=>'pk',
-			'test'=>'string'
-		));
-		
+		$db = Yii::app()->getMyDb();
+		$this->install();
 	}
 	
 	public function getSubDomain(){
@@ -110,18 +109,33 @@ class Nii extends CWebApplication
 		$this->_subDomain = $subdomain;
 	}
 	
+	
+	
+	public $prefix = 'spanner_';
+	public function getMyDbName(){
+		$subdomain = $this->getSubDomain();
+		
+		return $this->prefix.$subdomain;
+	}
+	
 	/**
 	 * get the database specific to this subdomain
 	 * 
 	 * @param string $subdomain
 	 * @return CDbConnection 
 	 */
-	public function getMyDb($subdomain=null){
-		$subdomain = ($subdomain===null) ? $this->getSubDomain() : $subdomain ;
-		if(!$this->hasComponent("{$subdomain}_db")) {
-			$this->components = array("{$subdomain}_db"=>array(
+	public function getMyDb(){
+		
+		// hmm this is a wee bit dangerous maybe
+		if($this->getSubDomain() === null)
+			return $this->db;
+		
+		$dbName = $this->getMyDbName();
+		
+		if(!$this->hasComponent("{$dbName}_db")) {
+			$this->components = array("{$dbName}_db"=>array(
 				'class' => 'CDbConnection',
-				'connectionString' => "mysql:host=localhost;dbname=spanner_{$subdomain}",
+				'connectionString' => "mysql:host=localhost;dbname={$dbName}",
 				'emulatePrepare' => true,
 				'username' => 'newicon',
 				'password' => 'bonsan',
@@ -132,7 +146,7 @@ class Nii extends CWebApplication
 				'enableParamLogging'=>true,
 			));
 		}
-		$component = "{$subdomain}_db";
+		$component = "{$dbName}_db";
 		return $this->$component;
 	}
 	

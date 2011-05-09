@@ -23,5 +23,9 @@ class IndexController extends AController {
 
 		$this->render('view',array('model'=>$model));
 	}
+	
+	public function actionInstall(){
+		$this->getModule()->install();
+	}
 
 }

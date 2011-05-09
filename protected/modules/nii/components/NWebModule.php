@@ -60,4 +60,12 @@ class NWebModule extends CWebModule
 		return $this->_assetsUrl;
 	}
 
+	public function install(){}
+	
+	public function runMySql(){
+		$f = Yii::getPathOfAlias($this->getName().'.data').DS.'schema.mysql.sql';
+		$sql = file_get_contents($f);
+		Yii::app()->getMyDb()->createCommand($sql)->execute();
+	}
+	
 }

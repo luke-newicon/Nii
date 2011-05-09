@@ -94,5 +94,38 @@ class CrmPhone extends CrmActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public static function getPhoneLabels(){
+		return self::getLabels(__CLASS__,array(
+			'Home'=>array('title'=>''),
+			'Mobile'=>array('title'=>''),
+			'Work'=>array('title'=>''),
+			'Tel'=>array('title'=>''),
+			'Fax'=>array('title'=>'')
+		));
+	}
+	
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'contact_id'=>'int',
+				'number'=>'string',
+				'label'=>'string',
+				'verified'=>'boolean'
+			),
+			'keys'=>array(
+				array('contact_id')
+			),
+			'foreignKeys'=>array(
+				array('crm_phone_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
+			)
+		);
+	}
 
 }
