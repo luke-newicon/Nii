@@ -12,7 +12,7 @@ $JQUERY_THEME = 'nii';
 return array(
 	'basePath'=>dirname(__FILE__).DS.'..',
 	'name'=>'Newicon',
-
+	'timezone'=>'Europe/London',
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
 

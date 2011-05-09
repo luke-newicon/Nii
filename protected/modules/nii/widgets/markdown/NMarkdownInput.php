@@ -1,8 +1,10 @@
-<?php
+v<?php
 /**
  * Show a markdown input textarea,
  * Transforms a typical textarea to have a preview button displaying markdown rendered
  * output for the textarea's text.
+ *
+ * @version 0.2
  */
 class NMarkdownInput extends CInputWidget
 {
@@ -94,7 +96,9 @@ class NMarkdownInput extends CInputWidget
 					var textArea = nTextAreaMarkDownGetTextArea(this,"textarea");
 					var previewBox = nTextAreaMarkDownGetField(this,".previewBox");
 					previewBox.hide();
-					textArea.parent().show();
+					textArea.parent().fadeIn("fast",function() {
+						textArea.focus();
+					});
 				});';
 		$cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('maskedinput');

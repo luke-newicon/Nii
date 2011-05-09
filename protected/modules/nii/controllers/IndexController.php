@@ -13,7 +13,8 @@ class IndexController extends NController
 {
 	public function actions(){
 		return array(
-			'markdownPreview'=>'modules.nii.widgets.markdown.NMarkdownAction'
+			'markdownPreview'=>'modules.nii.widgets.markdown.NMarkdownAction',
+			'NNotes'=>'modules.nii.widgets.notes.NNotesAction'
 		);
 	}
 }

@@ -9,24 +9,6 @@ $this->menu=array(
 	),
 );
 ?>
-
-<h1>All Projects</h1>
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'project-project-grid',
-	'dataProvider'=>$project->search(),
-	'filter'=>$project,
-	'columns'=>array(
-		'id',
-		array('name'=>'name','value'=>'$data->nameCol()','type'=>'html'),
-		'code',
-		'description',
-		'completion_date',
-		'estimated_time',
-		array('name'=>'recorded_time','value'=>'$data->recordedTimeCol()','type'=>'html'),
-		'created',
-		array(
-			'class'=>'CButtonColumn',
-			'template'=>'{update}{delete}'
-		),
-	),
-)); ?>
+<h1>Active Projects</h1>
+<?php $this->renderPartial('/index/partials/_status',array('overallProjectStats'=>$project->getProjectStats())) ?>
+<?php $this->renderPartial('/index/partials/_grid',array('project'=>$project)) ?>

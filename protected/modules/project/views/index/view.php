@@ -36,19 +36,15 @@ $this->widget('zii.widgets.CDetailView', array(
 
 <?php
 
-$this->widget('system.web.widgets.CTabView',array('tabs'=>array(
-    'tab0'=>array(
-          'title'=>'Statistics',
-	  'view'=>'_stats',
-	  'data'=>array('task'=>$task,'project'=>$project,'totalTime'=>$project->getRecordedTime())
-    ),
-    'tasks'=>array(
-          'title'=>'Tasks',
-	  'view'=>'_taskGrid',
-	  'data'=>array('task'=>$task)
-    ),
-),
-	'htmlOptions'=>array('class'=>'solidTabs')));
+//$this->widget('system.web.widgets.CTabView',array('tabs'=>array(
+//    'tasks'=>array(
+//          'title'=>'Tasks',
+//	  'view'=>'/task/partials/_grid',
+//	  'data'=>array('task'=>$task)
+//    ),
+//),
+//	'htmlOptions'=>array('class'=>'solidTabs')));
 
 ?>
+<?php $this->renderPartial('/task/partials/_grid',array('class'=>'solidTabs','task'=>$task))?>
 
