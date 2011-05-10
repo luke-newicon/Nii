@@ -1,4 +1,6 @@
 body{font-family:Arial,Helvitica,sans-serif;}
+body{background:url('../images/bg-top.png') repeat-x left -53px;}
+
 
 h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}
 
@@ -6,11 +8,17 @@ h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}
 
 
 
-.head{padding:10px 0px;}
-.menu{height:50px;background:#333333;border-radius:5px;position:relative;}
-.menu .logo{position:absolute;left:11px;top:8px;}
-.menu ul{padding-left:155px;border-right:2px solid #444444;}
+/**  
+ * Header styles
+ */
+h1{font-family:"Arial Black",Arial,sans-serif; text-transform: uppercase; font-size:250%; }
+
+
+
+.head{padding:30px 0px 10px 0px;}
+.menu{height:25px;border-radius:5px;position:relative;}
+.menu .logo{position:absolute;left:11px;top:3px;}
 .menu li{margin:0px;}
-.menu li a{text-decoration:none;height:50px;line-height:50px;font-size:12px;color:#FFFFFF;text-transform:uppercase;width:100px;text-align:center;border-left:2px solid #444444;}
-.menu li a:hover,.menu li a:active,.menu .active a{background:#222222;text-decoration:none;}
-#sitesearch{padding:5px;position:absolute;right:12px;top:10px;width:175px;border:2px solid #444444;border-radius:4px;}
+.menu li a{text-decoration:none;height:25px;line-height:25px;font-size:12px;color:#000;text-transform:uppercase;padding:3px 10px;margin:0 10px;text-align:center;}
+.menu li a:hover,.menu li a:active,.menu .active a{text-decoration:none;font-weight:normal;background-color:#e4e4e4;border-radius:7px;}
+#sitesearch{background-color: #f3f3f3;border: 0 none;padding:8px;position:absolute;width:175px;border-radius:7px;margin-left:8px;}

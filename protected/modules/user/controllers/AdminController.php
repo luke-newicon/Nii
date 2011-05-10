@@ -124,7 +124,7 @@ class AdminController extends AController
 	{
 		$model=$this->loadModel();
 		$user = UserModule::get()->userClass;
-		if(isset($_POST[]))
+		if(isset($_POST[$user]))
 		{
 			$model->attributes=$_POST[$user];
 			

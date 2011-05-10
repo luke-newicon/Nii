@@ -13,7 +13,9 @@ class Controller extends NController {
 	public $layout = '//layouts/site';
 
 	public function init() {
+		
 		$this->menu = array(
+			array('label' => 'Newicon', 'url' => array('/site/index'), 'template'=>'<a style="padding:3px 8px;margin-left:0px;" href="'.NHtml::url('/site/index').'"><img style="padding-top:3px;" alt="Newicon" src="'.Yii::app()->request->baseUrl.'/images/newicon.png" /></a>'),
 			array('label' => 'Websites', 'url' => array('/site/websites')),
 			array('label' => 'Hosting', 'url' => array('/hosting/domain/lookup')),
 			array('label' => 'Systems', 'url' => array('/site/systems')),
