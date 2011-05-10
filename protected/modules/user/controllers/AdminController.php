@@ -38,10 +38,10 @@ class AdminController extends AController
 	{
 		$user = UserModule::get()->userClass;
 		$model = new $user('search');
-		if(isset($_GET['User']))
-			$model->attributes = $_GET['User'];
+		if(isset($_GET[$user]))
+			$model->attributes = $_GET[$user];
 
-		$dataProvider=new CActiveDataProvider('User', array(
+		$dataProvider=new CActiveDataProvider($user, array(
 			'pagination'=>array(
 				'pageSize'=>Yii::app()->controller->module->user_page_size,
 			),
@@ -101,9 +101,9 @@ class AdminController extends AController
 	{
 		$user = UserModule::get()->userClass;
 		$model = new $user;
-		if(isset($_POST['User']))
+		if(isset($_POST[$user]))
 		{
-			$model->attributes=$_POST['User'];
+			$model->attributes=$_POST[$user];
 			if($model->validate()) {
 				//$model->password=crypt($model->password);
 				$model->save();
@@ -123,9 +123,10 @@ class AdminController extends AController
 	public function actionUpdate()
 	{
 		$model=$this->loadModel();
-		if(isset($_POST['User']))
+		$user = UserModule::get()->userClass;
+		if(isset($_POST[]))
 		{
-			$model->attributes=$_POST['User'];
+			$model->attributes=$_POST[$user];
 			
 			if($model->validate()) {
 				$model->save();

@@ -60,8 +60,9 @@ class AuthAssignment extends NActiveRecord
 	 */
 	public function relations()
 	{
+		$user = UserModule::get()->userClass;
 		return array(
-			'user'=>array(self::BELONGS_TO, 'User', 'userid'),
+			'user'=>array(self::BELONGS_TO, $user, 'userid'),
 			'authitem'=>array(self::BELONGS_TO, 'AuthItem', 'itemname')
 		);
 	}

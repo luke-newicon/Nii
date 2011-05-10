@@ -53,7 +53,7 @@ class User extends NActiveRecord
 			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
 			array('status', 'in', 'range'=>array(self::STATUS_NOACTIVE,self::STATUS_ACTIVE,self::STATUS_BANED)),
 			array('superuser', 'in', 'range'=>array(0,1)),
-			array('username, email, createtime, lastvisit, superuser, status', 'required'),
+			array('username, email, superuser, status', 'required'),
 			array('createtime, lastvisit, superuser, status', 'numerical', 'integerOnly'=>true),
 			array('username, domain', 'safe', 'on'=>'search'),
 		):((Yii::app()->user->id==$this->id)?array(
@@ -183,8 +183,8 @@ class User extends NActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('username',$this->username,true);
-
-		return new CActiveDataProvider('User', array(
+		$user = UserModule::get()->userClass;
+		return new CActiveDataProvider($user, array(
 			'criteria'=>$criteria,
 		));
 	}

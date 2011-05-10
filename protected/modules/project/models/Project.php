@@ -1,7 +1,7 @@
 <?php
 
 /**
- * IndexCrontroller class file.
+ * Project class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -10,15 +10,11 @@
  */
 
 /**
- * Description of IndexCrontroller
+ * Description of Project
  *
  * @author steve
  */
-class IndexController extends AController
-{ 
-	//put your code here
-	public function actionIndex(){
+class Project extends NActiveRecord
+{
 
-		$this->render('index');
-	}
 }

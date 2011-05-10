@@ -8,8 +8,8 @@ class IndexController extends AController {
 	public function actionIndex() {
 		$user = UserModule::get()->userClass;
 		$model = new $user('search');
-		if (isset($_GET['User']))
-			$model->attributes = $_GET['User'];
+		if (isset($_GET[$user]))
+			$model->attributes = $_GET[$user];
 		$this->render('index', array(
 			'model' => $model
 		));
