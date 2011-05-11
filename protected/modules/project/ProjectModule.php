@@ -18,11 +18,25 @@ class ProjectModule extends NWebModule
 {
 
 	public function init(){
+		
+		$this->setImport(array(
+			'project.models.*',
+			'project.components.*',
+		));
+		
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
 	}
 	
 	public function install(){
 		Project::install();
+	}
+	
+	/**
+	 *
+	 * @return ProjectModule
+	 */
+	public static function get(){
+		return Yii::app()->getModule('project');
 	}
 }

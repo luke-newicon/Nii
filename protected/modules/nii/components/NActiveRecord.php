@@ -105,8 +105,7 @@ class NActiveRecord extends CActiveRecord
 	
 	public static function install($className){
 		$t = new $className(null);
-		Yii::app();
-		$db = Yii::app()->getMyDb();
+		$db = $t->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
 		$realTable = $t->getRealTableName();
 		$s = $t->schema();
@@ -172,8 +171,8 @@ class NActiveRecord extends CActiveRecord
 	 */
 	public function getRealTableName(){
 		$realName = $this->tableName();
-		if(Yii::app()->getMyDb()->tablePrefix!==null && strpos($realName,'{{')!==false)
-			$realName=preg_replace('/\{\{(.*?)\}\}/',Yii::app()->getMyDb()->tablePrefix.'$1',$realName);
+		if($this->getDbConnection()->tablePrefix!==null && strpos($realName,'{{')!==false)
+			$realName=preg_replace('/\{\{(.*?)\}\}/',$this->getDbConnection()->tablePrefix.'$1',$realName);
 		return $realName;
 	}
 	

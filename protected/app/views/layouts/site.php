@@ -17,7 +17,7 @@
 			<div class="body">
 				<div class="main">
 					<?php $this->renderPartial('//layouts/_messages'); ?>
-					<?php $this->renderPartial('//layouts/_breadcrumbs'); ?>
+					<?php // $this->renderPartial('//layouts/_breadcrumbs'); ?>
 					<?php echo $content; ?>
 				</div>
 			</div>

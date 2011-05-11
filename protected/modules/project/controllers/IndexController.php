@@ -18,7 +18,11 @@ class IndexController extends AController
 { 
 	//put your code here
 	public function actionIndex(){
-
+		Project::install();
 		$this->render('index');
+	}
+	
+	public function actionInstall(){
+		ProjectModule::get()->install();
 	}
 }
