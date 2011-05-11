@@ -54,7 +54,7 @@ class CrmActiveRecord extends NActiveRecord
 	public static function labelArray($rowset, $defaultsArray){
 		$tmp=array();
 		foreach($rowset as $l){
-			if(empty($l->label)) continue;
+			if(isset($l->label)) continue;
 			$tmp[$l->label] = $l->label;
 		}
 		return array_merge($tmp, array_combine(array_keys($defaultsArray), array_values($defaultsArray)));

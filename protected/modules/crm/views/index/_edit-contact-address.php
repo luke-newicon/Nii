@@ -1,6 +1,6 @@
 <?php $display = (!empty($a->lines) || !empty($a->city) || !empty($a->postcode) || !empty($a->county))?'block':'none'; ?>
 <div class="line replicate " style="display:<?php echo $display; ?>;">
-	<div class="unit size23of25 formFieldBlock">
+	<div class="unit size23of25 field">
 		<div class="line inputBox multiInput">
 			<div class="unit noBorder size1of6 txtC">
 				<a href="#address" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;"><?php echo NData::param($a->label,'&nbsp;'); ?></a>

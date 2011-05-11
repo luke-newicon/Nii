@@ -1,4 +1,4 @@
-<div class="formFieldBlock replicate">
+<div class="field replicate">
 	<div class="line">
 		<div class="unit size23of25 inputBox multiInput ">
 			<div class="line noHighlight">
@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" tipsy-gravity="w" title="Remove"></a></div>
+		<div class="lastUnit" style="padding-top:6px;"><a href="#" data-tip="Remove" class="icon ni-minus  removeRow showTipLive" tipsy-gravity="w" ></a></div>
 		<?php echo $form->error($e, "[$i]address"); ?>
 	</div>
 </div>

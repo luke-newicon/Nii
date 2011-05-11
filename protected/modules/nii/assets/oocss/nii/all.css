@@ -1,0 +1,15 @@
+/* include all newicon oocss plugin scripts */
+@import url("core/content.css");
+@import url("core/heading.css");
+@import url("core/grid.css");
+@import url("plugins/breadcrumb/breadcrumb.css");
+@import url("plugins/buttons/buttons.css");
+@import url("core/forms/forms.css");
+@import url("core/forms/forms_skins.css");
+@import url("plugins/icons/sprite.css");
+@import url("core/module/mod_skins.css");
+@import url("plugins/progress/progress.css");
+@import url("plugins/talk/talk_skins.css");
+@import url("plugins/menus/menu.css");
+@import url("plugins/menus/menu_skins.css");
+@import url("plugins/tabs/tabs.css");

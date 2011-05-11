@@ -1,2 +1,3 @@
-@import url("core/core.css");
-@import url("plugins/plugins.css");
+@import url("oocss/core/core.css");
+@import url("oocss/plugins/plugins.css");
+@import url("nii/all.css");

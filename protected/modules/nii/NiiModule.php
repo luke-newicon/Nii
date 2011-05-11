@@ -11,6 +11,10 @@
 class NiiModule extends NWebModule
 {
 	public function init(){
-		
+		// register nii js goodness
+		$cs = Yii::app()->getClientScript();
+		$cs->registerScriptFile($this->getAssetsUrl().'/js/tipsy/jquery.tipsy.js');
+		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/css/tipsy.css');
+		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 	}
 }

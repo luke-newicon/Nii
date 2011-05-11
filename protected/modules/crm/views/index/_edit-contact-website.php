@@ -1,5 +1,5 @@
 <?php $display = (!empty($w->address))?'block':'none'; ?>
-<div class="formFieldBlock replicate" style="display:<?php echo $display; ?>;">
+<div class="field replicate" style="display:<?php echo $display; ?>;">
 	<div class="line">
 		<div class="unit size23of25 inputBox multiInput">
 			<div class="line noHighlight">

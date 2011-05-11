@@ -15,10 +15,10 @@
 	
 	.addLabel p{margin:2px;}
 	
-	.formFieldState{padding:2%;}
-	.formFieldState.focus{background-color:#EAF2FA;}
+	.fieldState{padding:2%;}
+	.fieldState.focus{background-color:#EAF2FA;}
 	
-	.formFieldState .formFieldBlock {padding:0 0 2% 0;}
+	.fieldState .field {padding:0 0 2% 0;}
 	.formGuide{color:#999;font-size:90%;}
 </style> 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -30,7 +30,7 @@
 )); ?>
 <?php // echo $form->errorSummary($c); ?>
 <div id="editUserForm" class="flashy">
-	<div class="formFieldBlock">
+	<div class="field">
 		<div class="media man size23of25">
 			<?php if(isset($c) && $c != false): ?>
 				<a href="#" class="img prm">
@@ -86,10 +86,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Email</h4></div>
-			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" tipsy-gravity="sw" title="Add another email address"></a></p></div>
+			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" data-tip="Add another email address" tipsy-gravity="sw" title="Add another email address"></a></p></div>
 		</div>
 		<?php if(count($c->emails)): ?>
 			<?php foreach($c->emails as $i=>$e): ?>
@@ -99,7 +99,7 @@
 			<?php $this->renderPartial('_edit-contact-email',array('e'=>new CrmEmail, 'i'=>0, 'form'=>$form)); ?>
 		<?php endif; ?>
 	</div>
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Phone</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -113,7 +113,7 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Website</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -127,7 +127,7 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Address</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -224,14 +224,14 @@ $(function(){
 				//if($menu.width() < $btn.parent().width())
 					//$menu.css('width',$btn.parent().width());
 				// Highlight the parent fieldBlock when button slelected
-				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
+				var $blocks = $btn.parents('.field,.fieldState');
 				if($blocks.length != 0)
 					$blocks.addClass('focus');
 				$menu.delegate('li a','click.dropButton',function(){
 					$btn.html($(this).html());
 					methods.closeMenu($btn, $menu);
 					$btn.next('input:hidden').val($(this).html());
-					$b = $btn.closest('.formFieldBlock').find('.formGuide');
+					$b = $btn.closest('.field').find('.formGuide');
 					$g = $b.find('.formGuide');
 					if($g.length==0)
 						$g = $('<span class="formGuide"></span>').appendTo($b);
@@ -246,7 +246,7 @@ $(function(){
 			$(window).unbind('.dropButton');
 			$menu.hide(100);
 			methods.attachOpenMenu($btn.removeClass('down'), $menu);
-			var $block = $btn.parents('.formFieldBlock,.formFieldState');
+			var $block = $btn.parents('.field,.fieldState');
 			if($block.length != 0)
 				$block.removeClass('focus');
 		},
@@ -271,6 +271,15 @@ $(function(){
 			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
 		}
 	};
+	
+	
+	jQuery(".field :input").live("focus",function(){
+		$(this).addClass("focus");
+		$(this).parents(".fieldState,.field").addClass("focus");
+	}).live("blur", function(){
+		$(this).removeClass("focus");
+		$(this).parents(".fieldState,.field").removeClass("focus");
+	});
 
 })(jQuery);
 
