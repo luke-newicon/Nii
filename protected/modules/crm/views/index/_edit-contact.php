@@ -89,7 +89,7 @@
 	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Email</h4></div>
-			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" data-tip="Add another email address" tipsy-gravity="sw" title="Add another email address"></a></p></div>
+			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow" data-tip data-tip-gravity="s"  title="Add another email address"></a></p></div>
 		</div>
 		<?php if(count($c->emails)): ?>
 			<?php foreach($c->emails as $i=>$e): ?>
