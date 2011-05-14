@@ -4,7 +4,7 @@
 	</a>
 	<div class="bd">
 		<?php if($contact !== null): ?>
-			<p class="mtn mbn">
+			<p class="mlm mtn mbn">
 				<?php if($term!=''):?>
 					<?php echo $contact->name($term); ?>
 				<?php else: ?>
@@ -18,7 +18,7 @@
 				</p>
 			<?php endif;?>-->
 		<?php else: ?>
-			<p class="mtn mbn">
+			<p class="mlm mtn mbn">
 				<?php echo Yii::app()->user->record->username; ?>
 			</p>
 		<?php endif; ?>

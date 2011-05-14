@@ -11,7 +11,7 @@
  * @property integer $item_id
  * @property string $note
  */
-class NNotes extends CActiveRecord
+class NNote extends CActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
@@ -27,7 +27,7 @@ class NNotes extends CActiveRecord
      */
     public function tableName()
     {
-        return 'notes';
+        return '{{notes}}';
     }
 
     /**

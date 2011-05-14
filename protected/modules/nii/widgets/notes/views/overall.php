@@ -1,6 +1,5 @@
-<div class="NNotes">
+<div class="NNotes" data-area="<?php echo $area; ?>" data-ajaxcontroller="<?php echo $ajaxController;?>" data-id="<?php echo $id; ?>">
 	<div class="NNotes-input">
-		<h2><?php echo $title ?></h2>
 			<?php if($canAdd): ?>
 				<?php $this->render('_newItem',array('displayUserPic'=>$displayUserPic,'profilePic'=>$profilePic,'area'=>$area,'id'=>$id,'ajaxController'=>$ajaxController)) ?>
 			<?php endif;?>

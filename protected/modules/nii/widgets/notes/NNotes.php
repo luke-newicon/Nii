@@ -29,7 +29,6 @@
  * code required to display a widget with all the optional attributes specified:
  * <?php $this->widget('modules.nii.widgets.notes.NNotes',array(
  *	'model'=>MODEL,
- *	'title'=>TITLE,
  *	'newNoteText'=>NEWNOTETEXT,
  *	'AjaxController'=>AJAXCONTROLLER,
  *	'displayUserPic'=>DISPLAYUSERPIC,
@@ -53,8 +52,6 @@
  *
  * CANADD = Boolean, Whether the user can add notes (default = false).
  *
- * TITLE = Text, the title to be put at the top of the widget (default = 'Notes')
- * 
  * EMPTYTEXT = Text, The text to display if no notes are attached to the specified item
  * at the top or the bottom of the widget (default = 'bottom')
  *
@@ -64,6 +61,7 @@
  * @todo: If you do not want to use the primary key you should be able to override it and set a different one
  * @todo: permissions need to be checked on the server!
  * @todo: CActiverecords should be used.
+ * @todo: namespace the notes table to be nii_notes
  *
  * @author matthewturner
  * @version 0.1
@@ -73,8 +71,7 @@ class NNotes extends CWidget{
 	public $model;
 	public $emptyText = 'There are no notes attached to this item';
 	public $canAdd = false;
-	public $ajaxController = array('nii/index/NNotes');
-	public $title = 'Notes';
+	public $ajaxController = array('/nii/index/NNotes');
 	public $newNoteText= 'New note...';
 
 	public function run(){
@@ -90,60 +87,60 @@ class NNotes extends CWidget{
 		$assetFolder = $assetManager->publish($assetLocation);
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
 
+		// this javascript support multiple note widgets on one page and 
+		// therefore must obtain the specific information from the data attributes 
+		// of the notes wrapper div
 		yii::app()->clientScript->registerScript('NNote','
 		$(document).ready(function(){
 			// Hides all the text areas on page load
-			$(".NNotes .newNote .NTextareaMarkdown").hide();
 
 			// Adds a new note to the system
 			$(".NNotes .newNote .add").click(function(event){
-				var base = $(this).parent().parent().parent().children(".newNote");
-				var ajaxUrl = $(base).data("ajaxLoc");
-				var model = $(base).data("model");
-				var itemId = $(base).data("id");
-				var note = $(this).parent().parent().children(".note").children(".NTextareaMarkdown").children(".input").children("textarea").val();
-				var notesModelLocation = $(base).data("notesmodellocation");
-				var $note = $(this).closest(".newNote").find(".note");
+				var $data = $(this).closest(".NNotes").data();
+				var $base = $(this).closest(".newNote");
+				var note = $base.find(".note .NTextareaMarkdown textarea").val();
+				
+				var $note = $base.find(".note");
 				$note.fadeTo(1,0.5);
 				$note.find("textarea").attr("disabled","disabled");
 
 
-				var $adding = $(this).parent().parent().parent().children(".adding");
+				var $adding = $base.find(".adding");
 				$adding.show();
 				$adding.position({my:"center", at:"center", of:$note});
 
 				$.ajax({
-					url: ajaxUrl,
+					url: $data.ajaxcontroller,
 					type: "POST",
-					data: ({itemId : itemId,model:model,note:note,notesModelLocation:notesModelLocation}),
+					data: ({itemId : $data.id,model:$data.area,note:note}),
 					success: function(){
-					location.reload();
+						location.reload();
 					}
 				});
 			});
 
 			// Shows the edit box when entered
-			$(".NNotes .newNote .newNoteBox").focus(function() {
+			$(".NNotes .newNote .newNoteBox").click(function() {
 				$(this).hide();
-				$(this).parent().children(".NTextareaMarkdown").fadeIn("medium",function() {
-				$(this).parent().children(".NTextareaMarkdown").children(".input").children(\'textarea\').focus();
-			});
+				$(this).parent().children(".markdownInput").fadeIn("medium",function() {
+					$(this).find(\'textarea\').focus();
+				});
 			});
 
 			// Closes the edit box if no text entered
-			$(".NNotes .newNote .note .input textarea").blur(function() {
+			$(".NNotes .newNote .note .inputBox textarea").blur(function() {
 				if($(this).val()==""){
-					$(this).parent().parent().parent().children(".NTextareaMarkdown").hide();
-					$(this).parent().parent().parent().children(".newNoteBox").fadeIn("medium");
+					$(this).closest(".markdownInput").hide();
+					$(this).closest(".note").find(".newNoteBox").fadeIn("medium");
 				}
 
 			});
 
 		   // If there is not a value in the notes button then
 		   // you should not be able to submit it
-		   $(".NNotes .newNote .note .input").keyup(function() {
+		   $(".NNotes .newNote .note .inputBox").keyup(function() {
 				var notesValue = $(this).children(\'textarea\').val();
-				var addButton = $(this).parent().parent().parent().children(\'.buttons\').children(\'.add\');
+				var addButton = $(this).parent().parent().parent().find(\'.add\');
 
 				if(notesValue==""){
 					$(addButton).attr("disabled", "disabled");
@@ -169,6 +166,7 @@ class NNotes extends CWidget{
 			->order('id DESC')
 			->queryAll();
 
+
 		$this->render('overall',array('data'=>$data,
 			'emptyText'=>$this->emptyText,
 			'displayUserPic'=>$this->displayUserPic,
@@ -176,8 +174,7 @@ class NNotes extends CWidget{
 			'canAdd'=>$this->canAdd,
 			'area'=>$area,
 			'id'=>$id,
-			'ajaxController'=>yii::app()->createAbsoluteUrl($this->ajaxController),
-			'title'=>$this->title,
+			'ajaxController'=>CHtml::normalizeUrl($this->ajaxController),
 			'newNoteText'=>$this->newNoteText
 		));
 	}

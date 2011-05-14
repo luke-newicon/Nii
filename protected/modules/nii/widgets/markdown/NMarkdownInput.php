@@ -1,4 +1,4 @@
-v<?php
+<?php
 /**
  * Show a markdown input textarea,
  * Transforms a typical textarea to have a preview button displaying markdown rendered
@@ -30,7 +30,7 @@ class NMarkdownInput extends CInputWidget
 	 * Options to be applied to the text area
 	 * @var array
 	 */
-	public $htmlOptions = array('style'=>'width:100%;height:160px;border:1px solid #ccc;margin:0px;border:0px;');
+	public $htmlOptions = array('style'=>'width:100%;margin:0px;border:0px;');
 
 	public function run() {
 		// The location of the markdown widgets asset folder
@@ -111,4 +111,4 @@ class NMarkdownInput extends CInputWidget
 			$inputElement = CHtml::textArea($this->name, $this->value, $this->htmlOptions);
 		$this->render('markdown', array('inputElement' => $inputElement));
 	}
-}?>
+}

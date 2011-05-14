@@ -325,8 +325,6 @@ class CrmContact extends NActiveRecord
 	}
 	
 	public function nameLikeQuery($term){
-		if($term=='')
-			return $this;
 		if(Yii::app()->getModule('crm')->displayOrderFirstLast){
 			$col1='first_name';	$col2='last_name';
 		}else{

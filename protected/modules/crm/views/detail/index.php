@@ -6,7 +6,7 @@
 		<?php $this->widget('crm.components.CrmImage',array('size'=>70,'contact'=>$contact)); ?>
 	</a>
 	<div class="bd">
-  		<h1>
+  		<h1 class="mlm">
   			<a href="<?php echo NHtml::url('crm/detail/index/'.$contact->id()); ?>">
     		<?php if($contact->isPerson()): ?>
 				<?php echo $contact->first_name . ' ' . $contact->last_name; ?>
@@ -73,3 +73,8 @@
 //	'live'=>false,
 //	'success'=>'js:function(r){alert(r);}'
 //)); ?>
+
+<?php $this->widget('modules.nii.widgets.notes.NNotes',array(
+ 	'model'=>$contact,
+	'canAdd'=>true
+)); ?>

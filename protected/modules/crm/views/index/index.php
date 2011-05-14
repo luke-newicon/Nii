@@ -1,7 +1,7 @@
 <br/>
 
 <style>
-	.userList li,.groupList li {border-left:1px solid #ccc;border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
+	.userList li,.groupList li {border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
 	.groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
@@ -428,6 +428,17 @@ $(function(){
 		return false;
 	});
 	
+	
+	
+	$('.userListScreen').resizable({
+		handles:'e',
+		minWidth: 240,
+		iframeFix:true,
+		alsoResize: '#userListScroll, .jspContainer, .jspPane',
+		stop: function(event, ui) {
+			//resizer();
+		}
+	});
 
 });
 
