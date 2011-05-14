@@ -18,7 +18,6 @@ class Controller extends NController {
 			array('label' => 'Newicon', 'url' => array('/site/index'), 'template'=>'<a style="padding:3px 8px;margin-left:0px;" href="'.NHtml::url('/site/index').'"><img style="padding-top:3px;" alt="Newicon" src="'.Yii::app()->request->baseUrl.'/images/newicon.png" /></a>'),
 			array('label' => 'Services', 'url' => array('/site/websites')),
 			array('label' => 'Hosting', 'url' => array('/hosting/domain/lookup')),
-			array('label' => 'Systems', 'url' => array('/site/systems')),
 			array('label' => 'Blog', 'url' => array('/site/blog')),
 			array('label' => 'Resources', 'url' => array('/site/resources')),
 			array('label' => 'Support', 'url' => array('/site/support')),
