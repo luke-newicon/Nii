@@ -1,4 +1,4 @@
-<div class="formFieldBlock replicate">
+<div class="field replicate">
 	<div class="line">
 		<div class="unit size23of25 inputBox multiInput ">
 			<div class="line noHighlight">
@@ -9,12 +9,12 @@
 				</div>
 				<div class="lastUnit leftBorderOnly cornerLeftOff">
 					<div class="inputBox">
-						<?php echo $form->textField($e, "[$i]address",array('class'=>'input')); ?>
+						<?php echo $form->textField($e, "[$i]address",array('class'=>'input', 'data-tip'=>"", 'data-tip-trigger'=>'focus','title'=>'Enter email address')); ?>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="lastUnit" style="padding-top:6px;"><a href="#" class="icon ni-minus  removeRow showTipLive" tipsy-gravity="w" title="Remove"></a></div>
+		<div class="lastUnit" style="padding-top:6px;"><a href="#" title="Remove" class="icon ni-minus removeRow" data-tip data-tip-gravity="w"}'  ></a></div>
 		<?php echo $form->error($e, "[$i]address"); ?>
 	</div>
 </div>

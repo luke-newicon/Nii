@@ -11,7 +11,7 @@
 
 		<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 	</head>
-	<body id="frontLayout">
+	<body>
 		<div class="page">
 			<?php $this->renderPartial('//layouts/site/_head'); ?>
 			<div class="body">

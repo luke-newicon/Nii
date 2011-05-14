@@ -1,4 +1,4 @@
-<div class="formFieldBlock replicate">
+<div class="field replicate">
 	<div class="line">
 		<div class="unit size23of25 inputBox multiInput">
 			<div class="line noHighlight">

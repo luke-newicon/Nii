@@ -1,5 +1,5 @@
 <?php $this->renderPartial('//layouts/admin/_header'); ?>
-<body id="adminLayout">
+<body>
 	<div class="page liquid">
 		<?php $this->renderPartial('//layouts/admin/_head'); ?>
 		<div class="body">

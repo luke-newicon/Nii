@@ -38,7 +38,7 @@
 	.groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
 	.inputBox{position:relative;}
 	.userList{margin-right:-15px;}
-
+	.size10of100 {width:10%;}
 
 </style>
 
@@ -129,14 +129,14 @@
 				//if($menu.width() < $btn.parent().width())
 					//$menu.css('width',$btn.parent().width());
 				// Highlight the parent fieldBlock when button slelected
-				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
+				var $blocks = $btn.parents('.field,.fieldState');
 				if($blocks.length != 0)
 					$blocks.addClass('focus');
 				$menu.delegate('li a','click.dropButton',function(){
 					$btn.html($(this).html());
 					methods.closeMenu($btn, $menu);
 					$btn.next('input:hidden').val($(this).html());
-					$b = $btn.closest('.formFieldBlock').find('.formGuide');
+					$b = $btn.closest('.field').find('.formGuide');
 					$g = $b.find('.formGuide');
 					if($g.length==0)
 						$g = $('<span class="formGuide"></span>').appendTo($b);
@@ -151,7 +151,7 @@
 			$(window).unbind('.dropButton');
 			$menu.hide(100);
 			methods.attachOpenMenu($btn.removeClass('down'), $menu);
-			var $block = $btn.parents('.formFieldBlock,.formFieldState');
+			var $block = $btn.parents('.field,.fieldState');
 			if($block.length != 0)
 				$block.removeClass('focus');
 		},
@@ -380,7 +380,7 @@ $(function(){
 	});
 
 	$('#detailsScreen').delegate('.addRow','click',function(){
-		var $b = $(this).closest('.formFieldState');
+		var $b = $(this).closest('.fieldState');
 		var $el = $b.find('.replicate:first');
 		// if the first element is hidden then dont add another
 		// just show the existing hidden one with position 0
@@ -427,8 +427,13 @@ $(function(){
 		$('.tipsy').remove();
 		return false;
 	});
+	
 
 });
+
+
+
+
 
 
 </script>
