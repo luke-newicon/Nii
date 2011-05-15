@@ -1,6 +1,7 @@
 <style>
 .labelTag{background-color:#aaa;border-radius:10px;-moz-border-radius:10px;color:#fff;padding:0px 5px 0px 5px;font-size:10px;}
 </style>
+<div class="pam">
 <div class="media">
 	<a href="#" class="img">
 		<?php $this->widget('crm.components.CrmImage',array('size'=>70,'contact'=>$contact)); ?>
@@ -16,7 +17,7 @@
 			</a>
 		</h1>
 		<?php if($contact->isPerson() && $contact->hasCompany()): ?>
-		<p class="mtn"><?php echo $contact->getCompany()->company; ?></p>
+		<p class="mtn mlm"><?php echo $contact->getCompany()->company; ?></p>
 		<?php endif; ?>
 	</div>
 </div>
@@ -76,5 +77,6 @@
 
 <?php $this->widget('modules.nii.widgets.notes.NNotes',array(
  	'model'=>$contact,
-	'canAdd'=>true
+	'canAdd'=>false
 )); ?>
+</div>

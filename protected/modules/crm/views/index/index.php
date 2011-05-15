@@ -69,7 +69,7 @@
 			<div class="unit size10of100">
 				<a id="showAlphaSearch" href="#" class="btn btnN btnToolbar btnFlat"><span class="grey-icon fam-font"></span></a>
 			</div>
-			<div class="unit size4of5 flashy" style="padding-left:2px;">
+			<div class="unit size3of5 flashy" style="padding-left:2px;">
 				<div class="inputContainer">
 					<div class="inputBox line" style="padding:2px;">
 						<div class="unit size1of10"><span class="grey-icon fam-zoom"></span></div>
@@ -78,7 +78,8 @@
 				</div>
 			</div>
 			<div class="lastUnit txtR">
-				<a href="" class="showTip btn btnN btnToolbar addContact btnFlat" title="Add Contact">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
+				<a href="" class="btn btnN btnToolbar addContact btnFlat" data-tip="{gravity:'s'}" title="Add Contact">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
+				<a href="" class="btn btnN btnToolbar addCompany btnFlat" data-tip="{gravity:'s'}" title="Add Company">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
 			</div>
 		</div>
 <!--		<ul id="alphaSearch" class="man" style="float:left;width:20px" >
@@ -105,79 +106,6 @@
 </div>
 <script type="text/javascript">
 
-
-;(function($){
-	var methods = {
-		init : function(options) {
-			return this.each(function(){
-				var $btn = $(this);
-         		var $menu = $($btn.attr('href'));
-             	methods.attachOpenMenu($btn, $menu);
-			});
-		},
-		attachOpenMenu:function($btn, $menu){
-			$menu.unbind('.dropButton');
-			$btn.unbind().one('click.dropButton',function(){
-				$btn.addClass('down');
-				$menu.click(function(e) {
-					e.stopPropagation();
-				}).slideDown(200, function() {
-					$(document).one('click.dropButton',function(){
-						methods.closeMenu($btn, $menu);
-					});
-				}).position({my:"left top",at:"left bottom",of:$btn});
-				//if($menu.width() < $btn.parent().width())
-					//$menu.css('width',$btn.parent().width());
-				// Highlight the parent fieldBlock when button slelected
-				var $blocks = $btn.parents('.field,.fieldState');
-				if($blocks.length != 0)
-					$blocks.addClass('focus');
-				$menu.delegate('li a','click.dropButton',function(){
-					$btn.html($(this).html());
-					methods.closeMenu($btn, $menu);
-					$btn.next('input:hidden').val($(this).html());
-					$b = $btn.closest('.field').find('.formGuide');
-					$g = $b.find('.formGuide');
-					if($g.length==0)
-						$g = $('<span class="formGuide"></span>').appendTo($b);
-					$g.html($(this).attr('title'));
-					return false;
-         		});
-				return false;
-			});
-		},
-		closeMenu : function($btn, $menu){
-			// should be able to figure this out?
-			$(window).unbind('.dropButton');
-			$menu.hide(100);
-			methods.attachOpenMenu($btn.removeClass('down'), $menu);
-			var $block = $btn.parents('.field,.fieldState');
-			if($block.length != 0)
-				$block.removeClass('focus');
-		},
-		destroy : function() {
-			return this.each(function(){
-				var $this = $(this),
-				data = $this.data('dropButton');
-				// Namespacing FTW
-				$(window).unbind('.dropButton');
-				data.dropButton.remove();
-				$this.removeData('dropButton');
-			});
-		}
-	};
-
-	$.fn.dropButton = function( method ) {
-		if ( methods[method] ) {
-			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
-		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
-		}
-	};
-
-})(jQuery);
 
 $(function(){
 

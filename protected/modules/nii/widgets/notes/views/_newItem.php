@@ -1,6 +1,6 @@
 <div class="line newNote">
 	<?php if($this->displayUserPic): ?>
-		<div class="unit profilePic size1of10">
+		<div class="unit profilePic">
 			<img src="<?php echo $profilePic ?>" width="50"/>
 		</div>
 	<?php endif; ?>

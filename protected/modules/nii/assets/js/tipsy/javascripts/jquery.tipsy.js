@@ -196,15 +196,7 @@
     // return $.extend({}, options, {gravity: $(ele).attr('tipsy-gravity') || 'n' });
     // (remember - do not modify 'options' in place!)
     $.fn.tipsy.elementOptions = function(ele, options) {
-		var $data = {};
-		var $el = $(ele);
-		// turn this in to automatic function.
-		$data.gravity = $el.is('[data-tip-gravity]') ? $el.data('tip-gravity') : 's';
-		$data.live = $el.is('[data-tip-live]') ? $el.data('tip-live') : true;
-		$data.trigger = $el.is('[data-tip-trigger]') ? $el.data('tip-trigger') : 'hover';		
-		
-		console.log($data);
-        return $.extend({}, options, $data);
+        return $.extend({}, options, $(ele).metadata({type:'attr',name:'data-tip'}));
     };
     
     $.fn.tipsy.autoNS = function() {

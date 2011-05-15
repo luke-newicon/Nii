@@ -9,8 +9,9 @@
 	.popmenu a{display:block;padding:3px 10px 3px 10px;}
 	.popmenu a:hover{background-color:#1686d4;color:#fff;text-decoration:none;}
 	
+	.btn.btnN.btnDropDown{background:none;background-color:#f9f9f9;}
 	.btn.down{background:-moz-linear-gradient(center top ,#d8d8d8, #FFFFFF) repeat scroll 0 0 #ccc;}
-	
+	.btnDropDown .icon.fam-bullet-arrow-down{margin-top:-2px;}
 	.inputBox.multiInput{padding:0px;}
 	
 	.addLabel p{margin:2px;}
@@ -89,7 +90,7 @@
 	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Email</h4></div>
-			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow" data-tip data-tip-gravity="s"  title="Add another email address"></a></p></div>
+			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow" data-tip="{gravity:'s'}"  title="Add another email address"></a></p></div>
 		</div>
 		<?php if(count($c->emails)): ?>
 			<?php foreach($c->emails as $i=>$e): ?>
@@ -228,7 +229,7 @@ $(function(){
 				if($blocks.length != 0)
 					$blocks.addClass('focus');
 				$menu.delegate('li a','click.dropButton',function(){
-					$btn.html($(this).html());
+					$btn.find('.data').html($(this).html());
 					methods.closeMenu($btn, $menu);
 					$btn.next('input:hidden').val($(this).html());
 					$b = $btn.closest('.field').find('.formGuide');
