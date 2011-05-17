@@ -66,7 +66,8 @@
  * @author matthewturner
  * @version 0.1
  */
-class NNotes extends CWidget{
+class NNotes extends CWidget
+{
 	public $displayUserPic = true;
 	public $model;
 	public $emptyText = 'There are no notes attached to this item';

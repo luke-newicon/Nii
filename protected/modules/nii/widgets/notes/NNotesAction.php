@@ -4,7 +4,8 @@
  *
  * @author matthewturner
  */
-class NNotesAction extends CAction {
+class NNotesAction extends CAction 
+{
 
 	public $displayUserPic = false;
 

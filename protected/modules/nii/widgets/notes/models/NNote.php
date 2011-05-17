@@ -11,7 +11,7 @@
  * @property integer $item_id
  * @property string $note
  */
-class NNote extends CActiveRecord
+class NNote extends NActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
@@ -96,4 +96,26 @@ class NNote extends CActiveRecord
             'criteria'=>$criteria,
         ));
     }
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
+	}
+	
+	public function schema(){
+		return array(
+			'columns'=>array(
+				'id'=>'pk',
+				'user_id'=>'int',
+				'added'=>'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',
+				'area'=>'string',
+				'item_id'=>'int',
+				'note'=>'text',
+			),
+			'keys'=>array(
+				array('noteId', 'item_id'),
+				array('user_id'),
+			)
+		);
+	}
+	
 }

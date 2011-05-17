@@ -16,27 +16,31 @@
 class Nii extends CWebApplication
 {
 	
+	public $domain = false;
+	
 	private $_subDomain;
 	
 	public function run(){
 
-		// set up application context using the subdomain
-		$host = Yii::app()->request->getHostInfo();
-		// define the hostname!
-		$domain = 'local.ape-project.org';
-		$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
-		//echo $subdomain;
-		//echo $subdomain;
-		if($subdomain==''){
-			$this->defaultController = 'site';
-		} else {
-			//check domain
-			$dom = AppDomain::model()->findByPk($subdomain);
-			if($dom === null){
-				$this->catchAllRequest = array('error');
-			}else{
-				$this->setSubDomain($dom->domain);
-				$this->defaultController = 'app';
+		if($this->domain){
+			// set up application context using the subdomain
+			$host = Yii::app()->request->getHostInfo();
+			// define the hostname!
+			$domain = 'local.ape-project.org';
+			$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
+			//echo $subdomain;
+			//echo $subdomain;
+			if($subdomain==''){
+				$this->defaultController = 'site';
+			} else {
+				//check domain
+				$dom = AppDomain::model()->findByPk($subdomain);
+				if($dom === null){
+					$this->catchAllRequest = array('error');
+				}else{
+					$this->setSubDomain($dom->domain);
+					$this->defaultController = 'app';
+				}
 			}
 		}
 		
