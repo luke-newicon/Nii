@@ -16,6 +16,8 @@
 class Nii extends CWebApplication
 {
 	
+	public $hostname = 'local.ape-project.org';
+	
 	private $_subDomain;
 	
 	public function run(){
@@ -23,8 +25,7 @@ class Nii extends CWebApplication
 		// set up application context using the subdomain
 		$host = Yii::app()->request->getHostInfo();
 		// define the hostname!
-		$domain = 'local.ape-project.org';
-		$subdomain = trim(str_replace(array('http://',$domain),'',$host),'.');
+		$subdomain = trim(str_replace(array('http://',$this->hostname),'',$host),'.');
 		//echo $subdomain;
 		//echo $subdomain;
 		if($subdomain==''){

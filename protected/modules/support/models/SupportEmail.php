@@ -206,24 +206,29 @@ class SupportEmail extends NActiveRecord
 	
 	public function schema(){
 		return array(
-			'id'=>'pk',
-			'to'=>'text',
-			'cc'=>'text',
-			'from'=>'string',
-			'message_id'=>'string',
-			'subject'=>'string',
-			'headers'=>'text',
-			'message_text'=>'longtext',
-			'message_html'=>'longtext',
-			'sent'=>'boolean',
-			'opened'=>'boolean',
-			'opened_date'=>'datetime',
-			'bounced'=>'boolean',
-			'created'=>'datetime',
-			'date'=>'datetime',
-			'references'=>'text',
-			'in_reply_to'=>'string',
-			'test_col'=>'string'
+			'columns'=>array(
+				'id'=>'pk',
+				'to'=>'text',
+				'cc'=>'text',
+				'from'=>'string',
+				'message_id'=>'string',
+				'subject'=>'string',
+				'headers'=>'text',
+				'message_text'=>'longtext',
+				'message_html'=>'longtext',
+				'sent'=>'boolean',
+				'opened'=>'boolean',
+				'opened_date'=>'datetime',
+				'bounced'=>'boolean',
+				'created'=>'datetime',
+				'date'=>'datetime',
+				'references'=>'text',
+				'in_reply_to'=>'string',
+				'test_col'=>'string'
+			),
+			'keys'=>array(
+				array('subject')
+			)
 		);
 	}
 	
