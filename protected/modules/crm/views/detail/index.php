@@ -77,6 +77,7 @@
 
 <?php $this->widget('modules.nii.widgets.notes.NNotes',array(
  	'model'=>$contact,
-	'canAdd'=>false
+	'canAdd'=>false,
+	'emptyText'=>''
 )); ?>
 </div>
