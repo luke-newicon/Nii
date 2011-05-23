@@ -5,7 +5,7 @@
 			<div class="line noHighlight">
 				<div class="unit noBorder size1of6 txtC">
 					<a id="selectTitle" href="#website" class="btn btnN btnDropDown ui-corner-l-only" style="display:block;border-right:0px;padding:0.52em;">
-						<span class="data"><?php echo NData::param($p->label,'&nbsp;'); ?></span>
+						<span class="data"><?php echo NData::param($w->label,'&nbsp;'); ?></span>
 						<span class="icon fam-bullet-arrow-down" style="float:right;">&nbsp;</span>
 					</a>
 					<?php echo CHtml::activeHiddenField($w, "[$i]label"); ?>

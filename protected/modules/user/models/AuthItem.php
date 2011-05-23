@@ -146,7 +146,7 @@ class AuthItem extends NActiveRecord
 				'name'=>'varchar(64) not null',
 				'type'=>'int not null',
 				'description'=>'text',
-				'bizRule'=>'text',
+				'bizrule'=>'text',
 				'data'=>'text',
 				0=>'PRIMARY KEY (name)',
 			),
