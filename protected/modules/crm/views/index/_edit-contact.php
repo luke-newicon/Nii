@@ -181,7 +181,15 @@
 		<?php endforeach; ?>
 	</ul>
 </div>
+
 <?php $this->endWidget(); ?>
+<h4>Notes</h4>
+<?php $this->widget('modules.nii.widgets.notes.NNotes',array(
+ 	'model'=>$c,
+	'canAdd'=>true,
+	'emptyText'=>''
+)); ?>
+
 <script type="text/javascript">
 $(function(){
 	$('#general_first_name').focus();

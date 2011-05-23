@@ -292,7 +292,7 @@ $(function(){
 		return false;
 	});
 
-	// $('.userList').selectable();
+	//$('.userList').selectable();
 
 
 

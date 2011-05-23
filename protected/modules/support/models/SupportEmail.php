@@ -224,6 +224,9 @@ class SupportEmail extends NActiveRecord
 				'date'=>'datetime',
 				'references'=>'text',
 				'in_reply_to'=>'string',
+			),
+			'keys'=>array(
+				array('subject')
 			)
 		);
 	}

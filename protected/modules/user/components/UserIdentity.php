@@ -49,9 +49,10 @@ class UserIdentity extends CUserIdentity
 			// an extra check
 			if(UserModule::get()->domain){
 				if($this->_user->domain != Yii::app()->getSubDomain()){
-					//echo 'errord domain';
-					$this->errorCode=self::ERROR_DOMAIN;
-					return !$this->errorCode;
+					if(!$this->_user->superuser){
+						$this->errorCode=self::ERROR_DOMAIN;
+						return !$this->errorCode;
+					}
 				}
 			}
 			

@@ -102,7 +102,15 @@ class NActiveRecord extends CActiveRecord
 		return array();
 	}
 
-	
+	/**
+	 * install the table from its defined schema, the child active record model
+	 * must implement the schema function.
+	 * The install can be called on existing tables, if the schema defined in the php
+	 * class file is different from the mysql table the function will attempt to merge them.
+	 * It will ONLY ADD columns, indexs or foreign key constraints
+	 * 
+	 * @param string $className 
+	 */
 	public static function install($className){
 		$t = new $className(null);
 		$db = Yii::app()->getMyDb();
@@ -128,19 +136,26 @@ class NActiveRecord extends CActiveRecord
 				if(is_string($key))$cols[$key]=$c;
 			$missingCols = array_diff(array_keys($cols), array_keys($exists->columns));
 			foreach($missingCols as $col){
-				$db->createCommand()->addColumn($realTable, $col, $s[$col]);
+				$db->createCommand()->addColumn($realTable, $col, $s['columns'][$col]);
 			}
 		}
+		
 		// add table keys / indexs
 		if(array_key_exists('keys', $s)) {
+			// see what keys the current table has
+			$curtKeysRes = $db->createCommand("show keys from $realTable")->queryAll();
+			// build a flat quick access array
+			$curKeys = array();
+			foreach($curtKeysRes as $keyRow)
+				$curKeys[] = $keyRow['Key_name'];
+			
 			foreach($s['keys'] as $k){
+				$name = $k[0];
 				$unique = array_key_exists(2, $k) ? $k[2] : false;
-				$column =  array_key_exists(1, $k) ? $k[1] : $k[0];
-				try{
-					$db->createCommand()->createIndex($k[0], $realTable, $column, $unique);
-				}catch(Exception $e ){
-					
-				}
+				$column =  array_key_exists(1, $k) ? $k[1] : $name;
+				// check if key is already in the table
+				if(!in_array($name, $curKeys))
+					$db->createCommand()->createIndex($name, $realTable, $column, $unique);
 			}
 		}
 		
@@ -149,11 +164,9 @@ class NActiveRecord extends CActiveRecord
 			foreach($s['foreignKeys'] as $f){
 				$delete = array_key_exists(4, $f) ? $f[4] : NULL;
 				$update = array_key_exists(5, $f) ? $f[5] : NULL;
-				try {
+				// if the key is not already in on the table add it.
+				if (!array_key_exists($f[1], $exists->foreignKeys))
 					$db->createCommand()->addForeignKey($f[0], $realTable, $f[1], $f[2], $f[3], $delete, $update);
-				}catch(Exception $e ){
-					
-				}
 			}	
 		}
 		$t->onAfterInstall(new CEvent($t));

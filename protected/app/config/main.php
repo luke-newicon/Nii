@@ -13,6 +13,7 @@ return array(
 	'basePath'=>dirname(__FILE__).DS.'..',
 	'name'=>'Newicon',
 	'timezone'=>'Europe/London',
+	'hostname'=>'localhost',
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
 
