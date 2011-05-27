@@ -29,7 +29,7 @@
 	.listItem .subject{overflow:hidden;height:1.4em;}
 	.listItem .body{overflow:hidden;height:30px;font-size:12px;}
 	.listItem .from{font-weight:bold;font-size:14px;height:1.4em;overflow:hidden;width:170px;}
-	.flags{width:8%;}
+	.flags{width:20px;}
 
 
 	/** Message Read column **/
@@ -216,24 +216,29 @@ $(function(){
 		.data('jsp');
 
 	var resizer = function(){
-		var paddingBottom = $('.main').padding().bottom;
-		var minHeight = 200;
-		var winHeight = $(window).height();
-		if(!((winHeight-$('#mClient').position().top-paddingBottom) <= minHeight)){
-			$('#mClient').css('height',(winHeight - $('#mClient').position().top - paddingBottom) + 'px');
-			$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
-			$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
-			$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
-			
-			if($("#emailWysiwyg").length){
-				var newHeight = $("#email").height() -  ($("#emailWysiwyg").position().top - $("#email").position().top);
-				var newWidth =  $("#email").width()-5;
-				CKEDITOR.instances['SupportComposeMail_message_html'].resize(newWidth,newHeight);
-				$('#cke_SupportComposeMail_message_html').css('width','100%');
-			}
-			
+		if (timer) {
+			clearTimeout(timer);
 		}
-		scroll.reinitialise();
+		timer = setTimeout( function(){
+			var paddingBottom = $('.main').padding().bottom;
+			var minHeight = 200;
+			var winHeight = $(window).height();
+			if(!((winHeight-$('#mClient').position().top-paddingBottom) <= minHeight)){
+				$('#mClient').css('height',(winHeight - $('#mClient').position().top - paddingBottom) + 'px');
+				$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
+				$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
+				$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
+
+				if($("#emailWysiwyg").length){
+					var newHeight = $("#email").height() -  ($("#emailWysiwyg").position().top - $("#email").position().top);
+					var newWidth =  $("#email").width()-5;
+					CKEDITOR.instances['SupportComposeMail_message_html'].resize(newWidth,newHeight);
+					$('#cke_SupportComposeMail_message_html').css('width','100%');
+				}
+
+			}
+			scroll.reinitialise();
+		}, 300);
 	}
 	
 	

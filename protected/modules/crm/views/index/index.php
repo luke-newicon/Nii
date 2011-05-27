@@ -1,4 +1,3 @@
-<br/>
 
 <style>
 	.userList li,.groupList li {border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
@@ -10,8 +9,8 @@
 	.editContact{display:none;}
 	.userList li.selected .editContact {display:block;/*margin-right:16px;*/}
 	.userList .media{margin:5px;}
-	.userListScreen{border-right:1px solid #a9a9a9;border-left:1px solid #ccc;-moz-box-shadow: 1px 0 5px #BBBBBB;background-color:#fff;}
-	.contactBook{background-color:#f9f9f9;border:1px solid #ccc;}
+	.userListScreen{border-right:1px solid #a9a9a9;border-left:1px solid #ccc;background-color:#fff;}
+	.contactBook{background-color:#f9f9f9;border-top:1px solid #ccc;}
 	.detailsScreen{background-color:#f9f9f9;}
 
 /** mods for inputBox classes **/
@@ -88,7 +87,7 @@
 			<?php endforeach; ?>
 			<li class="txtC alpha"><a href="#">#</a></li>
 		</ul>-->
-		<div id="userListScroll" style="height:550px;overflow-y:auto;">
+		<div id="userListScroll" style="overflow-y:auto;">
 			<?php echo $this->renderPartial('_user-list',array('contacts'=>$contacts,'term'=>$term)); ?>
 		</div> 
 	</div>
@@ -99,7 +98,7 @@
 			<a id="contactSave" href="#" class="contactSave btn btnN btnToolbar btnFlat" style="padding:3px;display:none;"><span class="grey-icon fam-disk">&nbsp;Save&nbsp;</span></a>
 			<a id="contactCancel" href="#" class="contactCancel btn btnN btnToolbar btnFlat" style="padding:3px;display:none;"><span class="grey-icon fam-cross">&nbsp;Cancel&nbsp;</span></a>
 		</div>
-		<div id="detailsScreen" class="plm prl ptm" >
+		<div id="detailsScreen" class="plm prl ptm" style="overflow:auto;" >
 			details
 		</div>
 	</div>
@@ -367,12 +366,58 @@ $(function(){
 			//resizer();
 		}
 	});
+	
+	
+	
+	
+	// resize window n panes
+	var resizer = function(){
+
+		if (timer) {
+			clearTimeout(timer);
+		}
+		timer = setTimeout( function(){
+			timer = null;
+			var paddingBottom = $('.main').padding().bottom;
+			var minHeight = 200;
+			var winHeight = $(window).height();
+			if(!((winHeight-$('#contactBook').position().top-paddingBottom) <= minHeight)){
+				var border = $('#contactBook').border();
+				borderHeight = border.top + border.bottom;
+				$('#contactBook').css('height',((winHeight - $('#contactBook').position().top - paddingBottom) - borderHeight) + 'px');
+				$('.userListScreen').css('height',(winHeight - $('.userListScreen').position().top - paddingBottom) + 'px');
+				$('#userListScroll').css('height',$('#contactBook').height()-27 + 'px');
+				$('#detailsScreen').css('height',$('#contactBook').height()-40 + 'px');
+				//$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
+				//$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
+				//$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
+			}
+			scroll.reinitialise();
+		}, 300);
+	}
+	
+	
+	resizer();
+	
+	$(window).stop().resize(function(){
+		resizer();
+	});
 
 });
 
 
 
-
+/*
+ * Used to determine border pixel sizes for resizing panes
+ * e.g. $('selector').border().bottom ( = integer size in pixels )
+ * 
+ * JSizes - JQuery plugin v0.33
+ *
+ * Licensed under the revised BSD License.
+ * Copyright 2008-2010 Bram Stein
+ * All rights reserved.
+ */
+(function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
 
 
 </script>

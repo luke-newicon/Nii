@@ -25,6 +25,8 @@ class NNotesAction extends CAction
 		$n->item_id = $itemId;
 		$n->note = $note;
 		$n->save();
+		
+		echo $this->getController()->widget('nii.widgets.notes.NNotes')->getNote($n);
 	}
 }
 ?>

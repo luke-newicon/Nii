@@ -11,7 +11,7 @@
 		<?php
 		$markdown = new NMarkdown();
 		echo $markdown->transform($line['note']); ?>
-		<p class="userInformation"><?php echo $line['username'] ?> - <?php echo Ntime::timeAgoInWordsShort($line['added']) ?></p>
+		<p class="userInformation"><?php echo $line['username'] ?> - <?php echo NTime::timeAgoInWordsShort($line['added']) ?></p>
 	</div>
 	<div class="unit lastUnit buttons">
 		<p style="display:none">Edit</p>

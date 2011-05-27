@@ -6,7 +6,7 @@ class IndexController extends AController
 		parent::init();
 		$url = CrmModule::get()->getAssetsUrl();
 		Yii::app()->getClientScript()->registerCssFile("$url/crm.css");
-		$this->breadcrumbs=array($this->module->id);
+		//$this->breadcrumbs=array($this->module->id);
 	}
 	
 	public function accessRules() 

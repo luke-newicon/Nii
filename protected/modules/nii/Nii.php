@@ -24,8 +24,7 @@ class Nii extends CWebApplication
 	private $_subDomain;
 	
 	public function run(){
-
-
+		
 		if($this->domain){
 
 			// set up application context using the subdomain
@@ -46,17 +45,16 @@ class Nii extends CWebApplication
 					$this->defaultController = 'app';
 				}
 			}
-		
-			// initialise modules
-			$this->getNiiModules();
-
-			// add event to do extra processing when a user signs up.
-			// change this to on activation... we only want to create new databases for real users
-			UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
-
-			// run the application (process the request)
-			parent::run();
 		}
+		// initialise modules
+		$this->getNiiModules();
+
+		// add event to do extra processing when a user signs up.
+		// change this to on activation... we only want to create new databases for real users
+		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
+
+		// run the application (process the request)
+		parent::run();
 	}
 	
 	/**
