@@ -9,7 +9,7 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 .mainMenu{height:56px;overflow:hidden;position:relative;}
 .mainMenu ul{margin:0px;display:inline-block;position:absolute;height:56px;width:56px;}
 .mainMenu li{margin:8px;list-style:none;float:left;}
-.mainMenu a{display:block;background:#FFFFFF;width:32px;height:32px;border:4px solid #AAA;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}
+.mainMenu a{box-shadow:1px 1px 0 #FFFFFF;display:block;background:#FFFFFF;width:32px;height:32px;border:4px solid #AAA;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}
 .mainMenu img{margin:7px;}
 
 

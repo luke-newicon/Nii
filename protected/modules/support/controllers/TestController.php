@@ -190,49 +190,52 @@ class TestController extends AController
 
 
 	public function actionTestMailread(){
-		/* connect to gmail */
-		$hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
-		$username = 'steve@newicon.net';
-		$password = 'mushroom11';
-
-		/* try to connect */
-		$inbox = imap_open($hostname,$username,$password) or die('Cannot connect to Gmail: ' . imap_last_error());
-
-		/* grab emails */
-		$emails = imap_search($inbox,'ALL');
-
-		/* if emails are returned, cycle through each... */
-		if($emails) {
-
-		  /* begin output var */
-		  $output = '';
-
-		  /* put the newest emails on top */
-		  rsort($emails);
-
-		  /* for every email... */
-		  foreach($emails as $email_number) {
-
-			/* get information specific to this email */
-			$overview = imap_fetch_overview($inbox,$email_number,0);
-			$message = imap_fetchbody($inbox,$email_number,2);
-
-			/* output the email header information */
-			$output.= '<div class="toggler '.($overview[0]->seen ? 'read' : 'unread').'">';
-			$output.= '<span class="subject">'.$overview[0]->subject.'</span> ';
-			$output.= '<span class="from">'.$overview[0]->from.'</span>';
-			$output.= '<span class="date">on '.$overview[0]->date.'</span>';
-			$output.= '</div>';
-
-			/* output the email body */
-			$output.= '<div class="body">'.$message.'</div>';
-		  }
-
-		  echo $output;
+		Yii::beginProfile('imap connect');
+			
+		$mbox = imap_open("{imap.gmail.com:993/ssl}INBOX", "steve@newicon.net", "mushroom11") or die("can't connect: " . imap_last_error());
+			
+		Yii::endProfile('imap connect');
+		Yii::beginProfile('imap check');
+		$MC = imap_check($mbox);
+		Yii::endProfile('imap check');
+		dp($MC);
+		$msgNum = $MC->Nmsgs;
+		
+		Yii::beginProfile('imap fo');
+		for ($i=$msgNum; $i>($msgNum-30); $i--){
+			$mo = imap_fetch_overview($mbox, $i);
+			dp($mo);
 		}
+		Yii::endProfile('imap fo');
+		// Fetch an overview for all messages in INBOX
+//		$result = imap_fetch_overview($mbox,"1:{$MC->Nmsgs}",0);
+//		foreach ($result as $overview) {
+//			echo "#{$overview->msgno} ({$overview->date}) - From: {$overview->from}
+//			{$overview->subject}\n";
+//		}
+		Yii::beginProfile('imap mboxs');
+		$mboxs = imap_list($mbox,"{imap.gmail.com}", "*");
+		Yii::endProfile('imap mboxs');
+		dp($mboxs);
 
-		/* close the connection */
-		imap_close($inbox);
+		
+		imap_close($mbox);
+		
+		Yii::beginProfile('Zend imap con');
+		$con = new Zend_Mail_Storage_Imap(array(
+				'host'     => 'imap.gmail.com',
+				'user'     => 'steve@newicon.net',
+				'password' => 'mushroom11',
+				'port'     => 993,
+				'ssl'	   => 'SSL'
+			));
+		Yii::endProfile('Zend imap con');
+		Yii::beginProfile('Zend imap message');
+		for ($ii=$msgNum; $ii>($msgNum-30); $ii--){
+			$con->getMessage($ii);
+		}
+		Yii::endProfile('Zend imap message');
 	}
+
 	
 }

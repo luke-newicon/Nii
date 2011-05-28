@@ -157,17 +157,17 @@ Class NMailReader extends CComponent
 
 		$t = false;
 		// Check the subject line for possible ID.
-        if (self::hasSubjectTicketId($m->subject, $id))
-        	if(($t = SupportTicket::model()->findByPk($id))===null);
-				$t = new SupportTicket();
-				
-		$t->createTicketFromMail($m);
+//        if (self::hasSubjectTicketId($m->subject, $id))
+//        	if(($t = SupportTicket::model()->findByPk($id))===null);
+//				$t = new SupportTicket();
+//				
+		//$t->createTicketFromMail($m);
 			
 		// create link table
-		$te = new SupportTicketEmail();
-		$te->email_id = $m->id();
-		$te->ticket_id = $t->id();
-		$te->save();
+//		$te = new SupportTicketEmail();
+//		$te->email_id = $m->id();
+//		$te->ticket_id = $t->id();
+//		$te->save();
 	}
 
 

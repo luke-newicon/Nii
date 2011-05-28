@@ -23,9 +23,11 @@ class IndexController extends AController
 	public function actionIndex() 
 	{
 		$contacts = CrmContact::model()->orderByName()->findAll();
+		$groups = CrmGroup::model()->findAll();
 		$this->render('index',array(
 			'term'=>'',
-			'contacts'=>$contacts
+			'contacts'=>$contacts,
+			'groups'=>$groups
 		));
 	}
 
@@ -222,4 +224,14 @@ class IndexController extends AController
 		$contact = new CrmContact;
 		$this->render('test',array('contact'=>$contact));
 	}
+	
+	
+	public function actionAddGroup(){
+		$gn = ($_POST['group']=='')?CrmModule::get()->defaultNewGroupName:$_POST['group'];
+		$g = new CrmGroup;
+		$g->name = $gn;
+		$g->save();
+		echo json_encode(array('id'=>$g->id,'name'=>$g->name));
+	}
+	
 }

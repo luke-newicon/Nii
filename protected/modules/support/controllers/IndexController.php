@@ -190,7 +190,7 @@ class IndexController extends AController
 	
 	
 	public function actionCheckMail($id){
-		NMailReader::$readLimit = 5;
+		NMailReader::$readLimit = 15;
 		NMailReader::$forceCountRefresh = true;
 		NMailReader::readMail();
 		// need to know where i am. whats currently displaying?

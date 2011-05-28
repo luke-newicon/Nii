@@ -1,8 +1,8 @@
 
 <style>
-	.userList li,.groupList li {border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
+	.userList li,#groupList li {border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
-	.groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
+	#groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
 	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	
@@ -33,39 +33,47 @@
 	.userListScreen .alpha a{color:#999;font-size:10px;}
 	.userList li.letter {background:-moz-linear-gradient(center top , #f9f9f9, #eee) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#eee), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#eee');padding:2px 0px 2px 5px;}
 	.userList li.letter a {color:#999;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);}
-	.groupList{background-color:#fff;}
-	.groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
+	#groupList{background-color:#fff;}
+	#groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
 	.inputBox{position:relative;}
 	.userList{margin-right:-15px;}
-	.size10of100 {width:10%;}
-
+	
+	/**
+	 * css drag styles
+	 */
+	 .dragging .selected {opacity:0.5;}
 </style>
-
 <div id="contactBook" class="line contactBook noBull">
-	<div class="unit size2of10 groupList">
+	<div id="groupList" class="unit size2of10" style="width:180px;">
 		<div class="topperGreyBar pls line prs" style="height:24px;padding:3px 3px 0px 2px;">
 			<div class="unit size4of5 flashy" style="padding-left:2px;">
+				<!--
 				<div class="inputContainer" style="position:relative;">
 					<div class="inputBox line" style="padding:2px;">
 						<div class="unit" style="width:20px;"><span class="grey-icon fam-zoom"></span></div>
 						<div class="lastUnit"><input id="groupSearch" name="contactSearch" type="text" class="input" /></div>
 					</div>
 				</div>
+				-->
 			</div>
 			<div class="lastUnit txtR">
-				<a href="" class="showTip btn btnN btnToolbar addGroup btnFlat" title="Add Group">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
+				<a id="addGroup" href="" class="btn btnN btnToolbar addGroup btnFlat" data-tip="{gravity:'s'}" title="Add Group"><span class="icon ni-add mrn"></span></a>
 			</div>
 		</div>
 		<ul id="groups" class="man">
-			<li id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All contacts</a></li>
+			<li id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All</a></li>
 			<li id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
 			<li id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
 			<li id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
+			<li style="display:none;" id="newGroup" class="groupEdit line" ><div class="icon fam-vcard unit"></div><div class="inputBox lastUnit" style="padding:2px;"><input type="text" id="newGroupInput" name="newGroup" value="<?php echo CrmModule::get()->defaultNewGroupName; ?>" /></div></li>
+			<?php foreach($groups as $g): ?>
+				<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span> <a href="#"><?php echo $g->name; ?></a></li>
+			<?php endforeach; ?>
 		</ul>
 	</div>
 	<div class="unit size3of10 userListScreen ">
 		<div class="topperGreyBar pls line prs" style="height:24px;padding:3px 3px 0px 2px;">
-			<div class="unit size10of100">
+			<div class="unit">
 				<a id="showAlphaSearch" href="#" class="btn btnN btnToolbar btnFlat"><span class="grey-icon fam-font"></span></a>
 			</div>
 			<div class="unit size3of5 flashy" style="padding-left:2px;">
@@ -77,8 +85,8 @@
 				</div>
 			</div>
 			<div class="lastUnit txtR">
-				<a href="" class="btn btnN btnToolbar addContact btnFlat" data-tip="{gravity:'s'}" title="Add Contact">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
-				<a href="" class="btn btnN btnToolbar addCompany btnFlat" data-tip="{gravity:'s'}" title="Add Company">&nbsp;<span class="icon ni-add">&nbsp;</span></a>
+				<a href="" class="btn btnN btnToolbar addContact btnFlat" data-tip="{gravity:'s'}" title="Add Contact">&nbsp;<span class="icon ni-add mrn">&nbsp;</span></a>
+				<a href="" class="btn btnN btnToolbar addCompany btnFlat" data-tip="{gravity:'s'}" title="Add Company">&nbsp;<span class="icon ni-add mrn">&nbsp;</span></a>
 			</div>
 		</div>
 <!--		<ul id="alphaSearch" class="man" style="float:left;width:20px" >
@@ -105,33 +113,58 @@
 </div>
 <script type="text/javascript">
 
+var cBook = {
+	userScroll:{},
+	init:function(){
+		cBook.initUserScroll();
+	},
+	//initialises the scroll bar for the user list
+	initUserScroll:function	(){
+		var timer;
+		cBook.userScroll = $('#userListScroll')
+			.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+				$('.jspDrag').stop(1,0).css('opacity','0.7').show();
+				if (timer) {
+					clearTimeout(timer);
+				}
+				timer = setTimeout( function(){
+					timer = null;
+					$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
+					//scrollStop(scrollPositionY);
+				}, 300);
+			})
+			.jScrollPane({
+				verticalDragMinHeight: 20,
+				verticalGutter:0,
+				hideFocus:1
+			})
+			.data('jsp');
+		$('.jspDrag').hide();
+	},
+	addGroup:function(){
+		$('#newGroup').show();
+		$('#newGroupInput').select().bind('keyup blur', function(e){
+			if(e.type === 'keyup' && e.keyCode !== 13) return;
+			// unbind to prevent calling this function from the blur event
+			$('#newGroupInput').unbind('keyup blur');
+			// they hit enter or left the text field lets update!
+			$.post("<?php echo NHtml::url('/crm/index/addGroup'); ?>", 'group='+$('#newGroupInput').val(), function(r){
+				// unbind
+				$('#groups').append('<li data-id="'+r.id+'" class="group"><span class="icon fam-vcard"></span> <a href="#">'+r.name+'</a></li>');
+				$('#newGroup').hide();
+			},'json');
+		});
+		return false;
+	}
+}
 
 $(function(){
+	
+	cBook.init();
+	$('#addGroup').click(function(){return cBook.addGroup();});
 
-	var timer;
-	var scroll = $('#userListScroll')
-		.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
-			//$('.jspDrag').stop(1,0).fadeTo(100,0.7);
-			$('.jspDrag').stop(1,0).css('opacity','0.7').show();
-			if (timer) {
-				clearTimeout(timer);
-			}
-
-			timer = setTimeout( function(){
-				timer = null;
-				$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
-				//scrollStop(scrollPositionY);
-			}, 300);
-
-		})
-		.jScrollPane({
-			verticalDragMinHeight: 20,
-			verticalGutter:0,
-			hideFocus:1
-		})
-		.data('jsp');
 		
-	$('.jspDrag').hide();
+	//$('.jspDrag').hide();
 	$('#userListScroll').delegate('.jspContainer','mouseenter',function(){
 		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
 	});
@@ -141,7 +174,15 @@ $(function(){
 
 
 
-	$('.contactBook').delegate('.userList li.contact','click',function(){
+	$('.contactBook').delegate('.userList li.contact','click',function(e){
+		// can check event for shiftKey and ctrlKey
+		if(e.ctrlKey === true){
+			$(this).addClass('selected');
+			return;
+		}
+		if(e.shiftKey === true){
+			// do some marginally clever code to figure out which element to highlight
+		}
 		$(this).parent().find('.selected').removeClass('selected');
 		$(this).addClass('selected');
 		$('#contactEdit').show();$('#contactDelete').show();$('#contactCancel').hide();$('#contactSave').hide();
@@ -269,7 +310,8 @@ $(function(){
 			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
 			type:'post',
 			success:function(r){
-				$('#userListScroll').html(r);
+				$('#userListScroll .userList').replaceWith(r);
+				cBook.userScroll.reinitialise();
 			}
 		});
 	};
@@ -292,9 +334,37 @@ $(function(){
 	});
 
 	//$('.userList').selectable();
-
-
-
+	$('#userListScroll .userList li').draggable({
+		scope:'group',
+		addClasses:false,
+		revert:true,
+		cursorAt: {left: 0, top: 0},
+		cursor:'move',
+		start:function(){
+			//dragging has started add class to indicate all the draggables that are being dragged
+			$('#userListScroll .userList').addClass('dragging');
+		},
+		stop:function(){
+			$('#userListScroll .userList').removeClass('dragging');
+		},
+		helper:function(){
+			var count = $('#userListScroll .userList .selected').length;
+			return $('<div>helper '+count+'</div>').appendTo('body').get()
+		}
+	});
+	$('#groups .group').droppable({
+		scope:'group',
+		over:function(event, ui){
+			ui.droppable.is('#users');
+		},
+		hoverClass:'selected',
+		addClasses:false,
+		drop: function(event, ui) {
+			$('#userListScroll .userList .selected').each(function(i,e){
+				alert($(e).attr('id'));
+			});
+		}
+	});
 
 	/**********************
 	 * form controls
@@ -367,10 +437,20 @@ $(function(){
 		}
 	});
 	
+	$('#groupList').resizable({
+		handles:'e',
+		minWidth: 150,
+		iframeFix:true,
+		stop: function(event, ui) {
+			//resizer();
+		}
+	});
+	
 	
 	
 	
 	// resize window n panes
+	var timer;
 	var resizer = function(){
 
 		if (timer) {
@@ -384,16 +464,17 @@ $(function(){
 			if(!((winHeight-$('#contactBook').position().top-paddingBottom) <= minHeight)){
 				var border = $('#contactBook').border();
 				borderHeight = border.top + border.bottom;
-				$('#contactBook').css('height',((winHeight - $('#contactBook').position().top - paddingBottom) - borderHeight) + 'px');
-				$('.userListScreen').css('height',(winHeight - $('.userListScreen').position().top - paddingBottom) + 'px');
-				$('#userListScroll').css('height',$('#contactBook').height()-27 + 'px');
+				$('#contactBook').css('height',((winHeight - $('#contactBook').offset().top - paddingBottom) - borderHeight) + 'px');
+				$('.userListScreen').css('height',(winHeight - $('.userListScreen').offset().top - paddingBottom) + 'px');
+				$('#userListScroll').css('height',(winHeight - $('#userListScroll').offset().top - paddingBottom) + 'px');
+				//$('#userListScroll').css('height',$('#contactBook').height()-30 + 'px');
 				$('#detailsScreen').css('height',$('#contactBook').height()-40 + 'px');
 				//$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
 				//$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
 				//$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
 			}
-			scroll.reinitialise();
-		}, 300);
+			cBook.userScroll.reinitialise();
+		}, 150);
 	}
 	
 	
