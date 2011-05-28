@@ -164,7 +164,7 @@ class NActiveRecord extends CActiveRecord
 				$delete = array_key_exists(4, $f) ? $f[4] : NULL;
 				$update = array_key_exists(5, $f) ? $f[5] : NULL;
 				// if the key is not already in on the table add it.
-				if (!array_key_exists($f[1], $exists->foreignKeys))
+				if ($exists && !array_key_exists($f[1], $exists->foreignKeys))
 					$db->createCommand()->addForeignKey($f[0], $realTable, $f[1], $f[2], $f[3], $delete, $update);
 			}	
 		}

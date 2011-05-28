@@ -23,4 +23,9 @@ class NiiModule extends NWebModule
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 	}
 	
+	public function install(){
+		Yii::import('nii.widgets.notes.models.NNote');
+		NNote::install();
+	}
+	
 }
