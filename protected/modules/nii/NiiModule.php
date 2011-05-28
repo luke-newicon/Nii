@@ -10,9 +10,12 @@
 
 class NiiModule extends NWebModule
 {
+	
+	
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
+		Yii::import('nii.widgets.*');
 	}
 	
 	public function registerScripts(){

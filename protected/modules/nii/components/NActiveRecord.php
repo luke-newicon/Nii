@@ -113,7 +113,7 @@ class NActiveRecord extends CActiveRecord
 	 */
 	public static function install($className){
 		$t = new $className(null);
-		$db = $t->getDbConnection();
+		$db = Yii::app()->getMyDb();
 		$exists = $db->getSchema()->getTable($t->tableName());
 		$realTable = $t->getRealTableName();
 		$s = $t->schema();
@@ -121,10 +121,11 @@ class NActiveRecord extends CActiveRecord
 			throw new CException('The schema array must contain the array key "columns" with an array of the columns');
 		// add table columns
 		if(!$exists){ 
+			$options = array_key_exists('options', $s)?$s['options']:'ENGINE=InnoDB DEFAULT CHARSET=utf8';
 			$db->createCommand()->createTable(
 				$realTable,
 				$s['columns'],
-				'ENGINE=InnoDB DEFAULT CHARSET=utf8'
+				$options
 			);
 		}else{
 			// adds columns that dont exist in the database

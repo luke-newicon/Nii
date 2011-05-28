@@ -22,7 +22,7 @@
 	.fieldState .field {padding:0 0 2% 0;}
 	.formGuide{color:#999;font-size:90%;}
 </style> 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form=$this->beginWidget('NActiveForm', array(
 	'id'=>'contactForm',
 	'action'=>array('/crm/index/editContact','cid'=>$c->id()),
 	'enableAjaxValidation'=>true,
@@ -44,10 +44,10 @@
 					<div class="noHighlight noBorder">
 						<div class="inputBox">
 							<?php echo $form->textField($c,'company',array('class'=>'input','placeholder'=>'company')); ?>
-							<?php echo $form->error($c,'company'); ?>
 						</div>
 					</div>
 				</div>
+				<?php echo $form->error($c,'company'); ?>
 				<?php else: ?>
 				<div class="inputBox multiInput">
 					<div class="line noHighlight">
@@ -59,7 +59,6 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'first_name',array('class'=>'input','placeholder'=>'first name')); ?>
-									<?php echo $form->error($c,'first_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -67,7 +66,7 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'last_name',array('class'=>'input','placeholder'=>'last name')); ?>
-									<?php echo $form->error($c,'last_name'); ?>
+									<?php //echo $form->error($c,'last_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -83,6 +82,7 @@
 						</div>
 					</div>
 				</div>
+				<?php echo $form->error($c,'first_name'); ?>
 				<?php endif; ?>
 			</div>
 		</div>

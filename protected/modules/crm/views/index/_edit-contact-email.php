@@ -18,6 +18,6 @@
 			</div>
 		</div>
 		<div class="lastUnit" style="padding-top:6px;"><a href="#" title="Remove" class="icon ni-minus removeRow" data-tip="{gravity:'e'}"  ></a></div>
-		<?php echo $form->error($e, "[$i]address"); ?>
 	</div>
+	<?php echo $form->error($e, "[$i]address"); ?>
 </div>

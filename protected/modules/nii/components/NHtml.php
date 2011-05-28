@@ -133,5 +133,7 @@ class NHtml extends CHtml
 
 		$v->endWidget('zii.widgets.jui.CJuiDialog');
 	}
+	
+	
 
 }

@@ -66,7 +66,8 @@
  * @author matthewturner
  * @version 0.1
  */
-class NNotes extends CWidget{
+class NNotes extends CWidget
+{
 	public $displayUserPic = true;
 	public $model;
 	public $emptyText = 'There are no notes attached to this item';
@@ -74,17 +75,14 @@ class NNotes extends CWidget{
 	public $ajaxController = array('/nii/index/NNotes');
 	public $newNoteText= 'New note...';
 
+	
 	public function run(){
 		//The id of the item the notes should relate to
 		$area = $this->model->tableName();
 		$id = $this->model->getPrimaryKey();
 
-		// The location of the markdown widgets asset folder
-		$assetLocation = dirname(__FILE__) . DIRECTORY_SEPARATOR. 'assets';
-
 		// Includes the style sheet
-		$assetManager = yii::app()->getAssetManager();
-		$assetFolder = $assetManager->publish($assetLocation);
+		$assetFolder = $this->getAssetsDir();
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
 
 		// this javascript support multiple note widgets on one page and 
@@ -112,9 +110,9 @@ class NNotes extends CWidget{
 				$.ajax({
 					url: $data.ajaxcontroller,
 					type: "POST",
-					data: ({itemId : $data.id,model:$data.area,note:note}),
+					data: ({itemId : $data.id,model:$data.area,note:note,profilePic:"'.$this->getProfilePic().'"}),
 					success: function(){
-						location.reload();
+					
 					}
 				});
 			});
@@ -151,7 +149,6 @@ class NNotes extends CWidget{
 		 });
 		');
 
-		$profilePic = $assetFolder.'/profilePic.png';
 
 		// Gets the data to initially display when the widget loads.
 		$data = Yii::app()->db->createCommand()
@@ -170,7 +167,7 @@ class NNotes extends CWidget{
 		$this->render('overall',array('data'=>$data,
 			'emptyText'=>$this->emptyText,
 			'displayUserPic'=>$this->displayUserPic,
-			'profilePic'=>$profilePic,
+			'profilePic'=>$this->getProfilePic(),
 			'canAdd'=>$this->canAdd,
 			'area'=>$area,
 			'id'=>$id,
@@ -178,5 +175,22 @@ class NNotes extends CWidget{
 			'newNoteText'=>$this->newNoteText
 		));
 	}
+	
+	public function getAssetsDir()
+	{
+		$assetLocation = Yii::getPathOfAlias('nii.widgets.notes.assets');
+		return yii::app()->getAssetManager()->publish($assetLocation);
+	}
+	
+	public function getProfilePic()
+	{
+		return $this->getAssetsDir().'/profilePic.png';
+	}
+	
+	
+	public function getNote($n)
+	{
+		return $this->render('_line',array('line'=>$n,'profilePic'=>$this->getProfilePic()), true);
+	}
+	
 }
-?>

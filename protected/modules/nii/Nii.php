@@ -16,38 +16,43 @@
 class Nii extends CWebApplication
 {
 	
+
+	public $domain = false;
+
 	public $hostname = 'local.ape-project.org';
 	
 	private $_subDomain;
 	
 	public function run(){
+		
+		if($this->domain){
 
-		// set up application context using the subdomain
-		$host = Yii::app()->request->getHostInfo();
-		// define the hostname!
-		$subdomain = trim(str_replace(array('http://',$this->hostname),'',$host),'.');
-		//echo $subdomain;
-		//echo $subdomain;
-		if($subdomain==''){
-			$this->defaultController = 'site';
-		} else {
-			//check domain
-			$dom = AppDomain::model()->findByPk($subdomain);
-			if($dom === null){
-				$this->catchAllRequest = array('error');
-			}else{
-				$this->setSubDomain($dom->domain);
-				$this->defaultController = 'app';
+			// set up application context using the subdomain
+			$host = Yii::app()->request->getHostInfo();
+			// define the hostname!
+			$subdomain = trim(str_replace(array('http://',$this->hostname),'',$host),'.');
+			//echo $subdomain;
+			//echo $subdomain;
+			if($subdomain==''){
+				$this->defaultController = 'site';
+			} else {
+				//check domain
+				$dom = AppDomain::model()->findByPk($subdomain);
+				if($dom === null){
+					$this->catchAllRequest = array('error');
+				}else{
+					$this->setSubDomain($dom->domain);
+					$this->defaultController = 'app';
+				}
 			}
 		}
-		
 		// initialise modules
 		$this->getNiiModules();
-		
+
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
 		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
-		
+
 		// run the application (process the request)
 		parent::run();
 	}

@@ -97,7 +97,7 @@ class NNote extends NAppRecord
         ));
     }
 	
-	
+
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}

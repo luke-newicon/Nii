@@ -224,7 +224,6 @@ class SupportEmail extends NActiveRecord
 				'date'=>'datetime',
 				'references'=>'text',
 				'in_reply_to'=>'string',
-				'test_col'=>'string'
 			),
 			'keys'=>array(
 				array('subject')
