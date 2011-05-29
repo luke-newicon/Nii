@@ -238,20 +238,25 @@ class IndexController extends AController
 		$groupId = $_POST['groupId'];
 		$contacts = $_POST['contacts'];
 		$cs = explode(',', $contacts);
-		foreach($cs as $c){
+		
+		Yii::import('nii.components.db.NQuery');
+		$tblName = CrmGroupContact::model()->tableName();
+		$q = new NQuery();
+		$q->multiInsert($tblName,array('group_id','contact_id'),true);
+		foreach($cs as $i => $c){
 			if($c!=''){
-				// check if this contact is already in the database
-				$lkUp = CrmGroupContact::model()->findByPk(array('group_id'=>$groupId,'contact_id'=>$c));
-				if($lkUp === null){
-					$g = new CrmGroupContact;
-					$g->group_id = $groupId;
-					$g->contact_id = $c;
-					$g->save();
-				}
+				// do an insert ignore
+				$q->multiInsertValues(array($groupId, $c));
 			}
 		}
+		$q->execute();
 	}
 	
+	public function actionDeleteGroup(){
+		$gid = $_POST['group'];
+		CrmGroup::model()->deleteByPk($gid);
+		CrmGroupContact::model()->deleteAllByAttributes(array('group_id'=>$gid));
+	}
 	
 	public function actionTestGroup($group){
 		$cs = CrmContact::model();
@@ -259,5 +264,17 @@ class IndexController extends AController
 		foreach($cs->orderByName()->group($group)->nameLike('')->findAll() as $cr){
 			echo $cr->name.'<br>';
 		}
+	}
+	
+	public function actionGroupRename(){
+		$gName = ($_POST['groupName']=='')?CrmModule::get()->defaultNewGroupName:$_POST['groupName'];
+		$gid = $_POST['gid'];
+		$c = CrmGroup::model()->findByPk($gid);
+		if ($c===null) 
+			throw new CHttpException('no group found');
+		$c->name = $gName;
+		$c->save();
+		echo json_encode(array('name'=>$gName));
+		Yii::app()->end();
 	}
 }

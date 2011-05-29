@@ -7,12 +7,16 @@
 	)); ?>
 <?php else: ?>
 	<?php if($contact !== null): ?>
-		<?php $this->widget('crm.components.CrmCard',array(
-				'size'=>$this->size,
-				'contact'=>$user->contact,
-				'profileUrl'=>Yii::app()->getModule('user')->profileUrl)
-			); 
+		<?php //$this->widget('crm.components.CrmCard',array(
+			//	'size'=>$this->size,
+		//		'contact'=>$user->contact,
+	//			'profileUrl'=>Yii::app()->getModule('user')->profileUrl)
+	//		); 
+		
 		?>
+	<div>
+		<a href=""><?php echo $user->getName(); ?></a>
+	</div>
 	<?php endif; ?>
 	<div class="menu" style="display:none;">
 		<?php $this->widget('zii.widgets.CMenu',array(

@@ -26,9 +26,33 @@ class NiiModule extends NWebModule
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 	}
 	
+	/**
+	 * return array of the scripts not to include from ajax
+	 * note: these will likely mirror the scripts registered on every page load by
+	 * NiiModule::registerScripts
+	 */
+	public function ajaxScriptMap(){
+		return array (
+			'jquery.js'=>false,
+			'jquery-ui.css'=>false,
+			'jquery.tipsy.js'=>false,
+			'jquery.tipsy.css'=>false,
+			'jquery.metadata.js'=>false,
+			'nii.js'=>false,
+		);
+	}
+	
 	public function install(){
 		Yii::import('nii.widgets.notes.models.NNote');
 		NNote::install();
+	}
+	
+	/**
+	 * shortcut method to return the Nii module
+	 * @return NiiModule 
+	 */
+	public static function get(){
+		return yii::app()->getModule('nii'); 
 	}
 	
 }

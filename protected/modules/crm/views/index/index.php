@@ -1,6 +1,6 @@
 
 <style>
-	.userList li,#groupList li {border-bottom:1px solid #ccc;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
+	.userList li,#groupList li {border-bottom:1px solid #bbb;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
 	#groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
@@ -31,8 +31,8 @@
 	
 	.userListScreen .alpha{border:1px solid #fff;-moz-border-radius:8px 8px 8px 8px;border-radius:8px 8px 8px 8px;}
 	.userListScreen .alpha a{color:#999;font-size:10px;}
-	.userList li.letter {background:-moz-linear-gradient(center top , #f9f9f9, #eee) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#eee), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#eee');padding:2px 0px 2px 5px;}
-	.userList li.letter a {color:#999;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);}
+	.userList li.letter {cursor:default;background:-moz-linear-gradient(center top , #f4f4f4, #ddd) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#ddd), to(#f4f4f4));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f4f4', endColorstr='#ddd');padding:0px 0px 1px 5px;border-top:1px solid #fff;border-bottom:1px solid #aaa;}
+	.userList li.letter a {color:#666;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);cursor:default;}
 	#groupList{background-color:#fff;}
 	#groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
 	.inputBox{position:relative;}
@@ -42,7 +42,22 @@
 	 * css drag styles
 	 */
 	 .dragging .selected {opacity:0.5;}
+	 a.group-delete{display:none;float:right;color:#ffcccc;}
+	 .group:hover a.group-delete{display:block;}
+	 .group:hover a.group-delete:hover{color:#990000;text-decoration:none;}
+	 .main-toolbar{position:absolute;top:3px;left:600px;}
+	
+	 /**
+	  * classes used for the drag helper image
+	  */
+	 .dragHelper{position:relative;}
+	 .bigNumber{position:absolute;top:15px;left:40px;background-color:#aa0000;color:#fff;text-shadow:1px 1px 0px #000;border-radius:10px;padding:2px 5px;}
 </style>
+<div class="main-toolbar">
+	<div class="delete">
+		delete
+	</div>
+</div>
 <div id="contactBook" class="line contactBook noBull">
 	<div id="groupList" class="unit size2of10" style="width:180px;">
 		<div class="topperGreyBar pls line prs" style="height:24px;padding:3px 3px 0px 2px;">
@@ -67,7 +82,7 @@
 			<li data-id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
 			<li style="display:none;" id="newGroup" class="groupEdit line" ><div class="icon fam-vcard unit"></div><div class="inputBox lastUnit" style="padding:2px;"><input type="text" id="newGroupInput" name="newGroup" value="<?php echo CrmModule::get()->defaultNewGroupName; ?>" /></div></li>
 			<?php foreach($groups as $g): ?>
-				<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span> <a href="#"><?php echo $g->name; ?></a></li>
+				<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span> <a href="#" class="group-name"><?php echo $g->name; ?></a><a class="group-delete" href="#">x</a></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
@@ -152,36 +167,49 @@ var cBook = {
 		$('#userListScroll .userList li').draggable({
 			scope:'group',
 			addClasses:false,
-			revert:true,
-			cursorAt:{left: 0, top: 0},
-			cursor:'move',
-			start:function(){
+			revert:'invalid', //reverts the helper to original position if not dropped
+			cursorAt:{left: 0, top: 15},
+			start:function(event, ui){
 				// dragging has started add class to indicate all the draggables that are being dragged
+				// this refers to the element being dragged (not the helper the actual element)
+				$(this).addClass('selected');
 				$('#userListScroll .userList').addClass('dragging');
 			},
 			stop:function(){
 				$('#userListScroll .userList').removeClass('dragging');
 			},
 			helper:function(){
+				$(this).addClass('selected');
 				var count = $('#userListScroll .userList .selected').length;
-				return $('<div>helper '+count+'</div>').appendTo('body').get()
+				// select a nice image
+				// be very cool to use actual images...
+				var img = 'drag-contact-5';
+				if(count>0 && count<6){
+					img = 'drag-contact-'+count;
+				}
+				var helperHtml = '<div class="dragHelper"><img class="img" src="<?php echo CrmModule::get()->getAssetsUrl(); ?>/images/'+img+'.png" />';
+				helperHtml += '<span class="bg bigNumber">'+count+'</span></div>';
+				return $(helperHtml).appendTo('body').get()
 			}
 		});
 		$('#groups .group').droppable({
 			scope:'group',
 			over:function(event, ui){
-
+				
 			},
 			hoverClass:'selected',
 			addClasses:false,
 			drop: function(event, ui) {
 				var contacts = '';
-				var groupId = $(this).data('id');
+				var $group = $(this);
+				var groupId = $group.data('id');
 				$('#userListScroll .userList .selected').each(function(i,e){
 					contacts += $(e).data('id') + ',';
 				});
+				$group.find('.icon.fam-vcard').removeClass('fam-vcard').addClass('fam-hourglass');
 				$.post("<?php echo NHtml::url('/crm/index/addToGroup'); ?>",{"groupId":groupId,"contacts":contacts},function(r){
-					alert('done');
+					$group.effect("highlight", {}, 1500);
+					$group.find('.icon').removeClass('fam-hourglass').addClass('fam-vcard');
 				});
 			}
 		});
@@ -189,18 +217,39 @@ var cBook = {
 	// enables the user to add a group to the group list
 	addGroup:function(){
 		$('#newGroup').show();
+		$('#newGroupInput').val("<?php echo CrmModule::get()->defaultNewGroupName; ?>");
 		$('#newGroupInput').select().bind('keyup blur', function(e){
+			// escaped
+			if(e.type === 'keyup' && e.keyCode === 27){
+				$('#newGroup').hide();
+				$('#newGroupInput').unbind('keyup blur');
+				return;
+			}
 			if(e.type === 'keyup' && e.keyCode !== 13) return;
 			// unbind to prevent calling this function from the blur event
 			$('#newGroupInput').unbind('keyup blur');
 			// they hit enter or left the text field lets update!
 			$.post("<?php echo NHtml::url('/crm/index/addGroup'); ?>", 'group='+$('#newGroupInput').val(), function(r){
 				// unbind
-				$('#groups').append('<li data-id="'+r.id+'" class="group"><span class="icon fam-vcard"></span> <a href="#">'+r.name+'</a></li>');
+				$('#groups').append('<li data-id="'+r.id+'" class="group"><span class="icon fam-vcard"></span> <a href="#">'+r.name+'</a><a class="group-delete" href="#">x</a></li>');
 				$('#newGroup').hide();
+				cBook.initUserDrag();
 			},'json');
 		});
 		return false;
+	},
+	loadContactList:function(){
+		var grpId = $('#groups .selected').data('id');
+		$.ajax({
+			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
+			type:'post',
+			success:function(r){
+				$('#userListScroll .userList').replaceWith(r);
+				cBook.reinit();
+				$firstContact = $('#userListScroll .userList .contact:first');
+				$firstContact.trigger('click');
+			}
+		});
 	}
 }
 
@@ -208,7 +257,53 @@ $(function(){
 	
 	cBook.init();
 	$('#addGroup').click(function(){return cBook.addGroup();});
-
+	$('#groups').delegate('li', 'click', function(e){
+		var $grpLi = $(this);
+		if($(e.target).is('.group-delete')){
+			// clicked on delete this group!
+			if(confirm('Are you sure you want to delete the "'+$(this).find('.group-name').html()+'" group?')){
+				$.post("<?php echo NHtml::url('/crm/index/deleteGroup/') ?>","group="+$grpLi.data('id'),function(){
+					// deleted, lets remove it.
+					$grpLi.slideUp(250, function(){$grpLi.remove();});
+				});
+			};
+			return false;
+		}
+		if($grpLi.is('.selected')) return false;
+		$(this).parent().find('li').removeClass('selected');
+		$(this).addClass('selected');
+		cBook.loadContactList();
+		return false;
+	});
+	$('#groups').delegate('li', 'dblclick', function(e){
+		var $grpLi = $(this);
+		var $grpName = $grpLi.find('.group-name');
+		var $inlineEdit = $('<div id="inlineEdit" class="inputBox" style="padding:0px;"><input type="text" value="'+$grpName.html()+'" /></div>')
+			.appendTo('body')
+			.width(($grpLi.width()-28))
+			.position({'my':'top left','at':'top left','of':$grpLi,'offset':'8 0'})
+		var $input = $inlineEdit.find('input')
+		$input.select().bind('keyup blur',function(e){
+			if(e.type === 'keyup' && e.keyCode === 27){
+				// escape, ignore changes
+				$inlineEdit.remove();$grpLi.find('.group-delete').css('display','');$grpName.show();
+			}
+			if(e.type === 'keyup' && e.keyCode !== 13) return;
+			$input.unbind('keyup blur');
+			// change name
+			if($grpName.html() == $input.val()){
+				// no change don't bother
+				$inlineEdit.remove();$grpLi.find('.group-delete').css('display','');$grpName.show();
+			}else{
+				$.post("<?php echo NHtml::url('/crm/index/groupRename'); ?>",{"gid":$grpLi.data('id'),"groupName":$input.val()},function(r){
+					$grpName.html(r.name);
+					$inlineEdit.remove();$grpLi.find('.group-delete').css('display','');$grpName.show();
+				},'json')
+			}
+		});
+		$grpLi.find('.group-delete').hide();
+		$grpName.hide();
+	});
 		
 	//$('.jspDrag').hide();
 	$('#userListScroll').delegate('.jspContainer','mouseenter',function(){
@@ -219,33 +314,37 @@ $(function(){
 	});
 
 
-
+	var lastContactClicked = {};
 	$('.contactBook').delegate('.userList li.contact','click',function(e){
 		// can check event for shiftKey and ctrlKey
+		var $contact = $(this);
 		if(e.ctrlKey === true){
-			$(this).addClass('selected');
-			return;
-		}
-		if(e.shiftKey === true){
-			// do some marginally clever code to figure out which element to highlight
-		}
-		$(this).parent().find('.selected').removeClass('selected');
-		$(this).addClass('selected');
-		$('#contactEdit').show();$('#contactDelete').show();$('#contactCancel').hide();$('#contactSave').hide();
-		if ($(this).attr('id')){
-			var id = $(this).attr('id').replace('cid_','');
-			$('#detailsScreen').load('<?php echo NHtml::url("/crm/detail/index"); ?>?id='+id);
+			if($contact.is('.selected')){
+				$contact.removeClass('selected');
+			}else{
+				$contact.addClass('selected');
+			}
+		} else if(e.shiftKey === true){
+			var start = $('.userList li.contact').index(this);
+			var end = $('.userList li.contact').index(lastContactClicked);
+			for(i=Math.min(start,end);i<=Math.max(start,end);i++) {
+				$('.userList li.contact').eq(i).addClass('selected');
+			}
 		} else {
-			$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
+			$(this).parent().find('.selected').removeClass('selected');
+			$(this).addClass('selected');
+			$('#contactEdit').show();$('#contactDelete').show();$('#contactCancel').hide();$('#contactSave').hide();
+			if ($(this).attr('id')){
+				var id = $(this).attr('id').replace('cid_','');
+				$('#detailsScreen').load('<?php echo NHtml::url("/crm/detail/index"); ?>?id='+id);
+			} else {
+				$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
+			}
 		}
+		lastContactClicked = this;
 	});
 
-	$('#groups').delegate('li', 'click', function(){
-		$(this).parent().find('li').removeClass('selected');
-		$(this).addClass('selected');
-		loadContactList();
-		return false;
-	});
+	
 
 	$('#showAlphaSearch').click(function(){
 		$('#alphaSearch').toggle();
@@ -347,20 +446,8 @@ $(function(){
 
 
 	$('#contactSearch').keyup(function(){
-		loadContactList();
+		cBook.loadContactList();
 	});
-
-	var loadContactList = function(){
-		var grpId = $('#groups .selected').data('id');
-		$.ajax({
-			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
-			type:'post',
-			success:function(r){
-				$('#userListScroll .userList').replaceWith(r);
-				cBook.reinit();
-			}
-		});
-	};
 
 	$('.alpha a').click(function(){
 		var letter = $(this).attr('href').replace('#','');

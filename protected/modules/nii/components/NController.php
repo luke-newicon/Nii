@@ -32,10 +32,9 @@ class NController extends CController
 			$this->layout = '//layouts/ajax.php';
 			// prevent jquery being added via ajax as this breaks jquery ui components that ajax in content.
 			// specifically dialog boxes! Should also add scripts that are always included
-			Yii::app()->clientScript->scriptMap=array(
-				'jquery.js'=>false,
-				'jquery-ui.css'=>false
-			);
+			// remove scripts added every page load by nii.
+			// we don't therefore need them to load in on ajax requests!
+			Yii::app()->clientScript->scriptMap=NiiModule::get()->ajaxScriptMap();
 		} else {
 			// include my scripts!
 			$this->coreAssets = Yii::app()->getModule('nii')->getAssetsUrl();

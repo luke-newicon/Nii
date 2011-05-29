@@ -18,7 +18,7 @@ body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
 
 .leftCol{width:150px;padding:10px;margin-right:10px;}
 .title{position:absolute;left:200px;top:18px;}
-.loginMenu{position:absolute;top:0px;right:0px;width:500px;}
+.loginMenu{position:absolute;top:0px;right:0px;padding:10px;top:9px;}
 
 .loginPage{width:500px;padding-top:125px;}
 

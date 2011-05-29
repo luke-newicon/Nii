@@ -61,7 +61,7 @@ class CrmModule extends NWebModule
 	}
 
 	public function uninstall(){}
-
+	
 	/**
 	 *
 	 * @return CrmModule

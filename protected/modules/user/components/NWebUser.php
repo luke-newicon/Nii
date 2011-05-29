@@ -71,10 +71,32 @@ class NWebUser extends CWebUser
 		return Yii::app()->user->checkAccess($route);	
 	}
 
+	/**
+	 * Finds the most suitable representation for the users name
+	 * Often users may not have all fields so finds one that is not empty.
+	 * 
+	 * first it checks to see if there is a related crm contact record.
+	 * if there is it uses first and last name
+	 * if there is not it uses the default user table, if no username is supplied uses the email
+	 * @return type 
+	 */
 	public function getName(){
 		if($this->getIsGuest()){
 			return $this->guestName;
 		}else{
+			$c = $this->contact;
+			// this code should probably delegate to the CrmContact object
+			if($c !== null){
+				if($c->first_name != '' && $c->last_name != ''){
+					return $c->first_name.' '.$c->last_name;
+				}
+				if($c->first_name != ''){
+					return $c->last_name;
+				}
+				if($c->last_name != ''){
+					return $c->last_name;
+				}
+			}
 			if($this->record !== null){
 				if($this->record->username !== null)
 					return $this->record->username;
