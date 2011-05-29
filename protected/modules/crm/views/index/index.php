@@ -117,6 +117,11 @@ var cBook = {
 	userScroll:{},
 	init:function(){
 		cBook.initUserScroll();
+		cBook.initUserDrag();
+	},
+	reinit:function(){
+		cBook.userScroll.reinitialise();
+		cBook.initUserDrag();
 	},
 	//initialises the scroll bar for the user list
 	initUserScroll:function	(){
@@ -141,6 +146,47 @@ var cBook = {
 			.data('jsp');
 		$('.jspDrag').hide();
 	},
+	// initialises the abaility to drag contacts from the contact list
+	// into groups
+	initUserDrag:function(){
+		$('#userListScroll .userList li').draggable({
+			scope:'group',
+			addClasses:false,
+			revert:true,
+			cursorAt:{left: 0, top: 0},
+			cursor:'move',
+			start:function(){
+				// dragging has started add class to indicate all the draggables that are being dragged
+				$('#userListScroll .userList').addClass('dragging');
+			},
+			stop:function(){
+				$('#userListScroll .userList').removeClass('dragging');
+			},
+			helper:function(){
+				var count = $('#userListScroll .userList .selected').length;
+				return $('<div>helper '+count+'</div>').appendTo('body').get()
+			}
+		});
+		$('#groups .group').droppable({
+			scope:'group',
+			over:function(event, ui){
+
+			},
+			hoverClass:'selected',
+			addClasses:false,
+			drop: function(event, ui) {
+				var contacts = '';
+				var groupId = $(this).data('id');
+				$('#userListScroll .userList .selected').each(function(i,e){
+					contacts += $(e).data('id') + ',';
+				});
+				$.post("<?php echo NHtml::url('/crm/index/addToGroup'); ?>",{"groupId":groupId,"contacts":contacts},function(r){
+					alert('done');
+				});
+			}
+		});
+	},
+	// enables the user to add a group to the group list
 	addGroup:function(){
 		$('#newGroup').show();
 		$('#newGroupInput').select().bind('keyup blur', function(e){
@@ -311,7 +357,7 @@ $(function(){
 			type:'post',
 			success:function(r){
 				$('#userListScroll .userList').replaceWith(r);
-				cBook.userScroll.reinitialise();
+				cBook.reinit();
 			}
 		});
 	};
@@ -331,44 +377,6 @@ $(function(){
 			})			
 		}
 		return false;
-	});
-
-	//$('.userList').selectable();
-	$('#userListScroll .userList li').draggable({
-		scope:'group',
-		addClasses:false,
-		revert:true,
-		cursorAt:{left: 0, top: 0},
-		cursor:'move',
-		start:function(){
-			// dragging has started add class to indicate all the draggables that are being dragged
-			$('#userListScroll .userList').addClass('dragging');
-		},
-		stop:function(){
-			$('#userListScroll .userList').removeClass('dragging');
-		},
-		helper:function(){
-			var count = $('#userListScroll .userList .selected').length;
-			return $('<div>helper '+count+'</div>').appendTo('body').get()
-		}
-	});
-	$('#groups .group').droppable({
-		scope:'group',
-		over:function(event, ui){
-			
-		},
-		hoverClass:'selected',
-		addClasses:false,
-		drop: function(event, ui) {
-			var contacts = '';
-			var groupId = $(this).data('id');
-			$('#userListScroll .userList .selected').each(function(i,e){
-				contacts += $(e).data('id') + ',';
-			});
-			$.post("<?php echo NHtml::url('/crm/index/addToGroup'); ?>",{"groupId":groupId,"contacts":contacts},function(r){
-				alert('done');
-			});
-		}
 	});
 
 	/**********************

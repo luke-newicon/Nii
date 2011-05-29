@@ -36,6 +36,7 @@ class IndexController extends AController
 		$c = CrmContact::model()->findByPk($cid);
 		if(!$c) $c = new CrmContact();
 		echo $this->render('_edit-contact', array('c' => $c), true);
+		Yii::app()->end();
 	}
 
 	
@@ -165,8 +166,9 @@ class IndexController extends AController
 	public function actionFindContact($term='', $group='') 
 	{
 		$cs = CrmContact::model();
-		$contacts = $cs->group($group)->nameLike($term)->findAll();
+		$contacts = $cs->orderByName()->group($group)->nameLike($term)->findAll();
 		echo $this->render('_user-list', array('contacts' => $contacts, 'term' => $term), true);
+		Yii::app()->end();
 	}
 
 	/**
@@ -251,10 +253,10 @@ class IndexController extends AController
 	}
 	
 	
-	public function actionTestGroup($contact){
+	public function actionTestGroup($group){
 		$cs = CrmContact::model();
-		//orderByName()
-		foreach($cs->orderByName()->group(1)->nameLike('')->findAll() as $cr){
+		// orderByName()
+		foreach($cs->orderByName()->group($group)->nameLike('')->findAll() as $cr){
 			echo $cr->name.'<br>';
 		}
 	}

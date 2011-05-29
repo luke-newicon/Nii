@@ -20,7 +20,7 @@
  * @property websites[] $CrmWebsite
  * @property user $User
  */
-class CrmContact extends NActiveRecord
+class CrmContact extends NAppRecord
 {
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
@@ -310,8 +310,8 @@ class CrmContact extends NActiveRecord
 			$name = 'last_name';
 		}
 		$this->getDbCriteria()->mergeWith(array(
-			'select'=>"*, CONCAT($name, company) AS name",
-			'order'=>'name'
+			'select'=>"*, CONCAT($name, company) AS order_name",
+			'order'=>'order_name'
 		));
 		return $this;
 	}
@@ -358,7 +358,7 @@ class CrmContact extends NActiveRecord
 				// only get user if has an email
 				'joinType'=>'INNER JOIN')
 			),
-			'condition'=>'address like :q',
+			'condition'=>'emails.address like :q',
 			'params'=>array(':q'=>"%$email%"),
 		),$useAnd);
 		return $this;
@@ -378,23 +378,18 @@ class CrmContact extends NActiveRecord
 			return $this->companies();
 		if($group=='users')
 			return $this->users();
-		if(is_int($group)){
+		if($group=='all')
+			return $this;
+		if($group!=''){
+			// assume the group is the group id
 			// get all members of group
-//			$contacts = CrmGroupContact::model()->findAllByAttributes(array('group_id'=>$group));
-//			$c = array();
-//			foreach($contacts as $c){
-//				$c[] = $c->contact_id;
-//			}
+			$tblGroup = CrmGroupContact::model()->tableName();
 			$this->getDbCriteria()->mergeWith(array(
-				'with'=>array('groups'=>array(
-					'select'=>false,
-					'joinType'=>'INNER JOIN')
-				),
-				'condition'=>'groups.id = :g',
+				//SELECT * FROM `crm_contact` WHERE id in (select contact_id from crm_group_contact where group_id = 1)
+				'condition'=>"id in (select contact_id from $tblGroup where group_id = :g)",
 				'params'=>array(':g'=>$group),
 			));
 		}
-
 		return $this;
 	}
 	
