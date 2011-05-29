@@ -82,6 +82,8 @@ class CrmContact extends NActiveRecord
 			'contacts'=> array(self::HAS_MANY, 'CrmContact', 'company_id'),
 			'company'=>array(self::BELONGS_TO, 'CrmContact', 'company_id'),
 			'user'=>array(self::BELONGS_TO, 'User', 'user_id'),
+			// this relation has not yet been tested
+			'groups' => array(self::MANY_MANY, 'CrmGroup', 'crm_group_contact(contact_id, group_id)'),
 		);
 	}
 
@@ -362,6 +364,12 @@ class CrmContact extends NActiveRecord
 		return $this;
 	}
 
+	/**
+	 *
+	 * 
+	 * @param type $group
+	 * @return CrmContact 
+	 */
 	public function group($group=''){
 		// built in groups
 		if($group=='people')
@@ -370,6 +378,23 @@ class CrmContact extends NActiveRecord
 			return $this->companies();
 		if($group=='users')
 			return $this->users();
+		if(is_int($group)){
+			// get all members of group
+//			$contacts = CrmGroupContact::model()->findAllByAttributes(array('group_id'=>$group));
+//			$c = array();
+//			foreach($contacts as $c){
+//				$c[] = $c->contact_id;
+//			}
+			$this->getDbCriteria()->mergeWith(array(
+				'with'=>array('groups'=>array(
+					'select'=>false,
+					'joinType'=>'INNER JOIN')
+				),
+				'condition'=>'groups.id = :g',
+				'params'=>array(':g'=>$group),
+			));
+		}
+
 		return $this;
 	}
 	

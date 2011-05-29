@@ -86,8 +86,6 @@ class IndexController extends AController
 	 */
 	public function actionEditContact($cid=null) 
 	{
-		
-		
 		if(isset($_POST['ajax']) && $_POST['ajax'] == 'contactForm'){
 			$c = new CrmContact;
 			$e = new CrmEmail;
@@ -167,7 +165,7 @@ class IndexController extends AController
 	public function actionFindContact($term='', $group='') 
 	{
 		$cs = CrmContact::model();
-		$contacts = $cs->orderByName()->nameLike($term)->group($group)->findAll();
+		$contacts = $cs->group($group)->nameLike($term)->findAll();
 		echo $this->render('_user-list', array('contacts' => $contacts, 'term' => $term), true);
 	}
 
@@ -234,4 +232,30 @@ class IndexController extends AController
 		echo json_encode(array('id'=>$g->id,'name'=>$g->name));
 	}
 	
+	public function actionAddToGroup(){
+		$groupId = $_POST['groupId'];
+		$contacts = $_POST['contacts'];
+		$cs = explode(',', $contacts);
+		foreach($cs as $c){
+			if($c!=''){
+				// check if this contact is already in the database
+				$lkUp = CrmGroupContact::model()->findByPk(array('group_id'=>$groupId,'contact_id'=>$c));
+				if($lkUp === null){
+					$g = new CrmGroupContact;
+					$g->group_id = $groupId;
+					$g->contact_id = $c;
+					$g->save();
+				}
+			}
+		}
+	}
+	
+	
+	public function actionTestGroup($contact){
+		$cs = CrmContact::model();
+		//orderByName()
+		foreach($cs->orderByName()->group(1)->nameLike('')->findAll() as $cr){
+			echo $cr->name.'<br>';
+		}
+	}
 }

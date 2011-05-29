@@ -61,10 +61,10 @@
 			</div>
 		</div>
 		<ul id="groups" class="man">
-			<li id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All</a></li>
-			<li id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
-			<li id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
-			<li id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
+			<li data-id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All</a></li>
+			<li data-id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
+			<li data-id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
+			<li data-id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
 			<li style="display:none;" id="newGroup" class="groupEdit line" ><div class="icon fam-vcard unit"></div><div class="inputBox lastUnit" style="padding:2px;"><input type="text" id="newGroupInput" name="newGroup" value="<?php echo CrmModule::get()->defaultNewGroupName; ?>" /></div></li>
 			<?php foreach($groups as $g): ?>
 				<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span> <a href="#"><?php echo $g->name; ?></a></li>
@@ -305,7 +305,7 @@ $(function(){
 	});
 
 	var loadContactList = function(){
-		var grpId = $('#groups .selected').attr('id');
+		var grpId = $('#groups .selected').data('id');
 		$.ajax({
 			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
 			type:'post',
@@ -338,10 +338,10 @@ $(function(){
 		scope:'group',
 		addClasses:false,
 		revert:true,
-		cursorAt: {left: 0, top: 0},
+		cursorAt:{left: 0, top: 0},
 		cursor:'move',
 		start:function(){
-			//dragging has started add class to indicate all the draggables that are being dragged
+			// dragging has started add class to indicate all the draggables that are being dragged
 			$('#userListScroll .userList').addClass('dragging');
 		},
 		stop:function(){
@@ -355,13 +355,18 @@ $(function(){
 	$('#groups .group').droppable({
 		scope:'group',
 		over:function(event, ui){
-			ui.droppable.is('#users');
+			
 		},
 		hoverClass:'selected',
 		addClasses:false,
 		drop: function(event, ui) {
+			var contacts = '';
+			var groupId = $(this).data('id');
 			$('#userListScroll .userList .selected').each(function(i,e){
-				alert($(e).attr('id'));
+				contacts += $(e).data('id') + ',';
+			});
+			$.post("<?php echo NHtml::url('/crm/index/addToGroup'); ?>",{"groupId":groupId,"contacts":contacts},function(r){
+				alert('done');
 			});
 		}
 	});
