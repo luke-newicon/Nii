@@ -2,7 +2,7 @@
 <style>
 	.userList li,#groupList li {border-bottom:1px solid #bbb;overflow:hidden;cursor:pointer;background-color:#fff;padding-left:5px;}
 	.userList li:hover {background-color:#f9f9f9;}
-	#groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
+	#groupList .selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top ,left bottom, from(#f9f9f9), to(#e1e1e1));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	.userList li.ui-selecting { background: #FECA40; }
 	.userList li.ui-selected {background:-moz-linear-gradient(center top , #f9f9f9, #e1e1e1) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#e1e1e1), to(#f9f9f9));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e1e1e1');}
 	
@@ -31,7 +31,7 @@
 	
 	.userListScreen .alpha{border:1px solid #fff;-moz-border-radius:8px 8px 8px 8px;border-radius:8px 8px 8px 8px;}
 	.userListScreen .alpha a{color:#999;font-size:10px;}
-	.userList li.letter {cursor:default;background:-moz-linear-gradient(center top , #f4f4f4, #ddd) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#ddd), to(#f4f4f4));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f4f4', endColorstr='#ddd');padding:0px 0px 1px 5px;border-top:1px solid #fff;border-bottom:1px solid #aaa;}
+	.userList li.letter {cursor:default;background:-moz-linear-gradient(center top , #f4f4f4, #ddd) repeat scroll 0 0 transparent;background:-webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#ddd));filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f4f4f4', endColorstr='#ddd');padding:0px 0px 1px 5px;border-top:1px solid #fff;border-bottom:1px solid #aaa;}
 	.userList li.letter a {color:#666;text-shadow:0 1px 0 rgba(255, 255, 255, 0.8);cursor:default;}
 	#groupList{background-color:#fff;}
 	#groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
