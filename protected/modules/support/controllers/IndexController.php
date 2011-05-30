@@ -129,8 +129,8 @@ class IndexController extends AController
 	public function actionReply($emailId){
 		$e = SupportEmail::model()->findByPk($emailId);
 		// get last email in conversation
-
-		echo $this->widget('support.components.NComposeMail',array('replyTo'=>$e),true);
+		echo $this->widget('support.components.NComposeMail',array('replyToEmail'=>$e),true);
+		Yii::app()->end();
 	}
 
 	public function actionCompose(){
@@ -173,20 +173,27 @@ class IndexController extends AController
 		$mail->setBodyText(strip_tags($model->message_html));
 		$mail->setBodyHtml($model->message_html);
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
-		echo $model->message_html;
-		echo $model->to;
+//		echo $model->message_html;
+//		echo $model->to;
 		
-		if(strpos($model->to, ',')){
-			$to = explode(',',$model->to);
-			foreach($to as $t)
-				$mail->addTo(SupportEmail::getContact($t));
-		}else{
-			$mail->addTo(SupportEmail::getContact($model->to));
-		}
+		$to = NMailReader::getRecipients($model->to);
+		foreach($to as $t)
+			$mail->addTo($t['email'], $t['name']);
+		
+		$cc = NMailReader::getRecipients($model->cc);
+		foreach($cc as $c)
+			$mail->addCc($c['email'], $c['name']);
+		
+		$bcc = NMailReader::getRecipients($model->bcc);
+		foreach($bcc as $bc)
+			$mail->addBcc($bc['email'], $bc['name']);
 		
 		$mail->setSubject($model->subject);
 		$mail->send();
 	}
+	
+	
+	
 	
 	
 	public function actionCheckMail($id){

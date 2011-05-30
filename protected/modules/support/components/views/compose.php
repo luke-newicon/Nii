@@ -7,14 +7,16 @@ $form=$this->beginWidget('CActiveForm', array(
 	'enableAjaxValidation'=>false,
 ));
 ?>
-<form>
+<form name="email">
+<div class="">
+	<button id="sendEmail" class="btn btnN">Send</button>
+</div>	
 <div class="line inputBox" style="border-width:0px 0px 1px 0px; background: none;">
 	<div id="ccMore" class="unit" style="width:20px;" ><a onclick="$('.ccFields').toggle();return false;" href="#">&gt;</a></div>
 	<div class="unit txtR prs" style="width:35px;">
 		<?php echo CHtml::activeLabel($model, 'to', array('class'=>'faded')); ?>
 	</div>
-	<div class="unit">
-		<?php dp($model->to); ?>
+	<div class="lastUnit">
 		<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
@@ -28,8 +30,8 @@ $form=$this->beginWidget('CActiveForm', array(
 		<div class="unit txtR prs" style="width:55px;">
 			<?php echo CHtml::activeLabel($model, 'cc', array('class'=>'mll faded')); ?>
 		</div>
-		<div class="unit">
-			<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
+		<div class="lastUnit">
+			<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 				'model'=>$model,
 				'attribute'=>'cc',
 				'url'=>'/support/index/contacts',
@@ -42,8 +44,8 @@ $form=$this->beginWidget('CActiveForm', array(
 		<div class="unit txtR prs" style="width:55px;">
 			<?php echo CHtml::activeLabel($model, 'bcc', array('class'=>' faded')); ?>
 		</div>
-		<div class="unit">
-			<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
+		<div class="lastUnit">
+			<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 				'model'=>$model,
 				'attribute'=>'bcc',
 				'url'=>'/support/index/contacts',
@@ -71,7 +73,7 @@ $form=$this->beginWidget('CActiveForm', array(
 <div id="emailWysiwyg" class="line" style="border-width:0px 0px 1px 0px; background: none;">
 
 	<?php
-	$this->widget('application.widgets.editor.CKkceditor',array(
+	$this->widget('nii.widgets.editor.CKkceditor',array(
 		"model"=>$model,                # Data-Model
 		"attribute"=>'message_html',    # Attribute in the Data-Model,
 		"width"=>'100%',
@@ -118,3 +120,14 @@ $form=$this->beginWidget('CActiveForm', array(
 	?>
 </div>
 <?php $this->endWidget(); ?>
+<script>
+	$(function(){
+		$('#sendEmail').click(function(){
+			$serialize = $(this).closest('form').serialize();
+			$.post("<?php echo NHtml::url('/support/index/send') ?>",$serialize,function(){
+				
+			},'json')
+			return false;
+		});
+	})
+</script>

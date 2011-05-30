@@ -46,13 +46,16 @@
 	.popy{border:1px solid #000;background:#909090;box-shadow:0px 0px 10px #333;border-radius:5px;}
 	.popy .inner{box-shadow:0px 0px 0px 1px #ccc inset;border-radius:5px;}
 	.threadNumber{background: none repeat scroll 0 0 rgba(82, 82, 82, 0.5); -webkit-border-radius:3px;-moz-border-radius:3px;border-radius: 3px;color: white;font-size: 10px;padding: 1px 3px;text-shadow: 0 1px 0 #888;}
+	
+	.btn.btnImage{padding:0px;margin:2px 10px 0px 10px;}
+	
 </style>
-<?php //$this->widget('application.widgets.popSpinner'); ?>
+<?php //$this->widget('nii.widgets.popSpinner'); ?>
 <div class="popSpinner">
 	<div class="line"><div class="unit size1of4 pam"><div class="spinner">&nbsp;</div></div><div class="lastUnit"><div class="h4 mln" style="color:#fff;padding-top:15px;text-shadow: 0 -1px 0 #000000;">Loading...</div></div></div>
 </div>
 <div style="display:none;">
-<?php $this->widget('application.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
+<?php $this->widget('nii.widgets.tokeninput.NTokenInput',array('name'=>'dummy','data'=>'dummy'))->publishAssets(); ?>
 </div>
 
 <?php
@@ -92,21 +95,22 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 
 <div class="line" id="mClient">
 	<div id="messageFoldersBox" class="unit size1of8 leftMainPanel">
-		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
+		<?php $this->beginWidget('nii.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas">
 				&nbsp; 
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageFolders">
-
+			<span style="color:white;text-shadow:1px 1px 0px #000;"><?php echo count(NEmailReader::unseen()); ?></span>
 		</div>
 	</div>
 	
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
-		<?php $this->beginWidget('application.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
-			<div class="bd pas">
-				&nbsp;<a href="#" data-tip="{'gravity':'s'}" title="Compose email" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-pencil"></span></a>
-				<a href="#" data-tip="{'gravity':'s'}" title="Reply" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnN"><span class="icon fam-email-go"></span></a>
+		<?php $this->beginWidget('nii.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
+			<div class="bd pas txtR">
+				<a href="#" data-tip="{'gravity':'s'}" title="Compose email" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/compose.png" /></a>
+				<a href="#" data-tip="{'gravity':'s'}" title="Reply" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/reply.png" /></a>
+				<a style="margin-right:30px;" href="#" data-tip="{'gravity':'s'}" title="Trash" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/trash.png" /></a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">

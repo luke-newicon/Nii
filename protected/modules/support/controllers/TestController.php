@@ -200,7 +200,6 @@ class TestController extends AController
 		Yii::endProfile('imap check');
 		dp($MC);
 		$msgNum = $MC->Nmsgs;
-		$headers = imap_headers($mbox);
 		$search = imap_search($mbox, 'UNSEEN');
 		dp($search);
 		
