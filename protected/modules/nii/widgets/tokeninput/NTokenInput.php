@@ -94,7 +94,7 @@ Class NTokenInput extends CInputWidget
 		else
 			echo CHtml::textField($name,$this->value,$this->htmlOptions);
 
-		
+		$this->options['prePopulate'] = '[{id: 3, name: "test", id: 5, name: "awesome"}]';
 
 		if($this->url === null && $this->data === null)
 			throw new CException('you must specify the data for the tokens by specifing the data property as an array

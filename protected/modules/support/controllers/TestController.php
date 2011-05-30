@@ -200,41 +200,10 @@ class TestController extends AController
 		Yii::endProfile('imap check');
 		dp($MC);
 		$msgNum = $MC->Nmsgs;
+		$headers = imap_headers($mbox);
+		$search = imap_search($mbox, 'UNSEEN');
+		dp($search);
 		
-		Yii::beginProfile('imap fo');
-		for ($i=$msgNum; $i>($msgNum-30); $i--){
-			$mo = imap_fetch_overview($mbox, $i);
-			dp($mo);
-		}
-		Yii::endProfile('imap fo');
-		// Fetch an overview for all messages in INBOX
-//		$result = imap_fetch_overview($mbox,"1:{$MC->Nmsgs}",0);
-//		foreach ($result as $overview) {
-//			echo "#{$overview->msgno} ({$overview->date}) - From: {$overview->from}
-//			{$overview->subject}\n";
-//		}
-		Yii::beginProfile('imap mboxs');
-		$mboxs = imap_list($mbox,"{imap.gmail.com}", "*");
-		Yii::endProfile('imap mboxs');
-		dp($mboxs);
-
-		
-		imap_close($mbox);
-		
-		Yii::beginProfile('Zend imap con');
-		$con = new Zend_Mail_Storage_Imap(array(
-				'host'     => 'imap.gmail.com',
-				'user'     => 'steve@newicon.net',
-				'password' => 'mushroom11',
-				'port'     => 993,
-				'ssl'	   => 'SSL'
-			));
-		Yii::endProfile('Zend imap con');
-		Yii::beginProfile('Zend imap message');
-		for ($ii=$msgNum; $ii>($msgNum-30); $ii--){
-			$con->getMessage($ii);
-		}
-		Yii::endProfile('Zend imap message');
 	}
 
 	

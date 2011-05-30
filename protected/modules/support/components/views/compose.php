@@ -14,7 +14,8 @@ $form=$this->beginWidget('CActiveForm', array(
 		<?php echo CHtml::activeLabel($model, 'to', array('class'=>'faded')); ?>
 	</div>
 	<div class="unit">
-		<?php $this->widget('application.widgets.tokeninput.NTokenInput', array(
+		<?php dp($model->to); ?>
+		<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
 			'url'=>'/support/index/contacts',

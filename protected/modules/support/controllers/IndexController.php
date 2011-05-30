@@ -190,9 +190,14 @@ class IndexController extends AController
 	
 	
 	public function actionCheckMail($id){
-		NMailReader::$readLimit = 15;
+		// actually want to change to maximum messages to loop through
+		// may be 30
+		// it will add 30 new messages or look at 30 existing messages
+		// then if the first 30 already are in the database it will skip
+		// then maximum 
+		NMailReader::$readLimit = 30;
 		NMailReader::$forceCountRefresh = true;
-		NMailReader::readMail();
+		NMailReader::readMail(false);
 		// need to know where i am. whats currently displaying?
 		// check to see if new emails exist in the db
 		// the id is the id of the latest email displaying.
