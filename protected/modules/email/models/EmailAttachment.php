@@ -1,20 +1,20 @@
 <?php
 
 /**
- * This is the model class for table "support_Attachment".
+ * This is the model class for table "email_Attachment".
  *
- * The followings are the available columns in table 'support_Attachment':
+ * The followings are the available columns in table 'email_Attachment':
  * @property string $attachment_id
  * @property string $attachment_name
  * @property string $attachment_type
  * @property string $attachment_mail_id
  * @property string $attachment_file_id
  */
-class SupportAttachment extends NActiveRecord
+class EmailAttachment extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return SupportAttachment the static model class
+	 * @return EmailAttachment the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -26,7 +26,7 @@ class SupportAttachment extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{support_attachment}}';
+		return '{{email_attachment}}';
 	}
 
 	/**

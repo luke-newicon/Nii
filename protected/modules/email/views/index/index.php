@@ -1,5 +1,5 @@
 <?php $msgPreviewHeight=86; ?>
-<?php $msgPreviewNumber=SupportModule::get()->msgPageLimit; ?>
+<?php $msgPreviewNumber=EmailModule::get()->msgPageLimit; ?>
 <style>
 	.mod.toolbar {border-top:1px solid #ccc;}
 	.mod.toolbar .inner {border-bottom:1px solid #888;border-top:1px solid #fff;
@@ -73,19 +73,19 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 				'click'=>'js:function(){
 					for (instance in CKEDITOR.instances )
 					  CKEDITOR.instances[instance].updateElement();
-					$.post("'.NHtml::url('/support/index/send').'",$("#mydialog form").serialize(),function(){
+					$.post("'.NHtml::url('/email/index/send').'",$("#mydialog form").serialize(),function(){
 						//$("#mydialog").dialog("close");
 					});
 				}'
 			),
 		),
 		'open'=>'js:function(e,ui){
-			$("#mydialog").load("'.NHtml::url('/support/index/compose').'");
+			$("#mydialog").load("'.NHtml::url('/email/index/compose').'");
 		}',
 		'resize'=>'js:function(e,ui){
 			var newHeight = $("#mydialog").height() - $("#emailWysiwyg").position().top;
 			var newWidth =  $("#mydialog").width();
-			CKEDITOR.instances["SupportComposeMail_message_html"].resize(newWidth,newHeight);
+			CKEDITOR.instances["EmailComposeMail_message_html"].resize(newWidth,newHeight);
 		}'
 	),
 ));
@@ -108,9 +108,9 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 	<div id="messageListBox" class="unit size1of5 leftPanel ui-layout-west">
 		<?php $this->beginWidget('nii.widgets.oocss.Mod', array('class'=>'mod toolbar man')); ?>
 			<div class="bd pas txtR">
-				<a href="#" data-tip="{'gravity':'s'}" title="Compose email" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/compose.png" /></a>
-				<a href="#" data-tip="{'gravity':'s'}" title="Reply" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/reply.png" /></a>
-				<a style="margin-right:30px;" href="#" data-tip="{'gravity':'s'}" title="Trash" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo SupportModule::get()->getAssetsUrl() ?>/images/trash.png" /></a>
+				<a href="#" data-tip="{'gravity':'s'}" title="Compose email" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo EmailModule::get()->getAssetsUrl() ?>/images/compose.png" /></a>
+				<a href="#" data-tip="{'gravity':'s'}" title="Reply" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo EmailModule::get()->getAssetsUrl() ?>/images/reply.png" /></a>
+				<a style="margin-right:30px;" href="#" data-tip="{'gravity':'s'}" title="Trash" onclick="$('#mydialog').dialog('open'); return false;" id="compose" class="btn btnImage"><img src="<?php echo EmailModule::get()->getAssetsUrl() ?>/images/trash.png" /></a>
 			</div>
 		<?php $this->endWidget(); ?>
 		<div id="messageScroll" class="scroll">
@@ -132,7 +132,7 @@ $this->widget('zii.widgets.jui.CJuiDialog', array(
 				</div>
 				<div id="message">
 					<iframe style="width:100%;height:100%;border:0px none;margin:0px;padding:0px;" width="100%" frameborder="0" scrolling="no"
-							src="<?php echo NHtml::url('/support/index/emptyIframe'); ?>">
+							src="<?php echo NHtml::url('/email/index/emptyIframe'); ?>">
 					</iframe>
 				</div>
 			</div>
@@ -237,8 +237,8 @@ $(function(){
 				if($("#emailWysiwyg").length){
 					var newHeight = $("#email").height() -  ($("#emailWysiwyg").position().top - $("#email").position().top);
 					var newWidth =  $("#email").width()-5;
-					CKEDITOR.instances['SupportComposeMail_message_html'].resize(newWidth,newHeight);
-					$('#cke_SupportComposeMail_message_html').css('width','100%');
+					CKEDITOR.instances['EmailComposeMail_message_html'].resize(newWidth,newHeight);
+					$('#cke_EmailComposeMail_message_html').css('width','100%');
 				}
 
 			}
@@ -259,7 +259,7 @@ $(function(){
 	})
 
 
-	//$('#messageFolders').load('<?php echo NHtml::url('/support/index/loadMessageFolders') ?>');
+	//$('#messageFolders').load('<?php echo NHtml::url('/email/index/loadMessageFolders') ?>');
 
 	var $email = $('#email');
 
@@ -283,7 +283,7 @@ $(function(){
 		}else{
 			$('.popSpinner').show().position({my:'center',at:'center',of:$email}).show();
 			// html not in cache so ajax it in.
-			$.getJSON('<?php echo SupportModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
+			$.getJSON('<?php echo EmailModule::getLoadMessageUrl(); ?>/id/'+id, function(json){
 				msgsLoaded[key] = json;
 				inserMessage(json);
 				resizer();
@@ -339,7 +339,7 @@ $(function(){
 	var loadMessageBatch = function(batch){
 		$('.popSpinner').show().position({my:'center',at:'center',of:'#messageScroll'}).show();
 		$.ajax({
-			url:'<?php echo SupportModule::getLoadMessageListUrl(); ?>/'+batch,
+			url:'<?php echo EmailModule::getLoadMessageListUrl(); ?>/'+batch,
 			success:function($msgs){
 				$('#messageList').append($msgs);
 				//now ajust position to take into account any new emails
@@ -413,7 +413,7 @@ $(function(){
 		$('#reply').show();
 		var id = $('#messageList .sel').data('id');
 		$('#emailView').hide();
-		$('#reply').load('<?php echo NHtml::url('/support/index/reply/emailId') ?>/'+id, function(){
+		$('#reply').load('<?php echo NHtml::url('/email/index/reply/emailId') ?>/'+id, function(){
 			$('#composeMail').removeAttr('style');
 			//resizer();
 		});
@@ -427,7 +427,7 @@ $(function(){
 	}
 	var doCheckMail = function(time){
 		var id = $('#messageList .listItem:first').data('id');
-		$.getJSON("<?php echo NHtml::url('/support/index/checkMail'); ?>/id/"+id, function(r){
+		$.getJSON("<?php echo NHtml::url('/email/index/checkMail'); ?>/id/"+id, function(r){
 			jQuery.each(r, function(index, itemData) {
 				addNewMessage(itemData);
 			});

@@ -46,7 +46,7 @@ return array(
 		),
 		'crm',
 		'kashflow',
-		'support',
+		'email',
 		'user',
 		'project',
 		'hosting',

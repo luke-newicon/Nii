@@ -18,7 +18,7 @@ class NComposeMail extends NWidget
 
 	/**
 	 *
-	 * @var SupportEmail
+	 * @var EmailEmail
 	 */
 	public $replyToEmail;
 	
@@ -29,7 +29,7 @@ class NComposeMail extends NWidget
 		
 		
 		
-		$model = new SupportComposeMail;
+		$model = new EmailComposeMail;
 		if($this->replyToEmail){
 			$arr = array();
 			foreach(NMailReader::getRecipients($this->replyToEmail->from) as $id=>$e){

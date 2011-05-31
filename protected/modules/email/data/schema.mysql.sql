@@ -1,10 +1,10 @@
 
 
 --
--- Table structure for table `support_assignee`
+-- Table structure for table `email_assignee`
 --
 
-CREATE TABLE IF NOT EXISTS `support_assignee` (
+CREATE TABLE IF NOT EXISTS `email_assignee` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ticket_id` int(11) unsigned NOT NULL,
   `user` int(11) unsigned NOT NULL,
@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS `support_assignee` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `support_attachment`
+-- Table structure for table `email_attachment`
 --
 
-CREATE TABLE IF NOT EXISTS `support_attachment` (
+CREATE TABLE IF NOT EXISTS `email_attachment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -30,10 +30,10 @@ CREATE TABLE IF NOT EXISTS `support_attachment` (
 
 
 --
--- Table structure for table `support_email`
+-- Table structure for table `email_email`
 --
 
-CREATE TABLE IF NOT EXISTS `support_email` (
+CREATE TABLE IF NOT EXISTS `email_email` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `to` text NOT NULL,
   `from` varchar(255) NOT NULL,
@@ -58,10 +58,10 @@ CREATE TABLE IF NOT EXISTS `support_email` (
 
 
 --
--- Table structure for table `support_ticket`
+-- Table structure for table `email_ticket`
 --
 
-CREATE TABLE IF NOT EXISTS `support_ticket` (
+CREATE TABLE IF NOT EXISTS `email_ticket` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `subject` varchar(255) NOT NULL,
   `message` text NOT NULL,
@@ -77,10 +77,10 @@ CREATE TABLE IF NOT EXISTS `support_ticket` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `support_ticket_email`
+-- Table structure for table `email_ticket_email`
 --
 
-CREATE TABLE IF NOT EXISTS `support_ticket_email` (
+CREATE TABLE IF NOT EXISTS `email_ticket_email` (
   `email_id` int(11) unsigned NOT NULL,
   `ticket_id` int(11) unsigned NOT NULL,
   `type` enum('TYPE_SENT','TYPE_RECEIVED') NOT NULL DEFAULT 'TYPE_RECEIVED',

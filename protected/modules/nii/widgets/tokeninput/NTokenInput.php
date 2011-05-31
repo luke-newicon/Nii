@@ -90,15 +90,13 @@ Class NTokenInput extends CInputWidget
 			$this->htmlOptions['name']=$name;
 
 		//$value = null;
-		$value = CHtml::resolveValue($this->model, $this->attribute);
-//		if($this->hasModel()){
-//			$value = CHtml::resolveValue($this->model, $this->attribute);
-//			
-//			echo CHtml::activeTextField($this->model,$this->attribute,$this->htmlOptions);
-//		}else{
-//			$value = $this->value;
-//			echo CHtml::textField($name,$this->value,$this->htmlOptions);
-//		}
+		if($this->hasModel()){
+			$value = CHtml::resolveValue($this->model, $this->attribute);
+		}else{
+			$value = $value = $this->value;
+		}
+		
+
 		echo CHtml::textField($name,'',$this->htmlOptions);
 		if($value!==null){
 			$this->options['prePopulate'] = $value;
