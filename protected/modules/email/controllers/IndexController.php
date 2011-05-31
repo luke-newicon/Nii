@@ -173,8 +173,8 @@ class IndexController extends AController
 		$mail->setBodyText(strip_tags($model->message_html));
 		$mail->setBodyHtml($model->message_html);
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
-//		echo $model->message_html;
-//		echo $model->to;
+		echo $model->message_html;
+		echo $model->to;
 		
 		$to = NMailReader::getRecipients($model->to);
 		foreach($to as $t)
@@ -189,6 +189,9 @@ class IndexController extends AController
 			$mail->addBcc($bc['email'], $bc['name']);
 		
 		$mail->setSubject($model->subject);
+		
+		dp($mail);
+		
 		$mail->send();
 	}
 	
