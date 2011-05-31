@@ -177,6 +177,7 @@ class SupportEmail extends NActiveRecord
 	}
 	
 	/**
+	 * NOT USED!!!
 	 * gets the correct contact based on either an id or an email
 	 * @param type $idOrEmail 
 	 */
@@ -191,6 +192,9 @@ class SupportEmail extends NActiveRecord
 			// OR an email that currently exists in the system and
 			// is attached to a contact.......
 			// ... so lets add it.
+			// why isnt this lookup the emails?
+			$emailArr = NMailReader::splitRecipient($idOrEmail);
+			// lookup $emailArr['email'];
 			$c = new CrmContact;
 			$c->first_name = NMailReader::removeEmailHost($idOrEmail);
 			$c->save();

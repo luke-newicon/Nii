@@ -89,13 +89,20 @@ Class NTokenInput extends CInputWidget
 		else
 			$this->htmlOptions['name']=$name;
 
-		if($this->hasModel())
-			echo CHtml::activeTextField($this->model,$this->attribute,$this->htmlOptions);
-		else
-			echo CHtml::textField($name,$this->value,$this->htmlOptions);
-
-		$this->options['prePopulate'] = '[{id: 3, name: "test", id: 5, name: "awesome"}]';
-
+		//$value = null;
+		$value = CHtml::resolveValue($this->model, $this->attribute);
+//		if($this->hasModel()){
+//			$value = CHtml::resolveValue($this->model, $this->attribute);
+//			
+//			echo CHtml::activeTextField($this->model,$this->attribute,$this->htmlOptions);
+//		}else{
+//			$value = $this->value;
+//			echo CHtml::textField($name,$this->value,$this->htmlOptions);
+//		}
+		echo CHtml::textField($name,'',$this->htmlOptions);
+		if($value!==null){
+			$this->options['prePopulate'] = $value;
+		}
 		if($this->url === null && $this->data === null)
 			throw new CException('you must specify the data for the tokens by specifing the data property as an array
 				of tokens or the url to ajax the data in.');
@@ -113,9 +120,12 @@ Class NTokenInput extends CInputWidget
 		$options=CJavaScript::encode($this->options);
 
 		$js = "jQuery('#{$id}').tokenInput($data,$options);";
-		//$cs = Yii::app()->getClientScript();
+		
+		$cs = Yii::app()->clientScript;
+		
 		echo '<script>jQuery(function($){'.$js.'});</script>';
-		//$cs->registerScript(__CLASS__.'#'.$id, $js);
+		//$cs = new CClientScript();
+		$cs->registerScript(__CLASS__.'#'.$id, $js, CClientScript::POS_READY);
 	}
 
 	public function publishAssets(){

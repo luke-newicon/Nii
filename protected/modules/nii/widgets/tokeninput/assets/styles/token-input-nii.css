@@ -2,7 +2,6 @@
 ul.token-input-list-nii {
     overflow: hidden;  
     height: 1%;
-    width: 400px;
     cursor: text;
     font-size: 12px;
     font-family: arial, verdana, sans-serif;
@@ -28,7 +27,7 @@ ul.token-input-list-nii li input {
     overflow: hidden; 
     height: auto !important; 
     height: 15px;
-    margin: 0px 5px 5px 0px;
+    margin: 0px 5px 3px 0px;
     padding: 1px 3px;
     background-color: #eff2f7;
     color: #000;

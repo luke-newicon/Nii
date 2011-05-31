@@ -15,7 +15,7 @@
  * @version $Id: NMailReader.php $
  * @package Support
  */
-Class NMailReader extends CComponent
+Class NEmailReader extends CComponent
 {
 	public static $readLimit;
 
@@ -473,6 +473,24 @@ Class NMailReader extends CComponent
 		preg_match($pattern, trim($subject), $matches);
 		//dp($matches);
 		return (array_key_exists(5, $matches)) ? $matches[5] : $subject;
+	}
+	
+	
+	/**
+	 * awesome function returns all unseen emails
+	 * @return array
+	 * index => message number
+	 */
+	public static function unseen(){
+		$mbox = imap_open("{imap.gmail.com:993/ssl}INBOX", "steve@newicon.net", "mushroom11") or die("can't connect: " . imap_last_error());
+			
+		//Yii::endProfile('imap connect');
+		//Yii::beginProfile('imap check');
+		//$MC = imap_check($mbox);
+		//Yii::endProfile('imap check');
+		//dp($MC);
+		//$msgNum = $MC->Nmsgs;
+		return imap_search($mbox, 'UNSEEN');
 	}
 	
 }
