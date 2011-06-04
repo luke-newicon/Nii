@@ -23,7 +23,7 @@ class CrmContactForm extends CrmContact
 		
 		return CMap::mergeArray(
 			array(
-				array('first_name, last_name, company', 'NOneRequiredValidator','message'=>'At least one is required')
+				//array('first_name, last_name, company', 'NOneRequiredValidator','message'=>'At least one is required')
 			),
 			parent::rules()
 		);

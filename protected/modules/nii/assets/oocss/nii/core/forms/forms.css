@@ -25,11 +25,10 @@ input.btn{width:auto;}
 
 
 
-
-.field.valid{/*background-color:#e8fbdc;*/}
+/**
 .field.focus{background-color:#eaf2fa;}
 .field.invalid{background-color:#fbdcdc;}
-
+*/
 
 
 /* formHint style */

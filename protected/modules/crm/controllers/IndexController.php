@@ -91,8 +91,8 @@ class IndexController extends AController
 	{
 		if(isset($_POST['ajax']) && $_POST['ajax'] == 'contactForm'){
 			$c = new CrmContact;
-			$e = new CrmEmail;
-			echo $this->validate(array($c, $e));
+			//$e = new CrmEmail;
+			echo $this->validate(array($c));
 			Yii::app()->end();
 		}
 		

@@ -17,7 +17,7 @@
 	.addLabel p{margin:2px;}
 	
 	.fieldState{padding:2%;}
-	.fieldState.focus{background-color:#EAF2FA;}
+	/*.fieldState.focus{background-color:#EAF2FA;}*/
 	
 	.fieldState .field {padding:0 0 2% 0;}
 	.formGuide{color:#999;font-size:90%;}

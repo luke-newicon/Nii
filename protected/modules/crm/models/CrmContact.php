@@ -305,9 +305,9 @@ class CrmContact extends NAppRecord
 
 	public function orderByName(){
 		if(Yii::app()->getModule('crm')->sortOrderFirstLast){
-			$name = 'first_name';
+			$name = 'first_name, last_name';
 		}else{
-			$name = 'last_name';
+			$name = 'last_name, first_name';
 		}
 		$this->getDbCriteria()->mergeWith(array(
 			'select'=>"*, CONCAT($name, company) AS order_name",
@@ -416,8 +416,9 @@ class CrmContact extends NAppRecord
 
 
 	public function name($term=''){
-		if($term == '')
-			return $this->getNamePartOne().' '.$this->getNamePartTwo();
+		if($term == ''){
+			return trim($this->getNamePartOne().' '.$this->getNamePartTwo());
+		}
 
 		if(!$this->isPerson())
 			return NHtml::hilightText($this->company,$term);
