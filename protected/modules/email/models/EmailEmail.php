@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "support_email".
+ * This is the model class for table "email_email".
  *
- * The followings are the available columns in table 'support_email':
+ * The followings are the available columns in table 'email_email':
  * @property string $id
  * @property string $to
  * @property string $from
@@ -22,11 +22,11 @@
  * @property string $references
  * @property string $replyto
  */
-class SupportEmail extends NActiveRecord
+class EmailEmail extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return SupportEmail the static model class
+	 * @return EmailEmail the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -38,7 +38,7 @@ class SupportEmail extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{support_email}}';
+		return '{{email_email}}';
 	}
 
 	/**

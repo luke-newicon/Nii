@@ -20,7 +20,7 @@ $form=$this->beginWidget('CActiveForm', array(
 		<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 			'model'=>$model,
 			'attribute'=>'to',
-			'url'=>'/support/index/contacts',
+			'url'=>'/email/index/contacts',
 			'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 		)); ?>
 	</div>
@@ -34,7 +34,7 @@ $form=$this->beginWidget('CActiveForm', array(
 			<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 				'model'=>$model,
 				'attribute'=>'cc',
-				'url'=>'/support/index/contacts',
+				'url'=>'/email/index/contacts',
 				'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 			)); ?>
 			<?php //echo CHtml::activeTextField($model, 'cc',array('class'=>'input')); ?>
@@ -48,7 +48,7 @@ $form=$this->beginWidget('CActiveForm', array(
 			<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 				'model'=>$model,
 				'attribute'=>'bcc',
-				'url'=>'/support/index/contacts',
+				'url'=>'/email/index/contacts',
 				'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 			)); ?>
 			<?php // echo CHtml::activeTextField($model, 'bcc',array('class'=>'input')); ?>
@@ -124,7 +124,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	$(function(){
 		$('#sendEmail').click(function(){
 			$serialize = $(this).closest('form').serialize();
-			$.post("<?php echo NHtml::url('/support/index/send') ?>",$serialize,function(){
+			$.post("<?php echo NHtml::url('/email/index/send') ?>",$serialize,function(){
 				
 			},'json')
 			return false;

@@ -17,7 +17,7 @@ class IndexController extends AController
 		
 		
 		//NMailReader::readMail();
-		//$tickets = SupportTicket::model()->findAll();
+		//$tickets = EmailTicket::model()->findAll();
 		$total = NMailReader::countMessages();
 		$this->render('index',array(
 			'total'=>$total,
@@ -29,7 +29,7 @@ class IndexController extends AController
 	 */
 	public function actionMessage($id){
 		$this->layout = '/layouts/ajax';
-		$e = SupportEmail::model()->findByPk($id);
+		$e = EmailEmail::model()->findByPk($id);
 		$j['summary'] = $this->render('message',array('email'=>$e),true);
 		if($e->opened == 0){
 			$e->opened = 1;
@@ -49,7 +49,7 @@ class IndexController extends AController
 		
 		$this->layout = '/layouts/ajax';
 		$thread = $threading->subjectTable[$id];
-		//$e = SupportEmail::model()->findByPk($id);
+		//$e = EmailEmail::model()->findByPk($id);
 		$j['summary'] = $this->render('message-thread',array('container'=>$thread),true);
 		// make this work
 		
@@ -72,7 +72,7 @@ class IndexController extends AController
 	// not really used at the moment!
 	public function actionEmail($id){
 		$this->layout = '/layouts/ajax';
-		if(($e = SupportEmail::model()->findByPk($id)) === null)
+		if(($e = EmailEmail::model()->findByPk($id)) === null)
 			throw new CHttpException(404, 'Can not find the email message in the database');
 		if($e->opened == 0){
 			$e->opened = 1;
@@ -88,11 +88,11 @@ class IndexController extends AController
 	public function actionLoadMessageList($offset=0)
 	{
 		$this->layout = '/layouts/ajax';
-		$limit = SupportModule::get()->msgPageLimit;
+		$limit = EmailModule::get()->msgPageLimit;
 		//NMailReader::$readOfset = $offset*$limit;
 		//NMailReader::readMail();
 		$total = NMailReader::countMessages();
-		$emails = SupportEmail::model()->findAll(array(
+		$emails = EmailEmail::model()->findAll(array(
 			'limit'=>$limit,
 			'offset'=>$offset*$limit,
 			'order'=>'date DESC, id DESC'
@@ -112,12 +112,12 @@ class IndexController extends AController
 		
 		
 		$this->layout = '/layouts/ajax';
-		$limit = SupportModule::get()->msgPageLimit;
+		$limit = EmailModule::get()->msgPageLimit;
 		$offset = $offset*$limit;
 		//NMailReader::$readOfset = $offset*$limit;
 		//NMailReader::readMail();
 		$total = NMailReader::countMessages();
-		//$emails = SupportEmail::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
+		//$emails = EmailEmail::model()->findAll(array('limit'=>$limit,'offset'=>$offset*$limit));
 		$this->render('message-list-threaded',array(
 			'total'=>$total,
 			'threads'=>$thread->threads,
@@ -127,14 +127,14 @@ class IndexController extends AController
 	}
 
 	public function actionReply($emailId){
-		$e = SupportEmail::model()->findByPk($emailId);
+		$e = EmailEmail::model()->findByPk($emailId);
 		// get last email in conversation
-		echo $this->widget('support.components.NComposeMail',array('replyToEmail'=>$e),true);
+		echo $this->widget('email.components.NComposeMail',array('replyToEmail'=>$e),true);
 		Yii::app()->end();
 	}
 
 	public function actionCompose(){
-		echo $this->widget('support.components.NComposeMail',array(),true);
+		echo $this->widget('email.components.NComposeMail',array(),true);
 	}
 
 	public function actionContacts($q){
@@ -165,16 +165,16 @@ class IndexController extends AController
 
 	public function actionSend(){
 		// lets hack this in for now...
-		$model = new SupportComposeMail();
-		$model->attributes = $_POST['SupportComposeMail'];
+		$model = new EmailComposeMail();
+		$model->attributes = $_POST['EmailComposeMail'];
 		
 		$mail = new Zend_Mail();
 
 		$mail->setBodyText(strip_tags($model->message_html));
 		$mail->setBodyHtml($model->message_html);
 		$mail->setFrom('steve@newicon.net', 'Steve O\'Brien');
-//		echo $model->message_html;
-//		echo $model->to;
+		echo $model->message_html;
+		echo $model->to;
 		
 		$to = NMailReader::getRecipients($model->to);
 		foreach($to as $t)
@@ -189,6 +189,9 @@ class IndexController extends AController
 			$mail->addBcc($bc['email'], $bc['name']);
 		
 		$mail->setSubject($model->subject);
+		
+		dp($mail);
+		
 		$mail->send();
 	}
 	
@@ -208,7 +211,7 @@ class IndexController extends AController
 		// need to know where i am. whats currently displaying?
 		// check to see if new emails exist in the db
 		// the id is the id of the latest email displaying.
-		$r = SupportEmail::model()->findAll(array(
+		$r = EmailEmail::model()->findAll(array(
 			'limit'=>30,
 			'order'=>'date DESC, id DESC',
 		));

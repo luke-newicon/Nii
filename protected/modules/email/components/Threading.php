@@ -103,7 +103,7 @@ class Threading extends CComponent
 	
 	
 	public function createIdTable(){
-		foreach(SupportEmail::model()->findAll(array('limit'=>1500)) as $msg){
+		foreach(EmailEmail::model()->findAll(array('limit'=>1500)) as $msg){
 			
 			$parnetCont = $this->getContainerById($msg->message_id);
 			// check container is empty
@@ -279,7 +279,7 @@ class Message
 	}
 	/**
 	 *
-	 * @var SupportEmail 
+	 * @var EmailEmail 
 	 */
 	//public $_msg;
 	public $dbId;
@@ -451,7 +451,7 @@ class Container
 		if ($this->_dbEmail === null){
 			$msg = $this->getMessage();
 			if($msg){
-				$this->_dbEmail = SupportEmail::model()->findByPk($msg->dbId);
+				$this->_dbEmail = EmailEmail::model()->findByPk($msg->dbId);
 			}
 		}
 		return $this->_dbEmail;

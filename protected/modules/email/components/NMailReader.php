@@ -9,11 +9,11 @@
  */
 
 /**
- * NMailReader is the module class for the support system
+ * NMailReader is the module class for the email system
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @version $Id: NMailReader.php $
- * @package Support
+ * @package Email
  */
 Class NMailReader extends CComponent
 {
@@ -41,13 +41,13 @@ Class NMailReader extends CComponent
 		if(self::$mail === null){
 			// mail could be cached
 			Yii::beginProfile('imap connect');
-			$support = Yii::app()->getModule('support');
+			$email = Yii::app()->getModule('email');
 			self::$mail = new Zend_Mail_Storage_Imap(array(
-				'host'     => $support->emailHost,
-				'user'     => $support->emailUsername,
-				'password' => $support->emailPassword,
-				'port'     => $support->emailPort,
-				'ssl'	   => $support->emailSsl
+				'host'     => $email->emailHost,
+				'user'     => $email->emailUsername,
+				'password' => $email->emailPassword,
+				'port'     => $email->emailPort,
+				'ssl'	   => $email->emailSsl
 			));
 			self::$mail->selectFolder(self::$folder);
 			Yii::endProfile('imap connect');
@@ -69,7 +69,7 @@ Class NMailReader extends CComponent
 	
 	public static function getReadLimit(){
 		if(self::$readLimit === null)
-			self::$readLimit = SupportModule::get()->msgPageLimit;
+			self::$readLimit = EmailModule::get()->msgPageLimit;
 		return self::$readLimit;
 	}
 	
@@ -93,7 +93,7 @@ Class NMailReader extends CComponent
 			$ii++;
 			if($e->headerExists('message-id')){
 				Yii::beginProfile('imap db: check message in db');
-				$emailExists = SupportEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
+				$emailExists = EmailEmail::model()->exists('message_id=:id',array(':id'=>$e->getHeader('message-id')));
 				Yii::endProfile('imap db: check message in db');
 
 				if($emailExists)
@@ -118,7 +118,7 @@ Class NMailReader extends CComponent
 	 */
 	public static function saveMail(Zend_Mail_Message $e, $i){
 		// create mail message
-		$m = new SupportEmail();
+		$m = new EmailEmail();
 		$m->subject = mb_decode_mimeheader(self::headerParam($e, 'subject', ''));
 		//$m->headers = serialize($e->getHeaders());
 		$m->references = self::headerParam($e, 'references', '');
@@ -158,13 +158,13 @@ Class NMailReader extends CComponent
 		$t = false;
 		// Check the subject line for possible ID.
 //        if (self::hasSubjectTicketId($m->subject, $id))
-//        	if(($t = SupportTicket::model()->findByPk($id))===null);
-//				$t = new SupportTicket();
+//        	if(($t = EmailTicket::model()->findByPk($id))===null);
+//				$t = new EmailTicket();
 //				
 		//$t->createTicketFromMail($m);
 			
 		// create link table
-//		$te = new SupportTicketEmail();
+//		$te = new EmailTicketEmail();
 //		$te->email_id = $m->id();
 //		$te->ticket_id = $t->id();
 //		$te->save();
@@ -182,7 +182,7 @@ Class NMailReader extends CComponent
 	 * @return boolean
 	 */
 	public static function hasSubjectTicketId($subject, &$id=false){
-		$hash = Yii::app()->getModule('support')->subjectPrepend;
+		$hash = Yii::app()->getModule('email')->subjectPrepend;
 		$ret = preg_match("[$hash([0-9]{1,11})]",$subject,$matches);
 		$id = (array_key_exists(1,$matches)) ? $matches[1] : false;
 		return ($ret !== 0);
@@ -192,7 +192,7 @@ Class NMailReader extends CComponent
 	 * Save parts of a message to a record
 	 * 
 	 * @param Zend_Mail_Message $msg
-	 * @param SupportEmail $m
+	 * @param EmailEmail $m
 	 */
 	public static function parseParts($msg, &$m){
 		if($msg->isMultipart()){
@@ -250,8 +250,8 @@ Class NMailReader extends CComponent
 //				$filename = trim(str_replace(array('filename=','"'),'',strtok(';')));
 //				$data = self::decode($part->getContent(),$part->contentTransferEncoding);
 //				$up = new NUploader();
-//				$fileId = $up->addFile($filename, $data, 'support_attachments');
-//				$a = new SupportAttachment();
+//				$fileId = $up->addFile($filename, $data, 'email_attachments');
+//				$a = new EmailAttachment();
 //				$a->name = $filename;
 //				$a->type = strtok($part->contentType, ';');
 //				$a->mail_id = $mail->id();

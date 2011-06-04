@@ -23,7 +23,11 @@
 		<div id="emailHeaderDetail" class="data" style="display:none;">
 			<div class="line">
 				<div class="unit"><span class="faded">From</span></div>
-				<div class="lastUnit pls"><a class="contactLinkBtn token-input-token-nii" href="#"><?php echo CHtml::encode($email->from); ?></a></div>
+				<div class="lastUnit pls">
+					<ul class="token-input-list-nii">
+						<li class="contactLinkBtn token-input-token-nii" href="#"><?php echo CHtml::encode($email->from); ?></li>
+					</ul>
+				</div>
 			</div>
 			<div class="line">
 				<div class="unit"><span class="faded">Date</span></div>
@@ -32,18 +36,22 @@
 			<div class="line">
 				<div class="unit"><span class="faded">To</span></div>
 				<div class="lastUnit pls">
+					<ul class="token-input-list-nii">
 					<?php foreach($email->to() as $recip): ?>
-						<span class="token-input-token-nii"><?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;</span>
+						<li class="token-input-token-nii"><?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;</li>
 					<?php endforeach; ?>
+					</ul>
 				</div>
 			</div>
 			<?php if($email->cc): ?>
 					<div class="line">
 						<div class="unit"><span class="faded">Cc</span></div>
 						<div class="lastUnit pls">
+							<ul class="token-input-list-nii">
 							<?php foreach($email->cc() as $recip): ?>
-								<span class="token-input-token-nii"><?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;</span>
+								<li class="token-input-token-nii"><?php echo $recip['name']; ?> &lt;<?php echo $recip['email']; ?>&gt;</li>
 							<?php endforeach; ?>
+							</ul>
 						</div>
 					</div>
 			<?php endif; ?>

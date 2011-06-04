@@ -1,6 +1,6 @@
 <?php
 /**
- * SupportComposeMail class file.
+ * EmailComposeMail class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -9,11 +9,11 @@
  */
 
 /**
- * Description of SupportComposeMail
+ * Description of EmailComposeMail
  *
  * @author steve
  */
-class SupportComposeMail  extends CFormModel
+class EmailComposeMail  extends CFormModel
 {
 	public $to;
 	public $cc;

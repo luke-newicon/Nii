@@ -37,7 +37,7 @@ class TestController extends AController
 	}
 	
 	public function actionTestSave($index){
-		$m = new SupportEmail();
+		$m = new EmailEmail();
 		NMailReader::connect();
 		$msgNum = NMailReader::countMessages();
 		$mail = NMailReader::$mail;
@@ -128,7 +128,7 @@ class TestController extends AController
 	
 	public function actionThreading(){
 		
-//		$e = SupportEmail::model()->findByPk(21);
+//		$e = EmailEmail::model()->findByPk(21);
 //		$headers = mb_convert_encoding($e->headers, 'utf-8');
 //		dp($headers);
 //		dp(CJSON::decode("$headers"));
@@ -138,7 +138,7 @@ class TestController extends AController
 		$thread->parseMessagesIntoThreads();
 		//dp($thread->rootSet);
 //		Yii::beginProfile('loop');
-//		foreach(SupportEmail::model()->findAll() as $e){
+//		foreach(EmailEmail::model()->findAll() as $e){
 //			if(empty($e->headers))
 //				continue;
 //			Yii::beginProfile('CJSON');
@@ -171,7 +171,7 @@ class TestController extends AController
 			foreach($c->children as $c){
 				echo '<blockquote>';
 				if($c->message!=null){
-					$e = SupportEmail::model()->findByPk($c->message->dbId);
+					$e = EmailEmail::model()->findByPk($c->message->dbId);
 
 					echo $e->message_text;
 				}

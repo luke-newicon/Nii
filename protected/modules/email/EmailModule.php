@@ -1,6 +1,6 @@
 <?php
 /**
- * SupportModule class file.
+ * EmailModule class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://www.newicon.org/
@@ -9,27 +9,27 @@
  */
 
 /**
- * SupportModule is the module class for the support system
+ * EmailModule is the module class for the email system
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
- * @version $Id: SupportModule.php $
- * @package Support
+ * @version $Id: EmailModule.php $
+ * @package Email
  */
-class SupportModule extends NWebModule
+class EmailModule extends NWebModule
 {
 	
 	/**
 	 * @label Email Address
-	 * @guideText The support email address that messages will be sent from e.g. support@newicon.net
+	 * @guideText The email email address that messages will be sent from e.g. email@newicon.net
 	 * @property string
 	 */
 	public $email = 'steve@newicon.net';
 	
 	/**
-	 * support email name i.e newicon support team
+	 * email email name i.e newicon email team
 	 * @property string
 	 */
-	public $emailName = 'Newicon Support';
+	public $emailName = 'Newicon Email';
 	
 	/**
 	 * the host server name e.g. snarf.cm.bytemark.co.uk
@@ -104,13 +104,13 @@ class SupportModule extends NWebModule
 
 		// import the module-level models and components
 		$this->setImport(array(
-			'support.models.*',
-			'support.components.*',
+			'email.models.*',
+			'email.components.*',
 		));
 		
-		$url = Yii::app()->assetManager->publish(Yii::getPathOfAlias('support.assets'));
+		$url = Yii::app()->assetManager->publish(Yii::getPathOfAlias('email.assets'));
 		if(!Yii::app()->getRequest()->getIsAjaxRequest()){
-			Yii::app()->clientScript->registerCssFile("$url/support.css");
+			Yii::app()->clientScript->registerCssFile("$url/email.css");
 			Yii::app()->clientScript->registerCssFile("$url/jquery.jscrollpane.css");
 			Yii::app()->clientScript->registerScriptFile("$url/js/jquery.jscrollpane.min.js");
 			Yii::app()->clientScript->registerScriptFile("$url/js/jquery.mousewheel.js");
@@ -119,7 +119,7 @@ class SupportModule extends NWebModule
 		require_once 'Zend/Loader/Autoloader.php';
 		Yii::registerAutoloader(array('Zend_Loader_Autoloader', 'autoload'));
 		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/email.png', 'Support'), array('/support/index/index'));
+			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/email.png', 'Email'), array('/email/index/index'));
 	}
 
 	public function beforeControllerAction($controller, $action)
@@ -135,27 +135,27 @@ class SupportModule extends NWebModule
 	}
 
 	/**
-	 * @return SupportModule
+	 * @return EmailModule
 	 */
 	public static function get(){
-		return Yii::app()->getModule('support');
+		return Yii::app()->getModule('email');
 	}
 	
 	public function getLoadMessageListUrl(){
 		if(self::get()->threading)
-			echo NHtml::url('/support/index/loadMessageListThreaded/offset');
+			echo NHtml::url('/email/index/loadMessageListThreaded/offset');
 		else
-			echo NHtml::url('/support/index/loadMessageList/offset');
+			echo NHtml::url('/email/index/loadMessageList/offset');
 	}
 	
 	public function getLoadMessageUrl(){
 		if(self::get()->threading)
-			echo NHtml::url('/support/index/messageThread');
+			echo NHtml::url('/email/index/messageThread');
 		else
-			echo NHtml::url('/support/index/message');
+			echo NHtml::url('/email/index/message');
 	}
 	
 	public function install(){
-		SupportEmail::install();
+		EmailEmail::install();
 	}
 }
