@@ -250,7 +250,7 @@ var cBook = {
 				$firstContact.trigger('click');
 			}
 		});
-	}
+	},
 }
 
 $(function(){
@@ -342,6 +342,7 @@ $(function(){
 			}
 		}
 		lastContactClicked = this;
+		cBook.reinit();
 	});
 
 	
@@ -355,10 +356,12 @@ $(function(){
 		$ul = $('.userList');
 		$ul.find('.selected').removeClass('selected');
 		$('#contactEdit').hide();$('#contactDelete').hide();$('#contactCancel').show();$('#contactSave').show();
-		$('<li class="contact mystery"><div class="media"><a class="img" href="#"><img width="24" alt="Mystery Image" src="http://localhost/newicon/project-manager/app/Nworx/Crm/theme/assets/mistery-img.png"></a><div class="bd"><p>Add</p></div></li>')
+		$('<li class="contact mystery"><div class="media"><a class="img" href="#"><img width="24" alt="Mystery Image" src="http://localhost/newicon/project-manager/app/Nworx/Crm/theme/assets/mistery-img.png"></a><div class="bd"><p class="mlm">Add</p></div></li>')
 			.prependTo($ul).addClass('selected');
-		$('#userListScroll').scrollTo(0);
+		cBook.userScroll.scrollTo(0,0);
 		$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
+		//cBook.reinit();
+		
 		return false;
 	});
 	// save
@@ -374,14 +377,15 @@ $(function(){
 			data:data,
 			success:function(r) {
 				if (r.id == false) return;
-				$li.attr('id','cid_'+r.id);
+				//$li.data('id');
 				$li.html(r.card).trigger('click');
 				$.ajax({
 					url:'<?php echo NHtml::url('/crm/index/findContact/'); ?>',
 					type:'post',
 					success:function(html){
 						$('#userListScroll').html(html);
-						$('#userListScroll').scrollTo($('#cid_'+r.id).addClass('selected'),{duration:0,axis:'y'});
+						cBook.reinit();
+						//cBook.userScroll.scrollToElement($('#cid_'+r.id).addClass('selected'));
 					}
 				});
 				if(r.createdCompany){
@@ -391,6 +395,7 @@ $(function(){
 						.attr('id',r.createdCompany.id)
 						.html(r.createdCompany.card)
 						.insertAfter($li);
+					cBook.reinit();
 				}
 			}
 		});
@@ -453,13 +458,14 @@ $(function(){
 		var letter = $(this).attr('href').replace('#','');
 		var s2el = $('a[name="'+letter+'"]');
 		if(s2el.length != 0){
-			$('#userListScroll').scrollTo(s2el,'y');
+			cBook.userScroll.scrollToElement(s2el);
 		}else{
 			$.ajax({
 				url:'<?php echo NHtml::url('/crm/index/find-contact-alpha'); ?>/'+letter,
 				type:'post',
 				success:function(r){
 					$('#userListScroll').html(r);
+					cBook.reinit();
 				}
 			})			
 		}
