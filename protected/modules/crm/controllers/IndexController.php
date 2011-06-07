@@ -16,8 +16,10 @@ class IndexController extends AController
 				//'actions'=>array('index'),
 				'users'=>array('@'),
 			),
+			array('deny',
+				'users'=>array('*'),
+			),
         );
-		parent::accessRules();
 	}
 	
 	public function actionIndex() 

@@ -128,7 +128,7 @@ class AccountController extends Controller {
 					
 
 					if ($userModule->sendActivationMail) {
-						$activationUrl = $this->makeActivationLink($user, '/user/registration/activation');
+						$activationUrl = $this->makeActivationLink($user, '/user/account/activation');
 						UserModule::sendMail($user->email,
 							UserModule::t("You registered from {site_name}",
 								array('{site_name}'=>Yii::app()->name)),
@@ -263,6 +263,7 @@ class AccountController extends Controller {
 							if ($find->status==0) {
 								$find->status = 1;
 							}
+							$find->password = $form2->password;
 							$find->save();
 							Yii::app()->user->setFlash('recoveryMessage',UserModule::t("New password is saved."));
 							$this->redirect(Yii::app()->controller->module->recoveryUrl);
@@ -278,7 +279,7 @@ class AccountController extends Controller {
 					$form->attributes=$_POST['UserRecoveryForm'];
 					if($form->validate()) {
 						$user = UserModule::userModel()->notsafe()->findbyPk($form->user_id);
-						$activation_url = $this->makeActivationLink($user, '/user/registration/recovery');
+						$activation_url = $this->makeActivationLink($user, '/user/account/recovery');
 
 						$subject = UserModule::t("You have requested password recovery from {site_name}",array('{site_name}'=>Yii::app()->name));
 						$message = UserModule::t("You have requested password recovery from {site_name}. To receive a new password, go to {activation_url}.",array('{site_name}'=>Yii::app()->name, '{activation_url}'=>$activation_url));

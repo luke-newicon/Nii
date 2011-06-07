@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NWidget class file.
  *
@@ -13,7 +14,7 @@
  *
  * @author steve
  */
-class NWidget extends CWidget
+class NWidget extends CWidget 
 {
-    //put your code here
+	//put your code here
 }

@@ -20,7 +20,7 @@ class NWebUser extends CWebUser
 	private $_user;
 	
 	private $_contact;
-
+	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
 	 * If no user is logged in then this function will return null
@@ -65,7 +65,7 @@ class NWebUser extends CWebUser
 			return true;
 		return parent::checkAccess($operation, $params, $allowCaching);
 	}
-
+	
 	public function checkAccessToRoute(){
 		$route = Yii::app()->controller->getRoute();
 		return Yii::app()->user->checkAccess($route);	

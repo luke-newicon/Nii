@@ -160,16 +160,28 @@ class User extends NActiveRecord
 
 	public function cryptPassword($password){
 		return crypt($password);
-		//$this->password  = crypt($this->password);
-		//$this->activekey = crypt(microtime().$this->password);
+	}
+	
+	/**
+	 * ensure that everytime the password field is set it gets encrypted.
+	 * 
+	 * @param string $name
+	 * @param mixed $value 
+	 */
+	public function __set($name, $value){
+		if($name == 'password'){
+			parent::__set($name, $this->cryptPassword($value));
+		}else{
+			parent::__set($name, $value);
+		}
 	}
 
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
-			$this->password = $this->cryptPassword($this->password);
+			//$this->password = $this->cryptPassword($this->password);
 			$this->activekey = $this->cryptPassword(microtime().$this->password);
+			$this->createtime=time();
 		}
-		$this->createtime=time();
 		$this->lastvisit=time();
 		return parent::beforeSave();
 	}

@@ -66,7 +66,7 @@
  * @author matthewturner
  * @version 0.1
  */
-class NNotes extends CWidget
+class NNotes extends NAttributeWidget
 {
 	public $displayUserPic = true;
 	public $model;
