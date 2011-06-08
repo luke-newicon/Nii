@@ -84,17 +84,19 @@ class NWebUser extends CWebUser
 		if($this->getIsGuest()){
 			return $this->guestName;
 		}else{
-			$c = $this->contact;
 			// this code should probably delegate to the CrmContact object
-			if($c !== null){
-				if($c->first_name != '' && $c->last_name != ''){
-					return $c->first_name.' '.$c->last_name;
-				}
-				if($c->first_name != ''){
-					return $c->last_name;
-				}
-				if($c->last_name != ''){
-					return $c->last_name;
+			if(UserModule::get()->useCrm) {
+				$c = $this->contact;
+				if($c !== null){
+					if($c->first_name != '' && $c->last_name != ''){
+						return $c->first_name.' '.$c->last_name;
+					}
+					if($c->first_name != ''){
+						return $c->last_name;
+					}
+					if($c->last_name != ''){
+						return $c->last_name;
+					}
 				}
 			}
 			if($this->record !== null){

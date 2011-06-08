@@ -3,7 +3,7 @@
 &nbsp;<?php echo CHtml::label('Is Super User', 'superuserchk'); ?>
 </div>
 <?php
-$this->Widget('application.widgets.jstree.NJsTree', array(
+$this->Widget('nii.widgets.jstree.NJsTree', array(
 	'id'=>'permissions',
 	'core'=>array('animation'=>0),
 	'json_data'=>array(

@@ -15,13 +15,15 @@ class NiiModule extends NWebModule
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
-		Yii::import('nii.widgets.*');
+		//Yii::import('nii.widgets.*');
 	}
 	
 	public function registerScripts(){
 		$cs = Yii::app()->getClientScript();
+		Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.metadata.js');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/tipsy/javascripts/jquery.tipsy.js');
+		$cs->registerCssFile($this->getAssetsUrl().'/oocss/all.css');
 		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 	}

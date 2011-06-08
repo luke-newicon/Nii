@@ -17,5 +17,10 @@ class IndexController extends NController
 			'NNotes'=>'modules.nii.widgets.notes.NNotesAction'
 		);
 	}
+	
+	public function actionInstall(){
+		Yii::app()->install();
+	}
+	
 }
 ?>

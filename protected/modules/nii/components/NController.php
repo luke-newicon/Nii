@@ -38,6 +38,7 @@ class NController extends CController
 		} else {
 			// include my scripts!
 			$this->coreAssets = Yii::app()->getModule('nii')->getAssetsUrl();
+			
 			Yii::app()->getClientScript()->registerCssFile($this->coreAssets."/jqueryui/nii/jquery-ui.css");
 
 			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/js/jquery.scrollto.js');
