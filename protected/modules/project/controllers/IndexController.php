@@ -18,11 +18,22 @@ class IndexController extends AController
 { 
 	//put your code here
 	public function actionIndex(){
-		Project::install();
-		$this->render('index');
+		$projects = Project::model()->findAll();
+		$this->render('index',array('projects'=>$projects));
 	}
 	
 	public function actionInstall(){
 		ProjectModule::get()->install();
+	}
+	
+	public function actionCreate(){
+		$p = new Project;
+		$p->name = $_POST['name'];
+		$p->save();
+		$pStamp = $this->render('_project-stamp',array('project'=>$p), true);
+		echo json_encode(array(
+			'id'=>$p->id,
+			'project'=>$pStamp
+		));
 	}
 }

@@ -1,15 +1,31 @@
 <?php
+
 /**
- * upload.php
+ * {name} class file.
  *
- * Copyright 2009, Moxiecode Systems AB
- * Released under GPL License.
- *
- * License: http://www.plupload.com/license
- * Contributing: http://www.plupload.com/contributing
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://newicon.net/framework
+ * @copyright Copyright &copy; 2009-2011 Newicon Ltd
+ * @license http://newicon.net/framework/license/
  */
 
-	// HTTP headers for no cache etc
+/**
+ * Description of DetailsController
+ *
+ * @author steve
+ */
+class DetailsController extends AController 
+{
+	public function actionIndex($project){
+		$p = Project::model()->findByAttributes(array('name'=>$project));
+		if($p===null)
+			throw new CHttpException(404, 'Ooops no page found for this project');
+		
+		$this->render('index', array('project'=>$p));
+	}
+	
+	public function actionUpload(){
+		// HTTP headers for no cache etc
 	header('Content-type: text/plain; charset=UTF-8');
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -18,7 +34,7 @@
 	header("Pragma: no-cache");
 
 	// Settings
-	$targetDir = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
+	$targetDir = Yii::getPathOfAlias('project.uploads'); //dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
 	$cleanupTargetDir = false; // Remove old files
 	$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -26,7 +42,7 @@
 	@set_time_limit(5 * 60);
 
 	// Uncomment this one to fake upload time
-	// usleep(1000);
+	usleep(3000);
 
 	// Get parameters
 	$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
@@ -112,8 +128,9 @@
 			fclose($out);
 		} else
 			die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
-	}
+		}
 
-	// Return JSON-RPC response
-	die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
-?>
+		// Return JSON-RPC response
+		die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+	}
+}
