@@ -150,23 +150,23 @@ $(function(){
 		resizer();
 	});
 	
-	$.ui.plugin.add("resizable", "iframeFix", { 
+	$.ui.plugin.add("resizable", "iframeFix", {
 		start: function(event, ui) { 
 			var o = $(this).data('resizable').options; 
 			$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() { 
 				$('<div class="ui-resizable-iframeFix" style="background: #fff;"></div>') 
-				.css({ 
+				.css({
 					width: this.offsetWidth+"px", height: this.offsetHeight+"px", 
 					position: "absolute", opacity: "0.001", zIndex: 1000 
-				}) 
+				})
 				.css($(this).offset()) 
 				.appendTo("body"); 
-			}); 
+			});
 		}, 
 		stop: function(event, ui) { 
 			$("div.ui-resizable-iframeFix").each(function() { this.parentNode.removeChild(this); }); //Remove frame helpers 
-		} 
-	}); 
+		}
+	});
 				
 	
 	$('#messageListBox').resizable({

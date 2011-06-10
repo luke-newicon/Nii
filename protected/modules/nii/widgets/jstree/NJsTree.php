@@ -7,24 +7,60 @@
  *
  * To use NJsTree, simply sets {@link data} to the data that you want
  * to present and you are there.
+ * 
  * @link http://www.yiiframework.com/extension/jstree/#doc Documentation
-
- *
- * @author Shocky Han <shockyhan@gmail.com>
- * @author Dimitrios Meggidis <tydeas.dr@gmail.com>
- *
+ * @author Steve O'Brien <steve@newicon.net>
  * @version 1.1
- * @package application.extensions
-
- * @license http://www.yiiframework.com/license/
+ * @package nii.widgets
+ * @license http://www.newicon.net/license/
  */
+
 /**
- * Revision history.
- * 2010-05-14: Dimitrios Meggidis <tydeas.dr@gmail.com>
- * * Add jsTree data property
- * 2009-06-06: Shocky Han <shokyhan@gmail.com>
- * * initial release
-*/
+ * 
+ * useage example:
+ * $this->Widget('nii.widgets.jstree.NJsTree', array(
+ *     'id'=>'permissions',
+ *	   'core'=>array('animation'=>0),
+ *	   'json_data'=>array(
+ *         'data'=>array('data'=>'node name', 'children'=>array(
+ *				array('data'=>'child node'), 
+ *				array('data'=>'another'))
+ *			)
+ *	   ),
+ *	   'themes'=>array('theme'=>'ni'),
+ *	   'plugins'=>array("themes", "json_data", "checkbox"),
+ * )); 
+ * 
+ * Or load children via ajax (good for large trees)
+ * $this->Widget('nii.widgets.jstree.NJsTree', array(
+ *		'id'=>'permissions',
+ *		'core'=>array('animation'=>0,'load_open'=>true),
+ *		'json_data'=>array(
+ *			'data'=>array('data'=>'all','state'=>'closed'),
+ *			'ajax' => array(
+ *				"url"=>NHtml::url('/logic/survey/locationTree'),
+ *				"data"=>'js:function (n) {
+ *					return { id : n.data("id") ? n.data("id") : 0 };
+ *				}'
+ *			)
+ *		),
+ *		'themes'=>array('theme'=>'ni'),
+ *		'plugins'=>array("themes", "json_data", "ui"),
+ * ));
+ * 
+ * 
+ * 
+ * Interacting with the jstree jquery object:
+ * 
+ * METHOD ONE:
+ * jQuery("some-selector-to-container-node-here")
+ *   .jstree("operation_name" [, argument_1, argument_2, ...]);
+ * 
+ * METHOD TWO: (this method will have to be used when using the yii widget)
+ * jQuery.jstree._reference(needle).operation_name([ argument_1, argument_2, ...]);
+ * "needle" can be a DOM node or selector for the container or a node within the container
+ * 
+ */
 class NJsTree extends CWidget
 {
 
@@ -67,6 +103,7 @@ class NJsTree extends CWidget
 	 * @var array additional options that can be passed to the constructor of the treeview js object.
 	 */
 	public $options=array();
+	
 	/**
 	 * @var array additional HTML attributes that will be rendered in the UL tag.
 	 * The default tree view CSS has defined the following CSS classes which can be enabled
