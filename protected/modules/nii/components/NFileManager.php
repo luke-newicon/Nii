@@ -23,7 +23,8 @@
  *
  * TODO: matt code examples?
  *
- * 2) Creating a new file based on text etc in the system. :doesnt make much sense.
+ * 2) Creating a new file based on binary or text etc in the system. For example recieving the base_64 encoded 
+ * text for an email attachment, you want to create a file from the encoding. Call fileManager->addfile('myEmailAttach','EDV!E£FD(file contents)_ejhfuw3342')
  *
  * 3) Retrieving information for one or more files. (information?)
  *
@@ -39,7 +40,8 @@ require('Zend/File/Transfer/Adapter/Http.php');
  * @author matthewturner
  * @version 0.1
  */
-class NFileManager extends CApplicationComponent {
+class NFileManager extends CApplicationComponent 
+{
 
 	/**
 	 * location without trailing slash (will strip trailing slash)
@@ -48,7 +50,7 @@ class NFileManager extends CApplicationComponent {
 	public $location;
 	public $_fileTransObj;
 	public $_id;
-	public $fileHandlerClass = 'NFileHandler';
+	//public $fileHandlerClass = 'NFileHandler';
 	public $fileNameTemplate = '{timestamp}.{filename}';
 
 	public function __construct() {
@@ -85,7 +87,7 @@ class NFileManager extends CApplicationComponent {
 			$up->addFilter('rename', array('target' => $targetPath . $filedName));
 			$up->receive();
 			$info = $up->getFileInfo();
-			$upFile = new NFiles();
+			$upFile = new NFile();
 
 			if ($filedName)
 				$uploadedFileName = $filedName;
@@ -130,30 +132,11 @@ class NFileManager extends CApplicationComponent {
 	 * getFile(1);
 	 * will return information for one file. or many if array specified
 	 *
-	 * @param array of file information or null
-	 * @returns array of file information or null
-	 *
-	 * array(
-	 * 		0 => array(
-	 * 			file_id=>1,
-	 * 			'description'=>'Image description',
-	 * 			'uploadedUserId'=>1,
-	 * 			'uploadedDate'=>22/03/2010,
-	 * 			'originalName'=>'My file',
-	 * 			'filed_name'=>'Filed_name',
-	 * 			'size'=>3,
-	 * 			'mime'=>'image/jpeg',
-	 * 			'file_path'=>'c://FileMcPath/path.jpg'
-	 * 		)
-	 * )
-	 *
-	 *
+	 * @param int file id
+	 * @return NFile record or null
 	 */
 	public function getFile($id) {
-		$fileInformation = $this->getFiles($id);
-		if (is_array($fileInformation) && !array_key_exists(0, $fileInformation))
-			return null;
-		return $fileInformation[0];
+		return NFile::model()->findByPk($id);
 	}
 
 	/**
@@ -187,7 +170,7 @@ class NFileManager extends CApplicationComponent {
 
 		$status = file_put_contents($targetPath . $fileNewName . '.txt', $fileContents);
 
-		$newFile = new NFiles();
+		$newFile = new NFile();
 		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $area);
 
 		$this->_setid($newFile->id);
@@ -205,12 +188,12 @@ class NFileManager extends CApplicationComponent {
 		// If the file is to be removed from the file system then there is no point in leaving an
 		// orphan record in the database. The records are deleted along with the file.
 		if (!$deleteFile) {
-			NFiles::model()->updateByPk($ids, array('deleted' => 1));
+			NFile::model()->updateByPk($ids, array('deleted' => 1));
 		} else {
 
 			//CODE TO DELETE FILE FROM THE SYSTEM HERE!!!!!!1
 			//removes the unneeded records from the database.
-			NFiles::model()->deleteByPk($ids);
+			NFile::model()->deleteByPk($ids);
 		}
 	}
 
@@ -244,49 +227,12 @@ class NFileManager extends CApplicationComponent {
 	 * Will return files with an id of 1,2,3
 	 *
 	 * Both of the above examples will return data in the following format:
-	 *
-	 * array(
-	 * 		0 => array(
-	 * 			file_id=>1,
-	 * 			'description'=>'Image description',
-	 * 			'uploadedUserId'=>1,
-	 * 			'uploadedDate'=>22/03/2010,
-	 * 			'originalName'=>'My file',
-	 * 			'filed_name'=>'Filed_name',
-	 * 			'size'=>3,
-	 * 			'mime'=>'image/jpeg',
-	 * 			'file_path'=>'c://FileMcPath/path.jpg'
-	 * 		)
-	 * )
+	 * @see NFile
+	 * @return array of NFile active records, if no records found an empty array is returned
 	 */
 	public function getFiles($ids) {
-
 		// Searches the database for the file ids.
-		$files = NFiles::model()->findAllByPk($ids);
-
-
-		// If no results can be found then returns null.
-		if (count($files) == 0)
-			return null;
-
-		// This will contain the information on the files which will be returned to the user.
-		$fileInformation = array();
-
-
-		// Each result which is found is added to an array which can then be outputted.
-		foreach ($files as $id => $result) {
-			$fileInformation[$id]['id'] = $result->id;
-			$fileInformation[$id]['description'] = $result->description;
-			$fileInformation[$id]['uploaded_by'] = $result->uploaded_by;
-			$fileInformation[$id]['uploaded'] = $result->uploaded;
-			$fileInformation[$id]['original_name'] = $result->original_name;
-			$fileInformation[$id]['filed_name'] = $result->filed_name;
-			$fileInformation[$id]['size'] = $result->size;
-			$fileInformation[$id]['mime'] = $result->mime;
-			$fileInformation[$id]['file_path'] = $result->file_path;
-			$fileInformation[$id]['category'] = $result->category;
-		}
-		return $fileInformation;
+		return NFile::model()->findAllByPk($ids);;
 	}
 
 	private function setLocation($location) {

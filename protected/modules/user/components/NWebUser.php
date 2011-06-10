@@ -43,10 +43,17 @@ class NWebUser extends CWebUser
 	public function getContact(){
 		if($this->getRecord() === null)
 			return null;
-		if($this->_contact===null){
+		if(UserModule::get()->useCrm && $this->_contact===null){
 			$this->_contact = $this->getRecord()->contact;
 		}
 		return $this->_contact;
+	}
+	
+	
+	
+	
+	public function isSuper(){
+		return $this->record->superuser;
 	}
 	
 	/**
