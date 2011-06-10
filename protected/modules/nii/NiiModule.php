@@ -36,11 +36,14 @@ class NiiModule extends NWebModule
 	public function ajaxScriptMap(){
 		return array (
 			'jquery.js'=>false,
+			'jquery-ui.min.js'=>false,
 			'jquery-ui.css'=>false,
 			'jquery.tipsy.js'=>false,
 			'jquery.tipsy.css'=>false,
 			'jquery.metadata.js'=>false,
 			'nii.js'=>false,
+			'all.css'=>false,
+			'tipsy.css'=>false
 		);
 	}
 	
