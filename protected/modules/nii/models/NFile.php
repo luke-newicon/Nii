@@ -49,10 +49,9 @@ class NFile extends NActiveRecord
 			array('original_name, filed_name', 'length', 'max'=>200),
 			array('mime', 'length', 'max'=>45),
 			array('file_path', 'length', 'max'=>250),
-			array('description, uploaded', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, id, description, uploaded_by, uploaded, original_name, filed_name, size, mime, file_path', 'safe', 'on'=>'search'),
+			array('id, description, uploaded_by, uploaded, original_name, filed_name, size, mime, file_path', 'safe'),
 		);
 	}
 
@@ -64,7 +63,7 @@ class NFile extends NActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'uploadedBy0' => array(self::BELONGS_TO, 'UserUser', 'uploaded_by'),
+			'uploadedBy' => array(self::BELONGS_TO, 'UserUser', 'uploaded_by'),
 			'filetotables' => array(self::HAS_MANY, 'Filetotable', 'file_id'),
 		);
 	}
@@ -76,7 +75,6 @@ class NFile extends NActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'id' => 'File',
 			'description' => 'Description',
 			'uploaded_by' => 'Uploaded By',
 			'uploaded' => 'Uploaded',
@@ -100,7 +98,6 @@ class NFile extends NActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('id',$this->id,true);
 		$criteria->compare('description',$this->description,true);
 		$criteria->compare('uploaded_by',$this->uploaded_by);
 		$criteria->compare('uploaded',$this->uploaded,true);
@@ -113,34 +110,6 @@ class NFile extends NActiveRecord
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria'=>$criteria,
 		));
-	}
-
-	/**
-	 * Adds information on a new file to the database.
-	 * NOTE: This function does not handle the storage of the file.
-	 *
-	 * EXAMPLES:
-	 * addNewFile(1,'test description','origionalName.txt','filledName.txt',2,'c://mytext.txt','area');
-	 *
-	 * @param int $id The Id of the file to be added.
-	 * @param string $description The description of the file.
-	 * @param string $original_name The name the file was stored as before being uploaded.
-	 * @param string $filed_name The name the file was recorded as when stored.
-	 * @param string $size The size of the file (mb)
-	 * @param string $mime Mime type of the file.
-	 * @param string $file_path The pat to the file on the file system.
-	 * @return int/boolean the id of the file on sucess or false on faliure.
-	 */
-	public function addNewFile($description,$original_name,$filled_name,$size,$mime,$file_path,$category){
-		$this->description = $description;
-		$this->original_name = $original_name;
-		$this->filed_name = $filled_name;
-		$this->mime = $mime;
-		$this->file_path = $file_path;
-		$this->category = $category;
-		$this->save();
-
-		return $this->id;
 	}
 
 	
@@ -167,6 +136,34 @@ class NFile extends NActiveRecord
 				array('uploaded_by')
 			)
 		);
+	}
+	
+	
+	/**
+	 * Adds information on a new file to the database.
+	 * NOTE: This function does not handle the storage of the file.
+	 *
+	 * EXAMPLES:
+	 * addNewFile('test description','origionalName.txt','filledName.txt',2,'c://mytext.txt','area');
+	 *
+	 * @param string $description The description of the file.
+	 * @param string $original_name The name the file was stored as before being uploaded.
+	 * @param string $filed_name The name the file was recorded as when stored.
+	 * @param string $size The size of the file (mb)
+	 * @param string $mime Mime type of the file.
+	 * @param string $file_path The pat to the file on the file system.
+	 * @param string $category
+	 * @return int/boolean the id of the file on sucess or false on faliure.
+	 */
+	public function addNewFile($description,$original_name,$filled_name,$size,$mime,$file_path,$category){
+		$this->description = $description;
+		$this->original_name = $original_name;
+		$this->filed_name = $filled_name;
+		$this->mime = $mime;
+		$this->file_path = $file_path;
+		$this->category = $category;
+		$this->save();
+		return $this->id;
 	}
 	
 }

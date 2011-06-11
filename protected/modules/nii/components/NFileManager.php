@@ -52,6 +52,7 @@ class NFileManager extends CApplicationComponent
 	public $_id;
 	//public $fileHandlerClass = 'NFileHandler';
 	public $fileNameTemplate = '{timestamp}.{filename}';
+	public $lastFile;
 
 	public function __construct() {
 		$this->_fileTransObj = new Zend_File_Transfer_Adapter_Http();
@@ -94,8 +95,14 @@ class NFileManager extends CApplicationComponent
 			else
 				$uploadedFileName = $up->getFileName(null, false);
 
-			$upFile->addNewFile('', $up->getFileName(null, false), $uploadedFileName, $up->getFileSize(), $up->getMimeType(), $up->getFileName(), $area);
-
+			$upFile->original_name = $up->getFileName(null, false);
+			$upFile->filed_name = $uploadedFileName;
+			$upFile->size = $up->getFileSize();
+			$upFile->mime = $up->getMimeType();
+			$upFile->file_path = $up->getFileName();
+			$upFile->category = $area;
+			$upFile->save();
+			
 			$this->_setid($upFile->id);
 			return $this->_getid();
 		}
@@ -108,11 +115,11 @@ class NFileManager extends CApplicationComponent
 	private function locationCheck($targetPath) {
 		//If base folder cannot be found then throws an error
 		if ($this->folderFileCheck($this->location) == false) {
-			echo "Sorry but the file could not be uploaded.\nThis is probably due to the upload directory being unavailable.\nCheck the network, and the location supplied in the conf.ini file is reachable.";
+			echo "Sorry but the file could not be uploaded.\nThis is probably due to the upload directory being unavailable.\nCheck the network, and the location supplied in the configuration file is reachable.";
 		} else {
 			//checks to see if the area folder is present and readable. If it is not present, then the folder is created.
 			if ($this->folderFileCheck($targetPath) === false) {
-				mkdir($targetPath);
+				@mkdir($targetPath);
 			}
 		}
 	}
@@ -161,19 +168,19 @@ class NFileManager extends CApplicationComponent
 	public function addFile($fileName, $fileContents, $area='nii', $mimeType=null) {
 
 		$fileNewName = time() . $fileName;
-
 		//$status = file_put_contents($this->location.$fileNewName,$fileContents);
 		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
 		$targetPath = $filePath . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
 
 		$this->locationCheck($targetPath);
 
-		$status = file_put_contents($targetPath . $fileNewName . '.txt', $fileContents);
+		$status = file_put_contents($targetPath . $fileNewName, $fileContents);
 
 		$newFile = new NFile();
 		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $area);
 
 		$this->_setid($newFile->id);
+		$this->lastFile = $newFile;
 		return $this->_getid();
 	}
 
@@ -279,7 +286,7 @@ class NFileManager extends CApplicationComponent
 			$name = $file->filed_name;
 
 		//Stores the location of the file as a variable
-		$fileLocation = $this->location . $file['category'] . DIRECTORY_SEPARATOR . $file['filed_name'];
+		$fileLocation = $this->getFilePath($file);
 		$data = file_get_contents($fileLocation);
 		$this->displayFileData($data, $file['mime'], $name, $makeDownload);
 	}
@@ -318,6 +325,26 @@ class NFileManager extends CApplicationComponent
 		} else {
 			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}
+	}
+	
+	public function getUrlPath($file){
+	//	return NHtml::url(array('/nii/index/file','id'=>$file->id,'')
+	}
+	
+	/**
+	 * @param NFile $file
+	 * @return string path to file
+	 */
+	public function getFilePath($file){
+		return $this->location . DIRECTORY_SEPARATOR . $file->category . DIRECTORY_SEPARATOR . $file->filed_name;
+	}
+	
+	/**
+	 *
+	 * @return NFileManager 
+	 */
+	public static function get(){
+		return Yii::app()->fileManager;
 	}
 
 }

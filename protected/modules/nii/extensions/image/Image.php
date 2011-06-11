@@ -1,6 +1,6 @@
 <?php
-
-Yii::import('ext.nii.extensions.image.Image_Driver');
+Yii::import('nii.extensions.image.CArray');
+Yii::import('nii.extensions.image.Image_Driver');
 
 /**
  * Manipulate images using standard methods such as resize, crop, rotate, etc.
@@ -120,7 +120,7 @@ class Image {
 		$driver = 'Image_'.ucfirst($this->config['driver']).'_Driver';
 
         // Load the driver
-        Yii::import("ext.nii.extensions.image.drivers.$driver");
+        Yii::import("nii.extensions.image.drivers.$driver");
 
 		// Initialize the driver
 		$this->driver = new $driver($this->config['params']);

@@ -1,4 +1,6 @@
 <?php
+Yii::import('nii.models.*');
+
 /**
  * Yii-User module
  * 
@@ -7,7 +9,6 @@
  * @license http://www.opensource.org/licenses/bsd-license.php
  * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
  */
-
 class NiiModule extends NWebModule
 {
 	
@@ -15,7 +16,7 @@ class NiiModule extends NWebModule
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
-		//Yii::import('nii.widgets.*');
+		
 	}
 	
 	public function registerScripts(){
@@ -50,6 +51,7 @@ class NiiModule extends NWebModule
 	public function install(){
 		Yii::import('nii.widgets.notes.models.NNote');
 		NNote::install();
+		NFile::install();
 	}
 	
 	/**

@@ -1,17 +1,13 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-Yii::import('ext.nii.extensions.image.CImageComponent');
+Yii::import('nii.extensions.image.CImageComponent');
 
 /**
  * Nii Image related goodness such as resizing.
  * @author matthewturner
  * @version 1.0
  */
-class NImage extends CImageComponent {
+class NImage extends CImageComponent 
+{
 
 	// The location of the not found image
 	public $notFoundImage;
@@ -64,7 +60,7 @@ class NImage extends CImageComponent {
 	 * @param int $id the fileManager id representing the image to generate the thumb from.
 	 * @param mixed $thumbType if a string it is treated as key of the
 	 * $this->thumbs property array and will get thumb info.
-	 * If specified as an array it assumes it coontains a unique thumbs configuration
+	 * If specified as an array it assumes it contains a unique thumbs configuration
 	 * see $this->thumbs property for array config. array('x'=>100,'y'=>100)
 	 */
 	public function showThumb($id, $thumbType) {
@@ -76,11 +72,11 @@ class NImage extends CImageComponent {
 			$file = Yii::app()->fileManager->getFile($id);
 
 			// If the file cant be found then loads the default image
-			if (count($file) ===0) {
+			if ($file === null ) {
 				yii::app()->getCache()->delete($imageCacheId);
 				$fileLocation = yii::app()->fileManager->getBaseLocation().$this->notFoundImage;
 				$fileName = $this->notFoundImage;
-			} else{
+			} else {
 				$fileLocation = $file['file_path'];
 				$fileName = $file['filed_name'];
 			}
@@ -88,15 +84,8 @@ class NImage extends CImageComponent {
 			// TODO: Check to make sure the user has permission to download the selected file.
 			// The location the tempoary image should be stored in.
 			$tempImageLocation = Yii::app()->getRuntimePath();
-
-			// Checks to see if the directory can be written to.
-			if (!is_writable($tempImageLocation))
-				throw new CHttpException(404, Yii::t('app', 'The runtime path must be writable'));
-
-			// Checks to see if the image directory is readable
-			if (!is_readable($fileLocation))
-				throw new CHttpException(404, Yii::t('app', 'The image directory cannot be read'));
-
+			
+			$fileLocation = yii::app()->fileManager->getFilePath($file);
 			$image = Yii::app()->image->load($fileLocation);
 			$info = $this->getThumbSize($thumbType);
 
@@ -128,4 +117,12 @@ class NImage extends CImageComponent {
 		$imageSize = $this->getThumbSize($thumbType);
 		return 'thumb' . $id . $imageSize['x'] . $imageSize['y'];
 	}
-}?>
+	
+	/**
+	 *
+	 * @return NImage
+	 */
+	public static function get(){
+		return Yii::app()->image;
+	}
+}

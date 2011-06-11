@@ -46,16 +46,18 @@
 class PluploadWidget extends CWidget {
 
     const ASSETS_DIR_NAME       = 'assets';
-    const PLUPLOAD_FILE_NAME    = 'plupload.full.min.js';
-    const JQUERYQUEUE_FILE_NAME = 'jquery.plupload.queue.min.js';
-    const JQUERYUI_FILE_NAME    = 'jquery.ui.plupload.min.js';
-    const GEARS_FILE_NAME       = 'gears_init.js';
-    const BROWSER_PLUS_URL      = 'http://bp.yahooapis.com/2.4.21/browserplus-min.js';
+    const PLUPLOAD_FILE_NAME    = 'plupload.full.js';
+    const JQUERYQUEUE_FILE_NAME = 'jquery.plupload.queue/jquery.plupload.queue.js';
+	const PUPLOAD_CSS_PATH      = 'jquery.plupload.queue/css/jquery.plupload.queue.css';
+    const JQUERYUI_FILE_NAME    = 'jquery.ui.plupload/jquery.ui.plupload.js';
+	const JQUERYUI_CSS_PATH     = 'jquery.ui.plupload/css/jquery.ui.plupload.css';
+    const GEARS_FILE_NAME       = 'plupload.gears.js';
+    const BROWSER_PLUS          = 'plupload.browserplus.js';
     const FLASH_FILE_NAME       = 'plupload.flash.swf';
     const SILVERLIGHT_FILE_NAME = 'plupload.silverlight.xap';
-    const DEFAULT_RUNTIMES      = 'gears,flash,silverlight,browserplus,html5';
-    const PUPLOAD_CSS_PATH      = 'css/plupload.queue.css';
-    const JQUERYUI_CSS_PATH     = 'css/jquery.ui.plupload.css';
+    const DEFAULT_RUNTIMES      = 'html5,flash,gears,silverlight,browserplus,html5';
+    
+    
     const I18N_DIR_NAME         = 'i18n';
 
     public $config = array();
@@ -64,67 +66,8 @@ class PluploadWidget extends CWidget {
 
     public function init() {        
         $css = "";
-
-        $localPath = dirname(__FILE__) . "/" . self::ASSETS_DIR_NAME;
-        $publicPath = Yii::app()->getAssetManager()->publish($localPath);
-
-        if(!isset($this->config['flash_swf_url'])) {
-
-            $flashUrl = $publicPath . "/" . self::FLASH_FILE_NAME;
-            $this->config['flash_swf_url'] = $flashUrl;
-        }
-
-        if(!isset($this->config['silverlight_xap_url'])) {
-            
-            $silverLightUrl = $publicPath . "/" . self::SILVERLIGHT_FILE_NAME;
-            $this->config['silverlight_xap_url'] = $silverLightUrl;
-        }
-
-        if(!isset($this->config['runtimes'])) {
-
-            $this->config['runtimes'] = self::DEFAULT_RUNTIMES;
-        }
-
-        $runtimes = explode(',', $this->config['runtimes']);
-        foreach($runtimes as $key => $value) {
-
-            $value = strtolower(trim($value));
-            if($value === 'gears') {
-
-                $gearsPath = $publicPath . "/" . self::GEARS_FILE_NAME;
-                Yii::app()->clientScript->registerScriptFile($gearsPath);
-            }
-            if($value === 'browserplus') {
-
-                Yii::app()->clientScript->registerScriptFile(self::BROWSER_PLUS_URL);
-            }
-        }
-
-        $pluploadPath = $publicPath . "/" . self::PLUPLOAD_FILE_NAME;
-        Yii::app()->clientScript->registerScriptFile($pluploadPath);
-
-        $use_jquery_ui = (isset($this->config['jquery_ui']) && $this->config['jquery_ui']);
-        if($use_jquery_ui) {
-
-            $jQueryUIPath = $publicPath . "/" . self::JQUERYUI_FILE_NAME;
-            Yii::app()->clientScript->registerScriptFile($jQueryUIPath);
-
-            $jQueryUICssPath = $publicPath . "/" . self::JQUERYUI_CSS_PATH;
-            Yii::app()->clientScript->registerCssFile($jQueryUICssPath);
-        } else {
-
-            $jQueryQueuePath = $publicPath . "/" . self::JQUERYQUEUE_FILE_NAME;
-            Yii::app()->clientScript->registerScriptFile($jQueryQueuePath);
-
-            $cssPath = $publicPath . "/" . self::PUPLOAD_CSS_PATH;
-            Yii::app()->clientScript->registerCssFile($cssPath);
-        }
-
-        if(isset($this->config['language'])) {
-
-            Yii::app()->clientScript->registerScriptFile($publicPath . "/" . self::I18N_DIR_NAME . "/" . $this->config['language'] . ".js");
-            unset($this->config['language']);
-        }
+		$this->registerScript();
+        
 
         $max_file_number = 0;
         if(isset($this->config['max_file_number'])) {
@@ -189,10 +132,8 @@ class PluploadWidget extends CWidget {
         }
 
         if (isset($this->callbacks) && is_array($this->callbacks)) {
-
             foreach ($this->callbacks as $bind => $function) {
-
-                $jqueryScript .= "uploader.bind('$bind', $function); ";
+                $jqueryScript .= "uploader.bind('$bind',$function); ";
             }
         }
 
@@ -222,17 +163,70 @@ class PluploadWidget extends CWidget {
         $jqueryScript .= "} ";
 
         $uniqueId = 'Yii.' . __CLASS__ . '#' . $this->id;
-        Yii::app()->clientScript->registerScript($uniqueId.".end", stripcslashes($jqueryScript), CClientScript::POS_END);
-        Yii::app()->clientScript->registerScript($uniqueId.".ready", "do_plupload_$fnUniqueId();", CClientScript::POS_READY);
-        if (strlen($css) > 0)
-            Yii::app()->clientScript->registerCss($uniqueId.".css", $css);
+//        Yii::app()->clientScript->registerScript($uniqueId.".end", stripcslashes($jqueryScript), CClientScript::POS_END);
+//        Yii::app()->clientScript->registerScript($uniqueId.".ready", "do_plupload_$fnUniqueId();", CClientScript::POS_READY);
+//        if (strlen($css) > 0)
+//            Yii::app()->clientScript->registerCss($uniqueId.".css", $css);
     }
+	
+	
+	public function registerScript(){
+		$localPath = dirname(__FILE__) . "/" . self::ASSETS_DIR_NAME;
+        $publicPath = Yii::app()->getAssetManager()->publish($localPath);
+
+        if(!isset($this->config['flash_swf_url'])) {
+            $flashUrl = $publicPath . "/" . self::FLASH_FILE_NAME;
+            $this->config['flash_swf_url'] = $flashUrl;
+        }
+
+        if(!isset($this->config['silverlight_xap_url'])) {
+            $silverLightUrl = $publicPath . "/" . self::SILVERLIGHT_FILE_NAME;
+            $this->config['silverlight_xap_url'] = $silverLightUrl;
+        }
+
+        if(!isset($this->config['runtimes'])) {
+            $this->config['runtimes'] = self::DEFAULT_RUNTIMES;
+        }
+
+        $runtimes = explode(',', $this->config['runtimes']);
+        foreach($runtimes as $key => $value) {
+
+            $value = strtolower(trim($value));
+            if($value === 'gears') {
+                $gearsPath = $publicPath . "/" . self::GEARS_FILE_NAME;
+                Yii::app()->clientScript->registerScriptFile($gearsPath);
+            }
+            if($value === 'browserplus') {
+                Yii::app()->clientScript->registerScriptFile(self::BROWSER_PLUS);
+            }
+        }
+
+        $pluploadPath = $publicPath . "/" . self::PLUPLOAD_FILE_NAME;
+        Yii::app()->clientScript->registerScriptFile($pluploadPath);
+
+        $use_jquery_ui = (isset($this->config['jquery_ui']) && $this->config['jquery_ui']);
+        if($use_jquery_ui) {
+
+            $jQueryUIPath = $publicPath . "/" . self::JQUERYUI_FILE_NAME;
+            Yii::app()->clientScript->registerScriptFile($jQueryUIPath);
+
+            $jQueryUICssPath = $publicPath . "/" . self::JQUERYUI_CSS_PATH;
+            Yii::app()->clientScript->registerCssFile($jQueryUICssPath);
+        } else {
+
+            $jQueryQueuePath = $publicPath . "/" . self::JQUERYQUEUE_FILE_NAME;
+            Yii::app()->clientScript->registerScriptFile($jQueryQueuePath);
+
+            $cssPath = $publicPath . "/" . self::PUPLOAD_CSS_PATH;
+            Yii::app()->clientScript->registerCssFile($cssPath);
+        }
+	}
 
     public function run()
     {
-        echo "<div id=\"$this->id\">";
-        echo "<p>".Yii::t('plupload', "Your browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.")."</p>";
-		echo "</div>";
+//        echo "<div id=\"$this->id\">";
+//        echo "<p>".Yii::t('plupload', "Your browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.")."</p>";
+//		echo "</div>";
     }
 }
 ?>
