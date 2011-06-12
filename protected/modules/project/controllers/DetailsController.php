@@ -150,4 +150,12 @@ class DetailsController extends AController
 		// Return JSON-RPC response
 		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
 	}
+	
+	public function actionImage(){
+		
+		$f = NFileManager::get()->getFile(30);
+		NImage::get()->load($f->file_path.DS.'nii'.DS.$f->filed_name)->resize(250, 250)->render();
+		
+	}
+	
 }
