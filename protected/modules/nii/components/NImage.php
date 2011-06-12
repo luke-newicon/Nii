@@ -32,36 +32,33 @@ class NImage extends CImageComponent
 	public $defaultQuality = 75;
 
 	/**
-	 * Returns the thumbnail size options
-	 * @return array
-	 */
-	public function getThumbSizes() {
-		return $this->thumbs;
-	}
-
-	/**
-	 * Returns the size settings off a thumbnail.
+	 * Returns the size settings of a thumbnail.
+	 * 
 	 * @param int $size
 	 * @return array
 	 */
 	public function getThumbSize($size) {
-		if (!array_key_exists($size, $this->thumbs))
+		
+		if (is_string($size) && !array_key_exists($size, $this->thumbs))
 			throw new CException('No image thumb key sepcified for ' . $size . ' you must specify thumb keys in the main config. e.g. small=>array("x"=>100,"y"=>100) see NImage::thumbs property');
+		
+		$ret = is_array($size) ? $size : $this->thumbs[$size];
 
-		$ret = $this->thumbs[$size];
 		//Checks to ensure a x and why property is set.
 		if (!isset($ret['x']) || !isset($ret['y']))
 			throw new CException('no x or y lengths specified for this thumb image type');
+		
 		return $ret;
 	}
 
 	/**
 	 * Displays the requested images thumbnail
+	 * 
 	 * @param int $id the fileManager id representing the image to generate the thumb from.
 	 * @param mixed $thumbType if a string it is treated as key of the
 	 * $this->thumbs property array and will get thumb info.
 	 * If specified as an array it assumes it contains a unique thumbs configuration
-	 * see $this->thumbs property for array config. array('x'=>100,'y'=>100)
+	 * see $this->thumbs property for array config. array('x'=>100,'y'=>100, q=>50)
 	 */
 	public function showThumb($id, $thumbType) {
 
@@ -108,6 +105,7 @@ class NImage extends CImageComponent
 
 	/**
 	 * Gets the chache id for an image
+	 * 
 	 * @param int $id The id of the image that the id should relate to
 	 * @param string $imageType The size of image to display. These options are
 	 * set in the main config file. Examples could be ('product','thumb')
@@ -119,7 +117,32 @@ class NImage extends CImageComponent
 	}
 	
 	/**
-	 *
+	 * controller action to show the thumb image
+	 * 
+	 * @param int $id file manager id of file
+	 * @param string $size the image thumb size (defined in NImage thumbs array. e.g. 'small') or
+	 * a custom string of xy-100-122 (walk before you run) 100=x and 122 = y
+	 */
+	public function actionShowThumb($id, $size){
+		if(strpos($size,'xy-')!==false){
+			$s = explode('-',$size);
+			$size = array('x'=>$s[1],'y'=>$s[2]);
+		}
+		$this->showThumb($id, $size);
+	}
+	
+	/**
+	 * Get the url to call to display the image or use as an img tag src attribute
+	 * 
+	 * @param int $id filemanagers NFile id
+	 * @param string $size thumbSize key name or string in the form xy-100-130
+	 * @return string url 
+	 */
+	public function getUrl($id,$size='small'){
+		return NHtml::url(array('/nii/index/showThumb','id'=>$id, 'size'=>$size));
+	}
+	
+	/**
 	 * @return NImage
 	 */
 	public static function get(){

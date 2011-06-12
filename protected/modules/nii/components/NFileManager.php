@@ -45,14 +45,17 @@ class NFileManager extends CApplicationComponent
 
 	/**
 	 * location without trailing slash (will strip trailing slash)
-	 * @var <type>
+	 * @var string
 	 */
 	public $location;
-	public $_fileTransObj;
-	public $_id;
-	//public $fileHandlerClass = 'NFileHandler';
-	public $fileNameTemplate = '{timestamp}.{filename}';
+	/**
+	 * the last NFile object added and uploaded
+	 * @var NFile 
+	 */
 	public $lastFile;
+	
+	private $_fileTransObj;
+	
 
 	public function __construct() {
 		$this->_fileTransObj = new Zend_File_Transfer_Adapter_Http();
@@ -65,7 +68,7 @@ class NFileManager extends CApplicationComponent
 	 * Saves a file and returns the id to reference the file
 	 * This id should be stored and used to access information on the file in the future.
 	 * If the upload fails it returns boolean false;
-	 * To retrieve the error messages call ->getMessages which returns an array of the error
+	 * To retrieve the error messages call NFileManager->getFileTransObj()->getMessages which returns an array of the error
 	 * messages. For example upload limit exceeded.
 	 *
 	 * @param string $area The area the file will be saved in (e.g dreg or wpack).
@@ -103,8 +106,9 @@ class NFileManager extends CApplicationComponent
 			$upFile->category = $area;
 			$upFile->save();
 			
-			$this->_setid($upFile->id);
-			return $this->_getid();
+			$this->lastFile = $upFile;
+			
+			return $upFile->id;
 		}
 	}
 
@@ -128,16 +132,12 @@ class NFileManager extends CApplicationComponent
 	 * get the file transfer object responsible for handling the upload
 	 * @return Zend_File_Transfer_Adapter_Http
 	 */
-	private function getFileTransObj() {
+	public function getFileTransObj() {
 		return $this->_fileTransObj;
 	}
 
 	/**
-	 * Returns an array of file information for the supplied file id
-	 *
-	 * <div>EXAMPLES<div>
-	 * getFile(1);
-	 * will return information for one file. or many if array specified
+	 * Returns an NFile object for the supplied file id
 	 *
 	 * @param int file id
 	 * @return NFile record or null
@@ -147,45 +147,39 @@ class NFileManager extends CApplicationComponent
 	}
 
 	/**
-	 * Will create a new file in the system based on supplied text
+	 * Will create a new NFileManager managed file in the system based on supplied $fileContents variable
+	 * This is particularly useful when adding files from email attachments.
+	 * The file is represented by base64 text which can be decoded and passed into the $fileContents
+	 * variable, the function will store a physical file in the appropriate 
+	 * directory and add a NFile record to represent it.
 	 *
-	 * EXAMPLES
-	 * addFile('test contents',array('filed_name'=>'MyNewFile.txt'))
-	 * The mimimum code required to create a file on the system. This will create
-	 * a file with the name MyNewFile.txt in the location specified in main.php and put
-	 * 'test contents' as the contents of the file.
-	 *
-	 * $attributes = array('filed_name'=>'MyNewFile.text',
-	 * 'mime'=>'image/jpeg'.'description'=>'File description')
-	 * addFile('test contents',array('filed_name'=>'MyNewFile.txt'))
-	 * This more advanced example will create a file on the system in the location specified
-	 * in main.php called MyNewTextFile.txt and put 'test contents' as the contents. It will also
-	 * record the description as File Description in the database
-	 *
-	 * @param String $fileContents The contents of the file that will be created on the system
-	 * @return String the Id of the file which has been created in the system
+	 * @param string $fileName the name fo the file
+	 * @param string $fileContents The contents of the file that will be created on the system
+	 * @param string $category the category used to determine how to store the file defaults to nii
+	 * @param string $mimeType the mimeType of the file, if unknown it will attempt to autodetect the mimetype.
+	 * @return int the Id of the file which has been created in the system
 	 */
-	public function addFile($fileName, $fileContents, $area='nii', $mimeType=null) {
+	public function addFile($fileName, $fileContents, $category='nii', $mimeType=null) {
 
 		$fileNewName = time() . $fileName;
 		//$status = file_put_contents($this->location.$fileNewName,$fileContents);
 		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
-		$targetPath = $filePath . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
+		$targetPath = $filePath . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR;
 
 		$this->locationCheck($targetPath);
 
 		$status = file_put_contents($targetPath . $fileNewName, $fileContents);
 
 		$newFile = new NFile();
-		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $area);
+		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $category);
 
-		$this->_setid($newFile->id);
 		$this->lastFile = $newFile;
-		return $this->_getid();
+		return $newFile->id;
 	}
 
 	/**
 	 * Remove a file from the system
+	 * 
 	 * @param int or array $ids File id/s to mark as deleted.
 	 * @param boolean $deleteFile Whether or not to remove the file from the system.
 	 */
@@ -204,55 +198,22 @@ class NFileManager extends CApplicationComponent
 		}
 	}
 
-	/**
-	 * Sets a variable with the id of the newly uploaded file
-	 * @param int $id The id of the newly uploaded file.
-	 */
-	private function _setid($id) {
-		$this->_id = $id;
-	}
 
 	/**
-	 * Returns the id of the file which has just been uploaded.
-	 * @return string.
-	 */
-	private function _getid() {
-		return $this->_id;
-	}
-
-	/**
-	 * Returns an array of file information for the supplied file ids.
+	 * Returns an array of NFile objects for the supplied file ids.
 	 *
-	 * File ids can be supplied as either a numeric value or as an array if
-	 * searching for multiple files.
-	 *
-	 * <div>EXAMPLES<div>
-	 * getFile(1);
-	 * will return information for one file.
-	 *
-	 * getFile(array(1,2,3));
-	 * Will return files with an id of 1,2,3
-	 *
-	 * Both of the above examples will return data in the following format:
-	 * @see NFile
+	 * @param array $ids array of NFile ids.
 	 * @return array of NFile active records, if no records found an empty array is returned
+	 * @see NFile
 	 */
 	public function getFiles($ids) {
 		// Searches the database for the file ids.
 		return NFile::model()->findAllByPk($ids);;
 	}
 
-	private function setLocation($location) {
-		$this->location = $location;
-	}
-
-	// Returns the base file location.
-	public function getBaseLocation(){
-		return $this->location;
-	}
-
 	/**
 	 * Checks to make sure the area folder is present. If it is not, then it creates it.
+	 * 
 	 * @param $area
 	 */
 	private function folderFileCheck($area) {
@@ -264,44 +225,45 @@ class NFileManager extends CApplicationComponent
 	}
 
 	/**
-	 * Loads a file from where it is stored outside of the document root and outputs the information to screen.
-	 * @param int $id The uploader id of the file to display.
+	 * Loads a file from where it is stored on the system and outputs the information to screen.
+	 * 
+	 * @param mixed $id the NFile id of the file to display. Or an NFile object
 	 * @param boolean $renderInPage wether or not to render the file in page. The default is false
 	 * @param string $customName A custom name to call the file when downloading. Please include the file extension.
 	 * optional uses original_name if null
 	 * @returns void | false on error
 	 * @see NFileManager::displayFileData
 	 */
-	public function displayFile($id, $name=null, $makeDownload=false) {
+	public function displayFile($id, $name='', $makeDownload=false) {
 
-		//retrives file information.
-		$file = $this->getFile($id);
-
-		//Displays an error message if the supplied id search returns no rows.
-		if (count($file) === 0) {
-			return false;
+		// Retrieves file information.
+		if($id instanceof NFile) {
+			$file = $id;
+		} else {
+			$file = $this->getFile($id);
+			if($file === null) 
+				throw new CHttpException(404, "The file can not be found.");
 		}
 
-		if(!$name)
-			$name = $file->filed_name;
+		if($name == '')
+			$name = $file->original_name;
 
-		//Stores the location of the file as a variable
-		$fileLocation = $this->getFilePath($file);
-		$data = file_get_contents($fileLocation);
+		$data = file_get_contents($this->getFilePath($file));
 		$this->displayFileData($data, $file['mime'], $name, $makeDownload);
 	}
 
 	/**
 	 * Outputs file data to the screen
+	 * 
 	 * @param string $data
 	 * @param string $mimeType
-	 * @param <type> $name
-	 * @param <type> $makeDownload
+	 * @param string $name
+	 * @param boolean $makeDownload
 	 */
-	public function displayFileData($data, $mimeType, $name=null, $makeDownload=false) {
+	public function displayFileData($data, $mimeType, $name='', $makeDownload=false) {
 		if ($data) {
 			header('Content-Type:' . $mimeType);
-			if ($name === null) {
+			if ($name == '') {
 				$name = md5(date('Y-m-d h:i:s', time()));
 			}
 			//tells browser to download file if render in page is set to false.
@@ -327,13 +289,23 @@ class NFileManager extends CApplicationComponent
 		}
 	}
 	
-	public function getUrlPath($file){
-	//	return NHtml::url(array('/nii/index/file','id'=>$file->id,'')
+	/**
+	 * Makes and returns the url accessible path to the file.
+	 * 
+	 * @param mixed $id can be the integer filemanager id or a NFile object
+	 */
+	public function getUrl($id, $name='', $downloadable=false){
+		if($id instanceof NFile)
+			$id = $id->id;
+		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
 	}
 	
 	/**
+	 * Gets the system path to the file.
+	 * Note, this is not usually web accessible
+	 *
 	 * @param NFile $file
-	 * @return string path to file
+	 * @return string system path to the file
 	 */
 	public function getFilePath($file){
 		return $this->location . DIRECTORY_SEPARATOR . $file->category . DIRECTORY_SEPARATOR . $file->filed_name;

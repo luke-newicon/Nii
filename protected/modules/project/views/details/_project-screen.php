@@ -1,6 +1,6 @@
 <div class="projectBox">
 	<a href="#" class="projImg">
-		<img src="<?php echo NHtml::url(array('/nii/index/showThumb','id'=>$file->id, 'size'=>'small')); ?>" />
+		<img src="<?php echo NHtml::urlImageThumb($file->id); ?>" />
 	</a>
 	<div class="projName">
 		<span class="name">ser serrse </span>
