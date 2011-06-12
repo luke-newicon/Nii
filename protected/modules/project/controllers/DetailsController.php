@@ -24,7 +24,7 @@ class DetailsController extends AController
 		$this->render('index', array('project'=>$p));
 	}
 	
-	public function actionUpload(){
+	public function actionUpload($projectId){
 		$this->layout = 'ajax';
 		// HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
@@ -142,7 +142,11 @@ class DetailsController extends AController
 		}
 		$fileContents = file_get_contents($targetDir . DIRECTORY_SEPARATOR . $fileName);
 		$id = NFileManager::get()->addFile($fileName, $fileContents);
-		$res = $this->render('_project-screen',array('file'=>NFileManager::get()->lastFile),true);
+		$p = new ProjectScreen;
+		$p->file_id = $id;
+		$p->project_id = $projectId;
+		$p->save();
+		$res = $this->render('_project-screen',array('screen'=>$p),true);
 		// Return JSON-RPC response
 		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
 	}

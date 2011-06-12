@@ -1,6 +1,5 @@
 <?php
 Yii::import('nii.models.*');
-
 /**
  * Yii-User module
  * 

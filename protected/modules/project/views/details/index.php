@@ -8,7 +8,7 @@
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
         'runtimes' => 'flash,gears,html5,silverlight,browserplus',
-        'url' => NHtml::url('/project/details/upload/'),
+        'url' => NHtml::url(array('/project/details/upload/','projectId'=>$project->id)),
 		'filters'=>array(
 			array('title'=>'Image files', 'extensions'=>"jpg,gif,png")
 		),
@@ -69,6 +69,11 @@
 			</div>
 		</div>
 	</li>
+	<?php foreach($project->getScreens() as $screen): ?>
+	<li>
+		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>
+	</li>
+	<?php endforeach; ?>
 </ul>
 
 
@@ -80,7 +85,7 @@ $(function() {
 		browse_button : 'pickfiles',
 		container : 'container',
 		max_file_size : '10mb',
-		url : '<?php echo NHtml::url('/project/details/upload/') ?>',
+		url : '<?php echo NHtml::url(array('/project/details/upload/','projectId'=>$project->id)) ?>',
 		flash_swf_url:"/newicon/Nii/assets/79029962/plupload.flash.swf",
 		silverlight_xap_url:"/newicon/Nii/assets/79029962/plupload.silverlight.xap",
 		filters : [

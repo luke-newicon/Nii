@@ -45,4 +45,13 @@ class Project extends NActiveRecord
 			)
 		);
 	}
+	
+	/**
+	 * get all project screens
+	 * @return array of ProjectScreen
+	 */
+	public function getScreens(){
+		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id));
+	}
+	
 }
