@@ -155,17 +155,6 @@ class NFileManager extends CApplicationComponent
 	}
 	
 	/**
-	 * Makes and returns the url accessible path to the file.
-	 * 
-	 * @param mixed $id can be the integer filemanager id or a NFile object
-	 */
-	public function getUrl($id, $name='', $downloadable=false){
-		if($id instanceof NFile)
-			$id = $id->id;
-		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
-	}
-	
-	/**
 	 * Gets the system path to the file.
 	 * Note: this is not usually a web accessible path
 	 * Note: this uses the NFile's category and filed_name attribute to determin the path. 
@@ -176,6 +165,19 @@ class NFileManager extends CApplicationComponent
 	public function getFilePath($file){
 		return $this->getPath($file->category) . DIRECTORY_SEPARATOR . $file->filed_name;
 	}
+	
+	/**
+	 * Makes and returns the url accessible path to the file.
+	 * 
+	 * @param mixed $id can be the integer filemanager id or a NFile object
+	 */
+	public function getUrl($id, $name='', $downloadable=false){
+		if($id instanceof NFile)
+			$id = $id->id;
+		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
+	}
+	
+	
 
 	/**
 	 * Checks to see if the upload location is accessible.

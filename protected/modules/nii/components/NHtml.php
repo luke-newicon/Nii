@@ -134,6 +134,30 @@ class NHtml extends CHtml
 		$v->endWidget('zii.widgets.jui.CJuiDialog');
 	}
 	
+	/** 
+	 * gets the application wide button class
+	 * @return string 
+	 */
+	public static function btnClass(){
+		if(isset(Yii::app()->params->buttonClass))
+			return Yii::app()->params->buttonClass;
+		return 'btn btnN';
+	}
+	
+	
+	/**
+	 * draws a button using default button class
+	 * @param type $label
+	 * @param type $iconClass
+	 * @param string $class 
+	 */
+	public static function btn($label, $iconClass=null, $class=null){
+		$class = NHtml::btnClass() . ' ' . $class;
+		if ($iconClass!==null)
+			$label = "<span class=\"$iconClass\"></span>$label";
+		echo CHtml::htmlButton($label,array('class'=>$class));
+	}
+	
 	/**
 	 * Get the url address to show the imaghe or use in the img src attribute
 	 * 

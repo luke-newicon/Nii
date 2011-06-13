@@ -71,8 +71,8 @@ class NImage extends CImageComponent
 			// If the file cant be found then loads the default image
 			if ($file === null ) {
 				yii::app()->getCache()->delete($imageCacheId);
-				$fileLocation = yii::app()->fileManager->getBaseLocation().$this->notFoundImage;
-				$fileName = $this->notFoundImage;
+				$fileLocation = $this->notFoundImage;
+				$fileName = 'noimage' . CFileHelper::getExtension($fileLocation);
 			} else {
 				$fileLocation = $file['file_path'];
 				$fileName = $file['filed_name'];
@@ -80,20 +80,23 @@ class NImage extends CImageComponent
 
 			// TODO: Check to make sure the user has permission to download the selected file.
 			// The location the tempoary image should be stored in.
-			$tempImageLocation = Yii::app()->getRuntimePath();
 			
+			$tempImageLocation = Yii::app()->getRuntimePath();
 			$fileLocation = yii::app()->fileManager->getFilePath($file);
-			$image = Yii::app()->image->load($fileLocation);
+			// get thumb size info
 			$info = $this->getThumbSize($thumbType);
-
 			$q = isset($info['q']) ? $info['q'] : $this->defaultQuality;
+			
+			// make the thumb image and save
+			$image = Yii::app()->image->load($fileLocation);
 			$image->resize($info['x'], $info['y'])->quality($q);
-
 			$image->save($tempImageLocation . $fileName);
+			
+			// add to cache
 			$imageToCache = file_get_contents($tempImageLocation . $fileName, 'r');
 			yii::app()->getCache()->set($imageCacheId, $imageToCache, '6500');
 
-			// Removes the tempoary file
+			// Removes the thumb image file
 			unlink($tempImageLocation . $fileName);
 		}
 
