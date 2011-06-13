@@ -913,6 +913,37 @@ class NTreeTable extends CActiveRecordBehavior
 			}
 		}
 	}
+	
+	public function generateJstreeArray($rootNode=null,$idVar=null){
+		$tree= null;
+		if($rootNode===null)
+			$rootNode = $this->getTreeRoot();
+		$this->_generateJstreeArrayRecursive($rootNode, $tree,$idVar);
+		return $tree;
+	}
+	
+	public function _generateJstreeArrayRecursive($rootNode, &$tree=array(),$webAddress=null,$idVar=null){
+		// if child
+		$myArr = $this->getJstreeNodeArray($rootNode);
+		$tree[] =& $myArr;
+		
+		if($rootNode->hasChildren()){
+			$items = array();
+			$myArr['children'] =& $items;
+			foreach($rootNode->getChildren() as $child) {
+				$this->_generateJstreeArrayRecursive($child, $items,$idVar);
+			}
+		}
+	}
+	
+	public function getJstreeNodeArray($node){
+		$ret = array('data'=>$node->name, 'attr'=>array('data-id'=>$node->id));
+		if($node->hasChildren()){
+			$ret['state'] = 'closed';
+		}
+		return $ret;
+	}
+	
 
 
 	public function getTree($node) {
