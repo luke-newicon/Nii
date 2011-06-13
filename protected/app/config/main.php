@@ -1,18 +1,19 @@
 <?php
 
-define('DS',DIRECTORY_SEPARATOR);
+
 // uncomment the following to define a path alias
 //Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
-Yii::setPathOfAlias('base',dirname(__FILE__).DS.'..'.DS.'..'.DS.'..');
+Yii::setPathOfAlias('base',    dirname(dirname(dirname(dirname(__FILE__)))));
+Yii::setPathOfAlias('app',     Yii::getPathOfAlias('base.protected.app'));
 Yii::setPathOfAlias('modules', Yii::getPathOfAlias('base.protected.modules'));
-Yii::setPathOfAlias('nii', Yii::getPathOfAlias('modules.nii'));
+Yii::setPathOfAlias('nii',     Yii::getPathOfAlias('modules.nii'));
 $JQUERY_THEMEURL = rtrim(dirname($_SERVER['SCRIPT_NAME']),'/').'/css/jqueryui';
 $JQUERY_THEME = 'nii';
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath'=>dirname(__FILE__).DS.'..',
+	'basePath'=>dirname(dirname(__FILE__)),
 	'name'=>'Newicon',
 	'timezone'=>'Europe/London',
 	'hostname'=>'localhost',
@@ -34,7 +35,7 @@ return array(
 	),
 	'theme'=>'classic',
 
-	'modulePath'=>dirname(__FILE__).'/../../modules',
+	'modulePath'=>Yii::getPathOfAlias('modules'),
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		'gii'=>array(
@@ -188,10 +189,14 @@ return array(
 		'fileManager'=>array(
 			'class'=>'NFileManager',
 			'location'=>Yii::getPathOfAlias('base.uploads'),
+			'locationIsAbsolute'=>true,
+			'defaultCategory' => 'attachments',
+			'categories' => array(
+					'attachments' => 'attachments',
+					'profile_photos' => 'profile_photos',
+					'logos' => 'logos',
+			),
 		),
-//		'viewRenderer'=>array(
-//            'class'=>'CPradoViewRenderer',
-//        ),
 	),
 
 	// application-level parameters that can be accessed

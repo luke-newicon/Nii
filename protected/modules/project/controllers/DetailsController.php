@@ -35,7 +35,7 @@ class DetailsController extends AController
 		header("Pragma: no-cache");
 		
 		// Settings
-		$targetDir = Yii::getPathOfAlias('runtime'); //dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
+		$targetDir = Yii::getPathOfAlias('app.runtime'); //dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
 		$cleanupTargetDir = false; // Remove old files
 		$maxFileAge = 60 * 60; // Temp file age in seconds
 
@@ -152,9 +152,9 @@ class DetailsController extends AController
 	}
 	
 	public function actionImage(){
-		
-		$f = NFileManager::get()->getFile(30);
-		NImage::get()->load($f->file_path.DS.'nii'.DS.$f->filed_name)->resize(250, 250)->render();
+		echo Yii::getPathOfAlias('base.protected.app.runtime');
+//		$f = NFileManager::get()->getFile(30);
+//		NImage::get()->load($f->file_path.DS.'nii'.DS.$f->filed_name)->resize(250, 250)->render();
 		
 	}
 	

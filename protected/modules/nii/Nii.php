@@ -8,6 +8,8 @@
  * @license http://newicon.net/framework/license/
  */
 
+defined('DS') or define('DS',DIRECTORY_SEPARATOR);
+
 /**
  * Description of NApp
  *

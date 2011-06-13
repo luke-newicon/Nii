@@ -155,12 +155,12 @@ class NFile extends NActiveRecord
 	 * @param string $category
 	 * @return int/boolean the id of the file on sucess or false on faliure.
 	 */
-	public function addNewFile($description,$original_name,$filled_name,$size,$mime,$file_path,$category){
+	public function addNewFile($description,$original_name,$filled_name,$size,$mime,$category){
 		$this->description = $description;
 		$this->original_name = $original_name;
 		$this->filed_name = $filled_name;
 		$this->mime = $mime;
-		$this->file_path = $file_path;
+		$this->file_path = 'xxx';
 		$this->category = $category;
 		$this->save();
 		return $this->id;

@@ -15,20 +15,26 @@
  * Standardise the method by which the application stores and retrives files and ecapsulate the
  * functionality. Like this class!
  *
+ * The filemanager should be able to work out the files system path from the category variable
+ * In the case of complex file storage where a cron job may move files monthly onto a longer term file storage server, 
+ * the cron job can update the category field in the file database thus enabling the filemanager to work out where it is.
  *
- * HOW TO USE ME!
- * There are 3 reassons you will need this function:
- *
- * 1) Adding a file uploaded to the system. :doesnt make much sense (know what you mean though)
- *
- * TODO: matt code examples?
- *
- * 2) Creating a new file based on binary or text etc in the system. For example recieving the base_64 encoded 
- * text for an email attachment, you want to create a file from the encoding. Call fileManager->addfile('myEmailAttach','EDV!E£FD(file contents)_ejhfuw3342')
- *
- * 3) Retrieving information for one or more files. (information?)
- *
- * @author steve
+ * Typical configuration example:
+ * -----------------------------
+ *     'fileManager'=>array(
+ *         'class'=>'NFileManager',
+ *	       'location'=>Yii::getPathOfAlias('base.uploads'),
+ *	       'defaultCategory' => 'attachments',
+ *	       'categories' => array(
+ *	           'attachments' => 'attachments',
+ *             'profile_photos' => 'profile_photos',
+ *             'logos' => 'logos',
+ *         ),
+ *     ),
+ * 
+ * TODO: provide mechanism to store files in subfolders like month-day to avoid max file folder limits.
+ * 
+ * @author The Newicon Team
  * @version 1.0
  */
 Yii::import('application.vendors.Zend.File.*');
@@ -45,6 +51,8 @@ class NFileManager extends CApplicationComponent
 
 	/**
 	 * location without trailing slash (will strip trailing slash)
+	 * if specifying an absolute path you must set locationIsAsbsolute to true, also it is recomended to use
+	 * Yii::getPathOfAlias('system') to ensure absolute is generated properly depending on the current runtime environment
 	 * @var string
 	 */
 	public $location;
@@ -54,6 +62,28 @@ class NFileManager extends CApplicationComponent
 	 */
 	public $lastFile;
 	
+	
+	public $defaultCategory='nii';
+	
+	/**
+	 * a list of categories mapping to a storage location
+	 * categoryName=>'location'
+	 * @var array 
+	 */
+	public $categories;
+	
+	/**
+	 * determins if the location attribute is a path relative to the basePath (Yii::app()->basePath) or an absolute path
+	 * by default it assumes a relative path. However it is acceptable to specify the location as an absolute path 
+	 * using Yii::getPathOfAlias()
+	 * @var boolean 
+	 */
+	public $locationIsAbsolute = false;
+	
+	/**
+	 * The Zend file transfer object
+	 * @var Zend_File_Transfer_Adapter_Http 
+	 */
 	private $_fileTransObj;
 	
 
@@ -71,60 +101,91 @@ class NFileManager extends CApplicationComponent
 	 * To retrieve the error messages call NFileManager->getFileTransObj()->getMessages which returns an array of the error
 	 * messages. For example upload limit exceeded.
 	 *
-	 * @param string $area The area the file will be saved in (e.g dreg or wpack).
+	 * @param string $category The category to save the file in, categories can map to different storage locations.
 	 * @return int id to refer to the file, or boolean false if upload failed.
 	 */
-	public function saveFile($area='core') {
-
+	public function saveFile($category='default') {
 		if (!empty($_FILES)) {
-
-			$targetPath = $this->getPath();
-
-			$this->locationCheck($targetPath);
-
+			$targetPath = $this->getPath($category);
+		
+			//$targetPath = $this->location . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
+			$this->_locationCheck($targetPath);
 			$up = $this->getFileTransObj();
-
 			$origFileName = $up->getFileName(null, false);
+			$filedName = date('YmdHis') . '_' . $origFileName;
 
-			$filedName = time() . '_' . $origFileName;
-			
 			$up->addFilter('rename', array('target' => $targetPath . $filedName));
 			$up->receive();
+
+			
 			$info = $up->getFileInfo();
-			$upFile = new NFile();
+			$upFile = new NFiles();
 
 			if ($filedName)
 				$uploadedFileName = $filedName;
 			else
 				$uploadedFileName = $up->getFileName(null, false);
 
-			$upFile->original_name = $up->getFileName(null, false);
-			$upFile->filed_name = $uploadedFileName;
-			$upFile->size = $up->getFileSize();
-			$upFile->mime = $up->getMimeType();
-			$upFile->file_path = $up->getFileName();
-			$upFile->category = $area;
-			$upFile->save();
-			
+			$upFile->addNewFile('', $origFileName, $uploadedFileName, $up->getFileSize(), CFileHelper::getMimeTypeByExtension($origFileName), $category);
 			$this->lastFile = $upFile;
 			
-			return $upFile->id;
+			return $upFile->id;	
 		}
+	}
+	
+	/**
+	 * Get the system path where the file should be stored.
+	 * This function determines the path from the category variable
+	 * 
+	 * @param string $category
+	 * @return string file system path 
+	 */
+	public function getPath($category='default'){
+		$category = ($category=='default'?$this->defaultCategory:$category);
+		
+		// if the default category does not exist assume it is a folder with the default category name
+		$categoryLoc = array_key_exists($category, $this->categories) ? $this->categories[$category] : $category;
+		
+		if($this->locationIsAbsolute)
+			$targetPath = $this->location.DS.$categoryLoc.DS;
+		else
+			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc.DS;
+		
+		return $targetPath;
+	}
+	
+	/**
+	 * Makes and returns the url accessible path to the file.
+	 * 
+	 * @param mixed $id can be the integer filemanager id or a NFile object
+	 */
+	public function getUrl($id, $name='', $downloadable=false){
+		if($id instanceof NFile)
+			$id = $id->id;
+		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
+	}
+	
+	/**
+	 * Gets the system path to the file.
+	 * Note: this is not usually a web accessible path
+	 * Note: this uses the NFile's category and filed_name attribute to determin the path. 
+	 *
+	 * @param NFile $file
+	 * @return string system path to the file
+	 */
+	public function getFilePath($file){
+		return $this->getPath($file->category) . DIRECTORY_SEPARATOR . $file->filed_name;
 	}
 
 	/**
 	 * Checks to see if the upload location is accessible.
 	 * @param string $targetPath The path to check
 	 */
-	private function locationCheck($targetPath) {
+	private function _locationCheck($targetPath) {
 		//If base folder cannot be found then throws an error
-		if ($this->folderFileCheck($this->location) == false) {
-			echo "Sorry but the file could not be uploaded.\nThis is probably due to the upload directory being unavailable.\nCheck the network, and the location supplied in the configuration file is reachable.";
-		} else {
-			//checks to see if the area folder is present and readable. If it is not present, then the folder is created.
-			if ($this->folderFileCheck($targetPath) === false) {
-				@mkdir($targetPath);
-			}
+		if (!is_writable($targetPath)) {
+			if (!mkdir($targetPath))
+				throw new CException("Sorry the file could not be uploaded.\nThis may be due to the upload directory being unavailable.\nCheck the upload directory exists and has the right permissions.");
 		}
 	}
 
@@ -144,6 +205,18 @@ class NFileManager extends CApplicationComponent
 	 */
 	public function getFile($id) {
 		return NFile::model()->findByPk($id);
+	}
+	
+	/**
+	 * Returns an array of NFile objects for the supplied file ids.
+	 *
+	 * @param array $ids array of NFile ids.
+	 * @return array of NFile active records, if no records found an empty array is returned
+	 * @see NFile
+	 */
+	public function getFiles($ids) {
+		// Searches the database for the file ids.
+		return NFile::model()->findAllByPk($ids);;
 	}
 
 	/**
@@ -166,12 +239,12 @@ class NFileManager extends CApplicationComponent
 		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
 		$targetPath = $filePath . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR;
 
-		$this->locationCheck($targetPath);
+		$this->_locationCheck($targetPath);
 
 		$status = file_put_contents($targetPath . $fileNewName, $fileContents);
 
 		$newFile = new NFile();
-		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $category);
+		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $category);
 
 		$this->lastFile = $newFile;
 		return $newFile->id;
@@ -199,30 +272,6 @@ class NFileManager extends CApplicationComponent
 	}
 
 
-	/**
-	 * Returns an array of NFile objects for the supplied file ids.
-	 *
-	 * @param array $ids array of NFile ids.
-	 * @return array of NFile active records, if no records found an empty array is returned
-	 * @see NFile
-	 */
-	public function getFiles($ids) {
-		// Searches the database for the file ids.
-		return NFile::model()->findAllByPk($ids);;
-	}
-
-	/**
-	 * Checks to make sure the area folder is present. If it is not, then it creates it.
-	 * 
-	 * @param $area
-	 */
-	private function folderFileCheck($area) {
-		if (!is_writable($area)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 
 	/**
 	 * Loads a file from where it is stored on the system and outputs the information to screen.
@@ -289,34 +338,9 @@ class NFileManager extends CApplicationComponent
 		}
 	}
 	
-	/**
-	 * Makes and returns the url accessible path to the file.
-	 * 
-	 * @param mixed $id can be the integer filemanager id or a NFile object
-	 */
-	public function getUrl($id, $name='', $downloadable=false){
-		if($id instanceof NFile)
-			$id = $id->id;
-		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
-	}
+	
 	
 	/**
-	 * Gets the system path to the file.
-	 * Note, this is not usually web accessible
-	 *
-	 * @param NFile $file
-	 * @return string system path to the file
-	 */
-	public function getFilePath($file){
-		return $this->getPath() . DIRECTORY_SEPARATOR . $file->filed_name;
-	}
-	
-	public function getPath(){
-		return $this->location . DIRECTORY_SEPARATOR . $file->category;
-	}
-	
-	/**
-	 *
 	 * @return NFileManager 
 	 */
 	public static function get(){
