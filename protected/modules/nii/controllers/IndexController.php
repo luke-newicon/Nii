@@ -23,7 +23,7 @@ class IndexController extends NController
 	 * 
 	 * @see NFileManager::displayFile
 	 */
-	public function actionFile($id,$name='myfile',$downloadable=false){
+	public function actionFile($id,$name='',$downloadable=false){
 		NFileManager::get()->displayFile($id, $name, $makeDownload);
 	}
 	

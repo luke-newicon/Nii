@@ -33,9 +33,9 @@ class DetailsController extends AController
 		header("Cache-Control: no-store, no-cache, must-revalidate");
 		header("Cache-Control: post-check=0, pre-check=0", false);
 		header("Pragma: no-cache");
-
+		
 		// Settings
-		$targetDir = Yii::getPathOfAlias('project.uploads'); //dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
+		$targetDir = Yii::getPathOfAlias('runtime'); //dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
 		$cleanupTargetDir = false; // Remove old files
 		$maxFileAge = 60 * 60; // Temp file age in seconds
 

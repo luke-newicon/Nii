@@ -37,12 +37,12 @@
 	#groupList li{border-bottom:1px solid #ccc;border-left:none;padding:5px 10px;}
 	.inputBox{position:relative;}
 	.userList{margin-right:-15px;}
-	
+	#groups{margin-right:-15px;}
 	/**
 	 * css drag styles
 	 */
 	 .dragging .selected {opacity:0.5;}
-	 a.group-delete{display:none;float:right;color:#ffcccc;}
+	 a.group-delete{display:none;float:right;color:#ffcccc;margin-right:7px;}
 	 .group:hover a.group-delete{display:block;}
 	 .group:hover a.group-delete:hover{color:#990000;text-decoration:none;}
 	 .main-toolbar{position:absolute;top:3px;left:600px;}
@@ -52,6 +52,8 @@
 	  */
 	 .dragHelper{position:relative;}
 	 .bigNumber{position:absolute;top:15px;left:40px;background-color:#aa0000;color:#fff;text-shadow:1px 1px 0px #000;border-radius:10px;padding:2px 5px;}
+	 
+	 .inputBox input {width:100%;padding:0px;border:none;}
 </style>
 <div class="main-toolbar">
 	<div class="delete">
@@ -75,16 +77,18 @@
 				<a id="addGroup" href="" class="btn btnN btnToolbar addGroup btnFlat" data-tip="{gravity:'s'}" title="Add Group"><span class="icon ni-add mrn"></span></a>
 			</div>
 		</div>
-		<ul id="groups" class="man">
-			<li data-id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All</a></li>
-			<li data-id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
-			<li data-id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
-			<li data-id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
-			<li style="display:none;" id="newGroup" class="groupEdit line" ><div class="icon fam-vcard unit"></div><div class="inputBox lastUnit" style="padding:2px;"><input type="text" id="newGroupInput" name="newGroup" value="<?php echo CrmModule::get()->defaultNewGroupName; ?>" /></div></li>
-			<?php foreach($groups as $g): ?>
-				<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span> <a href="#" class="group-name"><?php echo $g->name; ?></a><a class="group-delete" href="#">x</a></li>
-			<?php endforeach; ?>
-		</ul>
+		<div id="groupListScroll" style="overflow:auto;">
+			<ul id="groups" class="man">
+				<li data-id="all" class="group selected"><span class="icon fam-vcard"></span> <a href="#">All</a></li>
+				<li data-id="people" class="group"><span class="icon fam-user"></span> <a href="#">people</a></li>
+				<li data-id="companies" class="group"><span class="icon fam-building"></span> <a href="#">companies</a></li>
+				<li data-id="users" class="group"><span class="icon fam-user-gray"></span> <a href="#">Users</a></li>
+				<li style="display:none;" id="newGroup" class="groupEdit line" ><div class="icon fam-vcard unit"></div><div class="inputBox lastUnit" style="padding:2px;"><input type="text" class="input" id="newGroupInput" name="newGroup" value="<?php echo CrmModule::get()->defaultNewGroupName; ?>" /></div></li>
+				<?php foreach($groups as $g): ?>
+					<li data-id="<?php echo $g->id; ?>" class="group"><span class="icon fam-vcard"></span>&nbsp;<a href="#" class="group-name"><?php echo $g->name; ?></a><a class="group-delete" href="#">x</a></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
 	</div>
 	<div class="unit size3of10 userListScreen ">
 		<div class="topperGreyBar pls line prs" style="height:24px;padding:3px 3px 0px 2px;">
@@ -101,7 +105,6 @@
 			</div>
 			<div class="lastUnit txtR">
 				<a href="" class="btn btnN btnToolbar addContact btnFlat" data-tip="{gravity:'s'}" title="Add Contact">&nbsp;<span class="icon ni-add mrn">&nbsp;</span></a>
-				<a href="" class="btn btnN btnToolbar addCompany btnFlat" data-tip="{gravity:'s'}" title="Add Company">&nbsp;<span class="icon ni-add mrn">&nbsp;</span></a>
 			</div>
 		</div>
 <!--		<ul id="alphaSearch" class="man" style="float:left;width:20px" >
@@ -130,26 +133,59 @@
 
 var cBook = {
 	userScroll:{},
+	groupScroll:{},
 	init:function(){
 		cBook.initUserScroll();
+		cBook.initGroupScroll();
 		cBook.initUserDrag();
 	},
 	reinit:function(){
 		cBook.userScroll.reinitialise();
+		cBook.groupScroll.reinitialise();
 		cBook.initUserDrag();
 	},
 	//initialises the scroll bar for the user list
-	initUserScroll:function	(){
+	initUserScroll:function(){
 		var timer;
 		cBook.userScroll = $('#userListScroll')
 			.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
-				$('.jspDrag').stop(1,0).css('opacity','0.7').show();
+				$('#userListScroll .jspDrag').stop(1,0).css('opacity','0.7').show();
 				if (timer) {
 					clearTimeout(timer);
 				}
 				timer = setTimeout( function(){
 					timer = null;
-					$('.jspDrag').stop(1,0).delay(400).fadeOut(500);
+					$('#userListScroll .jspDrag').stop(1,0).delay(400).fadeOut(500);
+					//scrollStop(scrollPositionY);
+				}, 300);
+			})
+			.jScrollPane({
+				verticalDragMinHeight: 20,
+				verticalGutter:0,
+				hideFocus:1,
+				autoReinitialise:true
+			})
+			.data('jsp');
+		$('#userListScroll .jspDrag').hide();
+		$('#userListScroll').delegate('.jspContainer','mouseenter',function(){
+			$('#userListScroll .jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
+		});
+		$('#userListScroll').delegate('.jspContainer','mouseleave',function(){
+			$('#userListScroll .jspDrag').stop(1,0).delay(300).fadeOut();
+		});
+	},
+	//initialises the scroll bar for the user list
+	initGroupScroll:function(){
+		var timer;
+		cBook.groupScroll = $('#groupListScroll')
+			.bind('jsp-scroll-y',function(event, scrollPositionY, isAtTop, isAtBottom){
+				$('#groupListScroll .jspDrag').stop(1,0).css('opacity','0.7').show();
+				if (timer) {
+					clearTimeout(timer);
+				}
+				timer = setTimeout( function(){
+					timer = null;
+					$('#groupListScroll .jspDrag').stop(1,0).delay(400).fadeOut(500);
 					//scrollStop(scrollPositionY);
 				}, 300);
 			})
@@ -159,7 +195,13 @@ var cBook = {
 				hideFocus:1
 			})
 			.data('jsp');
-		$('.jspDrag').hide();
+		$('#groupListScroll .jspDrag').hide();
+		$('#groupListScroll').delegate('.jspContainer','mouseenter',function(){
+			$('#groupListScroll .jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
+		});
+		$('#groupListScroll').delegate('.jspContainer','mouseleave',function(){
+			$('#groupListScroll .jspDrag').stop(1,0).delay(300).fadeOut();
+		});
 	},
 	// initialises the abaility to drag contacts from the contact list
 	// into groups
@@ -233,12 +275,12 @@ var cBook = {
 				// unbind
 				$('#groups').append('<li data-id="'+r.id+'" class="group"><span class="icon fam-vcard"></span> <a href="#">'+r.name+'</a><a class="group-delete" href="#">x</a></li>');
 				$('#newGroup').hide();
-				cBook.initUserDrag();
+				cBook.reinit();
 			},'json');
 		});
 		return false;
 	},
-	loadContactList:function(){
+	loadContactList:function(selectContactId){
 		var grpId = $('#groups .selected').data('id');
 		$.ajax({
 			url:'<?php echo NHtml::url('/crm/index/findContact'); ?>?term='+$('#contactSearch').val()+'&group='+grpId,
@@ -246,11 +288,16 @@ var cBook = {
 			success:function(r){
 				$('#userListScroll .userList').replaceWith(r);
 				cBook.reinit();
-				$firstContact = $('#userListScroll .userList .contact:first');
-				$firstContact.trigger('click');
+				if(selectContactId == undefined){
+					$firstContact = $('#userListScroll .userList .contact:first');
+					$firstContact.trigger('click');
+				}else{
+					$('#cid_'+selectContactId).trigger('click');
+					cBook.userScroll.scrollToElement($('#cid_'+selectContactId));
+				}
 			}
 		});
-	},
+	}
 }
 
 $(function(){
@@ -306,12 +353,7 @@ $(function(){
 	});
 		
 	//$('.jspDrag').hide();
-	$('#userListScroll').delegate('.jspContainer','mouseenter',function(){
-		$('.jspDrag').stop(1,0).fadeTo(100,0.7).delay(400).fadeOut();
-	});
-	$('#userListScroll').delegate('.jspContainer','mouseleave',function(){
-		$('.jspDrag').stop(1,0).delay(300).fadeOut();
-	});
+	
 
 
 	var lastContactClicked = {};
@@ -360,8 +402,7 @@ $(function(){
 			.prependTo($ul).addClass('selected');
 		cBook.userScroll.scrollTo(0,0);
 		$('#detailsScreen').load("<?php echo NHtml::url('/crm/index/getContactForm'); ?>");
-		//cBook.reinit();
-		
+		cBook.reinit();
 		return false;
 	});
 	// save
@@ -369,7 +410,6 @@ $(function(){
 		$f = $('#contactForm');
 		var data = $f.serialize();
 		var $li = $('.userList li.selected');
-		var adding = (!$li.attr('id'));
 		$.ajax({
 			url:$f.attr('action'),
 			type:'post',
@@ -377,17 +417,9 @@ $(function(){
 			data:data,
 			success:function(r) {
 				if (r.id == false) return;
-				//$li.data('id');
-				$li.html(r.card).trigger('click');
-				$.ajax({
-					url:'<?php echo NHtml::url('/crm/index/findContact/'); ?>',
-					type:'post',
-					success:function(html){
-						$('#userListScroll').html(html);
-						cBook.reinit();
-						//cBook.userScroll.scrollToElement($('#cid_'+r.id).addClass('selected'));
-					}
-				});
+				// refresh user list
+				cBook.loadContactList(r.id);
+				cBook.reinit();
 				if(r.createdCompany){
 					// a new company was also created!
 					// lets add it to the list
@@ -549,6 +581,8 @@ $(function(){
 		iframeFix:true,
 		stop: function(event, ui) {
 			//resizer();
+			resizer();
+			//$('#groupList').css('height','');
 		}
 	});
 	
@@ -575,11 +609,13 @@ $(function(){
 				$('#userListScroll').css('height',(winHeight - $('#userListScroll').offset().top - paddingBottom) + 'px');
 				//$('#userListScroll').css('height',$('#contactBook').height()-30 + 'px');
 				$('#detailsScreen').css('height',$('#contactBook').height()-40 + 'px');
+				$('#groupList').css('height',(winHeight - $('#groupList').offset().top - paddingBottom) + 'px');
+				$('#groupListScroll').css('height',(winHeight - $('#groupListScroll').offset().top - paddingBottom) + 'px');
 				//$('#messageScroll').css('height',(winHeight-$('#messageScroll').position().top-paddingBottom)+'px');
 				//$('#email').css('height',(winHeight-$('#email').position().top-paddingBottom)+'px');
 				//$('#messageFolders').css('height',(winHeight-$('#messageFolders').position().top-paddingBottom)+'px');
 			}
-			cBook.userScroll.reinitialise();
+			cBook.reinit();
 		}, 150);
 	}
 	

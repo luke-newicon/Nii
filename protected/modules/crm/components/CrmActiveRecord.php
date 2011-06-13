@@ -13,7 +13,7 @@
  *
  * @author steve
  */
-class CrmActiveRecord extends NActiveRecord
+class CrmActiveRecord extends NAppRecord
 {
 
 	

@@ -127,7 +127,7 @@ class IndexController extends AController
 		}
 
 		echo CJSON::encode(array(
-			'valid' => $valid, 'form' => $html, 'id' => $c->id(), 'card' => $card, 'createdCompany' => $compData
+			'valid' => $valid, 'id' => $c->id(), 'card' => $card, 'createdCompany' => $compData
 		));
 	}
 	

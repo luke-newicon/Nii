@@ -78,7 +78,7 @@ class NFileManager extends CApplicationComponent
 
 		if (!empty($_FILES)) {
 
-			$targetPath = $this->location . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
+			$targetPath = $this->getPath();
 
 			$this->locationCheck($targetPath);
 
@@ -308,7 +308,11 @@ class NFileManager extends CApplicationComponent
 	 * @return string system path to the file
 	 */
 	public function getFilePath($file){
-		return $this->location . DIRECTORY_SEPARATOR . $file->category . DIRECTORY_SEPARATOR . $file->filed_name;
+		return $this->getPath() . DIRECTORY_SEPARATOR . $file->filed_name;
+	}
+	
+	public function getPath(){
+		return $this->location . DIRECTORY_SEPARATOR . $file->category;
 	}
 	
 	/**
