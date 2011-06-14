@@ -20,6 +20,7 @@ class Image {
 	const AUTO = 2;
 	const HEIGHT = 3;
 	const WIDTH = 4;
+	const MIN = 7; // Added by Luke to add proper resizing for thumbnails
 	// Flip Directions
 	const HORIZONTAL = 5;
 	const VERTICAL = 6;
@@ -438,7 +439,8 @@ class Image {
 				if ($value !== Image::NONE AND
 				    $value !== Image::AUTO AND
 				    $value !== Image::WIDTH AND
-				    $value !== Image::HEIGHT)
+				    $value !== Image::HEIGHT AND
+					$value !== Image::MIN) // Added by Luke to add proper resizing for thumbnails
 					return FALSE;
 			break;
 		}

@@ -223,6 +223,14 @@ class Image_GD_Driver extends Image_Driver {
 			// Change an automatic master dim to the correct type
 			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::WIDTH : Image::HEIGHT;
 		}
+		
+		/** Added by Luke to add proper resizing for thumbnails **/
+		if ($properties['master'] === Image::MIN)
+		{
+			// Change an automatic master dim to the correct type
+			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::HEIGHT : Image::WIDTH;
+		}
+		/**********************************************************/
 
 		if (empty($properties['height']) OR $properties['master'] === Image::WIDTH)
 		{
