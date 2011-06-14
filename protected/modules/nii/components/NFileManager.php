@@ -56,6 +56,7 @@ class NFileManager extends CApplicationComponent
 	 * @var string
 	 */
 	public $location;
+	
 	/**
 	 * the last NFile object added and uploaded
 	 * @var NFile 
@@ -66,14 +67,14 @@ class NFileManager extends CApplicationComponent
 	public $defaultCategory='nii';
 	
 	/**
-	 * a list of categories mapping to a storage location
+	 * A list of categories mapping to a storage location
 	 * categoryName=>'location'
 	 * @var array 
 	 */
 	public $categories;
 	
 	/**
-	 * determins if the location attribute is a path relative to the basePath (Yii::app()->basePath) or an absolute path
+	 * Determins if the location attribute is a path relative to the basePath (Yii::app()->basePath) or an absolute path
 	 * by default it assumes a relative path. However it is acceptable to specify the location as an absolute path 
 	 * using Yii::getPathOfAlias()
 	 * @var boolean 

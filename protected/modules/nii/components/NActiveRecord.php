@@ -113,7 +113,7 @@ class NActiveRecord extends CActiveRecord
 	 */
 	public static function install($className){
 		$t = new $className(null);
-		$db = Yii::app()->getMyDb();
+		$db = $this->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
 		$realTable = $t->getRealTableName();
 		$s = $t->schema();

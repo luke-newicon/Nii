@@ -141,6 +141,7 @@ class DetailsController extends AController
 			}
 		}
 		$fileContents = file_get_contents($targetDir . DIRECTORY_SEPARATOR . $fileName);
+		unlink($targetDir . DIRECTORY_SEPARATOR . $fileName);
 		$id = NFileManager::get()->addFile($fileName, $fileContents);
 		$p = new ProjectScreen;
 		$p->file_id = $id;

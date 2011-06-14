@@ -62,12 +62,15 @@ class NImage extends CImageComponent
 	 */
 	public function showThumb($id, $thumbType) {
 
+		if(Yii::app()->getCache() === null)
+			throw new CException('you must enable CCache component in your main config file');
+		
 		$imageCacheId = $this->getThumbCacheId($id, $thumbType);
 
+		
 		if (!yii::app()->getCache()->get($imageCacheId)) {
-
+			
 			$file = Yii::app()->fileManager->getFile($id);
-
 			// If the file cant be found then loads the default image
 			if ($file === null ) {
 				yii::app()->getCache()->delete($imageCacheId);
@@ -80,8 +83,7 @@ class NImage extends CImageComponent
 
 			// TODO: Check to make sure the user has permission to download the selected file.
 			// The location the tempoary image should be stored in.
-			
-			$tempImageLocation = Yii::app()->getRuntimePath();
+			$tempImageLocation = Yii::app()->getRuntimePath() . DIRECTORY_SEPARATOR;
 			$fileLocation = yii::app()->fileManager->getFilePath($file);
 			// get thumb size info
 			$info = $this->getThumbSize($thumbType);
@@ -94,16 +96,16 @@ class NImage extends CImageComponent
 			
 			// add to cache
 			$imageToCache = file_get_contents($tempImageLocation . $fileName, 'r');
-			yii::app()->getCache()->set($imageCacheId, $imageToCache, '6500');
-
+			yii::app()->getCache()->set($imageCacheId, $imageToCache, 6500);
+			yii::app()->getCache()->set('NFile-'.$id, $file, 6500);
 			// Removes the thumb image file
 			unlink($tempImageLocation . $fileName);
 		}
 
 		$data = yii::app()->getCache()->get($imageCacheId);
-
+		$file = yii::app()->getCache()->get('NFile-'.$id);
 		$upload = Yii::app()->fileManager;
-		$upload->displayFileData($data, '.png', 'image.png', false);
+		$upload->displayFileData($data, $file->mime, $file->original_name, false);
 	}
 
 	/**

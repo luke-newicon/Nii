@@ -374,7 +374,7 @@ class Image {
 		return $status; 
 	}
 
-		public function getData()
+	public function getData()
 	{
 		// Process the image with the driver
 		$status = $this->driver->getData($this->image, $this->actions);
