@@ -91,7 +91,7 @@ class NImage extends CImageComponent
 			
 			// make the thumb image and save
 			$image = Yii::app()->image->load($fileLocation);
-			$image->resize($info['x'], $info['y'])->quality($q);
+			$image->resize($info['x'], $info['y'], constant('Image::'.$info['master']))->crop($info['x'], $info['y'], 'top')->quality($q);
 			$image->save($tempImageLocation . $fileName);
 			
 			// add to cache

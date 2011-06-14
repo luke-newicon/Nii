@@ -123,10 +123,10 @@ return array(
 				'tiny'=>array('x'=>40,'y'=>40),
 				'small'=>array('x'=>200,'y'=>200),
 				'medium'=>array('x'=>900,'y'=>900),
+				'projectThumb'=>array('x'=>198, 'y'=>158, 'master'=>'MIN')
 			),
 			'notFoundImage'=>'NoPhoto.png'
         ),
-
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
