@@ -26,6 +26,7 @@ return array(
 		'application.components.*',
 		'ext.*',
 		'modules.nii.components.*',
+		'modules.nii.widgets.*',
 		'application.validators.*',
 		'application.vendors.*',
 		'application.vendors.FirePHPCore.*',
