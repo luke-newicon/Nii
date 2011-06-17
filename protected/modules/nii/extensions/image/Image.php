@@ -111,6 +111,7 @@ class Image {
             $this->config = array(
                 'driver'=>'GD',
                 'params'=>array(),
+				'actions'=>array(),
             );
         }
         else{
@@ -129,6 +130,8 @@ class Image {
 		// Validate the driver
 		if ( ! ($this->driver instanceof Image_Driver))
 			throw new CException('image driver must be implement Image_Driver class');
+
+		$this->actions = $this->config['actions'];
 	}
 
 	/**
@@ -351,10 +354,11 @@ class Image {
 	/** 
 	 * Output the image to the browser. 
 	 * 
-	 * @param   boolean  keep or discard image process actions
+	 * @param  boolean keep or discard image process actions
+	 * @param  boolean return the image instead of output
 	 * @return	object 
 	 */ 
-	public function render($keep_actions = FALSE) 
+	public function render($keep_actions = FALSE, $return = false) 
 	{ 
 		$new_image = $this->image['file']; 
 	
@@ -366,13 +370,17 @@ class Image {
 		$dir = str_replace('\\', '/', realpath($dir)).'/'; 
 	
 		// Process the image with the driver 
-		$status = $this->driver->process($this->image, $this->actions, $dir, $file, $render = TRUE); 
+		$status = $this->driver->process($this->image, $this->actions, $dir, $file, $render = TRUE, $return); 
 		
 		// Reset actions. Subsequent save() or render() will not apply previous actions.
 		if ($keep_actions === FALSE)
 			$this->actions = array();
 		
 		return $status; 
+	}
+	
+	public function generate($keep_actions = FALSE){
+		return $this->render($keep_actions, TRUE);
 	}
 
 	public function getData()

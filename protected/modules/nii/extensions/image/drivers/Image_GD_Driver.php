@@ -20,7 +20,7 @@ class Image_GD_Driver extends Image_Driver {
 	public function __construct()
 	{
 		// Make sure that GD2 is available
-		if ( ! function_exists('gd_info'))
+		if (!function_exists('gd_info'))
             throw new CException('image gd requires v2');
 
 		// Get the GD information
@@ -32,7 +32,7 @@ class Image_GD_Driver extends Image_Driver {
 	}
 
 
-	public function process($image, $actions, $dir, $file, $render = FALSE)
+	public function process($image, $actions, $dir, $file, $render = FALSE, $return = FALSE)
 	{
 		// Set the "create" function
 		switch ($image['type'])
@@ -123,15 +123,22 @@ class Image_GD_Driver extends Image_Driver {
 						header('Content-Type: image/png');
 					break;
 				}
-
-				//$status = isset($quality) ? $save($this->tmp_image, NULL, $quality) : $save($this->tmp_image);
+				if($return)
+					ob_start();
+				
+				$status = isset($quality) ? $save($this->tmp_image, NULL, $quality) : $save($this->tmp_image);
+				
+				if($return)
+					$contents = ob_get_clean();
 			}
 
 			// Destroy the temporary image
 			imagedestroy($this->tmp_image);
 		}
-
-		//return $status;
+		if($return)
+			return $contents;
+		else
+			return $status;
 	}
 
     public function flip($direction)
@@ -197,7 +204,7 @@ class Image_GD_Driver extends Image_Driver {
 	}
 
 	public function resize($properties)
-	{
+	{	
 		// Get the current width and height
 		$width = imagesx($this->tmp_image);
 		$height = imagesy($this->tmp_image);
@@ -218,77 +225,88 @@ class Image_GD_Driver extends Image_Driver {
 		empty($properties['width'])  and $properties['width']  = round($width * $properties['height'] / $height);
 		empty($properties['height']) and $properties['height'] = round($height * $properties['width'] / $width);
 		
-		if ($properties['master'] === Image::AUTO)
-		{
-			// Change an automatic master dim to the correct type
-			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::WIDTH : Image::HEIGHT;
+		if($properties['scale'] == 'down' && ($properties['width'] > $width || $properties['height'] > $height)){
+			$resize = false;
 		}
-		
-		/** Added by Luke to add proper resizing for thumbnails **/
-		if ($properties['master'] === Image::MIN)
-		{
-			// Change an automatic master dim to the correct type
-			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::HEIGHT : Image::WIDTH;
-		}
-		/**********************************************************/
-
-		if (empty($properties['height']) OR $properties['master'] === Image::WIDTH)
-		{
-			// Recalculate the height based on the width
-			$properties['height'] = round($height * $properties['width'] / $width);
-		}
-
-		if (empty($properties['width']) OR $properties['master'] === Image::HEIGHT)
-		{
-			// Recalculate the width based on the height
-			$properties['width'] = round($width * $properties['height'] / $height);
-		}
-
-		// Test if we can do a resize without resampling to speed up the final resize
-		if ($properties['width'] > $width / 2 AND $properties['height'] > $height / 2)
-		{
-			// Presize width and height
-			$pre_width = $width;
-			$pre_height = $height;
-
-			// The maximum reduction is 10% greater than the final size
-			$max_reduction_width  = round($properties['width']  * 1.1);
-			$max_reduction_height = round($properties['height'] * 1.1);
-
-			// Reduce the size using an O(2n) algorithm, until it reaches the maximum reduction
-			while ($pre_width / 2 > $max_reduction_width AND $pre_height / 2 > $max_reduction_height)
+		elseif($properties['scale'] == 'up' && ($properties['width'] < $width || $properties['height'] < $height))
+			$resize = false;
+		else
+			$resize = true;
+				
+		if($resize){
+			if ($properties['master'] === Image::AUTO)
 			{
-				$pre_width /= 2;
-				$pre_height /= 2;
+				// Change an automatic master dim to the correct type
+				$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::WIDTH : Image::HEIGHT;
 			}
 
-			// Create the temporary image to copy to
-			$img = $this->imagecreatetransparent($pre_width, $pre_height);
+			/** Added by Luke to add proper resizing for thumbnails **/
+			if ($properties['master'] === Image::MIN)
+			{
+				// Change an automatic master dim to the correct type
+				$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::HEIGHT : Image::WIDTH;
+			}
+			/**********************************************************/
 
-			if ($status = imagecopyresized($img, $this->tmp_image, 0, 0, 0, 0, $pre_width, $pre_height, $width, $height))
+			if (empty($properties['height']) OR $properties['master'] === Image::WIDTH)
+			{
+				// Recalculate the height based on the width
+				$properties['height'] = round($height * $properties['width'] / $width);
+			}
+
+			if (empty($properties['width']) OR $properties['master'] === Image::HEIGHT)
+			{
+				// Recalculate the width based on the height
+				$properties['width'] = round($width * $properties['height'] / $height);
+			}
+
+//			// Test if we can do a resize without resampling to speed up the final resize
+//			if ($properties['width'] > $width / 2 AND $properties['height'] > $height / 2)
+//			{
+//				// Presize width and height
+//				$pre_width = $width;
+//				$pre_height = $height;
+//
+//				// The maximum reduction is 10% greater than the final size
+//				$max_reduction_width  = round($properties['width']  * 1.1);
+//				$max_reduction_height = round($properties['height'] * 1.1);
+//
+//				// Reduce the size using an O(2n) algorithm, until it reaches the maximum reduction
+//				while ($pre_width / 2 > $max_reduction_width AND $pre_height / 2 > $max_reduction_height)
+//				{
+//					$pre_width /= 2;
+//					$pre_height /= 2;
+//				}
+//
+//				// Create the temporary image to copy to
+//				$img = $this->imagecreatetransparent($pre_width, $pre_height);
+//
+//				if ($status = imagecopyresized($img, $this->tmp_image, 0, 0, 0, 0, $pre_width, $pre_height, $width, $height))
+//				{
+//					// Swap the new image for the old one
+//					imagedestroy($this->tmp_image);
+//					$this->tmp_image = $img;
+//				}
+//
+//				// Set the width and height to the presize
+//				$width  = $pre_width;
+//				$height = $pre_height;
+//			}
+			
+			// Create the temporary image to copy to
+			$img = $this->imagecreatetransparent($properties['width'], $properties['height']);
+
+			// Execute the resize
+			if ($status = imagecopyresampled($img, $this->tmp_image, 0, 0, 0, 0, $properties['width'], $properties['height'], $width, $height))
 			{
 				// Swap the new image for the old one
 				imagedestroy($this->tmp_image);
 				$this->tmp_image = $img;
 			}
 
-			// Set the width and height to the presize
-			$width  = $pre_width;
-			$height = $pre_height;
+			return $status;
 		}
-
-		// Create the temporary image to copy to
-		$img = $this->imagecreatetransparent($properties['width'], $properties['height']);
-
-		// Execute the resize
-		if ($status = imagecopyresampled($img, $this->tmp_image, 0, 0, 0, 0, $properties['width'], $properties['height'], $width, $height))
-		{
-			// Swap the new image for the old one
-			imagedestroy($this->tmp_image);
-			$this->tmp_image = $img;
-		}
-
-		return $status;
+		return true;
 	}
 
     public function rotate($amount)
@@ -356,33 +374,73 @@ class Image_GD_Driver extends Image_Driver {
 	 */
 	protected function imagecreatetransparent($width, $height)
 	{
-		if (self::$blank_png === NULL)
-		{
-			// Decode the blank PNG if it has not been done already
-			self::$blank_png = imagecreatefromstring(base64_decode
-			(
-				'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29'.
-				'mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBN'.
-				'CgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQ'.
-				'AANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoH'.
-				'AgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB'.
-				'3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII='
-			));
-
-			// Set the blank PNG width and height
-			self::$blank_png_width = imagesx(self::$blank_png);
-			self::$blank_png_height = imagesy(self::$blank_png);
-		}
-
+//		if (self::$blank_png === NULL)
+//		{
+//			// Decode the blank PNG if it has not been done already
+//			self::$blank_png = imagecreatefromstring(base64_decode
+//			(
+//				'iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29'.
+//				'mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBN'.
+//				'CgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQ'.
+//				'AANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoH'.
+//				'AgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB'.
+//				'3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII='
+//			));
+//
+//			// Set the blank PNG width and height
+//			self::$blank_png_width = imagesx(self::$blank_png);
+//			self::$blank_png_height = imagesy(self::$blank_png);
+//		}
+//
+//		$img = imagecreatetruecolor($width, $height);
+//
+//		// Resize the blank image
+//		imagecopyresized($img, self::$blank_png, 0, 0, 0, 0, $width, $height, self::$blank_png_width, self::$blank_png_height);
+//
+//		// Prevent the alpha from being lost
+//		imagealphablending($img, FALSE);
+//		imagesavealpha($img, TRUE);
+//
+//		return $img;
+		
 		$img = imagecreatetruecolor($width, $height);
+		
+		$trnprt_indx = imagecolortransparent($this->tmp_image);
+   
+		// If we have a specific transparent color
+		if ($trnprt_indx >= 0) {
 
-		// Resize the blank image
-		imagecopyresized($img, self::$blank_png, 0, 0, 0, 0, $width, $height, self::$blank_png_width, self::$blank_png_height);
+			// Get the original image's transparent color's RGB values
+			$trnprt_color    = imagecolorsforindex($this->tmp_image, $trnprt_indx);
 
-		// Prevent the alpha from being lost
-		imagealphablending($img, FALSE);
-		imagesavealpha($img, TRUE);
+			// Allocate the same color in the new image resource
+			$trnprt_indx    = imagecolorallocate($img, $trnprt_color['red'], $trnprt_color['green'], $trnprt_color['blue']);
 
+			// Completely fill the background of the new image with allocated color.
+			imagefill($img, 0, 0, $trnprt_indx);
+
+			// Set the background color for new image to transparent
+			imagecolortransparent($img, $trnprt_indx);
+
+
+		} 
+		// Always make a transparent background color for PNGs that don't have one allocated already
+		//elseif ($info[2] == IMAGETYPE_PNG) {
+		else {
+
+			// Turn off transparency blending (temporarily)
+			imagealphablending($img, false);
+
+			// Create a new transparent color for image
+			$color = imagecolorallocatealpha($img, 0, 0, 0, 127);
+
+			// Completely fill the background of the new image with allocated color.
+			imagefill($img, 0, 0, $color);
+
+			// Restore transparency blending
+			imagesavealpha($img, true);
+		}
+		
 		return $img;
 	}
 
