@@ -1,5 +1,5 @@
 <?php
-Yii::import('nii.extensions.image.CImageComponent');
+Yii::import('ext.image.CImageComponent');
 
 /**
  * Nii Image related goodness such as resizing.
@@ -13,46 +13,63 @@ class NImage extends CImageComponent
 	public $notFoundImage;
 
 	/**
-	 * Default image sizes
+	 * Default image types
 	 * array(
-	 *     'small'=>array('x'=>100,'y'=>100),
-	 *     'medium'=>array('x'=>100,'y'=>100, q=>75)
+	 *     'thumb' => array(
+	 * 			'resize' => array('width'=>100, 'height'=>100, 'master'=>Image::MIN, 'scale'=>'down'),
+	 *		),
+	 *		'small' => array(
+	 *			'resize' => array('width'=>150, 'height'=>150, 'master'=>Image::MIN, 'scale'=>'down'),
+	 *		),
+	 *		'medium' => array(
+	 *			'resize' => array('width'=>400, 'height'=>400, 'master'=>Image::MIN, 'scale'=>'down'),
+	 *		),
+	 *		'large' => array(
+	 *			'resize' => array('width'=>800, 'height'=>800, 'master'=>Image::MIN, 'scale'=>'up'),
+	 *		),
 	 * )
 	 * @var Array
 	 */
-	public $thumbs = array(
-		'small' => array('x' => 100, 'y' => 100),
-		'medium' => array('x' => 400, 'y' => 400)
-	);
+	public $types;
+
+	public function init()
+    {
+        parent::init();
+		$defaultTypes = array(
+			'thumb' => array(
+				'resize' => array('width'=>100, 'height'=>100, 'master'=>Image::MIN, 'scale'=>'down'),
+			),
+			'small' => array(
+				'resize' => array('width'=>150, 'height'=>150, 'master'=>Image::MIN, 'scale'=>'down'),
+			),
+			'medium' => array(
+				'resize' => array('width'=>400, 'height'=>400, 'master'=>Image::MIN, 'scale'=>'down'),
+			),
+			'large' => array(
+				'resize' => array('width'=>800, 'height'=>800, 'master'=>Image::MIN, 'scale'=>'up'),
+			),
+		);
+        $this->types = CMap::mergeArray($defaultTypes, $this->types);
+    }
 
 	/**
-	 * The default quality of new thumbnails created by the plugin.
-	 * @var int
-	 */
-	public $defaultQuality = 75;
-
-	/**
-	 * Returns the size settings of a thumbnail.
+	 * Returns the image type settings.
 	 * 
-	 * @param int $size
+	 * @param int $type
 	 * @return array
 	 */
-	public function getThumbSize($size) {
+	public function getType($type) {
 		
-		if (is_string($size) && !array_key_exists($size, $this->thumbs))
-			throw new CException('No image thumb key sepcified for ' . $size . ' you must specify thumb keys in the main config. e.g. small=>array("x"=>100,"y"=>100) see NImage::thumbs property');
+		if (is_string($type) && !array_key_exists($type, $this->types))
+			throw new CException('No image type key sepcified for ' . $type . ' you must specify type keys in the main config. e.g. "small"=>array("resize"=>array("width"=>100,"height"=>100,"master"=>"min","scale"=>"down")) see NImage::types property');
 		
-		$ret = is_array($size) ? $size : $this->thumbs[$size];
-
-		//Checks to ensure a x and why property is set.
-		if (!isset($ret['x']) || !isset($ret['y']))
-			throw new CException('no x or y lengths specified for this thumb image type');
+		$ret = is_array($type) ? $type : $this->types[$type];
 		
 		return $ret;
 	}
 
 	/**
-	 * Displays the requested images thumbnail
+	 * Displays the requested images thumbnail from filemanager file
 	 * 
 	 * @param int $id the fileManager id representing the image to generate the thumb from.
 	 * @param mixed $thumbType if a string it is treated as key of the
@@ -60,97 +77,85 @@ class NImage extends CImageComponent
 	 * If specified as an array it assumes it contains a unique thumbs configuration
 	 * see $this->thumbs property for array config. array('x'=>100,'y'=>100, q=>50)
 	 */
-	public function showThumb($id, $thumbType) {
-
-		if(Yii::app()->getCache() === null)
-			throw new CException('you must enable CCache component in your main config file');
+	public function show($id, $type=null, $defaultImage=null) {
 		
-		$imageCacheId = $this->getThumbCacheId($id, $thumbType);
-
+		$imageCacheId = $this->getCacheId($id,$type);
 		
-		if (!yii::app()->getCache()->get($imageCacheId)) {
-			
-			$file = Yii::app()->fileManager->getFile($id);
-			// If the file cant be found then loads the default image
-			if ($file === null ) {
-				yii::app()->getCache()->delete($imageCacheId);
-				$fileLocation = $this->notFoundImage;
-				$fileName = 'noimage' . CFileHelper::getExtension($fileLocation);
+		$file = Yii::app()->fileManager->getFile($id);
+		
+		// If the file cant be found then loads the default image
+		if ($file === null ) {
+			if (Yii::app()->cache !== NULL)
+				Yii::app()->cache->delete($imageCacheId);
+			$fileLocation = $defaultImage ? $defaultImage : $this->notFoundImage;
+		} else {
+			$fileLocation = Yii::app()->fileManager->getFilePath($file);
+		}
+		
+		if ($file === null ) {
+			$actions = $type ? $this->getType($type) : array();
+			$image = $this->load($fileLocation,$actions);
+			$image->render();
+		} else {
+			if (Yii::app()->cache !== NULL){
+				$cachedImage = Yii::app()->cache->get($imageCacheId);
+				if (!$cachedImage) {
+					// TODO: Check to make sure the user has permission to download the selected file.
+					// Make the thumb image and save
+					$actions = $type ? $this->getType($type) : array();
+					$image = $this->load($fileLocation,$actions);
+					$imageContents = $image->generate();
+					// Cache contents
+					Yii::app()->cache->set($imageCacheId, $imageContents, '6500');
+				} else {
+					$imageContents = $cachedImage;
+				}
 			} else {
-				$fileLocation = $file['file_path'];
-				$fileName = $file['filed_name'];
+				$imageContents = file_get_contents($fileLocation);
 			}
 
-			// TODO: Check to make sure the user has permission to download the selected file.
-			// The location the tempoary image should be stored in.
-			$tempImageLocation = Yii::app()->getRuntimePath() . DIRECTORY_SEPARATOR;
-			$fileLocation = yii::app()->fileManager->getFilePath($file);
-			// get thumb size info
-			$info = $this->getThumbSize($thumbType);
-			$q = isset($info['q']) ? $info['q'] : $this->defaultQuality;
-			
-			// make the thumb image and save
-			$image = Yii::app()->image->load($fileLocation);
-			$image->resize($info['x'], $info['y'], constant('Image::'.$info['master']))->crop($info['x'], $info['y'], 'top')->quality($q);
-			$image->save($tempImageLocation . $fileName);
-			
-			// add to cache
-			$imageToCache = file_get_contents($tempImageLocation . $fileName, 'r');
-			yii::app()->getCache()->set($imageCacheId, $imageToCache, 6500);
-			yii::app()->getCache()->set('NFile-'.$id, $file, 6500);
-			// Removes the thumb image file
-			unlink($tempImageLocation . $fileName);
+			Yii::app()->fileManager->displayFileData($imageContents, $file->mime, $file->original_name);
 		}
-
-		$data = yii::app()->getCache()->get($imageCacheId);
-		$file = yii::app()->getCache()->get('NFile-'.$id);
-		$upload = Yii::app()->fileManager;
-		$upload->displayFileData($data, $file->mime, $file->original_name, false);
 	}
 
 	/**
-	 * Gets the chache id for an image
+	 * Gets the cache id for an image
 	 * 
 	 * @param int $id The id of the image that the id should relate to
-	 * @param string $imageType The size of image to display. These options are
+	 * @param string $type The type of image to display. These options are
 	 * set in the main config file. Examples could be ('product','thumb')
 	 * @return string The cache id of the thumbnail.
 	 */
-	public function getThumbCacheId($id, $thumbType) {
-		$imageSize = $this->getThumbSize($thumbType);
-		return 'thumb' . $id . $imageSize['x'] . $imageSize['y'];
-	}
-	
-	/**
-	 * controller action to show the thumb image
-	 * 
-	 * @param int $id file manager id of file
-	 * @param string $size the image thumb size (defined in NImage thumbs array. e.g. 'small') or
-	 * a custom string of xy-100-122 (walk before you run) 100=x and 122 = y
-	 */
-	public function actionShowThumb($id, $size){
-		if(strpos($size,'xy-')!==false){
-			$s = explode('-',$size);
-			$size = array('x'=>$s[1],'y'=>$s[2]);
-		}
-		$this->showThumb($id, $size);
+	public function getCacheId($id, $type=null) {
+		if($type)
+			return $id.'-'.$type;
+		else
+			return $id;
 	}
 	
 	/**
 	 * Get the url to call to display the image or use as an img tag src attribute
 	 * 
 	 * @param int $id filemanagers NFile id
-	 * @param string $size thumbSize key name or string in the form xy-100-130
+	 * @param string $type type key name
 	 * @return string url 
 	 */
-	public function getUrl($id,$size='small'){
-		return NHtml::url(array('/nii/index/showThumb','id'=>$id, 'size'=>$size));
+	public function url($id,$type=null){
+		if($type)
+			return NHtml::url(array('/image/show','id'=>$id, 'type'=>$type));
+		else
+			return NHtml::url(array('/image/show','id'=>$id));
 	}
 	
 	/**
 	 * @return NImage
 	 */
-	public static function get(){
-		return Yii::app()->image;
+	public static function get($id=null,$actions=array()){
+		$i = Yii::app()->image;
+		if($id!==null){
+			$f = NFileManager::get()->getFile($id);
+			return $i->load(NFileManager::get()->getFilePath($f),$actions);
+		}
+		return $i;
 	}
 }

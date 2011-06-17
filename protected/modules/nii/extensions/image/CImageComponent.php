@@ -1,6 +1,6 @@
 <?php
 
-Yii::import('modules.nii.extensions.image.Image');
+Yii::import('ext.image.Image');
 
 /**
  * Description of CImageComponent
@@ -31,11 +31,12 @@ class CImageComponent extends CApplicationComponent
         }
     }
 
-    public function load($image)
+    public function load($image,$actions=array())
     {
         $config = array(
             'driver'=>$this->driver,
             'params'=>$this->params,
+			'actions'=>$actions,
         );
 
         return new Image($image, $config);
