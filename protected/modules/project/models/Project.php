@@ -54,4 +54,16 @@ class Project extends NActiveRecord
 		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id));
 	}
 	
+	
+	/**
+	 * gets the title image from the screens
+	 * typically selects the home page or the first screen
+	 */
+	public function getImageId(){
+		$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
+		if($screen===null)
+			return -99;
+		return $screen->file_id;
+	}
+	
 }
