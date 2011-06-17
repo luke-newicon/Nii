@@ -1,20 +1,22 @@
 <?php
 /**
- * What is this widget?
  * Enables notes to be recorded against items in the website.
  *
  * Installation:
+ * 
  * 1)Run the sql script called database.sql which can be found within the Notes
  * "data" folder.
  *
  * 2)Copy the following code into the actions array in the controller which the
  * application will use to remotely connect to the application:
  *
+ * <code><?php
  * public function actions(){
  *		return array(
  *			'NNotes'=>'modules.nii.widgets.notes.NNotesAction'
  *		);
  *	}
+ * ?></code>
  *
  * NOTE: Depending on how the controller is coded you may need to give the action
  * permission to run. The widget will not be able to communicate with the server
@@ -27,6 +29,7 @@
  *
  * The code above will display a basic note widget. Below is an example of the
  * code required to display a widget with all the optional attributes specified:
+ * <code>
  * <?php $this->widget('modules.nii.widgets.notes.NNotes',array(
  *	'model'=>MODEL,
  *	'title'=>TITLE,
@@ -36,7 +39,8 @@
  *	'canEdit'=>CANEDIT,
  *	'canDelete'=>CANDELETE,
  *	'canAdd'=>CANADD,
- *	'emptyText'=>EMPTYTEXT) ?>
+ *	'emptyText'=>EMPTYTEXT)
+ * ?></code>
  *
  * Variables:
  * MODEL = a CActiveRecord instance of the model which you would like the data to link to
@@ -65,16 +69,50 @@
  * @todo: permissions need to be checked on the server!
  * @todo: CActiverecords should be used.
  *
- * @author matthewturner
+ * @author Matthew Turner
  * @version 0.1
  */
 class NNotes extends CWidget{
+	/**
+	 * Whether or not to display a user picture
+	 * @var boolean
+	 */
 	public $displayUserPic = true;
+
+	/**
+	 * The CActiveRecord which the note should be linked to
+	 * @var CActiveRecord
+	 */
 	public $model;
+
+	/**
+	 * The empty text which will be displayed when no notes are present
+	 * @var string
+	 */
 	public $emptyText = 'There are no notes attached to this item';
+
+	/**
+	 * Whether the user can add notes to the system
+	 * @var boolean
+	 */
 	public $canAdd = false;
+
+	/**
+	 * The controller to send the AJAX request to.
+	 * @var array
+	 */
 	public $ajaxController = array('nii/index/NNotes');
+
+	/**
+	 * The title of the widget
+	 * @var string
+	 */
 	public $title = 'Notes';
+
+	/**
+	 * The text which should be placed in the new note box
+	 * @var <type>
+	 */
 	public $newNoteText= 'New note...';
 
 	public function run(){
@@ -106,7 +144,6 @@ class NNotes extends CWidget{
 				var $note = $(this).closest(".newNote").find(".note");
 				$note.fadeTo(1,0.5);
 				$note.find("textarea").attr("disabled","disabled");
-
 
 				var $adding = $(this).parent().parent().parent().children(".adding");
 				$adding.show();
@@ -164,7 +201,7 @@ class NNotes extends CWidget{
 				added,
 				note')
 			->from('notes')
-			->join('user_user u', 'u.id=notes.user_id')
+			->leftjoin('user_user u', 'u.id=notes.user_id')
 			->where('item_id=:itemId AND area=:area', array(':itemId'=>$id,':area'=>$area))
 			->order('id DESC')
 			->queryAll();
