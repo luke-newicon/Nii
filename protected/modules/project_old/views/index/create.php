@@ -5,7 +5,5 @@ $this->breadcrumbs=array(
 );
 
 ?>
-
-<h1>Add A New Project</h1>
-
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<h1>Add New Project</h1>
+<?php echo $this->renderPartial('/index/partials/_form', array('model'=>$model)); ?>

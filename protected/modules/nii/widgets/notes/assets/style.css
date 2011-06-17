@@ -1,41 +1,9 @@
 .NNotes .unit {padding: 0 5px;}
-.NNotes .unit.note {
-    width: 730px;
-}
-.NNotes .userInformation p {
-    padding: 0px;
-    margin: 0px;
-	color:#ccc;
-}
-.NNotes .newNote .buttons .add input {
-    height: 228px;
-}
-.NNotes .profilePic {
-    padding-left: 0px;
-}
-.NNotes .userInformation {
-    text-align: center;
-    width: 76px;
-    padding-top: 0px;
-}
-.NNotes hr {
-	border:0px;
-	border-top: 1px dashed #ccc;
-	margin:5px;
-}
-.NNotes .noItems {
-    color: #CCCCCC;
-    padding: 5px;
-    text-align: center;
-}
-
-.NNotes .newNoteBox {
-    border: 1px solid #CCCCCC;
-    color: #CCCCCC;
-    padding: 7px;
-    width: 714px;
-}
-
-.NNotes .line.note{
-    margin: 10px 0;
-}
+.NNotes .userInformation {color:#999999;}
+.NNotes .newNote .buttons .add input {height: 228px;}
+.NNotes .profilePic {padding-left: 0px;}
+.NNotes .userInformation { padding-top: 0px;}
+.NNotes hr {border:0px;border-top: 1px dashed #ccc;margin:5px;}
+.NNotes .noItems {color: #CCCCCC; padding: 5px;}
+.NNotes .newNoteBox .fakebox {border: 1px solid #CCCCCC;color: #CCCCCC;padding: 5px;}
+.NNotes .line.note{margin: 10px 0;}

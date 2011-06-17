@@ -29,6 +29,7 @@ class ProjectProject extends NActiveRecord {
 
 	public $recorded_time;
 	public $type;
+	public $count;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -57,7 +58,7 @@ class ProjectProject extends NActiveRecord {
 			array(array('name', 'description', 'code'), 'required'),
 			array('name', 'length', 'max' => 100),
 			array('code', 'length', 'max' => 50),
-			array('description, completion_date, created', 'safe'),
+			array('description, completion_date, created,date_due', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, code, description, completion_date, estimated_time, created, created_by', 'safe', 'on' => 'search'),
@@ -173,6 +174,33 @@ class ProjectProject extends NActiveRecord {
 			'condition' => 't.id =' . $this->id
 		);
 		return $this->model()->findAll($condition);
+	}
+
+	public function getProjectStats(){
+		$goodDate = date('Y-m-d',mktime(0, 0, 0, date("m")+1, date("d"),   date("Y")));
+		$badDate = date('Y-m-d',mktime(0, 0, 0, date("m"), date("d")+14,   date("Y")));
+
+		// Discovers how many "Good" Projects are in the system
+		$goodProjects = $this->model()->find(array(
+			'select'=>'count(id) as count',
+			'condition'=>'completion_date = "0000-00-00" AND date_due >="'.$goodDate.'"'));
+
+		// Discovers how many "Warning" projects are in the system
+		$warningProjects = $this->model()->find(array(
+			'select'=>'count(id) as count',
+			'condition'=>'completion_date = "0000-00-00" AND date_due <"'.$goodDate.'" AND date_due >="'.$badDate.'"'));
+
+		// Discovers how many "Bad" projects are in the system
+		$badProjects = $this->model()->find(array(
+			'select'=>'count(id) as count',
+			'condition'=>'completion_date = "0000-00-00" AND date_due <="'.$badDate.'"'));
+
+		return array(
+			'good'=>$goodProjects->count,
+			'warnings'=>$warningProjects->count,
+			'bad'=>$badProjects->count,
+			'overHours'=>1
+		);
 	}
 
 	/**

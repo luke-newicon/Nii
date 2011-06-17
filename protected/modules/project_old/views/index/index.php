@@ -9,5 +9,6 @@ $this->menu=array(
 	),
 );
 ?>
-<h1>All Projects</h1>
-<?php $this->renderPartial('_grid',array('project'=>$project)) ?>
+<h1>Active Projects</h1>
+<?php $this->renderPartial('/index/partials/_status',array('overallProjectStats'=>$project->getProjectStats())) ?>
+<?php $this->renderPartial('/index/partials/_grid',array('project'=>$project)) ?>

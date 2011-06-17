@@ -48,8 +48,9 @@ class Profile extends NiiActiveRecord
 	 */
 	public function relations()
 	{
+		$user = UserModule::get()->userClass;
 		return array(
-			'user'=>array(self::HAS_ONE, 'User', 'id'),
+			'user'=>array(self::HAS_ONE, $user, 'id'),
 		);
 	}
 

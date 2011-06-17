@@ -58,8 +58,14 @@ class AppDomain extends NActiveRecord
 
 	public function schema(){
 		return array(
-			'domain'=>'string',
-			0=>'PRIMARY KEY (domain)'
+			'columns'=>array(
+				'domain'=>'string',
+				0=>'PRIMARY KEY (domain)'
+			)
 		);
+	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
 	}
 }

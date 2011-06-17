@@ -9,19 +9,20 @@
 	.popmenu a{display:block;padding:3px 10px 3px 10px;}
 	.popmenu a:hover{background-color:#1686d4;color:#fff;text-decoration:none;}
 	
+	.btn.btnN.btnDropDown{background:none;background-color:#f9f9f9;}
 	.btn.down{background:-moz-linear-gradient(center top ,#d8d8d8, #FFFFFF) repeat scroll 0 0 #ccc;}
-	
+	.btnDropDown .icon.fam-bullet-arrow-down{margin-top:-2px;}
 	.inputBox.multiInput{padding:0px;}
 	
 	.addLabel p{margin:2px;}
 	
-	.formFieldState{padding:2%;}
-	.formFieldState.focus{background-color:#EAF2FA;}
+	.fieldState{padding:2%;}
+	/*.fieldState.focus{background-color:#EAF2FA;}*/
 	
-	.formFieldState .formFieldBlock {padding:0 0 2% 0;}
+	.fieldState .field {padding:0 0 2% 0;}
 	.formGuide{color:#999;font-size:90%;}
 </style> 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php $form=$this->beginWidget('NActiveForm', array(
 	'id'=>'contactForm',
 	'action'=>array('/crm/index/editContact','cid'=>$c->id()),
 	'enableAjaxValidation'=>true,
@@ -30,7 +31,7 @@
 )); ?>
 <?php // echo $form->errorSummary($c); ?>
 <div id="editUserForm" class="flashy">
-	<div class="formFieldBlock">
+	<div class="field">
 		<div class="media man size23of25">
 			<?php if(isset($c) && $c != false): ?>
 				<a href="#" class="img prm">
@@ -43,10 +44,10 @@
 					<div class="noHighlight noBorder">
 						<div class="inputBox">
 							<?php echo $form->textField($c,'company',array('class'=>'input','placeholder'=>'company')); ?>
-							<?php echo $form->error($c,'company'); ?>
 						</div>
 					</div>
 				</div>
+				<?php echo $form->error($c,'company'); ?>
 				<?php else: ?>
 				<div class="inputBox multiInput">
 					<div class="line noHighlight">
@@ -58,7 +59,6 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'first_name',array('class'=>'input','placeholder'=>'first name')); ?>
-									<?php echo $form->error($c,'first_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -66,7 +66,7 @@
 							<div class="inputContainer">
 								<div class="inputBox">
 									<?php echo $form->textField($c,'last_name',array('class'=>'input','placeholder'=>'last name')); ?>
-									<?php echo $form->error($c,'last_name'); ?>
+									<?php //echo $form->error($c,'last_name'); ?>
 								</div>
 							</div>
 						</div>
@@ -82,14 +82,15 @@
 						</div>
 					</div>
 				</div>
+				<?php echo $form->error($c,'first_name'); ?>
 				<?php endif; ?>
 			</div>
 		</div>
 	</div>
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Email</h4></div>
-			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow showTip" tipsy-gravity="sw" title="Add another email address"></a></p></div>
+			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow" data-tip="{gravity:'s'}"  title="Add another email address"></a></p></div>
 		</div>
 		<?php if(count($c->emails)): ?>
 			<?php foreach($c->emails as $i=>$e): ?>
@@ -99,7 +100,7 @@
 			<?php $this->renderPartial('_edit-contact-email',array('e'=>new CrmEmail, 'i'=>0, 'form'=>$form)); ?>
 		<?php endif; ?>
 	</div>
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Phone</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -113,7 +114,7 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Website</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -127,7 +128,7 @@
 		<?php endif; ?>
 	</div>
 	
-	<div class="formFieldState">
+	<div class="fieldState">
 		<div class="line addLabel">
 			<div class="unit"><h4>Address</h4></div>
 			<div class="lastUnit"><p><a href="#" class="icon ni-add addRow"></a></p></div>
@@ -180,7 +181,15 @@
 		<?php endforeach; ?>
 	</ul>
 </div>
+
 <?php $this->endWidget(); ?>
+<h4>Notes</h4>
+<?php $this->widget('modules.nii.widgets.notes.NNotes',array(
+ 	'model'=>$c,
+	'canAdd'=>true,
+	'emptyText'=>''
+)); ?>
+
 <script type="text/javascript">
 $(function(){
 	$('#general_first_name').focus();
@@ -224,14 +233,14 @@ $(function(){
 				//if($menu.width() < $btn.parent().width())
 					//$menu.css('width',$btn.parent().width());
 				// Highlight the parent fieldBlock when button slelected
-				var $blocks = $btn.parents('.formFieldBlock,.formFieldState');
+				var $blocks = $btn.parents('.field,.fieldState');
 				if($blocks.length != 0)
 					$blocks.addClass('focus');
 				$menu.delegate('li a','click.dropButton',function(){
-					$btn.html($(this).html());
+					$btn.find('.data').html($(this).html());
 					methods.closeMenu($btn, $menu);
 					$btn.next('input:hidden').val($(this).html());
-					$b = $btn.closest('.formFieldBlock').find('.formGuide');
+					$b = $btn.closest('.field').find('.formGuide');
 					$g = $b.find('.formGuide');
 					if($g.length==0)
 						$g = $('<span class="formGuide"></span>').appendTo($b);
@@ -246,7 +255,7 @@ $(function(){
 			$(window).unbind('.dropButton');
 			$menu.hide(100);
 			methods.attachOpenMenu($btn.removeClass('down'), $menu);
-			var $block = $btn.parents('.formFieldBlock,.formFieldState');
+			var $block = $btn.parents('.field,.fieldState');
 			if($block.length != 0)
 				$block.removeClass('focus');
 		},
@@ -271,6 +280,15 @@ $(function(){
 			$.error( 'Method ' +  method + ' does not exist on jQuery.dropButton' );
 		}
 	};
+	
+	
+	jQuery(".field :input").live("focus",function(){
+		$(this).addClass("focus");
+		$(this).parents(".fieldState,.field").addClass("focus");
+	}).live("blur", function(){
+		$(this).removeClass("focus");
+		$(this).parents(".fieldState,.field").removeClass("focus");
+	});
 
 })(jQuery);
 

@@ -23,15 +23,6 @@ class NAppRecord extends NActiveRecord
      */
     public static $db;
  
-    private static $_models=array();            // class name => model
- 
-    private $_md;                               // meta data
-    private $_new=false;                        // whether this instance is new or not
-    private $_attributes=array();               // attribute name => attribute value
-    private $_related=array();                  // attribute name => related objects
-    private $_c;                                // query criteria (used by finder only)
-    private $_pk;                               // old primary key value
- 
     /**
      * Returns the database connection used by active record.
      * By default, the "db" application component is used as the database connection.
@@ -50,14 +41,7 @@ class NAppRecord extends NActiveRecord
             foreach(Yii::app()->getMyDb() as $key => $value)
                 self::$db->$key = $value;
  
- 
-        // Uncomment the following lines to prove that you have two database connections
-        /*
-            CVarDumper::dump(Yii::app()->db);
-            echo '<br />';
-            CVarDumper::dump(Yii::app()->db2);
-            die;
-        */
+
             if(self::$db instanceof CDbConnection)
             {
                 self::$db->setActive(true);

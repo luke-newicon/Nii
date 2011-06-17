@@ -1,0 +1,42 @@
+/**
+ * The form css file assumes the following oocss html element object
+ *
+ * wrap all field blocks with the field class
+ * <div class="field ">
+ *     // errors labels or messages relating to the field
+ *     <div class="inputBox">
+ *         // the input or control
+ *     </div>
+ *     // errors labels or messages relating to the field
+ *     <p class="hint">enter this and that</p> 
+ * </div>
+ *
+ * Add custom form styles by adding a new object root level class on the surrounding top level element (like the form)
+ * for example:
+ * .myFunkFormSkin .inputBox{//input styles} // can use inputBox style outside of a field but you will have to manually implement focus, error and success classes
+ * .myFunkFormSkin .field .inputBox{//input styles}
+ * .myFunkFormSkin .field.error .inputBox{//input error style}
+ */
+ 
+ 
+/* Resets the input elements styles, make expand to fit container (.inputBox) */
+.input,.inputBox input,.inputBox select,.inputBox textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
+/* Default padding for field blocks */
+.field{padding:5px;}
+/* padding and margin break widths so remove them, the input elements pading is defined by padding on .inputBox*/
+input.btn{width:auto;}
+/* make required * red have to use span element here becuase that''s what yii creates */
+span.required { color:#CC0000 }
+
+
+/* Default Skin */
+/* make a nice looking input, defines padding and input box style */
+.inputBox {background:#ffffff url('skin/input-bg.png') repeat-x top left;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:0.3em;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;}
+.field.error .inputBox {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
+.field.success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
+.field.focus .inputBox {border-color:#889999 #aaaaaa #aaaaaa;box-shadow: 0 0 5px #387BBE;-moz-box-shadow:0 0 5px #387BBE;-webkit-box-shadow: 0 0 5px #387BBE; background-image:none;}
+.field.focus .noHighlight .inputBox{box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;}
+
+/* formHint style */
+.hint{color:#999999;font-size:80%;}
+

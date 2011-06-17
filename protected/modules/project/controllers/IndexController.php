@@ -1,151 +1,39 @@
 <?php
 
-class IndexController extends AController {
+/**
+ * IndexCrontroller class file.
+ *
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://newicon.net/framework
+ * @copyright Copyright &copy; 2009-2011 Newicon Ltd
+ * @license http://newicon.net/framework/license/
+ */
 
-	public $layout = 'project';
-	/**
-	 * @return array action filters
-	 */
-	public function filters() {
-		return array(
-			'accessControl', // perform access control for CRUD operations
-		);
+/**
+ * Description of IndexCrontroller
+ *
+ * @author steve
+ */
+class IndexController extends AController
+{ 
+	//put your code here
+	public function actionIndex(){
+		$projects = Project::model()->findAll();
+		$this->render('index',array('projects'=>$projects));
 	}
-
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules() {
-		return array(
-			array('allow', // allow all users to perform 'index' and 'view' actions
-				'actions' => array('index', 'view'),
-				'users' => array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions' => array('create', 'update'),
-				'users' => array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions' => array('admin', 'delete'),
-				'users' => array('@'),
-			),
-			array('deny', // deny all users
-				'users' => array('*'),
-			),
-		);
+	
+	public function actionInstall(){
+		ProjectModule::get()->install();
 	}
-
-	/**
-	 * Project view page.
-	 * @param integer $projectId The ID of the project
-	 */
-	public function actionView($projectId) {
-
-		$project = $this->loadModel($projectId);
-
-		$task = new ProjectTask('search');
-		$task->unsetAttributes();  // clear any default values
-		if (isset($_GET['ProjectTask']))
-			$task->attributes = $_GET['ProjectTask'];
-		$task->project_id = $projectId;
-
-		$this->render('view', array(
-			'project' => $project,
-			'task' => $task,
+	
+	public function actionCreate(){
+		$p = new Project;
+		$p->name = $_POST['name'];
+		$p->save();
+		$pStamp = $this->render('_project-stamp',array('project'=>$p), true);
+		echo json_encode(array(
+			'id'=>$p->id,
+			'project'=>$pStamp
 		));
 	}
-
-	/**
-	 * Project create page
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate() {
-		$model = new ProjectProject;
-
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
-
-		if (isset($_POST['ProjectProject'])) {
-			$model->attributes = $_POST['ProjectProject'];
-			$model->created_by = yii::app()->getUser()->getId();
-			if ($model->save())
-				$this->redirect(array('view', 'projectId' => $model->id));
-		}
-		$this->render('create', array('model' => $model));
-	}
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the project to be updated
-	 */
-	public function actionUpdate($id) {
-		$model = $this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
-
-		if (isset($_POST['ProjectProject'])) {
-			$model->attributes = $_POST['ProjectProject'];
-			if ($model->save())
-				$this->redirect(array('view', 'projectId' => $model->id));
-		}
-
-		$this->render('update', array('model' => $model));
-	}
-
-	/**
-	 * Delete a project from the system
-	 * @param integer $id the ID of the project to be deleted
-	 */
-	public function actionDelete($id) {
-		if (Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
-
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if (!isset($_GET['ajax']))
-				$this->redirect(array('index/index'));
-		}
-		else
-			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
-	}
-
-	/**
-	 * Lists all the projects.
-	 */
-	public function actionIndex() {
-		$project = new ProjectProject('search');
-		$project->unsetAttributes();  // clear any default values
-		if (isset($_GET['ProjectProject']))
-			$project->attributes = $_GET['ProjectProject'];
-
-		$this->render('index', array('project' => $project));
-	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the ID of the model to be loaded
-	 */
-	private function loadModel($id) {
-		$model = ProjectProject::model()->findByPk((int) $id);
-		if ($model === null)
-			throw new CHttpException(404, 'The requested page does not exist.');
-		return $model;
-	}
-
-	/**
-	 * Performs the AJAX validation.
-	 * @param CModel the model to be validated
-	 */
-	public function performAjaxValidation($model) {
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'project-project-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
-	}
-
 }

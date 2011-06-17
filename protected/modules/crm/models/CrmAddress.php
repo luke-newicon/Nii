@@ -148,12 +148,14 @@ class CrmAddress extends CrmActiveRecord
 	 * @param <type> $ipAddr
 	 * @return <type>
 	 */
-	public function getCountryCityFromIP($ipAddr){
+	public function getCountryCityFromIP($ipAddr=null){
+		$ipAddr = ($ipAddr === null)?Yii::app()->getRequest()->getUserHostAddress():$ipAddr;
 		//function to find country and city from IP address
 		//Developed by Roshan Bhattarai [url]http://roshanbh.com.np[/url]
-
 		//verify the IP address for the
-		ip2long($ipAddr)== -1 || ip2long($ipAddr) === false ? trigger_error("Invalid IP", E_USER_ERROR) : "";
+		if(ip2long($ipAddr)== -1 || ip2long($ipAddr) === false){
+			// error ip address is not valid
+		}
 		$ipDetail=array(); //initialize a blank array
 
 		//get the XML result from hostip.info
@@ -162,7 +164,7 @@ class CrmAddress extends CrmActiveRecord
 		//get the city name inside the node <gml:name> and </gml:name>
 		preg_match("@<Hostip>(\s)*<gml:name>(.*?)</gml:name>@si",$xml,$match);
 
-		//assing the city name to the array
+		//accessing the city name to the array
 		$ipDetail['city']=$match[2];
 
 		//get the country name inside the node <countryName> and </countryName>

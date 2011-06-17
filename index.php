@@ -2,7 +2,7 @@
 
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/yii/yii.php';
-$nii=dirname(__FILE__).'/protected/app/Nii.php';
+$nii=dirname(__FILE__).'/protected/modules/nii/Nii.php';
 $config=dirname(__FILE__).'/protected/app/config/main.php';
 
 // remove the following lines when in production mode

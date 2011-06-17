@@ -8,4 +8,4 @@ $this->breadcrumbs=array(
 
 <h1>Update ProjectProject <?php echo $model->id; ?></h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('/index/partials/_form', array('model'=>$model)); ?>

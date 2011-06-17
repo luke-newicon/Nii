@@ -32,13 +32,6 @@ class SiteController extends Controller {
 		$this->render('websites');
 	}
 
-	public function actionSystems() {
-		$ProjectTask  = new ProjectTask();
-		$this->render('systems',array(
-			'projectTask'=>$ProjectTask->model()->findByPk(36),
-		));
-	}
-
 	public function actionBlog() {
 		$this->render('blog');
 	}

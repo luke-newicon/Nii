@@ -18,10 +18,10 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'description'); ?>
-		<?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
-		<?php echo $form->error($model,'description'); ?>
+		<?php //echo $form->labelEx($model,'description'); ?>
+		<?php //echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
+		<?php //echo $form->error($model,'description'); ?>
 	</div>
-	<?php echo CHtml::hiddenField('roleScenario', $model->getScenario()); ?>
+	<?php //echo CHtml::hiddenField('roleScenario', $model->getScenario()); ?>
 <?php $this->endWidget(); ?>
 </div>

@@ -1,22 +1,20 @@
 <?php
 /**
+ * What is this widget?
  * Enables notes to be recorded against items in the website.
  *
  * Installation:
- * 
  * 1)Run the sql script called database.sql which can be found within the Notes
  * "data" folder.
  *
  * 2)Copy the following code into the actions array in the controller which the
  * application will use to remotely connect to the application:
  *
- * <code><?php
  * public function actions(){
  *		return array(
  *			'NNotes'=>'modules.nii.widgets.notes.NNotesAction'
  *		);
  *	}
- * ?></code>
  *
  * NOTE: Depending on how the controller is coded you may need to give the action
  * permission to run. The widget will not be able to communicate with the server
@@ -29,18 +27,15 @@
  *
  * The code above will display a basic note widget. Below is an example of the
  * code required to display a widget with all the optional attributes specified:
- * <code>
  * <?php $this->widget('modules.nii.widgets.notes.NNotes',array(
  *	'model'=>MODEL,
- *	'title'=>TITLE,
  *	'newNoteText'=>NEWNOTETEXT,
  *	'AjaxController'=>AJAXCONTROLLER,
  *	'displayUserPic'=>DISPLAYUSERPIC,
  *	'canEdit'=>CANEDIT,
  *	'canDelete'=>CANDELETE,
  *	'canAdd'=>CANADD,
- *	'emptyText'=>EMPTYTEXT)
- * ?></code>
+ *	'emptyText'=>EMPTYTEXT) ?>
  *
  * Variables:
  * MODEL = a CActiveRecord instance of the model which you would like the data to link to
@@ -57,8 +52,6 @@
  *
  * CANADD = Boolean, Whether the user can add notes (default = false).
  *
- * TITLE = Text, the title to be put at the top of the widget (default = 'Notes')
- * 
  * EMPTYTEXT = Text, The text to display if no notes are attached to the specified item
  * at the top or the bottom of the widget (default = 'bottom')
  *
@@ -68,119 +61,84 @@
  * @todo: If you do not want to use the primary key you should be able to override it and set a different one
  * @todo: permissions need to be checked on the server!
  * @todo: CActiverecords should be used.
+ * @todo: namespace the notes table to be nii_notes
  *
- * @author Matthew Turner
+ * @author matthewturner
  * @version 0.1
  */
-class NNotes extends CWidget{
-	/**
-	 * Whether or not to display a user picture
-	 * @var boolean
-	 */
+class NNotes extends NAttributeWidget
+{
 	public $displayUserPic = true;
-
-	/**
-	 * The CActiveRecord which the note should be linked to
-	 * @var CActiveRecord
-	 */
 	public $model;
-
-	/**
-	 * The empty text which will be displayed when no notes are present
-	 * @var string
-	 */
 	public $emptyText = 'There are no notes attached to this item';
-
-	/**
-	 * Whether the user can add notes to the system
-	 * @var boolean
-	 */
 	public $canAdd = false;
-
-	/**
-	 * The controller to send the AJAX request to.
-	 * @var array
-	 */
-	public $ajaxController = array('nii/index/NNotes');
-
-	/**
-	 * The title of the widget
-	 * @var string
-	 */
-	public $title = 'Notes';
-
-	/**
-	 * The text which should be placed in the new note box
-	 * @var <type>
-	 */
+	public $ajaxController = array('/nii/index/NNotes');
 	public $newNoteText= 'New note...';
 
+	
 	public function run(){
 		//The id of the item the notes should relate to
 		$area = $this->model->tableName();
 		$id = $this->model->getPrimaryKey();
 
-		// The location of the markdown widgets asset folder
-		$assetLocation = dirname(__FILE__) . DIRECTORY_SEPARATOR. 'assets';
-
 		// Includes the style sheet
-		$assetManager = yii::app()->getAssetManager();
-		$assetFolder = $assetManager->publish($assetLocation);
+		$assetFolder = $this->getAssetsDir();
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
 
+		// this javascript support multiple note widgets on one page and 
+		// therefore must obtain the specific information from the data attributes 
+		// of the notes wrapper div
 		yii::app()->clientScript->registerScript('NNote','
 		$(document).ready(function(){
 			// Hides all the text areas on page load
-			$(".NNotes .newNote .NTextareaMarkdown").hide();
 
 			// Adds a new note to the system
 			$(".NNotes .newNote .add").click(function(event){
-				var base = $(this).parent().parent().parent().children(".newNote");
-				var ajaxUrl = $(base).data("ajaxLoc");
-				var model = $(base).data("model");
-				var itemId = $(base).data("id");
-				var note = $(this).parent().parent().children(".note").children(".NTextareaMarkdown").children(".input").children("textarea").val();
-				var notesModelLocation = $(base).data("notesmodellocation");
-				var $note = $(this).closest(".newNote").find(".note");
+				var $data = $(this).closest(".NNotes").data();
+				var $base = $(this).closest(".newNote");
+				var note = $base.find(".note .NTextareaMarkdown textarea").val();
+				
+				var $note = $base.find(".note");
 				$note.fadeTo(1,0.5);
 				$note.find("textarea").attr("disabled","disabled");
 
-				var $adding = $(this).parent().parent().parent().children(".adding");
+
+				var $adding = $base.find(".adding");
 				$adding.show();
 				$adding.position({my:"center", at:"center", of:$note});
 
 				$.ajax({
-					url: ajaxUrl,
+					url: $data.ajaxcontroller,
 					type: "POST",
-					data: ({itemId : itemId,model:model,note:note,notesModelLocation:notesModelLocation}),
+					data: ({itemId : $data.id,model:$data.area,note:note,profilePic:"'.$this->getProfilePic().'"}),
 					success: function(){
-					location.reload();
+					
 					}
 				});
 			});
 
 			// Shows the edit box when entered
-			$(".NNotes .newNote .newNoteBox").focus(function() {
+			$(".NNotes .newNote .newNoteBox").click(function() {
 				$(this).hide();
-				$(this).parent().children(".NTextareaMarkdown").fadeIn("medium",function() {
-				$(this).parent().children(".NTextareaMarkdown").children(".input").children(\'textarea\').focus();
-			});
+				$(this).parent().children(".markdownInput").fadeIn("medium",function() {
+					$(this).find(\'textarea\').focus();
+				});
 			});
 
 			// Closes the edit box if no text entered
-			$(".NNotes .newNote .note .input textarea").blur(function() {
+			$(".NNotes .newNote .note .inputBox textarea").blur(function() {
 				if($(this).val()==""){
-					$(this).parent().parent().parent().children(".NTextareaMarkdown").hide();
-					$(this).parent().parent().parent().children(".newNoteBox").fadeIn("medium");
+					$(this).closest(".markdownInput").hide();
+					$(this).closest(".note").find(".newNoteBox").fadeIn("medium");
 				}
 
 			});
 
 		   // If there is not a value in the notes button then
 		   // you should not be able to submit it
-		   $(".NNotes .newNote .note .input").keyup(function() {
+		   $(".NNotes .newNote .note .inputBox").keyup(function() {
 				var notesValue = $(this).children(\'textarea\').val();
-				var addButton = $(this).parent().parent().parent().children(\'.buttons\').children(\'.add\');
+				var addButton = $(this).parent().parent().parent().find(\'.add\');
 
 				if(notesValue==""){
 					$(addButton).attr("disabled", "disabled");
@@ -191,7 +149,6 @@ class NNotes extends CWidget{
 		 });
 		');
 
-		$profilePic = $assetFolder.'/profilePic.png';
 
 		// Gets the data to initially display when the widget loads.
 		$data = Yii::app()->db->createCommand()
@@ -201,22 +158,39 @@ class NNotes extends CWidget{
 				added,
 				note')
 			->from('notes')
-			->leftjoin('user_user u', 'u.id=notes.user_id')
+			->join('user_user u', 'u.id=notes.user_id')
 			->where('item_id=:itemId AND area=:area', array(':itemId'=>$id,':area'=>$area))
 			->order('id DESC')
 			->queryAll();
 
+
 		$this->render('overall',array('data'=>$data,
 			'emptyText'=>$this->emptyText,
 			'displayUserPic'=>$this->displayUserPic,
-			'profilePic'=>$profilePic,
+			'profilePic'=>$this->getProfilePic(),
 			'canAdd'=>$this->canAdd,
 			'area'=>$area,
 			'id'=>$id,
-			'ajaxController'=>yii::app()->createAbsoluteUrl($this->ajaxController),
-			'title'=>$this->title,
+			'ajaxController'=>CHtml::normalizeUrl($this->ajaxController),
 			'newNoteText'=>$this->newNoteText
 		));
 	}
+	
+	public function getAssetsDir()
+	{
+		$assetLocation = Yii::getPathOfAlias('nii.widgets.notes.assets');
+		return yii::app()->getAssetManager()->publish($assetLocation);
+	}
+	
+	public function getProfilePic()
+	{
+		return $this->getAssetsDir().'/profilePic.png';
+	}
+	
+	
+	public function getNote($n)
+	{
+		return $this->render('_line',array('line'=>$n,'profilePic'=>$this->getProfilePic()), true);
+	}
+	
 }
-?>

@@ -75,8 +75,8 @@ class AuthItemChild extends NActiveRecord
 				0=>'PRIMARY KEY (parent,child)',
 			),
 			'foreignKeys'=>array(
-				array('parent', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
-				array('child', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
+				array('parent','parent', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
+				array('child','child', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
 			)
 		);
 	}

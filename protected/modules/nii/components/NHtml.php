@@ -133,5 +133,55 @@ class NHtml extends CHtml
 
 		$v->endWidget('zii.widgets.jui.CJuiDialog');
 	}
+	
+	/** 
+	 * gets the application wide button class
+	 * @return string 
+	 */
+	public static function btnClass(){
+		if(isset(Yii::app()->params->buttonClass))
+			return Yii::app()->params->buttonClass;
+		return 'btn btnN';
+	}
+	
+	
+	/**
+	 * draws a button using default button class
+	 * @param type $label
+	 * @param type $iconClass
+	 * @param string $class 
+	 */
+	public static function btn($label, $iconClass=null, $class=null){
+		$class = NHtml::btnClass() . ' ' . $class;
+		if ($iconClass!==null)
+			$label = "<span class=\"$iconClass\"></span>$label";
+		echo CHtml::htmlButton($label,array('class'=>$class));
+	}
+	
+	/**
+	 * Get the url address to show the imaghe or use in the img src attribute
+	 * 
+	 * @param int $id fileManager NFile id
+	 * @param string $size thumbSize key name or string in the form xy-100-130
+	 * @return string url
+	 */
+	public static function urlImageThumb($id,$size='small'){
+		return NImage::get()->getUrl($id, $size);
+	}
+	
+	/**
+	 * function to generate a link to a file controlled by the fileManager 
+	 * component
+	 * 
+	 * @param int $id the filemanager id for the file
+	 * @param string $name the name of the file
+	 * @param boolean $downloadable wheather to create a download link.
+	 * @return string url
+	 * @see NFileManager::getUrl
+	 */
+	public static function urlFile($id, $name='', $downloadable=false){
+		return NFileManager::get()->getUrl($id, $name, $downloadable);
+	}
+	
 
 }

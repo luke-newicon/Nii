@@ -22,9 +22,7 @@
 			</script>
 		</div>
 		<div class="loginMenu">
-			<div class="menu menuR pts">
-				<?php $this->widget('user.components.NLoginInfo'); ?>
-			</div>
+			<?php $this->widget('user.widgets.NLoginInfo'); ?>
 		</div>
 	</div>
 </div>

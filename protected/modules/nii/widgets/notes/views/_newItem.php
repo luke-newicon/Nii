@@ -1,19 +1,21 @@
-<div class="line newNote" data-model="<?php echo $area; ?>" data-id="<?php echo $id; ?>" data-ajaxLoc="<?php echo $ajaxController ?>">
+<div class="line newNote">
 	<?php if($this->displayUserPic): ?>
 		<div class="unit profilePic">
-			<img src="<?php echo $profilePic ?>"/>
+			<img src="<?php echo $profilePic ?>" width="50"/>
 		</div>
 	<?php endif; ?>
-	<div class="unit userInformation">
-		<p>Now</p>
-		<p><?php echo yii::app()->getUser()->name ?></p>
-	</div>
-	<div class="unit note">
-		<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',array('name'=>$area.'_nnote')); ?>
-		<input type="text" class="newNoteBox" value="New Note..." />
-	</div>
-	<div class="unit lastUnit buttons">
-		<input type="button" value="Add" class="btn btnN add">
+	<div class="unit note lastUnit">
+		<div class="markdownInput" style="display:none;">
+			<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',array('name'=>$area.'_nnote')); ?>
+			<div class="txtR"><input type="button" value="Add" class="btn btnN add"></div>
+		</div>
+		
+		<div class="newNoteBox">
+			<div class="fakebox">
+				New Note...
+			</div>
+			<p class="userInformation man"><?php echo yii::app()->getUser()->name ?></p>
+		</div>
 	</div>
 </div>
 <hr/>

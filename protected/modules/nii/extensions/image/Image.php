@@ -1,6 +1,6 @@
 <?php
-
-Yii::import('ext.nii.extensions.image.Image_Driver');
+Yii::import('ext.image.CArray');
+Yii::import('ext.image.Image_Driver');
 
 /**
  * Manipulate images using standard methods such as resize, crop, rotate, etc.
@@ -20,6 +20,7 @@ class Image {
 	const AUTO = 2;
 	const HEIGHT = 3;
 	const WIDTH = 4;
+	const MIN = 7; // Added by Luke to add proper resizing for thumbnails
 	// Flip Directions
 	const HORIZONTAL = 5;
 	const VERTICAL = 6;
@@ -110,6 +111,7 @@ class Image {
             $this->config = array(
                 'driver'=>'GD',
                 'params'=>array(),
+				'actions'=>array(),
             );
         }
         else{
@@ -120,7 +122,7 @@ class Image {
 		$driver = 'Image_'.ucfirst($this->config['driver']).'_Driver';
 
         // Load the driver
-        Yii::import("ext.nii.extensions.image.drivers.$driver");
+        Yii::import("ext.image.drivers.$driver");
 
 		// Initialize the driver
 		$this->driver = new $driver($this->config['params']);
@@ -128,6 +130,8 @@ class Image {
 		// Validate the driver
 		if ( ! ($this->driver instanceof Image_Driver))
 			throw new CException('image driver must be implement Image_Driver class');
+
+		$this->actions = $this->config['actions'];
 	}
 
 	/**
@@ -350,10 +354,11 @@ class Image {
 	/** 
 	 * Output the image to the browser. 
 	 * 
-	 * @param   boolean  keep or discard image process actions
+	 * @param  boolean keep or discard image process actions
+	 * @param  boolean return the image instead of output
 	 * @return	object 
 	 */ 
-	public function render($keep_actions = FALSE) 
+	public function render($keep_actions = FALSE, $return = false) 
 	{ 
 		$new_image = $this->image['file']; 
 	
@@ -365,7 +370,7 @@ class Image {
 		$dir = str_replace('\\', '/', realpath($dir)).'/'; 
 	
 		// Process the image with the driver 
-		$status = $this->driver->process($this->image, $this->actions, $dir, $file, $render = TRUE); 
+		$status = $this->driver->process($this->image, $this->actions, $dir, $file, $render = TRUE, $return); 
 		
 		// Reset actions. Subsequent save() or render() will not apply previous actions.
 		if ($keep_actions === FALSE)
@@ -373,8 +378,12 @@ class Image {
 		
 		return $status; 
 	}
+	
+	public function generate($keep_actions = FALSE){
+		return $this->render($keep_actions, TRUE);
+	}
 
-		public function getData()
+	public function getData()
 	{
 		// Process the image with the driver
 		$status = $this->driver->getData($this->image, $this->actions);
@@ -438,7 +447,8 @@ class Image {
 				if ($value !== Image::NONE AND
 				    $value !== Image::AUTO AND
 				    $value !== Image::WIDTH AND
-				    $value !== Image::HEIGHT)
+				    $value !== Image::HEIGHT AND
+					$value !== Image::MIN) // Added by Luke to add proper resizing for thumbnails
 					return FALSE;
 			break;
 		}

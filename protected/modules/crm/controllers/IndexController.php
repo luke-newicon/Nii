@@ -6,7 +6,7 @@ class IndexController extends AController
 		parent::init();
 		$url = CrmModule::get()->getAssetsUrl();
 		Yii::app()->getClientScript()->registerCssFile("$url/crm.css");
-		$this->breadcrumbs=array($this->module->id);
+		//$this->breadcrumbs=array($this->module->id);
 	}
 	
 	public function accessRules() 
@@ -16,16 +16,20 @@ class IndexController extends AController
 				//'actions'=>array('index'),
 				'users'=>array('@'),
 			),
+			array('deny',
+				'users'=>array('*')
+			)
         );
-		parent::accessRules();
 	}
 	
 	public function actionIndex() 
 	{
 		$contacts = CrmContact::model()->orderByName()->findAll();
+		$groups = CrmGroup::model()->findAll();
 		$this->render('index',array(
 			'term'=>'',
-			'contacts'=>$contacts
+			'contacts'=>$contacts,
+			'groups'=>$groups
 		));
 	}
 
@@ -34,6 +38,7 @@ class IndexController extends AController
 		$c = CrmContact::model()->findByPk($cid);
 		if(!$c) $c = new CrmContact();
 		echo $this->render('_edit-contact', array('c' => $c), true);
+		Yii::app()->end();
 	}
 
 	
@@ -84,12 +89,10 @@ class IndexController extends AController
 	 */
 	public function actionEditContact($cid=null) 
 	{
-		
-		
 		if(isset($_POST['ajax']) && $_POST['ajax'] == 'contactForm'){
 			$c = new CrmContact;
-			$e = new CrmEmail;
-			echo $this->validate(array($c, $e));
+			//$e = new CrmEmail;
+			echo $this->validate(array($c));
 			Yii::app()->end();
 		}
 		
@@ -124,7 +127,7 @@ class IndexController extends AController
 		}
 
 		echo CJSON::encode(array(
-			'valid' => $valid, 'form' => $html, 'id' => $c->id(), 'card' => $card, 'createdCompany' => $compData
+			'valid' => $valid, 'id' => $c->id(), 'card' => $card, 'createdCompany' => $compData
 		));
 	}
 	
@@ -165,8 +168,9 @@ class IndexController extends AController
 	public function actionFindContact($term='', $group='') 
 	{
 		$cs = CrmContact::model();
-		$contacts = $cs->orderByName()->nameLike($term)->group($group)->findAll();
+		$contacts = $cs->orderByName()->group($group)->nameLike($term)->findAll();
 		echo $this->render('_user-list', array('contacts' => $contacts, 'term' => $term), true);
+		Yii::app()->end();
 	}
 
 	/**
@@ -221,5 +225,58 @@ class IndexController extends AController
 	{
 		$contact = new CrmContact;
 		$this->render('test',array('contact'=>$contact));
+	}
+	
+	
+	public function actionAddGroup(){
+		$gn = ($_POST['group']=='')?CrmModule::get()->defaultNewGroupName:$_POST['group'];
+		$g = new CrmGroup;
+		$g->name = $gn;
+		$g->save();
+		echo json_encode(array('id'=>$g->id,'name'=>$g->name));
+	}
+	
+	public function actionAddToGroup(){
+		$groupId = $_POST['groupId'];
+		$contacts = $_POST['contacts'];
+		$cs = explode(',', $contacts);
+		
+		Yii::import('nii.components.db.NQuery');
+		$tblName = CrmGroupContact::model()->tableName();
+		$q = new NQuery();
+		$q->multiInsert($tblName,array('group_id','contact_id'),true);
+		foreach($cs as $i => $c){
+			if($c!=''){
+				// do an insert ignore
+				$q->multiInsertValues(array($groupId, $c));
+			}
+		}
+		$q->execute();
+	}
+	
+	public function actionDeleteGroup(){
+		$gid = $_POST['group'];
+		CrmGroup::model()->deleteByPk($gid);
+		CrmGroupContact::model()->deleteAllByAttributes(array('group_id'=>$gid));
+	}
+	
+	public function actionTestGroup($group){
+		$cs = CrmContact::model();
+		// orderByName()
+		foreach($cs->orderByName()->group($group)->nameLike('')->findAll() as $cr){
+			echo $cr->name.'<br>';
+		}
+	}
+	
+	public function actionGroupRename(){
+		$gName = ($_POST['groupName']=='')?CrmModule::get()->defaultNewGroupName:$_POST['groupName'];
+		$gid = $_POST['gid'];
+		$c = CrmGroup::model()->findByPk($gid);
+		if ($c===null) 
+			throw new CHttpException('no group found');
+		$c->name = $gName;
+		$c->save();
+		echo json_encode(array('name'=>$gName));
+		Yii::app()->end();
 	}
 }

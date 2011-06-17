@@ -1,0 +1,14 @@
+.head .menu ul{z-index:1000;}
+.head .menu a{color:#000;font-size:12px;height:45px;line-height:45px;padding:0 20px;text-align:center;width:60px;}
+.head .menu a:hover{background:#fff;}
+.head .menu .last{border:none;}
+.head .menu li{border-right:1px solid;margin:0;padding:0px;position:relative;}
+.head .menu li ul{display:none;position:absolute;top:45px;left:0px;}
+.head .menu li ul li{float:none;margin:0px;border:none;padding:0px;border-bottom:1px solid;}
+.head .menu .over ul a{border:1px solid #ccc;background:#fff;color:#000;text-align:left;}
+.head .menu .over ul{display:block;}
+.menu .over li ul{display:none;}
+.menu .over .over ul{display:block;left:150px;top:0;z-index:3000;}
+
+
+

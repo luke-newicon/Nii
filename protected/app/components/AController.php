@@ -2,6 +2,7 @@
 /**
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
+ * Implements a default Deny behaviour
  */
 class AController extends NController
 {

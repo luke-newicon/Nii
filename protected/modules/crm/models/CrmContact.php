@@ -20,7 +20,7 @@
  * @property websites[] $CrmWebsite
  * @property user $User
  */
-class CrmContact extends NActiveRecord
+class CrmContact extends NAppRecord
 {
 	const TYPE_CONTACT = 'CONTACT';
 	const TYPE_COMPANY = 'COMPANY';
@@ -82,6 +82,8 @@ class CrmContact extends NActiveRecord
 			'contacts'=> array(self::HAS_MANY, 'CrmContact', 'company_id'),
 			'company'=>array(self::BELONGS_TO, 'CrmContact', 'company_id'),
 			'user'=>array(self::BELONGS_TO, 'User', 'user_id'),
+			// this relation has not yet been tested
+			'groups' => array(self::MANY_MANY, 'CrmGroup', 'crm_group_contact(contact_id, group_id)'),
 		);
 	}
 
@@ -303,17 +305,26 @@ class CrmContact extends NActiveRecord
 
 	public function orderByName(){
 		if(Yii::app()->getModule('crm')->sortOrderFirstLast){
-			$name = 'first_name';
+			$order = 'first_name, last_name, company';
 		}else{
-			$name = 'last_name';
+			$order = 'last_name, first_name, company';
 		}
 		$this->getDbCriteria()->mergeWith(array(
-			'select'=>"*, CONCAT($name, company) AS name",
-			'order'=>'name'
+//			'select'=>"*, CONCAT($name, company) AS order_name",
+			'order'=>$order
 		));
 		return $this;
 	}
 
+	public function sortName(){
+		if(!$this->isPerson())
+			return $this->company;
+		if(Yii::app()->getModule('crm')->sortOrderFirstLast)
+			return $this->first_name .' '.$this->last_name;
+		else
+			return $this->last_name .' '.$this->first_name;
+	}
+	
 	/**
 	 * name and company search scope
 	 * @param string $term
@@ -325,8 +336,6 @@ class CrmContact extends NActiveRecord
 	}
 	
 	public function nameLikeQuery($term){
-		if($term=='')
-			return $this;
 		if(Yii::app()->getModule('crm')->displayOrderFirstLast){
 			$col1='first_name';	$col2='last_name';
 		}else{
@@ -358,12 +367,18 @@ class CrmContact extends NActiveRecord
 				// only get user if has an email
 				'joinType'=>'INNER JOIN')
 			),
-			'condition'=>'address like :q',
+			'condition'=>'emails.address like :q',
 			'params'=>array(':q'=>"%$email%"),
 		),$useAnd);
 		return $this;
 	}
 
+	/**
+	 *
+	 * 
+	 * @param type $group
+	 * @return CrmContact 
+	 */
 	public function group($group=''){
 		// built in groups
 		if($group=='people')
@@ -372,6 +387,18 @@ class CrmContact extends NActiveRecord
 			return $this->companies();
 		if($group=='users')
 			return $this->users();
+		if($group=='all')
+			return $this;
+		if($group!=''){
+			// assume the group is the group id
+			// get all members of group
+			$tblGroup = CrmGroupContact::model()->tableName();
+			$this->getDbCriteria()->mergeWith(array(
+				//SELECT * FROM `crm_contact` WHERE id in (select contact_id from crm_group_contact where group_id = 1)
+				'condition'=>"id in (select contact_id from $tblGroup where group_id = :g)",
+				'params'=>array(':g'=>$group),
+			));
+		}
 		return $this;
 	}
 	
@@ -398,8 +425,9 @@ class CrmContact extends NActiveRecord
 
 
 	public function name($term=''){
-		if($term == '')
-			return $this->getNamePartOne().' '.$this->getNamePartTwo();
+		if($term == ''){
+			return trim($this->getNamePartOne().' '.$this->getNamePartTwo());
+		}
 
 		if(!$this->isPerson())
 			return NHtml::hilightText($this->company,$term);

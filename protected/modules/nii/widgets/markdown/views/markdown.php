@@ -6,6 +6,6 @@
 		echo cHtml::hiddenField('textAreaStatus', 1, array('class' =>'updated'));
 		echo cHtml::link('Help', 'http://daringfireball.net/projects/markdown/syntax', array('target' => 'blank', 'class' => 'help_button'));?>
 	</div>
-	<div class="input"><?php echo $inputElement ?></div>
+	<div class="inputBox"><?php echo $inputElement ?></div>
 	<div class="previewBox" style="display:none;">Loading...</div>
 </div>

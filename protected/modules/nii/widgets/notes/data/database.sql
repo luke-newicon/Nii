@@ -1,10 +1,10 @@
-CREATE  TABLE IF NOT EXISTS `project_manager`.`notes` (
+CREATE  TABLE IF NOT EXISTS `notes` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `user_id` INT UNSIGNED NULL ,
-  `added` DATE NULL ,
+  `added` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ,
   `area` VARCHAR(50) NULL ,
   `item_id` INT NULL ,
-  `note` VARCHAR(45) NULL ,
+  `note` text NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `noteId` (`item_id` ASC) )
-ENGINE = InnoDB
+ ENGINE=InnoDB DEFAULT CHARSET=utf8

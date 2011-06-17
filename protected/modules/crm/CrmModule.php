@@ -23,6 +23,8 @@ class CrmModule extends NWebModule
 	 */
 	public $sortOrderLastFirst = true;
 	
+	
+	public $defaultNewGroupName = 'Group Name';
 
 	public function init()
 	{
@@ -53,11 +55,13 @@ class CrmModule extends NWebModule
 		CrmEmail::install();
 		CrmPhone::install();
 		CrmWebsite::install();
+		CrmGroup::install();
+		CrmGroupContact::install();
 		//$this->runMySql();
 	}
 
 	public function uninstall(){}
-
+	
 	/**
 	 *
 	 * @return CrmModule

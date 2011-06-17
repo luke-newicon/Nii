@@ -130,6 +130,19 @@ class UserModule extends NWebModule
 
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
+		
+		// add to the main config
+		Yii::app()->components = array(
+			'authManager'=>array(
+				'class'=>'CDbAuthManager',
+				'connectionID'=>'db',
+				'assignmentTable'=>'auth_assignment',
+				'itemChildTable'=>'auth_item_child',
+				'itemTable'=>'auth_item',
+				'defaultRoles'=>array('authenticated', 'guest'),
+			)
+		);
+		
 	}
 	
 	public function getBehaviorsFor($componentName){
@@ -210,12 +223,11 @@ class UserModule extends NWebModule
 	 * Send mail method
 	 */
 	public static function sendMail($email,$subject,$message) {
-//    	$adminEmail = Yii::app()->params['adminEmail'];
-//	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
-//	    $message = wordwrap($message, 70);
-//	    $message = str_replace("\n.", "\n..", $message);
-//	    return mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
-		return true;
+    	$adminEmail = Yii::app()->params['adminEmail'];
+	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
+	    $message = wordwrap($message, 70);
+	    $message = str_replace("\n.", "\n..", $message);
+	    return mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
 	}
 	
 	/**

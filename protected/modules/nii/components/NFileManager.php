@@ -15,19 +15,26 @@
  * Standardise the method by which the application stores and retrives files and ecapsulate the
  * functionality. Like this class!
  *
+ * The filemanager should be able to work out the files system path from the category variable
+ * In the case of complex file storage where a cron job may move files monthly onto a longer term file storage server, 
+ * the cron job can update the category field in the file database thus enabling the filemanager to work out where it is.
  *
- * HOW TO USE ME!
- * There are 3 reassons you will need this function:
- *
- * 1) Adding a file uploaded to the system. :doesnt make much sense (know what you mean though)
- *
- * TODO: matt code examples?
- *
- * 2) Creating a new file based on text etc in the system. :doesnt make much sense.
- *
- * 3) Retrieving information for one or more files. (information?)
- *
- * @author steve
+ * Typical configuration example:
+ * -----------------------------
+ *     'fileManager'=>array(
+ *         'class'=>'NFileManager',
+ *	       'location'=>Yii::getPathOfAlias('base.uploads'),
+ *	       'defaultCategory' => 'attachments',
+ *	       'categories' => array(
+ *	           'attachments' => 'attachments',
+ *             'profile_photos' => 'profile_photos',
+ *             'logos' => 'logos',
+ *         ),
+ *     ),
+ * 
+ * TODO: provide mechanism to store files in subfolders like month-day to avoid max file folder limits.
+ * 
+ * @author The Newicon Team
  * @version 1.0
  */
 Yii::import('application.vendors.Zend.File.*');
@@ -39,17 +46,47 @@ require('Zend/File/Transfer/Adapter/Http.php');
  * @author matthewturner
  * @version 0.1
  */
-class NFileManager extends CApplicationComponent {
+class NFileManager extends CApplicationComponent 
+{
 
 	/**
 	 * location without trailing slash (will strip trailing slash)
-	 * @var <type>
+	 * if specifying an absolute path you must set locationIsAsbsolute to true, also it is recomended to use
+	 * Yii::getPathOfAlias('system') to ensure absolute is generated properly depending on the current runtime environment
+	 * @var string
 	 */
 	public $location;
-	public $_fileTransObj;
-	public $_id;
-	public $fileHandlerClass = 'NFileHandler';
-	public $fileNameTemplate = '{timestamp}.{filename}';
+	
+	/**
+	 * the last NFile object added and uploaded
+	 * @var NFile 
+	 */
+	public $lastFile;
+	
+	
+	public $defaultCategory='nii';
+	
+	/**
+	 * A list of categories mapping to a storage location
+	 * categoryName=>'location'
+	 * @var array 
+	 */
+	public $categories;
+	
+	/**
+	 * Determins if the location attribute is a path relative to the basePath (Yii::app()->basePath) or an absolute path
+	 * by default it assumes a relative path. However it is acceptable to specify the location as an absolute path 
+	 * using Yii::getPathOfAlias()
+	 * @var boolean 
+	 */
+	public $locationIsAbsolute = false;
+	
+	/**
+	 * The Zend file transfer object
+	 * @var Zend_File_Transfer_Adapter_Http 
+	 */
+	private $_fileTransObj;
+	
 
 	public function __construct() {
 		$this->_fileTransObj = new Zend_File_Transfer_Adapter_Http();
@@ -62,28 +99,26 @@ class NFileManager extends CApplicationComponent {
 	 * Saves a file and returns the id to reference the file
 	 * This id should be stored and used to access information on the file in the future.
 	 * If the upload fails it returns boolean false;
-	 * To retrieve the error messages call ->getMessages which returns an array of the error
+	 * To retrieve the error messages call NFileManager->getFileTransObj()->getMessages which returns an array of the error
 	 * messages. For example upload limit exceeded.
 	 *
-	 * @param string $area The area the file will be saved in (e.g dreg or wpack).
+	 * @param string $category The category to save the file in, categories can map to different storage locations.
 	 * @return int id to refer to the file, or boolean false if upload failed.
 	 */
-	public function saveFile($area='core') {
-
+	public function saveFile($category='default') {
 		if (!empty($_FILES)) {
-
-			$targetPath = $this->location . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
-
-			$this->locationCheck($targetPath);
-
+			$targetPath = $this->getPath($category);
+		
+			//$targetPath = $this->location . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
+			$this->_locationCheck($targetPath);
 			$up = $this->getFileTransObj();
-
 			$origFileName = $up->getFileName(null, false);
+			$filedName = date('YmdHis') . '_' . $origFileName;
 
-			$filedName = time() . '_' . $origFileName;
-			
 			$up->addFilter('rename', array('target' => $targetPath . $filedName));
 			$up->receive();
+
+			
 			$info = $up->getFileInfo();
 			$upFile = new NFiles();
 
@@ -92,26 +127,68 @@ class NFileManager extends CApplicationComponent {
 			else
 				$uploadedFileName = $up->getFileName(null, false);
 
-			$upFile->addNewFile('', $up->getFileName(null, false), $uploadedFileName, $up->getFileSize(), $up->getMimeType(), $up->getFileName(), $area);
-
-			$this->_setid($upFile->id);
-			return $this->_getid();
+			$upFile->addNewFile('', $origFileName, $uploadedFileName, $up->getFileSize(), CFileHelper::getMimeTypeByExtension($origFileName), $category);
+			$this->lastFile = $upFile;
+			
+			return $upFile->id;	
 		}
 	}
+	
+	/**
+	 * Get the system path where the file should be stored.
+	 * This function determines the path from the category variable
+	 * 
+	 * @param string $category
+	 * @return string file system path with trailing DS
+	 */
+	public function getPath($category='default'){
+		$category = ($category=='default'?$this->defaultCategory:$category);
+		
+		// if the default category does not exist assume it is a folder with the default category name
+		$categoryLoc = array_key_exists($category, $this->categories) ? $this->categories[$category] : $category;
+		
+		if($this->locationIsAbsolute)
+			$targetPath = $this->location.DS.$categoryLoc.DS;
+		else
+			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc.DS;
+		
+		return $targetPath;
+	}
+	
+	/**
+	 * Gets the system path to the file.
+	 * Note: this is not usually a web accessible path
+	 * Note: this uses the NFile's category and filed_name attribute to determin the path. 
+	 *
+	 * @param NFile $file
+	 * @return string system path to the file
+	 */
+	public function getFilePath($file){
+		return $this->getPath($file->category) . DIRECTORY_SEPARATOR . $file->filed_name;
+	}
+	
+	/**
+	 * Makes and returns the url accessible path to the file.
+	 * 
+	 * @param mixed $id can be the integer filemanager id or a NFile object
+	 */
+	public function getUrl($id, $name='', $downloadable=false){
+		if($id instanceof NFile)
+			$id = $id->id;
+		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
+	}
+	
+	
 
 	/**
 	 * Checks to see if the upload location is accessible.
 	 * @param string $targetPath The path to check
 	 */
-	private function locationCheck($targetPath) {
+	private function _locationCheck($targetPath) {
 		//If base folder cannot be found then throws an error
-		if ($this->folderFileCheck($this->location) == false) {
-			echo "Sorry but the file could not be uploaded.\nThis is probably due to the upload directory being unavailable.\nCheck the network, and the location supplied in the conf.ini file is reachable.";
-		} else {
-			//checks to see if the area folder is present and readable. If it is not present, then the folder is created.
-			if ($this->folderFileCheck($targetPath) === false) {
-				mkdir($targetPath);
-			}
+		if (!is_writable($targetPath)) {
+			if (!mkdir($targetPath))
+				throw new CException("Sorry the file could not be uploaded.\nThis may be due to the upload directory being unavailable.\nCheck the upload directory exists and has the right permissions.");
 		}
 	}
 
@@ -119,83 +196,63 @@ class NFileManager extends CApplicationComponent {
 	 * get the file transfer object responsible for handling the upload
 	 * @return Zend_File_Transfer_Adapter_Http
 	 */
-	private function getFileTransObj() {
+	public function getFileTransObj() {
 		return $this->_fileTransObj;
 	}
 
 	/**
-	 * Returns an array of file information for the supplied file id
+	 * Returns an NFile object for the supplied file id
 	 *
-	 * <div>EXAMPLES<div>
-	 * getFile(1);
-	 * will return information for one file. or many if array specified
-	 *
-	 * @param array of file information or null
-	 * @returns array of file information or null
-	 *
-	 * array(
-	 * 		0 => array(
-	 * 			file_id=>1,
-	 * 			'description'=>'Image description',
-	 * 			'uploadedUserId'=>1,
-	 * 			'uploadedDate'=>22/03/2010,
-	 * 			'originalName'=>'My file',
-	 * 			'filed_name'=>'Filed_name',
-	 * 			'size'=>3,
-	 * 			'mime'=>'image/jpeg',
-	 * 			'file_path'=>'c://FileMcPath/path.jpg'
-	 * 		)
-	 * )
-	 *
-	 *
+	 * @param int file id
+	 * @return NFile record or null
 	 */
 	public function getFile($id) {
-		$fileInformation = $this->getFiles($id);
-		if (is_array($fileInformation) && !array_key_exists(0, $fileInformation))
-			return null;
-		return $fileInformation[0];
+		return NFile::model()->findByPk($id);
+	}
+	
+	/**
+	 * Returns an array of NFile objects for the supplied file ids.
+	 *
+	 * @param array $ids array of NFile ids.
+	 * @return array of NFile active records, if no records found an empty array is returned
+	 * @see NFile
+	 */
+	public function getFiles($ids) {
+		// Searches the database for the file ids.
+		return NFile::model()->findAllByPk($ids);;
 	}
 
 	/**
-	 * Will create a new file in the system based on supplied text
+	 * Will create a new NFileManager managed file in the system based on supplied $fileContents variable
+	 * This is particularly useful when adding files from email attachments.
+	 * The file is represented by base64 text which can be decoded and passed into the $fileContents
+	 * variable, the function will store a physical file in the appropriate 
+	 * directory and add a NFile record to represent it.
 	 *
-	 * EXAMPLES
-	 * addFile('test contents',array('filed_name'=>'MyNewFile.txt'))
-	 * The mimimum code required to create a file on the system. This will create
-	 * a file with the name MyNewFile.txt in the location specified in main.php and put
-	 * 'test contents' as the contents of the file.
-	 *
-	 * $attributes = array('filed_name'=>'MyNewFile.text',
-	 * 'mime'=>'image/jpeg'.'description'=>'File description')
-	 * addFile('test contents',array('filed_name'=>'MyNewFile.txt'))
-	 * This more advanced example will create a file on the system in the location specified
-	 * in main.php called MyNewTextFile.txt and put 'test contents' as the contents. It will also
-	 * record the description as File Description in the database
-	 *
-	 * @param String $fileContents The contents of the file that will be created on the system
-	 * @return String the Id of the file which has been created in the system
+	 * @param string $fileName the name fo the file
+	 * @param string $fileContents The contents of the file that will be created on the system
+	 * @param string $category the category used to determine how to store the file defaults to nii
+	 * @param string $mimeType the mimeType of the file, if unknown it will attempt to autodetect the mimetype.
+	 * @return int the Id of the file which has been created in the system
 	 */
-	public function addFile($fileName, $fileContents, $area='nii', $mimeType=null) {
+	public function addFile($fileName, $fileContents, $category='nii', $mimeType=null) {
 
 		$fileNewName = time() . $fileName;
+		$filePath = $this->getPath($category) . $fileNewName;
+		
+		file_put_contents($filePath, $fileContents);
 
-		//$status = file_put_contents($this->location.$fileNewName,$fileContents);
-		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
-		$targetPath = $filePath . DIRECTORY_SEPARATOR . $area . DIRECTORY_SEPARATOR;
+		$newFile = new NFile();
+		$mimeType = ($mimeType!==null) ? $mimeType : CFileHelper::getMimeType($filePath);
+		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), $mimeType, $category);
 
-		$this->locationCheck($targetPath);
-
-		$status = file_put_contents($targetPath . $fileNewName . '.txt', $fileContents);
-
-		$newFile = new NFiles();
-		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $filePath, $area);
-
-		$this->_setid($newFile->id);
-		return $this->_getid();
+		$this->lastFile = $newFile;
+		return $newFile->id;
 	}
 
 	/**
 	 * Remove a file from the system
+	 * 
 	 * @param int or array $ids File id/s to mark as deleted.
 	 * @param boolean $deleteFile Whether or not to remove the file from the system.
 	 */
@@ -205,150 +262,57 @@ class NFileManager extends CApplicationComponent {
 		// If the file is to be removed from the file system then there is no point in leaving an
 		// orphan record in the database. The records are deleted along with the file.
 		if (!$deleteFile) {
-			NFiles::model()->updateByPk($ids, array('deleted' => 1));
+			NFile::model()->updateByPk($ids, array('deleted' => 1));
 		} else {
 
 			//CODE TO DELETE FILE FROM THE SYSTEM HERE!!!!!!1
 			//removes the unneeded records from the database.
-			NFiles::model()->deleteByPk($ids);
+			NFile::model()->deleteByPk($ids);
 		}
 	}
 
-	/**
-	 * Sets a variable with the id of the newly uploaded file
-	 * @param int $id The id of the newly uploaded file.
-	 */
-	private function _setid($id) {
-		$this->_id = $id;
-	}
+
 
 	/**
-	 * Returns the id of the file which has just been uploaded.
-	 * @return string.
-	 */
-	private function _getid() {
-		return $this->_id;
-	}
-
-	/**
-	 * Returns an array of file information for the supplied file ids.
-	 *
-	 * File ids can be supplied as either a numeric value or as an array if
-	 * searching for multiple files.
-	 *
-	 * <div>EXAMPLES<div>
-	 * getFile(1);
-	 * will return information for one file.
-	 *
-	 * getFile(array(1,2,3));
-	 * Will return files with an id of 1,2,3
-	 *
-	 * Both of the above examples will return data in the following format:
-	 *
-	 * array(
-	 * 		0 => array(
-	 * 			file_id=>1,
-	 * 			'description'=>'Image description',
-	 * 			'uploadedUserId'=>1,
-	 * 			'uploadedDate'=>22/03/2010,
-	 * 			'originalName'=>'My file',
-	 * 			'filed_name'=>'Filed_name',
-	 * 			'size'=>3,
-	 * 			'mime'=>'image/jpeg',
-	 * 			'file_path'=>'c://FileMcPath/path.jpg'
-	 * 		)
-	 * )
-	 */
-	public function getFiles($ids) {
-
-		// Searches the database for the file ids.
-		$files = NFiles::model()->findAllByPk($ids);
-
-
-		// If no results can be found then returns null.
-		if (count($files) == 0)
-			return null;
-
-		// This will contain the information on the files which will be returned to the user.
-		$fileInformation = array();
-
-
-		// Each result which is found is added to an array which can then be outputted.
-		foreach ($files as $id => $result) {
-			$fileInformation[$id]['id'] = $result->id;
-			$fileInformation[$id]['description'] = $result->description;
-			$fileInformation[$id]['uploaded_by'] = $result->uploaded_by;
-			$fileInformation[$id]['uploaded'] = $result->uploaded;
-			$fileInformation[$id]['original_name'] = $result->original_name;
-			$fileInformation[$id]['filed_name'] = $result->filed_name;
-			$fileInformation[$id]['size'] = $result->size;
-			$fileInformation[$id]['mime'] = $result->mime;
-			$fileInformation[$id]['file_path'] = $result->file_path;
-			$fileInformation[$id]['category'] = $result->category;
-		}
-		return $fileInformation;
-	}
-
-	private function setLocation($location) {
-		$this->location = $location;
-	}
-
-	// Returns the base file location.
-	public function getBaseLocation(){
-		return $this->location;
-	}
-
-	/**
-	 * Checks to make sure the area folder is present. If it is not, then it creates it.
-	 * @param $area
-	 */
-	private function folderFileCheck($area) {
-		if (!is_writable($area)) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	/**
-	 * Loads a file from where it is stored outside of the document root and outputs the information to screen.
-	 * @param int $id The uploader id of the file to display.
+	 * Loads a file from where it is stored on the system and outputs the information to screen.
+	 * 
+	 * @param mixed $id the NFile id of the file to display. Or an NFile object
 	 * @param boolean $renderInPage wether or not to render the file in page. The default is false
 	 * @param string $customName A custom name to call the file when downloading. Please include the file extension.
 	 * optional uses original_name if null
 	 * @returns void | false on error
 	 * @see NFileManager::displayFileData
 	 */
-	public function displayFile($id, $name=null, $makeDownload=false) {
+	public function displayFile($id, $name='', $makeDownload=false) {
 
-		//retrives file information.
-		$file = $this->getFile($id);
-
-		//Displays an error message if the supplied id search returns no rows.
-		if (count($file) === 0) {
-			return false;
+		// Retrieves file information.
+		if($id instanceof NFile) {
+			$file = $id;
+		} else {
+			$file = $this->getFile($id);
+			if($file === null) 
+				throw new CHttpException(404, "The file can not be found.");
 		}
 
-		if(!$name)
-			$name = $file->filed_name;
+		if($name == '')
+			$name = $file->original_name;
 
-		//Stores the location of the file as a variable
-		$fileLocation = $this->location . $file['category'] . DIRECTORY_SEPARATOR . $file['filed_name'];
-		$data = file_get_contents($fileLocation);
+		$data = file_get_contents($this->getFilePath($file));
 		$this->displayFileData($data, $file['mime'], $name, $makeDownload);
 	}
 
 	/**
 	 * Outputs file data to the screen
+	 * 
 	 * @param string $data
 	 * @param string $mimeType
-	 * @param <type> $name
-	 * @param <type> $makeDownload
+	 * @param string $name
+	 * @param boolean $makeDownload
 	 */
-	public function displayFileData($data, $mimeType, $name=null, $makeDownload=false) {
+	public function displayFileData($data, $mimeType, $name='', $makeDownload=false) {
 		if ($data) {
 			header('Content-Type:' . $mimeType);
-			if ($name === null) {
+			if ($name == '') {
 				$name = md5(date('Y-m-d h:i:s', time()));
 			}
 			//tells browser to download file if render in page is set to false.
@@ -372,6 +336,15 @@ class NFileManager extends CApplicationComponent {
 		} else {
 			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}
+	}
+	
+	
+	
+	/**
+	 * @return NFileManager 
+	 */
+	public static function get(){
+		return Yii::app()->fileManager;
 	}
 
 }
