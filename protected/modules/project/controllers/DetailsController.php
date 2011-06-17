@@ -152,11 +152,65 @@ class DetailsController extends AController
 		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
 	}
 	
-	public function actionImage(){
-		echo Yii::getPathOfAlias('application.runtime');
-//		$f = NFileManager::get()->getFile(30);
-//		NImage::get()->load($f->file_path.DS.'nii'.DS.$f->filed_name)->resize(250, 250)->render();
+	/**
+	 * render the individual screen view
+	 * @param int $id 
+	 */
+	public function actionScreen($id){
+		
+		$screen = ProjectScreen::model()->findByPk($id);
+		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
+		
+		$file = NFileManager::get()->getFile($screen->file_id);
+		if($file===null) throw new CHttpException (404,'whoops, no screen found');
+		
+		// guess image background (hack for now)
+		$info = getimagesize($file->getPath());
+		switch (strtolower(CFileHelper::getExtension($file->getPath()))){
+			case 'png':
+				$im = imagecreatefrompng($file->getPath());
+				break;
+			case 'gif':
+				$im = imagecreatefromgif($file->getPath());
+				break;
+			case 'jpg':
+			case 'jpeg':
+				$im = imagecreatefromjpeg($file->getPath());
+				break;
+		}
+		$rgb = imagecolorat($im, 1, 1);
+		$rgb = imagecolorsforindex($im, $rgb);
+		// end image guess background
+		
+		// get all the hotspots on the screen
+		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id));
+		$this->render('screen',array(
+			'screen'=>$screen,
+			'file'=>$file,
+			'width'=>$info[0],
+			'height'=>$info[1],
+			'rgb'=>$rgb,
+			'hotspots'=>$hotspots
+		));
+		
 		
 	}
 	
+	/**
+	 * adds a hotspot to a screen
+	 */
+	public function actionSaveHotspot(){
+		$spotData = $_POST['ProjectHotSpot'];
+		if($spotData['hotspot_id']==-1)
+			$hoty = new ProjectHotSpot;
+		else {
+			$hoty = ProjectHotSpot::model()->findByPk($spotData['hotspot_id']);
+			if($hoty===null)
+				throw new CHttpException (404,'No hotspot found');
+		}
+		$hoty->attributes = $spotData;
+		$hoty->save();
+		echo json_encode(array('id'=>$hoty->id));
+	}
+
 }

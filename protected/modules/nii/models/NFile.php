@@ -166,4 +166,12 @@ class NFile extends NActiveRecord
 		return $this->id;
 	}
 	
+	/**
+	 * convienience method to get the files path
+	 * @return string system path to the file
+	 */
+	public function getPath(){
+		return NFileManager::get()->getFilePath($this);
+	}
+	
 }

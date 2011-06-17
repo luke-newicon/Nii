@@ -139,7 +139,7 @@ class NFileManager extends CApplicationComponent
 	 * This function determines the path from the category variable
 	 * 
 	 * @param string $category
-	 * @return string file system path 
+	 * @return string file system path with trailing DS
 	 */
 	public function getPath($category='default'){
 		$category = ($category=='default'?$this->defaultCategory:$category);
@@ -238,16 +238,13 @@ class NFileManager extends CApplicationComponent
 	public function addFile($fileName, $fileContents, $category='nii', $mimeType=null) {
 
 		$fileNewName = time() . $fileName;
-		//$status = file_put_contents($this->location.$fileNewName,$fileContents);
-		$filePath = rtrim($this->location, DIRECTORY_SEPARATOR);
-		$targetPath = $filePath . DIRECTORY_SEPARATOR . $category . DIRECTORY_SEPARATOR;
-
-		$this->_locationCheck($targetPath);
-
-		$status = file_put_contents($targetPath . $fileNewName, $fileContents);
+		$filePath = $this->getPath($category) . $fileNewName;
+		
+		file_put_contents($filePath, $fileContents);
 
 		$newFile = new NFile();
-		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), CFileHelper::getMimeType($filePath), $category);
+		$mimeType = ($mimeType!==null) ? $mimeType : CFileHelper::getMimeType($filePath);
+		$newFile->addNewFile('', $fileName, $fileNewName, filesize($filePath), $mimeType, $category);
 
 		$this->lastFile = $newFile;
 		return $newFile->id;

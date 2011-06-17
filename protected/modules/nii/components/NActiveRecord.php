@@ -113,7 +113,7 @@ class NActiveRecord extends CActiveRecord
 	 */
 	public static function install($className){
 		$t = new $className(null);
-		$db = $this->getDbConnection();
+		$db = $t->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
 		$realTable = $t->getRealTableName();
 		$s = $t->schema();

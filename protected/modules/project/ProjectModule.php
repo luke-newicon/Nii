@@ -31,6 +31,7 @@ class ProjectModule extends NWebModule
 	public function install(){
 		Project::install();
 		ProjectScreen::install();
+		ProjectHotSpot::install();
 	}
 	
 	/**
