@@ -146,6 +146,7 @@ class DetailsController extends AController
 		$p = new ProjectScreen;
 		$p->file_id = $id;
 		$p->project_id = $projectId;
+		$p->name = $fileName;
 		$p->save();
 		$res = $this->render('_project-screen',array('screen'=>$p),true);
 		// Return JSON-RPC response
@@ -159,6 +160,7 @@ class DetailsController extends AController
 	public function actionScreen($id){
 		
 		$screen = ProjectScreen::model()->findByPk($id);
+		$project = Project::model()->findByPk($screen->project_id);
 		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
 		
 		$file = NFileManager::get()->getFile($screen->file_id);
@@ -185,6 +187,7 @@ class DetailsController extends AController
 		// get all the hotspots on the screen
 		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id));
 		$this->render('screen',array(
+			'project'=>$project,
 			'screen'=>$screen,
 			'file'=>$file,
 			'width'=>$info[0],
@@ -211,6 +214,12 @@ class DetailsController extends AController
 		$hoty->attributes = $spotData;
 		$hoty->save();
 		echo json_encode(array('id'=>$hoty->id));
+	}
+	
+	public function actionDeleteSpot(){
+		$spotId = $_POST['id'];
+		$spot = ProjectHotSpot::model()->findByPk($spotId);
+		$spot->delete();
 	}
 
 }

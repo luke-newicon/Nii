@@ -16,14 +16,15 @@ Yii::import('nii.extensions.image.Image_Driver');
 class Image {
 
 	// Master Dimension
-	const NONE = 1;
-	const AUTO = 2;
-	const HEIGHT = 3;
-	const WIDTH = 4;
-	const MIN = 7; // Added by Luke to add proper resizing for thumbnails
+	const NONE = 'none';
+	const AUTO = 'auto';
+	const HEIGHT = 'height';
+	const WIDTH = 'width';
+	const MIN = 'min'; // Added by Luke to add proper resizing for thumbnails (steve: how descriptive. a proper job?)
 	// Flip Directions
-	const HORIZONTAL = 5;
-	const VERTICAL = 6;
+	const HORIZONTAL = 'horizontal';
+	const VERTICAL = 'vertical';
+
 
 	// Allowed image types
 	public static $allowed_types = array

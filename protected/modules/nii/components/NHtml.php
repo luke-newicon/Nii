@@ -166,7 +166,7 @@ class NHtml extends CHtml
 	 * @return string url
 	 */
 	public static function urlImageThumb($id,$size='small'){
-		return NImage::get()->getUrl($id, $size);
+		return NImage::get()->url($id, $size);
 	}
 	
 	/**

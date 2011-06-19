@@ -41,7 +41,8 @@ class ProjectScreen extends NAppRecord
 			'columns'=>array(
 				'id'=>'pk',
 				'project_id'=>'int',
-				'file_id'=>'int'
+				'file_id'=>'int',
+				'name'=>'string'
 			)
 		);
 	}

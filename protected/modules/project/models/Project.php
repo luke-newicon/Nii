@@ -54,6 +54,11 @@ class Project extends NActiveRecord
 		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id));
 	}
 	
+	public function getScreensListData(){
+		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
+		array_unshift($ret, '- Select Linking Image -');
+		return $ret;
+	}
 	
 	/**
 	 * gets the title image from the screens

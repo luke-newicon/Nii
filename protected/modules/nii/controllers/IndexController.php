@@ -34,9 +34,9 @@ class IndexController extends NController
 	 * @param string $size the image thumb size (defined in NImage thumbs array. e.g. 'small') or
 	 * a custom string of xy-100-122 (walk before you run) 100=x and 122 = y
 	 */
-	public function actionShowThumb($id,$size){
+	public function actionShow($id,$type){
 		$this->layout = 'ajax';
-		NImage::get()->actionShowThumb($id, $size);
+		NImage::get()->show($id, $type);
 		Yii::app()->end();
 	}
 	

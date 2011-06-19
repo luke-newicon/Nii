@@ -1,6 +1,14 @@
 <style>
 	.uploading{width:100px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
 	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;height:150px;}
+
+	.projectBox{border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
+	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
+	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
+	.projList li{display:inline-block;float:left;margin:15px;}
+	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
+	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
+	
 </style>
 <h1 class="project"><?php echo $project->name; ?></h1>
 
@@ -36,39 +44,9 @@
 	<a id="uploadfiles" href="#">[Upload files]</a>
 </div>
 
-<style>
-	.projectBox{border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
-	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
-	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
-	.projList li{display:inline-block;float:left;margin:15px;}
-	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;}
-	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
-	
-</style>
+
 
 <ul class="noBull projList">
-	<li>
-		<div class="projectBox details">
-			<div class="norm">
-				<div class="projImg">
-				<h2>Add A New Project</h2>
-				</div>
-				<a href="" class="addProject">Create new project</a>
-			</div>
-			<div class="create" style="display:none;">
-				<h2>New Project</h2>
-				<div class="field">
-					<span class="formGuide">Enter the new project name</span>
-					<div class="inputBox">
-						<input id="projectInput" name="project" type="text" placeholder="Project Name" />
-					</div>
-				</div>
-				<div class="field">
-					<button class="btn btnN createProject">Create</button><a class="cancelNewProject mll" href="#">Cancel</a>
-				</div>
-			</div>
-		</div>
-	</li>
 	<?php foreach($project->getScreens() as $screen): ?>
 	<li>
 		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>

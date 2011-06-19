@@ -1,5 +1,5 @@
 <?php
-Yii::import('ext.image.CImageComponent');
+Yii::import('nii.extensions.image.CImageComponent');
 
 /**
  * Nii Image related goodness such as resizing.
@@ -16,7 +16,7 @@ class NImage extends CImageComponent
 	 * Default image types
 	 * array(
 	 *     'thumb' => array(
-	 * 			'resize' => array('width'=>100, 'height'=>100, 'master'=>Image::MIN, 'scale'=>'down'),
+	 * 			'resize' => array('width'=>100, 'height'=>100, 'master'=>'Image::MIN', 'scale'=>'down'),
 	 *		),
 	 *		'small' => array(
 	 *			'resize' => array('width'=>150, 'height'=>150, 'master'=>Image::MIN, 'scale'=>'down'),
@@ -72,10 +72,7 @@ class NImage extends CImageComponent
 	 * Displays the requested images thumbnail from filemanager file
 	 * 
 	 * @param int $id the fileManager id representing the image to generate the thumb from.
-	 * @param mixed $thumbType if a string it is treated as key of the
-	 * $this->thumbs property array and will get thumb info.
-	 * If specified as an array it assumes it contains a unique thumbs configuration
-	 * see $this->thumbs property for array config. array('x'=>100,'y'=>100, q=>50)
+	 * @param string $type name of the type as defined in config @see self::types
 	 */
 	public function show($id, $type=null, $defaultImage=null) {
 		
@@ -142,9 +139,9 @@ class NImage extends CImageComponent
 	 */
 	public function url($id,$type=null){
 		if($type)
-			return NHtml::url(array('/image/show','id'=>$id, 'type'=>$type));
+			return NHtml::url(array('/nii/index/show', 'id'=>$id, 'type'=>$type));
 		else
-			return NHtml::url(array('/image/show','id'=>$id));
+			return NHtml::url(array('/nii/index/show','id'=>$id));
 	}
 	
 	/**

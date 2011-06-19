@@ -3,7 +3,7 @@
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
 	.projList li{display:inline-block;float:left;margin:15px;}
-	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;}
+	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
 	
 </style>

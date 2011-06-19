@@ -119,12 +119,13 @@ return array(
             // ImageMagick setup path
             'params'=>array('directory'=>'/Applications/XAMPP/xamppfiles/bin'),
 			// An array of different sizes which can be reffered to throughout the program
-			'thumbs'=>array(
-				'grid'=>array('x'=>30,'y'=>30),
-				'tiny'=>array('x'=>40,'y'=>40),
-				'small'=>array('x'=>200,'y'=>200),
-				'medium'=>array('x'=>900,'y'=>900),
-				'projectThumb'=>array('x'=>198, 'y'=>158, 'master'=>'MIN')
+			'types'=>array(
+				'grid'=>array(
+					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')),
+				'projectThumb'=>array(
+					'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
+					'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top')
+				)
 			),
 			'notFoundImage'=>'NoPhoto.png'
         ),
