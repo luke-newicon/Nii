@@ -163,7 +163,7 @@
 					width:$spot.width(),
 					height:$spot.height(),
 					left:offset.left,
-					top:offset.top
+				top:offset.top
 				}},
 				function(json){
 					//populate my id

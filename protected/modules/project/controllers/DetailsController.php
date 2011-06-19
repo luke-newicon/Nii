@@ -226,7 +226,7 @@ class DetailsController extends AController
 		$sil = $_POST['screen_id_link'];
 		$spotId = $_POST['hotspot_id'];
 		$hs = ProjectHotSpot::model()->findByPk($spotId);
-		$hs->screen_link_id = $spotId;
+		$hs->screen_id_link = $spotId;
 		$hs->save();
 	}
 	
