@@ -143,7 +143,11 @@
 				return false;
 			});
 			$('#screenSelect').change(function(){
-				alert('oi save screen selection');
+				
+				$.post("<?php echo NHtml::url('/project/details/screenLink'); ?>", 
+				{screen_id_link:$(this).val(),hotspot_id:<?php echo $hotspot->id; ?>}, function(){
+					alert('done');
+				});
 			});
 		},
 		update:function(){

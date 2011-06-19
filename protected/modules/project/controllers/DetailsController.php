@@ -222,4 +222,12 @@ class DetailsController extends AController
 		$spot->delete();
 	}
 
+	public function actionScreenLink(){
+		$sil = $_POST['screen_id_link'];
+		$spotId = $_POST['hotspot_id'];
+		$hs = ProjectHotSpot::model()->findByPk($spotId);
+		$hs->screen_link_id = $spotId;
+		$hs->save();
+	}
+	
 }

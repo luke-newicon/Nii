@@ -15,7 +15,7 @@
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
-        'runtimes' => 'flash,gears,html5,silverlight,browserplus',
+        'runtimes' => 'html5,flash,gears,silverlight,browserplus',
         'url' => NHtml::url(array('/project/details/upload/','projectId'=>$project->id)),
 		'filters'=>array(
 			array('title'=>'Image files', 'extensions'=>"jpg,gif,png")
