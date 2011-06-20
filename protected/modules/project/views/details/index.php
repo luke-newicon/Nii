@@ -36,7 +36,6 @@
 
 
 </script>
-<h3>Custom example</h3>
 <div id="container">
 	<div id="filelist">No runtime found.</div>
 	<br />
@@ -125,5 +124,20 @@ $(function() {
 		$('.projList').append('<li>'+r.result+'</li>')
 		
 	});
+	
+	
+	// delete the images
+	$('.projList').delegate('.deleteScreen','click',function(){
+		$projectBox = $(this).closest('.projectBox');
+		if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" screen?')){
+			$projectBox.closest('li').hide('normal', function(){
+				$(this).remove();
+			});
+			$.post("<?php NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){
+			});
+		}
+		return false;
+	});
+	
 });
 </script>

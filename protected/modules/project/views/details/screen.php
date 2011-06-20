@@ -134,28 +134,29 @@
 			$('#spotForm').show()
 			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
 			$('#spotForm .triangle').position({my:'left center',at:'right top',of:$spot,offset:"0 0",collision:'none'});
-			$('#deleteSpot').unbind('.spotForm');
-			$('#cancelSpot').bind('click.spotForm',function(){
+			// unbind all previously set events
+			$('#spotForm').unbind('.spotForm');
+			$('#spotForm').delegate('#cancelSpot','click.spotForm',function(){
 				$('#spotForm').hide();
 			});
-			$('#deleteSpot').bind('click.spotForm',function(){
+			$('#spotForm').delegate('#deleteSpot','click.spotForm',function(){
 				$spot.hotspot('deleteSpot');
 				return false;
 			});
-			$('#screenSelect').change(function(){
-				
-				$.post("<?php echo NHtml::url('/project/details/screenLink'); ?>", 
-				{screen_id_link:$(this).val(),hotspot_id:<?php echo $hotspot->id; ?>}, function(){
-					alert('done');
-				});
+			$('#spotForm').delegate('#screenSelect','change.spotForm',function(){
+				$spot.attr('data-screen-link',$(this).val());
+				$spot.hotspot('update');
 			});
 		},
 		update:function(){
 			var $spot = $(this);
 			var offset = $spot.position();
 			var id = -1;
+			var screenId = 0;
 			if($spot.is('[data-id]'))
 				id = $spot.data('id');
+			if($spot.is('[data-screen-link]'))
+				screenId = $spot.data('screen-link');
 			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
 				{ProjectHotSpot:{
 					hotspot_id:id,
@@ -163,7 +164,8 @@
 					width:$spot.width(),
 					height:$spot.height(),
 					left:offset.left,
-				top:offset.top
+					top:offset.top,
+					screen_id_link:screenId
 				}},
 				function(json){
 					//populate my id

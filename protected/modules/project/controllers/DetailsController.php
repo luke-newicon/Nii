@@ -48,7 +48,7 @@ class DetailsController extends AController
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
 		$fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-
+		$orginalName = $fileName;
 		// Clean the fileName for security reasons
 		$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
 
@@ -146,7 +146,7 @@ class DetailsController extends AController
 		$p = new ProjectScreen;
 		$p->file_id = $id;
 		$p->project_id = $projectId;
-		$p->name = $fileName;
+		$p->name = ProjectScreen::model()->formatFileName($orginalName);
 		$p->save();
 		$res = $this->render('_project-screen',array('screen'=>$p),true);
 		// Return JSON-RPC response
@@ -163,26 +163,11 @@ class DetailsController extends AController
 		$project = Project::model()->findByPk($screen->project_id);
 		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
 		
-		$file = NFileManager::get()->getFile($screen->file_id);
+		$file = $screen->getFile();
 		if($file===null) throw new CHttpException (404,'whoops, no screen found');
 		
-		// guess image background (hack for now)
+		$rgb = $screen->guessBackgroundColor();
 		$info = getimagesize($file->getPath());
-		switch (strtolower(CFileHelper::getExtension($file->getPath()))){
-			case 'png':
-				$im = imagecreatefrompng($file->getPath());
-				break;
-			case 'gif':
-				$im = imagecreatefromgif($file->getPath());
-				break;
-			case 'jpg':
-			case 'jpeg':
-				$im = imagecreatefromjpeg($file->getPath());
-				break;
-		}
-		$rgb = imagecolorat($im, 1, 1);
-		$rgb = imagecolorsforindex($im, $rgb);
-		// end image guess background
 		
 		// get all the hotspots on the screen
 		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id));
@@ -222,12 +207,14 @@ class DetailsController extends AController
 		$spot->delete();
 	}
 
-	public function actionScreenLink(){
-		$sil = $_POST['screen_id_link'];
-		$spotId = $_POST['hotspot_id'];
-		$hs = ProjectHotSpot::model()->findByPk($spotId);
-		$hs->screen_id_link = $spotId;
-		$hs->save();
-	}
 	
+	public function deleteScreen(){
+		$screenId = $_POST['screenId'];
+		$screen = ProjectScreen::model()->findByPk($screenId);
+		if($screen===null)
+			throw new CHttpException(404, 'No screen found');
+		$screen->delete();
+		Yii::app()->end();
+	}
+
 }

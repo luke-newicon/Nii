@@ -50,7 +50,8 @@ class ProjectHotSpot extends NActiveRecord
 				'width'=>'int',
 				'height'=>'int',
 				'left'=>'int',
-				'top'=>'int'
+				'top'=>'int',
+				'screen_id_link'=>'int'
 			)
 		);
 	}
