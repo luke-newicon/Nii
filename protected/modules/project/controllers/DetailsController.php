@@ -208,12 +208,13 @@ class DetailsController extends AController
 	}
 
 	
-	public function deleteScreen(){
+	public function actionDeleteScreen(){
 		$screenId = $_POST['screenId'];
 		$screen = ProjectScreen::model()->findByPk($screenId);
 		if($screen===null)
 			throw new CHttpException(404, 'No screen found');
 		$screen->delete();
+		NFileManager::get()->deleteFile($screen->file_id);
 		Yii::app()->end();
 	}
 

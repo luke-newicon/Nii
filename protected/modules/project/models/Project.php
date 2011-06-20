@@ -55,9 +55,9 @@ class Project extends NActiveRecord
 	}
 	
 	public function getScreensListData(){
+		$arr = array(0=>'- Select Linking Image -');
 		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
-		array_unshift($ret, '- Select Linking Image -');
-		return $ret;
+		return $arr + $ret ;
 	}
 	
 	/**
@@ -65,7 +65,9 @@ class Project extends NActiveRecord
 	 * typically selects the home page or the first screen
 	 */
 	public function getImageId(){
-		$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
+		$screen = ProjectScreen::model()->find('project_id=:id AND home_page = 1',array('id'=>$this->id));
+		if($screen===null)
+			$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
 		if($screen===null)
 			return -99;
 		return $screen->file_id;

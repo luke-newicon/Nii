@@ -24,6 +24,12 @@ class ProjectModule extends NWebModule
 			'project.components.*',
 		));
 		
+		// relies on the image component NImage
+		Yii::app()->image->addType('projectThumb',array(
+			'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
+			'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top')
+		));
+		
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
 	}

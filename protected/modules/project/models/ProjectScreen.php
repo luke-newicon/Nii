@@ -109,7 +109,8 @@ class ProjectScreen extends NAppRecord
 				'id'=>'pk',
 				'project_id'=>'int',
 				'file_id'=>'int',
-				'name'=>'string'
+				'name'=>'string',
+				'home_page'=>'bool'
 			)
 		);
 	}

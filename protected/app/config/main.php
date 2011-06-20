@@ -113,7 +113,7 @@ return array(
             'errorAction'=>'site/error',
         ),
 		'image'=>array(
-          'class'=>'ext.nii.components.NImage',
+          'class'=>'nii.components.NImage',
             // GD or ImageMagick
             'driver'=>'GD',
             // ImageMagick setup path
@@ -122,10 +122,6 @@ return array(
 			'types'=>array(
 				'grid'=>array(
 					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')),
-				'projectThumb'=>array(
-					'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
-					'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top')
-				)
 			),
 			'notFoundImage'=>'NoPhoto.png'
         ),

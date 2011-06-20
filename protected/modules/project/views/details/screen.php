@@ -11,9 +11,9 @@
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="canvas"> 
-	<img src="<?php echo NHtml::urlFile($file->id); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
+	<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 	<?php foreach($hotspots as $hotspot): ?>
-		<a data-id="<?php echo $hotspot->id; ?>" class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
+		<a data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
 	<?php endforeach; ?>
 </div>
 
@@ -96,12 +96,6 @@
 			return false;
 		}
 	});
-//	$.extend($.ui.boxer, {
-//		defaults: $.extend({}, $.ui.mouse.defaults, {
-//			appendTo: '#canvas',
-//			distance: 0
-//		})
-//	});
 	
 /**
  * Hotspot plugin
@@ -122,8 +116,15 @@
 						$this.hotspot('update');
 					}
 				})
-				.click(function(){
-					$this.hotspot('showForm');
+				.click(function(e){
+					// detect keypress
+					// if shift click then load the screen link
+					// only available if there is a screen link id
+					if (e.shiftKey && $this.is('[data-screen]')) {
+						location.href = "<?php echo NHtml::url('/project/details/screen'); ?>/id/"+$this.attr('data-screen');
+					} else { 
+						$this.hotspot('showForm');
+					}
 				});
 			})
 			
@@ -131,22 +132,33 @@
 		},
 		showForm:function(){
 			var $spot = $(this);
+			// show and position the popup form
 			$('#spotForm').show()
 			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
 			$('#spotForm .triangle').position({my:'left center',at:'right top',of:$spot,offset:"0 0",collision:'none'});
+			
 			// unbind all previously set events
 			$('#spotForm').unbind('.spotForm');
+			// cancel form link
 			$('#spotForm').delegate('#cancelSpot','click.spotForm',function(){
 				$('#spotForm').hide();
 			});
+			// delete spot link
 			$('#spotForm').delegate('#deleteSpot','click.spotForm',function(){
 				$spot.hotspot('deleteSpot');
 				return false;
 			});
+			// screen link drop down box
+			$('#screenSelect').val(0);
+			if($spot.is('[data-screen]')){
+				var screenLink = $spot.attr('data-screen');
+				$('#screenSelect').val(screenLink);
+			}
 			$('#spotForm').delegate('#screenSelect','change.spotForm',function(){
-				$spot.attr('data-screen-link',$(this).val());
+				$spot.attr('data-screen',$(this).val());
 				$spot.hotspot('update');
 			});
+			
 		},
 		update:function(){
 			var $spot = $(this);
@@ -154,9 +166,9 @@
 			var id = -1;
 			var screenId = 0;
 			if($spot.is('[data-id]'))
-				id = $spot.data('id');
-			if($spot.is('[data-screen-link]'))
-				screenId = $spot.data('screen-link');
+				id = $spot.attr('data-id');
+			if($spot.is('[data-screen]'))
+				screenId = $spot.attr('data-screen');
 			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
 				{ProjectHotSpot:{
 					hotspot_id:id,
@@ -179,10 +191,10 @@
 			var $spot = $(this);
 			$spot.remove();
 			$('#spotForm').hide();
-			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.data('id')});
+			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
 		},
 		click:function(){
-			alert(el.data('id'));
+			alert(el.attr('data-id'));
 		}
 	};
 	$.fn.hotspot = function( method ) {

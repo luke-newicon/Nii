@@ -26,7 +26,7 @@ class ProjectHotSpot extends NActiveRecord
 	
 	public function rules(){
 		return array(
-			array('screen_id,width,height,left,top','safe')
+			array('screen_id,width,height,left,top,screen_id_link','safe')
 		);
 	}
 

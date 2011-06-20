@@ -51,6 +51,13 @@ class NImage extends CImageComponent
 		);
         $this->types = CMap::mergeArray($defaultTypes, $this->types);
     }
+	
+	
+	public function addType($name, $array){
+		if(array_key_exists($name, $this->types))
+			throw new CException("The key '$name' already exists in the type definition. ");
+		$this->types[$name] = $array;
+	}
 
 	/**
 	 * Returns the image type settings.

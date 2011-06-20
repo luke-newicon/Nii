@@ -175,7 +175,7 @@ class NFileManager extends CApplicationComponent
 	public function getUrl($id, $name='', $downloadable=false){
 		if($id instanceof NFile)
 			$id = $id->id;
-		return NHtml::url(array('/nii/index/file','id'=>$id,'name'=>$name, 'downloadable'=>$downloadable));
+		return NHtml::url(array('/nii/index/file','id'=>$id, 'name'=>$name, 'downloadable'=>$downloadable));
 	}
 	
 	
@@ -207,6 +207,9 @@ class NFileManager extends CApplicationComponent
 	 * @return NFile record or null
 	 */
 	public function getFile($id) {
+		// could add to local cache array
+		// file_id => file record
+		// thus subsequent calls to getFile would not result in additional lookups
 		return NFile::model()->findByPk($id);
 	}
 	
@@ -336,6 +339,22 @@ class NFileManager extends CApplicationComponent
 		} else {
 			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}
+	}
+	
+	
+	/**
+	 * deletes a file from the server and removes the associated database record.
+	 * @param int $fileId
+	 * @return boolean true on success false on failure 
+	 */
+	public function deleteFile($fileId){
+		$f = NFile::model()->findByPk($fileId);
+		$filePath = $this->getFilePath($f);
+		if(unlink($filePath)){
+			$f->delete();
+			return true;
+		}
+		return false;
 	}
 	
 	

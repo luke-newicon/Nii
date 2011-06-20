@@ -15,7 +15,7 @@
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
-        'runtimes' => 'html5,flash,gears,silverlight,browserplus',
+        'runtimes' => 'html5,flash,silverlight,browserplus',
         'url' => NHtml::url(array('/project/details/upload/','projectId'=>$project->id)),
 		'filters'=>array(
 			array('title'=>'Image files', 'extensions'=>"jpg,gif,png")
@@ -58,7 +58,7 @@
 // Custom example logic
 $(function() {
 	var uploader = new plupload.Uploader({
-		runtimes : 'html5,gears,flash,silverlight,browserplus',
+		runtimes : 'html5,flash,silverlight,browserplus',
 		browse_button : 'pickfiles',
 		container : 'container',
 		max_file_size : '10mb',
@@ -133,7 +133,7 @@ $(function() {
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
-			$.post("<?php NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){
+			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){
 			});
 		}
 		return false;
