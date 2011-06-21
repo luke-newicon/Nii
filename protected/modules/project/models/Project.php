@@ -51,7 +51,7 @@ class Project extends NActiveRecord
 	 * @return array of ProjectScreen
 	 */
 	public function getScreens(){
-		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id));
+		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
 	}
 	
 	public function getScreensListData(){

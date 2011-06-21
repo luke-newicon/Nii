@@ -218,4 +218,23 @@ class DetailsController extends AController
 		Yii::app()->end();
 	}
 
+	
+	/**
+	 * saves the order of project screens after being sorted
+	 */
+	public function actionOrder(){
+		$order = $_POST['order'];
+		//$sql = 'UPDATE project_screen SET `order` = CASE `id` ';
+		
+		$keys = array();
+		$sql = '';
+		foreach($order as $key=>$val){
+			$sql .= "WHEN $key THEN $val ";
+			$keys[] = $key;
+		}
+		//$sql .= 'END WHERE id IN ('.implode(',',$keys).')';
+		ProjectScreen::model()->updateByPk($keys, 
+			array('sort' => new CDbExpression("CASE id $sql END"))
+		);
+	}
 }

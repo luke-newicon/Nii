@@ -2,7 +2,7 @@
 	.uploading{width:100px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
 	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;height:150px;}
 
-	.projectBox{border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
+	.projectBox{background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
 	.projList li{display:inline-block;float:left;margin:15px;}
@@ -137,7 +137,21 @@ $(function() {
 			});
 		}
 		return false;
+	})
+	.sortable({
+		stop:function(){
+			var order = {};
+			$('.projList li').each(function(i,el){
+				$li = $(el);
+				//var id = $li.find('.projectBox').attr('data-id');
+				//console.log($li.find('.projectBox').attr('data-id') + ' index: ' + $li.index());
+				order[$li.find('.projectBox').attr('data-id')] = $li.index();
+			});
+			$.post("<?php echo NHtml::url('/project/details/order') ?>",{order:order})
+			//console.log(order);
+		}
 	});
+	
 	
 });
 </script>

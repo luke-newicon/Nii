@@ -5,9 +5,10 @@
 	.hotspot.helper{border:1px dotted red;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
 	#canvas{cursor:crosshair;position:relative;}
 	
-	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;width:300px;height:150px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
+	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;width:300px;height:98px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
 	.spotFormPart{padding:5px;}
+	a.delete, a.btn.btnN.delete {color:#cc0000;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="canvas"> 
@@ -21,16 +22,20 @@
 	<div class="spotFormContainer" style="position:relative;">
 		<div class="triangle"></div>
 		<div class="spotFormPart form">
-			<div class="field">
+			<div class="field line">
 				<label for="screenSelect">Link to:</label>
-				<div class="inputBox" style="padding:0px;">
-					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+				<div class="unit prs">
+					<div class="inputBox" style="padding:3px;">
+						<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+					</div>
 				</div>
-				<button class="btn btnN">Browse</button>
+				<div class="lastUnit">
+					<a href="#" class="browse btn btnN">Browse</a>
+				</div>
 			</div>
 			<div class="field">
-				<a id="cancelSpot" href="#" class="">Cancel</a>
-				<a id="deleteSpot" href="#" class="">Delete</a>
+				<a id="cancelSpot" href="#" class="btn btnN">Cancel</a>
+				<a id="deleteSpot" href="#" class="btn btnN delete">Delete</a>
 			</div>
 		</div>
 	</div>
@@ -53,7 +58,6 @@
 			.removeData("boxer")
 			.unbind(".boxer");
 			this._mouseDestroy();
-			
 			return this;
 		},
 		_mouseStart: function(event) {
@@ -107,6 +111,13 @@
 			return this.each(function(){
 				var $this = $(this);
 				$this.draggable({
+					drag: function(event, ui) {
+						if($('#spotForm:visible').index){
+							// make the spotForm follow the hotspot being dragged
+							$('#spotForm').position({my:'left top',at:'right top',of:$this,offset:"18 -30",collision:'none'});
+							$('#spotForm .triangle').position({my:'left center',at:'right top',of:$this,offset:"0 0",collision:'none'});
+						}
+					},
 					stop:function(e,ui){
 						$this.hotspot('update');
 					}
@@ -146,6 +157,10 @@
 			// delete spot link
 			$('#spotForm').delegate('#deleteSpot','click.spotForm',function(){
 				$spot.hotspot('deleteSpot');
+				return false;
+			});
+			$('#spotForm').delegate('.browse','click.spotForm',function(){
+				alert('show the browse popup dialog');
 				return false;
 			});
 			// screen link drop down box
