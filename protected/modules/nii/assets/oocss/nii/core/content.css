@@ -17,3 +17,6 @@ body{font-family:'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'trebuch
 ul li {list-style:disc;margin-left:15px;}
 ol li {list-style:decimal;margin-left:15px;}
 .noBull li{list-style:none;margin-left:0px;}
+
+
+h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media{margin:0px 0px 10px;}

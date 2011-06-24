@@ -9,8 +9,14 @@
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
 	.spotFormPart{padding:5px;}
 	a.delete, a.btn.btnN.delete {color:#cc0000;}
+	
+	/*  */
+	.toolbar{height:50px;background-color:#000;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
+<div class="toolbar">
+	<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" style="color:white;"><?php echo $project->name; ?></a>
+</div>
 <div id="canvas"> 
 	<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 	<?php foreach($hotspots as $hotspot): ?>
@@ -104,7 +110,7 @@
 /**
  * Hotspot plugin
  */
-(function( $ ){
+(function($){
 
 	var methods = {
 		init : function( options ) {

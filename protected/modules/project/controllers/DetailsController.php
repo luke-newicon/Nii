@@ -159,6 +159,8 @@ class DetailsController extends AController
 	 */
 	public function actionScreen($id){
 		
+		$this->layout = 'index';
+		
 		$screen = ProjectScreen::model()->findByPk($id);
 		$project = Project::model()->findByPk($screen->project_id);
 		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
@@ -180,8 +182,6 @@ class DetailsController extends AController
 			'rgb'=>$rgb,
 			'hotspots'=>$hotspots
 		));
-		
-		
 	}
 	
 	/**

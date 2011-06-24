@@ -13,7 +13,7 @@ Class NQuery extends CComponent
 	 * insert multiple rows in to the database at once. Add values using 
 	 * the multiInsertValues method below.
 	 * 
-	 * @param array $fields the names of the fields you want to insert as [n]=>name
+	 * @param array $fields the names of the fields you want to insert as array('col_name_1,col_name_2,col_name_3)
 	 * @param boolean $ignore set to true if you want to do an INSERT IGNORE rather than just INSERT
 	 * @return NQuery
 	 */
@@ -21,8 +21,9 @@ Class NQuery extends CComponent
 		$this->_multiInsert['table'] = $tblName;
 		$this->_multiInsert['fields'] = $fields;
 		$this->_multiInsert['ignore'] = $ignore;
-		return $this;
+		return $this;			
 	}
+	
 	/**
 	 * add another row of values to a multiInsert query. 
 	 * These MUST be in the same order as the

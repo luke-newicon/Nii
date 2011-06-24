@@ -6,24 +6,27 @@
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
 	
+	.item{border:1px solid #ccc;}
 </style>
 
 <ul class="noBull projList">
-	<li>
+	<li class="newProject">
 		<div class="projectBox details">
 			<div class="norm">
 				<div class="projImg">
-				<h2>Add A New Project</h2>
+					<h2>Add A New Project</h2>
 				</div>
 				<a href="" class="addProject">Create new project</a>
 			</div>
 			<div class="create" style="display:none;">
-				<h2>New Project</h2>
+				<div class="projImg" style="margin-bottom:5px;">
+					<h2>New Project</h2>
+				</div>
 				<div class="field">
-					<span class="formGuide">Enter the new project name</span>
 					<div class="inputBox">
 						<input id="projectInput" name="project" type="text" placeholder="Project Name" />
 					</div>
+					<span class="hint">Enter the new project name</span>
 				</div>
 				<div class="field">
 					<button class="btn btnN createProject">Create</button><a class="cancelNewProject mll" href="#">Cancel</a>
@@ -39,8 +42,23 @@
 </ul>
 
 
+
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.isotope.min.js" ></script>
 <script>
 $(function(){
+	
+//	$('.projList').isotope({
+//		// options
+//		itemSelector : 'li',
+//		layoutMode : 'fitRows',
+//		animationEngine:'best-available',
+//		animationOptions: {
+//		    duration: 750,
+//		    easing: 'linear',
+//		    queue: false
+//	    }
+//	});
+	
 	$('.addProject').click(function(){
 		$('.norm').hide();
 		$('.create').show();
@@ -56,11 +74,32 @@ $(function(){
 	$('.createProject').click(function(){
 		var projName = $('#projectInput').val();
 		//var $el = $('<li><div class="projectBox"><div class="projImg"></div><div class="projName"><span class="name">'+projName+'</span></div></div></li>')
+		
 		$.post("<?php echo NHtml::url('/project/index/create'); ?>",{name:projName},function(r){
-			$('.projList').append('<li>'+r.project+'</li>');
+			//$create = $('.projList .newProject').clone();
+			$createBox = $('.projList .newProject');
+			$new = $(r.project).appendTo('body').show()
+				.position({my:'left top', at:'left top', of:$createBox}).hide().fadeIn('normal');
+			$createBox.fadeOut('normal', function(){
+				$('<li>'+r.project+'</li>').insertAfter('.projList .newProject');
+				$new.remove();
+				window.setTimeout(function(){
+					$createBox.find('.norm').show();
+					$createBox.find('.create').hide();
+					$createBox.show('normal')
+				}, 300);
+			});
+			
+//			$('.projList .newProject').replaceWith('<li>'+r.project+'</li>');
+//			window.setTimeout(function(){
+//				$create.find('.norm').show();
+//				$create.find('.create').hide();
+//				$create.prependTo('.projList').hide().show('slow')
+//			},1000);
+//			$create.prependTo('.projList').hide().show('slow')
+			//$('<li>'+r.project+'</li>').insertAfter('.projList .newProject').hide().show('noraml')
 		},'json');
-		$('.norm').show();
-		$('.create').hide();
+		
 	});
 	
 });

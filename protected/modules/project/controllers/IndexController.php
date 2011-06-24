@@ -18,7 +18,7 @@ class IndexController extends AController
 { 
 	//put your code here
 	public function actionIndex(){
-		$projects = Project::model()->findAll();
+		$projects = Project::model()->findAll(array('order'=>'id DESC'));
 		$this->render('index',array('projects'=>$projects));
 	}
 	
@@ -28,7 +28,9 @@ class IndexController extends AController
 	
 	public function actionCreate(){
 		$p = new Project;
-		$p->name = $_POST['name'];
+		$name = $_POST['name'];
+		// todo: duplicate name check here?
+		$p->name = $name;
 		$p->save();
 		$pStamp = $this->render('_project-stamp',array('project'=>$p), true);
 		echo json_encode(array(

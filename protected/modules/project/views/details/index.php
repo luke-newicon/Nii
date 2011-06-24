@@ -1,17 +1,35 @@
 <style>
-	.uploading{width:100px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
-	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;height:150px;}
-
+	.uploading{width:50px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
+	
+	
 	.projectBox{background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
 	.projList li{display:inline-block;float:left;margin:15px;}
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
+	
+	.projName{height:40px;}
 	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
+	
+	.plupload input{cursor:pointer;}
+	
+	
+	
+	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;min-height:150px;}
+	#dropzone.miniDrop{display:none;}
+	#dropzone.dragging{background-color:#000;display:block;}
+	
+	
+	.functions{visibility: hidden;}
+	.hover .functions{visibility:visible;}
 	
 </style>
 <h1 class="project"><?php echo $project->name; ?></h1>
 
+
+<div class="toolbar">
+	<a href="" class="btn btnN">Delete</a>
+</div>
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
@@ -29,18 +47,13 @@
  )); ?>
 
 
-<div id="dropzone" class="mll">
+
+<div id="dropzone" class="mll miniDrop">
 	
 </div>
-
-
-
-</script>
 <div id="container">
-	<div id="filelist">No runtime found.</div>
-	<br />
-	<a id="pickfiles" href="#">[Select files]</a>
-	<a id="uploadfiles" href="#">[Upload files]</a>
+	<a class="btn btnN" id="pickfiles" href="#">Select files...</a>
+<!--	<a id="uploadfiles" href="#">[Upload files]</a>-->
 </div>
 
 
@@ -56,7 +69,30 @@
 
 <script>
 // Custom example logic
-$(function() {
+$(function(){
+	
+	var timer = {};
+	window.ondragenter = function(e){
+		//$('#dropzone').show();
+		clearTimeout(timer);
+		$('#dropzone').addClass('dragging');
+	};
+	window.addEventListener( 'dragover', function(){
+		clearTimeout(timer);
+		$('#dropzone').addClass('dragging');
+	}, true );
+	
+	window.addEventListener("dragleave", function(){
+		if(timer)
+			clearTimeout(timer);
+		timer = setTimeout(function(){
+			$('#dropzone').removeClass('dragging');
+		},300);
+		
+	}, false);
+	
+	
+	
 	var uploader = new plupload.Uploader({
 		runtimes : 'html5,flash,silverlight,browserplus',
 		browse_button : 'pickfiles',
@@ -69,13 +105,13 @@ $(function() {
 			{title : "Image files", extensions : "jpg,gif,png"},
 			{title : "Zip files", extensions : "zip"}
 		],
-		drop_element:'dropzone',
+		drop_element:'dropzone'
 		//resize : {width : 320, height : 240, quality : 90}
 	});
 	
 
 	uploader.bind('Init', function(up, params) {
-		$('#filelist').html("<div>Current runtime: " + params.runtime + "</div>");
+		//$('#filelist').html("<div>Current runtime: " + params.runtime + "</div>");
 	});
 
 	$('#uploadfiles').click(function(e) {
@@ -91,7 +127,7 @@ $(function() {
 		$.each(files, function(i, file) {
 			$('#dropzone').append(
 				'<div class="uploading" id="' + file.id + '">' +
-				file.name + ' (' + plupload.formatSize(file.size) + ') <strong></strong>' +
+				file.name + ' (' + plupload.formatSize(file.size) + ')' +
 			'</div>');
 		});
 		up.refresh(); // Reposition Flash/Silverlight
@@ -152,6 +188,8 @@ $(function() {
 		}
 	});
 	
-	
+	// add hover class when hovering over a screen
+	$('.projList').delegate('.projectBox','mouseenter',function(){$(this).addClass("hover");});
+	$('.projList').delegate('.projectBox','mouseleave',function(){$(this).removeClass("hover");});
 });
 </script>
