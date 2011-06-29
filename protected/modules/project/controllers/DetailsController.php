@@ -21,7 +21,7 @@ class DetailsController extends AController
 		if($p===null)
 			throw new CHttpException(404, 'Ooops no page found for this project');
 		
-		$this->render('index', array('project'=>$p));
+		$this->render('index', array('project'=>$p, 'screens'=>$p->getScreens()));
 	}
 	
 	public function actionUpload($projectId){

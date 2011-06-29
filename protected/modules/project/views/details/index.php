@@ -48,9 +48,6 @@
 
 
 
-<div id="dropzone" class="mll miniDrop">
-	
-</div>
 <div id="container">
 	<a class="btn btnN" id="pickfiles" href="#">Select files...</a>
 <!--	<a id="uploadfiles" href="#">[Upload files]</a>-->
@@ -59,7 +56,12 @@
 
 
 <ul class="noBull projList">
-	<?php foreach($project->getScreens() as $screen): ?>
+	<li><div class="projectBox addScreen">add screens n stuff...
+		<div id="dropzone" class="mll miniDrop">
+	
+</div>
+	</div></li>
+	<?php foreach($screens as $screen): ?>
 	<li>
 		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>
 	</li>
@@ -169,8 +171,7 @@ $(function(){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
-			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){
-			});
+			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){});
 		}
 		return false;
 	})
