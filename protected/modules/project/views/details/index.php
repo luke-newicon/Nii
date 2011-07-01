@@ -59,7 +59,7 @@
 	<li><div class="projectBox addScreen">add screens n stuff...
 		<div id="dropzone" class="mll miniDrop">
 	
-</div>
+		</div>
 	</div></li>
 	<?php foreach($screens as $screen): ?>
 	<li>
