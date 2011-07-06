@@ -16,7 +16,13 @@ class NImage extends CImageComponent
 	 * Default image types
 	 * array(
 	 *     'thumb' => array(
-	 * 			'resize' => array('width'=>100, 'height'=>100, 'master'=>'Image::MIN', 'scale'=>'down'),
+	 * 			'resize' => array(
+	 *				'width'=>100, 
+	 *				'height'=>100, 
+	 *              // the master dimension i.e. none,min,max,width,height (min will resize by the smallest dimension, 
+	 *              // max by the largest, none will resize the image without maintaining aspect ratio to the dimensions)
+	 *				'master'=>'Image::MIN',
+	 *				'scale'=>'down'),
 	 *		),
 	 *		'small' => array(
 	 *			'resize' => array('width'=>150, 'height'=>150, 'master'=>Image::MIN, 'scale'=>'down'),

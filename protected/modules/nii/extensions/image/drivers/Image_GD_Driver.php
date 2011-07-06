@@ -224,42 +224,48 @@ class Image_GD_Driver extends Image_Driver {
 		// Recalculate the width and height, if they are missing
 		empty($properties['width'])  and $properties['width']  = round($width * $properties['height'] / $height);
 		empty($properties['height']) and $properties['height'] = round($height * $properties['width'] / $width);
+
 		
-		if($properties['scale'] == 'down' && ($properties['width'] > $width || $properties['height'] > $height)){
-			$resize = false;
+		if ($properties['master'] === Image::MAX)
+		{
+			// Change an automatic master dim to the correct type
+			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::WIDTH : Image::HEIGHT;
 		}
-		elseif($properties['scale'] == 'up' && ($properties['width'] < $width || $properties['height'] < $height))
-			$resize = false;
-		else
-			$resize = true;
-				
-		if($resize){
-			if ($properties['master'] === Image::AUTO)
-			{
-				// Change an automatic master dim to the correct type
-				$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::WIDTH : Image::HEIGHT;
-			}
 
-			/** Added by Luke to add proper resizing for thumbnails **/
-			if ($properties['master'] === Image::MIN)
-			{
-				// Change an automatic master dim to the correct type
-				$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::HEIGHT : Image::WIDTH;
-			}
-			/**********************************************************/
+		/** Added by Luke to add resizing for thumbnails resizes based on the smallest dimension **/
+		if ($properties['master'] === Image::MIN)
+		{
+			// Change an automatic master dim to the correct type
+			$properties['master'] = (($width / $properties['width']) > ($height / $properties['height'])) ? Image::HEIGHT : Image::WIDTH;
+		}
+		/**********************************************************/
 
-			if (empty($properties['height']) OR $properties['master'] === Image::WIDTH)
-			{
-				// Recalculate the height based on the width
-				$properties['height'] = round($height * $properties['width'] / $width);
-			}
+		if (empty($properties['height']) OR $properties['master'] === Image::WIDTH)
+		{
+			// Recalculate the height based on the width
+			$properties['height'] = round($height * $properties['width'] / $width);
+		}
 
-			if (empty($properties['width']) OR $properties['master'] === Image::HEIGHT)
-			{
-				// Recalculate the width based on the height
-				$properties['width'] = round($width * $properties['height'] / $height);
-			}
-
+		if (empty($properties['width']) OR $properties['master'] === Image::HEIGHT)
+		{
+			// Recalculate the width based on the height
+			$properties['width'] = round($width * $properties['height'] / $height);
+		}
+		
+		
+		$resize = true;
+		if($properties['scale'] == 'down'){
+			if($properties['master'] === Image::HEIGHT && $properties['height'] > $height)
+				$resize = false;
+			elseif($properties['master'] === Image::WIDTH && $properties['width'] > $width)
+				$resize = false;			
+		} elseif($properties['scale'] == 'up'){
+			if($properties['master'] === Image::HEIGHT && $properties['height'] < $height)
+				$resize = false;
+			elseif($properties['master'] === Image::WIDTH && $properties['width'] < $width)
+				$resize = false;			
+		}
+		
 //			// Test if we can do a resize without resampling to speed up the final resize
 //			if ($properties['width'] > $width / 2 AND $properties['height'] > $height / 2)
 //			{
@@ -292,7 +298,7 @@ class Image_GD_Driver extends Image_Driver {
 //				$width  = $pre_width;
 //				$height = $pre_height;
 //			}
-			
+		if($resize){
 			// Create the temporary image to copy to
 			$img = $this->imagecreatetransparent($properties['width'], $properties['height']);
 

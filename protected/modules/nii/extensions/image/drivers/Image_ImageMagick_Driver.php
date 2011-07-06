@@ -156,7 +156,7 @@ class Image_ImageMagick_Driver extends Image_Driver {
 			case Image::HEIGHT: // xH
 				$dim = escapeshellarg('x'.$prop['height']);
 			break;
-			case Image::AUTO:   // WxH
+			case Image::MAX:   // WxH
 				$dim = escapeshellarg($prop['width'].'x'.$prop['height']);
 			break;
 			case Image::NONE:   // WxH!

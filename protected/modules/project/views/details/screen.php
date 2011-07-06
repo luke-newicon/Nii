@@ -5,13 +5,20 @@
 	.hotspot.helper{border:1px dotted red;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
 	#canvas{cursor:crosshair;position:relative;}
 	
-	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;width:300px;height:98px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
+	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
 	.spotFormPart{padding:5px;}
 	a.delete, a.btn.btnN.delete {color:#cc0000;}
 	
 	/*  */
 	.toolbar{height:50px;background-color:#000;}
+	.screenItem{background-color:#fff;cursor:pointer;}
+	.screenItem .img{width:48px;height:48px;background-color:#f9f9f9;border:1px solid #ccc;margin:2px;}
+	.ui-autocomplete {border:1px solid #666;max-height: 300px;overflow-y: auto;overflow-x: hidden;width:300px;background-color:#fff;}
+	/* IE 6 doesn't support max-height
+	 * we use height instead, but this forces the menu to always be this tall
+	 */
+	* html .ui-autocomplete {height: 250px;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div class="toolbar">
@@ -28,16 +35,31 @@
 	<div class="spotFormContainer" style="position:relative;">
 		<div class="triangle"></div>
 		<div class="spotFormPart form">
-			<div class="field line">
+			<div class="field">
 				<label for="screenSelect">Link to:</label>
-				<div class="unit prs">
-					<div class="inputBox" style="padding:3px;">
-						<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+<!--					<div class="inputBox" style="padding:3px;width:200px;">
+					<?php //echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+				</div>-->
+<!--					<div id="screenList" class="inputBox" style="padding:3px;width:200px;">
+					<a class="select" href="" onclick="$('#screenList .items').toggle();return false;">- select linking screen -</a>
+					<div class="items" style="display:none;position:absolute;z-index:100;background-color:#fff;height:250px;overflow:auto;border:1px solid #ccc;">
+						<ul class="noBull" style="margin-bottom:0px;">
+							<?php foreach($project->getScreens() as $miniScreen): ?>
+								<li class="screenItem" data-id="<?php echo $miniScreen->id; ?>">
+									<div class="media" style="border-bottom:1px solid #ccc;margin-bottom:0px;">
+										<div class="img txtC" style="width:48px;height:48px;background-color:#f9f9f9;border:1px solid #ccc;margin:2px;"><img style="display:inline;" src="<?php echo NHtml::urlImageThumb($miniScreen->file_id, 'project-drop-down-48-crop'); ?>"/></div>
+										<div class="bd pls"><p><?php echo $miniScreen->name; ?></p></div>
+									</div>
+								</li>
+							<?php endforeach; ?>
+						</ul>
 					</div>
+				</div>-->
+				<div id="screenList" class="line">
+					<div class="unit inputBox" style="width:215px;"><input /></div>
+					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight">drop</a></div>
 				</div>
-				<div class="lastUnit">
-					<a href="#" class="browse btn btnN">Browse</a>
-				</div>
+
 			</div>
 			<div class="field">
 				<a id="cancelSpot" href="#" class="btn btnN">Cancel</a>
@@ -67,6 +89,7 @@
 			return this;
 		},
 		_mouseStart: function(event) {
+			$("#screenList input").autocomplete("close");
 			//var self = this;
 			this.opos = [event.pageX, event.pageY];
 			if (this.options.disabled)
@@ -144,7 +167,6 @@
 					}
 				});
 			})
-			
 			return $spot;
 		},
 		showForm:function(){
@@ -169,16 +191,83 @@
 				alert('show the browse popup dialog');
 				return false;
 			});
-			// screen link drop down box
-			$('#screenSelect').val(0);
-			if($spot.is('[data-screen]')){
-				var screenLink = $spot.attr('data-screen');
-				$('#screenSelect').val(screenLink);
+			var projects = [
+				<?php foreach($project->getScreens() as $s):?>
+				{
+					value: "<?php echo $s->id; ?>",
+					label: "<?php echo $s->name; ?>",
+					src: "<?php echo NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop'); ?>"
+				},
+				<?php endforeach; ?>
+			];
+
+		$("#screenList input").autocomplete({
+			minLength: 0,
+			source: projects,
+			focus: function(event, ui) {
+				$("#screenList").val( ui.item.label );
+				return false;
+			},
+			select: function(event, ui) {
+				alert(ui.item.value)
+				return false;
 			}
-			$('#spotForm').delegate('#screenSelect','change.spotForm',function(){
-				$spot.attr('data-screen',$(this).val());
-				$spot.hotspot('update');
-			});
+		})
+		.data("autocomplete")._renderItem = function( ul, item ) {
+			return $('<li class="screenItem"></li>')
+				.data("item.autocomplete", item)
+				.append(
+					'<a><div class="media" style="margin-bottom:0px;">' +
+						'<div class="img txtC">'+
+							'<img style="display:inline;" src="'+item.src+'"/>' +
+						'</div>' +
+						'<div class="bd pls"><p>'+item.label+'</p></div>'+
+					'</div></a>'
+				)
+				.appendTo(ul);
+		};
+		$("#spotForm").delegate('#screenList a','click.spotForm',function(){
+			// close if already visible
+			if ($("#screenList input").autocomplete("widget").is(":visible")) {
+				$("#screenList input").autocomplete("close");
+				return;
+			}
+
+			// work around a bug (likely same cause as #5265)
+			$(this).blur();
+
+			// pass empty string as value to search for, displaying all results
+			$("#screenList input").autocomplete("search", "");
+			$("#screenList input").focus();
+		});
+		$('#screenList a')
+			.attr("tabIndex", -1)
+			.attr("title", "Show All Items")
+
+			
+			// screen link drop down box
+//			$('#spotForm').delegate('#screenList .items .screenItem', 'mouseover.spotForm', function(){
+//				$(this).addClass('hover');
+//			}).delegate('#screenList .items .screenItem', 'mouseout.spotForm', function(){
+//				$(this).removeClass('hover');
+//			}).delegate('#screenList .items .screenItem', 'click.spotForm', function(){
+//				$spot.attr('data-screen',$(this).attr('data-id'));
+//				$spot.hotspot('update');
+//			});
+//			if($spot.is('[data-screen]')){
+//				var screenLink = $spot.attr('data-screen');
+//				$('#screenList .screen').html(screenLink);
+//			}
+			// old code for select box
+//			$('#screenSelect').val(0);
+//			if($spot.is('[data-screen]')){
+//				var screenLink = $spot.attr('data-screen');
+//				$('#screenSelect').val(screenLink);
+//			}
+//			$('#spotForm').delegate('#screenSelect','change.spotForm',function(){
+//				$spot.attr('data-screen',$(this).val());
+//				$spot.hotspot('update');
+//			});
 			
 		},
 		update:function(){
@@ -242,8 +331,9 @@
 				.hotspot()
 				.hotspot('update')
 				.hotspot('showForm');// lets save our creation
-
 			}
+		}).click(function(){
+			$("#screenList input").autocomplete("close");
 		});
 		
 		$('.hotspot').hotspot();

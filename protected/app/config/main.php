@@ -121,7 +121,24 @@ return array(
 			// An array of different sizes which can be reffered to throughout the program
 			'types'=>array(
 				'grid'=>array(
-					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')),
+					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')
+				),
+				'project-drop-down'=>array(
+					'resize' => array('width'=>24, 'height'=>24, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-32'=>array(
+					'resize' => array('width'=>32, 'height'=>32, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-48'=>array(
+					'resize' => array('width'=>48, 'height'=>48, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-48-crop'=>array(
+					'resize' => array('width'=>48, 'height'=>48, 'master'=>'width', 'scale'=>'down'),
+					'crop' => array('width'=>48, 'height'=>48, 'top'=>'top', 'left'=>'center')
+				),
+				'project-drop-down-16'=>array(
+					'resize' => array('width'=>16, 'height'=>16, 'master'=>'max', 'scale'=>'down')
+				),
 			),
 			'notFoundImage'=>'NoPhoto.png'
         ),
