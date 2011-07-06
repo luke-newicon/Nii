@@ -55,7 +55,7 @@ class Project extends NActiveRecord
 	}
 	
 	public function getScreensListData(){
-		$arr = array(0=>'- Select Linking Image -');
+		$arr = array(0=>'- Select linking image -');
 		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
 		return $arr + $ret ;
 	}

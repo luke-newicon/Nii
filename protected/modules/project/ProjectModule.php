@@ -28,11 +28,14 @@ class ProjectModule extends NWebModule
 		Yii::app()->image->addType('projectThumb',array(
 			'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
 			'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
-			'noimage'=>Yii::getPathOfAlias('base.images.profile').'.png'
+			'noimage'=>Yii::getPathOfAlias('project.assets.gui').'.png'
 		));
 		
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
+		
+		Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/project.css');
+		
 	}
 	
 	public function install(){

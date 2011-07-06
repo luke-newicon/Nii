@@ -334,8 +334,8 @@ class NFileManager extends CApplicationComponent
 			}
 			echo $data;
 
-			//Once the file has been read, this code stops anything else from being rendered onto the bottom of it.
-			Yii::app()->end();
+			// Once the file has been read, this code stops anything else from being rendered onto the bottom of it.
+			exit();
 		} else {
 			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}

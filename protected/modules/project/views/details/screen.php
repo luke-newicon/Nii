@@ -22,8 +22,12 @@
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div class="toolbar">
+	<a href="<?php echo NHtml::url(array('/project/index/index')); ?>" style="color:white;">Projects</a>
 	<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" style="color:white;"><?php echo $project->name; ?></a>
+	Apply template 
 </div>
+
+
 <div id="canvas"> 
 	<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 	<?php foreach($hotspots as $hotspot): ?>
@@ -37,32 +41,31 @@
 		<div class="spotFormPart form">
 			<div class="field">
 				<label for="screenSelect">Link to:</label>
-<!--					<div class="inputBox" style="padding:3px;width:200px;">
-					<?php //echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
-				</div>-->
-<!--					<div id="screenList" class="inputBox" style="padding:3px;width:200px;">
-					<a class="select" href="" onclick="$('#screenList .items').toggle();return false;">- select linking screen -</a>
-					<div class="items" style="display:none;position:absolute;z-index:100;background-color:#fff;height:250px;overflow:auto;border:1px solid #ccc;">
-						<ul class="noBull" style="margin-bottom:0px;">
-							<?php foreach($project->getScreens() as $miniScreen): ?>
-								<li class="screenItem" data-id="<?php echo $miniScreen->id; ?>">
-									<div class="media" style="border-bottom:1px solid #ccc;margin-bottom:0px;">
-										<div class="img txtC" style="width:48px;height:48px;background-color:#f9f9f9;border:1px solid #ccc;margin:2px;"><img style="display:inline;" src="<?php echo NHtml::urlImageThumb($miniScreen->file_id, 'project-drop-down-48-crop'); ?>"/></div>
-										<div class="bd pls"><p><?php echo $miniScreen->name; ?></p></div>
-									</div>
-								</li>
-							<?php endforeach; ?>
-						</ul>
-					</div>
+<!--				<div class="inputBox" style="padding:3px;width:200px;">
+					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
 				</div>-->
 				<div id="screenList" class="line">
-					<div class="unit inputBox" style="width:215px;"><input /></div>
+					<div class="unit inputBox" style="width:215px;"><input placeholder="- select screen -" /></div>
 					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight">drop</a></div>
 				</div>
 
 			</div>
+<!--			<div class="field">
+				<input class="mrs" style="float:left;" type="checkbox" id="addtotemplate" name="addtotemplate"/>
+				<label  for="addtotemplate" style="font-weight:normal;">Add to template</label>
+				You don't have any templates 
+								<label  for="template" style="font-weight:normal;">Add to template</label>
+				<select>
+					<option>- add to existing template -</option>
+				</select>
+			</div>-->
+<!--			<div class="field">
+				<input class="mrs" style="float:left;" type="checkbox" id="maintainScroll" name="maintainScroll"/>
+				<label  for="maintainScroll" style="font-weight:normal;">Maintain scroll position</label>
+			</div>-->
 			<div class="field">
-				<a id="cancelSpot" href="#" class="btn btnN">Cancel</a>
+				<a id="okSpot" href="#" class="btn btnN">Ok</a>
+<!--				<a id="cancelSpot" href="#" class="btn btnN ">Cancel</a>-->
 				<a id="deleteSpot" href="#" class="btn btnN delete">Delete</a>
 			</div>
 		</div>
@@ -182,6 +185,9 @@
 			$('#spotForm').delegate('#cancelSpot','click.spotForm',function(){
 				$('#spotForm').hide();
 			});
+			$('#spotForm').delegate('#okSpot','click.spotForm',function(){
+				$('#spotForm').hide();
+			});
 			// delete spot link
 			$('#spotForm').delegate('#deleteSpot','click.spotForm',function(){
 				$spot.hotspot('deleteSpot');
@@ -191,59 +197,95 @@
 				alert('show the browse popup dialog');
 				return false;
 			});
-			var projects = [
-				<?php foreach($project->getScreens() as $s):?>
-				{
-					value: "<?php echo $s->id; ?>",
-					label: "<?php echo $s->name; ?>",
-					src: "<?php echo NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop'); ?>"
+			 
+			<?php 
+				$screenList = array();
+				foreach($project->getScreens() as $i=>$s){
+					$screenList[] = array(
+						'value'=>$s->id,
+						'label'=>$s->name, // get transformed into html by search
+						'name'=>$s->name,
+						'src'=>NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop')
+					);
+				}
+			?>
+			var projects = <?php echo json_encode($screenList); ?>;
+			$('#spotForm').delegate("#screenList input",'click.spotForm',function(){
+				$('#screenList a').click();
+			})
+			$("#screenList input").autocomplete({
+				minLength: 0,
+				source: function( request, response ) {
+					var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i");
+					response($(projects).map(function() {
+						if ( this.value && ( !request.term || matcher.test(this.label) ) )
+							return {
+								label: this.label.replace(
+									new RegExp(
+										"(?![^&;]+;)(?!<[^<>]*)(" +
+										$.ui.autocomplete.escapeRegex(request.term) +
+										")(?![^<>]*>)(?![^&;]+;)", "gi"
+									), "<strong>$1</strong>" ),
+								value: this.value,
+								src: this.src,
+								name: this.name
+							};
+					}));
 				},
-				<?php endforeach; ?>
-			];
+				focus: function(event, ui) {
+					$("#screenList input").val(ui.item.name);
+					return false;
+				},
+				select: function(event, ui) {
+					$spot.attr('data-screen',ui.item.value);
+					$spot.hotspot('update');
+					return false;
+				},
+				position:{'my':'left top','at':'left bottom','of':'#screenList'}
+			})
+			.data("autocomplete")._renderItem = function( ul, item ) {
+				return $('<li class="screenItem "></li>')
+					.data("item.autocomplete", item)
+					.append(
+						'<a><div class="media" style="margin-bottom:0px;">' +
+							'<div class="img txtC">'+
+								'<img style="display:inline;" src="'+item.src+'"/>' +
+							'</div>' +
+							'<div class="bd pls"><p>'+item.label+'</p></div>'+
+						'</div></a>'
+					)
+					.appendTo(ul);
+			};
+			$("#spotForm").delegate('#screenList a','click.spotForm',function(){
+				// close if already visible
+				if ($("#screenList input").autocomplete("widget").is(":visible")) {
+					$("#screenList input").autocomplete("close");
+					return;
+				}
 
-		$("#screenList input").autocomplete({
-			minLength: 0,
-			source: projects,
-			focus: function(event, ui) {
-				$("#screenList").val( ui.item.label );
-				return false;
-			},
-			select: function(event, ui) {
-				alert(ui.item.value)
-				return false;
+				// work around a bug (likely same cause as #5265)
+				$(this).blur();
+
+				// pass empty string as value to search for, displaying all results
+				$("#screenList input").autocomplete("search", "");
+				$("#screenList input").focus();
+			});
+			$('#screenList a')
+				.attr("tabIndex", -1)
+				.attr("title", "Show All Items")
+			// load the initial state of the drop down
+			if($spot.is('[data-screen]')){
+				// spot is already linked to a screen
+				var screenLink = $spot.attr('data-screen');
+				$(projects).map(function(){
+					if(this.value == screenLink){
+						$("#screenList input").val(this.name);
+						return false;
+					}
+				})
+			}else{
+				$("#screenList input").val('');
 			}
-		})
-		.data("autocomplete")._renderItem = function( ul, item ) {
-			return $('<li class="screenItem"></li>')
-				.data("item.autocomplete", item)
-				.append(
-					'<a><div class="media" style="margin-bottom:0px;">' +
-						'<div class="img txtC">'+
-							'<img style="display:inline;" src="'+item.src+'"/>' +
-						'</div>' +
-						'<div class="bd pls"><p>'+item.label+'</p></div>'+
-					'</div></a>'
-				)
-				.appendTo(ul);
-		};
-		$("#spotForm").delegate('#screenList a','click.spotForm',function(){
-			// close if already visible
-			if ($("#screenList input").autocomplete("widget").is(":visible")) {
-				$("#screenList input").autocomplete("close");
-				return;
-			}
-
-			// work around a bug (likely same cause as #5265)
-			$(this).blur();
-
-			// pass empty string as value to search for, displaying all results
-			$("#screenList input").autocomplete("search", "");
-			$("#screenList input").focus();
-		});
-		$('#screenList a')
-			.attr("tabIndex", -1)
-			.attr("title", "Show All Items")
-
 			
 			// screen link drop down box
 //			$('#spotForm').delegate('#screenList .items .screenItem', 'mouseover.spotForm', function(){
@@ -254,10 +296,7 @@
 //				$spot.attr('data-screen',$(this).attr('data-id'));
 //				$spot.hotspot('update');
 //			});
-//			if($spot.is('[data-screen]')){
-//				var screenLink = $spot.attr('data-screen');
-//				$('#screenList .screen').html(screenLink);
-//			}
+			
 			// old code for select box
 //			$('#screenSelect').val(0);
 //			if($spot.is('[data-screen]')){

@@ -2,9 +2,7 @@
 	.uploading{width:50px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
 	
 	
-	.projectBox{background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
-	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
-	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
+	
 	.projList li{display:inline-block;float:left;margin:15px;}
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
 	
@@ -20,16 +18,34 @@
 	#dropzone.dragging{background-color:#000;display:block;}
 	
 	
-	.functions{visibility: hidden;}
+	.projectBox{background-color:#fff;position:relative;background-color:#fff;border:1px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;}
+	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
+	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
+	.functions{border-radius:3px;visibility: hidden;background-color:#f4f4dc;padding:3px;}
 	.hover .functions{visibility:visible;}
-	
+	.main{background-color:#f9f9f9;}
 </style>
-<h1 class="project"><?php echo $project->name; ?></h1>
 
-
-<div class="toolbar">
-	<a href="" class="btn btnN">Delete</a>
+<div class="toolbar line plm" style="margin-top:-1px;">
+	<div class="line">
+		<div class="unit toolbarArrow mrm">
+			<a style="display:block;" class="titleBarText" href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
+		</div>
+		<div class="unit prm">
+			<h1 class="man titleBarText"><?php echo $project->name; ?></h1>
+		</div>
+		<div class="unit">
+			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+			
+		</div>
+		<div class="lastUnit plm">
+			<a href="#" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+		</div>
+	</div>
 </div>
+
+<br />
+<br />
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(

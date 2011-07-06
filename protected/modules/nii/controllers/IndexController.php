@@ -36,7 +36,7 @@ class IndexController extends NController
 	public function actionShow($id,$type){
 		$this->layout = 'ajax';
 		NImage::get()->show($id, $type);
-		Yii::app()->end();
+		exit();
 	}
 	
 	public function actionInstall(){

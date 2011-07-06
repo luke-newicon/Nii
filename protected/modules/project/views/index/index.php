@@ -9,6 +9,18 @@
 	.item{border:1px solid #ccc;}
 </style>
 
+<div class="toolbar line plm" style="margin-top:-1px;">
+	<div class="line">
+		<div class="unit mrm">
+			<h1 class="man titleBarText">Projects</h1>
+		</div>
+		<div class="lastUnit">
+<!--			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>-->
+		</div>
+	</div>
+</div>
+
+<br/>
 <ul class="noBull projList">
 	<li class="newProject">
 		<div class="projectBox details">

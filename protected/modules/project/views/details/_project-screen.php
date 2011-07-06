@@ -6,6 +6,6 @@
 		<span class="name"><?php echo $screen->getName(); ?></span>
 	</div>
 	<div class="functions">
-		<a class="deleteScreen" href="">Delete</a>
+		<a class="deleteScreen delete" href="">Delete</a>
 	</div>
 </div>

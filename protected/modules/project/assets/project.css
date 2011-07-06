@@ -10,7 +10,8 @@
    TODO customize this sample style
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
-
-
+.toolbarArrow{background:url('toolbar-bc-arrow.png') no-repeat right 1px;padding-right:25px;}
+.toolbar{height:48px;box-shadow:inset 0px 1px 0px #fff, 0px 2px 2px #ccc;border:1px solid #bbb;background:-moz-linear-gradient(center top , #ebebeb, #d1d1d1) repeat scroll 0 0 transparent;}
+.titleBarText{height:38px;padding-top:10px;font-weight:normal;font-family: Arial;font-size:22px;text-shadow:0px 1px 0px #fff;}
 
 
