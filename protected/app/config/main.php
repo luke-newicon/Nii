@@ -140,7 +140,7 @@ return array(
 					'resize' => array('width'=>16, 'height'=>16, 'master'=>'max', 'scale'=>'down')
 				),
 			),
-			'notFoundImage'=>'NoPhoto.png'
+			'notFoundImage'=>Yii::getPathOfAlias('base.images.newicon').'.png',
         ),
 		'log'=>array(
 			'class'=>'CLogRouter',

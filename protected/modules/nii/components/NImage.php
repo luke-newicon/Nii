@@ -87,17 +87,18 @@ class NImage extends CImageComponent
 	 * @param int $id the fileManager id representing the image to generate the thumb from.
 	 * @param string $type name of the type as defined in config @see self::types
 	 */
-	public function show($id, $type=null, $defaultImage=null) {
+	public function show($id, $type=null) {
 		
 		$imageCacheId = $this->getCacheId($id,$type);
 		
 		$file = Yii::app()->fileManager->getFile($id);
 		
-		// If the file cant be found then loads the default image
+		// If the file can not be found then loads the default image
 		if ($file === null ) {
 			if (Yii::app()->cache !== NULL)
 				Yii::app()->cache->delete($imageCacheId);
-			$fileLocation = $defaultImage ? $defaultImage : $this->notFoundImage;
+			$actions = $type ? $this->getType($type) : array();
+			$fileLocation = array_key_exists('noimage', $actions) ? $actions['noimage'] : $this->notFoundImage;
 		} else {
 			$fileLocation = Yii::app()->fileManager->getFilePath($file);
 		}

@@ -31,8 +31,7 @@ class IndexController extends NController
 	 * controller action for the fileManager
 	 * 
 	 * @param int $id file manager id of file
-	 * @param string $size the image thumb size (defined in NImage thumbs array. e.g. 'small') or
-	 * a custom string of xy-100-122 (walk before you run) 100=x and 122 = y
+	 * @param string $size the image thumb size (defined in NImage thumbs array. e.g. 'small')
 	 */
 	public function actionShow($id,$type){
 		$this->layout = 'ajax';

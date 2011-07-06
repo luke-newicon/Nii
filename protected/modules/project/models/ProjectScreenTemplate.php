@@ -1,7 +1,7 @@
 <?php
 
 /**
- * {name} class file.
+ * Project class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -10,12 +10,13 @@
  */
 
 /**
- * Description of ProjectHotSpots
+ * Description of Project
  *
  * @author steve
  */
-class ProjectHotSpot extends NActiveRecord 
+class ProjectScreenTemplate extends NAppRecord
 {
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return ProjectProject the static model class
@@ -23,18 +24,12 @@ class ProjectHotSpot extends NActiveRecord
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-	
-	public function rules(){
-		return array(
-			array('screen_id,width,height,left,top,screen_id_link','safe')
-		);
-	}
 
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_hotspot}}';
+		return '{{project_screen_template}}';
 	}
 	
 	
@@ -42,20 +37,13 @@ class ProjectHotSpot extends NActiveRecord
 		parent::install($className);
 	}
 	
+	
 	public function schema(){
 		return array(
 			'columns'=>array(
-				'id'=>'pk',
-				'screen_id'=>'int',
 				'template_id'=>'int',
-				'width'=>'int',
-				'height'=>'int',
-				'left'=>'int',
-				'top'=>'int',
-				'screen_id_link'=>'int'
+				'screen_id'=>'int',
 			)
 		);
 	}
-	
-	
 }

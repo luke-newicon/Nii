@@ -27,7 +27,8 @@ class ProjectModule extends NWebModule
 		// relies on the image component NImage
 		Yii::app()->image->addType('projectThumb',array(
 			'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
-			'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top')
+			'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
+			'noimage'=>Yii::getPathOfAlias('base.images.profile').'.png'
 		));
 		
 		if(!Yii::app()->user->isGuest)
@@ -38,6 +39,8 @@ class ProjectModule extends NWebModule
 		Project::install();
 		ProjectScreen::install();
 		ProjectHotSpot::install();
+		ProjectTemplate::install();
+		ProjectScreenTemplate::install();
 	}
 	
 	/**
