@@ -123,7 +123,7 @@ return array(
 				'grid'=>array(
 					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')),
 			),
-			'notFoundImage'=>'NoPhoto.png'
+			'notFoundImage'=>Yii::getPathOfAlias('base.images.newicon').'.png',
         ),
 		'log'=>array(
 			'class'=>'CLogRouter',

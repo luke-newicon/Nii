@@ -145,5 +145,14 @@ abstract class Image_Driver {
 	 * @return  boolean
 	 */
 	abstract public function sharpen($amount);
+	
+	/**
+	 * allows the configuration to have a noimage file path option
+	 * @param string $imagePath
+	 * @return string 
+	 */
+	public function noImage($imagePath){
+		return $imagePath;
+	}
 
 } // End Image Driver
