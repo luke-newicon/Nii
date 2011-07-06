@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class Template extends NActiveRecord
+class ProjectTemplate extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -50,7 +50,7 @@ class Template extends NActiveRecord
 	 * @return array of ProjectScreen
 	 */
 	public function getHotspots(){
-		return TemplateScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
+		return ProjectTemplateScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
 	}
 	
 	public function getScreensListData(){
