@@ -67,7 +67,7 @@ class Project extends NActiveRecord
 	public function getImageId(){
 		$screen = ProjectScreen::model()->find('project_id=:id AND home_page = 1',array('id'=>$this->id));
 		if($screen===null)
-			$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
+			$screen = ProjectScreen::model()->find(array('condition'=>'project_id=:id','params'=>array('id'=>$this->id),'order'=>'sort ASC'));
 		if($screen===null)
 			return -99;
 		return $screen->file_id;

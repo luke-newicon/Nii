@@ -43,7 +43,7 @@ class DetailsController extends AController
 		@set_time_limit(5 * 60);
 
 		// Uncomment this one to fake upload time
-		//usleep(100000);
+		sleep(1);
 		// Get parameters
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
@@ -148,7 +148,7 @@ class DetailsController extends AController
 		$p->project_id = $projectId;
 		$p->name = ProjectScreen::model()->formatFileName($orginalName);
 		$p->save();
-		$res = $this->render('_project-screen',array('screen'=>$p),true);
+		$res = $this->renderPartial('_project-screen',array('screen'=>$p), true, false);
 		// Return JSON-RPC response
 		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
 	}

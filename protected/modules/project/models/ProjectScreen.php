@@ -102,7 +102,6 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	
-	
 	public function schema(){
 		return array(
 			'columns'=>array(

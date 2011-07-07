@@ -3,9 +3,9 @@
 		<img src="<?php echo NHtml::urlImageThumb($screen->file_id, 'projectThumb'); ?>" />
 	</a>
 	<div class="projName">
-		<span class="name"><?php echo $screen->getName(); ?></span>
+		<div class="name" title="<?php echo $screen->getName(); ?>"><?php echo $screen->getName(); ?></div>
 	</div>
 	<div class="functions">
-		<a class="deleteScreen delete" href="">Delete</a>
+		<a href="#" class="deleteScreen btn aristo" ><img width="16" height="16" src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
 	</div>
 </div>

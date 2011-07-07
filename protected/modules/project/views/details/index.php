@@ -4,26 +4,34 @@
 	
 	
 	.projList li{display:inline-block;float:left;margin:15px;}
-	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
+	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	
 	.projName{height:40px;}
-	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
+	.projName .name,a.addProject{font-size:120%;font-weight:bold;width:200px;overflow:hidden;}
 	
 	.plupload input{cursor:pointer;}
 	
 	
 	
-	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;min-height:150px;}
+	#dropzone{border:1px solid #555;background-color:#909090;min-height:150px;}
 	#dropzone.miniDrop{display:none;}
-	#dropzone.dragging{background-color:#000;display:block;}
+	#dropzone.dragging{background-color:#666;display:block;}
 	
 	
 	.projectBox{background-color:#fff;position:relative;background-color:#fff;border:1px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
-	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
-	.functions{border-radius:3px;visibility: hidden;background-color:#f4f4dc;padding:3px;}
+	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;background-color:#fff;}
+	.functions{visibility: hidden;padding:3px;position:absolute;bottom:8px;right:10px;}
 	.hover .functions{visibility:visible;}
 	.main{background-color:#f9f9f9;}
+	
+	
+
+
+	
+	
+	
+	
 </style>
 
 <div class="toolbar line plm" style="margin-top:-1px;">
@@ -39,11 +47,13 @@
 			
 		</div>
 		<div class="lastUnit plm">
-			<a href="#" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
 		</div>
 	</div>
 </div>
-
+<div id="dropzone">
+	
+</div>
 <br />
 <br />
 
@@ -63,6 +73,9 @@
  )); ?>
 
 
+<?php if(count($screens) === 0): ?>
+<p>Upload screens to start! </p>
+<?php endif; ?>
 
 <div id="container">
 	<a class="btn btnN" id="pickfiles" href="#">Select files...</a>
@@ -72,7 +85,7 @@
 
 
 <ul class="noBull projList">
-	<li><div class="projectBox addScreen">add screens n stuff...
+	<li><div class="projectBox addScreen" data-id="0">add screens n stuff...
 		<div id="dropzone" class="mll miniDrop">
 	
 		</div>
@@ -88,6 +101,17 @@
 <script>
 // Custom example logic
 $(function(){
+	
+	
+	$('.toolbar').delegate('.delete','click',function(){
+		$projectBox = $(this).closest('.projectBox');
+		if(confirm('Are you sure you want to delete this project?')){
+			$.post("<?php echo NHtml::url('/project/index/delete') ?>",{id:<?php echo $project->id; ?>},function(){
+				location.href = "<?php echo NHtml::url('/project/index/index'); ?>";
+			});
+		}
+	});
+	
 	
 	var timer = {};
 	window.ondragenter = function(e){
@@ -143,8 +167,15 @@ $(function(){
 		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number);
 		
 		$.each(files, function(i, file) {
+			console.log(file);
+			$('.projList').prepend(
+				'<li><div class="projectBox" id="' + file.id + '">'+
+					'<a class="projImg" href="#"><img src=""></a>'+
+					'<div class="projName"><span class="name">'+file.name+'</span></div>' +
+				'</div></li>'
+			)
 			$('#dropzone').append(
-				'<div class="uploading" id="' + file.id + '">' +
+				'<div class="uploading" id2="' + file.id + '">' +
 				file.name + ' (' + plupload.formatSize(file.size) + ')' +
 			'</div>');
 		});
@@ -153,8 +184,9 @@ $(function(){
 	});
 
 	uploader.bind('UploadProgress', function(up, file) {
+		console.log(file);
 		//alert(file.percent);
-		$('#' + file.id + " strong").html(file.percent + "%");
+		$('#' + file.id).html(file.percent+'%');
 	});
 
 	uploader.bind('Error', function(up, err) {
@@ -173,9 +205,9 @@ $(function(){
 		if(r.error != undefined){
 			alert(r.error.message);
 		}
-		$('#' + file.id + " strong").html("100%");
-		$('#' + file.id).remove();
-		$('.projList').append('<li>'+r.result+'</li>')
+		$('#' + file.id).replaceWith(r.result);
+		//$('#' + file.id).remove();
+		//$('.projList').append('<li>'+r.result+'</li>')
 		
 	});
 	
