@@ -13,7 +13,7 @@
 	
 	
 	
-	#dropzone{border:1px solid #555;background-color:#909090;min-height:150px;}
+	#dropzone{border:1px solid #555;background-color:#909090;}
 	#dropzone.miniDrop{display:none;}
 	#dropzone.dragging{background-color:#666;display:block;}
 	
@@ -26,11 +26,12 @@
 	.main{background-color:#f9f9f9;}
 	
 	
+	.pending{border-style: dashed;background-color:#f1f1f1;}
+	.uploading{border-style:solid;background-color:#f1f1f1;}
 
-
+	.sortablePlaceholder{background-color:#f1f1f1;border:1px dotted #ccc;}
 	
-	
-	
+	.plupload{cursor:pointer;}
 	
 </style>
 
@@ -44,15 +45,23 @@
 		</div>
 		<div class="unit">
 			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
-			
+		</div>
+		<div class="unit plm">
+			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+		</div>
+		<div class="unit plm">
+			<a href="#" class="upload" style="padding-top:14px;display:block;" >Add Screens</a>
+		</div>
+		<div class="unit plm">
+			<a href="#" class="upload" style="padding-top:14px;display:block;" >Comments</a>
 		</div>
 		<div class="lastUnit plm">
-			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+			<a href="#" class="upload" style="padding-top:14px;display:block;" >Collaborator</a>
 		</div>
 	</div>
 </div>
-<div id="dropzone">
-	
+<div id="" class="droppy" style="display:none;height:150px;">
+	<a class="btn aristo" href="#">Browse...</a>
 </div>
 <br />
 <br />
@@ -77,19 +86,22 @@
 <p>Upload screens to start! </p>
 <?php endif; ?>
 
-<div id="container">
-	<a class="btn btnN" id="pickfiles" href="#">Select files...</a>
-<!--	<a id="uploadfiles" href="#">[Upload files]</a>-->
-</div>
 
 
 
 <ul class="noBull projList">
-	<li><div class="projectBox addScreen" data-id="0">add screens n stuff...
-		<div id="dropzone" class="mll miniDrop">
-	
+	<li class="addScreen">
+		<div class="projectBox" data-id="0" style="cursor:pointer;">
+			<div id="dropzone" class="mll" style="height:150px;">
+
+			</div>
+			<p>or</p>
+			<div id="container" style="cursor:pointer;">
+				<a style="cursor:pointer;" class="btn aristo" id="pickfiles" href="#">Browse files...</a>
+			</div>
+			<div class="progress"></div>
 		</div>
-	</div></li>
+	</li>
 	<?php foreach($screens as $screen): ?>
 	<li>
 		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>
@@ -163,22 +175,43 @@ $(function(){
 
 	uploader.init();
 
+	var totalPercent;
+	var totalImages;
+	var currentImage;
+	
+	var doPercent = function(){
+		totalPercent = (currentImage*100)/totalImages;
+		$('.projList .addScreen .progress').html(Math.floor(totalPercent)+'%');	
+	};
+	
 	uploader.bind('FilesAdded', function(up, files) {
-		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number);
+		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number)
 		
-		$.each(files, function(i, file) {
-			console.log(file);
-			$('.projList').prepend(
-				'<li><div class="projectBox" id="' + file.id + '">'+
-					'<a class="projImg" href="#"><img src=""></a>'+
-					'<div class="projName"><span class="name">'+file.name+'</span></div>' +
-				'</div></li>'
-			)
-			$('#dropzone').append(
-				'<div class="uploading" id2="' + file.id + '">' +
-				file.name + ' (' + plupload.formatSize(file.size) + ')' +
-			'</div>');
+		$.each(files.reverse(), function(i, file) {
+			
+			screenName = file.name.replace(/\.[^\.]*$/, '');
+			screenName.replace('-',' ').replace('_', ' ')
+			
+			var content = '<li><div class="projectBox pending" id="' + file.id + '">' +
+				'<a class="projImg" href="#"></a>' +
+				'<div class="projName"><div class="name">'+screenName+'</div></div>' +
+				'<div class="progress"></div>' +
+			'</div></li>';
+			
+			// lookup the name
+			// remove the file name
+			
+			$exists = $('.projectBox[data-name="'+screenName+'"]');
+			if($exists.length!=0){
+				$exists.closest('li').replaceWith(content);
+			}else{
+				$('.projList .addScreen').after(content);
+			}
 		});
+		totalPercent = 0;
+		currentImage = 0;
+		totalImages = files.length;
+		$('.projList .addScreen .progress').html('uploading 1 of '+files.length);		
 		up.refresh(); // Reposition Flash/Silverlight
 		if(up.files.length > 0) uploader.start();
 	});
@@ -186,7 +219,17 @@ $(function(){
 	uploader.bind('UploadProgress', function(up, file) {
 		console.log(file);
 		//alert(file.percent);
-		$('#' + file.id).html(file.percent+'%');
+		var $box = $('#' + file.id);
+		if(!$box.is('uploading')){
+			$box.removeClass('pending').addClass('uploading');
+			$box.animate({backgroundColor: "#fff"});
+		}
+			
+		//	$box.removeClass('pending').addClass('uploading');
+		$('#' + file.id).find('.progress').html(file.percent+'%');
+		
+		// work out total upload progress
+		doPercent();
 	});
 
 	uploader.bind('Error', function(up, err) {
@@ -200,12 +243,43 @@ $(function(){
 	});
 
 	uploader.bind('FileUploaded', function(up, file, info) {
+		currentImage = currentImage + 1;
+		doPercent();
+		
+		
 		console.log(info);
 		var r = $.parseJSON(info.response);
 		if(r.error != undefined){
 			alert(r.error.message);
 		}
-		$('#' + file.id).replaceWith(r.result);
+		
+		if(r.replacement){
+			$('.projectBox[data-id="'+r.id+'"]').closest('li').hide('normal', function(){$(this).remove();});
+		}
+		var $box = $(r.result);
+		$('#' + file.id).replaceWith($box);
+		$box.addClass('uploaded');
+		$box.find('.projImg').addClass('loading');
+		// check to see if it is a replacement
+		
+		// when the DOM is ready
+		var img = new Image();
+		// wrap our new image in jQuery, then:
+		$(img).load(function () {
+			// set the image hidden by default    
+			$(this).hide();
+			$box.find('.projImg')
+			// remove the loading class (so no background spinner), 
+			.removeClass('loading')
+			// then insert our image
+			.append(this);
+			 $(this).fadeIn();
+		})
+		.error(function () {
+			// show broken image graphic here
+			alert('oops broken image');
+		})
+		.attr('src', r.src);
 		//$('#' + file.id).remove();
 		//$('.projList').append('<li>'+r.result+'</li>')
 		
@@ -215,15 +289,20 @@ $(function(){
 	// delete the images
 	$('.projList').delegate('.deleteScreen','click',function(){
 		$projectBox = $(this).closest('.projectBox');
-		if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" screen?')){
+		//if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" screen?')){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
 			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){});
-		}
+		//}
 		return false;
 	})
 	.sortable({
+		cancel:'.btn,.addScreen',
+		items:'li:not(.addScreen)',
+		revert:100,
+		placeholder:'projectBox sortablePlaceholder',
+		opacity:0.8,
 		stop:function(){
 			var order = {};
 			$('.projList li').each(function(i,el){
@@ -240,5 +319,9 @@ $(function(){
 	// add hover class when hovering over a screen
 	$('.projList').delegate('.projectBox','mouseenter',function(){$(this).addClass("hover");});
 	$('.projList').delegate('.projectBox','mouseleave',function(){$(this).removeClass("hover");});
+	
+	$('.upload').click(function(){
+		$('.droppy').slideToggle(200);
+	});
 });
 </script>

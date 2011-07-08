@@ -43,6 +43,9 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	/**
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * !!!! NOTE IF YOU CHANGE THIS FUNCTION YOU MUST CHANGE THE JAVASCRIPT EQUIVELANT ON THE details/index.php PAGE
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 * initially when first uploaded the screens name is equivelant to the filename, this function
 	 * formats the filename so it a-lookedy-nice.
 	 * @param string $filename
@@ -50,9 +53,10 @@ class ProjectScreen extends NAppRecord
 	 */
 	public function formatFileName($filename){
 		// remove file extension
-		$name = substr($filename, 0,strrpos($filename,'.'));
+		$name = preg_replace("/\.[^\.]*$/", '', $filename);
+		//$name = substr($filename, 0,strrpos($filename,'.'));
 		// convert dashes to spaces
-		$name = str_replace('-', ' ', $name);
+		$name = str_replace(array('-','_'), ' ', $name);
 		return $name;
 	}
 	

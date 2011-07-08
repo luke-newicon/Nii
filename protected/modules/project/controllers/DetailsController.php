@@ -24,8 +24,8 @@ class DetailsController extends AController
 		$this->render('index', array('project'=>$p, 'screens'=>$p->getScreens()));
 	}
 	
-	public function actionUpload($projectId){
-		$this->layout = 'ajax';
+	
+	public function pluploadProcess(&$targetDir, &$fileName, &$orginalName){
 		// HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -43,7 +43,7 @@ class DetailsController extends AController
 		@set_time_limit(5 * 60);
 
 		// Uncomment this one to fake upload time
-		sleep(1);
+		sleep(1.5);
 		// Get parameters
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
@@ -142,15 +142,43 @@ class DetailsController extends AController
 		}
 		$fileContents = file_get_contents($targetDir . DIRECTORY_SEPARATOR . $fileName);
 		unlink($targetDir . DIRECTORY_SEPARATOR . $fileName);
+		return $fileContents;
+	}
+	
+	public function actionUpload($projectId){
+		$this->layout = 'ajax';
+		
+		// upload the file and return contents
+		$fileContents = $this->pluploadProcess($targetDir, $fileName, $orginalName);
+		
 		$id = NFileManager::get()->addFile($fileName, $fileContents);
-		$p = new ProjectScreen;
-		$p->file_id = $id;
-		$p->project_id = $projectId;
-		$p->name = ProjectScreen::model()->formatFileName($orginalName);
-		$p->save();
-		$res = $this->renderPartial('_project-screen',array('screen'=>$p), true, false);
+		
+		$name = ProjectScreen::model()->formatFileName($orginalName);
+		
+		$s = ProjectScreen::model()->findByAttributes(array('name'=>$name,'project_id'=>$projectId));
+		$replacement=false;
+		if($s===null){
+			$s = new ProjectScreen;
+		}else{
+			// delete current file
+			NFileManager::get()->deleteFile($s->file_id);
+			$replacement=true;
+		}
+		$s->file_id = $id;
+		$s->project_id = $projectId;
+		$s->name = ProjectScreen::model()->formatFileName($orginalName);
+		$s->save();
+		$res = $this->renderPartial('_project-screen',array('screen'=>$s,'loadIn'=>true), true, false);
+		
 		// Return JSON-RPC response
-		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
+		$ret = array(
+			'jsonrpc' => '2.0',
+			'result' => $res,
+			'src'=> NHtml::urlImageThumb($s->file_id, 'projectThumb'),
+			'id' => $s->id,
+			'replacement'=>$replacement
+		);
+		die(json_encode($ret));
 	}
 	
 	/**

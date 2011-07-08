@@ -123,7 +123,7 @@ class NFile extends NActiveRecord
 				'id'=>'pk',
 				'uploaded_by'=>'int',
 				'description'=>'text',
-				'uploaded'=>'timestamp NULL DEFAULT NULL',
+				'uploaded'=>'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',
 				'original_name'=>'string',
 				'filed_name'=>'string',
 				'size'=>'string',
@@ -162,6 +162,7 @@ class NFile extends NActiveRecord
 		$this->mime = $mime;
 		$this->file_path = 'xxx';
 		$this->category = $category;
+		$this->uploaded_by = Yii::app()->user->getId();
 		$this->save();
 		return $this->id;
 	}

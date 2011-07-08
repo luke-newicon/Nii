@@ -91,42 +91,43 @@ class NImage extends CImageComponent
 		
 		$imageCacheId = $this->getCacheId($id,$type);
 		
+		// if cache is enabled WHICH IT SHOULD BE! lets check for chache
+		if (Yii::app()->cache !== NULL){
+			if(($cachedImage = Yii::app()->cache->get($imageCacheId))){
+				Yii::app()->fileManager->displayFileData($cachedImage['img'], $cachedImage['mime'], $cachedImage['original_name']);
+				return;
+			}
+		}
+		
+		// no chache so lets crunch		
+		
 		$file = Yii::app()->fileManager->getFile($id);
 		
 		// If the file can not be found then loads the default image
 		if ($file === null ) {
-			if (Yii::app()->cache !== NULL)
-				Yii::app()->cache->delete($imageCacheId);
 			$actions = $type ? $this->getType($type) : array();
 			$fileLocation = array_key_exists('noimage', $actions) ? $actions['noimage'] : $this->notFoundImage;
-		} else {
-			$fileLocation = Yii::app()->fileManager->getFilePath($file);
-		}
-		
-		if ($file === null ) {
 			$actions = $type ? $this->getType($type) : array();
 			$image = $this->load($fileLocation,$actions);
 			$image->render();
-		} else {
-			if (Yii::app()->cache !== NULL){
-				$cachedImage = Yii::app()->cache->get($imageCacheId);
-				if (!$cachedImage) {
-					// TODO: Check to make sure the user has permission to download the selected file.
-					// Make the thumb image and save
-					$actions = $type ? $this->getType($type) : array();
-					$image = $this->load($fileLocation,$actions);
-					$imageContents = $image->generate();
-					// Cache contents
-					Yii::app()->cache->set($imageCacheId, $imageContents, '6500');
-				} else {
-					$imageContents = $cachedImage;
-				}
-			} else {
-				$imageContents = file_get_contents($fileLocation);
-			}
-
-			Yii::app()->fileManager->displayFileData($imageContents, $file->mime, $file->original_name);
+			return;
 		}
+		
+		
+		// file exists in file manager
+		$fileLocation = Yii::app()->fileManager->getFilePath($file);
+		
+		// Make the thumb image and save
+		$actions = $type ? $this->getType($type) : array();
+		$image = $this->load($fileLocation,$actions);
+		$imageContents = $image->generate();
+		// Cache contents
+		$cache = array('img'=>$imageContents,'mime'=>$file->mime, 'original_name'=>$file->original_name);
+		if (Yii::app()->cache !== NULL){
+			Yii::app()->cache->set($imageCacheId, $cache, '6500');
+		} 
+
+		Yii::app()->fileManager->displayFileData($cache['img'], $file['mime'], $file['original_name']);
 	}
 
 	/**

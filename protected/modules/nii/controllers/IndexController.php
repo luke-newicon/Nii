@@ -43,5 +43,6 @@ class IndexController extends NController
 		Yii::app()->install();
 	}
 	
+
+	
 }
-?>

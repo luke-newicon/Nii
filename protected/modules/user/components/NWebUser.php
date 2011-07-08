@@ -115,6 +115,5 @@ class NWebUser extends CWebUser
 			throw new CException('No record found for the logged in user');
 		}
 	}
-	
 
 }

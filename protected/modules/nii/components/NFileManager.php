@@ -253,6 +253,7 @@ class NFileManager extends CApplicationComponent
 		return $newFile->id;
 	}
 
+
 	/**
 	 * Remove a file from the system
 	 * 
