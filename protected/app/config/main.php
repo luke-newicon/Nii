@@ -203,7 +203,7 @@ return array(
 		),
 		'fileManager'=>array(
 			'class'=>'NFileManager',
-			'location'=>Yii::getPathOfAlias('base.uploads'),
+			'location'=>Yii::getPathOfAlias('base.assets'),
 			'locationIsAbsolute'=>true,
 			'defaultCategory' => 'attachments',
 			'categories' => array(

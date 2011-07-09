@@ -148,11 +148,14 @@ class NFileManager extends CApplicationComponent
 		$categoryLoc = array_key_exists($category, $this->categories) ? $this->categories[$category] : $category;
 		
 		if($this->locationIsAbsolute)
-			$targetPath = $this->location.DS.$categoryLoc.DS;
+			$targetPath = $this->location.DS.$categoryLoc;
 		else
-			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc.DS;
+			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc;
+		// if path doesn't exist atempt to create it.
+		if(!file_exists($targetPath))
+			mkdir($targetPath);
 		
-		return $targetPath;
+		return $targetPath.DS;
 	}
 	
 	/**
