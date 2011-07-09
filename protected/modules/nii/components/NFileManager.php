@@ -349,15 +349,15 @@ class NFileManager extends CApplicationComponent
 	/**
 	 * deletes a file from the server and removes the associated database record.
 	 * @param int $fileId
-	 * @return boolean true on success false on failure 
 	 */
 	public function deleteFile($fileId){
 		$f = NFile::model()->findByPk($fileId);
 		$filePath = $this->getFilePath($f);
-		if(unlink($filePath)){
-			$f->delete();
-			return true;
-		}
+		// it is possible if upload directories have changed or db and filesystem is out of sync
+		// for threr to be no file so first lets check there is a file available for deletion
+		if(file_exists($filePath))
+			unlink($filePath);
+		$f->delete();
 		return false;
 	}
 	
