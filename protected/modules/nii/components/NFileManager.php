@@ -164,7 +164,7 @@ class NFileManager extends CApplicationComponent
 	 * @return string system path to the file
 	 */
 	public function getFilePath($file){
-		return $this->getPath($file->category) . DIRECTORY_SEPARATOR . $file->filed_name;
+		return $this->getPath($file->category) . $file->filed_name;
 	}
 	
 	/**

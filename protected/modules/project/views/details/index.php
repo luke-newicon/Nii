@@ -50,7 +50,9 @@
 			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
 		</div>
 		<div class="unit plm">
-			<a href="#" class="upload" style="padding-top:14px;display:block;" >Add Screens</a>
+			<div id="container" style="cursor:pointer;">
+				<a style="cursor:pointer;" class="btn aristo" id="pickfiles" href="#">Browse files...</a>
+			</div>
 		</div>
 		<div class="unit plm">
 			<a href="#" class="upload" style="padding-top:14px;display:block;" >Comments</a>
@@ -60,8 +62,7 @@
 		</div>
 	</div>
 </div>
-<div id="" class="droppy" style="display:none;height:150px;">
-	<a class="btn aristo" href="#">Browse...</a>
+<div id="drop" class="droppy dropzone" style="border-radius:10px;border:5px solid #666;background-color:#fff;filter:alpha(opacity=90);opacity:0.9;position:absolute;z-index:9999;display:none;height:150px;background-color:#fff">
 </div>
 <br />
 <br />
@@ -83,25 +84,17 @@
 
 
 <?php if(count($screens) === 0): ?>
-<p>Upload screens to start! </p>
+<div style="border: 2px dashed #ccc;margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
 <?php endif; ?>
 
 
-
+<div id="progress" class="pal">
+	<div class="percent"></div>
+	<div class="qty"><span class="current"></span> of <span class="total"></span></div>
+	<div class="curentpercent"></div>
+</div>
 
 <ul class="noBull projList">
-	<li class="addScreen">
-		<div class="projectBox" data-id="0" style="cursor:pointer;">
-			<div id="dropzone" class="mll" style="height:150px;">
-
-			</div>
-			<p>or</p>
-			<div id="container" style="cursor:pointer;">
-				<a style="cursor:pointer;" class="btn aristo" id="pickfiles" href="#">Browse files...</a>
-			</div>
-			<div class="progress"></div>
-		</div>
-	</li>
 	<?php foreach($screens as $screen): ?>
 	<li>
 		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>
@@ -126,23 +119,31 @@ $(function(){
 	
 	
 	var timer = {};
-	window.ondragenter = function(e){
+	$('.main').get(0).addEventListener("dragenter", function(e){
 		//$('#dropzone').show();
 		clearTimeout(timer);
 		$('#dropzone').addClass('dragging');
-	};
-	window.addEventListener( 'dragover', function(){
+		$('#drop').show().addClass('dragging').width($(window).width()-40).height($(window).height()-40)
+			.position({'my':'center','at':'center','of':$(window)})
+	}, false);
+	
+	$('.main').get(0).addEventListener( 'dragover', function(){
 		clearTimeout(timer);
+		timer = setTimeout(function(){
+			$('#drop').fadeOut();
+			$('#dropzone').removeClass('dragging');
+		},300);
 		$('#dropzone').addClass('dragging');
+		$('#drop').show();
 	}, true );
 	
-	window.addEventListener("dragleave", function(){
+	$('.main').get(0).addEventListener("dragleave", function(e){
 		if(timer)
 			clearTimeout(timer);
 		timer = setTimeout(function(){
+			$('#drop').hide();
 			$('#dropzone').removeClass('dragging');
 		},300);
-		
 	}, false);
 	
 	
@@ -159,7 +160,7 @@ $(function(){
 			{title : "Image files", extensions : "jpg,gif,png"},
 			{title : "Zip files", extensions : "zip"}
 		],
-		drop_element:'dropzone'
+		drop_element:'drop'
 		//resize : {width : 320, height : 240, quality : 90}
 	});
 	
@@ -178,10 +179,13 @@ $(function(){
 	var totalPercent;
 	var totalImages;
 	var currentImage;
+	var currentPercent;
 	
 	var doPercent = function(){
-		totalPercent = (currentImage*100)/totalImages;
-		$('.projList .addScreen .progress').html(Math.floor(totalPercent)+'%');	
+		$('#progress .percent').html(totalPercent+'%');
+		if(currentImage+1 <= totalImages)
+			$('#progress .current').html(currentImage+1);
+		$('#progress .total').html(totalImages);
 	};
 	
 	uploader.bind('FilesAdded', function(up, files) {
@@ -205,19 +209,18 @@ $(function(){
 			if($exists.length!=0){
 				$exists.closest('li').replaceWith(content);
 			}else{
-				$('.projList .addScreen').after(content);
+				$('.projList').prepend(content);
 			}
 		});
 		totalPercent = 0;
 		currentImage = 0;
 		totalImages = files.length;
-		$('.projList .addScreen .progress').html('uploading 1 of '+files.length);		
+		//doPercent();
 		up.refresh(); // Reposition Flash/Silverlight
 		if(up.files.length > 0) uploader.start();
 	});
 
 	uploader.bind('UploadProgress', function(up, file) {
-		console.log(file);
 		//alert(file.percent);
 		var $box = $('#' + file.id);
 		if(!$box.is('uploading')){
@@ -227,8 +230,10 @@ $(function(){
 			
 		//	$box.removeClass('pending').addClass('uploading');
 		$('#' + file.id).find('.progress').html(file.percent+'%');
-		
+		currentPercent = file.percent;
 		// work out total upload progress
+		console.log(uploader);
+		totalPercent = uploader.total.percent;
 		doPercent();
 	});
 

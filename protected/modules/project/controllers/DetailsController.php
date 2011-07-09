@@ -43,7 +43,7 @@ class DetailsController extends AController
 		@set_time_limit(5 * 60);
 
 		// Uncomment this one to fake upload time
-		sleep(1.5);
+		//sleep(5);
 		// Get parameters
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
