@@ -191,6 +191,7 @@ $(function(){
 	};
 	
 	uploader.bind('FilesAdded', function(up, files) {
+		$('#no-screens-info').fadeOut();
 		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number)
 		if(!$('#progress').is(':visible'))
 			$('#progress').fadeIn().position({'my':'center','at':'center','of':$(window)});
@@ -293,7 +294,6 @@ $(function(){
 	});
 	uploader.bind('UploadComplete', function(up, file, info) {
 		$('#progress').fadeOut();
-		$('#no-screens-info').fadeOut();
 	});
 	
 	// delete the images
