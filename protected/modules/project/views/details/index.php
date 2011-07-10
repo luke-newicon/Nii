@@ -50,18 +50,13 @@
 			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
 		<div class="unit plm">
+			<a href="#" id="pickfiles" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/upload.png'; ?>"/></a>
+		</div>
+		<div class="unit plm">
 			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
 		</div>
-		<div class="unit plm">
-			<div id="container" style="cursor:pointer;">
-				<a style="cursor:pointer;" class="btn aristo" id="pickfiles" href="#">Browse files...</a>
-			</div>
-		</div>
-		<div class="unit plm">
-			<a href="#" class="upload" style="padding-top:14px;display:block;" >Comments</a>
-		</div>
 		<div class="lastUnit plm">
-			<a href="#" class="upload" style="padding-top:14px;display:block;" >Collaborator</a>
+<!--			<a href="#" class="upload" style="padding-top:14px;display:block;" >Collaborator</a>-->
 		</div>
 	</div>
 </div>
@@ -93,7 +88,7 @@
 
 <div id="progress" class="pam" style="">
 	<div class="bar"></div>
-	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span></div>
+	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span> <span class="size"></span></div>
 </div>
 
 <ul class="noBull projList">
@@ -153,7 +148,7 @@ $(function(){
 	var uploader = new plupload.Uploader({
 		runtimes : 'html5,flash,silverlight,browserplus',
 		browse_button : 'pickfiles',
-		container : 'container',
+		//container : 'container',
 		max_file_size : '10mb',
 		url : '<?php echo NHtml::url(array('/project/details/upload/','projectId'=>$project->id)) ?>',
 		flash_swf_url:"/newicon/Nii/assets/79029962/plupload.flash.swf",
