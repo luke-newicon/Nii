@@ -93,7 +93,7 @@
 
 <div id="progress" class="pam" style="">
 	<div class="bar"></div>
-	<div class="qty">Uploading <span class="current"></span> of <span class="total"></span> <span class="percent"></span></div>
+	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span></div>
 </div>
 
 <ul class="noBull projList">

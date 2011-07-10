@@ -20,4 +20,8 @@ class DocsController extends NController
 		
 		$this->render('index');
 	}
+	
+	public function actionFilelocation(){
+		echo NFileManager::get()->location;
+	}
 }
