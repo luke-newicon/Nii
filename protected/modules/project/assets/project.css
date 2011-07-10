@@ -27,3 +27,4 @@
 .loading{background: url(spinner.gif) no-repeat center center;}
 .loading-fb{background: url(fb-spinner.gif) no-repeat center center;}
 .ui-progressbar-value{background:#ccc url('pbar-ani.gif') repeat-x left top;border:1px solid #E78F08}
+#no-screens-info{height: 258px;left: 45px;margin: 10px;padding: 20px;position: absolute;top: 80px; width: 475px;background:transparent url('no-screens-info.png') no-repeat left top;}

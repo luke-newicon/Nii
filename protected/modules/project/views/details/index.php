@@ -82,7 +82,12 @@
 
 
 <?php if(count($screens) === 0): ?>
-<div class="" style="margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
+<div id="no-screens-info" style="position:absolute;display:block;"></div>
+<script>
+$(function(){
+	//$('#no-screens-info').position({'my':'center top','at':'center bottom','of':$('#pickfiles'),'offset':'103px 0px'});	
+})
+</script>
 <?php endif; ?>
 
 
@@ -288,6 +293,7 @@ $(function(){
 	});
 	uploader.bind('UploadComplete', function(up, file, info) {
 		$('#progress').fadeOut();
+		$('#no-screens-info').fadeOut();
 	});
 	
 	// delete the images
@@ -326,6 +332,7 @@ $(function(){
 	
 	$('.upload').click(function(){
 		$('.droppy').slideToggle(200);
+		$('#no-screens-info').fadeOut();
 	});
 });
 </script>
