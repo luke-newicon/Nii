@@ -33,6 +33,9 @@
 	
 	.plupload{cursor:pointer;}
 	
+	#progress{position:fixed;display:none;z-index:10;width:300px;border-radius:5px;opacity:0.9;color:#fff;text-shadow:0 -1px 0 #000;box-shadow:0px 0px 5px #444, inset 0px 1px 0px #ccc;background:-moz-linear-gradient(center top , #999999, #333333) repeat scroll 0 0 transparent;border:1px solid #333;}
+	.ui-progressbar{background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
+	
 </style>
 
 <div class="toolbar line plm" style="margin-top:-1px;">
@@ -84,16 +87,13 @@
 
 
 <?php if(count($screens) === 0): ?>
-<div class="dropzone" style="margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
+<div class="" style="margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
 <?php endif; ?>
 
 
-<div id="progress" class="pal">
-	<div class="percent"></div>
-	<div class="qty"><span class="current"></span> of <span class="total"></span></div>
-	<div class="curentpercent"></div>
-	<div class="bytespersecond"></div>
-	<div class="totalSize"></div>
+<div id="progress" class="pam" style="">
+	<div class="bar"></div>
+	<div class="qty">Uploading <span class="current"></span> of <span class="total"></span> <span class="percent"></span></div>
 </div>
 
 <ul class="noBull projList">
@@ -121,7 +121,7 @@ $(function(){
 	
 	
 	var timer = {};
-	$('.main').get(0).addEventListener("dragenter", function(e){
+	window.addEventListener("dragenter", function(e){
 		//$('#dropzone').show();
 		clearTimeout(timer);
 		$('#dropzone').addClass('dragging');
@@ -129,23 +129,23 @@ $(function(){
 			.position({'my':'center','at':'center','of':$(window)})
 	}, false);
 	
-	$('.main').get(0).addEventListener( 'dragover', function(){
+	window.addEventListener( 'dragover', function(){
 		clearTimeout(timer);
 		timer = setTimeout(function(){
-			$('#drop').fadeOut();
+			$('#drop').fadeOut('fast');
 			$('#dropzone').removeClass('dragging');
-		},300);
+		},150);
 		$('#dropzone').addClass('dragging');
 		$('#drop').show();
 	}, true );
 	
-	$('.main').get(0).addEventListener("dragleave", function(e){
+	window.addEventListener("dragleave", function(e){
 		if(timer)
 			clearTimeout(timer);
 		timer = setTimeout(function(){
-			$('#drop').hide();
+			$('#drop').fadeOut('fast');
 			$('#dropzone').removeClass('dragging');
-		},300);
+		},150);
 	}, false);
 	
 	
@@ -181,32 +181,27 @@ $(function(){
 	var totalPercent;
 	var totalImages;
 	var currentImage;
-	var currentPercent;
-	var totalSize=0;
 	var doPercent = function(){
-		$('#progress .percent').html(totalPercent+'%');
+		//$('#progress .percent').html(totalPercent+'%');
 		if(currentImage+1 <= totalImages)
 			$('#progress .current').html(currentImage+1);
 		$('#progress .total').html(totalImages);
-		var bps = uploader.total.bytesPerSec;
-		var remaining = uploader.total.size - uploader.total.loaded;
-		var seconds = remaining / bps;
-		
-		$('.bytespersecond').html(seconds);
-		$('.totalSize').html(uploader.total.size);
+		$("#progress .bar").progressbar({value: totalPercent});
+		$("#progress .percent").html(totalPercent + '% complete');
 	};
 	
 	uploader.bind('FilesAdded', function(up, files) {
 		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number)
-		
+		if(!$('#progress').is(':visible'))
+			$('#progress').fadeIn().position({'my':'center','at':'center','of':$(window)});
 		$.each(files.reverse(), function(i, file) {
 			screenName = file.name.replace(/\.[^\.]*$/, '');
 			screenName = screenName.replace(/-/g, " ");
 			screenName = screenName.replace(/_/g, " ");
 			var content = '<li><div class="projectBox pending" id="' + file.id + '">' +
-				'<a class="projImg" href="#"></a>' +
+				'<a class="projImg loading-fb" href="#"></a>' +
 				'<div class="projName"><div class="name">'+screenName+'</div></div>' +
-				'<div class="progress"></div>' +
+				'<div class="progress" style="height:10px;position:absolute;bottom:10px;width:180px;left:10px;"></div>' +
 			'</div></li>';
 			
 			// lookup the name
@@ -236,7 +231,7 @@ $(function(){
 		}
 			
 		//	$box.removeClass('pending').addClass('uploading');
-		$('#' + file.id).find('.progress').html(file.percent+'%');
+		$('#'+file.id+' .progress').progressbar({value:file.percent});
 		currentPercent = file.percent;
 		// work out total upload progress
 		console.log(uploader);
@@ -296,7 +291,9 @@ $(function(){
 		//$('.projList').append('<li>'+r.result+'</li>')
 		
 	});
-	
+	uploader.bind('UploadComplete', function(up, file, info) {
+		$('#progress').fadeOut();
+	});
 	
 	// delete the images
 	$('.projList').delegate('.deleteScreen','click',function(){
