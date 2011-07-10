@@ -62,7 +62,7 @@
 		</div>
 	</div>
 </div>
-<div id="drop" class="droppy dropzone" style="border-radius:10px;border:5px solid #666;background-color:#fff;filter:alpha(opacity=90);opacity:0.9;position:absolute;z-index:9999;display:none;height:150px;background-color:#fff">
+<div id="drop" class="dropzone" style="display:none;">
 </div>
 <br />
 <br />
@@ -84,7 +84,7 @@
 
 
 <?php if(count($screens) === 0): ?>
-<div style="border: 2px dashed #ccc;margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
+<div class="dropzone" style="margin:10px;padding:20px;height:100px;">Upload screens to start! </div>
 <?php endif; ?>
 
 
@@ -92,6 +92,8 @@
 	<div class="percent"></div>
 	<div class="qty"><span class="current"></span> of <span class="total"></span></div>
 	<div class="curentpercent"></div>
+	<div class="bytespersecond"></div>
+	<div class="totalSize"></div>
 </div>
 
 <ul class="noBull projList">
@@ -180,22 +182,27 @@ $(function(){
 	var totalImages;
 	var currentImage;
 	var currentPercent;
-	
+	var totalSize=0;
 	var doPercent = function(){
 		$('#progress .percent').html(totalPercent+'%');
 		if(currentImage+1 <= totalImages)
 			$('#progress .current').html(currentImage+1);
 		$('#progress .total').html(totalImages);
+		var bps = uploader.total.bytesPerSec;
+		var remaining = uploader.total.size - uploader.total.loaded;
+		var seconds = remaining / bps;
+		
+		$('.bytespersecond').html(seconds);
+		$('.totalSize').html(uploader.total.size);
 	};
 	
 	uploader.bind('FilesAdded', function(up, files) {
 		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number)
 		
 		$.each(files.reverse(), function(i, file) {
-			
 			screenName = file.name.replace(/\.[^\.]*$/, '');
-			screenName.replace('-',' ').replace('_', ' ')
-			
+			screenName = screenName.replace(/-/g, " ");
+			screenName = screenName.replace(/_/g, " ");
 			var content = '<li><div class="projectBox pending" id="' + file.id + '">' +
 				'<a class="projImg" href="#"></a>' +
 				'<div class="projName"><div class="name">'+screenName+'</div></div>' +
