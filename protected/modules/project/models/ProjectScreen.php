@@ -101,6 +101,34 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	
+	/**
+	 * Gets the number of hotspots on the screen
+	 * 
+	 * @return integer
+	 */
+	public function getNumHotspots(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id));
+	}
+	
+	/**
+	 * Gets the number of screens that link to this screen
+	 * 
+	 * @return integer 
+	 */
+	public function getNumIncomingLinks(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id_link'=>$this->id));
+	}
+	
+	/**
+	 * Gets the number of screens that link to this screen
+	 * 
+	 * @return integer 
+	 */
+	public function getNumOutgoingLinks(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id,'screen_link_id'=>''));
+	}
+	
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
@@ -115,6 +143,14 @@ class ProjectScreen extends NAppRecord
 				'name'=>'string',
 				'home_page'=>'bool',
 				'sort'=>'int'
+			),
+			'keys'=>array(
+				array('sort'),
+				array('file_id'),
+				array('project_id')
+			),
+			'foreignKeys'=>array(
+				array('project_screen','project_id','project_project','id','CASCADE','CASCADE')
 			)
 		);
 	}

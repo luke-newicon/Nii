@@ -21,9 +21,9 @@
 	.projectBox{background-color:#fff;position:relative;background-color:#fff;border:1px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;background-color:#fff;}
-	.functions{visibility: hidden;padding:3px;position:absolute;bottom:8px;right:10px;}
+	.functions{visibility: hidden;position:absolute;bottom:5px;right:10px;}
 	.hover .functions{visibility:visible;}
-	.main{background-color:#f9f9f9;}
+	.main,html{background-color:#f9f9f9;}
 	
 	
 	.pending{border-style: dashed;background-color:#f1f1f1;}
@@ -33,12 +33,14 @@
 	
 	.plupload{cursor:pointer;}
 	
-	#progress{position:fixed;display:none;z-index:10;width:300px;border-radius:5px;opacity:0.9;color:#fff;text-shadow:0 -1px 0 #000;box-shadow:0px 0px 5px #444, inset 0px 1px 0px #ccc;background:-moz-linear-gradient(center top , #999999, #333333) repeat scroll 0 0 transparent;border:1px solid #333;}
+	#progress{position:fixed;display:none;z-index:10;width:300px;}
 	.ui-progressbar{background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
+	
+	
 	
 </style>
 
-<div class="toolbar line plm" style="margin-top:-1px;">
+<div class="toolbar plm" style="margin-top:-1px;">
 	<div class="line">
 		<div class="unit toolbarArrow mrm">
 			<a style="display:block;" class="titleBarText" href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
@@ -49,7 +51,7 @@
 		<div class="unit">
 			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
-		<div class="unit plm">
+		<div class="unit plm" >
 			<a href="#" id="pickfiles" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/upload.png'; ?>"/></a>
 		</div>
 		<div class="unit plm">
@@ -62,7 +64,6 @@
 </div>
 <div id="drop" class="dropzone" style="display:none;">
 </div>
-<br />
 <br />
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
@@ -82,16 +83,11 @@
 
 
 <?php if(count($screens) === 0): ?>
-<div id="no-screens-info" style="position:absolute;display:block;"></div>
-<script>
-$(function(){
-	//$('#no-screens-info').position({'my':'center top','at':'center bottom','of':$('#pickfiles'),'offset':'103px 0px'});	
-})
-</script>
+<div id="no-screens-info" ></div>
 <?php endif; ?>
 
 
-<div id="progress" class="pam" style="">
+<div id="progress" class="pam blackpop" style="">
 	<div class="bar"></div>
 	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span> <span class="size"></span></div>
 </div>
@@ -296,15 +292,22 @@ $(function(){
 		$('#progress').fadeOut();
 	});
 	
+	
+	
+	/*
+	 * Screen cards
+	 *  
+	 */
+	
 	// delete the images
 	$('.projList').delegate('.deleteScreen','click',function(){
 		$projectBox = $(this).closest('.projectBox');
-		//if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" screen?')){
+		if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name:first').text()+'" screen?')){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
 			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){});
-		//}
+		}
 		return false;
 	})
 	.sortable({
@@ -334,5 +337,40 @@ $(function(){
 		$('.droppy').slideToggle(200);
 		$('#no-screens-info').fadeOut();
 	});
+	
+	
+	
+	$('.projList').delegate('.screenInfo','click',function(){
+		var $pBox = $(this).closest('.projectBox');
+		var info='';
+		$.post("<?php echo NHtml::url('/project/details/info') ?>",{screen_id:$pBox.attr('data-id')},function(r){
+			info = r;
+		});
+		$pBox.addClass('noShadow').flip({
+			direction:'rl',
+			speed:150,
+			color:'#fff',
+			content:$pBox.find('.screenFlip'),
+			onEnd:function(){
+				$pBox.removeClass('noShadow');
+				// only set the html once the ajax has returned.
+				checkInfo();
+			}
+		});
+		var checkInfo=function(){
+			if(info=='')
+				setTimeout(checkInfo,50);
+			else
+				$pBox.find('.screen-info').html(info).removeClass('loading');
+		};
+		return false;
+	});
+	$('.projList').delegate('.revertFlip','click',function(){
+		var $pBox = $(this).closest('.projectBox');
+		$pBox.addClass('noShadow').revertFlip();
+		return false;
+	});
+	
 });
+
 </script>

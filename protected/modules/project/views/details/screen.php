@@ -1,30 +1,59 @@
 <style type="text/css" media="screen">
 	body{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
-	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;}
-	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:orange;border: 1px solid red;opacity: 0.7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
-	.hotspot.helper{border:1px dotted red;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
-	#canvas{cursor:crosshair;position:relative;}
+	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;cursor:crosshair;position:relative;top:50px;}
 	
-	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
+	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border: 1px solid #2946a7;opacity: 0.7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
+	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
+	
+	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left top, left bottom, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
 	.spotFormPart{padding:5px;}
 	a.delete, a.btn.btnN.delete {color:#cc0000;}
 	
-	/*  */
-	.toolbar{height:50px;background-color:#000;}
-	.screenItem{background-color:#fff;cursor:pointer;}
+	.screenItem{background-color:#fff;cursor:pointer; border-bottom: 1px solid #CCCCCC;}
 	.screenItem .img{width:48px;height:48px;background-color:#f9f9f9;border:1px solid #ccc;margin:2px;}
 	.ui-autocomplete {border:1px solid #666;max-height: 300px;overflow-y: auto;overflow-x: hidden;width:300px;background-color:#fff;}
 	/* IE 6 doesn't support max-height
 	 * we use height instead, but this forces the menu to always be this tall
 	 */
 	* html .ui-autocomplete {height: 250px;}
+	
+	.small .toolbarArrow{background-position:100% 0px;}
+	.small .titleBarText{padding-top:5px;font-size:14px;}
+	.toolbar.screen{min-width:1024px;border-bottom-color:#666;height:46px;background-color:#000;position:fixed;box-shadow: 0 1px 0 #FFFFFF inset, 0 0 8px #000000;z-index:4000;}
+	
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
-<div class="toolbar">
-	<a href="<?php echo NHtml::url(array('/project/index/index')); ?>" style="color:white;">Projects</a>
-	<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" style="color:white;"><?php echo $project->name; ?></a>
-	Apply template 
+<div id="mainToolbar" class="toolbar screen plm">
+	<div class="line small">
+		<div class="unit toolbarArrow mrm" style="padding-top:8px;">
+			<a href="<?php echo NHtml::url('/project/index/index'); ?>" class="titleBarText" style="display:block;">Projects</a>
+		</div>
+		<div class="unit toolbarArrow prm" style="padding-top:8px;">
+			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" class="titleBarText" style="display:block;"><?php echo $project->name; ?></a>
+		</div>
+		<div class="unit plm ptm prm" style="padding-top:8px;">
+			<h1 class="man titleBarText" ><?php echo $screen->getName(); ?></h1>
+		</div>
+		<div class="unit">
+			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo" href="#"><span class="icon fam-comment"></span> Templates</button>
+		</div>
+		<div class="unit plm btnGroup" style="padding-top:10px;">
+			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarMid build" href="#"><span class="fugue fugue-layer-shape"></span>Build</button><button class="btn aristo btnToolbarRight view" href="#"><span class="fugue fugue-application"></span>View</button>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fam-cog"></span></button>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo" data-tip="" title="Hide" href="#"><span class="fugue fugue-arrow-180"></span></button>
+		</div>
+	</div>
 </div>
 
 
@@ -45,8 +74,8 @@
 					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
 				</div>-->
 				<div id="screenList" class="line">
-					<div class="unit inputBox" style="width:215px;"><input placeholder="- select screen -" /></div>
-					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight">drop</a></div>
+					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input placeholder="- select screen -" /></div>
+					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
 				</div>
 
 			</div>
@@ -64,9 +93,9 @@
 				<label  for="maintainScroll" style="font-weight:normal;">Maintain scroll position</label>
 			</div>-->
 			<div class="field">
-				<a id="okSpot" href="#" class="btn btnN">Ok</a>
+				<button id="okSpot" href="#" class="btn aristo">Ok</button>
 <!--				<a id="cancelSpot" href="#" class="btn btnN ">Cancel</a>-->
-				<a id="deleteSpot" href="#" class="btn btnN delete">Delete</a>
+				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
 			</div>
 		</div>
 	</div>
@@ -379,5 +408,17 @@
 		//$('.hotspot').click(function(){alert('oi')});
 	});
 	
+	
+	// lets code the toolbar
+	$('#mainToolbar .btnGroup .btn').click(function(){
+		$('#mainToolbar .btnGroup .btn').removeClass('selected');
+		$(this).addClass('selected');
+	})
+	$('#mainToolbar').delegate('.view', 'click', function(){
+		$('#canvas').find('.hotspot').hide();
+	});
+	$('#mainToolbar').delegate('.build', 'click', function(){
+		$('#canvas').find('.hotspot').show();
+	});
 
 </script>

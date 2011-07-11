@@ -43,6 +43,7 @@ class ProjectHotSpot extends NActiveRecord
 	}
 	
 	public function schema(){
+		
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
@@ -53,6 +54,13 @@ class ProjectHotSpot extends NActiveRecord
 				'left'=>'int',
 				'top'=>'int',
 				'screen_id_link'=>'int'
+			),
+			'keys'=>array(
+				array('screen_id'),
+				array('screen_id_link')
+			),
+			'foreignKeys'=>array(
+				array('project_hotspot','screen_id','project_screen','id','CASCADE','CASCADE')
 			)
 		);
 	}

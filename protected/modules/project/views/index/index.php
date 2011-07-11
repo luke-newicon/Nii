@@ -6,12 +6,11 @@
 	.projectBox{position:relative;background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;background-color:#f9f9f9;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
-	.projectBox.details.creating{background-color:#fff;}
-	.projectBox.noShadow{box-shadow:none;}
+	.projectBox.details.creating{background-color:#fff; box-shadow: 0 0 10px #AAAAAA;}
 	
 	
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
-	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
+	.projName .name,a.addProjectStyle{font-size:120%;font-weight:bold;}
 	
 	.projInfo{position:absolute;bottom:5px;right:10px;display:none;}
 	.projectBox:hover .projInfo{position:absolute;bottom:5px;right:10px;display:block;}
@@ -19,7 +18,7 @@
 	.revertFlip{position:absolute;bottom:5px;right:10px;}
 	
 	.item{border:1px solid #ccc;}
-	.main{background-color:#f9f9f9;}
+	.main,html{background-color:#f9f9f9;}
 	
 	
 	
@@ -35,8 +34,12 @@
 		</div>
 	</div>
 </div>
-
 <br/>
+<div id="overallStats" style="display:none;" class="pll">
+	<?php $screenCount = ProjectScreen::model()->count(); ?>
+	<p>You have <?php echo ($screenCount == 1) ? "$screenCount screen" : "$screenCount screens"; ?> across <span id="numProjects"></span>.</p>
+</div>
+
 <ul class="noBull projList">
 	<li class="newProject">
 		<div id="createProject" class="projectBox details">
@@ -44,7 +47,7 @@
 				<a href="#" class="projImg addNewProj addProject">
 					<img src="<?php echo ProjectModule::get()->getAssetsUrl().'/add-project.png'; ?>"  />
 				</a>
-				<a href="" class="addProject">Create new project</a>
+				<a href="" class="addProject addProjectStyle">Create new project</a>
 			</div>
 			<div class="create" style="display:none;">
 				<div class="projImg" style="margin-bottom:5px;">
@@ -86,20 +89,38 @@ $(function(){
 //		    queue: false
 //	    }
 //	});
-
+	
+	// do stats
+	var updateStats = function(){
+		var numProjects = $('.projList li .projectBox[data-id]').length;
+		$('#overallStats').show();
+		if(numProjects==0){
+			$('#numProjects').html('0 projects. <a href="#" class="addProject">Create a new project to get started</a>');
+		}else{
+			if(numProjects == 1)
+				$('#numProjects').html(numProjects + ' project');
+			else
+				$('#numProjects').html(numProjects + ' projects');
+		}
+	}
+	updateStats();
 
 	$('.projList').delegate('.projDelete','click',function(){
 		$projectBox = $(this).closest('.projectBox');
 		//if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" project?')){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
+				updateStats();
 			});
-			$.post("<?php echo NHtml::url('/project/index/delete') ?>",{id:$projectBox.data('id')},function(){});
+			$.post("<?php echo NHtml::url('/project/index/delete') ?>",{id:$projectBox.data('id')});
 		//}
+		
 		return false;
 	});
 	$('.projList').delegate('.projInfo','click',function(){
 		var $pBox = $(this).closest('.projectBox');
+		// could do ajax here to get info
+		
 		$pBox.addClass('noShadow').flip({
 			direction:'rl',
 			speed:150,
@@ -107,6 +128,7 @@ $(function(){
 			content:$pBox.find('.projFlip'),
 			onEnd:function(){
 				$pBox.removeClass('noShadow')
+				
 			}
 		});
 		return false;
@@ -148,19 +170,11 @@ $(function(){
 					$createBox.find('.norm').show();
 					$createBox.find('.create').hide();
 					$createBox.show('normal')
+					updateStats();
+					$('#createProject').removeClass('creating')
 				}, 300);
 			});
-			
-//			$('.projList .newProject').replaceWith('<li>'+r.project+'</li>');
-//			window.setTimeout(function(){
-//				$create.find('.norm').show();
-//				$create.find('.create').hide();
-//				$create.prependTo('.projList').hide().show('slow')
-//			},1000);
-//			$create.prependTo('.projList').hide().show('slow')
-			//$('<li>'+r.project+'</li>').insertAfter('.projList .newProject').hide().show('noraml')
 		},'json');
-		
 	});
 	
 });

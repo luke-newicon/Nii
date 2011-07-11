@@ -73,4 +73,21 @@ class Project extends NActiveRecord
 		return $screen->file_id;
 	}
 	
+	/**
+	 * Get the total number of comments this project has
+	 * 
+	 * @return integer 
+	 */
+	public function getNumComments(){
+		return 0;
+	}
+	
+	/**
+	 * get the total number of screens this project has
+	 * @return integer
+	 */
+	public function getNumScreens(){
+		return ProjectScreen::model()->countByAttributes(array('project_id'=>$this->id));
+	}
+	
 }

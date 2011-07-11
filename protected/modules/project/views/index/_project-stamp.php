@@ -11,11 +11,11 @@
 			<span class="name"><?php echo $project->name; ?></span>
 		</div>
 		<br />
-		<p>0 screens.</p>
-		<p>0 comments.</p>
+		<p><?php echo $project->getNumScreens(); ?> screens.</p>
+		<p><?php echo $project->getNumComments(); ?> comments.</p>
 		<div class="line">
 			<div class="unit mrs">
-				<a href="#" class="projDelete btn aristo">Delete</a>
+				<a href="#" class="projDelete btn aristo delete">Delete</a>
 			</div>
 			<div class="lastUnit">
 				<p>this project</p>

@@ -265,4 +265,13 @@ class DetailsController extends AController
 			array('sort' => new CDbExpression("CASE id $sql END"))
 		);
 	}
+	
+	
+	/**
+	 * loads gui to display the flipped info for a screen
+	 */
+	public function actionInfo(){
+		$screen = ProjectScreen::model()->findByPk($_POST['screen_id']);
+		echo $this->renderPartial('_screen-info',array('screen'=>$screen));
+	}
 }
