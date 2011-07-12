@@ -53,7 +53,7 @@
 			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
 		</div>
 		<div class="unit plm btnGroup" style="padding-top:10px;">
-			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarRight build selected" href="#"><span class="fugue fugue-layer-shape"></span>Build</button>
+			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarRight build selected" href="#"><span class="fugue fugue-layer-shape"></span>Edit</button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
@@ -67,7 +67,7 @@
 	</div>
 </div>
 <div id="closePreview" class="">
-	<button class="btn aristo editMode" data-tip="{gravity:'ne'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-pencil"></span> Edit</button>
+	<button class="btn aristo editMode" data-tip="{gravity:'ne'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-layer-shape"></span> Edit</button>
 </div>
 <div id="templateForm" class="spotForm" style="position:fixed;">
 	<div class="spotFormContainer" style="position:relative;">
