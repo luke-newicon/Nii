@@ -34,10 +34,11 @@ span.required { color:#CC0000 }
 /* Default Skin */
 /* make a nice looking input, defines padding and input box style */
 .inputBox {background:#ffffff url('skin/input-bg.png') repeat-x top left;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:0.3em;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;}
-.field.error .inputBox {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
-.field.success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
-.field.focus .inputBox {border-color:#889999 #aaaaaa #aaaaaa;box-shadow: 0 0 5px #387BBE;-moz-box-shadow:0 0 5px #387BBE;-webkit-box-shadow: 0 0 5px #387BBE; background-image:none;}
-.field.focus .noHighlight .inputBox{box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;}
+.error .inputBox {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
+.success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
+.focus .inputBox {border-color:#889999 #aaaaaa #aaaaaa;box-shadow: 0 0 5px #387BBE;-moz-box-shadow:0 0 5px #387BBE;-webkit-box-shadow: 0 0 5px #387BBE; background-image:none;}
+.focus .inputBox.noHighlight, .focus.noHighlight .inputBox{box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;}
+
 
 /* formHint style */
 .hint{color:#999999;font-size:80%;}

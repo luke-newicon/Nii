@@ -7,7 +7,7 @@
 	<div class="projName">
 		<div class="name" title="<?php echo $screen->getName(); ?>"><?php echo $screen->getName(); ?></div>
 	</div>
-	<div class="functions">
+	<div class="projFuns">
 		<a href="#" class="deleteScreen btn aristo" ><img height="14" src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
 		<div class="screenInfo btn aristo"><a href="#">i</a></div>
 	</div>

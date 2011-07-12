@@ -40,36 +40,32 @@ class ProjectTemplate extends NActiveRecord
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
+				'project_id'=>'int',
 				'name'=>'string',
+			),
+			'keys'=>array(
+				array('project_id')
+			),
+			'foreignKeys'=>array(
+				array('project_template','project_id','project_project','id','CASCADE','CASCADE')
 			)
 		);
 	}
 	
 	/**
-	 * get all project screens
-	 * @return array of ProjectScreen
+	 * checks if the template is active for this screen
+	 * 
+	 * @param int $screenId the id of the screen
+	 * @return boolean 
 	 */
-	public function getHotspots(){
-		return ProjectTemplateScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
+	public function isAppliedTo($screenId){
+		// a bit of an expensive function as it is called for every template
+		// however for speed of development should not be a problem as long as people have less than a hundred or so templates.
+		// this is called for each template in the project. On every screen loaded in edit mode
+		$t = ProjectScreenTemplate::model()->findByAttributes(array('screen_id'=>$screenId,'template_id'=>$this->id));
+		return ($t===null)?false:true;
 	}
 	
-	public function getScreensListData(){
-		$arr = array(0=>'- Select Linking Image -');
-		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
-		return $arr + $ret ;
-	}
 	
-	/**
-	 * gets the title image from the screens
-	 * typically selects the home page or the first screen
-	 */
-	public function getImageId(){
-		$screen = ProjectScreen::model()->find('project_id=:id AND home_page = 1',array('id'=>$this->id));
-		if($screen===null)
-			$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
-		if($screen===null)
-			return -99;
-		return $screen->file_id;
-	}
 	
 }

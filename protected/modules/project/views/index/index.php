@@ -12,8 +12,8 @@
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProjectStyle{font-size:120%;font-weight:bold;}
 	
-	.projInfo{position:absolute;bottom:5px;right:10px;display:none;}
-	.projectBox:hover .projInfo{position:absolute;bottom:5px;right:10px;display:block;}
+	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
+	.projectBox:hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
 	
 	.revertFlip{position:absolute;bottom:5px;right:10px;}
 	
@@ -40,7 +40,7 @@
 	<p>You have <?php echo ($screenCount == 1) ? "$screenCount screen" : "$screenCount screens"; ?> across <span id="numProjects"></span>.</p>
 </div>
 
-<ul class="noBull projList">
+<ul id="projectList" class="noBull projList">
 	<li class="newProject">
 		<div id="createProject" class="projectBox details">
 			<div class="norm">
@@ -92,7 +92,7 @@ $(function(){
 	
 	// do stats
 	var updateStats = function(){
-		var numProjects = $('.projList li .projectBox[data-id]').length;
+		var numProjects = $('#projectList li .projectBox[data-id]').length;
 		$('#overallStats').show();
 		if(numProjects==0){
 			$('#numProjects').html('0 projects. <a href="#" class="addProject">Create a new project to get started</a>');
@@ -105,7 +105,7 @@ $(function(){
 	}
 	updateStats();
 
-	$('.projList').delegate('.projDelete','click',function(){
+	$('#projectList').delegate('.projDelete','click',function(){
 		$projectBox = $(this).closest('.projectBox');
 		//if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" project?')){
 			$projectBox.closest('li').hide('normal', function(){
@@ -117,7 +117,7 @@ $(function(){
 		
 		return false;
 	});
-	$('.projList').delegate('.projInfo','click',function(){
+	$('#projectList').delegate('.projFuns','click',function(){
 		var $pBox = $(this).closest('.projectBox');
 		// could do ajax here to get info
 		
@@ -133,7 +133,7 @@ $(function(){
 		});
 		return false;
 	});
-	$('.projList').delegate('.revertFlip','click',function(){
+	$('#projectList').delegate('.revertFlip','click',function(){
 		var $pBox = $(this).closest('.projectBox');
 		$pBox.addClass('noShadow').revertFlip();
 		return false;

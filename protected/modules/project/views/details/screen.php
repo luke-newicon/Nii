@@ -22,6 +22,17 @@
 	.small .titleBarText{padding-top:5px;font-size:14px;}
 	.toolbar.screen{min-width:1024px;border-bottom-color:#666;height:46px;background-color:#000;position:fixed;box-shadow: 0 1px 0 #FFFFFF inset, 0 0 8px #000000;z-index:4000;}
 	
+	
+	.hotspot.link{background-color:transparent;border:none;}
+	
+	#closePreview{position:absolute;top:0px;right:0px;z-index:700;}
+	
+	#templateForm{display:none;z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
+	.triangle-verticle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle-verticle.png'; ?>") no-repeat top left;width:30px;height:22px;left:45%;top:-29px;position:absolute;}
+	.template label {display:block;padding:3px;}
+	.template label:hover {}
+	.template.selected label{}
+	.addTemplate .inputBox{border-radius:3px 0px 0px 3px;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -39,10 +50,13 @@
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
-			<button class="btn aristo" href="#"><span class="icon fam-comment"></span> Templates</button>
+			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
 		</div>
 		<div class="unit plm btnGroup" style="padding-top:10px;">
-			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarMid build" href="#"><span class="fugue fugue-layer-shape"></span>Build</button><button class="btn aristo btnToolbarRight view" href="#"><span class="fugue fugue-application"></span>View</button>
+			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarRight build selected" href="#"><span class="fugue fugue-layer-shape"></span>Build</button>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
@@ -50,12 +64,38 @@
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fam-cog"></span></button>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
-			<button class="btn aristo" data-tip="" title="Hide" href="#"><span class="fugue fugue-arrow-180"></span></button>
-		</div>
 	</div>
 </div>
-
+<div id="closePreview" class="">
+	<button class="btn aristo editMode" data-tip="{gravity:'ne'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-pencil"></span> Edit</button>
+</div>
+<div id="templateForm" class="spotForm" style="position:fixed;">
+	<div class="spotFormContainer" style="position:relative;">
+		<div class="triangle-verticle"></div>
+		<p id="templateFormNoTemplate">You don't have any templates, why not add a new one?</p>
+		<ul class="noBull man">
+			<li class="addTemplate">
+				<label>
+					<div class="line">
+						<div class="unit size3of4">
+							<div class="inputBox" style="position:relative;">
+								<input id="newTemplate" name="newTemplate" type="text" autocomplete="off" />
+								<label id="newTemplate-hint" style="position:absolute;left:8px;top:4px;color:#aaa;" for="newTemplate">Enter a new template name</label>
+							</div>
+						</div>
+						<div class="lastUnit">
+							<input id="newTemplateSubmit" style="padding-bottom:4px;" type="submit" class="btn aristo btnToolbarRight" value="save"/>
+						</div>
+					</div>
+				</label>
+			</li>
+			<?php foreach($screen->getTemplates() as $template): ?>
+				<?php $this->renderPartial('/screen/_template-item', array('template'=>$template, 'screenId'=>$screen->id)); ?>
+			<?php endforeach; ?>
+		</ul>
+		<div class="templateOk txtR"><button class="btn aristo">Ok</button></div>
+	</div>
+</div>
 
 <div id="canvas"> 
 	<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
@@ -77,7 +117,6 @@
 					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input placeholder="- select screen -" /></div>
 					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
 				</div>
-
 			</div>
 <!--			<div class="field">
 				<input class="mrs" style="float:left;" type="checkbox" id="addtotemplate" name="addtotemplate"/>
@@ -168,10 +207,11 @@
 (function($){
 
 	var methods = {
-		init : function( options ) {
+		init : function(options) {
 			return this.each(function(){
 				var $this = $(this);
 				$this.draggable({
+					cancel:'.link',
 					drag: function(event, ui) {
 						if($('#spotForm:visible').index){
 							// make the spotForm follow the hotspot being dragged
@@ -270,7 +310,7 @@
 					$spot.hotspot('update');
 					return false;
 				},
-				position:{'my':'left top','at':'left bottom','of':'#screenList'}
+				position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'none'}
 			})
 			.data("autocomplete")._renderItem = function( ul, item ) {
 				return $('<li class="screenItem "></li>')
@@ -387,38 +427,148 @@
 })( jQuery );
 	
 	
-	$(function($){
+$(function($){
 		
-		
-		
-		// Using the boxer plugin
-		$('#canvas').boxer({
-			stop: function(event, ui) {
-				ui.box.addClass('hotspot')
-				.removeClass('helper')
-				.hotspot()
-				.hotspot('update')
-				.hotspot('showForm');// lets save our creation
-			}
-		}).click(function(){
-			$("#screenList input").autocomplete("close");
-		});
-		
-		$('.hotspot').hotspot();
-		//$('.hotspot').click(function(){alert('oi')});
+	// Using the boxer plugin
+	$('#canvas').boxer({
+		stop: function(event, ui) {
+			ui.box.addClass('hotspot')
+			.removeClass('helper')
+			.hotspot()
+			.hotspot('update')
+			.hotspot('showForm');// lets save our creation
+		}
+	}).click(function(){
+		$("#screenList input").autocomplete("close");
 	});
-	
+	$('.hotspot').hotspot();
 	
 	// lets code the toolbar
-	$('#mainToolbar .btnGroup .btn').click(function(){
-		$('#mainToolbar .btnGroup .btn').removeClass('selected');
-		$(this).addClass('selected');
-	})
-	$('#mainToolbar').delegate('.view', 'click', function(){
-		$('#canvas').find('.hotspot').hide();
-	});
-	$('#mainToolbar').delegate('.build', 'click', function(){
-		$('#canvas').find('.hotspot').show();
-	});
-
+	
+	
+	
+	
+	
+	// template form
+	var toolbar = {
+		$mainToolbar:null,
+		$btnPreview:null,
+		$btnBuild:null,
+		$btnEdit:null,
+		$btnTemplate:null,
+		init:function(){
+			this.$mainToolbar = $('#mainToolbar');
+			this.$btnPreview = this.$mainToolbar.find('.preview');
+			this.$btnEdit = $('#closePreview .editMode');
+			this.$btnBuild = this.$mainToolbar.find('.build');
+			this.$btnTemplate = this.$mainToolbar.find('.template');
+			this.templateForm.init();
+			// toolbar button events
+			this.$btnPreview.click(function(){toolbar.previewMode()});
+			this.$btnEdit.click(function(){toolbar.editMode()});
+			this.$btnTemplate.click(function(e){toolbar.templateForm.open(e)});
+			
+			this.$btnBuild.click(function(){
+				$('#canvas').find('.hotspot').show();
+			});
+			
+			$('#mainToolbar .btnGroup .btn').click(function(){
+				$('#mainToolbar .btnGroup .btn').removeClass('selected');
+				$(this).addClass('selected');
+			});
+		},
+		previewMode:function(){
+			$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
+			this.$mainToolbar.animate({top:-60},500,'easeInBack');
+			$('#canvas').animate({top:0},500,'easeInBack')
+				.find('.hotspot')
+				.addClass('link')
+				.find('.ui-resizable-handle')
+				.hide();
+			this.templateForm.close();
+		},
+		editMode:function(){
+			this.$mainToolbar.animate({top:0},500,'easeInBack');
+			$('#canvas').animate({top:50},500,'easeInBack', function(){
+				$(this).find('.hotspot')
+				.removeClass('link')
+				.find('.ui-resizable-handle')
+				.show();
+			});
+		},
+		templateForm : {
+			init:function(){
+				$('#newTemplate').keyup(function(){
+					if($(this).val().length == 0){
+						$('#newTemplate-hint').show();
+					}else{
+						$('#newTemplate-hint').hide();
+					}
+				});
+				$('#templateForm').delegate('input','click',function(){
+					$('#templateForm li.template').removeClass('selected');
+					$('#templateForm input:checked').closest('li.template').addClass('selected');
+				});
+				$('#newTemplateSubmit').click(function(){
+					if($('#newTemplate').val() == '') 
+						return false;
+					$.post("<?php echo NHtml::url('/project/screen/addTemplate') ?>",
+						{template:$('#newTemplate').val(),project:<?php echo $project->id; ?>}, 
+						function(r){
+							if(r.template_id){
+								var $newItem = $(r.item);
+								$('#templateForm li.addTemplate').after($newItem)
+								$newItem.hide().slideDown(1000,function(){
+									if($('#templateFormNoTemplate').is(':visible')){
+										$('#templateFormNoTemplate').hide('normal');
+									}
+								});
+								$('#newTemplate').val('');
+								
+							}
+						},
+						'json'
+					);
+				});
+				$('#templateForm .templateOk button').click(function(){
+					toolbar.templateForm.close();
+				});
+			},
+			toggleInfo:function(){
+				if($('#templateForm li').length > 1){
+					$('#templateFormNoTemplate').hide();
+					$('#templateForm .templateOk').show();
+				}else{
+					$('#templateFormNoTemplate').show();
+					$('#templateForm .templateOk').hide();
+				}
+			},
+			open:function(e){
+				this.toggleInfo();
+				$('#templateForm').show();
+				toolbar.$btnTemplate.addClass('selected');
+				$('#templateForm').position({'my':'center top','at':'center bottom','of':toolbar.$btnTemplate,'offset':'0px 12px'});
+				$('#newTemplate').focus();
+				$('#templateForm').click(function(e){
+					e.stopPropagation();
+				});
+				$('body').bind('click.templateForm',function(){
+					toolbar.templateForm.close();
+				});
+				e.stopPropagation();
+			},
+			close: function(){
+				toolbar.$btnTemplate.removeClass('selected');
+				$('body').unbind('click.templateForm');
+				$('#templateForm').hide();
+			}
+		}
+	}
+	toolbar.init();
+	
+	
+	
+	
+});
+	
 </script>

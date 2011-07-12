@@ -21,8 +21,10 @@
 	.projectBox{background-color:#fff;position:relative;background-color:#fff;border:1px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;background-color:#fff;}
-	.functions{visibility: hidden;position:absolute;bottom:5px;right:10px;}
-	.hover .functions{visibility:visible;}
+	
+	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
+	.projectBox.hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
+	
 	.main,html{background-color:#f9f9f9;}
 	
 	
@@ -298,7 +300,6 @@ $(function(){
 	 * Screen cards
 	 *  
 	 */
-	
 	// delete the images
 	$('.projList').delegate('.deleteScreen','click',function(){
 		$projectBox = $(this).closest('.projectBox');
@@ -371,6 +372,7 @@ $(function(){
 		return false;
 	});
 	
+	
+	
 });
-
 </script>

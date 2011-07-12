@@ -5,7 +5,7 @@
 	<div class="projName">
 		<span class="name"><?php echo $project->name; ?></span>
 	</div>
-	<div class="projInfo btn aristo"><a href="#">i</a></div>
+	<div class="projFuns btn aristo"><a href="#">i</a></div>
 	<div class="projFlip" style="display:none;">
 		<div class="projName">
 			<span class="name"><?php echo $project->name; ?></span>

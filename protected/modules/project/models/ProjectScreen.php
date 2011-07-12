@@ -129,6 +129,12 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	
+	
+	public function getTemplates(){
+		$templates = ProjectTemplate::model()->findAllByAttributes(array('project_id'=>$this->project_id));
+		return $templates;
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
