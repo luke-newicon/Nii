@@ -43,6 +43,7 @@ class ProjectScreenTemplate extends NAppRecord
 			'columns'=>array(
 				'template_id'=>'int',
 				'screen_id'=>'int',
+				0=>'PRIMARY KEY (`template_id`, `screen_id`)'
 			)
 		);
 	}

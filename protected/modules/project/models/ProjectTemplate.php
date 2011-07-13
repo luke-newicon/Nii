@@ -47,7 +47,7 @@ class ProjectTemplate extends NActiveRecord
 				array('project_id')
 			),
 			'foreignKeys'=>array(
-				array('project_template','project_id','project_project','id','CASCADE','CASCADE')
+				array('project_template','project_id','project_project','id','CASCADE','CASCADE'),
 			)
 		);
 	}

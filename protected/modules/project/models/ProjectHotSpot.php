@@ -48,7 +48,7 @@ class ProjectHotSpot extends NActiveRecord
 			'columns'=>array(
 				'id'=>'pk',
 				'screen_id'=>'int',
-				'template_id'=>'int',
+				'template_id'=>'int NULL DEFAULT \'0\'',
 				'width'=>'int',
 				'height'=>'int',
 				'left'=>'int',
@@ -56,11 +56,12 @@ class ProjectHotSpot extends NActiveRecord
 				'screen_id_link'=>'int'
 			),
 			'keys'=>array(
+				array('template_id'),
 				array('screen_id'),
 				array('screen_id_link')
 			),
 			'foreignKeys'=>array(
-				array('project_hotspot','screen_id','project_screen','id','CASCADE','CASCADE')
+				array('project_hotspot','screen_id','project_screen','id','CASCADE','CASCADE'),
 			)
 		);
 	}

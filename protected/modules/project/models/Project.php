@@ -54,11 +54,7 @@ class Project extends NActiveRecord
 		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
 	}
 	
-	public function getScreensListData(){
-		$arr = array(0=>'- Select linking image -');
-		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
-		return $arr + $ret ;
-	}
+	
 	
 	/**
 	 * gets the title image from the screens
@@ -88,6 +84,34 @@ class Project extends NActiveRecord
 	 */
 	public function getNumScreens(){
 		return ProjectScreen::model()->countByAttributes(array('project_id'=>$this->id));
+	}
+	
+	/**
+	 * get a list of project screens,
+	 * this is used to populate the javascript array for the autocomplete screen selection
+	 * @return array 
+	 */
+	public function getScreenList(){
+		$screenList = array();
+		foreach($this->getScreens() as $i=>$s){
+			$screenList[] = array(
+				'value'=>$s->id,
+				'label'=>$s->name, // get transformed into html by search
+				'name'=>$s->name,
+				'src'=>NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop')
+			);
+		}
+		return $screenList;
+	}
+	
+	/**
+	 * populate a select box with all the projects screens
+	 * @return array 
+	 */
+	public function getScreensListData($notSelected='- Select linking image -'){
+		$arr = array(0=>$notSelected);
+		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
+		return $arr + $ret ;
 	}
 	
 }

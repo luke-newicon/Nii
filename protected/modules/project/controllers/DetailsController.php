@@ -200,7 +200,8 @@ class DetailsController extends AController
 		$info = getimagesize($file->getPath());
 		
 		// get all the hotspots on the screen
-		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id));
+		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id,'template_id'=>0));
+		$templateSpots = $screen->getTemplateHotspots();
 		$this->render('screen',array(
 			'project'=>$project,
 			'screen'=>$screen,
@@ -208,7 +209,8 @@ class DetailsController extends AController
 			'width'=>$info[0],
 			'height'=>$info[1],
 			'rgb'=>$rgb,
-			'hotspots'=>$hotspots
+			'hotspots'=>$hotspots,
+			'templateHotspots'=>$templateSpots
 		));
 	}
 	
