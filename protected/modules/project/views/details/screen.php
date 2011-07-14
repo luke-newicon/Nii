@@ -35,6 +35,8 @@
 	
 	.spot-template{background-color:orange;border-color:red;}
 	
+	.sidebarImg img{box-shadow:0px 0px 5px #000;margin:10px;}
+	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -50,6 +52,9 @@
 		</div>
 		<div class="unit">
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+		</div>
+		<div class="unit plm" style="padding-top:10px;">
+			<button class="btn aristo sidebar selected" href="#"><span class="icon fam-application-side-list"></span></button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
@@ -100,12 +105,16 @@
 </div>
 
 <div class="line">
-	<div class="unit" id="screenUnit">
+	<div class="unit" id="screenWrap">
 		<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#ccc;border-right:1px solid #000;">
 			<?php foreach($project->getScreens() as $s): ?>
-			<img src="<?php echo NHtml::urlImageThumb($s->file_id); ?>" />
+			<div class="sidebarImg txtC">
+				<img src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>" />
+				<span class="imageTitle"><?php echo $s->name; ?></span>
+			</div>
 			<? endforeach; ?>
 		</div>
+		<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>
 	</div>
 	<div class="lastUnit">
 		<div id="canvasWrap" style="position: relative; top:48px; overflow: auto; height: 400px;"> 
@@ -129,14 +138,15 @@ $(function($){
 		$('#canvasWrap').snapy({'snap':'.main'});
 		$('#screenPane').snapy({'snap':'.main'});
 		console.log($('#screenPane').border());
-		$('#canvasWrap').css('width',($(window).width()-$('#screenPane').width()+$('#screenPane').border().right-2) + 'px');
+		$('#canvasWrap').css('width',($(window).width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
+		$('#screenPane img').width($('#screenPane').width()-30);
 	}
 	$(window).resize(function(){
 		resizer();
 	});
 	$('#canvasWrap').snapy({'snap':'.main'});
 	$('#screenPane').snapy({'snap':'.main'});
-	$('#screenUnit').resizable({
+	$('#screenWrap').resizable({
 		handles:'e',
 		alsoResize:'#screenPane',
 		stop:function(){
@@ -196,6 +206,35 @@ $(function($){
 
 
 <div id="spotForm" class="spotForm" style="display:none;">
+	<div class="spotFormContainer" style="position:relative;">
+		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
+		<div class="spotFormPart form">
+			<div class="field">
+				<label for="screenSelect">Link to:</label>
+<!--			<div class="inputBox" style="padding:3px;width:200px;">
+					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+				</div>-->
+				<div id="screenList" class="line">
+					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
+					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
+				</div>
+			</div>
+			<div class="field">
+				<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
+			</div>
+<!--		<div class="field">
+				<input class="mrs" style="float:left;" type="checkbox" id="maintainScroll" name="maintainScroll"/>
+				<label  for="maintainScroll" style="font-weight:normal;">Maintain scroll position</label>
+			</div>-->
+			<div class="field">
+				<button id="okSpot" href="#" class="btn aristo">Ok</button>
+<!--				<a id="cancelSpot" href="#" class="btn btnN ">Cancel</a>-->
+				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="commentForm" class="spotForm" style="display:none;">
 	<div class="spotFormContainer" style="position:relative;">
 		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
 		<div class="spotFormPart form">
@@ -312,14 +351,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 					}
 				})
 				.click(function(e){
-					// detect keypress
-					// if shift click then load the screen link
-					// only available if there is a screen link id
-					if (e.shiftKey && $this.is('[data-screen]')) {
-						location.href = "<?php echo NHtml::url('/project/details/screen'); ?>/id/"+$this.attr('data-screen');
-					} else { 
-						$this.hotspot('showForm');
-					}
+					$this.hotspot('click',e);
 				});
 			})
 			return $spot;
@@ -360,8 +392,31 @@ $.widget("ui.boxer", $.ui.mouse, {
 			$('#spotForm').hide();
 			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
 		},
-		click:function(){
-			alert(el.attr('data-id'));
+		link:function(){
+			// hotspots may not have a defined screen id, so be careful
+			$spot = $(this);
+			if($spot.is('[data-screen]')){
+				location.href = "<?php echo NHtml::url('/project/details/screen'); ?>/id/"+$spot.attr('data-screen');
+			}
+		},
+		click:function(e){
+			$spot = $(this);
+			// detect keypress
+			// if shift click then load the screen link
+			// only available if there is a screen link id
+			if($spot.is('[data-disabled]')){
+				//spot is disabled so don't do anything.
+				return false;
+			}
+			if (e.shiftKey) {
+				$spot.hotspot('link');
+			}else{
+				if($spot.is('.link')){
+					$spot.hotspot('link');
+				}else{
+					$spot.hotspot('showForm');
+				}
+			}
 		}
 	};
 	$.fn.hotspot = function( method ) {
@@ -453,19 +508,14 @@ var spotForm = {
 		}else{
 			$("#screenList input").val('');
 		}
-		$("#screenList input").autocomplete({
+		$("#screenListInput").autocomplete({
 			minLength: 0,
 			source: function( request, response ) {
 				var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
 				response($(spotForm.screens).map(function() {
 					if (this.value && (!request.term || matcher.test(this.label)))
 						return {
-							label: this.label.replace(
-								new RegExp(
-									"(?![^&;]+;)(?!<[^<>]*)(" +
-									$.ui.autocomplete.escapeRegex(request.term) +
-									")(?![^<>]*>)(?![^&;]+;)", "gi"
-								), "<strong>$1</strong>" ),
+							label: this.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + $.ui.autocomplete.escapeRegex(request.term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>" ),
 							value: this.value,
 							src: this.src,
 							name: this.name
@@ -525,17 +575,29 @@ var toolbar = {
 			$('#mainToolbar .btnGroup .btn').removeClass('selected');
 			$(this).addClass('selected');
 		});
+		$('#mainToolbar .sidebar').click(function(){
+			if($(this).is('.selected')){
+				$('#screenWrap').animate({width:-0});
+				$('#screenPane').animate({width:-0});
+				$(this).removeClass('selected');
+			}else{
+				$('#screenWrap').animate({width:+200});
+				$('#screenPane').animate({width:+200});
+				$(this).addClass('selected');
+			}
+		});
 	},
 	showSpots:function(){
-		$('#canvas .hotspot').fadeTo(250,0.7);
+		$('#canvas .hotspot').fadeTo(250,0.7).removeAttr('data-disabled');
 	},
 	fadeSpots:function(){
-		$('#canvas .hotspot').fadeTo(250,0.2);
+		$('#canvas .hotspot').fadeTo(250,0.2).attr('data-disabled','true');
 	},
 	previewMode:function(){
 		$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
 		this.$mainToolbar.animate({top:-60},500,'easeInBack');
-		$('#canvasWrap').animate({top:0},500,'easeInBack')
+		$('#screenWrap').hide('fast',function(){$(this).width(0)});
+		$('#canvasWrap').animate({top:0},500,'swing')
 			.find('.hotspot')
 			.fadeOut(function(){
 				$(this).addClass('link').attr('data-editable','false').show();
@@ -554,6 +616,8 @@ var toolbar = {
 			.show()
 			toolbar.showSpots();
 		});
+		$('#screenWrap').width(200);
+		$('#screenWrap').show('fast');
 	},
 	templateForm : {
 		init:function(){
@@ -674,19 +738,18 @@ $(function($){
 			.hotspot('update')
 			.hotspot('showForm');// lets save our creation
 		}
-	}).click(function(){
+	}).click(function(e){
+		if($('#mainToolbar .comments').is('.selected')){
+			alert('commments');
+			e.stopPropagation();
+			return false;
+		}
 		$("#screenList input").autocomplete("close");
 	});
 	$('.hotspot').hotspot();
 	
 	// lets code the toolbar
-	
-	
-	
 	toolbar.init();
-	
-	
-	
 	
 });
 	

@@ -31,6 +31,12 @@ class ProjectModule extends NWebModule
 			'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
 		));
 		
+		Yii::app()->image->addType('projectSidebarThumb',array(
+			'resize' => array('width'=>500, 'height'=>300, 'master'=>'width', 'scale'=>'down'),
+			//'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
+			//'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
+		));
+		
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
 		
@@ -58,6 +64,7 @@ class ProjectModule extends NWebModule
 		ProjectHotSpot::install();
 		ProjectTemplate::install();
 		ProjectScreenTemplate::install();
+		ProjectComment::install();
 	}
 	
 	/**
