@@ -7,7 +7,7 @@
 <p>0 comments.</p>
 <div class="line">
 	<div class="unit mrs">
-		<a href="#" class="projDelete btn aristo">Delete</a>
+		<a href="#" class="projDelete btn aristo delete">Delete</a>
 	</div>
 	<div class="lastUnit">
 		<p>this screen</p>

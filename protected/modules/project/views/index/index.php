@@ -12,7 +12,7 @@
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProjectStyle{font-size:120%;font-weight:bold;}
 	
-	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
+	.projFuns{position:absolute;bottom:8px;right:10px;display:none;}
 	.projectBox:hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
 	
 	.revertFlip{position:absolute;bottom:5px;right:10px;}

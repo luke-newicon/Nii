@@ -8,8 +8,8 @@
 		<div class="name" title="<?php echo $screen->getName(); ?>"><?php echo $screen->getName(); ?></div>
 	</div>
 	<div class="projFuns">
-		<a href="#" class="deleteScreen btn aristo" ><img height="14" src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
-		<div class="screenInfo btn aristo"><a href="#">i</a></div>
+		<a style="padding-top:5px;" href="#" class="deleteScreen btn aristo" ><img height="15" src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+		<a style="width:12px;" class="screenInfo btn aristo txtC">i</a>
 	</div>
 	<div class="screenFlip" style="display:none;">
 		<div class="screen-info loading" style="height:200px;">
@@ -29,6 +29,6 @@
 				<p>this project</p>
 			</div>
 		</div>-->
-		<div class="functions"><a href="#" class="revertFlip btn aristo">Done</a></div>
+		<div style="position:absolute;bottom:8px;position:absolute;right:10px;"><a href="#" class="revertFlip btn aristo">Done</a></div>
 	</div>
 </div>

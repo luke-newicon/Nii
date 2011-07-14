@@ -1,11 +1,12 @@
 <style type="text/css" media="screen">
 	body{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
-	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;cursor:crosshair;position:relative;}
+	html{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
+	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;position:relative;}
 	
 	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border: 1px solid #2946a7;opacity: 0.7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
 	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
 	
-	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left top, left bottom, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
+	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left bottom, left top, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
 	.spotFormPart{padding:5px;}
 	a.delete, a.btn.btnN.delete {color:#cc0000;}
@@ -35,8 +36,10 @@
 	
 	.spot-template{background-color:orange;border-color:red;}
 	
-	.sidebarImg img{box-shadow:0px 0px 5px #000;margin:10px;}
+	.sidebarImg .sideImg{box-shadow:0px 0px 5px #000;margin:10px;}
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
+	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
+	button{margin:0px;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -54,13 +57,13 @@
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
-			<button class="btn aristo sidebar selected" href="#"><span class="icon fam-application-side-list"></span></button>
+			<button class="btn aristo sidebar selected" href="#"><span class="icon fam-application-side-list man"></span></button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
 		</div>
 		<div class="unit plm btnGroup" style="padding-top:10px;">
-			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span> Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="fugue fugue-layer-shape"></span>Edit</button>
+			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span>Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="fugue fugue-layer-shape"></span>Edit</button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
@@ -106,10 +109,10 @@
 
 <div class="line">
 	<div class="unit" id="screenWrap">
-		<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#ccc;border-right:1px solid #000;">
+		<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#aaa;border-right:1px solid #000;">
 			<?php foreach($project->getScreens() as $s): ?>
 			<div class="sidebarImg txtC">
-				<img src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>" />
+				<div class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
 				<span class="imageTitle"><?php echo $s->name; ?></span>
 			</div>
 			<? endforeach; ?>
@@ -118,7 +121,7 @@
 	</div>
 	<div class="lastUnit">
 		<div id="canvasWrap" style="position: relative; top:48px; overflow: auto; height: 400px;"> 
-			<div id="canvas"> 
+			<div id="canvas" style="cursor:crosshair;"> 
 				<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 				<?php foreach($hotspots as $hotspot): ?>
 					<a data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
@@ -127,20 +130,75 @@
 					<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot spot-template" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
 				<?php endforeach; ?>
 			</div>
+			<div id="spotForm" class="spotForm" style="display:none;">
+				<div class="spotFormContainer" style="position:relative;">
+					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
+					<div class="spotFormPart form">
+						<div class="field">
+							<label for="screenSelect">Link to:</label>
+							<!--<div class="inputBox" style="padding:3px;width:200px;">
+								<?php // echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+							</div>-->
+							<div id="screenList" class="line">
+								<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
+								<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
+							</div>
+						</div>
+						<div class="field">
+							<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
+						</div>
+						<div class="field">
+							<button id="okSpot" href="#" class="btn aristo">Ok</button>
+							<a id="deleteSpot" href="#" class="delete mls">Delete</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="commentsForm"  class="spotForm" style="width:300px;" >
+				<div class="commentsFormContainer" style="position:relative;">
+					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
+					<div class="form pam">
+						<div class="line">
+							<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
+							<div class="lastUnit"><?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('buttonPosition'=>'bottom', 'editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?></div>
+						</div>
+						<div class="field">
+							<button class="btn aristo primary save">Save</button>
+							<button class="btn aristo cancel">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script>
-$(function($){
-	
-	var resizer = function(){
-		$('#canvasWrap').snapy({'snap':'.main'});
-		$('#screenPane').snapy({'snap':'.main'});
-		console.log($('#screenPane').border());
-		$('#canvasWrap').css('width',($(window).width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
-		$('#screenPane img').width($('#screenPane').width()-30);
+
+var commentsForm = {
+	init:function(){
+		//attach events n stuff
+		// remove the browser default textarea resize handle
+		$('#commentsForm .cancel').click(function(){commentsForm.hide();})
+		$('#commentsForm textarea').css('resize','none');
+		$('#commentsForm').resizable({alsoResize:'#commentsForm textarea, #commentsForm .previewBox'});
+	},
+	show:function(){
+		$('#commentsForm').show();
+		
+	},
+	hide:function(){
+		$('#commentsForm').hide();
 	}
+}
+var resizer = function(){
+	$('#canvasWrap').snapy({'snap':'.main'});
+	$('#screenPane').snapy({'snap':'.main'});
+	console.log($('#screenPane').border());
+	$('#canvasWrap').css('width',($(window).width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
+	$('#screenPane img').width($('#screenPane').width()-35);
+}
+$(function($){
 	$(window).resize(function(){
 		resizer();
 	});
@@ -153,7 +211,10 @@ $(function($){
 			resizer();
 		}
 	});
+	commentsForm.init();
+	resizer();
 });
+
 	
 (function( $ ){
 
@@ -205,35 +266,7 @@ $(function($){
 </script>
 
 
-<div id="spotForm" class="spotForm" style="display:none;">
-	<div class="spotFormContainer" style="position:relative;">
-		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-		<div class="spotFormPart form">
-			<div class="field">
-				<label for="screenSelect">Link to:</label>
-<!--			<div class="inputBox" style="padding:3px;width:200px;">
-					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
-				</div>-->
-				<div id="screenList" class="line">
-					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
-					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
-				</div>
-			</div>
-			<div class="field">
-				<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
-			</div>
-<!--		<div class="field">
-				<input class="mrs" style="float:left;" type="checkbox" id="maintainScroll" name="maintainScroll"/>
-				<label  for="maintainScroll" style="font-weight:normal;">Maintain scroll position</label>
-			</div>-->
-			<div class="field">
-				<button id="okSpot" href="#" class="btn aristo">Ok</button>
-<!--				<a id="cancelSpot" href="#" class="btn btnN ">Cancel</a>-->
-				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
-			</div>
-		</div>
-	</div>
-</div>
+
 <div id="commentForm" class="spotForm" style="display:none;">
 	<div class="spotFormContainer" style="position:relative;">
 		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
@@ -285,6 +318,10 @@ $.widget("ui.boxer", $.ui.mouse, {
 	},
 	_mouseStart: function(event) {
 		$("#screenList input").autocomplete("close");
+		if(!$('#mainToolbar .edit').is('.selected')){
+			// we are not in edit mode!'
+			return false;
+		}
 		//var self = this;
 		this.opos = [event.pageX, event.pageY];
 		if (this.options.disabled)
@@ -568,8 +605,8 @@ var toolbar = {
 		this.$btnPreview.click(function(){toolbar.previewMode()});
 		this.$btnEditMode.click(function(){toolbar.showSpots();toolbar.editMode()});
 		this.$btnTemplate.click(function(e){toolbar.templateForm.open(e)});
-		this.$btnComments.click(function(){toolbar.fadeSpots()});
-		this.$btnEdit.click(function(){toolbar.showSpots();});
+		this.$btnComments.click(function(){toolbar.comments()});
+		this.$btnEdit.click(function(){toolbar.edit();});
 
 		$('#mainToolbar .btnGroup .btn').click(function(){
 			$('#mainToolbar .btnGroup .btn').removeClass('selected');
@@ -580,10 +617,12 @@ var toolbar = {
 				$('#screenWrap').animate({width:-0});
 				$('#screenPane').animate({width:-0});
 				$(this).removeClass('selected');
+				resizer();
 			}else{
 				$('#screenWrap').animate({width:+200});
 				$('#screenPane').animate({width:+200});
 				$(this).addClass('selected');
+				resizer();
 			}
 		});
 	},
@@ -596,7 +635,7 @@ var toolbar = {
 	previewMode:function(){
 		$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
 		this.$mainToolbar.animate({top:-60},500,'easeInBack');
-		$('#screenWrap').hide('fast',function(){$(this).width(0)});
+		$('#screenWrap').hide('fast',function(){$(this).width(0);});
 		$('#canvasWrap').animate({top:0},500,'swing')
 			.find('.hotspot')
 			.fadeOut(function(){
@@ -604,7 +643,10 @@ var toolbar = {
 			})
 			.find('.ui-resizable-handle')
 			.hide();
+		$('#mainToolbar .preview').addClass('selected');
+		$('#mainToolbar .edit').removeClass('selected');
 		this.templateForm.close();
+		$('#canvas').css('cursor','');
 	},
 	editMode:function(){
 		this.$mainToolbar.animate({top:0},500,'easeInBack');
@@ -615,9 +657,21 @@ var toolbar = {
 			.find('.ui-resizable-handle')
 			.show()
 			toolbar.showSpots();
+			//resizer();
 		});
 		$('#screenWrap').width(200);
 		$('#screenWrap').show('fast');
+		$('#mainToolbar .preview').removeClass('selected');
+		$('#mainToolbar .edit').addClass('selected');
+		$('#canvas').css('cursor','crosshair');
+	},
+	edit:function(){
+		toolbar.showSpots();
+		$('#canvas').css('cursor','');
+	},
+	comments:function(){
+		toolbar.fadeSpots();
+		$('#canvas').css('cursor','help');
 	},
 	templateForm : {
 		init:function(){
@@ -740,7 +794,7 @@ $(function($){
 		}
 	}).click(function(e){
 		if($('#mainToolbar .comments').is('.selected')){
-			alert('commments');
+			commentsForm.show();
 			e.stopPropagation();
 			return false;
 		}
@@ -750,7 +804,29 @@ $(function($){
 	
 	// lets code the toolbar
 	toolbar.init();
+
+
+	// load sidebar images
+	$('#screenWrap .sidebarImg .sideImg').each(function(){
+		var $this = $(this);
+		var src = $this.attr('data-src');
+		var img = new Image();
+		// wrap our new image in jQuery, then:
+		$(img).load(function () {
+			// set the image hidden by default    
+			$(this).hide();
+			$this.append(this).removeClass('loading');
+			$(this).fadeIn();
+		})
+		.error(function () {
+			// show broken image graphic here
+			alert('oops broken image');
+		})
+		.attr('src', src)
+		.width($('#screenPane').width()-35);
+	});
 	
+
 });
 	
 </script>
