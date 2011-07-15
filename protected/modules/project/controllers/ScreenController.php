@@ -70,4 +70,24 @@ class ScreenController extends AController
 		$s->save();
 	}
 	
+	public function actionSaveComment(){
+		$comment = $_POST['comment'];
+		$sid = $_POST['screen'];
+		if($_POST['id'] == 0) 
+			$c = new ProjectComment;
+		else
+			$c = ProjectComment::model()->findByPk($_POST['id']);
+		$c->comment = $comment;
+		$c->screen_id = $sid;
+		$c->left = $_POST['left'];
+		$c->top = $_POST['top'];
+		$c->save();
+		echo json_encode(array('id'=>$c->id));
+	}
+	
+	public function actionDeleteComment(){
+		$c = ProjectComment::model()->findByPk($_POST['id']); 
+		$c->delete();
+	}
+	
 }

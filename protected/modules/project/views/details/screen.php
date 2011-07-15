@@ -1,7 +1,7 @@
 <style type="text/css" media="screen">
 	body{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
 	html{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
-	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;position:relative;}
+	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;position:relative;cursor:crosshair;}
 	
 	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border: 1px solid #2946a7;opacity: 0.7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
 	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
@@ -40,6 +40,7 @@
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
 	button{margin:0px;}
+	.commentSpot{z-index: 100; position: absolute;padding:2px;background:-webkit-gradient(radial, 118 59, 100, 100 59, 0, from(#FF0000), to(#FFDDDD), color-stop(1,#E88787));background:-moz-radial-gradient(top left, #ffcccc, #dd0000);background-color: #dd0000;border:2px solid white;border-radius: 18px;-moz-border-radius:18px;-webkit-border-radius:18px;box-shadow: 1px 1px 3px #000000; color: white;text-align: center;width: 18px;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -129,6 +130,11 @@
 				<?php foreach($templateHotspots as $hotspot): ?>
 					<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot spot-template" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
 				<?php endforeach; ?>
+				<?php $commentJson = array(); ?>
+				<?php foreach($comments as $i=>$comment): ?>
+					<?php $commentJson[$comment->id] = $comment->comment; ?>
+					<a data-id="<?php echo $comment->id; ?>" class="commentSpot" style="left:<?php echo $comment->left; ?>px; top:<?php echo $comment->top; ?>px;"><?php echo $i+1; ?></a>
+				<?php endforeach; ?>
 			</div>
 			<div id="spotForm" class="spotForm" style="display:none;">
 				<div class="spotFormContainer" style="position:relative;">
@@ -154,7 +160,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="commentsForm"  class="spotForm" style="width:300px;" >
+			<div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
 				<div class="commentsFormContainer" style="position:relative;">
 					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
 					<div class="form pam">
@@ -165,6 +171,7 @@
 						<div class="field">
 							<button class="btn aristo primary save">Save</button>
 							<button class="btn aristo cancel">Cancel</button>
+							<a class="delete" href="#">Delete</a>
 						</div>
 					</div>
 				</div>
@@ -175,26 +182,176 @@
 
 <script>
 
-var commentsForm = {
+
+(function($){
+	var methods = {
+		init : function(options) {
+			return this.each(function(){
+				var $this = $(this);
+				$this.draggable({
+					start:function(){
+						if($('#commentForm:visible').index){
+							// make the spotForm follow the hotspot being dragged
+							commentForm.$form.fadeOut();
+						}
+					},
+					drag: function(event, ui) {
+						
+					},
+					stop:function(e,ui){
+						commentForm.show($this);
+						$this.commentSpot('save');
+					}
+				})
+				.click(function(e){
+					$this.commentSpot('click',e);
+				});
+			});
+		},
+		save:function(){
+			$spot = $(this);
+			alert($spot.text());
+			var id = 0;
+			if(commentForm.$textarea.val()=='')
+				return;
+			
+			if($spot.is('[data-id]'))
+				id = $spot.attr('data-id');
+			$.post("<?php echo NHtml::url('/project/screen/saveComment'); ?>",
+				{
+					"screen":<?php echo $screen->id; ?>,
+					"comment":commentForm.$textarea.val(),
+					"id":id,
+					"top":$spot.position().top,
+					"left":$spot.position().left,
+					"number":$spot.text()
+				},
+				function(r){
+					// on save i want to get the id. store it in an array as the key with the comment being the value
+					// so i don't have to ajax in the comment all the time'
+					$spot.attr('data-id', r.id);
+					commentForm.commentStore[r.id] = commentForm.$textarea.val();
+				},
+				'json'
+			);
+			commentForm.$form.hide();
+		},
+		click:function(e){
+			$spot = $(this);
+			commentForm.show($spot);
+		},
+		deleteComment:function(){
+			$spot = $(this);
+			if(!$spot.is('[data-id]')){
+				$spot.remove();
+				commentForm.$form.fadeOut('fast');
+			}else{
+				$.post("<?php echo NHtml::url('/project/screen/deleteComment') ?>",
+					{"id":$spot.attr('data-id')},
+					function(){
+						$spot.remove();
+						commentForm.$form.fadeOut('fast');
+					},
+					'json'
+				);
+			}
+		}
+	};
+	$.fn.commentSpot = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.hotspot' );
+		}    
+	};
+})( jQuery );
+var commentForm = {
+	$form:null,
+	$canvas:null,
+	$textarea:null,
+	$cancel:null,
+	commentStore:<?php echo json_encode($commentJson); ?>,
+	$currentSpot:null,
 	init:function(){
+		this.$form = $('#commentsForm');
+		this.$canvas = $('#canvas');
+		this.$textarea = commentForm.$form.find('textarea');
 		//attach events n stuff
 		// remove the browser default textarea resize handle
-		$('#commentsForm .cancel').click(function(){commentsForm.hide();})
-		$('#commentsForm textarea').css('resize','none');
-		$('#commentsForm').resizable({alsoResize:'#commentsForm textarea, #commentsForm .previewBox'});
-	},
-	show:function(){
-		$('#commentsForm').show();
 		
+		this.$textarea.css('resize','none');
+		this.$form.resizable({alsoResize:'#commentsForm textarea, #commentsForm .previewBox'});
 	},
-	hide:function(){
-		$('#commentsForm').hide();
+	show:function($cSpot){
+		if(this.$form.is(':visible')){
+			// if the comment form is already visible lets hide it
+			commentForm.hide(this.$currentSpot);
+		}else{
+			
+		}
+		this.$currentSpot = $cSpot;
+		this.setTextarea($cSpot);
+		this.$form.show();
+		this.$textarea.focus();
+		this.$form.position({'my':'left top','at':'left top','of':$cSpot,'offset':'35px -20px','collision':'none'});
+		
+		// attach events
+		this.$form.unbind('.commentForm');
+		this.$form.delegate('.save','click.commentForm',function(){$cSpot.commentSpot('save');});
+		this.$form.delegate('.cancel','click.commentForm',function(){commentForm.hide($cSpot)});
+		this.$form.delegate('.delete','click.commentForm',function(){$cSpot.commentSpot('deleteComment')});
+	},
+	newComment:function(e){
+		if(this.$form.is(':visible')){
+			// if the comment form is already visible lets hide it
+			commentForm.hide(this.$currentSpot);
+		}
+		var commentNo = this.$canvas.find('.commentSpot').length+1;
+		var $spot = $('<a class="commentSpot">'+commentNo+'</a>');
+		this.$canvas.append($spot);
+		$spot.css({
+			"z-index": 100,
+			"position": "absolute",
+			"left": e.clientX-this.$canvas.offset().left,
+			"top": e.clientY-this.$canvas.offset().top
+		});
+		$spot.commentSpot();
+		$spot.commentSpot('click');
+	},
+	setTextarea:function($cSpot){
+		if($cSpot.is('[data-id]')){
+			var key = $cSpot.attr('data-id');
+			if(key in commentForm.commentStore){
+				commentForm.$textarea.val(commentForm.commentStore[key]);
+			}
+		}else{
+			commentForm.$textarea.val('');
+		}
+	},
+	hide:function($cSpot){
+		// lets remove the spot if there is no comment
+		if(!$cSpot.is('[data-id]')){
+			if(this.$textarea.val()==''){
+				$cSpot.remove();
+			}else{
+				//should save it
+				// THIS CAUSES ISSUES DONT KNOW WHY!
+				//$cSpot.commentSpot('save');
+			}
+		}
+		this.$form.hide();
 	}
 }
+
+
+
+
+
 var resizer = function(){
 	$('#canvasWrap').snapy({'snap':'.main'});
 	$('#screenPane').snapy({'snap':'.main'});
-	console.log($('#screenPane').border());
 	$('#canvasWrap').css('width',($(window).width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
 	$('#screenPane img').width($('#screenPane').width()-35);
 }
@@ -211,7 +368,7 @@ $(function($){
 			resizer();
 		}
 	});
-	commentsForm.init();
+	commentForm.init();
 	resizer();
 });
 
@@ -263,40 +420,7 @@ $(function($){
  * All rights reserved.
  */
 (function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
-</script>
 
-
-
-<div id="commentForm" class="spotForm" style="display:none;">
-	<div class="spotFormContainer" style="position:relative;">
-		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-		<div class="spotFormPart form">
-			<div class="field">
-				<label for="screenSelect">Link to:</label>
-<!--			<div class="inputBox" style="padding:3px;width:200px;">
-					<?php echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
-				</div>-->
-				<div id="screenList" class="line">
-					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input placeholder="- select screen -" /></div>
-					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
-				</div>
-			</div>
-			<div class="field">
-				<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
-			</div>
-<!--		<div class="field">
-				<input class="mrs" style="float:left;" type="checkbox" id="maintainScroll" name="maintainScroll"/>
-				<label  for="maintainScroll" style="font-weight:normal;">Maintain scroll position</label>
-			</div>-->
-			<div class="field">
-				<button id="okSpot" href="#" class="btn aristo">Ok</button>
-<!--				<a id="cancelSpot" href="#" class="btn btnN ">Cancel</a>-->
-				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
-			</div>
-		</div>
-	</div>
-</div>
-<script>
 	
 //$('#spotForm').dialog({autoOpen:false});
 // Boxer plugin
@@ -390,8 +514,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 				.click(function(e){
 					$this.hotspot('click',e);
 				});
-			})
-			return $spot;
+			});
 		},
 		showForm:function(){
 			spotForm.showForm($(this));			
@@ -794,28 +917,33 @@ $(function($){
 		}
 	}).click(function(e){
 		if($('#mainToolbar .comments').is('.selected')){
-			commentsForm.show();
-			e.stopPropagation();
-			return false;
+			if($(e.target).is('.commentSpot')){
+				// alert('omment spot');
+				$(e.target).commentSpot('click')
+			}else{
+				commentForm.newComment(e);
+				e.stopPropagation();
+				return false;
+			}
 		}
 		$("#screenList input").autocomplete("close");
-	});
+	})
 	$('.hotspot').hotspot();
-	
+	$('.commentSpot').commentSpot();
 	// lets code the toolbar
 	toolbar.init();
 
 
 	// load sidebar images
-	$('#screenWrap .sidebarImg .sideImg').each(function(){
-		var $this = $(this);
-		var src = $this.attr('data-src');
+//	
+	var loadSideImage = function($div){
+		var src = $div.attr('data-src');
 		var img = new Image();
 		// wrap our new image in jQuery, then:
 		$(img).load(function () {
 			// set the image hidden by default    
-			$(this).hide();
-			$this.append(this).removeClass('loading');
+			$(this).hide().width($div.width());	
+			$div.append(this).removeClass('loading');
 			$(this).fadeIn();
 		})
 		.error(function () {
@@ -823,7 +951,11 @@ $(function($){
 			alert('oops broken image');
 		})
 		.attr('src', src)
-		.width($('#screenPane').width()-35);
+		.width($('#screenPane').width()-35);	
+	};
+	$('#screenWrap .sidebarImg .sideImg').each(function(){
+		var $div = $(this);
+		setTimeout(function(){loadSideImage($div)},10);
 	});
 	
 

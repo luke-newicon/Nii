@@ -41,7 +41,9 @@ class ProjectComment extends NActiveRecord
 			'columns'=>array(
 				'id'=>'pk',
 				'screen_id'=>'int',
-				'description'=>'text'
+				'comment'=>'text',
+				'left'=>'int',
+				'top'=>'int',
 			),
 			'keys'=>array(
 				array('screen_id')

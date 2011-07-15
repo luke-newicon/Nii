@@ -144,6 +144,7 @@ class ProjectScreen extends NAppRecord
 		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tArr));
 	}
 	
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}

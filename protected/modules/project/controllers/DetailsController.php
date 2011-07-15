@@ -202,6 +202,7 @@ class DetailsController extends AController
 		// get all the hotspots on the screen
 		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id,'template_id'=>0));
 		$templateSpots = $screen->getTemplateHotspots();
+		$comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$screen->id));
 		$this->render('screen',array(
 			'project'=>$project,
 			'screen'=>$screen,
@@ -210,6 +211,7 @@ class DetailsController extends AController
 			'height'=>$info[1],
 			'rgb'=>$rgb,
 			'hotspots'=>$hotspots,
+			'comments'=>$comments,
 			'templateHotspots'=>$templateSpots
 		));
 	}
