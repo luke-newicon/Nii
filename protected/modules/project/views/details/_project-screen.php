@@ -1,5 +1,5 @@
 <div class="projectBox" data-id="<?php echo $screen->id; ?>" data-name="<?php echo $screen->getName(); ?>">
-	<a href="<?php echo NHtml::url(array('/project/details/screen','id'=>$screen->id)); ?>" class="projImg">
+	<a href="<?php echo NHtml::url(array('/project/screen/index','id'=>$screen->id)); ?>" class="projImg">
 		<?php if(!isset($loadIn)): ?>
 		<img src="<?php echo NHtml::urlImageThumb($screen->file_id, 'projectThumb'); ?>" />
 		<?php endif; ?>

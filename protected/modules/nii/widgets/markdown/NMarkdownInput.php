@@ -38,11 +38,6 @@ class NMarkdownInput extends CInputWidget
 	 */
 	public $displayButtons = true;
 	
-	/**
-	 * top, bottom
-	 * @var string
-	 */
-	public $buttonPosition = 'top';
 	
 	public function run() {
 		// The location of the markdown widgets asset folder
@@ -50,92 +45,44 @@ class NMarkdownInput extends CInputWidget
 
 		// The location the system ajax's to for its prview
 		$ajaxLocation = NHtml::url($this->action);
+		
+		$nameId = $this->resolveNameID();
+		$id = $nameId[1];
 
 		// Includes the markdown style sheet
 		$assetManager = yii::app()->getAssetManager();
 		$assetFolder = $assetManager->publish($assetLocation);
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
-
+		yii::app()->clientScript->registerScriptFile("$assetFolder/markdown.js");
 		// Handles the ajaxing of the preview
-		$jsPreviewClick = '
-				// Gets the specified field
-				function nTextAreaMarkDownGetField(callingItem,name){
-					return $(callingItem).closest(".NTextareaMarkdown").find(name);
-				}
-				function nTextAreaMarkDownGetTextArea(callingItem,name){
-					return $(callingItem).closest(".NTextareaMarkdown").find(name);
-				}
-
-				// Sets the slected button to appear as Active
-				function nTextAreaMarkDownSetButtonState(button){
-					$(button).closest(".NTextareaMarkdown").find(".active").removeClass("active");
-					$(button).addClass("active");
-				}
-
-				// Loads the preview window
-				$(".NTextareaMarkdown .preview").click(function(){
-					var textArea = $(this).closest(".NTextareaMarkdown").find("textarea");
-					nTextAreaMarkDownSetButtonState(this);
-					var textArea = nTextAreaMarkDownGetTextArea(this,"textarea");
-					var previewBox = nTextAreaMarkDownGetField(this,".previewBox");
-					var update = $(this).closest(".NTextareaMarkdown").find(".updated");
-					previewBox.show();
-					textArea.parent().hide();
-					if(update.val()==1){
-						previewBox.html("<p>Loading...</p>");
-						$.ajax({
-						   type: "POST",
-						   url: "' . $ajaxLocation . '",
-						   data: "text="+textArea.val(),
-						   success: function(msg){
-							 previewBox.html(msg);
-							 update.val("0");
-						   }
-						 });
-					}
-					return false;
-				});
-
-				// Updates the status of the updated status
-				$(".NTextareaMarkdown textarea").change(function(){
-					var update = $(this).closest(".NTextareaMarkdown").find(".updated");
-					update.val("1");
-				});
-
-				// Displays the help file for the widget
-				$(".NTextareaMarkdown .edit").click(function(){
-					nTextAreaMarkDownSetButtonState(this);
-					var textArea = nTextAreaMarkDownGetTextArea(this,"textarea");
-					var previewBox = nTextAreaMarkDownGetField(this,".previewBox");
-					previewBox.hide();
-					textArea.parent().fadeIn("fast",function() {
-						textArea.focus();
-					});
-					return false;
-				});';
+		$script = "jQuery('#md-$id').markdown({ajaxAction:'".NHtml::url($this->action)."'});";
+		
 		$cs = Yii::app()->getClientScript();
 		$cs->registerCoreScript('maskedinput');
-		$cs->registerScript('MarkdownEditor', $jsPreviewClick);
-
+		$cs->registerScript('MarkdownEditor', $script);
+		
 		// If I have a model then display an active text area.
 		if ($this->hasModel())
 			$inputElement = CHtml::activeTextArea($this->model, $this->attribute, $this->htmlOptions);
 		else
 			$inputElement = CHtml::textArea($this->name, $this->value, $this->htmlOptions);
-		$this->render('markdown', array('inputElement' => $inputElement));
+		$this->render('markdown', array('inputElement' => $inputElement,'id'=>$id));
 	}
 	
 	/**
 	 * echos out the buttons for edit and preview as well as the help link
 	 */
 	public function displayButtons(){
-		echo '<div class="buttons">';
+		echo '<div class="buttons line" style="border-radius:0px 0px 3px 3px; border:1px solid #ccc; border-top:0px;background-color:#f9f9f9;font-size:80%;padding:3px;">';
 		$this->editButtonAttrs['class'] = $this->editButtonAttrs['class'] . ' edit active';
 		$this->previewButtonAttrs['class'] = $this->previewButtonAttrs['class'] . ' preview';
+		echo '<div class="unit size1of2">';
 		echo CHtml::link('Edit', '#', $this->editButtonAttrs);
 		echo CHtml::link('Preview', '#', $this->previewButtonAttrs);
-		echo CHtml::hiddenField('textAreaStatus', 1, array('class' =>'updated'));
+		echo '</div>';
+		echo '<div class="lastUnit txtR">';
 		echo CHtml::link('Help', 'http://daringfireball.net/projects/markdown/syntax', array('target' => 'blank', 'class' => 'help_button'));
+		echo '</div>';
 		echo '</div>';
 	}
 	

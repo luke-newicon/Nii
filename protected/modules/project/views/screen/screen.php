@@ -28,7 +28,7 @@
 	
 	#closePreview{position:absolute;top:0px;right:0px;z-index:700;}
 	
-	#templateForm{display:none;z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
+	.toolbarForm{z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
 	.triangle-verticle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle-verticle.png'; ?>") no-repeat top left;width:30px;height:22px;left:45%;top:-29px;position:absolute;}
 	.template label:hover {}
 	.template.selected label{}
@@ -40,7 +40,6 @@
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
 	button{margin:0px;}
-	.commentSpot{z-index: 100; position: absolute;padding:2px;background:-webkit-gradient(radial, 118 59, 100, 100 59, 0, from(#FF0000), to(#FFDDDD), color-stop(1,#E88787));background:-moz-radial-gradient(top left, #ffcccc, #dd0000);background-color: #dd0000;border:2px solid white;border-radius: 18px;-moz-border-radius:18px;-webkit-border-radius:18px;box-shadow: 1px 1px 3px #000000; color: white;text-align: center;width: 18px;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -70,7 +69,7 @@
 			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
-			<button class="btn aristo" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
+			<button class="btn aristo share" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
 		</div>
 		<div class="unit plm" style="padding-top:10px;">
 			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fam-cog"></span></button>
@@ -80,40 +79,15 @@
 <div id="closePreview" class="">
 	<button class="btn aristo editMode" data-tip="{gravity:'ne'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-layer-shape"></span> Edit</button>
 </div>
-<div id="templateForm" class="spotForm" style="position:fixed;">
-	<div class="spotFormContainer" style="position:relative;">
-		<div class="triangle-verticle"></div>
-		<p id="templateFormNoTemplate">You don't have any templates, why not add a new one?</p>
-		<ul class="noBull man">
-			<li class="addTemplate">
-				<label>
-					<div class="line">
-						<div class="unit size3of4">
-							<div class="inputBox" style="position:relative;">
-								<input id="newTemplate" name="newTemplate" type="text" autocomplete="off" />
-								<label id="newTemplate-hint" style="position:absolute;left:8px;top:4px;color:#aaa;" for="newTemplate">Enter a new template name</label>
-							</div>
-						</div>
-						<div class="lastUnit">
-							<input id="newTemplateSubmit" style="width:62px;padding-bottom:4px;" type="submit" class="btn aristo btnToolbarRight" value="save"/>
-						</div>
-					</div>
-				</label>
-			</li>
-			<?php foreach($screen->getTemplates() as $template): ?>
-				<?php $this->renderPartial('/screen/_template-item', array('template'=>$template, 'screenId'=>$screen->id)); ?>
-			<?php endforeach; ?>
-		</ul>
-		<div class="templateOk txtR"><button class="btn aristo">Ok</button></div>
-	</div>
-</div>
+<?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
+<?php $this->renderPartial('_share-form'); ?>
 
 <div class="line">
 	<div class="unit" id="screenWrap">
 		<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#aaa;border-right:1px solid #000;">
 			<?php foreach($project->getScreens() as $s): ?>
 			<div class="sidebarImg txtC">
-				<div class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
+				<div data-tip="{gravity:'w'}" title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
 				<span class="imageTitle"><?php echo $s->name; ?></span>
 			</div>
 			<? endforeach; ?>
@@ -161,17 +135,29 @@
 				</div>
 			</div>
 			<div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
-				<div class="commentsFormContainer" style="position:relative;">
+				<div style="position:relative;">
 					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-					<div class="form pam">
-						<div class="line">
-							<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
-							<div class="lastUnit"><?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('buttonPosition'=>'bottom', 'editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?></div>
+					<div class="form pas">
+						<div id="commentForm">
+							<div class="field" style="padding-bottom:0px;">
+								<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'comments','editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?>
+							</div>
+							<div class="field">
+								<button class="btn aristo primary save disabled">Save</button>
+								<button class="btn aristo cancel">Cancel</button>
+								<button class="btn aristo delete" >Delete</button>
+							</div>
 						</div>
-						<div class="field">
-							<button class="btn aristo primary save">Save</button>
-							<button class="btn aristo cancel">Cancel</button>
-							<a class="delete" href="#">Delete</a>
+						<div id="commentView" style="display:none;">
+							<div class="line field" style="padding-bottom:0px;">
+								<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
+								<div class="lastUnit"></div>
+							</div>
+							<div class="field">
+								<button class="btn aristo primary save disabled">Save</button>
+								<button class="btn aristo cancel">Cancel</button>
+								<button class="btn aristo delete" >Delete</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -179,10 +165,22 @@
 		</div>
 	</div>
 </div>
-
+<!-- this is a hidden div image cache -->
+<div style="display: none; ">
+	<?php foreach($project->getScreenList() as $cache): ?>
+	<img src="<?php echo $cache['src']; ?>" width="48" />
+	<?php endforeach; ?>
+</div>
 <script>
 
-
+// comment code is insanely fragile
+// perhaps rewrite into controller to handle states
+// example: 
+// - clicked from saved spot to canvas
+// - from saved spot to another saved spot
+// - from an unsaved spot to a new spot
+// - etc
+//
 (function($){
 	var methods = {
 		init : function(options) {
@@ -190,17 +188,24 @@
 				var $this = $(this);
 				$this.draggable({
 					start:function(){
-						if($('#commentForm:visible').index){
-							// make the spotForm follow the hotspot being dragged
-							commentForm.$form.fadeOut();
+						// handles the case when dragging a db spot from a non db spot
+						// we want to remove the non db spot
+						if(commentForm.$currentSpot!=undefined 
+						&& !commentForm.$currentSpot.is('[data-id]') 
+						&& $this.is('[data-id]'))
+						{
+							commentForm.$currentSpot.remove();
 						}
+						commentForm.$form.hide();
 					},
 					drag: function(event, ui) {
-						
 					},
 					stop:function(e,ui){
 						commentForm.show($this);
-						$this.commentSpot('save');
+						if($this.is('[data-id]')){
+							commentForm.show($this);
+							$this.commentSpot('save', false);
+						}
 					}
 				})
 				.click(function(e){
@@ -208,15 +213,30 @@
 				});
 			});
 		},
-		save:function(){
-			$spot = $(this);
-			alert($spot.text());
+		save:function(hideForm){
+			
+			
+			hideForm = (hideForm === false) ? false:true;
+			var $spot = $(this);
+			//alert($spot.text());
 			var id = 0;
-			if(commentForm.$textarea.val()=='')
+			var comment = commentForm.$textarea.val();
+			if(comment=='')
 				return;
 			
-			if($spot.is('[data-id]'))
+			commentForm.formModel = true;
+			commentForm.$form.find('.save').text('Saving...')
+			
+			if($spot.is('[data-id]')){
 				id = $spot.attr('data-id');
+			}else{
+				// we are saving the comment spot
+				// we need to create an empty data-id attribute so the app knows its saved,
+				// this prevents the race condition of the app cleaning this spot 
+				// and the textarea up because it thinks it is not saved, when the ajax returns the data-id attribute will be populated
+				$spot.attr('data-id','');
+			}
+			
 			$.post("<?php echo NHtml::url('/project/screen/saveComment'); ?>",
 				{
 					"screen":<?php echo $screen->id; ?>,
@@ -230,18 +250,24 @@
 					// on save i want to get the id. store it in an array as the key with the comment being the value
 					// so i don't have to ajax in the comment all the time'
 					$spot.attr('data-id', r.id);
-					commentForm.commentStore[r.id] = commentForm.$textarea.val();
+					
+					commentForm.commentStore[r.id] = comment;
+					commentForm.formModel = false;
+					commentForm.$form.find('.save').text('Save');
+					if(hideForm){
+						commentForm.$form.hide();
+					}
 				},
 				'json'
 			);
-			commentForm.$form.hide();
+			
 		},
 		click:function(e){
-			$spot = $(this);
+			var $spot = $(this);
 			commentForm.show($spot);
 		},
 		deleteComment:function(){
-			$spot = $(this);
+			var $spot = $(this);
 			if(!$spot.is('[data-id]')){
 				$spot.remove();
 				commentForm.$form.fadeOut('fast');
@@ -249,12 +275,16 @@
 				$.post("<?php echo NHtml::url('/project/screen/deleteComment') ?>",
 					{"id":$spot.attr('data-id')},
 					function(){
-						$spot.remove();
-						commentForm.$form.fadeOut('fast');
+						//$spot.remove();
+						//commentForm.$form.fadeOut('fast');
 					},
 					'json'
 				);
 			}
+			
+			$spot.remove();
+			commentForm.$textarea.val('');
+			commentForm.$form.fadeOut('fast');
 		}
 	};
 	$.fn.commentSpot = function( method ) {
@@ -271,42 +301,82 @@ var commentForm = {
 	$form:null,
 	$canvas:null,
 	$textarea:null,
+	$save:null,
 	$cancel:null,
 	commentStore:<?php echo json_encode($commentJson); ?>,
 	$currentSpot:null,
+	formModel:false,
 	init:function(){
 		this.$form = $('#commentsForm');
 		this.$canvas = $('#canvas');
 		this.$textarea = commentForm.$form.find('textarea');
-		//attach events n stuff
+		this.$save = this.$form.find('.save');
+		this.$cancel = this.$form.find('.cancel');
+		// attach events n stuff
 		// remove the browser default textarea resize handle
 		
 		this.$textarea.css('resize','none');
-		this.$form.resizable({alsoResize:'#commentsForm textarea, #commentsForm .previewBox'});
+		//this.$form.resizable({alsoResize:'#commentsForm textarea, #commentsForm .previewBox'});
+		this.$textarea.keyup(function(){
+			if(commentForm.$textarea.val() == ''){
+				commentForm.$save.addClass('disabled');
+			}else{
+				commentForm.$save.removeClass('disabled');
+			}
+		})
+	},
+	canvasClick:function(e){
+		commentForm.$form.find('#md-comments').markdown('edit');
+		if(commentForm.formModel)
+			return false;
+		if($(e.target).is('.commentSpot')){
+			// alert('omment spot');
+			$(e.target).commentSpot('click')
+		}else{
+			commentForm.newComment(e);
+		}
+		e.stopPropagation();
+		return false;
+	},
+	position:function($cSpot){
+		this.$form.position({'my':'left top','at':'left top','of':$cSpot,'offset':'43px -16px','collision':'none'});
 	},
 	show:function($cSpot){
 		if(this.$form.is(':visible')){
 			// if the comment form is already visible lets hide it
+			// if clicking on a spot from a new spot we want the hide function to remove the spot with no data-id attribute
+			// otherwise we get zombie spots
 			commentForm.hide(this.$currentSpot);
-		}else{
-			
 		}
 		this.$currentSpot = $cSpot;
 		this.setTextarea($cSpot);
 		this.$form.show();
 		this.$textarea.focus();
-		this.$form.position({'my':'left top','at':'left top','of':$cSpot,'offset':'35px -20px','collision':'none'});
+		
+		this.position($cSpot);
 		
 		// attach events
 		this.$form.unbind('.commentForm');
 		this.$form.delegate('.save','click.commentForm',function(){$cSpot.commentSpot('save');});
-		this.$form.delegate('.cancel','click.commentForm',function(){commentForm.hide($cSpot)});
+		this.$form.delegate('.cancel','click.commentForm',function(){commentForm.cancel($cSpot)});
 		this.$form.delegate('.delete','click.commentForm',function(){$cSpot.commentSpot('deleteComment')});
+	},
+	cancel:function($cSpot){
+		commentForm.hide($cSpot);
+		commentForm.$textarea.val('');
 	},
 	newComment:function(e){
 		if(this.$form.is(':visible')){
 			// if the comment form is already visible lets hide it
+			// if we return false here we will prevent clicking elsewhere on the canvas whilst
+			// the comment form is visible
+			// return false;
 			commentForm.hide(this.$currentSpot);
+		}
+		if(this.$currentSpot == undefined || this.$currentSpot.is('[data-id]')){
+			// we are clicking a new comment from an existing comment
+			// we want the textarea to appear empty - not with the current comments comment
+			this.$textarea.val('');
 		}
 		var commentNo = this.$canvas.find('.commentSpot').length+1;
 		var $spot = $('<a class="commentSpot">'+commentNo+'</a>');
@@ -321,25 +391,24 @@ var commentForm = {
 		$spot.commentSpot('click');
 	},
 	setTextarea:function($cSpot){
+		if(commentForm.$textarea.val() == ''){
+			commentForm.$save.addClass('disabled');
+		}
 		if($cSpot.is('[data-id]')){
+			//commentForm.$save.removeClass('disabled');
+			commentForm.$cancel.text('Close');
 			var key = $cSpot.attr('data-id');
 			if(key in commentForm.commentStore){
 				commentForm.$textarea.val(commentForm.commentStore[key]);
 			}
 		}else{
-			commentForm.$textarea.val('');
+			commentForm.$cancel.text('Cancel');
 		}
 	},
 	hide:function($cSpot){
 		// lets remove the spot if there is no comment
 		if(!$cSpot.is('[data-id]')){
-			if(this.$textarea.val()==''){
-				$cSpot.remove();
-			}else{
-				//should save it
-				// THIS CAUSES ISSUES DONT KNOW WHY!
-				//$cSpot.commentSpot('save');
-			}
+			$cSpot.remove();
 		}
 		this.$form.hide();
 	}
@@ -370,6 +439,7 @@ $(function($){
 	});
 	commentForm.init();
 	resizer();
+	//$('.sideImg').draggable({'helper':$('<div>screen</div>').appendTo('body')});
 });
 
 	
@@ -716,6 +786,7 @@ var toolbar = {
 	$btnEditMode:null,
 	$btnTemplate:null,
 	$btnComments:null,
+	$btnShare:null,
 	init:function(){
 		this.$mainToolbar = $('#mainToolbar');
 		this.$btnPreview = this.$mainToolbar.find('.preview');
@@ -723,11 +794,14 @@ var toolbar = {
 		this.$btnEdit = this.$mainToolbar.find('.edit');
 		this.$btnTemplate = this.$mainToolbar.find('.template');
 		this.$btnComments = this.$mainToolbar.find('.comments');
+		this.$btnShare = this.$mainToolbar.find('.share');
 		this.templateForm.init();
+		this.shareForm.init();
 		// toolbar button events
 		this.$btnPreview.click(function(){toolbar.previewMode()});
 		this.$btnEditMode.click(function(){toolbar.showSpots();toolbar.editMode()});
 		this.$btnTemplate.click(function(e){toolbar.templateForm.open(e)});
+		this.$btnShare.click(function(e){toolbar.shareForm.open(e)});
 		this.$btnComments.click(function(){toolbar.comments()});
 		this.$btnEdit.click(function(){toolbar.edit();});
 
@@ -754,6 +828,12 @@ var toolbar = {
 	},
 	fadeSpots:function(){
 		$('#canvas .hotspot').fadeTo(250,0.2).attr('data-disabled','true');
+	},
+	showComments:function(){
+		$('#canvas .commentSpot').fadeIn(250);
+	},
+	fadeComments:function(){
+		$('#canvas .commentSpot').fadeOut(250);
 	},
 	previewMode:function(){
 		$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
@@ -790,11 +870,35 @@ var toolbar = {
 	},
 	edit:function(){
 		toolbar.showSpots();
+		toolbar.fadeComments();
 		$('#canvas').css('cursor','');
 	},
 	comments:function(){
 		toolbar.fadeSpots();
+		toolbar.showComments();
 		$('#canvas').css('cursor','help');
+	},
+	shareForm:{
+		init:function(){
+			$('#shareForm .templateOk button').click(function(){toolbar.shareForm.close();});
+		},
+		open:function(e){
+			$('#shareForm').show();
+			toolbar.$btnShare.addClass('selected');
+			$('#shareForm').position({'my':'center top','at':'center bottom','of':toolbar.$btnShare,'offset':'0px 12px','collision':'none'});
+			$('#shareForm').click(function(e){
+				e.stopPropagation();
+			});
+			$('body').bind('click.shareForm',function(){
+				toolbar.shareForm.close();
+			});
+			e.stopPropagation();
+		},
+		close: function(){
+			toolbar.$btnShare.removeClass('selected');
+			$('body').unbind('click.shareForm');
+			$('#shareForm').hide();
+		}
 	},
 	templateForm : {
 		init:function(){
@@ -917,14 +1021,7 @@ $(function($){
 		}
 	}).click(function(e){
 		if($('#mainToolbar .comments').is('.selected')){
-			if($(e.target).is('.commentSpot')){
-				// alert('omment spot');
-				$(e.target).commentSpot('click')
-			}else{
-				commentForm.newComment(e);
-				e.stopPropagation();
-				return false;
-			}
+			commentForm.canvasClick(e)
 		}
 		$("#screenList input").autocomplete("close");
 	})

@@ -18,6 +18,41 @@ class ScreenController extends AController
 {
 	
 	/**
+	 * render the individual screen view
+	 * @param int $id 
+	 */
+	public function actionIndex($id){
+		
+		$this->layout = 'index';
+		
+		$screen = ProjectScreen::model()->findByPk($id);
+		$project = Project::model()->findByPk($screen->project_id);
+		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
+		
+		$file = $screen->getFile();
+		if($file===null) throw new CHttpException (404,'whoops, no screen found');
+		
+		$rgb = $screen->guessBackgroundColor();
+		$info = getimagesize($file->getPath());
+		
+		// get all the hotspots on the screen
+		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id,'template_id'=>0));
+		$templateSpots = $screen->getTemplateHotspots();
+		$comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$screen->id));
+		$this->render('screen',array(
+			'project'=>$project,
+			'screen'=>$screen,
+			'file'=>$file,
+			'width'=>$info[0],
+			'height'=>$info[1],
+			'rgb'=>$rgb,
+			'hotspots'=>$hotspots,
+			'comments'=>$comments,
+			'templateHotspots'=>$templateSpots
+		));
+	}
+	
+	/**
 	 * ajax: adds a new template
 	 */
 	public function actionAddTemplate(){

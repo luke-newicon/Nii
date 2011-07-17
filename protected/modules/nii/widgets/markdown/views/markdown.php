@@ -1,14 +1,12 @@
-<div class="NTextareaMarkdown">
-	<?php
-		if($this->displayButtons && $this->buttonPosition=='top'){
-			$this->displayButtons();
-		}
-	?>
-	<div class="inputBox"><?php echo $inputElement ?></div>
+<style>
+	.previewBox{background-color:#f9f9f9;border:1px solid #ccc;padding:4px;}
+	a.active{font-weight:bold;}
+</style>
+<div class="NTextareaMarkdown" id="md-<?php echo $id; ?>">
 	<div class="previewBox" style="display:none;">Loading...</div>
-	<?php
-		if($this->displayButtons && $this->buttonPosition=='bottom'){
-			$this->displayButtons();
-		}
-	?>
+	<div class="editBox inputBox" style="border-radius:3px 3px 0px 0px;">
+		<?php echo $inputElement ?>
+	</div>
+	<?php $this->displayButtons(); ?>
+	
 </div>

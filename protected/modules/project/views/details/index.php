@@ -36,7 +36,7 @@
 	.plupload{cursor:pointer;}
 	
 	#progress{position:fixed;display:none;z-index:10;width:300px;}
-	.ui-progressbar{background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
+	.ui-progressbar{background:-webkit-gradient(linear,center bottom,center top,from(#aaa), to(#666));background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
 	
 	
 	
