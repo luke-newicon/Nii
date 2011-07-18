@@ -14,6 +14,16 @@ class NImage extends CImageComponent
 
 	/**
 	 * Default image types
+	 * keys refer to image functions,
+	 * resize,
+	 * crop,
+	 * height,
+	 * width,
+	 * scale,
+	 * master the master dimension (none,min,max,width,height)
+	 * scale,
+	 * flip (horizontal, vertical)
+	 * rotate 
 	 * array(
 	 *     'thumb' => array(
 	 * 			'resize' => array(

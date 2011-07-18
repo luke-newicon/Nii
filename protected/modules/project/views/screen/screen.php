@@ -82,83 +82,79 @@
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
 <?php $this->renderPartial('_share-form'); ?>
 
-<div class="line">
-	<div class="unit" id="screenWrap">
-		<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#aaa;border-right:1px solid #000;">
-			<?php foreach($project->getScreens() as $s): ?>
-			<div class="sidebarImg txtC">
-				<div data-tip="{gravity:'w'}" title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
-				<span class="imageTitle"><?php echo $s->name; ?></span>
-			</div>
-			<? endforeach; ?>
+<div  id="screenWrap" style="position:absolute">
+	<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#aaa;border-right:1px solid #000;">
+		<?php foreach($project->getScreens() as $s): ?>
+		<div class="sidebarImg txtC">
+			<div data-tip="{gravity:'w'}" title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
+			<span class="imageTitle"><?php echo $s->name; ?></span>
 		</div>
-		<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>
+		<? endforeach; ?>
 	</div>
-	<div class="lastUnit">
-		<div id="canvasWrap" style="position: relative; top:48px; overflow: auto; height: 400px;"> 
-			<div id="canvas" style="cursor:crosshair;"> 
-				<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
-				<?php foreach($hotspots as $hotspot): ?>
-					<a data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
-				<?php endforeach; ?>
-				<?php foreach($templateHotspots as $hotspot): ?>
-					<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot spot-template" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
-				<?php endforeach; ?>
-				<?php $commentJson = array(); ?>
-				<?php foreach($comments as $i=>$comment): ?>
-					<?php $commentJson[$comment->id] = $comment->comment; ?>
-					<a data-id="<?php echo $comment->id; ?>" class="commentSpot" style="left:<?php echo $comment->left; ?>px; top:<?php echo $comment->top; ?>px;"><?php echo $i+1; ?></a>
-				<?php endforeach; ?>
-			</div>
-			<div id="spotForm" class="spotForm" style="display:none;">
-				<div class="spotFormContainer" style="position:relative;">
-					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-					<div class="spotFormPart form">
-						<div class="field">
-							<label for="screenSelect">Link to:</label>
-							<!--<div class="inputBox" style="padding:3px;width:200px;">
-								<?php // echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
-							</div>-->
-							<div id="screenList" class="line">
-								<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
-								<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
-							</div>
-						</div>
-						<div class="field">
-							<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
-						</div>
-						<div class="field">
-							<button id="okSpot" href="#" class="btn aristo">Ok</button>
-							<a id="deleteSpot" href="#" class="delete mls">Delete</a>
-						</div>
+	<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>
+</div>
+<div id="canvasWrap" style="position: absolute; top:48px; overflow: auto; height: 400px;"> 
+	<div id="canvas" style="cursor:crosshair;"> 
+		<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
+		<?php foreach($hotspots as $hotspot): ?>
+			<a data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
+		<?php endforeach; ?>
+		<?php foreach($templateHotspots as $hotspot): ?>
+			<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot spot-template" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
+		<?php endforeach; ?>
+		<?php $commentJson = array(); ?>
+		<?php foreach($comments as $i=>$comment): ?>
+			<?php $commentJson[$comment->id] = $comment->comment; ?>
+			<a data-id="<?php echo $comment->id; ?>" class="commentSpot" style="left:<?php echo $comment->left; ?>px; top:<?php echo $comment->top; ?>px;"><?php echo $i+1; ?></a>
+		<?php endforeach; ?>
+	</div>
+	<div id="spotForm" class="spotForm" style="display:none;">
+		<div class="spotFormContainer" style="position:relative;">
+			<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
+			<div class="spotFormPart form">
+				<div class="field">
+					<label for="screenSelect">Link to:</label>
+					<!--<div class="inputBox" style="padding:3px;width:200px;">
+						<?php // echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
+					</div>-->
+					<div id="screenList" class="line">
+						<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
+						<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
 					</div>
 				</div>
+				<div class="field">
+					<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
+				</div>
+				<div class="field">
+					<button id="okSpot" href="#" class="btn aristo">Ok</button>
+					<a id="deleteSpot" href="#" class="delete mls">Delete</a>
+				</div>
 			</div>
-			<div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
-				<div style="position:relative;">
-					<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-					<div class="form pas">
-						<div id="commentForm">
-							<div class="field" style="padding-bottom:0px;">
-								<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'comments','editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?>
-							</div>
-							<div class="field">
-								<button class="btn aristo primary save disabled">Save</button>
-								<button class="btn aristo cancel">Cancel</button>
-								<button class="btn aristo delete" >Delete</button>
-							</div>
-						</div>
-						<div id="commentView" style="display:none;">
-							<div class="line field" style="padding-bottom:0px;">
-								<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
-								<div class="lastUnit"></div>
-							</div>
-							<div class="field">
-								<button class="btn aristo primary save disabled">Save</button>
-								<button class="btn aristo cancel">Cancel</button>
-								<button class="btn aristo delete" >Delete</button>
-							</div>
-						</div>
+		</div>
+	</div>
+	<div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
+		<div style="position:relative;">
+			<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
+			<div class="form pas">
+				<div id="commentForm">
+					<div class="field" style="padding-bottom:0px;">
+						<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'comments','editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?>
+					</div>
+					<div class="field">
+						<button class="btn aristo primary save disabled">Save</button>
+						<button class="btn aristo cancel">Cancel</button>
+						<button class="btn aristo delete" >Delete</button>
+					</div>
+				</div>
+				<div id="commentView" style="display:none;">
+					<div class="line field" style="padding-bottom:0px;">
+						<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
+						<div class="lastUnit"></div>
+					</div>
+					<div class="field">
+						<button class="btn aristo primary save disabled">Save</button>
+						<button class="btn aristo cancel">Cancel</button>
+						<button class="btn aristo delete" >Delete</button>
 					</div>
 				</div>
 			</div>
@@ -419,9 +415,14 @@ var commentForm = {
 
 
 var resizer = function(){
-	$('#canvasWrap').snapy({'snap':'.main'});
-	$('#screenPane').snapy({'snap':'.main'});
-	$('#canvasWrap').css('width',($(window).width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
+	//$('#canvasWrap').snapy({'snap':'.main'});
+	//$('#screenPane').snapy({'snap':'.main'});
+	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
+	$('#canvasWrap').css('left',$('#screenWrap').width());
+	
+	//$('#canvasWrap').css('height',$(window).height()-$('#canvasWrap').offset().top);
+	//$('#screenWrap').css('height',$(window).height()-$('#screenWrap').offset().top);
+	
 	$('#screenPane img').width($('#screenPane').width()-35);
 }
 $(function($){
@@ -439,6 +440,9 @@ $(function($){
 	});
 	commentForm.init();
 	resizer();
+	$('#screenPane').scroll(function(){
+		$('.sideImg').tipsy('show');
+	});
 	//$('.sideImg').draggable({'helper':$('<div>screen</div>').appendTo('body')});
 });
 
