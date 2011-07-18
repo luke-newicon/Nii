@@ -40,6 +40,7 @@
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
 	button{margin:0px;}
+	body{overflow:hidden;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -82,18 +83,18 @@
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
 <?php $this->renderPartial('_share-form'); ?>
 
-<div  id="screenWrap" style="position:absolute">
-	<div id="screenPane" class="unit" style="overflow:auto;position:relative;top:48px;z-index:300;height:400px;width:200px;background-color:#aaa;border-right:1px solid #000;">
+<div  id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
+	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
 		<?php foreach($project->getScreens() as $s): ?>
 		<div class="sidebarImg txtC">
-			<div data-tip="{gravity:'w'}" title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
+			<div title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
 			<span class="imageTitle"><?php echo $s->name; ?></span>
 		</div>
 		<? endforeach; ?>
 	</div>
-	<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>
+<!--	<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>-->
 </div>
-<div id="canvasWrap" style="position: absolute; top:48px; overflow: auto; height: 400px;"> 
+<div id="canvasWrap" style="position: absolute; top:48px; overflow: auto; left:200px; height: 400px;"> 
 	<div id="canvas" style="cursor:crosshair;"> 
 		<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 		<?php foreach($hotspots as $hotspot): ?>
@@ -415,8 +416,9 @@ var commentForm = {
 
 
 var resizer = function(){
-	//$('#canvasWrap').snapy({'snap':'.main'});
-	//$('#screenPane').snapy({'snap':'.main'});
+	$('#canvasWrap').snapy({'snap':$(window)});
+	$('#screenWrap').snapy({'snap':$(window)});
+	$('#screenPane').snapy({'snap':'#screenWrap'});
 	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
 	$('#canvasWrap').css('left',$('#screenWrap').width());
 	
@@ -429,8 +431,8 @@ $(function($){
 	$(window).resize(function(){
 		resizer();
 	});
-	$('#canvasWrap').snapy({'snap':'.main'});
-	$('#screenPane').snapy({'snap':'.main'});
+	$('#canvasWrap').snapy({'snap':$(window)});
+	$('#screenWrap').snapy({'snap':$(window)});
 	$('#screenWrap').resizable({
 		handles:'e',
 		alsoResize:'#screenPane',
@@ -465,7 +467,7 @@ $(function($){
 				var minHeight = 200;
 				$snapTo = $(options.snap);
 				
-				var winHeight = $(window).height();
+				var winHeight = $snapTo.height();
 				
 				if(!((winHeight-$this.position().top) <= minHeight)){
 					$this.css('height',(winHeight - $this.position().top - _padHeight($this)) + 'px');
@@ -813,15 +815,27 @@ var toolbar = {
 			$('#mainToolbar .btnGroup .btn').removeClass('selected');
 			$(this).addClass('selected');
 		});
+		var previousScreenWidth = 200;
 		$('#mainToolbar .sidebar').click(function(){
 			if($(this).is('.selected')){
-				$('#screenWrap').animate({width:-0});
-				$('#screenPane').animate({width:-0});
+				previousScreenWidth = $('#screenWrap').width();
+//				$('#screenWrap').animate({width:-0},250);
+//				$('#screenPane').animate({width:-0},250);
+//				$('#canvasWrap').animate({width:$(window).width(),left:-0},250);
+				$('#screenWrap').width(0);
+				$('#screenPane').width(0);
+				$('#canvasWrap').width($(window).width());
+				$('#canvasWrap').css('left',0);
 				$(this).removeClass('selected');
 				resizer();
 			}else{
-				$('#screenWrap').animate({width:+200});
-				$('#screenPane').animate({width:+200});
+//				$('#screenWrap').animate({width:+previousScreenWidth},250);
+//				$('#screenPane').animate({width:+previousScreenWidth},250);
+//				$('#canvasWrap').animate({width:$(window).width()-previousScreenWidth,left:+previousScreenWidth},250)
+				$('#screenWrap').width(previousScreenWidth);
+				$('#screenPane').width(previousScreenWidth);
+				$('#canvasWrap').width($(window).width()-previousScreenWidth);
+				$('#canvasWrap').css('left',previousScreenWidth);
 				$(this).addClass('selected');
 				resizer();
 			}
