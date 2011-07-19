@@ -115,5 +115,17 @@ class NWebUser extends CWebUser
 			throw new CException('No record found for the logged in user');
 		}
 	}
+	
+	/**
+	 * get the current users email address
+	 */
+	public function getEmail(){
+		if($this->record !== null){
+			return $this->record->email;
+		}
+			
+		return $this->username;
+		
+	}
 
 }

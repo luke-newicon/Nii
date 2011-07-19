@@ -39,6 +39,16 @@ $(function(){
 		$('#deleteOverlay').width($tpl.width()-10);
 		$('#deleteOverlay').height($tpl.height()+10);
 		$('#deleteOverlay').fadeTo(0,0.1).position({'my':'left top','at':'left top','of':$tpl,'offset':'0 -1px'}).fadeTo(250,1);
+		$('#deleteOverlay .delete').one('click',function(){
+			var id = $tpl.attr('data-id');
+			$.post("<?php echo NHtml::url('/project/screen/deleteTemplate'); ?>",{"id":id},function(r){
+				if(r.result.success){
+					$('#deleteOverlay').fadeOut();
+					$tpl.fadeOut();
+				}
+			},'json');
+		});
 	});
+	
 });
 </script>

@@ -16,8 +16,6 @@
  */
 class NActiveRecord extends CActiveRecord
 {
- 
-   
 	
 	/**
 	 * Shorthand method to Yii::app()->db->createCommand()

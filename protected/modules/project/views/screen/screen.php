@@ -3,8 +3,19 @@
 	html{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
 	#canvas{margin: 0 auto;width:<?php echo $width; ?>px;position:relative;cursor:crosshair;}
 	
-	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border: 1px solid #2946a7;opacity: 0.7;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
-	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
+	/** 
+	 * hotspot styles
+	 */
+	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border:1px dotted #2946a7;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
+	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.3;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
+	
+/*	.hotspot.linked{opacity:0.7;border-style:solid;}*/
+	.hotspot[data-screen]{opacity:0.7;border-style:solid;}
+	.hotspot[data-template]{background-color:orange;border-color:red;}
+	
+	.hotspot.link{background-color:transparent;border:none;}
+	a.hotspot[data-disabled="true"]{cursor:help;}
+	/*.spot-template{background-color:orange;border-color:red;}*/
 	
 	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left bottom, left top, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
 	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
@@ -22,25 +33,26 @@
 	.small .toolbarArrow{background-position:100% 0px;}
 	.small .titleBarText{padding-top:5px;font-size:14px;}
 	.toolbar.screen{min-width:1024px;border-bottom-color:#666;height:46px;background-color:#000;position:fixed;box-shadow: 0 1px 0 #FFFFFF inset, 0 0 8px #000000;z-index:4000;}
+
 	
-	
-	.hotspot.link{background-color:transparent;border:none;}
-	
+
 	#closePreview{position:absolute;top:0px;right:0px;z-index:700;}
 	
 	.toolbarForm{z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
 	.triangle-verticle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle-verticle.png'; ?>") no-repeat top left;width:30px;height:22px;left:45%;top:-29px;position:absolute;}
 	.template label:hover {}
-	.template.selected label{}
+	.template.selected label {}
 	.addTemplate .inputBox{border-radius:3px 0px 0px 3px;}
-	
-	.spot-template{background-color:orange;border-color:red;}
-	
 	.sidebarImg .sideImg{box-shadow:0px 0px 5px #000;margin:10px;}
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
+
 	button{margin:0px;}
 	body{overflow:hidden;}
+	
+	.username{font-weight:bold;}
+	.stats{color:#999;}
+
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -77,11 +89,11 @@
 		</div>
 	</div>
 </div>
-<div id="closePreview" class="">
-	<button class="btn aristo editMode" data-tip="{gravity:'ne'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-layer-shape"></span> Edit</button>
+<div id="closePreview" style="position:absolute;top:10px;left:10px;">
+	<button class="btn aristo editMode" data-tip="{gravity:'nw'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-layer-shape"></span> Edit</button>
 </div>
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
-<?php $this->renderPartial('_share-form'); ?>
+<?php $this->renderPartial('_share-form',array('screen'=>$screen,'project'=>$project)); ?>
 
 <div  id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
 	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
@@ -98,69 +110,24 @@
 	<div id="canvas" style="cursor:crosshair;"> 
 		<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
 		<?php foreach($hotspots as $hotspot): ?>
-			<a data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
+			<a data-id="<?php echo $hotspot->id; ?>" <?php echo ($hotspot->screen_id_link)? 'data-screen="'.$hotspot->screen_id_link.'"':''; ?>  class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
 		<?php endforeach; ?>
 		<?php foreach($templateHotspots as $hotspot): ?>
-			<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php if($hotspot->screen_id_link): ?> data-screen="<?php echo $hotspot->screen_id_link; ?>" <?php endif; ?> class="hotspot spot-template" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
+			<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php echo ($hotspot->screen_id_link)?'data-screen="'.$hotspot->screen_id_link.'"':''; ?> class="hotspot spot-template <?php echo ($hotspot->screen_id_link)?'linked':''; ?>" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
 		<?php endforeach; ?>
 		<?php $commentJson = array(); ?>
 		<?php foreach($comments as $i=>$comment): ?>
-			<?php $commentJson[$comment->id] = $comment->comment; ?>
+			<?php $commentJson[$comment->id] = array(
+				'comment'=>$comment->comment,
+				'view'=>$this->renderPartial('_comment',array('comment'=>$comment),true)
+			); ?>
 			<a data-id="<?php echo $comment->id; ?>" class="commentSpot" style="left:<?php echo $comment->left; ?>px; top:<?php echo $comment->top; ?>px;"><?php echo $i+1; ?></a>
 		<?php endforeach; ?>
 	</div>
-	<div id="spotForm" class="spotForm" style="display:none;">
-		<div class="spotFormContainer" style="position:relative;">
-			<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-			<div class="spotFormPart form">
-				<div class="field">
-					<label for="screenSelect">Link to:</label>
-					<!--<div class="inputBox" style="padding:3px;width:200px;">
-						<?php // echo CHtml::dropDownList('screenSelect', 0, $project->getScreensListData(),array('class'=>'input','style'=>'margin:0px;')) ?>
-					</div>-->
-					<div id="screenList" class="line">
-						<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
-						<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
-					</div>
-				</div>
-				<div class="field">
-					<label for="hotspotTemplate">Add to template</label><select id="hotspotTemplate"></select>
-				</div>
-				<div class="field">
-					<button id="okSpot" href="#" class="btn aristo">Ok</button>
-					<a id="deleteSpot" href="#" class="delete mls">Delete</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
-		<div style="position:relative;">
-			<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-			<div class="form pas">
-				<div id="commentForm">
-					<div class="field" style="padding-bottom:0px;">
-						<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'comments','editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?>
-					</div>
-					<div class="field">
-						<button class="btn aristo primary save disabled">Save</button>
-						<button class="btn aristo cancel">Cancel</button>
-						<button class="btn aristo delete" >Delete</button>
-					</div>
-				</div>
-				<div id="commentView" style="display:none;">
-					<div class="line field" style="padding-bottom:0px;">
-						<div class="unit"><?php $this->widget('nii.widgets.Gravatar',array('email'=>Yii::app()->user->record->email)); ?></div>
-						<div class="lastUnit"></div>
-					</div>
-					<div class="field">
-						<button class="btn aristo primary save disabled">Save</button>
-						<button class="btn aristo cancel">Cancel</button>
-						<button class="btn aristo delete" >Delete</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
+	<?php $this->renderPartial('_comment-form'); ?>
+	<?php $this->renderPartial('_spot-form'); ?>
+	
 </div>
 <!-- this is a hidden div image cache -->
 <div style="display: none; ">
@@ -211,8 +178,6 @@
 			});
 		},
 		save:function(hideForm){
-			
-			
 			hideForm = (hideForm === false) ? false:true;
 			var $spot = $(this);
 			//alert($spot.text());
@@ -248,11 +213,14 @@
 					// so i don't have to ajax in the comment all the time'
 					$spot.attr('data-id', r.id);
 					
-					commentForm.commentStore[r.id] = comment;
+					commentForm.commentStore[r.id] = {'comment':comment,'view':r.comment};
 					commentForm.formModel = false;
 					commentForm.$form.find('.save').text('Save');
 					if(hideForm){
-						commentForm.$form.hide();
+						$('#commentForm').hide();
+						$('#commentView').html(r.comment);
+						$('#commentViewWrap').show();
+						//commentForm.$form.hide();
 					}
 				},
 				'json'
@@ -295,6 +263,7 @@
 	};
 })( jQuery );
 var commentForm = {
+	defaultHeight:60,
 	$form:null,
 	$canvas:null,
 	$textarea:null,
@@ -346,7 +315,9 @@ var commentForm = {
 			commentForm.hide(this.$currentSpot);
 		}
 		this.$currentSpot = $cSpot;
+		
 		this.setTextarea($cSpot);
+		
 		this.$form.show();
 		this.$textarea.focus();
 		
@@ -354,15 +325,31 @@ var commentForm = {
 		
 		// attach events
 		this.$form.unbind('.commentForm');
-		this.$form.delegate('.save','click.commentForm',function(){$cSpot.commentSpot('save');});
+		this.$form.delegate('.save','click.commentForm',function(e){if($(e.target).is('.disabled')){return false;}$cSpot.commentSpot('save');});
 		this.$form.delegate('.cancel','click.commentForm',function(){commentForm.cancel($cSpot)});
+		this.$form.delegate('.close','click.commentForm',function(){commentForm.close($cSpot)});
+		this.$form.delegate('.edit','click.commentForm',function(){commentForm.edit($cSpot)});
 		this.$form.delegate('.delete','click.commentForm',function(){$cSpot.commentSpot('deleteComment')});
 	},
 	cancel:function($cSpot){
+		if($cSpot.is('[data-id]')){
+			commentForm.showView();
+		} else {
+			commentForm.close($cSpot);
+		}
+	},
+	edit:function($cSpot){
+		var h = $('#commentViewWrap').height();
+		$('#commentViewWrap').hide();$('#commentForm').show();
+		$('#commentForm textarea').height(h-61);
+	},
+	close:function($cSpot){
 		commentForm.hide($cSpot);
 		commentForm.$textarea.val('');
 	},
 	newComment:function(e){
+		commentForm.showForm();
+		commentForm.$textarea.height(commentForm.defaultHeight);
 		if(this.$form.is(':visible')){
 			// if the comment form is already visible lets hide it
 			// if we return false here we will prevent clicking elsewhere on the canvas whilst
@@ -375,6 +362,7 @@ var commentForm = {
 			// we want the textarea to appear empty - not with the current comments comment
 			this.$textarea.val('');
 		}
+		
 		var commentNo = this.$canvas.find('.commentSpot').length+1;
 		var $spot = $('<a class="commentSpot">'+commentNo+'</a>');
 		this.$canvas.append($spot);
@@ -392,15 +380,27 @@ var commentForm = {
 			commentForm.$save.addClass('disabled');
 		}
 		if($cSpot.is('[data-id]')){
-			//commentForm.$save.removeClass('disabled');
-			commentForm.$cancel.text('Close');
+			
 			var key = $cSpot.attr('data-id');
 			if(key in commentForm.commentStore){
-				commentForm.$textarea.val(commentForm.commentStore[key]);
+				// alert(commentForm.commentStore[key].view);
+				
+				// display view
+				$('#commentForm').hide();
+				$('#commentView').html(commentForm.commentStore[key].view);
+				$('#commentViewWrap').show();
+				
+				commentForm.$textarea.val(commentForm.commentStore[key].comment);
 			}
 		}else{
 			commentForm.$cancel.text('Cancel');
 		}
+	},
+	showView:function(){
+		$('#commentForm').hide();$('#commentViewWrap').show();
+	},
+	showForm:function(){
+		$('#commentForm').show();$('#commentViewWrap').hide();
 	},
 	hide:function($cSpot){
 		// lets remove the spot if there is no comment
@@ -596,14 +596,19 @@ $.widget("ui.boxer", $.ui.mouse, {
 			spotForm.showForm($(this));			
 		},
 		update:function(){
+			// update the server with spot details
 			var $spot = $(this);
 			var offset = $spot.position();
 			var id = -1;
 			var screenId = 0;
 			if($spot.is('[data-id]'))
 				id = $spot.attr('data-id');
-			if($spot.is('[data-screen]'))
+			if($spot.is('[data-screen]')){
 				screenId = $spot.attr('data-screen');
+				$spot.addClass('linked');
+			}else{
+				$spot.removeClass('linked');
+			}
 			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
 				{ProjectHotSpot:{
 					hotspot_id:id,
@@ -628,15 +633,26 @@ $.widget("ui.boxer", $.ui.mouse, {
 			$('#spotForm').hide();
 			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
 		},
+		setStateLink:function(){
+			this.removeAttr('data-disabled')
+				.addClass('link')
+				.attr('data-editable','false').show()
+				.find('.ui-resizable-handle').hide()
+		},
+		setStateEdit:function(){
+			this.removeClass('link')
+				.attr('data-editable','true')
+				.find('.ui-resizable-handle').show()
+		},
 		link:function(){
 			// hotspots may not have a defined screen id, so be careful
-			$spot = $(this);
+			var $spot = $(this);
 			if($spot.is('[data-screen]')){
-				location.href = "<?php echo NHtml::url('/project/details/screen'); ?>/id/"+$spot.attr('data-screen');
+				location.href = "<?php echo NHtml::url('/project/screen/index'); ?>/id/"+$spot.attr('data-screen');
 			}
 		},
 		click:function(e){
-			$spot = $(this);
+			var $spot = $(this);
 			// detect keypress
 			// if shift click then load the screen link
 			// only available if there is a screen link id
@@ -687,9 +703,14 @@ var spotForm = {
 	},
 	applyTemplate:function(){
 		var val = $('#hotspotTemplate').find(':selected').val();
-		// alert(val);
-		if(val==0) return;
-		
+		if(val==0) {
+			// we have selected no template so if the current spot is a template we want to unlink it.
+			spotForm.$spot.removeAttr('data-template').removeClass('spot-template');
+			// update db to unlink spot from template
+			$.post("<?php echo NHtml::url('/project/screen/addTemplateSpot') ?>",
+				{'spot':spotForm.$spot.attr('data-id'), 'template':val});
+			return false;
+		}
 		// save it
 		$.post("<?php echo NHtml::url('/project/screen/addTemplateSpot') ?>",
 		{'spot':spotForm.$spot.attr('data-id'), 'template':val},function(){
@@ -702,9 +723,18 @@ var spotForm = {
 	},
 	initTemplates:function(){
 		// get a list of all templates
+		
 		$select = $('#hotspotTemplate').html('');
-		$select.append('<option>- select template -</option>');
-		$('#templateForm li.template').each(function(){
+		$select.append('<option value="0">- select template -</option>');
+		$templates = $('#templateForm li.template');
+		if($templates.length == 0){
+			$('#spotTemplatesNone').show();
+			$('#spotTemplatesSelect').hide();
+		}else{
+			$('#spotTemplatesNone').hide();
+			$('#spotTemplatesSelect').show();
+		}
+		$templates.each(function(){
 			$select.append('<option value="'+$(this).find('input:checkbox').val()+'">'+$(this).find('label').text()+'</option>');
 		});
 		// lets set the initial selected option
@@ -793,6 +823,7 @@ var toolbar = {
 	$btnTemplate:null,
 	$btnComments:null,
 	$btnShare:null,
+	sidebarWidth:200,
 	init:function(){
 		this.$mainToolbar = $('#mainToolbar');
 		this.$btnPreview = this.$mainToolbar.find('.preview');
@@ -815,76 +846,53 @@ var toolbar = {
 			$('#mainToolbar .btnGroup .btn').removeClass('selected');
 			$(this).addClass('selected');
 		});
-		var previousScreenWidth = 200;
 		$('#mainToolbar .sidebar').click(function(){
 			if($(this).is('.selected')){
-				previousScreenWidth = $('#screenWrap').width();
-//				$('#screenWrap').animate({width:-0},250);
-//				$('#screenPane').animate({width:-0},250);
-//				$('#canvasWrap').animate({width:$(window).width(),left:-0},250);
-				$('#screenWrap').width(0);
-				$('#screenPane').width(0);
-				$('#canvasWrap').width($(window).width());
-				$('#canvasWrap').css('left',0);
-				$(this).removeClass('selected');
-				resizer();
+				toolbar.sidebarClose();
 			}else{
-//				$('#screenWrap').animate({width:+previousScreenWidth},250);
-//				$('#screenPane').animate({width:+previousScreenWidth},250);
-//				$('#canvasWrap').animate({width:$(window).width()-previousScreenWidth,left:+previousScreenWidth},250)
-				$('#screenWrap').width(previousScreenWidth);
-				$('#screenPane').width(previousScreenWidth);
-				$('#canvasWrap').width($(window).width()-previousScreenWidth);
-				$('#canvasWrap').css('left',previousScreenWidth);
-				$(this).addClass('selected');
-				resizer();
+				toolbar.sidebarOpen();
 			}
 		});
 	},
 	showSpots:function(){
-		$('#canvas .hotspot').fadeTo(250,0.7).removeAttr('data-disabled');
+		$('#canvas .hotspot').css('opacity','').removeAttr('data-disabled').find('.ui-resizable-handle').show();
 	},
 	fadeSpots:function(){
-		$('#canvas .hotspot').fadeTo(250,0.2).attr('data-disabled','true');
+		$('#canvas .hotspot').fadeTo(250,0).attr('data-disabled','true').find('.ui-resizable-handle').hide();
 	},
 	showComments:function(){
-		$('#canvas .commentSpot').fadeIn(250);
+		$('#canvas .commentSpot').show();
 	},
 	fadeComments:function(){
 		$('#canvas .commentSpot').fadeOut(250);
 	},
 	previewMode:function(){
-		$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
+		toolbar.sidebarClose();
+		//$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
 		this.$mainToolbar.animate({top:-60},500,'easeInBack');
-		$('#screenWrap').hide('fast',function(){$(this).width(0);});
+		//$('#screenWrap').hide('fast',function(){/*$(this).width(0);*/});
 		$('#canvasWrap').animate({top:0},500,'swing')
-			.find('.hotspot')
-			.fadeOut(function(){
-				$(this).addClass('link').attr('data-editable','false').show();
-			})
-			.find('.ui-resizable-handle')
-			.hide();
-		$('#mainToolbar .preview').addClass('selected');
-		$('#mainToolbar .edit').removeClass('selected');
+			.find('.hotspot').hotspot('setStateLink');
+		
 		this.templateForm.close();
-		$('#canvas').css('cursor','');
+		if(toolbar.$btnComments.is('.selected')){
+			
+		}
+		$('#canvas').css('cursor','default');
 	},
 	editMode:function(){
+		toolbar.sidebarOpen();
+		$('#screenWrap').show('fast')
 		this.$mainToolbar.animate({top:0},500,'easeInBack');
+		$('#canvasWrap').find('.hotspot').hotspot('setStateEdit');
+		toolbar.showSpots();
 		$('#canvasWrap').animate({top:48},500,'easeInBack', function(){
-			$(this).find('.hotspot')
-			.hide()
-			.removeClass('link')
-			.find('.ui-resizable-handle')
-			.show()
-			toolbar.showSpots();
-			//resizer();
+			resizer();
 		});
-		$('#screenWrap').width(200);
-		$('#screenWrap').show('fast');
-		$('#mainToolbar .preview').removeClass('selected');
-		$('#mainToolbar .edit').addClass('selected');
+		//$('#screenWrap').width(200);
+		//$('#screenWrap').show('fast');
 		$('#canvas').css('cursor','crosshair');
+		toolbar.$btnEdit.click();
 	},
 	edit:function(){
 		toolbar.showSpots();
@@ -895,6 +903,31 @@ var toolbar = {
 		toolbar.fadeSpots();
 		toolbar.showComments();
 		$('#canvas').css('cursor','help');
+	},
+	sidebarOpen:function(){
+		$('#screenWrap').show();
+		if(toolbar.sidebarWidth==0){
+			toolbar.sidebarWidth = 200;
+		}
+		$('#screenWrap').width(toolbar.sidebarWidth);
+		$('#screenPane').width(toolbar.sidebarWidth);
+		$('#canvasWrap').width($(window).width()-toolbar.sidebarWidth);
+		$('#canvasWrap').css('left',toolbar.sidebarWidth);
+		$('#mainToolbar .sidebar').addClass('selected');
+		resizer();
+		
+	},
+	sidebarClose:function(){
+		if($('#screenWrap').width() != 0){
+			toolbar.sidebarWidth = $('#screenWrap').width();
+		}
+		$('#screenWrap').width(0);
+		$('#screenPane').width(0);
+		$('#canvasWrap').width($(window).width());
+		$('#canvasWrap').css('left',0);
+		$('#mainToolbar .sidebar').removeClass('selected');
+		resizer();
+		$('#screenWrap').hide();
 	},
 	shareForm:{
 		init:function(){
@@ -935,7 +968,7 @@ var toolbar = {
 			});
 		},
 		newTemplate:function(){
-			if($('#newTemplate').val() == '') 
+			if($('#newTemplate').val() == '')
 				return false;
 			$.post("<?php echo NHtml::url('/project/screen/addTemplate') ?>",
 				{template:$('#newTemplate').val(),project:<?php echo $project->id; ?>}, 
@@ -1002,7 +1035,7 @@ var toolbar = {
 					$(hotspots).map(function(){
 						if($('#canvas').find('[data-id="'+this.id+'"]').length != 0)
 							return;
-						$('<a></a>').attr('data-id',this.id)
+						var $spot = $('<a></a>').attr('data-id',this.id)
 							.attr('data-screen',this.screen_id_link)
 							.attr('data-template',this.template_id)
 							.addClass('hotspot spot-template')
@@ -1012,6 +1045,9 @@ var toolbar = {
 							.css('top',this.top+'px')
 							.appendTo($('#canvas'))
 							.hotspot();
+						if($spot.is('[data-screen]')){
+							$spot.addClass('linked');
+						}
 
 					})
 				},'json');

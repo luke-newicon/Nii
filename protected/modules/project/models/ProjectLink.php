@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectComment extends NActiveRecord
+class ProjectLink extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -28,7 +28,7 @@ class ProjectComment extends NActiveRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_comment}}';
+		return '{{project_link}}';
 	}
 	
 	
@@ -39,21 +39,24 @@ class ProjectComment extends NActiveRecord
 	public function schema(){
 		return array(
 			'columns'=>array(
-				'id'=>'pk',
-				'screen_id'=>'int',
-				'comment'=>'text',
-				'left'=>'int',
-				'top'=>'int',
-				'time'=>'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
-				'username'=>'text',
-				'email'=>'text'
+				'link'=>'string',
+				'project_id'=>'int',
+				'password'=>'text',
+				0=>'PRIMARY KEY (`link`)'
 			),
 			'keys'=>array(
-				array('screen_id')
-			),
-			array('project_comment','screen_id','project_screen','id','CASCADE','CASCADE'),
+				array('project_id'),
+			)
 		);
 	}
+	
+	public function beforeSave(){
+		$rnd = rand(10, 10000);
+		$string = $this->project_id . '' . $this->password .'somerandom!@-!stro!g'.$rnd;
+		$this->link = sprintf('%x',crc32($string));
+		
+	}
+	
 	
 	
 }

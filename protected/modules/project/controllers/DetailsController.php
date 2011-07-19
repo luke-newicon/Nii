@@ -244,4 +244,12 @@ class DetailsController extends AController
 		$screen = ProjectScreen::model()->findByPk($_POST['screen_id']);
 		echo $this->renderPartial('_screen-info',array('screen'=>$screen));
 	}
+	
+	
+	public function actionProjectLink(){
+		$pl = new ProjectLink;
+		$pl->attributes = $_POST['ProjectLink'];
+		$pl->save();
+		echo $pl->link;
+	}
 }

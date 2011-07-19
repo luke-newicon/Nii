@@ -65,6 +65,7 @@ class ProjectModule extends NWebModule
 		ProjectTemplate::install();
 		ProjectScreenTemplate::install();
 		ProjectComment::install();
+		ProjectLink::install();
 	}
 	
 	/**

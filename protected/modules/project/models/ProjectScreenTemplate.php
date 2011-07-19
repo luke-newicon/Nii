@@ -44,6 +44,9 @@ class ProjectScreenTemplate extends NAppRecord
 				'template_id'=>'int',
 				'screen_id'=>'int',
 				0=>'PRIMARY KEY (`template_id`, `screen_id`)'
+			),
+			'foreignKeys'=>array(
+				array('project_screen_template','template_id','project_template','id','CASCADE','CASCADE'),
 			)
 		);
 	}

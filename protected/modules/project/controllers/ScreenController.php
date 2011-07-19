@@ -17,6 +17,7 @@
 class ScreenController extends AController 
 {
 	
+	public $markdown;
 	/**
 	 * render the individual screen view
 	 * @param int $id 
@@ -116,13 +117,39 @@ class ScreenController extends AController
 		$c->screen_id = $sid;
 		$c->left = $_POST['left'];
 		$c->top = $_POST['top'];
+		$c->username = Yii::app()->user->getName();
+		$c->email = Yii::app()->user->email;
 		$c->save();
-		echo json_encode(array('id'=>$c->id));
+		$comment = $this->renderPartial('_comment',array('comment'=>$c),true);
+		echo json_encode(array('id'=>$c->id,'comment'=>$comment));
 	}
 	
 	public function actionDeleteComment(){
 		$c = ProjectComment::model()->findByPk($_POST['id']); 
 		$c->delete();
 	}
+	
+	public function actionDeleteTemplate(){
+		$id = $_POST['id'];
+		$t = ProjectTemplate::model()->findByPk($id);
+		if($t===null)
+			throw new CHttpException(404,'no template found');
+		$success = $t->delete();
+		
+		echo json_encode(array('result'=>array('success'=>true)));
+	}
+
+	/**
+	 *
+	 * @return NMarkdown 
+	 */
+	public function getMarkdown(){
+		if($this->markdown===null){
+			$this->markdown = new NMarkdown;
+		}
+		return $this->markdown;				
+	}
+	
+	
 	
 }

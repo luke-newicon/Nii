@@ -6,7 +6,7 @@
 ?>
 <?php $applied = false; ?>
 <?php $selected = (isset($screenId)) ? (($applied = $template->isAppliedTo($screenId)) ? 'selected':'' ): ''; ?>
-<li class="template <?php echo $selected; ?> line pts pbs" onmouseover="$(this).addClass('hover')" onmouseout="$(this).removeClass('hover')">
+<li data-id="<?php echo $template->id; ?>" class="template <?php echo $selected; ?> line pts pbs" onmouseover="$(this).addClass('hover')" onmouseout="$(this).removeClass('hover')">
 	<div class="display">
 		<div class="unit size4of5">
 			<input id="template-<?php echo $template->id; ?>" name="template[]" <?php echo $applied ? 'checked="checked"': ''; ?> type="checkbox" value="<?php echo $template->id; ?>"/> 	
