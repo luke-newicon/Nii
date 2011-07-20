@@ -17,7 +17,22 @@
 class ProjectScreen extends NAppRecord
 {
 	
+	/**
+	 * the associated NFile record for the screen image
+	 * @var NFile 
+	 */
 	private $_file;
+	
+	/**
+	 * @var array of width and height
+	 */
+	private $_size;
+	
+	/**
+	 * store the comments collection for this screen
+	 * @var array of ProjectComment objects 
+	 */
+	private $_comments;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -68,8 +83,12 @@ class ProjectScreen extends NAppRecord
 	public function getFile(){
 		if($this->_file === null) 
 			$this->_file = NFileManager::get()->getFile($this->file_id);
+		if($this->_file === null)
+			throw new CHttpException (404,'whoops, no screen found');
 		return $this->_file;		
 	}
+	
+	
 	
 	/**
 	 * Uses the top left pixel to determin the background color
@@ -102,6 +121,34 @@ class ProjectScreen extends NAppRecord
 	
 	
 	/**
+	 * produce an array of image width and height for the screens image file
+	 * @return array
+	 * [0] => image width in pixels
+	 * [1] => image height in pixels
+	 */
+	public function getSize(){
+		if($this->_size===null)
+			$this->_size = getimagesize($this->getFile()->getPath());
+		return $this->_size;
+	}
+	
+	/**
+	 * get the width of the screen image in pixels
+	 */
+	public function getWidth(){
+		$a = $this->getSize();
+		return $a[0];
+	}
+	
+	/**
+	 * get the height of the screen image in pixels
+	 */
+	public function getHeight(){
+		$a = $this->getSize();
+		return $a[1];
+	}
+	
+	/**
 	 * Gets the number of hotspots on the screen
 	 * 
 	 * @return integer
@@ -129,12 +176,19 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	
-	
+	/**
+	 * get all templates for this project
+	 * @return array 
+	 */
 	public function getTemplates(){
 		$templates = ProjectTemplate::model()->findAllByAttributes(array('project_id'=>$this->project_id));
 		return $templates;
 	}
 	
+	/**
+	 * return all the hotspots applied to the screen through templates
+	 * @return array 
+	 */
 	public function getTemplateHotspots(){
 		$templates = ProjectScreenTemplate::model()->findAllByAttributes(array('screen_id'=>$this->id));
 		$tArr = array();
@@ -144,6 +198,24 @@ class ProjectScreen extends NAppRecord
 		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tArr));
 	}
 	
+	/**
+	 * get hotspots on this screen
+	 * @return array 
+	 */
+	public function getHotspots(){
+		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0));
+	}
+	
+	/**
+	 * get all comments on this screen
+	 * @return array 
+	 */
+	public function getComments(){
+		// lets cache results of getcomments as its called a few times
+		if($this->_comments === null)
+			$this->_comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$this->id));
+		return $this->_comments;
+	}
 	
 	public static function install($className=__CLASS__){
 		parent::install($className);

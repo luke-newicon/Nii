@@ -16,8 +16,18 @@
  */
 class ScreenController extends AController 
 {
-	
+	/**
+	 * store the NMarkdown object
+	 * @var NMarkdown 
+	 */
 	public $markdown;
+	
+	/**
+	 * store the current screen object
+	 * @var ProjectScreen
+	 */
+	public $screen;
+	
 	/**
 	 * render the individual screen view
 	 * @param int $id 
@@ -25,33 +35,42 @@ class ScreenController extends AController
 	public function actionIndex($id){
 		
 		$this->layout = 'index';
-		
+		$screen = $this->loadScreen($id);
 		$screen = ProjectScreen::model()->findByPk($id);
 		$project = Project::model()->findByPk($screen->project_id);
-		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
 		
-		$file = $screen->getFile();
-		if($file===null) throw new CHttpException (404,'whoops, no screen found');
-		
-		$rgb = $screen->guessBackgroundColor();
-		$info = getimagesize($file->getPath());
 		
 		// get all the hotspots on the screen
-		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id,'template_id'=>0));
-		$templateSpots = $screen->getTemplateHotspots();
-		$comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$screen->id));
 		$this->render('screen',array(
 			'project'=>$project,
 			'screen'=>$screen,
-			'file'=>$file,
-			'width'=>$info[0],
-			'height'=>$info[1],
-			'rgb'=>$rgb,
-			'hotspots'=>$hotspots,
-			'comments'=>$comments,
-			'templateHotspots'=>$templateSpots
+			'file'=>$screen->getFile(),
+			'width'=>$screen->getWidth(),
+			'height'=>$screen->getHeight(),
+			'rgb'=>$screen->guessBackgroundColor(),
+			'hotspots'=>$screen->getHotspots(),
+			'comments'=>$screen->getComments(),
+			'templateHotspots'=>$screen->getTemplateHotspots(),
 		));
 	}
+	
+	/**
+	 * generates the comments json array.
+	 * This enables the javascript to manipulate the comments on the screen index page
+	 * @param ProjectScreen $screen
+	 * @return string json array 
+	 */
+	public function getCommentsJson($screen){
+		$commentJson = array();
+		foreach($screen->getComments() as $comment){
+			$commentJson[$comment->id] = array(
+				'comment'=>$comment->comment,
+				'view'=>$this->renderPartial('_comment',array('comment'=>$comment),true)
+			);
+		}
+		return json_encode($commentJson);
+	}
+	
 	
 	/**
 	 * ajax: adds a new template
@@ -150,6 +169,23 @@ class ScreenController extends AController
 		return $this->markdown;				
 	}
 	
+	/**
+	 * load in a new screen to edit by ajax
+	 */
+	public function actionLoad(){
+		$screen = $this->loadScreen($_POST['id']);
+		echo json_encode(array(
+			'canvas'=>$this->renderPartial('_canvas',array('screen'=>$screen),true),
+			'commentsJson'=>$this->getCommentsJson($screen)
+		));
+	}
 	
+	public function loadScreen($id){
+		if($this->screen === null)
+			$this->screen = ProjectScreen::model()->findByPk($id);
+		if($this->screen === null)
+			throw new CHttpException(404, 'whoops, no screen found');
+		return $this->screen;
+	}
 	
 }

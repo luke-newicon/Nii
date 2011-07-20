@@ -92,43 +92,26 @@
 <div id="closePreview" style="position:absolute;top:10px;left:10px;">
 	<button class="btn aristo editMode" data-tip="{gravity:'nw'}" title="Close preview and return to edit mode" href="#"><span class="fugue fugue-layer-shape"></span> Edit</button>
 </div>
+
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
 <?php $this->renderPartial('_share-form',array('screen'=>$screen,'project'=>$project)); ?>
+
 
 <div  id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
 	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
 		<?php foreach($project->getScreens() as $s): ?>
 		<div class="sidebarImg txtC">
-			<div title="<?php echo $s->name; ?>" class="loading sideImg" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></div>
+			<a href="#" onclick="return false;" style="display:block" title="<?php echo $s->name; ?>" class="loading sideImg" data-id="<?php echo $s->id; ?>" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></a>
 			<span class="imageTitle"><?php echo $s->name; ?></span>
 		</div>
 		<? endforeach; ?>
 	</div>
-<!--	<div id="closeSideBar" style="background-color: #CCCCCC;height: 50px;position: absolute;right: -20px;top: 100px;width: 20px;">Close</div>-->
 </div>
+
 <div id="canvasWrap" style="position: absolute; top:48px; overflow: auto; left:200px; height: 400px;"> 
-	<div id="canvas" style="cursor:crosshair;"> 
-		<img src="<?php echo NHtml::urlFile($file->id, $file->original_name); ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" />
-		<?php foreach($hotspots as $hotspot): ?>
-			<a data-id="<?php echo $hotspot->id; ?>" <?php echo ($hotspot->screen_id_link)? 'data-screen="'.$hotspot->screen_id_link.'"':''; ?>  class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
-		<?php endforeach; ?>
-		<?php foreach($templateHotspots as $hotspot): ?>
-			<a data-template="<?php echo $hotspot->template_id; ?>" data-id="<?php echo $hotspot->id; ?>" <?php echo ($hotspot->screen_id_link)?'data-screen="'.$hotspot->screen_id_link.'"':''; ?> class="hotspot spot-template <?php echo ($hotspot->screen_id_link)?'linked':''; ?>" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>
-		<?php endforeach; ?>
-		<?php $commentJson = array(); ?>
-		<?php foreach($comments as $i=>$comment): ?>
-			<?php $commentJson[$comment->id] = array(
-				'comment'=>$comment->comment,
-				'view'=>$this->renderPartial('_comment',array('comment'=>$comment),true)
-			); ?>
-			<a data-id="<?php echo $comment->id; ?>" class="commentSpot" style="left:<?php echo $comment->left; ?>px; top:<?php echo $comment->top; ?>px;"><?php echo $i+1; ?></a>
-		<?php endforeach; ?>
-	</div>
-	
-	<?php $this->renderPartial('_comment-form'); ?>
-	<?php $this->renderPartial('_spot-form'); ?>
-	
+<?php $this->renderPartial('_canvas',array('screen'=>$screen)); ?>
 </div>
+
 <!-- this is a hidden div image cache -->
 <div style="display: none; ">
 	<?php foreach($project->getScreenList() as $cache): ?>
@@ -146,6 +129,20 @@
 // - etc
 //
 (function($){
+	
+	
+	$(function(){
+		$('#screenPane .sidebarImg a').click(function(){
+			var id = $(this).attr('data-id');
+			$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
+				$('#canvasWrap').html(r.canvas);
+				commentForm.commentStore = r.commentsJson;
+				initCanvas();
+				toolbar.initTemplates();
+			},'json')
+		});
+	});
+	
 	var methods = {
 		init : function(options) {
 			return this.each(function(){
@@ -269,7 +266,7 @@ var commentForm = {
 	$textarea:null,
 	$save:null,
 	$cancel:null,
-	commentStore:<?php echo json_encode($commentJson); ?>,
+	commentStore:<?php echo $this->getCommentsJson($screen); ?>,
 	$currentSpot:null,
 	formModel:false,
 	init:function(){
@@ -1060,10 +1057,10 @@ var toolbar = {
 			};
 		}
 	}
+
 }
-	
-$(function($){
-		
+
+var initCanvas = function(){
 	// Using the boxer plugin
 	$('#canvas').boxer({
 		stop: function(event, ui) {
@@ -1079,10 +1076,15 @@ $(function($){
 		}
 		$("#screenList input").autocomplete("close");
 	})
-	$('.hotspot').hotspot();
-	$('.commentSpot').commentSpot();
+	$('#canvas .hotspot').hotspot();
+	$('#canvas .commentSpot').commentSpot();
 	// lets code the toolbar
 	toolbar.init();
+}
+	
+$(function($){
+	initCanvas();
+	
 
 
 	// load sidebar images
