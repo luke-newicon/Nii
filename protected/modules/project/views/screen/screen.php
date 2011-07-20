@@ -1075,18 +1075,17 @@ $(function($){
 		$('.sideImg').tipsy('show');
 	});
 	
-	$(function(){
-		$('#screenPane .sidebarImg a').click(function(){
-			var id = $(this).attr('data-id');
-			$('#screenPane .sidebarImg').removeClass('selected')
-			$(this).addClass('selected');
-			$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
-				$('#canvasWrap').html(r.canvas);
-				commentForm.commentStore = r.commentsJson;
-				initCanvas();
-				toolbar.initTemplates();
-			},'json')
-		});
+	$('#screenPane').sortable();
+	$('#screenPane .sidebarImg a').click(function(){
+		var id = $(this).attr('data-id');
+		$('#screenPane .sidebarImg').removeClass('selected')
+		$(this).addClass('selected');
+		$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
+			$('#canvasWrap').html(r.canvas);
+			commentForm.commentStore = r.commentsJson;
+			initCanvas();
+			toolbar.initTemplates();
+		},'json')
 	});
 	//
 	// load sidebar images
@@ -1110,7 +1109,7 @@ $(function($){
 	};
 	$('#screenWrap .sidebarImg .sideImg').each(function(){
 		var $div = $(this);
-		setTimeout(function(){loadSideImage($div)},10);
+		setTimeout(function(){loadSideImage($div)},1);
 	});
 	
 
