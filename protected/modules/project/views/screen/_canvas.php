@@ -1,4 +1,4 @@
-<div id="canvas" style="cursor:crosshair;"> 
+<div id="canvas" data-id="<?php echo $screen->id; ?>" style="cursor:crosshair;"> 
 	<img src="<?php echo NHtml::urlFile($screen->file_id, $screen->name); ?>" width="<?php echo $screen->getWidth(); ?>" height="<?php echo $screen->getHeight(); ?>" />
 	<?php foreach($screen->getHotspots() as $hotspot): ?>
 		<a data-id="<?php echo $hotspot->id; ?>" <?php echo ($hotspot->screen_id_link)? 'data-screen="'.$hotspot->screen_id_link.'"':''; ?>  class="hotspot" style="width:<?php echo $hotspot->width; ?>px;height:<?php echo $hotspot->height; ?>px;left:<?php echo $hotspot->left; ?>px; top:<?php echo $hotspot->top; ?>px;"></a>

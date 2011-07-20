@@ -129,20 +129,6 @@
 // - etc
 //
 (function($){
-	
-	
-	$(function(){
-		$('#screenPane .sidebarImg a').click(function(){
-			var id = $(this).attr('data-id');
-			$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
-				$('#canvasWrap').html(r.canvas);
-				commentForm.commentStore = r.commentsJson;
-				initCanvas();
-				toolbar.initTemplates();
-			},'json')
-		});
-	});
-	
 	var methods = {
 		init : function(options) {
 			return this.each(function(){
@@ -198,7 +184,7 @@
 			
 			$.post("<?php echo NHtml::url('/project/screen/saveComment'); ?>",
 				{
-					"screen":<?php echo $screen->id; ?>,
+					"screen":$('#canvas').attr('data-id'),
 					"comment":commentForm.$textarea.val(),
 					"id":id,
 					"top":$spot.position().top,
@@ -250,6 +236,244 @@
 		}
 	};
 	$.fn.commentSpot = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.hotspot' );
+		}    
+	};
+})( jQuery );
+
+
+/**
+ * snapy plugin
+ */
+(function($){
+
+	function _padHeight($el){
+		padding = $el.padding();
+		return padding.top + padding.bottom;
+	}
+	function _padWidth($el){
+		padding = $el.padding();
+		return padding.left + padding.right;
+	}
+	var methods = {
+		init : function( options ) {
+			return this.each(function(){
+				$this = $(this);
+				//options
+				var minHeight = 200;
+				$snapTo = $(options.snap);
+				
+				var winHeight = $snapTo.height();
+				
+				if(!((winHeight-$this.position().top) <= minHeight)){
+					$this.css('height',(winHeight - $this.position().top - _padHeight($this)) + 'px');
+				}
+			});
+		}
+	};
+	$.fn.snapy = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+		}    
+	};
+})(jQuery);
+/*
+ * Used to determine border pixel sizes for resizing panes
+ * e.g. $('selector').border().bottom ( = integer size in pixels )
+ * 
+ * JSizes - JQuery plugin v0.33
+ *
+ * Licensed under the revised BSD License.
+ * Copyright 2008-2010 Bram Stein
+ * All rights reserved.
+ */
+(function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
+
+
+	
+//$('#spotForm').dialog({autoOpen:false});
+// Boxer plugin
+$.widget("ui.boxer", $.ui.mouse, {
+	_init: function() {
+		this.element.addClass("ui-boxer");
+		this.dragged = false;
+		this._mouseInit();
+		this.helper = $(document.createElement('a'))
+		.addClass('hotspot helper ui-boxer-helper')
+	},
+	destroy: function() {
+		this.element
+		.removeClass("ui-boxer ui-boxer-disabled")
+		.removeData("boxer")
+		.unbind(".boxer");
+		this._mouseDestroy();
+		return this;
+	},
+	_mouseStart: function(event) {
+		$("#screenList input").autocomplete("close");
+		if(!$('#mainToolbar .edit').is('.selected')){
+			// we are not in edit mode!'
+			return false;
+		}
+		//var self = this;
+		this.opos = [event.pageX, event.pageY];
+		if (this.options.disabled)
+			return;
+		var options = this.options;
+		this._trigger("start", event);
+		$('#canvas').append(this.helper);
+		this.helper.css({
+			"z-index": 100,
+			"position": "absolute",
+			"left": event.clientX,
+			"top": event.clientY,
+			"width": 0,
+			"height": 0
+		});
+	},
+	_mouseDrag: function(event) {
+		//var self = this;
+		this.dragged = true;
+		if (this.options.disabled)
+			return;
+		var options = this.options;
+		var x1 = this.opos[0], y1 = this.opos[1], x2 = event.pageX, y2 = event.pageY;
+		if (x1 > x2) { var tmp = x2; x2 = x1; x1 = tmp; }
+		if (y1 > y2) { var tmp = y2; y2 = y1; y1 = tmp; }
+		this.helper.css({left: x1-$('#canvas').offset().left, top: y1-$('#canvas').offset().top, width: x2-x1, height: y2-y1});
+		this._trigger("drag", event);
+		return false;
+	},
+	_mouseStop: function(event) {
+		//var self = this;
+		this.dragged = false;
+		var clone = this.helper.clone()
+		.removeClass('ui-boxer-helper').appendTo(this.element);
+		this._trigger("stop", event, { box: clone });
+		this.helper.remove();
+		return false;
+	}
+});
+	
+/**
+ * Hotspot plugin
+ */
+(function($){
+	var methods = {
+		init : function(options) {
+			return this.each(function(){
+				var $this = $(this);
+				$this.draggable({
+					cancel:'.link',
+					drag: function(event, ui) {
+						if($('#spotForm:visible').index){
+							// make the spotForm follow the hotspot being dragged
+							$('#spotForm').position({my:'left top',at:'right top',of:$this,offset:"18 -30",collision:'none'});
+						}
+					},
+					stop:function(e,ui){
+						$this.hotspot('update');
+					}
+				})
+				.resizable({
+					stop:function(e,ui){
+						$this.hotspot('update');
+					}
+				})
+				.click(function(e){
+					$this.hotspot('click',e);
+				});
+			});
+		},
+		showForm:function(){
+			spotForm.showForm($(this));			
+		},
+		update:function(){
+			// update the server with spot details
+			var $spot = $(this);
+			var offset = $spot.position();
+			var id = -1;
+			var screenId = 0;
+			if($spot.is('[data-id]'))
+				id = $spot.attr('data-id');
+			if($spot.is('[data-screen]')){
+				screenId = $spot.attr('data-screen');
+				$spot.addClass('linked');
+			}else{
+				$spot.removeClass('linked');
+			}
+			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
+				{ProjectHotSpot:{
+					hotspot_id:id,
+					screen_id:$('#canvas').attr('data-id'),
+					width:$spot.width(),
+					height:$spot.height(),
+					left:offset.left,
+					top:offset.top,
+					screen_id_link:screenId
+				}},
+				function(json){
+					//populate my id
+					$spot.attr('data-id',json.id);
+				},
+				'json'
+			);
+			return $spot;
+		},
+		deleteSpot:function(){
+			var $spot = $(this);
+			$spot.remove();
+			$('#spotForm').hide();
+			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
+		},
+		setStateLink:function(){
+			this.removeAttr('data-disabled')
+				.addClass('link')
+				.attr('data-editable','false').show()
+				.find('.ui-resizable-handle').hide()
+		},
+		setStateEdit:function(){
+			this.removeClass('link')
+				.attr('data-editable','true')
+				.find('.ui-resizable-handle').show()
+		},
+		link:function(){
+			// hotspots may not have a defined screen id, so be careful
+			var $spot = $(this);
+			if($spot.is('[data-screen]')){
+				location.href = "<?php echo NHtml::url('/project/screen/index'); ?>/id/"+$spot.attr('data-screen');
+			}
+		},
+		click:function(e){
+			var $spot = $(this);
+			// detect keypress
+			// if shift click then load the screen link
+			// only available if there is a screen link id
+			if($spot.is('[data-disabled]')){
+				//spot is disabled so don't do anything.
+				return false;
+			}
+			if (e.shiftKey) {
+				$spot.hotspot('link');
+			}else{
+				if($spot.is('.link')){
+					$spot.hotspot('link');
+				}else{
+					$spot.hotspot('showForm');
+				}
+			}
+		}
+	};
+	$.fn.hotspot = function( method ) {
 		if ( methods[method] ) {
 			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
 		} else if ( typeof method === 'object' || ! method ) {
@@ -407,277 +631,6 @@ var commentForm = {
 		this.$form.hide();
 	}
 }
-
-
-
-
-
-var resizer = function(){
-	$('#canvasWrap').snapy({'snap':$(window)});
-	$('#screenWrap').snapy({'snap':$(window)});
-	$('#screenPane').snapy({'snap':'#screenWrap'});
-	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
-	$('#canvasWrap').css('left',$('#screenWrap').width());
-	
-	//$('#canvasWrap').css('height',$(window).height()-$('#canvasWrap').offset().top);
-	//$('#screenWrap').css('height',$(window).height()-$('#screenWrap').offset().top);
-	
-	$('#screenPane img').width($('#screenPane').width()-35);
-}
-$(function($){
-	$(window).resize(function(){
-		resizer();
-	});
-	$('#canvasWrap').snapy({'snap':$(window)});
-	$('#screenWrap').snapy({'snap':$(window)});
-	$('#screenWrap').resizable({
-		handles:'e',
-		alsoResize:'#screenPane',
-		stop:function(){
-			resizer();
-		}
-	});
-	commentForm.init();
-	resizer();
-	$('#screenPane').scroll(function(){
-		$('.sideImg').tipsy('show');
-	});
-	//$('.sideImg').draggable({'helper':$('<div>screen</div>').appendTo('body')});
-});
-
-	
-(function( $ ){
-
-	function _padHeight($el){
-		padding = $el.padding();
-		return padding.top + padding.bottom;
-	}
-	function _padWidth($el){
-		padding = $el.padding();
-		return padding.left + padding.right;
-	}
-	var methods = {
-		init : function( options ) {
-			return this.each(function(){
-				$this = $(this);
-				//options
-				var minHeight = 200;
-				$snapTo = $(options.snap);
-				
-				var winHeight = $snapTo.height();
-				
-				if(!((winHeight-$this.position().top) <= minHeight)){
-					$this.css('height',(winHeight - $this.position().top - _padHeight($this)) + 'px');
-				}
-			});
-		}
-	};
-	$.fn.snapy = function( method ) {
-		if ( methods[method] ) {
-			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
-		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
-		}    
-	};
-})(jQuery);
-/*
- * Used to determine border pixel sizes for resizing panes
- * e.g. $('selector').border().bottom ( = integer size in pixels )
- * 
- * JSizes - JQuery plugin v0.33
- *
- * Licensed under the revised BSD License.
- * Copyright 2008-2010 Bram Stein
- * All rights reserved.
- */
-(function(b){var a=function(c){return parseInt(c,10)||0};b.each(["min","max"],function(d,c){b.fn[c+"Size"]=function(g){var f,e;if(g){if(g.width!==undefined){this.css(c+"-width",g.width)}if(g.height!==undefined){this.css(c+"-height",g.height)}return this}else{f=this.css(c+"-width");e=this.css(c+"-height");return{width:(c==="max"&&(f===undefined||f==="none"||a(f)===-1)&&Number.MAX_VALUE)||a(f),height:(c==="max"&&(e===undefined||e==="none"||a(e)===-1)&&Number.MAX_VALUE)||a(e)}}}});b.fn.isVisible=function(){return this.is(":visible")};b.each(["border","margin","padding"],function(d,c){b.fn[c]=function(e){if(e){if(e.top!==undefined){this.css(c+"-top"+(c==="border"?"-width":""),e.top)}if(e.bottom!==undefined){this.css(c+"-bottom"+(c==="border"?"-width":""),e.bottom)}if(e.left!==undefined){this.css(c+"-left"+(c==="border"?"-width":""),e.left)}if(e.right!==undefined){this.css(c+"-right"+(c==="border"?"-width":""),e.right)}return this}else{return{top:a(this.css(c+"-top"+(c==="border"?"-width":""))),bottom:a(this.css(c+"-bottom"+(c==="border"?"-width":""))),left:a(this.css(c+"-left"+(c==="border"?"-width":""))),right:a(this.css(c+"-right"+(c==="border"?"-width":"")))}}}})})(jQuery);
-
-	
-//$('#spotForm').dialog({autoOpen:false});
-// Boxer plugin
-$.widget("ui.boxer", $.ui.mouse, {
-	_init: function() {
-		this.element.addClass("ui-boxer");
-		this.dragged = false;
-		this._mouseInit();
-		this.helper = $(document.createElement('a'))
-		.addClass('hotspot helper ui-boxer-helper')
-	},
-	destroy: function() {
-		this.element
-		.removeClass("ui-boxer ui-boxer-disabled")
-		.removeData("boxer")
-		.unbind(".boxer");
-		this._mouseDestroy();
-		return this;
-	},
-	_mouseStart: function(event) {
-		$("#screenList input").autocomplete("close");
-		if(!$('#mainToolbar .edit').is('.selected')){
-			// we are not in edit mode!'
-			return false;
-		}
-		//var self = this;
-		this.opos = [event.pageX, event.pageY];
-		if (this.options.disabled)
-			return;
-		var options = this.options;
-		this._trigger("start", event);
-		$('#canvas').append(this.helper);
-		this.helper.css({
-			"z-index": 100,
-			"position": "absolute",
-			"left": event.clientX,
-			"top": event.clientY,
-			"width": 0,
-			"height": 0
-		});
-	},
-	_mouseDrag: function(event) {
-		//var self = this;
-		this.dragged = true;
-		if (this.options.disabled)
-			return;
-		var options = this.options;
-		var x1 = this.opos[0], y1 = this.opos[1], x2 = event.pageX, y2 = event.pageY;
-		if (x1 > x2) { var tmp = x2; x2 = x1; x1 = tmp; }
-		if (y1 > y2) { var tmp = y2; y2 = y1; y1 = tmp; }
-		this.helper.css({left: x1-$('#canvas').offset().left, top: y1-$('#canvas').offset().top, width: x2-x1, height: y2-y1});
-		this._trigger("drag", event);
-		return false;
-	},
-	_mouseStop: function(event) {
-		//var self = this;
-		this.dragged = false;
-		var clone = this.helper.clone()
-		.removeClass('ui-boxer-helper').appendTo(this.element);
-		this._trigger("stop", event, { box: clone });
-		this.helper.remove();
-		return false;
-	}
-});
-	
-/**
- * Hotspot plugin
- */
-(function($){
-	var methods = {
-		init : function(options) {
-			return this.each(function(){
-				var $this = $(this);
-				$this.draggable({
-					cancel:'.link',
-					drag: function(event, ui) {
-						if($('#spotForm:visible').index){
-							// make the spotForm follow the hotspot being dragged
-							$('#spotForm').position({my:'left top',at:'right top',of:$this,offset:"18 -30",collision:'none'});
-						}
-					},
-					stop:function(e,ui){
-						$this.hotspot('update');
-					}
-				})
-				.resizable({
-					stop:function(e,ui){
-						$this.hotspot('update');
-					}
-				})
-				.click(function(e){
-					$this.hotspot('click',e);
-				});
-			});
-		},
-		showForm:function(){
-			spotForm.showForm($(this));			
-		},
-		update:function(){
-			// update the server with spot details
-			var $spot = $(this);
-			var offset = $spot.position();
-			var id = -1;
-			var screenId = 0;
-			if($spot.is('[data-id]'))
-				id = $spot.attr('data-id');
-			if($spot.is('[data-screen]')){
-				screenId = $spot.attr('data-screen');
-				$spot.addClass('linked');
-			}else{
-				$spot.removeClass('linked');
-			}
-			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
-				{ProjectHotSpot:{
-					hotspot_id:id,
-					screen_id:"<?php echo $screen->id; ?>",
-					width:$spot.width(),
-					height:$spot.height(),
-					left:offset.left,
-					top:offset.top,
-					screen_id_link:screenId
-				}},
-				function(json){
-					//populate my id
-					$spot.attr('data-id',json.id);
-				},
-				'json'
-			);
-			return $spot;
-		},
-		deleteSpot:function(){
-			var $spot = $(this);
-			$spot.remove();
-			$('#spotForm').hide();
-			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
-		},
-		setStateLink:function(){
-			this.removeAttr('data-disabled')
-				.addClass('link')
-				.attr('data-editable','false').show()
-				.find('.ui-resizable-handle').hide()
-		},
-		setStateEdit:function(){
-			this.removeClass('link')
-				.attr('data-editable','true')
-				.find('.ui-resizable-handle').show()
-		},
-		link:function(){
-			// hotspots may not have a defined screen id, so be careful
-			var $spot = $(this);
-			if($spot.is('[data-screen]')){
-				location.href = "<?php echo NHtml::url('/project/screen/index'); ?>/id/"+$spot.attr('data-screen');
-			}
-		},
-		click:function(e){
-			var $spot = $(this);
-			// detect keypress
-			// if shift click then load the screen link
-			// only available if there is a screen link id
-			if($spot.is('[data-disabled]')){
-				//spot is disabled so don't do anything.
-				return false;
-			}
-			if (e.shiftKey) {
-				$spot.hotspot('link');
-			}else{
-				if($spot.is('.link')){
-					$spot.hotspot('link');
-				}else{
-					$spot.hotspot('showForm');
-				}
-			}
-		}
-	};
-	$.fn.hotspot = function( method ) {
-		if ( methods[method] ) {
-			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-		} else if ( typeof method === 'object' || ! method ) {
-			return methods.init.apply( this, arguments );
-		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.hotspot' );
-		}    
-	};
-})( jQuery );
 
 var spotForm = {
 	screens:<?php echo json_encode($project->getScreenList()); ?>,
@@ -1027,7 +980,7 @@ var toolbar = {
 			var templateId = $checkBox.val();
 			if($checkBox.is(':checked')){
 				$.post("<?php echo NHtml::url('/project/screen/applyTemplate') ?>",
-				{'template':templateId,'screen':<?php echo $screen->id; ?>},function(hotspots){
+				{'template':templateId,'screen':$('#canvas').attr('data-id')},function(hotspots){
 					// get template hotspot info and add hotspots
 					$(hotspots).map(function(){
 						if($('#canvas').find('[data-id="'+this.id+'"]').length != 0)
@@ -1050,7 +1003,7 @@ var toolbar = {
 				},'json');
 			}else{
 				$.post("<?php echo NHtml::url('/project/screen/removeTemplate') ?>",
-				{'template':templateId,'screen':<?php echo $screen->id; ?>},function(){
+				{'template':templateId,'screen':$('#canvas').attr('data-id')},function(){
 					// remove template hotspots
 					$('#canvas').find('[data-template="'+templateId+'"]').remove();
 				});
@@ -1059,6 +1012,10 @@ var toolbar = {
 	}
 
 }
+
+
+	
+
 
 var initCanvas = function(){
 	// Using the boxer plugin
@@ -1081,14 +1038,59 @@ var initCanvas = function(){
 	// lets code the toolbar
 	toolbar.init();
 }
-	
+var resizer = function(){
+	$('#canvasWrap').snapy({'snap':$(window)});
+	$('#screenWrap').snapy({'snap':$(window)});
+	$('#screenPane').snapy({'snap':'#screenWrap'});
+	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
+	$('#canvasWrap').css('left',$('#screenWrap').width());
+	$('#screenPane img').width($('#screenPane').width()-35);
+}
+
+
+
+
+
+
+
 $(function($){
+	
 	initCanvas();
 	
-
-
+	$(window).resize(function(){
+		resizer();
+	});
+	$('#canvasWrap').snapy({'snap':$(window)});
+	$('#screenWrap').snapy({'snap':$(window)});
+	$('#screenWrap').resizable({
+		handles:'e',
+		alsoResize:'#screenPane',
+		stop:function(){
+			resizer();
+		}
+	});
+	commentForm.init();
+	resizer();
+	$('#screenPane').scroll(function(){
+		$('.sideImg').tipsy('show');
+	});
+	
+	$(function(){
+		$('#screenPane .sidebarImg a').click(function(){
+			var id = $(this).attr('data-id');
+			$('#screenPane .sidebarImg').removeClass('selected')
+			$(this).addClass('selected');
+			$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
+				$('#canvasWrap').html(r.canvas);
+				commentForm.commentStore = r.commentsJson;
+				initCanvas();
+				toolbar.initTemplates();
+			},'json')
+		});
+	});
+	//
 	// load sidebar images
-//	
+	//	
 	var loadSideImage = function($div){
 		var src = $div.attr('data-src');
 		var img = new Image();
