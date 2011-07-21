@@ -870,7 +870,11 @@ var toolbar = {
 		$('#canvasWrap').animate({top:48},500,'easeInBack', function(){
 			resizer();
 		});
-		toolbar.setState(toolbar.beforePreviewState);
+		if(toolbar.beforePreviewState==state.previewMode){
+			toolbar.setState(state.editMode);
+		}else{
+			toolbar.setState(toolbar.beforePreviewState);
+		}
 	},
 	/**
 	 * must be a state object property

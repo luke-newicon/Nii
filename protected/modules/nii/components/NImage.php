@@ -110,7 +110,6 @@ class NImage extends CImageComponent
 		}
 		
 		// no chache so lets crunch		
-		
 		$file = Yii::app()->fileManager->getFile($id);
 		
 		// If the file can not be found then loads the default image
