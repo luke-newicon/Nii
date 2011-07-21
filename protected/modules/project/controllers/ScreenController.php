@@ -192,6 +192,24 @@ class ScreenController extends AController
 		));
 	}
 	
+	/**
+	 * the preview mode must receve the hash
+	 * @param string $h hash 
+	 */
+	public function actionView($h){
+		$this->layout = 'index';
+		$link = ProjectLink::model()->findByPk($h);
+		if($link===null)
+			throw new CHttpException(404, 'Oops this page does not exist');
+		
+		$project = Project::model()->findByPk($link->project_id);
+		if($project===null)
+			throw new CHttpException(404, 'Oops this project no loger exists');
+
+		$this->render('view',array('project'=>$project));
+	}
+	
+	
 	public function loadScreen($id){
 		if($this->screen === null)
 			$this->screen = ProjectScreen::model()->findByPk($id);
@@ -199,5 +217,7 @@ class ScreenController extends AController
 			throw new CHttpException(404, 'whoops, no screen found');
 		return $this->screen;
 	}
+	
+	
 	
 }

@@ -114,4 +114,14 @@ class Project extends NActiveRecord
 		return $arr + $ret ;
 	}
 	
+	/**
+	 * get the start screen for the preview.
+	 */
+	public function getHomeScreen(){
+		$screen = ProjectScreen::model()->findByAttributes(array('project_id'=>$this->id,'sort'=>0));
+		if($screen===null)
+			throw new CHtppException(404, 'Oops I couldn\'t find the home screen');
+		return $screen;
+	}
+	
 }

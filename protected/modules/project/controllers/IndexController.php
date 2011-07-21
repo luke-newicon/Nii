@@ -47,8 +47,5 @@ class IndexController extends AController
 		$p->delete();
 	}
 	
-	public function actionView(){
-		
-	}
 	
 }

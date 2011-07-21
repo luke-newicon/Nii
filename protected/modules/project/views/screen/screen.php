@@ -855,11 +855,9 @@ var toolbar = {
 		});
 	},
 	showSpots:function(){
-		console.log('in');
 		$('#canvas .hotspot').stop(true, true).show().removeAttr('data-disabled').find('.ui-resizable-handle').show();
 	},
 	fadeSpots:function(){
-		console.log('fadeout');
 		$('#canvas .hotspot').fadeOut(250).attr('data-disabled','true').find('.ui-resizable-handle').hide();
 	},
 	showComments:function(){
@@ -1180,7 +1178,6 @@ var _doLoadScreen = function(screenId, maintainScroll){
 	$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
 		$('#canvasWrap').html(r.canvas);
 		commentForm.commentStore = r.commentsJson;
-		console.log(r);
 		initCanvas();
 		// set background color
 		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
@@ -1263,7 +1260,6 @@ $(function($){
 	$(window).bind( "hashchange", function(e) {
 		// In jQuery 1.4, use e.getState( "url" );
 		var url = e.getState();
-		console.log(e.getState())
 		_doLoadScreen(url.i, url.s);
 	});
 

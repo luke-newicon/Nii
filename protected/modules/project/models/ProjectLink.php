@@ -31,6 +31,12 @@ class ProjectLink extends NActiveRecord
 		return '{{project_link}}';
 	}
 	
+	public function rules(){
+		return array(
+			array('link,project_id,password','safe')
+		);
+	}
+	
 	
 	public static function install($className=__CLASS__){
 		parent::install($className);
@@ -51,10 +57,12 @@ class ProjectLink extends NActiveRecord
 	}
 	
 	public function beforeSave(){
+		parent::beforeSave();
 		$rnd = rand(10, 10000);
-		$string = $this->project_id . '' . $this->password .'somerandom!@-!stro!g'.$rnd;
+		$string = $this->project_id . '' . 'somerandom!@-!stro!g'.$rnd;
+		//TODO: check there is no collision
 		$this->link = sprintf('%x',crc32($string));
-		
+		return true;
 	}
 	
 	

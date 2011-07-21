@@ -17,6 +17,11 @@
 class ProjectModule extends NWebModule
 {
 
+	/**
+	 * the link fed into NHtml::Url for the preview experience
+	 */
+	public $shareLink = '/project/screen/view/h';
+	
 	public function init(){
 		
 		$this->setImport(array(
@@ -75,8 +80,6 @@ class ProjectModule extends NWebModule
 	public static function get(){
 		return Yii::app()->getModule('project');
 	}
-	
-	
 	
 	
 }
