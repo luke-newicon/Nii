@@ -24,7 +24,7 @@
 	
 </style>
 
-<div class="toolbar line plm" style="margin-top:-1px;">
+<div class="toolbar line plm">
 	<div class="line">
 		<div class="unit mrm">
 			<h1 class="man titleBarText">Projects</h1>

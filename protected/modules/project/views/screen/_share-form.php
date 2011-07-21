@@ -7,6 +7,7 @@
 		<div class="field">Share this screen</div>
 		<div class="field">Share the whole project <a href="#" onclick="return false;" class="btn aristo" id="getlink">get link</a></div>
 		</form>
+		<span id="project-link"></span>
 		<div class="templateOk txtR"><button class="btn aristo">Ok</button></div>
 	</div>
 </div>
@@ -14,6 +15,8 @@
 	$('#getlink').click(function(){
 		var pf = $('#shareForm').serialize();
 		$.post("<?php echo NHtml::url('/project/details/projectLink'); ?>", 
-		{'ProjectLink':pf})
+		{'ProjectLink':pf}, function(r){
+			$('#project-link').html('<a href="<?php echo NHtml::url('/project/index/view'); ?>/'+r+'">'+r+'</a>');
+		});
 	});
 </script>

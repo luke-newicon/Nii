@@ -26,7 +26,7 @@ class ProjectHotSpot extends NActiveRecord
 	
 	public function rules(){
 		return array(
-			array('screen_id,width,height,left,top,screen_id_link','safe')
+			array('screen_id,width,height,left,top,screen_id_link,fixed_scroll','safe')
 		);
 	}
 
@@ -53,7 +53,8 @@ class ProjectHotSpot extends NActiveRecord
 				'height'=>'int',
 				'left'=>'int',
 				'top'=>'int',
-				'screen_id_link'=>'int'
+				'screen_id_link'=>'int',
+				'fixed_scroll'=>'TINYINT(1) NULL DEFAULT  \'0\''
 			),
 			'keys'=>array(
 				array('template_id'),

@@ -17,6 +17,7 @@
 class DetailsController extends AController 
 {
 	public function actionIndex($project){
+		$this->layout = 'index';
 		$p = Project::model()->findByAttributes(array('name'=>$project));
 		if($p===null)
 			throw new CHttpException(404, 'Ooops no page found for this project');

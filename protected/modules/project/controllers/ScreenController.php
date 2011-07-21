@@ -39,6 +39,7 @@ class ScreenController extends AController
 		$screen = ProjectScreen::model()->findByPk($id);
 		$project = Project::model()->findByPk($screen->project_id);
 		
+		Yii::app()->getClientScript()->registerCoreScript('bbq');
 		
 		// get all the hotspots on the screen
 		$this->render('screen',array(
@@ -187,7 +188,7 @@ class ScreenController extends AController
 			'canvas'=>$this->renderPartial('_canvas',array('screen'=>$screen),true),
 			'commentsJson'=>$this->getCommentsData($screen),
 			'bgRgb'=>$screen->guessBackgroundColor(),
-			'templates'=>$screen->getTemplatesAppliedIds()
+			'templates'=>$screen->getTemplatesAppliedIds(),
 		));
 	}
 	

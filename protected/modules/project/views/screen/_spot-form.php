@@ -16,6 +16,9 @@
 				</div>
 			</div>
 			<div class="field">
+				<input name="fixedScroll" id="fixedScroll" type="checkbox" /> <label for="fixedScroll">Fixed scroll position</label>
+			</div>
+			<div class="field">
 				<button id="okSpot" href="#" class="btn aristo">Ok</button>
 				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
 			</div>

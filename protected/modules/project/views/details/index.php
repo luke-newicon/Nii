@@ -42,7 +42,7 @@
 	
 </style>
 
-<div class="toolbar plm" style="margin-top:-1px;">
+<div class="toolbar plm" >
 	<div class="line">
 		<div class="unit toolbarArrow mrm">
 			<a style="display:block;" class="titleBarText" href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
@@ -51,7 +51,7 @@
 			<h1 class="man titleBarText"><?php echo $project->name; ?></h1>
 		</div>
 		<div class="unit">
-			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
 		<div class="unit plm" >
 			<a href="#" id="pickfiles" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/upload.png'; ?>"/></a>

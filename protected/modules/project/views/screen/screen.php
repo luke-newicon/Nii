@@ -30,8 +30,6 @@
 	 */
 	* html .ui-autocomplete {height: 250px;}
 	
-	.small .toolbarArrow{background-position:100% 0px;}
-	.small .titleBarText{padding-top:5px;font-size:14px;}
 	.toolbar.screen{min-width:1024px;border-bottom-color:#666;height:46px;background-color:#000;position:fixed;box-shadow: 0 1px 0 #FFFFFF inset, 0 0 8px #000000;z-index:4000;}
 
 	
@@ -58,34 +56,34 @@
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
 	<div class="line small">
-		<div class="unit toolbarArrow mrm" style="padding-top:8px;">
+		<div class="unit toolbarArrow mrm" >
 			<a href="<?php echo NHtml::url('/project/index/index'); ?>" class="titleBarText" style="display:block;">Projects</a>
 		</div>
-		<div class="unit toolbarArrow prm" style="padding-top:8px;">
+		<div class="unit toolbarArrow prm" >
 			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" class="titleBarText" style="display:block;"><?php echo $project->name; ?></a>
 		</div>
-		<div class="unit plm ptm prm" style="padding-top:8px;">
+		<div class="unit plm prm" >
 			<h1 class="man titleBarText" ><?php echo $screen->getName(); ?></h1>
 		</div>
 		<div class="unit">
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
+		<div class="unit plm ptm" >
 			<button class="btn aristo sidebar selected" href="#"><span class="icon fam-application-side-list man"></span></button>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
+		<div class="unit plm ptm" >
 			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
 		</div>
-		<div class="unit plm btnGroup" style="padding-top:10px;">
+		<div class="unit plm btnGroup ptm">
 			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span>Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="fugue fugue-layer-shape"></span>Edit</button>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
+		<div class="unit plm ptm">
 			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
+		<div class="unit plm ptm" >
 			<button class="btn aristo share" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
 		</div>
-		<div class="unit plm" style="padding-top:10px;">
+		<div class="unit plm ptm">
 			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fam-cog"></span></button>
 		</div>
 	</div>
@@ -412,12 +410,19 @@ $.widget("ui.boxer", $.ui.mouse, {
 			var screenId = 0;
 			if($spot.is('[data-id]'))
 				id = $spot.attr('data-id');
+			// get the screen id
 			if($spot.is('[data-screen]')){
 				screenId = $spot.attr('data-screen');
 				$spot.addClass('linked');
 			}else{
 				$spot.removeClass('linked');
 			}
+			
+			var fixedScroll = 0;
+			if($spot.is('[data-fixed-scroll]')){
+				var fixedScroll = 1;
+			}
+			
 			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
 				{ProjectHotSpot:{
 					hotspot_id:id,
@@ -426,7 +431,8 @@ $.widget("ui.boxer", $.ui.mouse, {
 					height:$spot.height(),
 					left:offset.left,
 					top:offset.top,
-					screen_id_link:screenId
+					screen_id_link:screenId,
+					fixed_scroll:fixedScroll
 				}},
 				function(json){
 					//populate my id
@@ -464,7 +470,8 @@ $.widget("ui.boxer", $.ui.mouse, {
 			// hotspots may not have a defined screen id, so be careful
 			var $spot = $(this);
 			if($spot.is('[data-screen]')){
-				loadScreen($spot.attr('data-screen'));
+				var maintainScroll = ($spot.is('[data-fixed-scroll]'))?1:0;
+				loadScreen($spot.attr('data-screen'),maintainScroll);
 			}
 		},
 		click:function(e){
@@ -485,6 +492,14 @@ $.widget("ui.boxer", $.ui.mouse, {
 					$spot.hotspot('showForm');
 				}
 			}
+		},
+		fixedScroll:function(bool){
+			if(bool){
+				this.attr('data-fixed-scroll','true');
+			}else{
+				this.removeAttr('data-fixed-scroll');
+			}
+			this.hotspot('update');
 		}
 	};
 	$.fn.hotspot = function( method ) {
@@ -661,6 +676,12 @@ var spotForm = {
 		spotForm.$form.delegate('#okSpot','click.spotForm',function(){$('#spotForm').hide();});
 		// delete spot link
 		spotForm.$form.delegate('#deleteSpot','click.spotForm',function(){$spot.hotspot('deleteSpot');return false;});
+		
+		spotForm.$form.delegate('#fixedScroll','click.spotForm',function(){spotForm.fixScroll($spot);});
+		// if fixed scroll
+		$spot.is('[data-fixed-scroll]')?$('#fixedScroll').attr('checked','checked'):$('#fixedScroll').removeAttr('checked');
+		
+		spotForm.$form.delegate('#fixedScroll','click.spotForm',function(){spotForm.fixScroll($spot);});
 
 		spotForm.autocomplete();
 		spotForm.initTemplates();
@@ -669,6 +690,9 @@ var spotForm = {
 	position:function($spot){
 		spotForm.$form.show()
 			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
+	},
+	fixScroll:function($spot){
+		$spot.hotspot('fixedScroll',$('#fixedScroll').is(':checked'));
 	},
 	applyTemplate:function(){
 		var val = $('#hotspotTemplate').find(':selected').val();
@@ -1143,13 +1167,20 @@ var resizer = function(){
 /**
  * Load in a screen and its hotspots and comments by ajax
  */
-var loadScreen = function(screenId){
+var loadScreen = function(screenId, maintainScroll){
 	// select the sidebar image
+	if(maintainScroll==undefined){maintainScroll=0};
+	$.bbq.pushState({ i: screenId, s:maintainScroll });
+}
+
+var _doLoadScreen = function(screenId, maintainScroll){
+	
 	$('#screenPane .sidebarImg').removeClass('selected')
 	$('#sideSscreen-'+screenId).addClass('selected');
 	$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
 		$('#canvasWrap').html(r.canvas);
 		commentForm.commentStore = r.commentsJson;
+		console.log(r);
 		initCanvas();
 		// set background color
 		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
@@ -1162,6 +1193,9 @@ var loadScreen = function(screenId){
 		$.each(r.templates,function(index,id){
 			$('#template-'+id).attr('checked','checked');
 		})
+		if(maintainScroll == 0){
+			$('#canvasWrap').scrollTo(0);
+		}
 	},'json')
 }
 
@@ -1195,8 +1229,8 @@ $(function($){
 	$("#screenPane .sidebarImg").disableSelection();
 	
 	$('#screenPane .sidebarImg a').click(function(){
-		var id = $(this).attr('data-id');
-		loadScreen(id);
+		var screenId = $(this).attr('data-id');
+		loadScreen(screenId, 1);
 	});
 	//
 	// load sidebar images
@@ -1225,6 +1259,14 @@ $(function($){
 		setTimeout(function(){loadSideImage($div)},1);
 	});
 	
+	
+	$(window).bind( "hashchange", function(e) {
+		// In jQuery 1.4, use e.getState( "url" );
+		var url = e.getState();
+		console.log(e.getState())
+		_doLoadScreen(url.i, url.s);
+	});
+
 
 });
 	
