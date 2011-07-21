@@ -148,12 +148,11 @@ class User extends NActiveRecord
 	 * @param string $password
 	 * @return boolean
 	 */
-	public function checkPassword($checkPassword){
+	public function checkPassword($checkPass){
 		// uses a salt so that two people with the same password will have
 		// different encrypted password values
 		// creates a unique salt from each password
-		$salt = substr($this->password, 0, CRYPT_SALT_LENGTH);
-		return ($this->password == crypt($checkPassword, $salt));
+		return (UserModule::checkPassword($this->password, $checkPass));
 	}
 
 

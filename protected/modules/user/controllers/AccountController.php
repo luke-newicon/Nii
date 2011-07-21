@@ -74,7 +74,6 @@ class AccountController extends Controller {
 		
 		$user = new RegistrationForm;
 		
-		$domain = new AppDomain;
 		$contact = null;
 		// populate array of models to validate
 		$models[] = $user;
@@ -82,8 +81,10 @@ class AccountController extends Controller {
 			$contact = new CrmContact;
 			$models[] = $contact;
 		}		
-		if($userModule->domain) 
+		if($userModule->domain) {
+			$domain = new AppDomain;
 			$models[] = $domain;
+		}
 		
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
@@ -116,7 +117,6 @@ class AccountController extends Controller {
 						$domain->save();
 						$user->domain = $domain->domain;
 					}
-					
 					$user->save();
 
 					// if crm module installed
