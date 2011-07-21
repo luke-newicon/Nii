@@ -268,6 +268,17 @@ class UserModule extends NWebModule
 		return Yii::app()->getModule('user');
 	}
 	
+	/**
+	 * check the password is correct
+	 * @param string $dbPass the initial password stored in the database
+	 * @param type $checkPass the password to check against
+	 * @return boolean 
+	 */
+	public static function checkPassword($dbPass,$checkPass) {
+		$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
+		return ($dbPass == crypt($checkPass, $salt));
+	}
+	
 	
 	/**
 	 * EVENTS ... events ROCK!

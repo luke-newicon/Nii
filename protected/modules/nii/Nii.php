@@ -91,7 +91,8 @@ class Nii extends CWebApplication
 	 * @param type $event 
 	 */
 	public function registrationComplete($event){
-		$this->createApp($event->params['user']->domain);
+		if ($this->domain)
+			$this->createApp($event->params['user']->domain);
 		
 		// add signed up user to own db user table
 	}

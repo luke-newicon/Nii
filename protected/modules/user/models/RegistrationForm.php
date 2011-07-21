@@ -19,7 +19,7 @@ class RegistrationForm extends User
 			array('email', 'email'),
 			array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
 			array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
-			array('verifyPassword', 'compare', 'compareAttribute'=>'password', 'message' => UserModule::t("Retype Password is incorrect.")),
+			array('verifyPassword', 'doVerifyPassword'),
 			array('username', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect symbols (A-z0-9).")),
 			array('password','compare','compareAttribute'=>'username','operator'=>'!=','message'=>'Your password must be different from your username'),
 		);
@@ -38,4 +38,9 @@ class RegistrationForm extends User
 		return $rules;
 	}
 	
+	public function doVerifyPassword($attribute,$params) {
+		if (UserModule::checkPassword($this->password, $this->verifyPassword) === false) {
+			$this->addError("verifyPassword",UserModule::t("Retype Password is incorrect."));
+		}
+	}
 }
