@@ -54,6 +54,8 @@ return array(
 		'user',
 		'project',
 		'hosting',
+		'account',
+		'payment',
 		'dev'=>array(
 			'modules'=>array('kanban')
 		),
