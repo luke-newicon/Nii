@@ -43,7 +43,7 @@
 	.template label:hover {}
 	.template.selected label {}
 	.addTemplate .inputBox{border-radius:3px 0px 0px 3px;}
-	.sidebarImg .sideImg{box-shadow:0px 0px 5px #000;margin:10px;}
+	.sidebarImg .sideImg{border:1px solid #000;box-shadow:0px 0px 5px #000;margin:10px;}
 	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
 
@@ -53,6 +53,7 @@
 	.username{font-weight:bold;}
 	.stats{color:#999;}
 
+	.sidebarImg.selected .sideImg{box-shadow:0px 0px 10px 5px #fff;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -100,7 +101,7 @@
 <div  id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
 	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
 		<?php foreach($project->getScreens() as $s): ?>
-		<div class="sidebarImg txtC">
+		<div class="sidebarImg txtC" id="sideSscreen-<?php echo $s->id; ?>">
 			<a href="#" onclick="return false;" style="display:block" title="<?php echo $s->name; ?>" class="loading sideImg" data-id="<?php echo $s->id; ?>" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></a>
 			<span class="imageTitle"><?php echo $s->name; ?></span>
 		</div>
@@ -375,9 +376,9 @@ $.widget("ui.boxer", $.ui.mouse, {
 				$this.draggable({
 					cancel:'.link',
 					drag: function(event, ui) {
-						if($('#spotForm:visible').index){
+						if($('#spotForm').is(':visible')){
 							// make the spotForm follow the hotspot being dragged
-							$('#spotForm').position({my:'left top',at:'right top',of:$this,offset:"18 -30",collision:'none'});
+							spotForm.position($this);
 						}
 					},
 					stop:function(e,ui){
@@ -385,6 +386,12 @@ $.widget("ui.boxer", $.ui.mouse, {
 					}
 				})
 				.resizable({
+					handles:'all',
+					resize:function(){
+						if($('#spotForm').is(':visible')){
+							spotForm.position($this);
+						}
+					},
 					stop:function(e,ui){
 						$this.hotspot('update');
 					}
@@ -453,6 +460,13 @@ $.widget("ui.boxer", $.ui.mouse, {
 				location.href = "<?php echo NHtml::url('/project/screen/index'); ?>/id/"+$spot.attr('data-screen');
 			}
 		},
+		linkAjax:function(){
+			// hotspots may not have a defined screen id, so be careful
+			var $spot = $(this);
+			if($spot.is('[data-screen]')){
+				loadScreen($spot.attr('data-screen'));
+			}
+		},
 		click:function(e){
 			var $spot = $(this);
 			// detect keypress
@@ -463,10 +477,10 @@ $.widget("ui.boxer", $.ui.mouse, {
 				return false;
 			}
 			if (e.shiftKey) {
-				$spot.hotspot('link');
+				$spot.hotspot('linkAjax');
 			}else{
 				if($spot.is('.link')){
-					$spot.hotspot('link');
+					$spot.hotspot('linkAjax');
 				}else{
 					$spot.hotspot('showForm');
 				}
@@ -635,21 +649,26 @@ var commentForm = {
 var spotForm = {
 	screens:<?php echo json_encode($project->getScreenList()); ?>,
 	$spot:null,
+	$form:null,
 	showForm:function($spot){
 		spotForm.$spot = $spot;
 		// show and position the popup form
-		$('#spotForm').show()
-		.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
+		spotForm.$form = $('#spotForm');
+		spotForm.position($spot);
 		// unbind all previously set events
-		$('#spotForm').unbind('.spotForm');
+		spotForm.$form.unbind('.spotForm');
 		// ok spot link
-		$('#spotForm').delegate('#okSpot','click.spotForm',function(){$('#spotForm').hide();});
+		spotForm.$form.delegate('#okSpot','click.spotForm',function(){$('#spotForm').hide();});
 		// delete spot link
-		$('#spotForm').delegate('#deleteSpot','click.spotForm',function(){$spot.hotspot('deleteSpot');return false;});
+		spotForm.$form.delegate('#deleteSpot','click.spotForm',function(){$spot.hotspot('deleteSpot');return false;});
 
 		spotForm.autocomplete();
 		spotForm.initTemplates();
-		$('#spotForm').delegate('#hotspotTemplate','change.spotForm',function(){spotForm.applyTemplate()});
+		spotForm.$form.delegate('#hotspotTemplate','change.spotForm',function(){spotForm.applyTemplate()});
+	},
+	position:function($spot){
+		spotForm.$form.show()
+			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
 	},
 	applyTemplate:function(){
 		var val = $('#hotspotTemplate').find(':selected').val();
@@ -765,6 +784,11 @@ var spotForm = {
 	}
 };
 // template form
+var state = {
+	editMode:1,
+	previewMode:2,
+	commentsMode:3
+};
 var toolbar = {
 	$mainToolbar:null,
 	$btnPreview:null,
@@ -774,6 +798,8 @@ var toolbar = {
 	$btnComments:null,
 	$btnShare:null,
 	sidebarWidth:200,
+	state:null,
+	beforePreviewState:null,
 	init:function(){
 		this.$mainToolbar = $('#mainToolbar');
 		this.$btnPreview = this.$mainToolbar.find('.preview');
@@ -786,11 +812,11 @@ var toolbar = {
 		this.shareForm.init();
 		// toolbar button events
 		this.$btnPreview.click(function(){toolbar.previewMode()});
-		this.$btnEditMode.click(function(){toolbar.showSpots();toolbar.editMode()});
+		this.$btnEditMode.click(function(){toolbar.showSpots();toolbar.closePreview()});
 		this.$btnTemplate.click(function(e){toolbar.templateForm.open(e)});
 		this.$btnShare.click(function(e){toolbar.shareForm.open(e)});
-		this.$btnComments.click(function(){toolbar.comments()});
-		this.$btnEdit.click(function(){toolbar.edit();});
+		this.$btnComments.click(function(){toolbar.commentsMode()});
+		this.$btnEdit.click(function(){toolbar.editMode();});
 
 		$('#mainToolbar .btnGroup .btn').click(function(){
 			$('#mainToolbar .btnGroup .btn').removeClass('selected');
@@ -805,32 +831,37 @@ var toolbar = {
 		});
 	},
 	showSpots:function(){
-		$('#canvas .hotspot').css('opacity','').removeAttr('data-disabled').find('.ui-resizable-handle').show();
+		console.log('in');
+		$('#canvas .hotspot').stop(true, true).show().removeAttr('data-disabled').find('.ui-resizable-handle').show();
 	},
 	fadeSpots:function(){
-		$('#canvas .hotspot').fadeTo(250,0).attr('data-disabled','true').find('.ui-resizable-handle').hide();
+		console.log('fadeout');
+		$('#canvas .hotspot').fadeOut(250).attr('data-disabled','true').find('.ui-resizable-handle').hide();
 	},
 	showComments:function(){
-		$('#canvas .commentSpot').show();
+		$('#canvas .commentSpot').stop(true, true).show();
 	},
 	fadeComments:function(){
 		$('#canvas .commentSpot').fadeOut(250);
 	},
 	previewMode:function(){
 		toolbar.sidebarClose();
-		//$('#closePreview').position({'my':'left','at':'left','of':$('#mainToolbar .preview')});
-		this.$mainToolbar.animate({top:-60},500,'easeInBack');
-		//$('#screenWrap').hide('fast',function(){/*$(this).width(0);*/});
-		$('#canvasWrap').animate({top:0},500,'swing')
-			.find('.hotspot').hotspot('setStateLink');
-		
-		this.templateForm.close();
-		if(toolbar.$btnComments.is('.selected')){
-			
+		// if we are already in preview mode don't bother animating'
+		if(toolbar.state != state.previewMode){
+			this.$mainToolbar.animate({top:-60},500,'easeInBack');
+			$('#canvasWrap').animate({top:0,height:'+=48'},500,'swing');
 		}
+		$('#canvas').find('.hotspot').hotspot('setStateLink');
+		this.templateForm.close();
 		$('#canvas').css('cursor','default');
+		toolbar.selectButton(toolbar.$btnPreview);
+		toolbar.fadeComments();
+		// set the state before preview loaded
+		toolbar.beforePreviewState = toolbar.state;
+		toolbar.state = state.previewMode;
 	},
-	editMode:function(){
+	closePreview:function(){
+		// if we are in preview mode we need to swish stuff back in
 		toolbar.sidebarOpen();
 		$('#screenWrap').show('fast')
 		this.$mainToolbar.animate({top:0},500,'easeInBack');
@@ -839,20 +870,46 @@ var toolbar = {
 		$('#canvasWrap').animate({top:48},500,'easeInBack', function(){
 			resizer();
 		});
-		//$('#screenWrap').width(200);
-		//$('#screenWrap').show('fast');
-		$('#canvas').css('cursor','crosshair');
-		toolbar.$btnEdit.click();
+		toolbar.setState(toolbar.beforePreviewState);
 	},
-	edit:function(){
+	/**
+	 * must be a state object property
+	 */
+	setState:function(toolbarState){
+		switch(toolbarState){
+			case state.commentsMode:
+				toolbar.commentsMode();
+				break;
+			case state.editMode:
+				toolbar.editMode();
+				break;
+			case state.previewMode:
+				toolbar.previewMode();
+				break;
+			default:
+				toolbar.editMode();
+		}
+	},
+	editMode:function(){
+		// ensure the edit button is selected
+		$('#canvas').css('cursor','crosshair');
 		toolbar.showSpots();
 		toolbar.fadeComments();
-		$('#canvas').css('cursor','');
+		toolbar.selectButton(toolbar.$btnEdit);
+		toolbar.state = state.editMode;
 	},
-	comments:function(){
+	commentsMode:function(){
 		toolbar.fadeSpots();
 		toolbar.showComments();
 		$('#canvas').css('cursor','help');
+		toolbar.selectButton(toolbar.$btnComments);
+		toolbar.state = state.commentsMode;
+	},
+	selectButton:function($btnToSelect){
+		toolbar.$btnEdit.removeClass('selected');
+		toolbar.$btnPreview.removeClass('selected');
+		toolbar.$btnComments.removeClass('selected');
+		$btnToSelect.addClass('selected');
 	},
 	sidebarOpen:function(){
 		$('#screenWrap').show();
@@ -950,6 +1007,11 @@ var toolbar = {
 			}
 		},
 		open:function(e){
+			if($('#templateForm').is(':visible')){
+				this.close();
+				e.stopPropagation();
+				return false;
+			}
 			this.toggleInfo();
 			$('#templateForm').show();
 			toolbar.$btnTemplate.addClass('selected');
@@ -1035,8 +1097,34 @@ var initCanvas = function(){
 	})
 	$('#canvas .hotspot').hotspot();
 	$('#canvas .commentSpot').commentSpot();
+	
+	commentForm.init();
+	
+	$("#canvas").droppable({
+		accept:'.sidebarImg',
+		drop: function(event, ui) {
+			// we are creating a hotspot so we need to be in edit mode!
+			toolbar.editMode();
+			// we have dropped onto the canvas so we want to create a hotspot here
+			var helper = $(document.createElement('a'))
+			$('#canvas').append(helper);
+			helper.css({
+				"z-index": 100,
+				"position": "absolute",
+				"left": event.clientX-$('#canvas').offset().left-75,
+				"top": event.clientY-$('#canvas').offset().top-15,
+				"width": 150,
+				"height": 30
+			}).addClass('hotspot')
+			.hotspot()
+			.hotspot('update')
+			.attr('data-screen', $(ui.draggable).find('[data-id]').attr('data-id'))
+			.hotspot('showForm')
+		}
+	});
+	$('#canvas .hotspot').hide();
 	// lets code the toolbar
-	toolbar.init();
+	toolbar.setState(toolbar.state);
 }
 var resizer = function(){
 	$('#canvasWrap').snapy({'snap':$(window)});
@@ -1044,23 +1132,45 @@ var resizer = function(){
 	$('#screenPane').snapy({'snap':'#screenWrap'});
 	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
 	$('#canvasWrap').css('left',$('#screenWrap').width());
-	$('#screenPane img').width($('#screenPane').width()-35);
+	$('#screenPane img').width($('#screenPane').width()-39);
 }
 
 
+/**
+ * Load in a screen and its hotspots and comments by ajax
+ */
+var loadScreen = function(screenId){
+	// select the sidebar image
+	$('#screenPane .sidebarImg').removeClass('selected')
+	$('#sideSscreen-'+screenId).addClass('selected');
+	$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
+		$('#canvasWrap').html(r.canvas);
+		commentForm.commentStore = r.commentsJson;
+		initCanvas();
+		// set background color
+		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
+		$('html').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
+		r.bgRgb.red
 
-
+		// set applied templates where the id refers to the template id
+		// first uncheck all of them
+		$('#templateForm .template input:checkbox').removeAttr('checked');
+		$.each(r.templates,function(index,id){
+			$('#template-'+id).attr('checked','checked');
+		})
+	},'json')
+}
 
 
 
 $(function($){
 	
+	toolbar.init();
 	initCanvas();
 	
 	$(window).resize(function(){
 		resizer();
 	});
-	$('#canvasWrap').snapy({'snap':$(window)});
 	$('#screenWrap').snapy({'snap':$(window)});
 	$('#screenWrap').resizable({
 		handles:'e',
@@ -1069,23 +1179,20 @@ $(function($){
 			resizer();
 		}
 	});
-	commentForm.init();
-	resizer();
-	$('#screenPane').scroll(function(){
-		$('.sideImg').tipsy('show');
-	});
 	
-	$('#screenPane').sortable();
+	resizer();
+	
+	$('#screenPane .sidebarImg').draggable({
+		zIndex:5000,
+		revert:'invalid',
+		appendTo:'body',
+		helper:'clone'
+	});
+	$("#screenPane .sidebarImg").disableSelection();
+	
 	$('#screenPane .sidebarImg a').click(function(){
 		var id = $(this).attr('data-id');
-		$('#screenPane .sidebarImg').removeClass('selected')
-		$(this).addClass('selected');
-		$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':id},function(r){
-			$('#canvasWrap').html(r.canvas);
-			commentForm.commentStore = r.commentsJson;
-			initCanvas();
-			toolbar.initTemplates();
-		},'json')
+		loadScreen(id);
 	});
 	//
 	// load sidebar images
@@ -1095,10 +1202,12 @@ $(function($){
 		var img = new Image();
 		// wrap our new image in jQuery, then:
 		$(img).load(function () {
-			// set the image hidden by default    
+			// set the image hidden by default
+			$div.show();
 			$(this).hide().width($div.width());	
 			$div.append(this).removeClass('loading');
 			$(this).fadeIn();
+			$(this).width($div.width());	
 		})
 		.error(function () {
 			// show broken image graphic here

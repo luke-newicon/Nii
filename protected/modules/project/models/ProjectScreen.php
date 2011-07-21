@@ -186,6 +186,19 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	/**
+	 * returns an aray of template id's that are applied to this screen
+	 * @return array 
+	 */
+	public function getTemplatesAppliedIds(){
+		$ts = array();
+		$appliedTs = ProjectScreenTemplate::model()->findAllByAttributes(array('screen_id'=>$this->id));
+		foreach($appliedTs as $t){
+			$ts[] = $t->template_id;
+		}
+		return $ts;
+	}
+	
+	/**
 	 * return all the hotspots applied to the screen through templates
 	 * @return array 
 	 */

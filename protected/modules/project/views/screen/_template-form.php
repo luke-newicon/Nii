@@ -19,7 +19,7 @@
 				</label>
 			</li>
 			<?php foreach($screen->getTemplates() as $template): ?>
-				<?php $this->renderPartial('/screen/_template-item', array('template'=>$template, 'screenId'=>$screen->id)); ?>
+				<?php $this->renderPartial('/screen/_template-item', array('template'=>$template, 'screen'=>$screen)); ?>
 			<?php endforeach; ?>
 		</ul>
 		<div class="templateOk"><button class="btn aristo">Ok</button></div>

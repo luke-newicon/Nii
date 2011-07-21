@@ -53,17 +53,36 @@ class ProjectTemplate extends NActiveRecord
 	}
 	
 	/**
+	 * used by self::isAppliedTo function
+	 * stores an array of screen ids to an array of applied template ids
+	 * each time isAppliedTo is called it checks if the screen id exists as a key 
+	 * if it does not then it queries the screen object for an aray of the applied 
+	 * template ids and stores it against the scren id key simples.
+	 * for example:
+	 * [1]=>array(
+	 *     [0]=>1
+	 *     [1]=>3
+	 * )
+	 * this indicates that screen with id of 1 has two templates applied with ids of 1 and 3
+	 * .simples.
+	 * @var array
+	 * @see ProjectTemplate::isAppliedTo
+	 */
+	public $screenTemplates = array();
+	
+	/**
 	 * checks if the template is active for this screen
 	 * 
-	 * @param int $screenId the id of the screen
+	 * @param ProjectScreen $screen the screen object
 	 * @return boolean 
 	 */
-	public function isAppliedTo($screenId){
-		// a bit of an expensive function as it is called for every template
-		// however for speed of development should not be a problem as long as people have less than a hundred or so templates.
-		// this is called for each template in the project. On every screen loaded in edit mode
-		$t = ProjectScreenTemplate::model()->findByAttributes(array('screen_id'=>$screenId,'template_id'=>$this->id));
-		return ($t===null)?false:true;
+	public function isAppliedTo($screen){
+		if(!array_key_exists($screen->id, $this->screenTemplates))
+			$this->screenTemplates[$screen->id] = $screen->getTemplatesAppliedIds();
+		// get array of applied template ids for this screen
+		$appliedTs = $this->screenTemplates[$screen->id];
+		// lets check if the current template ($this) is in the array
+		return in_array($this->id, $appliedTs);
 	}
 	
 	

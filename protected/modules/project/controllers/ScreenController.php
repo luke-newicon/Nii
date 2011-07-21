@@ -55,12 +55,12 @@ class ScreenController extends AController
 	}
 	
 	/**
-	 * generates the comments json array.
+	 * generates the comments json array data.
 	 * This enables the javascript to manipulate the comments on the screen index page
 	 * @param ProjectScreen $screen
-	 * @return string json array 
+	 * @return array 
 	 */
-	public function getCommentsJson($screen){
+	public function getCommentsData($screen){
 		$commentJson = array();
 		foreach($screen->getComments() as $comment){
 			$commentJson[$comment->id] = array(
@@ -68,7 +68,15 @@ class ScreenController extends AController
 				'view'=>$this->renderPartial('_comment',array('comment'=>$comment),true)
 			);
 		}
-		return json_encode($commentJson);
+		return $commentJson;
+	}
+	
+	/**
+	 * json_encoded comments data for javascript
+	 * @return string 
+	 */
+	public function getCommentsJson($screen){
+		return json_encode($this->getCommentsData($screen));
 	}
 	
 	
@@ -174,9 +182,12 @@ class ScreenController extends AController
 	 */
 	public function actionLoad(){
 		$screen = $this->loadScreen($_POST['id']);
+		
 		echo json_encode(array(
 			'canvas'=>$this->renderPartial('_canvas',array('screen'=>$screen),true),
-			'commentsJson'=>$this->getCommentsJson($screen)
+			'commentsJson'=>$this->getCommentsData($screen),
+			'bgRgb'=>$screen->guessBackgroundColor(),
+			'templates'=>$screen->getTemplatesAppliedIds()
 		));
 	}
 	
