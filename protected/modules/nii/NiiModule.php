@@ -26,6 +26,7 @@ class NiiModule extends NWebModule
 		$cs->registerCssFile($this->getAssetsUrl().'/oocss/all.css');
 		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
+		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.hotkeys.js');
 	}
 	
 	public function beforeControllerAction($controller, $action)
@@ -58,7 +59,8 @@ class NiiModule extends NWebModule
 			'jquery.metadata.js'=>false,
 			'nii.js'=>false,
 			'all.css'=>false,
-			'tipsy.css'=>false
+			'tipsy.css'=>false,
+			'jquery.hotkeys.js'=>false
 		);
 	}
 	

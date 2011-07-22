@@ -182,13 +182,13 @@ class ScreenController extends AController
 	 * load in a new screen to edit by ajax
 	 */
 	public function actionLoad(){
-		$screen = $this->loadScreen($_POST['id']);
-		
+		$screen = $this->loadScreen($_REQUEST['id']);
 		echo json_encode(array(
 			'canvas'=>$this->renderPartial('_canvas',array('screen'=>$screen),true),
 			'commentsJson'=>$this->getCommentsData($screen),
 			'bgRgb'=>$screen->guessBackgroundColor(),
 			'templates'=>$screen->getTemplatesAppliedIds(),
+			'size'=>$screen->getSize()
 		));
 	}
 	
@@ -206,10 +206,28 @@ class ScreenController extends AController
 		if($project===null)
 			throw new CHttpException(404, 'Oops this project no loger exists');
 
-		$this->render('view',array('project'=>$project));
+		$screen = $project->getHomeScreen();
+		
+		if($link->password == '' || $this->validPassword($link))
+			$this->render('view',array('project'=>$project, 'screen'=>$screen,'rgb'=>$screen->guessBackgroundColor()));
+		else
+			$this->render('password',array('project'=>$project, 'screen'=>$screen));
+		
+	}
+	
+	public function validPassword($link){
+		if(!isset($_POST['password']) || $_POST['password']=='')
+			return false;
+		if($link->password == $link->password)
+			return true;
 	}
 	
 	
+	/**
+	 * returns the screen object
+	 * @param int $id
+	 * @return ProjectScreen or null 
+	 */
 	public function loadScreen($id){
 		if($this->screen === null)
 			$this->screen = ProjectScreen::model()->findByPk($id);

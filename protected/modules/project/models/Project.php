@@ -98,7 +98,8 @@ class Project extends NActiveRecord
 				'value'=>$s->id,
 				'label'=>$s->name, // get transformed into html by search
 				'name'=>$s->name,
-				'src'=>NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop')
+				'src'=>NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop'),
+				'bigSrc'=>NHtml::urlFile($s->file_id, $s->name)
 			);
 		}
 		return $screenList;

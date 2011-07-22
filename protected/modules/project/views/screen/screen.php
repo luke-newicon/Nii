@@ -32,8 +32,6 @@
 	
 	.toolbar.screen{min-width:1024px;border-bottom-color:#666;height:46px;background-color:#000;position:fixed;box-shadow: 0 1px 0 #FFFFFF inset, 0 0 8px #000000;z-index:4000;}
 
-	
-
 	#closePreview{position:absolute;top:0px;right:0px;z-index:700;}
 	
 	.toolbarForm{z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
@@ -42,15 +40,13 @@
 	.template.selected label {}
 	.addTemplate .inputBox{border-radius:3px 0px 0px 3px;}
 	.sidebarImg .sideImg{border:1px solid #000;box-shadow:0px 0px 5px #000;margin:10px;}
-	.imageTitle{padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
+	.imageTitle{font-size:11px;margin:0px 15px;display:block;padding:5px 10px;border-radius:10px;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 	.sidebarImg .loading{width:165px;height:165px;background-color:#f1f1f1;}
 
 	button{margin:0px;}
 	body{overflow:hidden;}
-	
 	.username{font-weight:bold;}
 	.stats{color:#999;}
-
 	.sidebarImg.selected .sideImg{box-shadow:0px 0px 10px 5px #fff;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
@@ -95,8 +91,7 @@
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
 <?php $this->renderPartial('_share-form',array('screen'=>$screen,'project'=>$project)); ?>
 
-
-<div  id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
+<div id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
 	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
 		<?php foreach($project->getScreens() as $s): ?>
 		<div class="sidebarImg txtC" id="sideSscreen-<?php echo $s->id; ?>">
@@ -1158,7 +1153,12 @@ var resizer = function(){
 	$('#screenPane').snapy({'snap':'#screenWrap'});
 	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
 	$('#canvasWrap').css('left',$('#screenWrap').width());
-	$('#screenPane img').width($('#screenPane').width()-39);
+	
+	var imgs = $('#screenPane img');
+	if(imgs.length>0)
+		$('#screenPane img').width($('#screenPane .sidebarImg').width()-20);
+	
+	$('#screenPane a.sideImg').width($('#screenPane .sidebarImg').width()-20);
 }
 
 
@@ -1175,7 +1175,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 	
 	$('#screenPane .sidebarImg').removeClass('selected')
 	$('#sideSscreen-'+screenId).addClass('selected');
-	$.post("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
+	$.get("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
 		$('#canvasWrap').html(r.canvas);
 		commentForm.commentStore = r.commentsJson;
 		initCanvas();
@@ -1190,6 +1190,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 		$.each(r.templates,function(index,id){
 			$('#template-'+id).attr('checked','checked');
 		})
+		$('#canvas').width(r.size[0]);
 		if(maintainScroll == 0){
 			$('#canvasWrap').scrollTo(0);
 		}
@@ -1209,7 +1210,12 @@ $(function($){
 	$('#screenWrap').snapy({'snap':$(window)});
 	$('#screenWrap').resizable({
 		handles:'e',
+		minWidth:100,
+		maxWidth:400,
 		alsoResize:'#screenPane',
+		resize:function(){
+			resizer();
+		},
 		stop:function(){
 			resizer();
 		}
