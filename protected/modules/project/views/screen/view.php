@@ -9,7 +9,7 @@
 	.ui-progressbar{background:-webkit-gradient(linear,center bottom,center top,from(#aaa), to(#666));background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
 </style>
 <div id="canvasWrap" >
-	<?php $this->renderPartial('_canvas',array('screen'=>$screen)); ?>
+	<?php $this->renderPartial('_canvas',array('screen'=>$screen,'onlyLinked'=>true)); ?>
 </div>
 
 
@@ -37,29 +37,31 @@ var loadScreen = function(screenId, maintainScroll){
 }
 
 var _doLoadScreen = function(screenId, maintainScroll){
-	
-	$.get("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
-		$('#canvasWrap').html(r.canvas);
-		commentForm.commentStore = r.commentsJson;
-		initCanvas();
-		// set background color
-		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
-		$('html').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
-		r.bgRgb.red
-
-		// set applied templates where the id refers to the template id
-		// first uncheck all of them
-		$('#templateForm .template input:checkbox').removeAttr('checked');
-		$.each(r.templates,function(index,id){
-			$('#template-'+id).attr('checked','checked');
-		})
-		$('#canvas').width(r.size[0]);
-		if(maintainScroll == 0){
-			$('#canvasWrap').scrollTo(0);
-		}
-	},'json')
+	// get image from preloaded set
+	var $newImg = $('#preloadImages [data-screen="'+screenId+'"] img');
+	$newImg = $('#canvas').find('img').replaceWith($newImg.clone());
+	$('#canvas').width($newImg);
+	$('#canvas-hotspots').html(view.screenData[screenId].hotspots);
+	$(document).scrollTo(0);
+	$('body').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
+	$('html').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
+	view.spotState();
 }
 
+var view = {
+	visibleSpots:false,
+	screenData:<?php echo $screenData; ?>,
+	screenDataSize:<?php echo $screenDataSize; ?>,
+	spotState:function(){
+		(view.visibleSpots) ? view.showSpots() : view.hideSpots();
+	},
+	showSpots:function(){
+		jQuery('#canvas .hotspot').addClass('viewspot');
+	},
+	hideSpots:function(){
+		jQuery('#canvas .hotspot').removeClass('viewspot');
+	}
+}
 
 $(function(){
 
@@ -69,58 +71,49 @@ $(function(){
 		_doLoadScreen(url.i, url.s);
 	});
 	
-	$('#canvas').delegate('.hotspot', 'click', function(){
-//		var $spot = $(this);
-//		var sId = $spot.attr('data-screen');
-//		// get image from preloaded set
-//		alert(sId)
-//		var $newImg = $('#preloadImages [data-screen="'+sId+'"] img');
-//		// alert($newImg.attr('src'));
-//		$('#canvas').find('img').replaceWith($newImg);
+	$('#canvasWrap').delegate('.hotspot', 'click', function(){
+		var $spot = $(this);
+		var sId = $spot.attr('data-screen');
+		loadScreen(sId);
 	});
 
 	jQuery(document).bind('keypress', 'h', function (evt){
 		if($('#canvas .hotspot').is('.viewspot')){
 			jQuery('#canvas .hotspot').removeClass('viewspot');
+			view.visibleSpots = false;
 		}else{
 			jQuery('#canvas .hotspot').addClass('viewspot');
+			view.visibleSpots = true;
 		}
 		return false; 
 	});
-	jQuery(document).bind('keydown', 'shift', function (evt){
+	jQuery(window).bind('keydown', 'shift', function (evt){
 		jQuery('#canvas .hotspot').addClass('viewspot'); return false; 
 	});
-	jQuery(document).bind('keyup', 'shift', function (evt){
+	jQuery(window).bind('keyup', 'shift', function (evt){
 		jQuery('#canvas .hotspot').removeClass('viewspot'); return false; 
 	});
 	
 	
-	$('#dialog').dialog({modal:true})
-	
-	var preloadImages = <?php echo json_encode($project->getScreenList()); ?>;
-	
-	var total = preloadImages.length
-	var done = [];
+	$('#dialog').dialog({modal:true,draggable:false})
+	var done=0;;
 	var percent;
 	var $preloadDiv = $('#preloadImages');
 	$("#progress .bar").progressbar({value: 1});
-	$.each(preloadImages, function(i,val){
-		
-		var $div = $('<div data-screen="'+val.value+'"></div>');
+	$.each(view.screenData, function(i,val){
+		var $div = $('<div data-screen="'+val.id+'"></div>');
 		var img = new Image();
 		// wrap our new image in jQuery, then:
 		$(img)
-			.attr('src', val.bigSrc)
+			.attr('src', val.src)
 			.load(function () {
 				// set the image hidden by default
 				$div.appendTo($preloadDiv);
 				$(img).appendTo($div);
-				done[i] = true;
-				
+				done += 1;
 				// might load in different order so
 				// lets just count the number done in the done array
-				var current = done.length
-				percent = current * (100/total);
+				percent = done * (100/view.screenDataSize);
 				$("#progress .bar").progressbar({value: percent});
 				$('#progress .percent').html(Math.floor(percent) + '%');
 			})

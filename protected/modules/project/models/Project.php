@@ -105,6 +105,7 @@ class Project extends NActiveRecord
 		return $screenList;
 	}
 	
+	
 	/**
 	 * populate a select box with all the projects screens
 	 * @return array 

@@ -103,7 +103,7 @@
 </div>
 
 <div id="canvasWrap" style="position: absolute; top:48px; overflow: auto; left:200px; height: 400px;"> 
-<?php $this->renderPartial('_canvas',array('screen'=>$screen)); ?>
+<?php $this->renderPartial('_canvas',array('screen'=>$screen, 'onlyLinked'=>false)); ?>
 </div>
 
 <!-- this is a hidden div image cache -->
@@ -206,7 +206,13 @@
 		},
 		click:function(e){
 			var $spot = $(this);
-			commentForm.show($spot);
+			// if the form is visible and the spot is not stored in db then we don't want to do nofin' or nofin'
+			if($('#commentsForm').is(':visible') && !$spot.is('[data-id]')){
+				// do nofin or nofin
+			}else{
+				commentForm.show($spot);
+			}
+			
 		},
 		deleteComment:function(){
 			var $spot = $(this);
@@ -1179,10 +1185,10 @@ var _doLoadScreen = function(screenId, maintainScroll){
 		$('#canvasWrap').html(r.canvas);
 		commentForm.commentStore = r.commentsJson;
 		initCanvas();
+		$('#md-comments').markdown();
 		// set background color
 		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
 		$('html').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
-		r.bgRgb.red
 
 		// set applied templates where the id refers to the template id
 		// first uncheck all of them
@@ -1268,8 +1274,6 @@ $(function($){
 		var url = e.getState();
 		_doLoadScreen(url.i, url.s);
 	});
-
-
 });
 	
 </script>

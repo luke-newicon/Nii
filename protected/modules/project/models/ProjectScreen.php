@@ -200,24 +200,29 @@ class ProjectScreen extends NAppRecord
 	
 	/**
 	 * return all the hotspots applied to the screen through templates
+	 * @param $onlyLinked if true only returns spots that have active links to other screens
 	 * @return array 
 	 */
-	public function getTemplateHotspots(){
+	public function getTemplateHotspots($onlyLinked=false){
 		$templates = ProjectScreenTemplate::model()->findAllByAttributes(array('screen_id'=>$this->id));
 		$tArr = array();
 		foreach($templates as $t){
 			$tArr[] = $t->template_id;
 		}
-		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tArr));
+		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
+		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tArr),$condition);
 	}
 	
 	/**
 	 * get hotspots on this screen
+	 * @param $onlyLinked if true only returns spots that have active links to other screens
 	 * @return array 
 	 */
-	public function getHotspots(){
-		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0));
+	public function getHotspots($onlyLinked=false){
+		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
+		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0),$condition);
 	}
+
 	
 	/**
 	 * get all comments on this screen

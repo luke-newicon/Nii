@@ -28,6 +28,10 @@ class ScreenController extends AController
 	 */
 	public $screen;
 	
+	public function init(){
+		Yii::app()->getClientScript()->registerCoreScript('bbq');
+	}
+
 	/**
 	 * render the individual screen view
 	 * @param int $id 
@@ -39,7 +43,6 @@ class ScreenController extends AController
 		$screen = ProjectScreen::model()->findByPk($id);
 		$project = Project::model()->findByPk($screen->project_id);
 		
-		Yii::app()->getClientScript()->registerCoreScript('bbq');
 		
 		// get all the hotspots on the screen
 		$this->render('screen',array(
@@ -188,7 +191,8 @@ class ScreenController extends AController
 			'commentsJson'=>$this->getCommentsData($screen),
 			'bgRgb'=>$screen->guessBackgroundColor(),
 			'templates'=>$screen->getTemplatesAppliedIds(),
-			'size'=>$screen->getSize()
+			'size'=>$screen->getSize(),
+			'hotspots'=>$this->renderPartial('_hotspots',array('screen'=>$screen, 'onlyLinked'=>true),true),
 		));
 	}
 	
@@ -208,11 +212,32 @@ class ScreenController extends AController
 
 		$screen = $project->getHomeScreen();
 		
-		if($link->password == '' || $this->validPassword($link))
-			$this->render('view',array('project'=>$project, 'screen'=>$screen,'rgb'=>$screen->guessBackgroundColor()));
-		else
+		if($link->password == '' || $this->validPassword($link)){
+			$screenData = $this->getProjectScreenData($project);
+			$this->render('view',array(
+				'project'=>$project, 
+				'screen'=>$screen,
+				'rgb'=>$screen->guessBackgroundColor(),
+				'screenData'=>json_encode($screenData),
+				'screenDataSize'=>count($screenData)
+			));
+		}else{
 			$this->render('password',array('project'=>$project, 'screen'=>$screen));
-		
+		}
+	}
+	
+	public function getProjectScreenData($project){
+		$screenList = array();
+		foreach($project->getScreens() as $i=>$s){
+			$screenList[$s->id] = array(
+				'id'=>$s->id,
+				'name'=>$s->name,
+				'rgb'=>$s->guessBackgroundColor(),
+				'src'=>NHtml::urlFile($s->file_id, $s->name),
+				'hotspots'=>$this->renderPartial('_hotspots',array('screen'=>$s),true)
+			);
+		}
+		return $screenList;
 	}
 	
 	public function validPassword($link){
