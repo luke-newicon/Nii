@@ -11,7 +11,7 @@
 		<h1>A project visualisation has been shared with you.</h1>
 		<div class="field unit size4of5">
 			<div class="inputBox">
-				<input id="password" name="password" type="password" placeholder="enter the password"/>
+				<input id="password" name="password" type="password" placeholder="Enter the password"/>
 			</div>
 		</div>
 		<div class="field lastUnit">
