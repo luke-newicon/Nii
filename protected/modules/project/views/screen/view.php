@@ -22,7 +22,6 @@
 </div>
 
 
-<div id="preloadImages" style="display:none;"></div>
 <script>
 
 
@@ -30,18 +29,43 @@
 /**
  * Load in a screen and its hotspots and comments by ajax
  */
-var loadScreen = function(screenId, maintainScroll){
+var loadScreen = function(screenId){
 	// select the sidebar image
-	if(maintainScroll==undefined){maintainScroll=0};
-	$.bbq.pushState({ i: screenId, s:maintainScroll });
+	$.bbq.pushState({i:screenId});
 }
 
-var _doLoadScreen = function(screenId, maintainScroll){
-	// get image from preloaded set
-	var $newImg = $('#preloadImages [data-screen="'+screenId+'"] img');
-	$newImg = $('#canvas').find('img').replaceWith($newImg.clone());
-	$('#canvas').width($newImg);
-	$('#canvas-hotspots').html(view.screenData[screenId].hotspots);
+var _doLoadScreen = function(hsId, maintainScroll){
+	$canvas = $('#canvas');
+	var screenId = view.hotspotData[hsId].screen_id_link
+	$img = $canvas.find('img')
+	$newImg = $canvas.find('img[data-id="'+screenId+'"]');
+	$img.hide();
+	$newImg.show()
+	
+	// now load the hotspots for the screen
+	
+	var $canvasHs = $('#canvas-hotspots').html('');
+	var hotspot;
+	console.log(view.hotspotData);
+	$.each(view.screenData[screenId].screenHotspots,function(i,h){
+		console.log(h);
+		hotspot = view.hotspotData[h];
+		var $h = $('<a><br/></a>')
+			.attr('href','#i='+hotspot.id)
+			.attr('data-id',hotspot.id)
+			.attr('data-screen',hotspot.screen_id_link)
+			.addClass("hotspot")
+			.width(hotspot.width)
+			.height(hotspot.height)
+			.css('left',hotspot.left+'px')
+			.css('top',hotspot.top+'px')
+			.appendTo($canvasHs)
+	});
+	
+	$canvas.attr('data-id',screenId);
+	$canvas.width($newImg);
+	//$('#canvas-hotspots').html(view.screenData[screenId].hotspots);
+	// lookup hotspot data. see if it should fix scroll position
 	$(document).scrollTo(0);
 	$('body').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
 	$('html').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
@@ -50,6 +74,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 
 var view = {
 	visibleSpots:false,
+	hotspotData:<?php echo $hotspotData; ?>,
 	screenData:<?php echo $screenData; ?>,
 	screenDataSize:<?php echo $screenDataSize; ?>,
 	spotState:function(){
@@ -65,16 +90,17 @@ var view = {
 
 $(function(){
 
-	$(window).bind( "hashchange", function(e) {
+	$(window).bind("hashchange", function(e) {
 		// In jQuery 1.4, use e.getState( "url" );
-		var url = e.getState();
-		_doLoadScreen(url.i, url.s);
+		var i = e.getState("i");
+		_doLoadScreen(i);
 	});
 	
 	$('#canvasWrap').delegate('.hotspot', 'click', function(){
 		var $spot = $(this);
-		var sId = $spot.attr('data-screen');
+		var sId = $spot.attr('data-id');
 		loadScreen(sId);
+		return false
 	});
 
 	jQuery(document).bind('keypress', 'h', function (evt){
@@ -98,18 +124,18 @@ $(function(){
 	$('#dialog').dialog({modal:true,draggable:false})
 	var done=0;;
 	var percent;
-	var $preloadDiv = $('#preloadImages');
+	var $preloadDiv = $('#canvas');
 	$("#progress .bar").progressbar({value: 1});
 	$.each(view.screenData, function(i,val){
-		var $div = $('<div data-screen="'+val.id+'"></div>');
 		var img = new Image();
 		// wrap our new image in jQuery, then:
 		$(img)
+			.hide()
+			.attr('data-id',val.id)
 			.attr('src', val.src)
 			.load(function () {
 				// set the image hidden by default
-				$div.appendTo($preloadDiv);
-				$(img).appendTo($div);
+				$(img).prependTo($preloadDiv);
 				done += 1;
 				// might load in different order so
 				// lets just count the number done in the done array

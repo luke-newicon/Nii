@@ -1,6 +1,6 @@
 <?php $onlyLinked = (isset($onlyLinked))?$onlyLinked:false; ?>
 <div id="canvas" data-id="<?php echo $screen->id; ?>"> 
-	<img src="<?php echo NHtml::urlFile($screen->file_id, $screen->name); ?>" width="<?php echo $screen->getWidth(); ?>" height="<?php echo $screen->getHeight(); ?>" />
+	<img data-id="<?php echo $screen->id; ?>" src="<?php echo NHtml::urlFile($screen->file_id, $screen->name); ?>" width="<?php echo $screen->getWidth(); ?>" height="<?php echo $screen->getHeight(); ?>" />
 	<div id="canvas-hotspots">
 		<?php $this->renderPartial('_hotspots',array('screen'=>$screen, 'onlyLinked'=>$onlyLinked)); ?>
 	</div>
