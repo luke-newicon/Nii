@@ -3,9 +3,10 @@
 	<div class="spotFormContainer" style="position:relative;">
 		<div class="triangle-verticle"></div>
 		<form id="shareLinkForm">
+			 <a href="#" onclick="return false;" class="btn aristo" id="getlink">Generate link</a>
 			<input id="project_id" name="project_id" type="hidden" value="<?php echo $project->id; ?>" />
 			<div class="field">Share this screen</div>
-			<div class="field">Share the whole project <a href="#" onclick="return false;" class="btn aristo" id="getlink">get link</a></div>
+			<div class="field">Share the whole project</div>
 			<input type="checkbox" name="makepassword" id="makepassword" />
 		<label for="makepassword">password protect this link</label>
 			<div class="inputBox"><input type="text" name="password" /></div>
