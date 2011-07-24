@@ -18,9 +18,12 @@
 			<div class="field">
 				<input name="fixedScroll" id="fixedScroll" type="checkbox" /> <label for="fixedScroll">Fixed scroll position</label>
 			</div>
-			<div class="field">
-				<button id="okSpot" href="#" class="btn aristo">Ok</button>
-				<a id="deleteSpot" href="#" class="delete mls">Delete</a>
+			<div class="field line">
+				<div class="unit size3of4">
+					<button id="okSpot" href="#" class="btn aristo">Ok</button>
+					<a id="deleteSpot" href="#" class="delete mls">Delete</a>
+				</div>
+				<div class="lastUnit txtR"><a id="followlink" href="#">follow link</a></div>
 			</div>
 		</div>
 	</div>

@@ -333,7 +333,7 @@ class NFileManager extends CApplicationComponent
 				header('Content-Disposition: attachment; filename=' . $safeName);
 
 				header("Pragma: public");
-				header("Expires: 0");
+				header("ExpiresDefault: access plus 10 years");
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 			}
 			echo $data;

@@ -396,7 +396,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 					}
 				})
 				.click(function(e){
-					$this.hotspot('click',e);
+					return $this.hotspot('click',e);
 				});
 			});
 		},
@@ -493,6 +493,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 					$spot.hotspot('showForm');
 				}
 			}
+			return false;
 		},
 		fixedScroll:function(bool){
 			if(bool){
@@ -681,7 +682,8 @@ var spotForm = {
 		spotForm.$form.delegate('#fixedScroll','click.spotForm',function(){spotForm.fixScroll($spot);});
 		// if fixed scroll
 		$spot.is('[data-fixed-scroll]')?$('#fixedScroll').attr('checked','checked'):$('#fixedScroll').removeAttr('checked');
-		
+		$spot.is('[data-screen]')?$('#followlink').show().attr('href','#i='+$spot.attr('data-id')):$('#followlink').hide();
+		spotForm.$form.delegate('#followlink','click.spotForm',function(){loadScreen($spot.attr('data-screen'));return false;})
 		spotForm.$form.delegate('#fixedScroll','click.spotForm',function(){spotForm.fixScroll($spot);});
 
 		spotForm.autocomplete();
@@ -789,6 +791,7 @@ var spotForm = {
 			select: function(event, ui) {
 				spotForm.$spot.attr('data-screen',ui.item.value);
 				spotForm.$spot.hotspot('update');
+				spotForm.showForm(spotForm.$spot);
 				return false;
 			},
 			position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'none'}
@@ -977,6 +980,8 @@ var toolbar = {
 			$('body').bind('click.shareForm',function(){
 				toolbar.shareForm.close();
 			});
+			// hide tipsy hint
+			toolbar.$btnShare.tipsy('hide');
 			e.stopPropagation();
 		},
 		close: function(){

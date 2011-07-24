@@ -213,30 +213,44 @@ class ScreenController extends AController
 		$screen = $project->getHomeScreen();
 		
 		if($link->password == '' || $this->validPassword($link)){
-			$screenData = $this->getProjectScreenData($project);
+			$screenData = $this->getProjectScreenData($project, $hotspotData);
 			$this->render('view',array(
 				'project'=>$project, 
 				'screen'=>$screen,
 				'rgb'=>$screen->guessBackgroundColor(),
 				'screenData'=>json_encode($screenData),
-				'screenDataSize'=>count($screenData)
+				'screenDataSize'=>count($screenData),
+				'hotspotData'=>json_encode($hotspotData),
 			));
 		}else{
 			$this->render('password',array('project'=>$project, 'screen'=>$screen));
 		}
 	}
+
 	
-	public function getProjectScreenData($project){
+	public function getProjectScreenData($project, &$hotspotData){
 		$screenList = array();
+		$hotspotData=array();
 		foreach($project->getScreens() as $i=>$s){
+			$screenHotspots = array();
+			foreach($s->getHotspots(true) as $hs){
+				$screenHotspots[$hs->id] = 1;
+				$hotspotData[$hs->id] = $hs->getAttributes();
+			}
+			foreach($s->getTemplateHotspots(true) as $hs){
+				$screenHotspots[$hs->id] = 1;
+				$hotspotData[$hs->id] = $hs->getAttributes();
+			}
 			$screenList[$s->id] = array(
 				'id'=>$s->id,
 				'name'=>$s->name,
 				'rgb'=>$s->guessBackgroundColor(),
 				'src'=>NHtml::urlFile($s->file_id, $s->name),
-				'hotspots'=>$this->renderPartial('_hotspots',array('screen'=>$s),true)
+				'screenHotspots'=>array_keys($screenHotspots),
+				//'hotspots'=>$this->renderPartial('_hotspots',array('screen'=>$s),true)
 			);
 		}
+		
 		return $screenList;
 	}
 	
