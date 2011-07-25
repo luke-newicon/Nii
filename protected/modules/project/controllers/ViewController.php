@@ -19,7 +19,9 @@
 class ViewController extends NController {
 	
 	
-	
+	public function init(){
+		Yii::app()->getClientScript()->registerCoreScript('bbq');
+	}
 	/**
 	 * the preview mode must recieve the hash
 	 * @param string $h hash 
