@@ -24,7 +24,7 @@
 
 
 <div id="canvasWrap" >
-	<?php $this->renderPartial('_canvas',array('screen'=>$screen,'onlyLinked'=>true)); ?>
+	<?php $this->renderPartial('/screen/_canvas',array('screen'=>$screen,'onlyLinked'=>true)); ?>
 </div>
 <!--
 <div id="info" style="display:none;">

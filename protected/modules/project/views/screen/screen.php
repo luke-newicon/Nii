@@ -376,7 +376,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 					cancel:'.link',
 					start:function(event, ui){
 						// very cool if dragging with alt key pressed would copy the current spot.
-						if(event.altKey){
+						if(event.altKey || event.shiftKey){
 							// you wana copy spot? okey doaky then..
 							$this.clone().removeAttr('data-id')
 								.appendTo($('#canvas-hotspots'))

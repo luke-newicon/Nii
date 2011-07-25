@@ -20,7 +20,7 @@ class ProjectModule extends NWebModule
 	/**
 	 * the link fed into NHtml::Url for the preview experience
 	 */
-	public $shareLink = '/project/screen/view/h';
+	public $shareLink = '/project/view/index/h';
 	
 	public function init(){
 		
