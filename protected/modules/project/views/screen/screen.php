@@ -374,6 +374,15 @@ $.widget("ui.boxer", $.ui.mouse, {
 				var $this = $(this);
 				$this.draggable({
 					cancel:'.link',
+					start:function(event, ui){
+						// very cool if dragging with alt key pressed would copy the current spot.
+						if(event.altKey){
+							// you wana copy spot? okey doaky then..
+							$this.clone().removeAttr('data-id')
+								.appendTo($('#canvas-hotspots'))
+								.hotspot().hotspot('update')
+						};
+					},
 					drag: function(event, ui) {
 						if($('#spotForm').is(':visible')){
 							// make the spotForm follow the hotspot being dragged
@@ -794,7 +803,7 @@ var spotForm = {
 				spotForm.showForm(spotForm.$spot);
 				return false;
 			},
-			position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'none'}
+			position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'flip'}
 		})
 		.data("autocomplete")._renderItem = function( ul, item ) {
 			return $('<li class="screenItem "></li>')
