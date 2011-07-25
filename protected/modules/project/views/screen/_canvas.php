@@ -2,7 +2,7 @@
 <div id="canvas" data-id="<?php echo $screen->id; ?>"> 
 	<img data-id="<?php echo $screen->id; ?>" src="<?php echo NHtml::urlFile($screen->file_id, $screen->name); ?>" width="<?php echo $screen->getWidth(); ?>" height="<?php echo $screen->getHeight(); ?>" />
 	<div id="canvas-hotspots">
-		<?php $this->renderPartial('_hotspots',array('screen'=>$screen, 'onlyLinked'=>$onlyLinked)); ?>
+		<?php $this->renderPartial('/screen/_hotspots',array('screen'=>$screen, 'onlyLinked'=>$onlyLinked)); ?>
 	</div>
 	<div id="canvas-comments">
 		<?php foreach($screen->getComments() as $i=>$comment): ?>
@@ -10,5 +10,5 @@
 		<?php endforeach; ?>
 	</div>
 </div>
-<?php $this->renderPartial('_comment-form'); ?>
-<?php $this->renderPartial('_spot-form'); ?>
+<?php $this->renderPartial('/screen/_comment-form'); ?>
+<?php $this->renderPartial('/screen/_spot-form'); ?>

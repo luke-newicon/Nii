@@ -248,7 +248,7 @@ class ProjectScreen extends NAppRecord
 				'file_id'=>'int',
 				'name'=>'string',
 				'home_page'=>'bool',
-				'sort'=>'int'
+				'sort'=>'int(5) NULL DEFAULT  \'0\' '
 			),
 			'keys'=>array(
 				array('sort'),

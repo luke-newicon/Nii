@@ -25,7 +25,7 @@
 	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
 	.projectBox.hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
 	
-	.main,html{background-color:#f9f9f9;}
+	.main,html,body{background-color:#f9f9f9;}
 	
 	
 	.pending{border-style: dashed;background-color:#f1f1f1;}

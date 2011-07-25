@@ -374,6 +374,15 @@ $.widget("ui.boxer", $.ui.mouse, {
 				var $this = $(this);
 				$this.draggable({
 					cancel:'.link',
+					start:function(event, ui){
+						// very cool if dragging with alt key pressed would copy the current spot.
+						if(event.altKey || event.shiftKey){
+							// you wana copy spot? okey doaky then..
+							$this.clone().removeAttr('data-id')
+								.appendTo($('#canvas-hotspots'))
+								.hotspot().hotspot('update')
+						};
+					},
 					drag: function(event, ui) {
 						if($('#spotForm').is(':visible')){
 							// make the spotForm follow the hotspot being dragged
@@ -690,6 +699,13 @@ var spotForm = {
 		spotForm.initTemplates();
 		spotForm.$form.delegate('#hotspotTemplate','change.spotForm',function(){spotForm.applyTemplate()});
 	},
+	windowResize:function(){
+		if(spotForm.$form!=null && spotForm.$spot!=null){
+			if(spotForm.$form.is(':visible')){
+				spotForm.position(spotForm.$spot);
+			}
+		}
+	},
 	position:function($spot){
 		spotForm.$form.show()
 			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
@@ -794,7 +810,7 @@ var spotForm = {
 				spotForm.showForm(spotForm.$spot);
 				return false;
 			},
-			position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'none'}
+			position:{'my':'left top','at':'left bottom','of':'#screenList','collision':'flip'}
 		})
 		.data("autocomplete")._renderItem = function( ul, item ) {
 			return $('<li class="screenItem "></li>')
@@ -1168,6 +1184,7 @@ var resizer = function(){
 	var imgs = $('#screenPane img');
 	if(imgs.length>0)
 		$('#screenPane img').width($('#screenPane .sidebarImg').width()-20);
+	spotForm.windowResize();
 	
 	$('#screenPane a.sideImg').width($('#screenPane .sidebarImg').width()-20);
 }
