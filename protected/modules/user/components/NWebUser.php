@@ -53,7 +53,7 @@ class NWebUser extends CWebUser
 	
 	
 	public function isSuper(){
-		return $this->record->superuser;
+		return ($this->record ===null)?false:$this->record->superuser;
 	}
 	
 	/**

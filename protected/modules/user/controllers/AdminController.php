@@ -13,13 +13,9 @@ class AdminController extends AController
 	public function accessRules()
 	{
 		return array(
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'expression'=>'$user->checkAccessToRoute()',
-				'actions'=>array('test')
-			),
 			array('allow',
 				'actions'=>array('index','roles','assignRoles','view','create','update','changePassword','delete','impersonate'),
-				'users'=>UserModule::getAdmins()
+				'expression'=>'$user->isSuper()'
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
