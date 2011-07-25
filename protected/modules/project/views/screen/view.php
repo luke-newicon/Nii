@@ -3,7 +3,7 @@
 	html{background-color: rgb(<?php echo $rgb['red']; ?>,<?php echo $rgb['green']; ?>,<?php echo $rgb['blue']; ?>);}
 	#canvas{margin: 0 auto;position:relative;cursor:default;width:<?php echo $screen->getWidth(); ?>px}
 	.hotspot{position:absolute;cursor:pointer;}
-	.hotspot.viewspot{background-color:#75ff4b;border-radius:5px;opacity:0.8}
+	.hotspot.viewspot{background-color:#75ff4b;border-radius:5px; opacity:0.6;filter: alpha(opacity=50);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";}
 	
 	
 	.ui-progressbar{background:-webkit-gradient(linear,center bottom,center top,from(#aaa), to(#666));background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
@@ -82,11 +82,14 @@ var _doLoadScreen = function(hsId, maintainScroll){
 	var screenId = view.hotspotData[hsId].screen_id_link
 	$img = $canvas.find('img')
 	$newImg = $canvas.find('img[data-id="'+screenId+'"]');
+	// as the home page image is both preloaded in and loaded in on initial load we need to remove it
+	if($newImg.length>1){
+		$newImg.eq(1).remove();
+	}
 	$img.hide();
 	$newImg.show()
 	
 	// now load the hotspots for the screen
-	
 	var $canvasHs = $('#canvas-hotspots').html('');
 	var hotspot;
 	console.log(view.hotspotData);
@@ -173,7 +176,7 @@ var preloader = {
 					// show broken image graphic here
 					alert('oops broken image');
 				});
-		})
+		});
 	},
 	displayInfo:function(){
 		$('#progress').fadeTo(500,0);
@@ -222,8 +225,6 @@ $(function(){
 	$('.ui-widget-overlay').css('opacity',0.8);
 	
 	preloader.preload();
-	
-
 	
 });
 

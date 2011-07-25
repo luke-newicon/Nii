@@ -699,6 +699,13 @@ var spotForm = {
 		spotForm.initTemplates();
 		spotForm.$form.delegate('#hotspotTemplate','change.spotForm',function(){spotForm.applyTemplate()});
 	},
+	windowResize:function(){
+		if(spotForm.$form!=null && spotForm.$spot!=null){
+			if(spotForm.$form.is(':visible')){
+				spotForm.position(spotForm.$spot);
+			}
+		}
+	},
 	position:function($spot){
 		spotForm.$form.show()
 			.position({my:'left top',at:'right top',of:$spot,offset:"18 -30",collision:'none'});
@@ -1177,6 +1184,7 @@ var resizer = function(){
 	var imgs = $('#screenPane img');
 	if(imgs.length>0)
 		$('#screenPane img').width($('#screenPane .sidebarImg').width()-20);
+	spotForm.windowResize();
 	
 	$('#screenPane a.sideImg').width($('#screenPane .sidebarImg').width()-20);
 }

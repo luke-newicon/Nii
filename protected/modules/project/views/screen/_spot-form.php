@@ -3,7 +3,7 @@
 		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
 		<div class="spotFormPart">
 			<div class="field">
-				<label for="screenSelect" class="lbl">Link to:</label>
+				<label for="screenSelect" class="lbl"><a id="followlink" href="#">Follow</a> Link to:</label>
 				<div id="screenList" class="line">
 					<div class="unit inputBox btn btnToolbarLeft" style="width:230px;"><input id="screenListInput" placeholder="- select screen -" /></div>
 					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:18px;height:14px;border-color:#bbb;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
