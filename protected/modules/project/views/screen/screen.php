@@ -1186,9 +1186,8 @@ var resizer = function(){
 	
 	var imgs = $('#screenPane img');
 	if(imgs.length>0)
-		$('#screenPane img').width($('#screenPane .sidebarImg').width()-20);
+		$('#screenPane img').attr('width',$('#screenPane .sidebarImg').width()-20).width($('#screenPane .sidebarImg').width()-20);
 	spotForm.windowResize();
-	
 	$('#screenPane a.sideImg').width($('#screenPane .sidebarImg').width()-20);
 }
 

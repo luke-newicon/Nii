@@ -44,7 +44,7 @@
 <div id="messageDialog">
 </div>
 
-<div id="dialog" title="">
+<div id="dialog" title="" style="display:none;">
 	<div id="preload">
 		<h1 style="padding-bottom:8px;">Visuals have been shared with you for review.</h1>
 		<div class="line">

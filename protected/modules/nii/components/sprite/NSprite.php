@@ -185,16 +185,17 @@ Class NSprite extends CApplicationComponent
     private function _generateCss(){ 
 		$total = $this->_totalSize();
 		$top = $total['height']; 
-		$css = '.'.$this->cssSpriteClass = '{background-image:url(sprite.png);}';
+		$css = '.'.$this->cssSpriteClass.'{background-image:url(sprite.png);}'."\n";
 		// for 16x16 icons
-		$css = '.'.$this->cssIconClass.='{display:inline;overflow:hidden;padding-left:18px;background-repeat:no-repeat;background-image:url(sprite.png);}'."\n";
+		$css .= '.'.$this->cssIconClass.'{display:inline;overflow:hidden;padding-left:18px;background-repeat:no-repeat;background-image:url(sprite.png);}'."\n";
 		
 		foreach($this->_images as $image) 
 		{ 
-			$css .= '.'.$this->cssSpriteClass.'.'.$image['name'].' { ';
-			$css .= 'background-position: '.($image['width'] - $total['width']).'px '.($top - $total['height']).'px; '; 
-			$css .= 'width: '.$image['width'].'px; ';
-			$css .= 'height: '.$image['height'].'px; ';
+			echo $image['name'];
+			$css .= '.'.$image['name'].'{';
+			$css .= 'background-position:'.($image['width'] - $total['width']).'px '.($top - $total['height']).'px;'; 
+			$css .= 'width:'.$image['width'].'px;';
+			$css .= 'height:'.$image['height'].'px;';
 			$css .= '}'."\n";
 			$top -= $image['height']; 
 		} 
@@ -240,6 +241,7 @@ Class NSprite extends CApplicationComponent
 			// convert the relative path into the class name
 			// replace slashes with dashes and remove extension from file name
 			$p = pathinfo($imgPath);
+			echo $s['path'];
 			$name = str_replace(array('/','\\','_'),'-', $s['path']);
 			$this->_images[$i]['name'] = str_replace(array($p['extension'],'.'),'',$name);
 		}
@@ -278,7 +280,7 @@ Class NSprite extends CApplicationComponent
 				foreach($files as $p){
 					$this->sprites[] = array(
 						'imageFolder' => $iFolder,
-						'path' => trim(str_replace(realpath($iFolder), '', $p),'/')
+						'path' => trim(str_replace(realpath($iFolder), '', $p),DIRECTORY_SEPARATOR)
 					);
 				}
 			}

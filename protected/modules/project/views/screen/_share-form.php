@@ -25,17 +25,19 @@
 		<form id="shareLinkForm" style="display:none;">
 			<div class="field">
 				<h4>Generate a new link</h4>
-				<input onclick="$('#passwordBox').toggle();$('#password').focus();" type="checkbox" name="makepassword" id="makepassword" />
-				<label for="makepassword">password protect this link</label>
-				<div id="passwordBox" style="display:none;">
-					<label for="password" id="passwordHint" style="position:absolute;top:55px;left:23px;color:#ccc;">Enter a password</label>
-					<div class="inputBox" style="margin:2px 0px 0px 12px;width:200px;" >
-						<input id="password" type="text" name="password" />
+				<div class="field">
+					<input onclick="$('#passwordBox').toggle();$('#password').focus();" type="checkbox" name="makepassword" id="makepassword" />
+					<label for="makepassword">Password protect this link</label>
+					<div id="passwordBox" style="display:none;">
+						<label for="password" id="passwordHint" style="position:absolute;top:27px;left:23px;color:#ccc;">Enter a password</label>
+						<div class="inputBox" style="margin:2px 0px 0px 12px;width:200px;" >
+							<input id="password" type="text" name="password" />
+						</div>
 					</div>
 				</div>
 				<div class="field">
 					<input type="checkbox" name="allowcomments" id="allowcomments" />
-					<label for="allowcomments">Allow Comments</label>
+					<label for="allowcomments">Allow comments</label>
 				</div>
 			</div>
 			<input id="project_id" name="project_id" type="hidden" value="<?php echo $project->id; ?>" />
