@@ -56,6 +56,19 @@ class ProjectLink extends NActiveRecord
 		);
 	}
 	
+	/**
+	 * Get the url link for this link record. Can be used for a tag href attribute
+	 */
+	public function getLink(){
+		return NHtml::url(ProjectModule::get()->shareLink).'/'.$this->link;
+	}
+	
+	
+	/**
+	 * The hash is the primary key so we need to generate the hash before saving.
+	 * must return true to continue saving.
+	 * @return boolean
+	 */
 	public function beforeSave(){
 		parent::beforeSave();
 		$rnd = rand(10, 10000);

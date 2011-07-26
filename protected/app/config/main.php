@@ -64,7 +64,12 @@ return array(
 
 	// application components
 	'components'=>array(
-
+		'sprite'=>array(
+			'class'=>'nii.components.sprite.NSprite',
+			'imageFolderPath'=>array(
+				Yii::getPathOfAlias('modules.project.images')
+			)
+		),
 		'user'=>array(
 			'class'=>'NWebUser',
 			// enable cookie-based authentication

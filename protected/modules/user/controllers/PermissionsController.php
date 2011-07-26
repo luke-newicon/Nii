@@ -90,12 +90,9 @@ class PermissionsController extends AController {
 
 	public function actionRoles(){
 
-//		$dummy = $this->Widget('application.widgets.jstree.NJsTree', array(
-//			'id'=>'dummy',
-//		), true);
-
-
-
+		// $dummy = $this->Widget('application.widgets.jstree.NJsTree', array(
+		//		'id'=>'dummy',
+		// ), true);
 		$model = new AuthItem('search');
 		if(isset($_GET['AuthItem']))
 			$model->attributes = $_GET['AuthItem'];
@@ -213,7 +210,6 @@ class PermissionsController extends AController {
 
 		if($role === null)
 			throw new CHttpException (404, 'Can not find a role with this name');
-
 	}
 
 }

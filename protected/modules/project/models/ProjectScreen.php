@@ -157,6 +157,11 @@ class ProjectScreen extends NAppRecord
 		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id));
 	}
 	
+	public function getNumTemplateHotspots(){
+		$tIds = $this->getTemplatesAppliedIds();
+		return ProjectHotSpot::model()->countByAttributes(array('template_id'=>$tIds));
+	}
+	
 	/**
 	 * Gets the number of screens that link to this screen
 	 * 
@@ -166,6 +171,8 @@ class ProjectScreen extends NAppRecord
 		return ProjectHotSpot::model()->countByAttributes(array('screen_id_link'=>$this->id));
 	}
 	
+	
+	
 	/**
 	 * Gets the number of screens that link to this screen
 	 * 
@@ -173,6 +180,15 @@ class ProjectScreen extends NAppRecord
 	 */
 	public function getNumOutgoingLinks(){
 		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id,'screen_link_id'=>''));
+	}
+	
+	/**
+	 * Get the total number of comments this screen has
+	 * 
+	 * @return integer 
+	 */
+	public function getNumComments(){
+		return ProjectComment::model()->countByAttributes(array('screen_id'=>$this->id));
 	}
 	
 	
@@ -204,13 +220,9 @@ class ProjectScreen extends NAppRecord
 	 * @return array 
 	 */
 	public function getTemplateHotspots($onlyLinked=false){
-		$templates = ProjectScreenTemplate::model()->findAllByAttributes(array('screen_id'=>$this->id));
-		$tArr = array();
-		foreach($templates as $t){
-			$tArr[] = $t->template_id;
-		}
+		$tIds = $this->getTemplatesAppliedIds();
 		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
-		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tArr),$condition);
+		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tIds),$condition);
 	}
 	
 	/**

@@ -12,7 +12,7 @@ class AdminController extends AController
 	 */
 	public function accessRules()
 	{
-		return array(
+		return array( 
 			array('allow',
 				'actions'=>array('index','roles','assignRoles','view','create','update','changePassword','delete','impersonate'),
 				'expression'=>'$user->isSuper()'

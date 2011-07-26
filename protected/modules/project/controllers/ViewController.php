@@ -82,8 +82,7 @@ class ViewController extends NController {
 	public function validPassword($link){
 		if(!isset($_POST['password']) || $_POST['password']=='')
 			return false;
-		if($link->password == $link->password)
-			return true;
+		return ($link->password == $_POST['password']);
 	}
 	
 	

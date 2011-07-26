@@ -28,10 +28,6 @@
 		</div>
 	</div>
 </div>
-<style>
-	.template .templateFuns{visibility:hidden;}
-	.template.hover .templateFuns{visibility:visible;}
-</style>
 <script>
 $(function(){
 	$('#templateForm').delegate('.deleteTemplate','click',function(){

@@ -46,6 +46,12 @@ class Project extends NActiveRecord
 		);
 	}
 	
+	public function relations(){
+		return array(
+			'comments'=>array(self::HAS_MANY, 'ProjectComment', 'project_id'),
+		);
+	}
+	
 	/**
 	 * get all project screens
 	 * @return array of ProjectScreen
@@ -54,6 +60,13 @@ class Project extends NActiveRecord
 		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
 	}
 	
+	
+	/**
+	 * return all of the generated project links
+	 */
+	public function getLinks(){
+		return ProjectLink::model()->findAllByAttributes(array('project_id'=>$this->id));
+	}
 	
 	
 	/**
@@ -75,7 +88,10 @@ class Project extends NActiveRecord
 	 * @return integer 
 	 */
 	public function getNumComments(){
-		return 0;
+		$screens = array();
+		foreach($this->getScreens() as $s)
+			$screens[] = $s->id;
+		return ProjectComment::model()->countByAttributes(array('screen_id'=>$screens));
 	}
 	
 	/**

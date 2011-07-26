@@ -3,8 +3,9 @@
 </div>
 <br />
 <p><?php echo $screen->getNumHotspots(); ?> hotspots.</p>
+<p><?php echo $screen->getNumTemplateHotspots(); ?> template hotspots.</p>
 <p><?php echo $screen->getNumIncomingLinks(); ?> Incoming links.</p>
-<p>0 comments.</p>
+<p><?php echo $screen->getNumComments(); ?> Comments.</p>
 <div class="line">
 	<div class="unit mrs">
 		<a href="#" class="projDelete btn aristo delete">Delete</a>

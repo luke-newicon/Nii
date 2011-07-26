@@ -48,6 +48,9 @@
 	.username{font-weight:bold;}
 	.stats{color:#999;}
 	.sidebarImg.selected .sideImg{box-shadow:0px 0px 10px 5px #fff;}
+	
+	.template .templateFuns{display:none;}
+	.template.hover .templateFuns{display:block;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm">
@@ -59,28 +62,28 @@
 			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" class="titleBarText" style="display:block;"><?php echo $project->name; ?></a>
 		</div>
 		<div class="unit plm prm" >
-			<h1 class="man titleBarText" ><?php echo $screen->getName(); ?></h1>
+			<h1 id="screenName" class="man titleBarText" ><?php echo $screen->getName(); ?></h1>
 		</div>
 		<div class="unit">
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
 		</div>
 		<div class="unit plm ptm" >
-			<button class="btn aristo sidebar selected" href="#"><span class="icon fam-application-side-list man"></span></button>
+			<button class="btn aristo sidebar selected" href="#"><span class="icon fugue-application-sidebar man"></span></button>
 		</div>
 		<div class="unit plm ptm" >
 			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
 		</div>
 		<div class="unit plm btnGroup ptm">
-			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="fugue fugue-balloon-white-left"></span>Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="fugue fugue-layer-shape"></span>Edit</button>
+			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="icon fugue-balloon-white-left"></span>Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="icon fugue-layer-shape"></span>Edit</button>
 		</div>
 		<div class="unit plm ptm">
-			<button class="btn aristo preview" href="#"><span class="fugue fugue-magnifier"></span>Preview</button>
+			<button class="btn aristo preview" href="#"><span class="icon fugue-magnifier"></span>Preview</button>
 		</div>
 		<div class="unit plm ptm" >
-			<button class="btn aristo share" data-tip="" title="Share" href="#"><span class="fugue fugue-arrow-curve"></span></button>
+			<button class="btn aristo share" data-tip="" title="Share" href="#"><span class="icon fugue-arrow-curve"></span></button>
 		</div>
 		<div class="unit plm ptm">
-			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fam-cog"></span></button>
+			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fugue-gear"></span></button>
 		</div>
 	</div>
 </div>

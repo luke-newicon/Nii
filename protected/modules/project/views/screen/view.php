@@ -39,7 +39,8 @@
 	<div id="infobtn" style="display:none;">
 		<button style="font-size:200%;width:100%;" class="btn aristo primary mtm">Ok</button>
 	</div>
-</div>-->
+</div>
+-->
 <div id="messageDialog">
 </div>
 

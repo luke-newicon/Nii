@@ -78,8 +78,12 @@ class IndexController extends Controller
 	}
 	
 	public function actionSprite(){
-		Yii::import('modules.dev.components.sprite.NSprite');
+		Yii::import('modules.nii.components.sprite.NSprite');
 		$s = new NSprite();
-		$s->generate();
+		$sprite = $s->getAssetsUrl().'/sprite.png';
+		$css = $s->getPublishedAssetsPath(false).'/sprite.css';
+		$m = new NMarkdown();
+		echo $m->transform(file_get_contents($css));
+		echo '<img src="'.$sprite.'" />';
 	}
 }

@@ -36,8 +36,8 @@
  * - Bob is now your uncle.
  * 
  * @property $cssParentClass
- * @property $sprites
- * @property $iconFolderPath
+ * @property $sprites populated automatically if empty
+ * @property mixed $imageFolderPath
  * @author Steven OBrien <steven.obrien@newicon.net>
  * @package nii
  */
@@ -51,10 +51,17 @@ Class NSprite extends CApplicationComponent
 	 * 
 	 * @property string 
 	 */
-	public $cssParentClass = 'icon';
+	public $cssSpriteClass = 'sprite';
 	
 	/**
-	 * array of image paths relative to the NSprite::$iconFolderPath to include in the sprite, without a preceeding slash
+	 * class name of convienent icon class, works for the famfamfam and fugue icon sets
+	 * easilly display an icon inline that is size 16x16
+	 * @var type 
+	 */
+	public $cssIconClass = 'icon';
+	
+	/**
+	 * array of image paths relative to the NSprite::$imageFolderPath to include in the sprite, without a preceeding slash
 	 * this is automatically populated if empty, by NSprite::findFiles()
 	 * @property array 
 	 */
@@ -63,9 +70,10 @@ Class NSprite extends CApplicationComponent
 	/**
 	 * Stores the path to the folder where the individual images that 
 	 * will be included in the spite are kept.
-	 * @property string 
+	 * can be an array of imagefolder paths
+	 * @property mixed 
 	 */
-	public $iconFolderPath;
+	public $imageFolderPath;
 	
 	/**
 	 * array of all image data
@@ -102,11 +110,17 @@ Class NSprite extends CApplicationComponent
 		// check if we need to generate the sprite
 		// if the asset folder exists we will assume we do not 
 		// want to regenerate the sprite
-		if(!is_file($this->getPublishedAssetsPath(false))){
+		if(!file_exists($this->getPublishedAssetsPath().'/sprite.png')){
 			$this->generate();
 		}
-		$a = Yii::app()->getAssetManager();
-		return $a->publish($this->getAssetFolder());
+		return Yii::app()->getAssetManager()->publish($this->getAssetFolder());
+	}
+	
+	/**
+	 * uses CClientScript to register the sprite css script
+	 */
+	public function registerSpriteCss(){
+		Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/sprite.css');
 	}
 	
 	/**
@@ -118,10 +132,9 @@ Class NSprite extends CApplicationComponent
 	 * @param boolean $publish default true
 	 * @return string the published asset folder file path
 	 */
-	public function getPublishedAssetsPath($publish=true){
+	public function getPublishedAssetsPath(){
 		$a = Yii::app()->getAssetManager();
-		if($publish)
-			$a->publish($this->getAssetFolder());
+		$a->publish($this->getAssetFolder());
 		return $a->getPublishedPath($this->getAssetFolder());
 	}
 	
@@ -137,7 +150,7 @@ Class NSprite extends CApplicationComponent
 			$this->findFiles();
 		$this->_generateImageData();
 		$this->_generateImage();
-		echo $this->_generateCss();
+		$this->_generateCss();
 	}
 	
 	/**
@@ -172,10 +185,13 @@ Class NSprite extends CApplicationComponent
     private function _generateCss(){ 
 		$total = $this->_totalSize();
 		$top = $total['height']; 
-		$css = '.'.$this->cssParentClass.'{background-image:url(sprite.png);}'."\n";
+		$css = '.'.$this->cssSpriteClass = '{background-image:url(sprite.png);}';
+		// for 16x16 icons
+		$css = '.'.$this->cssIconClass.='{display:inline;overflow:hidden;padding-left:18px;background-repeat:no-repeat;background-image:url(sprite.png);}'."\n";
+		
 		foreach($this->_images as $image) 
 		{ 
-			$css .= '.'.$this->cssParentClass.'.'.$image['name'].' { ';
+			$css .= '.'.$this->cssSpriteClass.'.'.$image['name'].' { ';
 			$css .= 'background-position: '.($image['width'] - $total['width']).'px '.($top - $total['height']).'px; '; 
 			$css .= 'width: '.$image['width'].'px; ';
 			$css .= 'height: '.$image['height'].'px; ';
@@ -208,9 +224,8 @@ Class NSprite extends CApplicationComponent
 	 * @return void
 	 */
 	private function _generateImageData(){
-		$path = $this->getIconPath();
 		foreach($this->sprites as $i => $s){
-			$imgPath = "$path/$s";
+			$imgPath = $s['imageFolder'].'/'.$s['path'];
 			if(!file_exists($imgPath))
 				throw new CException("The image file's path '$imgPath' does not exist.");
 			$info = getimagesize($imgPath);
@@ -225,7 +240,7 @@ Class NSprite extends CApplicationComponent
 			// convert the relative path into the class name
 			// replace slashes with dashes and remove extension from file name
 			$p = pathinfo($imgPath);
-			$name = str_replace(array('/','\\','_'),'-', $s);
+			$name = str_replace(array('/','\\','_'),'-', $s['path']);
 			$this->_images[$i]['name'] = str_replace(array($p['extension'],'.'),'',$name);
 		}
 	}
@@ -237,21 +252,45 @@ Class NSprite extends CApplicationComponent
 	 * @return string 
 	 */
 	public function getIconPath(){
-		if($this->iconFolderPath===null)
-			$this->iconFolderPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icons';
-		return $this->iconFolderPath;
+		if($this->imageFolderPath===null){
+			$this->imageFolderPath = array(
+				dirname(__FILE__) . DIRECTORY_SEPARATOR . 'icons',
+			);
+		}
+		return $this->imageFolderPath;
 	}
 	
 	/**
-	 * Finds all the image files within the NSprite::$iconFolderPath
+	 * Finds all the image files within the NSprite::$imageFolderPath
 	 * and populates the sprites array 
+	 * 
 	 * @see NSprite::$sprites
 	 * @return void
 	 */
 	public function findFiles(){
-		$f = CFileHelper::findFiles($this->getIconPath(), array('fileTypes'=>array('png','gif','jpeg','jpg')));
-		foreach($f as $p){
-			$this->sprites[] = trim(str_replace(realpath($this->getIconPath()), '', $p),'/');
+		$options = array('fileTypes'=>array('png','gif','jpeg','jpg'));
+		if(is_array($this->getIconPath())){
+			// must be an array of folders
+			foreach($this->getIconPath() as $iFolder){
+				if(!is_dir($iFolder))
+					throw new CException("The folder path '$iFolder' does not exist.");
+				$files = CFileHelper::findFiles($iFolder, $options);
+				foreach($files as $p){
+					$this->sprites[] = array(
+						'imageFolder' => $iFolder,
+						'path' => trim(str_replace(realpath($iFolder), '', $p),'/')
+					);
+				}
+			}
+			
+		}else{
+			$files = CFileHelper::findFiles($this->getIconPath(), $options);
+			foreach($files as $p){
+				$this->sprites[] = array(
+					'imageFolder' => $this->getIconPath(),
+					'path' => trim(str_replace(realpath($this->getIconPath()), '', $p),'/')
+				);
+			}
 		}
 	}
 	
