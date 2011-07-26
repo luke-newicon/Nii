@@ -18,7 +18,7 @@
 	.revertFlip{position:absolute;bottom:5px;right:10px;}
 	
 	.item{border:1px solid #ccc;}
-	.main,html{background-color:#f9f9f9;}
+	.main,body,html{background-color:#f9f9f9;}
 	
 	
 	
