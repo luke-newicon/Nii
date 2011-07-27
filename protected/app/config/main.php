@@ -52,7 +52,9 @@ return array(
 		'crm',
 		'kashflow',
 		'email',
-		'user',
+		'user'=>array(
+			'registrationCaptcha'=>false,
+		),
 		'project',
 		'hosting',
 		'account',

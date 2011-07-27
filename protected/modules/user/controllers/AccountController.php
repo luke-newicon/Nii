@@ -120,11 +120,12 @@ class AccountController extends Controller {
 					$user->save();
 
 					// if crm module installed
-					if($userModule->useCrm){
-						$contact->type = CrmContact::TYPE_USER;
-						$contact->user_id = $user->id;
-						$contact->save();
-					}
+					// remove this use events instead.
+//					if($userModule->useCrm){
+//						$contact->type = CrmContact::TYPE_USER;
+//						$contact->user_id = $user->id;
+//						$contact->save();
+//					}
 					
 
 					if ($userModule->sendActivationMail) {
@@ -167,7 +168,6 @@ class AccountController extends Controller {
 			$this->render('registration',array('model'=>$user,'contact'=>$contact,'domain'=>$domain));
 		}
 	}
-
 	
 
 	/**

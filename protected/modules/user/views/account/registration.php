@@ -86,7 +86,7 @@ $this->breadcrumbs=array(
 	<?php if(UserModule::get()->domain): ?>
 		<h2>Select your site address!</h2>
 		<div class="row">
-			https://<?php echo $form->textField($domain,'domain'); ?>.spannerguides.com
+			https://<?php echo $form->textField($domain,'domain'); ?>.<?php echo Yii::app()->hostname; ?>
 			<?php echo $form->error($domain,'domain'); ?>
 		</div>
 	<?php endif; ?>
