@@ -275,6 +275,25 @@ class ScreenController extends AController
 		return $this->screen;
 	}
 	
+	/**
+	 * generate a new link
+	 */
+	public function actionProjectLink(){
+		$pl = new ProjectLink;
+		$pl->attributes = $_POST['ProjectLink'];
+		$pl->save();
+		echo $this->renderPartial('_share-form-item',array('link'=>$pl));
+	}
 	
+	/**
+	 * Deletes a project link
+	 */
+	public function actionDeleteLink(){
+		// maybe this should only soft delete?
+		$pl = ProjectLink::model()->findByPk($_POST['id']);
+		if($pl===null)
+			throw new CHttpException (404, 'No project link found');
+		$pl->delete();
+	}
 	
 }

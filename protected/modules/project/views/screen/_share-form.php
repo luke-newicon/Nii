@@ -12,12 +12,11 @@
 							<th>Password</th>
 						</tr>
 					</thead>
+					<tbody>
 					<?php foreach($project->getLinks() as $l): ?>
-					<tr>
-						<td><a target="_blank" href="<?php echo $l->getLink(); ?>"><?php echo $l->link; ?></a></td>
-						<td><?php echo $l->password; ?></td>
-					</tr>
+						<?php $this->renderPartial('_share-form-item',array('link'=>$l)); ?>
 					<?php endforeach; ?>
+					</tbody>
 				</table>
 			</div>
 			<div class="templateOk txtR"><button class="btn aristo">Ok</button></div>
@@ -41,18 +40,27 @@
 				</div>
 			</div>
 			<input id="project_id" name="project_id" type="hidden" value="<?php echo $project->id; ?>" />
-			<div class="txtR"><button onclick="$('#shareLinkForm').hide();$('#linkTable').show();return false;" class="btn aristo">Cancel</button> <button class="templateOk btn aristo primary">Save</button></div>
+			<div class="txtR"><button onclick="$('#shareLinkForm').hide();$('#linkTable').show();return false;" class="btn aristo">Cancel</button> <button id="savelink" class="btn aristo primary">Save</button></div>
 		</form>
-		
 	</div>
 </div>
 <script>
-	$('#getlink').click(function(){
+	$('#savelink').click(function(){
 		var pf = $.deparam($('#shareLinkForm').serialize());
-		$.post("<?php echo NHtml::url('/project/details/projectLink'); ?>", 
+		$.post("<?php echo NHtml::url('/project/screen/projectLink'); ?>", 
 		{'ProjectLink':pf}, function(r){
-			$('#project-link').html('<a href="<?php echo NHtml::url(ProjectModule::get()->shareLink); ?>/'+r+'">'+r+'</a>');
+			// r is a new table row.
+			
+			$('#shareLinkForm').hide();
+			$('#linkTable').fadeIn('fast', function(){
+				$('#linkTable tr:eq(1)').effect("highlight", {}, 2000);
+			});
+			$('#linkTable table tbody').prepend(r);
+			
+			
+			//$('#project-link').html('<a href="<?php echo NHtml::url(ProjectModule::get()->shareLink); ?>/'+r+'">'+r+'</a>');
 		});
+		return false;
 	});
 	$(function(){
 		$('#password').keyup(function(){
@@ -61,6 +69,13 @@
 			else
 				$('#passwordHint').show();
 		});
+		$('#linkTable').delegate('.delete','click',function(){
+			var $tr = $(this).closest('tr');
+			if(confirm('Are you sure you want to delete this link. The link will no longer open a project view.')){
+				$.post("<?php echo NHtml::url('/project/screen/deleteLink'); ?>",{'id':$tr.attr('data-id')},function(){
+					$tr.remove();
+				});
+			}
+		});
 	});
-	
 </script>
