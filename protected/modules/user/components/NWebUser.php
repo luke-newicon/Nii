@@ -21,6 +21,7 @@ class NWebUser extends CWebUser
 	
 	private $_contact;
 	
+	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
 	 * If no user is logged in then this function will return null
@@ -30,6 +31,7 @@ class NWebUser extends CWebUser
 		if($this->getId() === null)
 			return null;
 		if($this->_user === null){
+			
 			$this->_user = UserModule::userModel()->findByPk($this->getId());
 		}
 		return $this->_user;

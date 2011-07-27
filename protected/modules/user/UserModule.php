@@ -77,6 +77,7 @@ class UserModule extends NWebModule
 	/**
 	 * Whether to make the app user module domain specific 
 	 * (also adds required domain field to the user signup form)
+	 * This will be automatically set by nii's domain property
 	 * @var boolean 
 	 */
 	public $domain = false;
@@ -122,6 +123,8 @@ class UserModule extends NWebModule
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
 
+		// remember Yii app should be pointing to Nii!
+		$this->domain = Yii::app()->domain;
 		// import the module-level models and components
 		$this->setImport(array(
 			'user.models.*',
@@ -153,17 +156,6 @@ class UserModule extends NWebModule
         }
 	}
 
-	public function beforeControllerAction($controller, $action)
-	{
-		if(parent::beforeControllerAction($controller, $action))
-		{
-			// this method is called before any module controller action is performed
-			// you may place customized code here
-			return true;
-		}
-		else
-			return false;
-	}
 	
 	/**
 	 * @param $str

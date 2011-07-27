@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class Project extends NActiveRecord
+class Project extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.

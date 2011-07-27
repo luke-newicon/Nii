@@ -13,10 +13,11 @@ $JQUERY_THEME = 'nii';
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath'=>dirname(dirname(__FILE__)),
+	'basePath'=>Yii::getPathOfAlias('app'),
 	'name'=>'Newicon',
+	'domain'=>true,
 	'timezone'=>'Europe/London',
-	'hostname'=>'localhost',
+	'hostname'=>'local.ape-project.org',
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
 
@@ -64,6 +65,9 @@ return array(
 
 	// application components
 	'components'=>array(
+		'themeManager'=>array(
+			'basePath'=>Yii::getPathOfAlias('base')
+		),
 		'sprite'=>array(
 			'class'=>'nii.components.sprite.NSprite',
 			'imageFolderPath'=>array(
@@ -75,7 +79,6 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 			'loginUrl' => array("/user/account/login"),
-			
 		),
 		'authManager'=>array(
 			'class'=>'CDbAuthManager',

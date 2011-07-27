@@ -15,7 +15,6 @@ class NiiModule extends NWebModule
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
-		
 	}
 	
 	public function registerScripts(){

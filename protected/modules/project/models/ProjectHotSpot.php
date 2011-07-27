@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectHotSpot extends NActiveRecord 
+class ProjectHotSpot extends NAppRecord 
 {
 	/**
 	 * Returns the static model of the specified AR class.

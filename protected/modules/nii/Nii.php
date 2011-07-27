@@ -17,7 +17,11 @@ defined('DS') or define('DS',DIRECTORY_SEPARATOR);
  */
 class Nii extends CWebApplication
 {
-	
+	/**
+	 * prefix of the the new subdomain databases
+	 * @var type 
+	 */
+	public $prefix = 'nii_';
 
 	public $domain = false;
 
@@ -32,7 +36,7 @@ class Nii extends CWebApplication
 			// set up application context using the subdomain
 			$host = Yii::app()->request->getHostInfo();
 			// define the hostname!
-			$subdomain = trim(str_replace(array('http://',$this->hostname),'',$host),'.');
+			$subdomain = trim(str_replace(array('http://', $this->hostname),'',$host),'.');
 			//echo $subdomain;
 			//echo $subdomain;
 			if($subdomain==''){
@@ -119,11 +123,8 @@ class Nii extends CWebApplication
 	}
 	
 	
-	
-	public $prefix = 'spanner_';
 	public function getMyDbName(){
 		$subdomain = $this->getSubDomain();
-		
 		return $this->prefix.$subdomain;
 	}
 	

@@ -191,7 +191,6 @@ Class NSprite extends CApplicationComponent
 		
 		foreach($this->_images as $image) 
 		{ 
-			echo $image['name'];
 			$css .= '.'.$image['name'].'{';
 			$css .= 'background-position:'.($image['width'] - $total['width']).'px '.($top - $total['height']).'px;'; 
 			$css .= 'width:'.$image['width'].'px;';
@@ -241,7 +240,6 @@ Class NSprite extends CApplicationComponent
 			// convert the relative path into the class name
 			// replace slashes with dashes and remove extension from file name
 			$p = pathinfo($imgPath);
-			echo $s['path'];
 			$name = str_replace(array('/','\\','_'),'-', $s['path']);
 			$this->_images[$i]['name'] = str_replace(array($p['extension'],'.'),'',$name);
 		}
