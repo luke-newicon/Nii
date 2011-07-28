@@ -60,7 +60,7 @@ return array(
 		),
 		'project',
 		//'hosting',
-		'account',
+		//'account',
 		//'payment',
 		'dev'=>array(
 			'modules'=>array('kanban')

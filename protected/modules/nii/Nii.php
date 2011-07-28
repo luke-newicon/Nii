@@ -49,6 +49,7 @@ class Nii extends CWebApplication
 				}else{
 					$this->setSubDomain($dom->domain);
 					$this->defaultController = 'app';
+					//$this->configSubDomain();
 				}
 			}
 		}
@@ -61,6 +62,19 @@ class Nii extends CWebApplication
 
 		// run the application (process the request)
 		parent::run();
+	}
+	
+	/**
+	 * this is run when a subdomain is initialised.
+	 * changes file paths etc to make specific to the subdomain environment
+	 */
+	public function configSubDomain(){
+		// to prevent cache affecting other subdomains lets create a specific runtime folder for each subdomain
+		$runtime = Yii::getPathOfAlias('app.runtime').DS.$this->getSubDomain();
+		if(!file_exists($runtime)){
+			mkdir($runtime);
+		}
+		$this->runtimePath = $runtime;
 	}
 	
 	/**
