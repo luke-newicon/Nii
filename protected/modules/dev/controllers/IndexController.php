@@ -94,4 +94,8 @@ class IndexController extends Controller
 		}
 		echo 'mailled';
 	}
+	
+	public function actionInstallApp($subdomain){
+		Yii::app()->createApp($subdomain);
+	}
 }

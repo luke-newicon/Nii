@@ -16,7 +16,7 @@
  * @property string category
  * @property boolean deleted
  */
-class NFile extends NActiveRecord
+class NFile extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -32,7 +32,7 @@ class NFile extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'file';
+		return '{{nii_file}}';
 	}
 
 

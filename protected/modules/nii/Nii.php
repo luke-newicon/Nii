@@ -108,7 +108,7 @@ class Nii extends CWebApplication
 		$sql = "CREATE DATABASE `$dbName`";
 		$cmd = Yii::app()->db->createCommand($sql);
 		$cmd->execute();
-		
+		// TODO: create a mysql user with the name of the subdomain.
 		// install the tables and run each modules install
 		$db = Yii::app()->getMyDb();
 		$this->install();
@@ -147,7 +147,7 @@ class Nii extends CWebApplication
 				'class' => 'CDbConnection',
 				'connectionString' => "mysql:host=localhost;dbname={$dbName}",
 				'emulatePrepare' => true,
-				'username' => 'newicon',
+				'username' => 'newicon',// should probably use a specific username generated for this db
 				'password' => 'bonsan',
 				'charset' => 'utf8',
 				'tablePrefix' =>'',

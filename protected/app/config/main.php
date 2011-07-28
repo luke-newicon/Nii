@@ -49,16 +49,16 @@ return array(
 				'ext.gtc',   // Gii Template Collection
 			),
 		),
-		'crm',
-		'kashflow',
-		'email',
+		//'crm',
+		//'kashflow',
+		//'email',
 		'user'=>array(
 			'registrationCaptcha'=>false,
 		),
 		'project',
-		'hosting',
+		//'hosting',
 		'account',
-		'payment',
+		//'payment',
 		'dev'=>array(
 			'modules'=>array('kanban')
 		),

@@ -68,6 +68,7 @@ class NiiModule extends NWebModule
 	
 	public function install(){
 		Yii::import('nii.widgets.notes.models.NNote');
+		Yii::import('nii.models.*');
 		NNote::install();
 		NFile::install();
 	}
