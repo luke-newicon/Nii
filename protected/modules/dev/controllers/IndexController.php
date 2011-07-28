@@ -86,4 +86,12 @@ class IndexController extends Controller
 		echo $m->transform(file_get_contents($css));
 		echo '<img src="'.$sprite.'" />';
 	}
+	
+	
+	public function actionTestMail(){
+		if(mail('steve@newicon.net', 'hello', 'what the func!@')){
+			echo 'it sent!';
+		}
+		echo 'mailled';
+	}
 }
