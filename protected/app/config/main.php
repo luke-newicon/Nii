@@ -99,6 +99,7 @@ return array(
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 				'login'=>'/user/account/login',
+				'logout'=>'/user/account/logout'
 			),
 			'showScriptName'=>false,
 		),
