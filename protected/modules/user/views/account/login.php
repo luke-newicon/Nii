@@ -45,7 +45,7 @@ $this->breadcrumbs=array(
 	</div>
 
 	<div class="row submit">
-		<?php echo CHtml::submitButton(UserModule::t("Login")); ?>
+		<?php echo CHtml::submitButton(UserModule::t("Login"), array('class'=>'btn aristo')); ?>
 	</div>
 	
 <?php echo CHtml::endForm(); ?>

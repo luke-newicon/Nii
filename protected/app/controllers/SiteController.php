@@ -2,6 +2,7 @@
 
 class SiteController extends Controller {
 
+	
 	/**
 	 * Declares class-based actions.
 	 */
@@ -25,10 +26,6 @@ class SiteController extends Controller {
 	 * when an action is not explicitly requested by users.
 	 */
 	public function actionIndex() {
-		$this->menu = array(
-			array('label' => 'Newicon', 'url' => array('/site/index'), 'template'=>'<a style="padding:3px 8px;margin-left:0px;" href="'.NHtml::url('/site/index').'"><img style="padding-top:3px;" alt="Newicon" src="'.Yii::app()->request->baseUrl.'/images/newicon.png" /></a>'),
-			array('label' => 'Register', 'url' => array('/user/account/registration')),
-		);
 		$this->render('index');
 	}
 

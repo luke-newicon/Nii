@@ -81,7 +81,7 @@ class UserLogin extends CFormModel
 						extract($_POST);
 
 						// set POST variables
-						$url = 'http://'.$identity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+						
 						
 						$fields_string = http_build_query($this->getAttributes());
 						// open connection
@@ -90,10 +90,12 @@ class UserLogin extends CFormModel
 						curl_setopt($ch,CURLOPT_URL,$url);
 						curl_setopt($ch,CURLOPT_POST,count($fields));
 						curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 						// execute post
 						$result = curl_exec($ch);
 						// close connection
 						curl_close($ch);
+						
 						
 					}
 					$domain = $identity->getSubDomain();
