@@ -28,7 +28,8 @@ class AppController extends Controller
 	}
 	
 	public function actionIndex(){
-		$this->render('index');
+		$this->redirect(array('/project/index/index'));
+		//$this->render('index');
 	}
 	
 	public function actionCreateApp($subdomain){
