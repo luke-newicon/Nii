@@ -49,7 +49,7 @@ class Nii extends CWebApplication
 				}else{
 					$this->setSubDomain($dom->domain);
 					$this->defaultController = 'app';
-					//$this->configSubDomain();
+					$this->configSubDomain();
 				}
 			}
 		}
