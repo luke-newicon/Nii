@@ -35,7 +35,7 @@ return array(
 		'modules.user.models.*',
         'modules.user.components.*',
 	),
-	'theme'=>'classic',
+	'theme'=>'nii',
 
 	'modulePath'=>Yii::getPathOfAlias('modules'),
 	'modules'=>array(
@@ -54,6 +54,7 @@ return array(
 		//'email',
 		'user'=>array(
 			'registrationCaptcha'=>false,
+			'termsRequired'=>false
 		),
 		'project',
 		//'hosting',
@@ -67,9 +68,6 @@ return array(
 
 	// application components
 	'components'=>array(
-		'themeManager'=>array(
-			'basePath'=>Yii::getPathOfAlias('base')
-		),
 		'sprite'=>array(
 			'class'=>'nii.components.sprite.NSprite',
 			'imageFolderPath'=>array(
@@ -81,6 +79,7 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 			'loginUrl' => array("/user/account/login"),
+			//'returnUrl'=>''
 		),
 		'authManager'=>array(
 			'class'=>'CDbAuthManager',

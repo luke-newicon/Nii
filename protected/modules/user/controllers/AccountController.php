@@ -74,13 +74,9 @@ class AccountController extends Controller {
 		
 		$user = new RegistrationForm;
 		
-		$contact = null;
 		// populate array of models to validate
 		$models[] = $user;
-		if($userModule->useCrm){
-			$contact = new CrmContact;
-			$models[] = $contact;
-		}		
+
 		if($userModule->domain) {
 			$domain = new AppDomain;
 			$models[] = $domain;
@@ -119,15 +115,6 @@ class AccountController extends Controller {
 					}
 					$user->save();
 
-					// if crm module installed
-					// remove this use events instead.
-//					if($userModule->useCrm){
-//						$contact->type = CrmContact::TYPE_USER;
-//						$contact->user_id = $user->id;
-//						$contact->save();
-//					}
-					
-
 					if ($userModule->sendActivationMail) {
 						$activationUrl = $this->makeActivationLink($user, '/user/account/activation');
 						UserModule::sendMail($user->email,
@@ -165,7 +152,7 @@ class AccountController extends Controller {
 					$userModule->onRegistrationComplete($e);
 				}
 			}
-			$this->render('registration',array('model'=>$user,'contact'=>$contact,'domain'=>$domain));
+			$this->render('registration',array('model'=>$user,'domain'=>$domain));
 		}
 	}
 	
@@ -184,7 +171,7 @@ class AccountController extends Controller {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
-			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is activated.")));
+			    $this->render('acitvation',array('title'=>UserModule::t("User activation")));
 				$e = new CEvent($this, array('user'=>$user));
 				UserModule::get()->onActivation($e);
 			} else {
