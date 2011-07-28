@@ -171,7 +171,7 @@ class AccountController extends Controller {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
 				$find->save();
-			    $this->render('acitvation',array('title'=>UserModule::t("User activation")));
+			    $this->render('activation',array('title'=>UserModule::t("User activation")));
 				$e = new CEvent($this, array('user'=>$user));
 				UserModule::get()->onActivation($e);
 			} else {
