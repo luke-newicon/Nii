@@ -51,10 +51,10 @@ class UserLogin extends CFormModel
 		{
 			$identity=new UserIdentity($this->username,$this->password);
 			$identity->authenticate();
+			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
 			switch($identity->errorCode)
 			{
 				case UserIdentity::ERROR_NONE:
-					$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
 					Yii::app()->user->login($identity,$duration);
 					break;
 				case UserIdentity::ERROR_EMAIL_INVALID:
@@ -73,6 +73,29 @@ class UserLogin extends CFormModel
 					$this->addError("password",UserModule::t("Password is incorrect."));
 					break;
 				case UserIdentity::ERROR_DOMAIN:
+					// if the user is trying to log into the wrong subdomain but is a valid user
+					if($identity->getUser()->domain){
+						Yii::app()->user->login($identity,$duration);
+						//Yii::app()->getRequest()->redirect('http://'.$identity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login',true);
+						/// extract data from the post
+						extract($_POST);
+
+						// set POST variables
+						$url = 'http://'.$identity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+						
+						$fields_string = http_build_query($this->getAttributes());
+						// open connection
+						$ch = curl_init();
+						// set the url, number of POST vars, POST data
+						curl_setopt($ch,CURLOPT_URL,$url);
+						curl_setopt($ch,CURLOPT_POST,count($fields));
+						curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+						// execute post
+						$result = curl_exec($ch);
+						// close connection
+						curl_close($ch);
+						
+					}
 					$domain = $identity->getSubDomain();
 					Yii::app()->user->setFlash('error','You don\'t have access to the web address "'.Yii::app()->getSubDomain().'", check the address before trying again... try... '.$domain.' ');
 					$this->addError("username",UserModule::t("You do not have access to this address, ."));

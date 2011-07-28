@@ -16,6 +16,18 @@ class UserIdentity extends CUserIdentity
 	const ERROR_STATUS_BAN=5;
 	const ERROR_DOMAIN=6;
 	
+	
+	public function getUser(){
+		if($this->_user === null){
+			if (strpos($this->username,"@")) {
+				$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$this->username));
+			} else {
+				$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('username'=>$this->username));
+			}
+		}
+		return $this->_user;
+	}
+	
 	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
@@ -26,11 +38,7 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		if (strpos($this->username,"@")) {
-			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$this->username));
-		} else {
-			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('username'=>$this->username));
-		}
+		$this->getUser();
 		if($this->_user===null)
 			if (strpos($this->username,"@")) {
 				$this->errorCode=self::ERROR_EMAIL_INVALID;

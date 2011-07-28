@@ -46,6 +46,7 @@ class AccountController extends Controller {
 					$user->save();
 					$this->redirect(Yii::app()->getModule('user')->returnUrl);
 				}
+				
 			}
 			// display the login form
 			$this->render('login', array('model' => $model));
@@ -53,6 +54,8 @@ class AccountController extends Controller {
 			$this->redirect(Yii::app()->getModule('user')->returnUrl);
 		}
 	}
+	
+	
 
 	/**
 	 * Logout the current user and redirect to returnLogoutUrl.
@@ -280,6 +283,4 @@ class AccountController extends Controller {
 			}
 		}
 	}
-
-
 }
