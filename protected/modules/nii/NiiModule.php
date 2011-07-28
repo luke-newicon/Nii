@@ -22,10 +22,12 @@ class NiiModule extends NWebModule
 		Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.metadata.js');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/tipsy/javascripts/jquery.tipsy.js');
-		$cs->registerCssFile($this->getAssetsUrl().'/oocss/all.css');
-		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.hotkeys.js');
+		
+		Yii::app()->sprite->registerSpriteCss();// register the sprite css file
+		$cs->registerCssFile($this->getAssetsUrl().'/oocss/all.css');
+		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
 	}
 	
 	public function beforeControllerAction($controller, $action)
@@ -56,10 +58,11 @@ class NiiModule extends NWebModule
 			'jquery.tipsy.js'=>false,
 			'jquery.tipsy.css'=>false,
 			'jquery.metadata.js'=>false,
+			'tipsy.css'=>false,
+			'jquery.hotkeys.js'=>false,
 			'nii.js'=>false,
 			'all.css'=>false,
-			'tipsy.css'=>false,
-			'jquery.hotkeys.js'=>false
+			'sprite.css'=>false
 		);
 	}
 	

@@ -43,8 +43,6 @@ class ProjectModule extends NWebModule
 			//'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
 		));
 		
-		// register the sprite css file
-		Yii::app()->sprite->registerSpriteCss();
 		
 		if(!Yii::app()->user->isGuest)
 			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/book.png', 'CRM'), array('/project/index/index'));
