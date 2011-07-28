@@ -84,7 +84,8 @@ class UserLogin extends CFormModel
 					
 					$domain = $identity->getSubDomain();
 					Yii::app()->user->setFlash('error','You don\'t have access to the web address "'.Yii::app()->getSubDomain().'", check the address before trying again... try... '.$domain.' ');
-					//$this->addError("username",UserModule::t("You do not have access to this address, ."));
+					// add the error so we fail validation
+					$this->addError("username",UserModule::t("You do not have access to this address, ."));
 					break;
 			}
 		}
