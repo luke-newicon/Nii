@@ -42,7 +42,7 @@
 	
 </style>
 
-<div class="toolbar plm" >
+<div class="toolbar plm" style="width:100%;">
 	<div class="line">
 		<div class="unit toolbarArrow mrm">
 			<a style="display:block;" class="titleBarText" href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>

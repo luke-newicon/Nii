@@ -16,7 +16,11 @@ class UserIdentity extends CUserIdentity
 	const ERROR_STATUS_BAN=5;
 	const ERROR_DOMAIN=6;
 	
-	
+	/**
+	 * Gets the ActiveRecord User model
+	 * 
+	 * @return User 
+	 */
 	public function getUser(){
 		if($this->_user === null){
 			if (strpos($this->username,"@")) {

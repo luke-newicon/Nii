@@ -56,7 +56,9 @@ return array(
 			'registrationCaptcha'=>false,
 			'termsRequired'=>false,
 			'returnUrl'=>array('/project/index/index'),
-			'profileUrl'=>array('/project/index/index')
+			'profileUrl'=>array('/project/index/index'),
+			'sendActivationMail'=>false,
+			'activeAfterRegister'=>true
 		),
 		'project',
 		//'hosting',

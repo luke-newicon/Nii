@@ -7,10 +7,6 @@ button, input {width: auto; overflow: visible;margin:0px;}
 .btn::-moz-focus-inner { border: 0; }
 
 a.btn,.btn:hover,a.btn:hover,.btn:focus,a.btn:focus{color:#000;text-decoration:none;}
-/*.btn:active{top:1px;}*/
-.btn.small,.btn.small:visited{font-size:11px;}
-.btn:visited,.btn.medium,.btn.medium:visited{font-size:13px;font-weight:bold;text-shadow:0 -1px 1px rgba(0,0,0,0.25);}
-.btn.large,.btn.large:visited{font-size:14px;padding:8px 14px 9px;}
 
 /* skins */
 /* awesome */
@@ -61,6 +57,11 @@ button[disabled],button[disabled]:active,.btn.aristo.disabled,.btn.aristo.disabl
 button[disabled]:hover,button[disabled]:focus,.btn.aristo.disabled:hover,.btn.aristo.disabled:focus {box-shadow: none;-webkit-box-shadow: none;-moz-box-shadow: none;}
 
 
-.btn.btnToolbarLeft{border-right:0px;border-top-right-radius:0px;border-bottom-right-radius:0px; -moz-border-radius-topright:0px;-moz-border-radius-bottomright:0px; -webkit-border-top-right-radius:0px;-webkit-border-bottom-right-radius:0px;}
-.btn.btnToolbarMid{border-right:0px;border-radius:0px; -moz-border-radius: 0px; -webkit-border-radius:0px;}
-.btn.btnToolbarRight{border-top-left-radius:0px;border-bottom-left-radius:0px; -moz-border-radius-topleft:0px;-moz-border-radius-bottomleft:0px; -webkit-border-top-left-radius:0px;-webkit-border-bottom-left-radius:0px;}
+.bLeft,.btn.btnToolbarLeft{border-right:0px !important;border-top-right-radius:0px !important;border-bottom-right-radius:0px !important; -moz-border-radius-topright:0px !important;-moz-border-radius-bottomright:0px !important; -webkit-border-top-right-radius:0px !important;-webkit-border-bottom-right-radius:0px !important;}
+.bMid,.btn.btnToolbarMid{border-right:0px !important;border-radius:0px !important; -moz-border-radius: 0px !important; -webkit-border-radius:0px !important;}
+.bRight,.btn.btnToolbarRight{border-top-left-radius:0px !important;border-bottom-left-radius:0px !important; -moz-border-radius-topleft:0px !important;-moz-border-radius-bottomleft:0px !important; -webkit-border-top-left-radius:0px !important;-webkit-border-bottom-left-radius:0px !important;}
+
+
+.btn.small{font-size:90%;}
+.btn.medium{font-size:125%;}
+.btn.large{font-size:150%;}

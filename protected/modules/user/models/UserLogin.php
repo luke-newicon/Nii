@@ -11,6 +11,7 @@ class UserLogin extends CFormModel
 	public $password;
 	public $rememberMe;
 
+	private $_userIdentity;
 	/**
 	 * Declares the validation rules.
 	 * The rules state that username and password are required,
@@ -39,6 +40,11 @@ class UserLogin extends CFormModel
 			'password'=>UserModule::t("password"),
 		);
 	}
+	
+	public function getUserIdentity(){
+		return $this->_userIdentity;
+	}
+	
 
 	/**
 	 * Authenticates the password.
@@ -49,13 +55,13 @@ class UserLogin extends CFormModel
 		
 		if(!$this->hasErrors())  // we only want to authenticate when no input errors
 		{
-			$identity=new UserIdentity($this->username,$this->password);
-			$identity->authenticate();
-			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
-			switch($identity->errorCode)
+			$this->_userIdentity=new UserIdentity($this->username,$this->password);
+			$this->_userIdentity->authenticate();
+			$duration=$this->rememberMe ? UserModule::get()->rememberMeDuration : 0;
+			switch($this->_userIdentity->errorCode)
 			{
 				case UserIdentity::ERROR_NONE:
-					Yii::app()->user->login($identity,$duration);
+					Yii::app()->user->login($this->_userIdentity,$duration);
 					break;
 				case UserIdentity::ERROR_EMAIL_INVALID:
 					$this->addError("username",UserModule::t("Email is incorrect."));
@@ -73,18 +79,6 @@ class UserLogin extends CFormModel
 					$this->addError("password",UserModule::t("Password is incorrect."));
 					break;
 				case UserIdentity::ERROR_DOMAIN:
-					
-					// if the user is trying to log into the wrong subdomain but is a valid user
-					if($identity->getUser()->domain){
-						// unbelievable that it comes to this...
-						// but even the paypal IPN modules in magento and zen cart use this method.
-						$url = 'http://'.$identity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
-						Yii::app()->getClientScript()->registerScript('userlogin-domainredirect','$("#userloginform").attr("action","'.$url.'").submit();');
-					}
-					
-					$domain = $identity->getSubDomain();
-					//Yii::app()->user->setFlash('error','You don\'t have access to the web address "'.Yii::app()->getSubDomain().'", check the address before trying again... try... '.$domain.' ');
-					// add the error so we fail validation
 					$this->addError("username",UserModule::t("You do not have access to this address, ."));
 					break;
 			}

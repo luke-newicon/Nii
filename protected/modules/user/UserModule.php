@@ -10,18 +10,7 @@
 
 class UserModule extends NWebModule
 {
-	/**
-	 * @var int
-	 * @desc items on page
-	 */
-	public $user_page_size = 10;
-	
-	/**
-	 * @var int
-	 * @desc items on page
-	 */
-	public $fields_page_size = 10;
-	
+
 	/**
 	 * @var boolean
 	 * @desc use email for activation user account
@@ -36,15 +25,22 @@ class UserModule extends NWebModule
 	
 	/**
 	 * @var boolean
-	 * @desc activate user on registration (only $sendActivationMail = false)
+	 * @desc activate user on registration (required $sendActivationMail = false)
 	 */
 	public $activeAfterRegister=false;
 	
 	/**
 	 * @var boolean
-	 * @desc login after registration (need loginNotActiv or activeAfterRegister = true)
+	 * @desc login after registration (requires loginNotActiv or activeAfterRegister = true)
 	 */
 	public $autoLogin=true;
+	
+	/**
+	 * how long the cookie should last that identifies the user
+	 * @var int (number of seconds) 
+	 */
+	public $rememberMeDuration = 2592000; // 30 days = (3600*24*30)
+	
 	
 	public $registrationUrl = array("/user/account/registration");
 	public $recoveryUrl = array("/user/account/recovery");

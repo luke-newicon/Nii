@@ -26,11 +26,13 @@
 
 <div class="toolbar line plm">
 	<div class="line">
-		<div class="unit mrm">
+		<div class="unit mrm toolbarArrow">
 			<h1 class="man titleBarText">Projects</h1>
 		</div>
-		<div class="lastUnit">
-<!--			<div style="margin:2px 5px 2px 5px;width:0px;height:44px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>-->
+		<div class="lastUnit txtR">
+			<div class="userbox mrl mtm">
+				<a href="<?php echo NHtml::url('/logout'); ?>" class="btn aristo"><?php echo Yii::app()->user->getName(); ?></a>
+			</div>
 		</div>
 	</div>
 </div>

@@ -53,12 +53,12 @@
 	.template.hover .templateFuns{display:block;}
 </style>
 <?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
-<div id="mainToolbar" class="toolbar screen plm">
+<div id="mainToolbar" class="toolbar screen plm" style="width:100%;">
 	<div class="line small">
 		<div class="unit toolbarArrow mrm" >
 			<a href="<?php echo NHtml::url('/project/index/index'); ?>" class="titleBarText" style="display:block;">Projects</a>
 		</div>
-		<div class="unit toolbarArrow prm" >
+		<div class="unit toolbarArrow" >
 			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" class="titleBarText" style="display:block;"><?php echo $project->name; ?></a>
 		</div>
 		<div class="unit plm prm" >

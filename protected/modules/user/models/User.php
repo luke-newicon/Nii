@@ -83,8 +83,8 @@ class User extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username'=>UserModule::t("username"),
-			'password'=>UserModule::t("password"),
+			'username'=>UserModule::t("Username"),
+			'password'=>UserModule::t("Password"),
 			'verifyPassword'=>UserModule::t("Retype Password"),
 			'email'=>UserModule::t("E-mail"),
 			'verifyCode'=>UserModule::t("Verification Code"),
@@ -162,22 +162,23 @@ class User extends NActiveRecord
 	}
 	
 	/**
+	 * CANT DO IT THIS WAY OTHERWISE FORMS END UP WITH BIG CRYPTED PASSWORDS AS THEIR VALUES
 	 * ensure that everytime the password field is set it gets encrypted.
 	 * 
 	 * @param string $name
 	 * @param mixed $value 
 	 */
-	public function __set($name, $value){
-		if($name == 'password'){
-			parent::__set($name, $this->cryptPassword($value));
-		}else{
-			parent::__set($name, $value);
-		}
-	}
+//	public function __set($name, $value){
+//		if($name == 'password'){
+//			parent::__set($name, $this->cryptPassword($value));
+//		}else{
+//			parent::__set($name, $value);
+//		}
+//	}
 
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
-			//$this->password = $this->cryptPassword($this->password);
+			$this->password = $this->cryptPassword($this->password);
 			$this->activekey = $this->cryptPassword(microtime().$this->password);
 			$this->createtime=time();
 		}
