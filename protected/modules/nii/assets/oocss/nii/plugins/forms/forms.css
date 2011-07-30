@@ -44,7 +44,7 @@ span.required { color:#CC0000 }
 .success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
 .focus .inputBox {border-color:#889999 #aaaaaa #aaaaaa;box-shadow: 0 0 5px #387BBE;-moz-box-shadow:0 0 5px #387BBE;-webkit-box-shadow: 0 0 5px #387BBE; background-image:none;}
 .focus .inputBox.noHighlight, .focus.noHighlight .inputBox{box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;}
-
+.validating .inputBox{/*border-color:#ccc;*/}/* this class is applied when the form is validating the input, typically when sending the ajax response to check validation */
 
 /* formHint style */
 .hint{color:#999999;font-size:80%;}

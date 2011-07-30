@@ -44,3 +44,32 @@ jQuery(function($){
 });
 
 
+(function()
+{
+	// Define overriding method.
+	jQuery.fn.yiiactiveform.updateInput = function(attribute, messages, form) 
+	{
+			attribute.status = 1;
+			var hasError = messages!=null && $.isArray(messages[attribute.id]) && messages[attribute.id].length>0;
+			var $error = $('#'+attribute.errorID, form);
+			var $container = $.fn.yiiactiveform.getInputContainer(attribute, form);
+			$container.removeClass(attribute.validatingCssClass)
+					.removeClass(attribute.errorCssClass)
+					.removeClass(attribute.successCssClass);
+
+			if(hasError) {
+					$error.html(messages[attribute.id][0]).hide().fadeIn('slow');
+					$container.addClass(attribute.errorCssClass);
+			}
+			else if(attribute.enableAjaxValidation || attribute.clientValidation) {
+					$container.addClass(attribute.successCssClass);
+			}
+			if(!attribute.hideErrorMessage)
+					$error.toggle(hasError);
+
+			attribute.value = $('#'+attribute.inputID, form).val();
+
+			return hasError;
+
+	}
+})();

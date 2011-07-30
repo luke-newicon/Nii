@@ -46,7 +46,7 @@ $this->breadcrumbs=array(
 <!--		<h3 class="mbm ptm">Email & Password</h3>-->
 		<div>
 			<?php if(UserModule::get()->showUsernameField): ?>
-				<div class="field mbl">
+				<div class="field mbl <?php echo ($model->hasErrors('username'))?'error':''; ?>">
 					<div class="inputContainer">
 						<?php echo $form->labelEx($model,'username', array('class'=>'inFieldLabel')); ?>
 						<div class="inputBox">
@@ -56,7 +56,7 @@ $this->breadcrumbs=array(
 					<?php echo $form->error($model,'username'); ?>
 				</div>
 			<?php endif; ?>
-			<div class="field mbl">
+			<div class="field mbl <?php echo ($model->hasErrors('email'))?'error':''; ?>">
 				<div class="inputContainer">
 					<?php echo $form->labelEx($model,'email', array('class'=>'inFieldLabel')); ?>
 					<div class="inputBox">
@@ -65,7 +65,7 @@ $this->breadcrumbs=array(
 				</div>
 				<?php echo $form->error($model,'email'); ?>
 			</div>
-			<div class="field line mbl">
+			<div class="field line mbl <?php echo ($model->hasErrors('password')||$model->hasErrors('verifyPassword'))?'error':''; ?>">
 				<div class="unit size1of2">
 					<div class="field man">
 						<div class="inputContainer">
@@ -91,7 +91,7 @@ $this->breadcrumbs=array(
 				<?php echo $form->error($model,'verifyPassword'); ?>
 			</div>
 		</div>
-		<div class="field mbl">
+		<div class="field mbl <?php echo ($domain->hasErrors('domain'))?'error':''; ?>">
 				<div class="inputContainer">
 					<div class="line">
 						<?php echo $form->labelEx($domain,'domain',array('class'=>'inFieldLabel')); ?>
