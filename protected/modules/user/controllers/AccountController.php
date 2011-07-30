@@ -70,7 +70,11 @@ class AccountController extends NController {
 				// unbelievable that it comes to this...
 				// but even the paypal IPN modules in magento and zen cart use this method
 				// To post data to a redirect page
-				$url = 'http://'.$userIdentity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+				if($userIdentity->getUser()->domain==''){
+					$url = 'http://'.Yii::app()->hostname.'/user/account/login';
+				}else{
+					$url = 'http://'.$userIdentity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+				}
 				echo $this->render('transfer',array('userIdentity'=>$userIdentity, 'action'=>$url),true);
 				exit();
 			}

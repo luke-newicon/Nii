@@ -60,7 +60,6 @@ class UserIdentity extends CUserIdentity
 			// if user module set up for subdomain apps then we need to add 
 			// an extra check
 			if(UserModule::get()->domain){
-				echo Yii::app()->getSubDomain();
 				if($this->_user->domain != Yii::app()->getSubDomain()){
 					if(!$this->_user->superuser){
 						$this->errorCode=self::ERROR_DOMAIN;
