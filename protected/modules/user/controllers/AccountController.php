@@ -33,8 +33,6 @@ class AccountController extends NController {
 	 * Displays the login page
 	 */
 	public function actionLogin() {
-		
-		
 		if (Yii::app()->user->isGuest) {
 			$model = new UserLogin;
 			$this->performAjaxValidation($model, 'userloginform');
@@ -52,7 +50,6 @@ class AccountController extends NController {
 					// check domain
 					$this->transferToDomain($model->getUserIdentity());
 				}
-				
 			}
 			// display the login form
 			$this->render('login', array('model' => $model));
@@ -151,7 +148,8 @@ class AccountController extends NController {
 
 					// if users can login imediately after registration
 					if (($userModule->loginNotActive ||($userModule->activeAfterRegister && $userModule->sendActivationMail==false)) && $userModule->autoLogin) {
-						$identity=new UserIdentity($user->username,$_POST['RegistrationForm']['password']);
+						$username = ($user->username=='')?$user->email:$user->username;
+						$identity=new UserIdentity($username,$_POST['RegistrationForm']['password']);
 						$identity->authenticate();
 						
 						// call external events!

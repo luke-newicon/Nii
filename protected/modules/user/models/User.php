@@ -83,10 +83,12 @@ class User extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
+			'name'=>'Name',
+			'company'=>'Company',
 			'username'=>UserModule::t("Username"),
 			'password'=>UserModule::t("Password"),
-			'verifyPassword'=>UserModule::t("Retype Password"),
-			'email'=>UserModule::t("E-mail"),
+			'verifyPassword'=>UserModule::t("Password, again!"),
+			'email'=>UserModule::t("E-mail Address"),
 			'verifyCode'=>UserModule::t("Verification Code"),
 			'id' => UserModule::t("Id"),
 			'activekey' => UserModule::t("activation key"),
@@ -213,6 +215,8 @@ class User extends NActiveRecord
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
+				'name'=>'string',
+				'company'=>'string',
 				'username'=>'string',
 				'password'=>'string NOT NULL',
 				'email'=>'string NOT NULL',
@@ -221,7 +225,7 @@ class User extends NActiveRecord
 				'lastvisit'=>'int',
 				'superuser'=>'boolean NOT NULL DEFAULT 0',
 				'status'=>'boolean NOT NULL DEFAULT 0',
-				'domain'=>'string'
+				'domain'=>'string',
 			),
 			'keys'=>array(
 				array('username', 'username', true),

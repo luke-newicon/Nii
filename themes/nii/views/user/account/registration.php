@@ -18,15 +18,35 @@ $this->breadcrumbs=array(
 	'enableClientValidation'=>true,
 	'htmlOptions' => array('enctype'=>'multipart/form-data'),
 )); ?>
-<div class="line">
-	<div class="unit size1of2">
-<!--		<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>-->
 
-
-		<h3>Your Account</h3>
+<div class="line" style="font-size:15px;">
+	<div class="unit size2of5">
+		<?php if(UserModule::get()->domain): ?>
+			<h3 class="mbm ptm">Create Your Account!</h3>
+<!--			<div class="field mbl">
+				<div class="inputContainer">
+					<?php echo $form->labelEx($model,'name', array('class'=>'inFieldLabel')); ?>
+					<div class="inputBox">
+						<?php echo $form->textField($model,'name'); ?>
+					</div>
+				</div>
+			</div>
+			<div class="field mbl">
+				<div class="inputContainer">
+					<?php echo $form->labelEx($model,'company', array('class'=>'inFieldLabel')); ?>
+					<div class="inputBox">
+						<?php echo $form->textField($model,'company'); ?>
+					</div>
+				</div>
+			</div>-->
+			
+		<?php endif; ?>
+			
+			
+<!--		<h3 class="mbm ptm">Email & Password</h3>-->
 		<div>
 			<?php if(UserModule::get()->showUsernameField): ?>
-				<div class="field">
+				<div class="field mbl">
 					<div class="inputContainer">
 						<?php echo $form->labelEx($model,'username', array('class'=>'inFieldLabel')); ?>
 						<div class="inputBox">
@@ -36,7 +56,7 @@ $this->breadcrumbs=array(
 					<?php echo $form->error($model,'username'); ?>
 				</div>
 			<?php endif; ?>
-			<div class="field">
+			<div class="field mbl">
 				<div class="inputContainer">
 					<?php echo $form->labelEx($model,'email', array('class'=>'inFieldLabel')); ?>
 					<div class="inputBox">
@@ -45,7 +65,7 @@ $this->breadcrumbs=array(
 				</div>
 				<?php echo $form->error($model,'email'); ?>
 			</div>
-			<div class="field line">
+			<div class="field line mbl">
 				<div class="unit size1of2">
 					<div class="field man">
 						<div class="inputContainer">
@@ -54,10 +74,7 @@ $this->breadcrumbs=array(
 								<?php echo $form->passwordField($model,'password'); ?>
 							</div>
 						</div>
-						<?php echo $form->error($model,'password'); ?>
-						<p class="hint">
-							<?php echo UserModule::t("Minimal password length 4 symbols."); ?>
-						</p>
+						
 					</div>
 				</div>
 				<div class="lastUnit">
@@ -68,11 +85,29 @@ $this->breadcrumbs=array(
 								<?php echo $form->passwordField($model,'verifyPassword'); ?>
 							</div>
 						</div>
-						<?php echo $form->error($model,'verifyPassword'); ?>
 					</div>
 				</div>
+				<?php echo $form->error($model,'password'); ?>
+				<?php echo $form->error($model,'verifyPassword'); ?>
 			</div>
 		</div>
+		<div class="field mbl">
+				<div class="inputContainer">
+					<div class="line">
+						<?php echo $form->labelEx($domain,'domain',array('class'=>'inFieldLabel')); ?>
+						<div class="unit size1of2">
+							<div class="inputBox">
+							<?php echo $form->textField($domain,'domain'); ?>
+							</div>
+						</div>
+						<div class="lastUnit">
+							<label class="mlm" for="AppDomain_domain" style="color:#999;">.<?php echo Yii::app()->hostname; ?></label>
+						</div>
+					</div>
+				</div>
+				<?php echo $form->error($domain,'domain'); ?>
+				<span class="hint">This is only set once. It can be your company or agency name.</span>
+			</div>
 		<?php if (UserModule::doCaptcha('registration')): ?>
 		<div class="field">
 			<?php echo $form->labelEx($model,'verifyCode'); ?>
@@ -86,24 +121,6 @@ $this->breadcrumbs=array(
 		</div>
 		<?php endif; ?>
 
-		<?php if(UserModule::get()->domain): ?>
-			<h3>Select your site address!</h3>
-			<div class="field">
-				<div class="inputContainer">
-					<div class="inputBox">
-						<div class="line">
-							<label class="unit size1of10" for="AppDomain_domain" style="line-height:16px;color:#999;">http://</label>
-							<div class="unit size6of10">
-								<?php echo $form->textField($domain,'domain'); ?>
-							</div>
-							<label class="lastUnit" for="AppDomain_domain" style="line-height:16px;color:#999;">.<?php echo Yii::app()->hostname; ?></label>
-						</div>
-					</div>
-				</div>
-				<?php echo $form->error($domain,'domain'); ?>
-			</div>
-		<?php endif; ?>
-
 
 		<?php if(UserModule::get()->termsRequired): ?>
 			<h3>Terms</h3>
@@ -115,21 +132,19 @@ $this->breadcrumbs=array(
 		<?php endif; ?>
 
 		<div class="field submit line mtl">
-			<div class="unit size1of2">
-				<?php echo CHtml::submitButton(UserModule::t("Register"),array('class'=>'btn aristo primary large pll prl','style'=>'width:100%')); ?>
-			</div>
-			<div class="lastUnit">
-				<p class="pll hint" style="line-height:16px;">By submitting this form you are accepting our <br/><a href="#">terms and conditions</a></p>
-			</div>
+			<p class="hint" style="line-height:16px;">By singing up you agree to the <a href="#">terms and conditions</a></p>
+			<?php echo CHtml::submitButton(UserModule::t("Register"),array('class'=>'btn aristo primary large pll prl','style'=>'width:100%')); ?>
 		</div>
 	</div>
-	<div class="lastUnit pll" style="padding-top:29px">
-		<?php echo $form->errorSummary(array($model)); ?>
-		<?php // echo $form->error($model,'username'); ?>
-		<?php // echo $form->error($model,'email'); ?>
-		<?php // echo $form->error($model,'password'); ?>
-		<?php // echo $form->error($model,'verifyPassword'); ?>
-		<?php // echo $form->error($domain,'domain'); ?>
+	<div class="lastUnit pll">
+		<div class="line">
+			<div class="unit">
+				<img style="padding-left:50px" src="<?php echo Yii::app()->theme->baseUrl.'/images/whitefade.png' ?>" />
+			</div>
+			<div class="lastUnit">
+				<?php echo $form->errorSummary(array($model)); ?>
+			</div>
+		</div>
 	</div>
 </div>
 <?php $this->endWidget(); ?>

@@ -58,7 +58,9 @@ return array(
 			'returnUrl'=>array('/project/index/index'),
 			'profileUrl'=>array('/project/index/index'),
 			'sendActivationMail'=>false,
-			'activeAfterRegister'=>true
+			'activeAfterRegister'=>true,
+			'usernameRequired'=>false,
+			'showUsernameField'=>false
 		),
 		'project',
 		//'hosting',

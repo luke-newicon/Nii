@@ -41,7 +41,7 @@ class AppDomain extends NActiveRecord
 		return array(
 			array('domain','required'),
 			array('domain', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect characters (A-z0-9).")),
-			array('domain','length', 'max'=>50, 'min' => 3,'message' =>UserModule::t("The address must be between 3 and 250 characters long")),
+			array('domain','length', 'max'=>50, 'min' => 2,'message' =>UserModule::t("The address must be between 3 and 250 characters long")),
 			array('domain', 'unique', 'message'=>'This address already exists')
 		);
 	}
@@ -53,7 +53,7 @@ class AppDomain extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'domain'=>UserModule::t("Domain"),
+			'domain'=>UserModule::t("Subdomain"),
 		);
 	}
 

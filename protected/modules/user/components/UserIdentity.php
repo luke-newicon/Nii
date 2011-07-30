@@ -78,7 +78,7 @@ class UserIdentity extends CUserIdentity
 		if($user){
 			$this->_user = $user;
 			$this->_id = $this->_user->id;
-			$this->username = $this->_user->username;
+			$this->username = ($user->username==null)?$user->email:$user->username;
             $this->errorCode = self::ERROR_NONE;
 		}
 	}
