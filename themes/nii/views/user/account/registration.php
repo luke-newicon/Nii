@@ -134,7 +134,7 @@ $this->breadcrumbs=array(
 
 		<div class="field submit line mtl">
 			<p class="hint" style="line-height:16px;">By singing up you agree to the <a href="#">terms and conditions</a></p>
-			<?php echo CHtml::submitButton(UserModule::t("Register"),array('class'=>'btn aristo primary large pll prl','style'=>'width:100%')); ?>
+			<?php echo CHtml::submitButton(UserModule::t("Register"),array('class'=>'btn aristo primary large pll prl','style'=>'width:100%','onclick'=>'$(this).val(\'Loading...\').addClass(\'disabled\')')); ?>
 		</div>
 	</div>
 	<div class="lastUnit pll">
