@@ -21,6 +21,7 @@ $this->breadcrumbs=array(
 
 <div class="line" style="font-size:15px;">
 	<div class="unit size2of5">
+		<?php echo $form->errorSummary(array($model)); ?>
 		<?php if(UserModule::get()->domain): ?>
 			<h3 class="mbm ptm">Create Your Account!</h3>
 <!--			<div class="field mbl">
@@ -142,7 +143,7 @@ $this->breadcrumbs=array(
 				<img style="padding-left:50px" src="<?php echo Yii::app()->theme->baseUrl.'/images/whitefade.png' ?>" />
 			</div>
 			<div class="lastUnit">
-				<?php echo $form->errorSummary(array($model)); ?>
+				
 			</div>
 		</div>
 	</div>

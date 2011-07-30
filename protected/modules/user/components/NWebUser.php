@@ -106,19 +106,6 @@ class NWebUser extends CWebUser
 		
 	}
 	
-	
-	/**
-	 * To be sure the domain is secure lets do one final 
-	 * check before ever allowing someone to log in
-	 */
-	public function login($identity,$duration=0){
-		if(UserModule::get()->domain){
-			if($identity->getUser()->domain == Yii::app()->getSubDomain()){
-				parent::login($identity,$duration);
-			}
-		}else{
-			parent::login($identity,$duration);
-		}
-	}
+
 
 }

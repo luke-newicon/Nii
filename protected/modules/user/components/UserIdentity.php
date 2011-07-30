@@ -16,6 +16,7 @@ class UserIdentity extends CUserIdentity
 	const ERROR_STATUS_BAN=5;
 	const ERROR_DOMAIN=6;
 	
+	
 	/**
 	 * Gets the ActiveRecord User model
 	 * 
@@ -49,7 +50,6 @@ class UserIdentity extends CUserIdentity
 			} else {
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
-			
 		else if(!$this->_user->checkPassword($this->password))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		else if($this->_user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
@@ -67,7 +67,6 @@ class UserIdentity extends CUserIdentity
 					}
 				}
 			}
-			
 			$this->_loginUser($this->_user);
 		}
 		return !$this->errorCode;
