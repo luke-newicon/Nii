@@ -192,14 +192,19 @@ class AccountController extends NController {
 		$email = NData::base64UrlDecode($_GET['e']);
 		$activekey = $_GET['activekey'];
 		if ($email&&$activekey) {
-			$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
-			if (isset($find) && $find->status==1) {
+			$user = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
+			if (isset($user) && $user->status==1) {
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is active.")));
-			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
-				$find->activekey = crypt(microtime());
-				$find->status = 1;
-				$find->email_verified = 1;
-				$find->save();
+			}elseif($user->email_verified == 0 && $user->status == 1){
+				// user is active but has not verfified his email
+				$user->email_verified = 1;
+				$user->save();
+				$this->render('message',array('title'=>UserModule::t("Email Verfied"),'content'=>UserModule::t("Thank you! We now know you are who you are you!")));
+			} elseif(isset($user->activekey) && $this->checkActivationKey($user, $activekey)) {
+				$user->activekey = crypt(microtime());
+				$user->status = 1;
+				$user->email_verified = 1;
+				$user->save();
 			    $this->render('activation');
 				$e = new CEvent($this, array('user'=>$user));
 				UserModule::get()->onActivation($e);
