@@ -86,21 +86,27 @@
 	</div>
 </div>
 
-<div id="fb">
-	Add Task
+<div id="appfb-dialog" title="Feedback" style="display:none;">
 	<div class="field mbm">
 		<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'task')); ?>
 	</div>
 	<div class="field mbm txtR">
-		<a href="#" class="btn aristo primary">Add Task</a>
+		<a href="#" class="btn aristo primary">Send Feedback</a>
 	</div>
 </div>
-<div style="position:fixed;bottom:0px;right:0px;">Feedback</div>
-
+<div style="position:fixed;bottom:0px;right:0px;background-color:#000;border:2px solid #fff;"><a id="appfb-button" href="#" style="color:white;">Feedback</a></div>
+<script>
+	$(function(){
+		$('#appfb-dialog').dialog({autoOpen:false,modal:true});
+		$('#appfb-button').click(function(){
+			$('#appfb-dialog').dialog('open')
+		});
+	});
+</script>
 <script>
 	
 	$(function(){
-		$('#fb').dialog();
+	$('#fb').dialog();
 		
 		var userMenu = {
 			open:function(){
