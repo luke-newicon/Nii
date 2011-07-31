@@ -197,7 +197,7 @@ class AccountController extends NController {
 				// user is active but has not verified his email
 				$user->email_verified = 1;
 				$user->save();
-				$this->render('message',array('title'=>UserModule::t("Email Verfied"),'content'=>UserModule::t("Thank you! We now know you are who you are you!")));
+				$this->render('message',array('title'=>UserModule::t("Email Verfied"),'content'=>UserModule::t("Thank you! We now know you are you!")));
 			} elseif (isset($user) && $user->status==1 && $user->email_verified==1) {
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is active.")));
 			} elseif(isset($user->activekey) && $this->checkActivationKey($user, $activekey)) {
