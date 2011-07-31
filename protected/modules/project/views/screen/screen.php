@@ -65,8 +65,8 @@
 					<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>"><?php echo $project->name; ?></a>
 				</div>
 				<div class="unit toolbarArrow"></div>
-				<div class="unit size1of8 titleBarText" >
-					<span id="screenName"><?php echo $screen->getName(); ?></span>
+				<div class="unit lastUnit titleBarText" >
+					<span id="screenName" style="white-space:nowrap;overflow:hidden;"><?php echo $screen->getName(); ?></span>
 				</div>
 			</DIV>
 		</div>

@@ -51,7 +51,7 @@ return array(
 		),
 		//'crm',
 		//'kashflow',
-		//'email',
+		'email',
 		'user'=>array(
 			'registrationCaptcha'=>false,
 			'termsRequired'=>false,

@@ -198,7 +198,7 @@ class AccountController extends NController {
 			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
-				$find->email_verification = 1;
+				$find->email_verified = 1;
 				$find->save();
 			    $this->render('activation');
 				$e = new CEvent($this, array('user'=>$user));

@@ -18,13 +18,13 @@ class NMarkdownInput extends CInputWidget
 	 * The classes to be applied to the edit button
 	 * @var string
 	 */
-	public $editButtonAttrs = array('class'=>'btn btnN btnToolbar btnToolbarLeft');
+	public $editButtonAttrs = array('class'=>'mrs');
 
 	/**
 	 * The classes to be applied to the preview button
 	 * @var string
 	 */
-	public $previewButtonAttrs = array('class'=>'btn btnN btnToolbar btnToolbarRight');
+	public $previewButtonAttrs = array('class'=>'mrs');
 
 	/**
 	 * Options to be applied to the text area
