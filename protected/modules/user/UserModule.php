@@ -31,7 +31,7 @@ class UserModule extends NWebModule
 	
 	/**
 	 * @var boolean
-	 * @desc login after registration (requires loginNotActiv or activeAfterRegister = true)
+	 * @desc login after registration (requires loginNotActive or activeAfterRegister = true)
 	 */
 	public $autoLogin=true;
 	

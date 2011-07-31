@@ -36,8 +36,8 @@ jQuery(function($){
 	});
 	
 	// form stuff
-	$(":input").focus(function(){$(this).closest(".field").addClass("focus");})
-		.blur(function(){$(this).closest(".field").removeClass("focus");});
+	$('body').delegate(':input','focusin',function(){$(this).closest(".field").addClass("focus");})
+	$('body').delegate(':input','focusout',function(){$(this).closest(".field").removeClass("focus");})
 		
 	// infield labels
 	$('.inFieldLabel').inFieldLabels({fadeDuration:0});

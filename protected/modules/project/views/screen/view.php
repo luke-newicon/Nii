@@ -81,6 +81,7 @@ var loadScreen = function(screenId){
 var _doLoadScreen = function(hsId, maintainScroll){
 	$canvas = $('#canvas');
 	var screenId = view.hotspotData[hsId].screen_id_link
+	console.log(view.hotspotData);
 	$img = $canvas.find('img')
 	$newImg = $canvas.find('img[data-id="'+screenId+'"]');
 	// as the home page image is both preloaded in and loaded in on initial load we need to remove it
@@ -93,7 +94,6 @@ var _doLoadScreen = function(hsId, maintainScroll){
 	// now load the hotspots for the screen
 	var $canvasHs = $('#canvas-hotspots').html('');
 	var hotspot;
-	console.log(view.hotspotData);
 	$.each(view.screenData[screenId].screenHotspots,function(i,h){
 		console.log(h);
 		hotspot = view.hotspotData[h];
@@ -113,7 +113,11 @@ var _doLoadScreen = function(hsId, maintainScroll){
 	$canvas.width($newImg);
 	//$('#canvas-hotspots').html(view.screenData[screenId].hotspots);
 	// lookup hotspot data. see if it should fix scroll position
-	$(document).scrollTo(0);
+	console.log(view.hotspotData[hsId])
+	console.log(view.hotspotData[hsId].fixed_scroll)
+	if(view.hotspotData[hsId].fixed_scroll == 0){
+		$(document).scrollTo(0);
+	}
 	$('body').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
 	$('html').css('backgroundColor','rgb('+view.screenData[screenId].rgb.red+','+view.screenData[screenId].rgb.green+','+view.screenData[screenId].rgb.blue+')');
 	view.spotState();

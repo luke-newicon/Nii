@@ -1,13 +1,10 @@
 <style>
 	
 	.projList li{display:inline-block;float:left;margin:15px;}
-	
-	
 	.projectBox{position:relative;background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
 	.projectBox.details{box-shadow:none;border:2px dashed #ccc;background-color:#f9f9f9;}
 	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
 	.projectBox.details.creating{background-color:#fff; box-shadow: 0 0 10px #AAAAAA;}
-	
 	
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProjectStyle{font-size:120%;font-weight:bold;}
@@ -98,7 +95,7 @@
 		<a href="#" class="btn aristo primary">Add Task</a>
 	</div>
 </div>
-
+<div style="position:fixed;bottom:0px;right:0px;">Feedback</div>
 
 <script>
 	

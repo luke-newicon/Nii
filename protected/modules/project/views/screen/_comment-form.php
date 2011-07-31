@@ -1,7 +1,7 @@
 <div id="commentsForm"  class="spotForm" style="width:300px;display:none;" >
 	<div style="position:relative;">
 		<div class="triangle" style="left: -19px; top: 12px;position:absolute;"></div>
-		<div class="form pas">
+		<div class="form pas prm plm">
 			<div id="commentForm">
 				<div class="field" style="padding-bottom:0px;">
 					<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'comments','editButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'), 'previewButtonAttrs'=>array('class'=>'','style'=>'margin-right:5px;'))); ?>

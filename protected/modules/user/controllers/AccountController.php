@@ -151,7 +151,7 @@ class AccountController extends NController {
 					}
 
 					// if users can login imediately after registration
-					if (($userModule->loginNotActive ||($userModule->activeAfterRegister && $userModule->sendActivationMail==false)) && $userModule->autoLogin) {
+					if (($userModule->loginNotActive ||($userModule->activeAfterRegister)) && $userModule->autoLogin) {
 						$username = ($user->username=='')?$user->email:$user->username;
 						$identity=new UserIdentity($username,$_POST['RegistrationForm']['password']);
 						$identity->authenticate();
@@ -159,7 +159,6 @@ class AccountController extends NController {
 						// call external events!
 						$e = new CEvent($this, array('user'=>$user));
 						$userModule->onRegistrationComplete($e);
-						
 				
 						$this->transferToDomain($identity);
 
@@ -199,6 +198,7 @@ class AccountController extends NController {
 			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
 				$find->activekey = crypt(microtime());
 				$find->status = 1;
+				$find->email_verification = 1;
 				$find->save();
 			    $this->render('activation',array('title'=>UserModule::t("User activation")));
 				$e = new CEvent($this, array('user'=>$user));

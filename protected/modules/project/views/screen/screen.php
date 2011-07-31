@@ -102,14 +102,14 @@
 <?php $this->renderPartial('_template-form',array('screen'=>$screen)); ?>
 <?php $this->renderPartial('_share-form',array('screen'=>$screen,'project'=>$project)); ?>
 
-<div id="screenWrap" style="position: absolute; width:200px; top:48px;  height: 400px;border-right:1px solid #000;">
-	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;">
+<div id="screenWrap" style="position:absolute;width:200px;top:48px;height:400px;border-right:1px solid #000;">
+	<div id="screenPane" class="unit" style="overflow: auto;z-index:300;background-color:#aaa;width:200px;">
 		<?php foreach($project->getScreens() as $s): ?>
 		<div class="sidebarImg txtC" id="sideSscreen-<?php echo $s->id; ?>">
 			<a href="#" onclick="return false;" style="display:block" title="<?php echo $s->name; ?>" class="loading sideImg" data-id="<?php echo $s->id; ?>" data-src="<?php echo NHtml::urlImageThumb($s->file_id, 'projectSidebarThumb'); ?>"></a>
 			<span class="imageTitle"><?php echo $s->name; ?></span>
 		</div>
-		<? endforeach; ?>
+		<?php endforeach; ?>
 	</div>
 </div>
 
@@ -1190,7 +1190,7 @@ var resizer = function(){
 	$('#screenWrap').snapy({'snap':$(window)});
 	$('#screenPane').snapy({'snap':'#screenWrap'});
 	$('#canvasWrap').css('width',($('body').width()-$('#screenWrap').width()+$('#screenWrap').border().right-2) + 'px');
-	$('#canvasWrap').css('left',$('#screenWrap').width());
+	$('#canvasWrap').css('left',$('#screenWrap').width()+$('#screenWrap').border().right);
 	
 	var imgs = $('#screenPane img');
 	if(imgs.length>0)

@@ -57,7 +57,7 @@ return array(
 			'termsRequired'=>false,
 			'returnUrl'=>array('/project/index/index'),
 			'profileUrl'=>array('/project/index/index'),
-			'sendActivationMail'=>false,
+			'sendActivationMail'=>true,
 			'activeAfterRegister'=>true,
 			'usernameRequired'=>false,
 			'showUsernameField'=>false

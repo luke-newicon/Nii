@@ -73,7 +73,6 @@ class NMarkdownInput extends CInputWidget
 	 * echos out the buttons for edit and preview as well as the help link
 	 */
 	public function displayButtons(){
-		echo '<div class="buttons line" style="border-radius:0px 0px 3px 3px; border:1px solid #ccc; border-top:0px;background-color:#f9f9f9;font-size:80%;padding:3px;">';
 		$this->editButtonAttrs['class'] = $this->editButtonAttrs['class'] . ' edit active';
 		$this->previewButtonAttrs['class'] = $this->previewButtonAttrs['class'] . ' preview';
 		echo '<div class="unit size1of2">';
@@ -82,7 +81,6 @@ class NMarkdownInput extends CInputWidget
 		echo '</div>';
 		echo '<div class="lastUnit txtR">';
 		echo CHtml::link('Help', 'http://daringfireball.net/projects/markdown/syntax', array('target' => 'blank', 'class' => 'help_button'));
-		echo '</div>';
 		echo '</div>';
 	}
 	
