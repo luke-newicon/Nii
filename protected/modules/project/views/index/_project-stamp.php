@@ -1,3 +1,6 @@
+<style>
+	.numOf{background-color:#ccc;border-radius:10px;padding:3px 10px;text-shadow:0px 1px 0px #000;color:white;}
+</style>
 <div class="projectBox" data-id="<?php echo $project->id; ?>">
 	<a class="projImg" href="<?php echo NHtml::url(array('/project/details/index/','project'=>$project->name)); ?>">
 		<img src="<?php echo NHtml::urlImageThumb($project->getImageId(), 'projectThumb'); ?>" />
@@ -5,7 +8,9 @@
 	<div class="projName">
 		<span class="name"><?php echo $project->name; ?></span>
 	</div>
-	<div class="projFuns"><a class="btn aristo txtC">i</a></div>
+	<span class="numOf" data-tip="" title="<?php echo $project->getNumComments(); ?> Comments"><?php echo $project->getNumComments(); ?></span>
+	<span class="numOf"><?php echo $project->getNumScreens(); ?></span>
+	<div class="projFuns"><a href="#" class="btn aristo txtC">i</a></div>
 	<div class="projFlip" style="display:none;">
 		<div class="projName">
 			<span class="name"><?php echo $project->name; ?></span>

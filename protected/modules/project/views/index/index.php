@@ -9,8 +9,8 @@
 	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	.projName .name,a.addProjectStyle{font-size:120%;font-weight:bold;}
 	
-	.projFuns{position:absolute;bottom:8px;right:10px;display:none;}
-	.projectBox:hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
+	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
+	.projectBox.hover .projFuns{display:block;}
 	
 	.revertFlip{position:absolute;bottom:5px;right:10px;}
 	
@@ -24,7 +24,7 @@
 	.menuLinks a:hover{text-decoration:none;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 </style>
 
-<div class="toolbar  plm">
+<div class="toolbar plm">
 	<div class="line">
 		<div class="unit titleBarText">
 			<span>Projects</span>
@@ -106,8 +106,13 @@
 <script>
 	
 	$(function(){
-	$('#fb').dialog();
-		
+
+		$('#projectList').delegate('.projectBox','mouseenter',function(){
+			$(this).addClass('hover');
+		});
+		$('#projectList').delegate('.projectBox','mouseleave',function(){
+			$(this).removeClass('hover');
+		});
 		var userMenu = {
 			open:function(){
 				$('#userMenu').show().position({my:'center top',at:'center bottom', of:$('#userBox a'),offset:'0px 10px;'});

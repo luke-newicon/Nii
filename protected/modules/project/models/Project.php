@@ -82,16 +82,22 @@ class Project extends NAppRecord
 		return $screen->file_id;
 	}
 	
+	
+	private $_numComments;
 	/**
 	 * Get the total number of comments this project has
 	 * 
 	 * @return integer 
 	 */
 	public function getNumComments(){
-		$screens = array();
-		foreach($this->getScreens() as $s)
-			$screens[] = $s->id;
-		return ProjectComment::model()->countByAttributes(array('screen_id'=>$screens));
+		if($this->_numComments === null){
+			$screens = array();
+			foreach($this->getScreens() as $s)
+				$screens[] = $s->id;
+			$this->_numComments = ProjectComment::model()->countByAttributes(array('screen_id'=>$screens));
+		}
+		
+		return $this->_numComments;
 	}
 	
 	/**

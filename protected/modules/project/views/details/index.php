@@ -42,7 +42,7 @@
 	
 </style>
 
-<div class="toolbar plm" style="width:100%;">
+<div class="toolbar plm" >
 	<div class="line">
 		<div class="unit titleBarText">
 			<a href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
@@ -90,7 +90,7 @@
 <?php endif; ?>
 
 
-<div id="progress" class="pam blackpop" style="">
+<div id="progress" class="pam blackpop">
 	<div class="bar"></div>
 	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span> <span class="size"></span></div>
 </div>
