@@ -116,7 +116,7 @@ class User extends NActiveRecord
                 'condition'=>'superuser=1',
             ),
             'notsafe'=>array(
-            	'select' => 'id, username, password, email, activekey, createtime, lastvisit, superuser, status, domain',
+            	'select' => 'id, username, password, email, email_verified, activekey, createtime, lastvisit, superuser, status, domain',
             ),
         );
     }
