@@ -6,7 +6,7 @@
 			<li class="addTemplate">
 				<label>
 					<div class="line">
-						<div class="unit size4of5">
+						<div class="unit size6of8">
 							<div class="inputBox" style="position:relative;">
 								<input id="newTemplate" name="newTemplate" type="text" autocomplete="off" />
 								<label id="newTemplate-hint" style="position:absolute;left:8px;top:4px;color:#aaa;" for="newTemplate">Enter a new template name</label>

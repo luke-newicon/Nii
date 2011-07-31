@@ -9,7 +9,6 @@
 	.hotspot{cursor:pointer;z-index: 100; position: absolute;background-color:#c3d0f6;border:1px dotted #2946a7;opacity: 0.4;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";filter: alpha(opacity=70);}
 	.hotspot.helper{border:1px dotted #2946a7;cursor:crosshair;opacity: 0.3;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";filter: alpha(opacity=40);}
 	
-/*	.hotspot.linked{opacity:0.7;border-style:solid;}*/
 	.hotspot[data-screen]{opacity:0.7;border-style:solid;}
 	.hotspot[data-template]{background-color:orange;border-color:red;}
 	
@@ -18,7 +17,7 @@
 	/*.spot-template{background-color:orange;border-color:red;}*/
 	
 	.spotForm{border-radius:5px;z-index:3000;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left bottom, left top, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute; }
-	.triangle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle.png'; ?>") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
+	
 	.spotFormPart{padding:5px;}
 	a.delete, a.btn.btnN.delete {color:#cc0000;}
 	
@@ -35,7 +34,7 @@
 	#closePreview{position:absolute;top:0px;right:0px;z-index:700;}
 	
 	.toolbarForm{z-index:4001;padding:10px;width:250px;text-shadow:0px 1px 0px #fff;}
-	.triangle-verticle{background:url("<?php echo ProjectModule::get()->getAssetsUrl().'/triangle-verticle.png'; ?>") no-repeat top left;width:30px;height:22px;left:45%;top:-29px;position:absolute;}
+	
 	.template label:hover {}
 	.template.selected label {}
 	.addTemplate .inputBox{border-radius:3px 0px 0px 3px;}
@@ -51,39 +50,48 @@
 	
 	.template .templateFuns{display:none;}
 	.template.hover .templateFuns{display:block;}
+	.btn{font-family:arial;}
 </style>
-<?php echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
+<?php //echo CHtml::linkTag('stylesheet', 'text/css', ProjectModule::get()->getAssetsUrl().'/project.css'); ?>
 <div id="mainToolbar" class="toolbar screen plm" style="width:100%;">
 	<div class="line small">
-		<div class="unit toolbarArrow mrm" >
-			<a href="<?php echo NHtml::url('/project/index/index'); ?>" class="titleBarText" style="display:block;">Projects</a>
+		<div class="unit size1of3">
+			<div class="line">
+				<div class="unit titleBarText">
+					<a href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
+				</div>
+				<div class="unit toolbarArrow" ></div>
+				<div class="unit titleBarText">
+					<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>"><?php echo $project->name; ?></a>
+				</div>
+				<div class="unit toolbarArrow"></div>
+				<div class="unit size1of8 titleBarText" >
+					<span id="screenName"><?php echo $screen->getName(); ?></span>
+				</div>
+			</DIV>
 		</div>
-		<div class="unit toolbarArrow" >
-			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>" class="titleBarText" style="display:block;"><?php echo $project->name; ?></a>
-		</div>
-		<div class="unit plm prm" >
-			<h1 id="screenName" class="man titleBarText" ><?php echo $screen->getName(); ?></h1>
-		</div>
-		<div class="unit">
-			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
-		</div>
-		<div class="unit plm ptm" >
-			<button class="btn aristo sidebar selected" href="#"><span class="icon fugue-application-sidebar man"></span></button>
-		</div>
-		<div class="unit plm ptm" >
-			<button class="btn aristo template" href="#"><span class="icon fam-application-side-list"></span> Templates</button>
-		</div>
-		<div class="unit plm btnGroup ptm">
-			<button class="btn aristo btnToolbarLeft comments" href="#"><span class="icon fugue-balloon-white-left"></span>Comments</button><button class="btn aristo btnToolbarRight edit selected" href="#"><span class="icon fugue-layer-shape"></span>Edit</button>
-		</div>
-		<div class="unit plm ptm">
-			<button class="btn aristo preview" href="#"><span class="icon fugue-magnifier"></span>Preview</button>
-		</div>
-		<div class="unit plm ptm" >
-			<button class="btn aristo share" data-tip="" title="Share" href="#"><span class="icon fugue-arrow-curve"></span></button>
-		</div>
-		<div class="unit plm ptm">
-			<button class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fugue-gear"></span></button>
+		<div class="lastUnit">
+			<div class="unit">
+				<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+			</div>
+			<div class="unit plm ptm" >
+				<a class="btn aristo sidebar selected" href="#"><span class="icon fugue-application-sidebar man"></span></a>
+			</div>
+			<div class="unit plm ptm" >
+				<a class="btn aristo template" href="#"><span class="icon fugue-template"></span> Templates</a>
+			</div>
+			<div class="unit plm btnGroup ptm">
+				<a class="btn aristo btnToolbarLeft comments" href="#"><span class="icon fugue-balloon-white-left"></span>Comments</a><a class="btn aristo btnToolbarRight edit selected" href="#"><span class="icon fugue-layer-shape"></span>Edit</a>
+			</div>
+			<div class="unit plm ptm">
+				<a class="btn aristo preview" href="#"><span class="icon fugue-magnifier"></span>Preview</a>
+			</div>
+			<div class="unit plm ptm" >
+				<a class="btn aristo share" data-tip="" title="Share" href="#"><span class="icon fugue-arrow-curve man"></span></a>
+			</div>
+			<div class="unit plm ptm">
+<!--				<a class="btn aristo" data-tip="" title="Configure" href="#"><span class="icon fugue-gear man"></span></a>-->
+			</div>	
 		</div>
 	</div>
 </div>

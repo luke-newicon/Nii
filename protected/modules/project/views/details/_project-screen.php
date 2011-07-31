@@ -9,7 +9,7 @@
 	</div>
 	<div class="projFuns">
 		<a style="padding-top:5px;" href="#" class="deleteScreen btn aristo" ><img height="15" src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
-		<a style="width:12px;" class="screenInfo btn aristo txtC">i</a>
+		<a href="#" style="width:12px;" class="screenInfo btn aristo txtC">i</a>
 	</div>
 	<div class="screenFlip" style="display:none;">
 		<div class="screen-info loading" style="height:200px;">

@@ -21,18 +21,23 @@
 	.main,body,html{background-color:#f9f9f9;}
 	
 	
+	.toolbarForm{z-index:4001;text-shadow:0px 1px 0px #fff;border-radius:5px;background-color:#f1f1f1;background:-moz-linear-gradient(bottom, #ddd, #f1f1f1);background:-webkit-gradient(linear, left bottom, left top, from(#ddd), to(#f1f1f1));width:300px;border:1px solid #535a64;box-shadow:0px 3px 10px #444,inset 0px 1px 0px 0px #fff; top:100px;left:100px;position:absolute;}
 	
+	.menuLinks a{display:block;padding:2px 10px;}
+	.menuLinks a:hover{text-decoration:none;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
 </style>
 
-<div class="toolbar line plm">
+<div class="toolbar  plm">
 	<div class="line">
-		<div class="unit mrm toolbarArrow">
-			<h1 class="man titleBarText">Projects</h1>
+		<div class="unit titleBarText">
+			<span>Projects</span>
 		</div>
-		<div class="lastUnit txtR">
-			<div class="userbox mrl mtm">
-				<a href="<?php echo NHtml::url('/logout'); ?>" class="btn aristo"><?php echo Yii::app()->user->getName(); ?></a>
+		<div class="unit toolbarArrow"></div>
+		<div class="lastUnit txtR ptm prm">
+			<div id="userBox">
+				<a href="#" class="btn aristo"><?php echo Yii::app()->user->getName(); ?><span class="icon fam-bullet-arrow-down mls mrn " style="padding-left:14px;"></span></a>
 			</div>
+			
 		</div>
 	</div>
 </div>
@@ -74,7 +79,53 @@
 	<?php endforeach; ?>
 </ul>
 
+<div id="userMenu" class=" toolbarForm" style="width:80px;display:none;">
+	<div style="position:relative;">
+		<div style="top:-19px;" class="triangle-verticle"></div>
+		<ul class="noBull mbs menuLinks pts ">
+<!--			<li><a href="#">Account</a></li>-->
+			<li><a href="<?php echo NHtml::url('/logout'); ?>">Log Out</a></li>
+		</ul>
+	</div>
+</div>
 
+<div id="fb">
+	Add Task
+	<div class="field mbm">
+		<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'task')); ?>
+	</div>
+	<div class="field mbm txtR">
+		<a href="#" class="btn aristo primary">Add Task</a>
+	</div>
+</div>
+
+
+<script>
+	
+	$(function(){
+		$('#fb').dialog();
+		
+		var userMenu = {
+			open:function(){
+				$('#userMenu').show().position({my:'center top',at:'center bottom', of:$('#userBox a'),offset:'0px 10px;'});
+				$('#userBox a').addClass('selected');
+				$('#userMenu').click(function(e){e.stopPropagation();});
+				$('body').bind('click.userMenu',function(){
+					userMenu.close();
+				});
+			},
+			close:function(){
+				$('#userMenu').hide();
+				$('body').unbind('click.userMenu');
+				$('#userBox a').removeClass('selected');
+			}
+		}
+		$('#userBox a').click(function(){
+			userMenu.open();
+			return false;
+		});
+	});
+</script>
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.isotope.min.js" ></script>
 <script>

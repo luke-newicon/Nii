@@ -39,7 +39,7 @@ span.required { color:#CC0000 }
 
 /* Default Skin */
 /* make a nice looking input, defines padding and input box style */
-.inputBox {background:#ffffff url('skin/input-bg.png') repeat-x top left;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:0.3em;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;}
+.inputBox {background:#ffffff url('skin/input-bg.png') repeat-x top left;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:0.3em;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;box-shadow:0px 1px 0px rgba(255,255,255,0.5);-moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);}
 .error .inputBox {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
 .success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
 .focus .inputBox {border-color:#889999 #aaaaaa #aaaaaa;box-shadow: 0 0 5px #387BBE;-moz-box-shadow:0 0 5px #387BBE;-webkit-box-shadow: 0 0 5px #387BBE; background-image:none;}

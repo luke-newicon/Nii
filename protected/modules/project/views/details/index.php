@@ -44,11 +44,12 @@
 
 <div class="toolbar plm" style="width:100%;">
 	<div class="line">
-		<div class="unit toolbarArrow mrm">
-			<a style="display:block;" class="titleBarText" href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
+		<div class="unit titleBarText">
+			<a href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
 		</div>
-		<div class="unit prm">
-			<h1 class="man titleBarText"><?php echo $project->name; ?></h1>
+		<div class="unit toolbarArrow"></div>
+		<div class="unit titleBarText mrm">
+			<span><?php echo $project->name; ?></span>
 		</div>
 		<div class="unit">
 			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
