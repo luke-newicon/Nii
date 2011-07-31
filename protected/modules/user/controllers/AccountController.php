@@ -200,7 +200,7 @@ class AccountController extends NController {
 				$find->status = 1;
 				$find->email_verification = 1;
 				$find->save();
-			    $this->render('activation',array('title'=>UserModule::t("User activation")));
+			    $this->render('activation');
 				$e = new CEvent($this, array('user'=>$user));
 				UserModule::get()->onActivation($e);
 			} else {
