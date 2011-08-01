@@ -53,6 +53,31 @@ class ViewController extends NController {
 		}
 	}
 	
+	public $markdown;
+	
+	/**
+	 *
+	 * @return NMarkdown 
+	 */
+	public function getMarkdown(){
+		if($this->markdown===null){
+			$this->markdown = new NMarkdown;
+		}
+		return $this->markdown;				
+	}
+	
+	public function getComments($screen){
+		$commentJson = array();
+		foreach($screen->getComments() as $comment){
+			$commentJson[$comment->id] = array(
+				'data'=>$comment->getAttributes(),
+				'comment'=>$comment->comment,
+				'view'=>$this->renderPartial('/screen/_comment',array('comment'=>$comment),true)
+			);
+		}
+		return $commentJson;
+	}
+	
 	public function getProjectScreenData($project, &$hotspotData){
 		$screenList = array();
 		$hotspotData=array();
@@ -72,6 +97,7 @@ class ViewController extends NController {
 				'rgb'=>$s->guessBackgroundColor(),
 				'src'=>NHtml::urlFile($s->file_id, $s->name),
 				'screenHotspots'=>array_keys($screenHotspots),
+				'comments'=>$this->getComments($s)
 				//'hotspots'=>$this->renderPartial('_hotspots',array('screen'=>$s),true)
 			);
 		}

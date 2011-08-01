@@ -22,6 +22,8 @@
 	
 	.menuLinks a{display:block;padding:2px 10px;}
 	.menuLinks a:hover{text-decoration:none;background-color:#666;color:#fff;text-shadow:0px 1px 0px #000;}
+	
+	.numOf{background-color:#ccc;border-radius:10px;padding:3px 10px;text-shadow:0px 1px 0px #000;color:white;}
 </style>
 
 <div class="toolbar plm">
@@ -87,11 +89,14 @@
 </div>
 
 <div id="appfb-dialog" title="Feedback" style="display:none;">
-	<div class="field mbm">
-		<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'task')); ?>
+	<div class="field mbm" id="appfb-form">
+		<?php $this->widget('nii.widgets.markdown.NMarkdownInput',array('name'=>'appfb-feedback')); ?>
+	</div>
+	<div class="field mbm" id="appfb-thankyou" style="display:none;">
+		<p>Thankyou. Your feedback has been sent to the team.</p>
 	</div>
 	<div class="field mbm txtR">
-		<a href="#" class="btn aristo primary">Send Feedback</a>
+		<a id="appfb-send" href="#" class="btn aristo primary">Send Feedback</a>
 	</div>
 </div>
 <div style="position:fixed;bottom:0px;right:0px;background-color:#000;border:2px solid #fff;"><a id="appfb-button" href="#" style="color:white;">Feedback</a></div>
@@ -101,6 +106,26 @@
 		$('#appfb-button').click(function(){
 			$('#appfb-dialog').dialog('open')
 		});
+		$('#appfb-send').click(function(){
+			$('#appfb-send').addClass('disabled');
+			$.post("<?php echo NHtml::url('/nii/feedback/send'); ?>",{feedback:$('#appfb-feedback').val()},function(){
+				$('#appfb-send').fadeOut('slow');
+				$('#appfb-form').fadeOut('slow',function(){
+					$('#appfb-thankyou').fadeIn('fast', function(){
+						setTimeout(function(){
+							$('.ui-widget-overlay').fadeOut('slow');$('.ui-dialog').fadeOut('slow',function(){
+								$('#appfb-dialog').dialog('close');
+								$('#appfb-thankyou').hide();
+								$('#appfb-form').show();
+								$('#appfb-send').removeClass('disabled').show();
+							});
+						},1500);
+					});
+					$('#appfb-feedback').val('');
+				})
+			});
+			return false;
+		})
 	});
 </script>
 <script>
@@ -139,17 +164,7 @@
 <script>
 $(function(){
 	
-//	$('.projList').isotope({
-//		// options
-//		itemSelector : 'li',
-//		layoutMode : 'fitRows',
-//		animationEngine:'best-available',
-//		animationOptions: {
-//		    duration: 750,
-//		    easing: 'linear',
-//		    queue: false
-//	    }
-//	});
+
 	
 	// do stats
 	var updateStats = function(){

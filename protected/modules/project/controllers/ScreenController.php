@@ -187,6 +187,7 @@ class ScreenController extends AController
 	public function actionLoad(){
 		$screen = $this->loadScreen($_REQUEST['id']);
 		echo json_encode(array(
+			'name'=>$screen->name,
 			'canvas'=>$this->renderPartial('_canvas',array('screen'=>$screen),true),
 			'commentsJson'=>$this->getCommentsData($screen),
 			'bgRgb'=>$screen->guessBackgroundColor(),

@@ -1215,6 +1215,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 	$('#sideSscreen-'+screenId).addClass('selected');
 	$.get("<?php echo NHtml::url('/project/screen/load') ?>",{'id':screenId},function(r){
 		$('#canvasWrap').html(r.canvas);
+		
 		commentForm.commentStore = r.commentsJson;
 		initCanvas();
 		$('#md-comments').markdown();
@@ -1222,6 +1223,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 		$('body').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
 		$('html').css('backgroundColor','rgb('+r.bgRgb.red+','+r.bgRgb.green+','+r.bgRgb.blue+')');
 
+		$('#screenName').html(r.name);
 		// set applied templates where the id refers to the template id
 		// first uncheck all of them
 		$('#templateForm .template input:checkbox').removeAttr('checked');
@@ -1232,6 +1234,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 		if(maintainScroll == 0){
 			$('#canvasWrap').scrollTo(0);
 		}
+		
 	},'json')
 }
 

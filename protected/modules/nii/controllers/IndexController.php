@@ -44,5 +44,9 @@ class IndexController extends NController
 	}
 	
 
+	public function actionHeartbeat(){
+		// this is called to force the session to stay open
+		echo json_encode(array('success'=>true));
+	}
 	
 }
