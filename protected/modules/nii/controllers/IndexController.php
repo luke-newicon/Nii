@@ -26,8 +26,8 @@ class IndexController extends NController
 	public function actionFile($id,$name='',$makeDownload=false){
 		NFileManager::get()->displayFile($id, $name, $makeDownload);
 	}
-	
-	/**
+
+		/**
 	 * controller action for the fileManager
 	 * 
 	 * @param int $id file manager id of file
