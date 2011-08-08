@@ -261,44 +261,40 @@ class NTime {
 		$diff = $futureTime - $pastTime;
 
 		if ($diff > abs($now - strtotime($end))) {
-			$relativeDate = sprintf('on %s', date($format, $inSeconds));
+			return sprintf('on %s', date($format, $inSeconds));
 		} else {
 			if ($years > 0) {
 				// years
-				$relativeDate .= ($relativeDate ? ', ' : '') . $years . ' ' . ($years==1 ? 'year':'years');
-				//$relativeDate .= $months > 0 ? ($relativeDate ? ', ' : '') . $months . ' ' . ($months==1 ? 'month':'months') : '';
-				//$relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . $weeks . ' ' . ($weeks==1 ? 'week':'weeks') : '';
-				//$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . ($days==1 ? 'day':'days') : '';
+				$relativeDate = ($relativeDate ? ', ' : '') . $years . ' ' . ($years==1 ? 'year':'years');
 			} elseif (abs($months) > 0) {
 				// months
-				$relativeDate .= ($relativeDate ? ', ' : '') . $months . ' ' . ($months==1 ? 'month':'months');
-				//$relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . $weeks . ' ' . ($weeks==1 ? 'week':'weeks') : '';
-				//$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . ($days==1 ? 'day':'days') : '';
+				$relativeDate = ($relativeDate ? ', ' : '') . $months . ' ' . ($months==1 ? 'month':'months');
 			} elseif (abs($weeks) > 0) {
 				// weeks
-				$relativeDate .= ($relativeDate ? ', ' : '') . $weeks . ' ' . ($weeks==1 ? 'week':'weeks');
-				//$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . ($days==1 ? 'day':'days') : '';
+				$relativeDate = ($relativeDate ? ', ' : '') . $weeks . ' ' . ($weeks==1 ? 'week':'weeks');
 			} elseif (abs($days) > 0) {
 				// days
-				$relativeDate .= ($relativeDate ? ', ' : '') . $days . ' ' . ($days==1 ? 'day':'days');
-				//$relativeDate .= $hours > 0 ? ($relativeDate ? ', ' : '') . $hours . ' ' . ($hours==1 ? 'hour':'hours') : '';
+				$relativeDate = ($relativeDate ? ', ' : '') . $days . ' ' . ($days==1 ? 'day':'days');
 			} elseif (abs($hours) > 0) {
 				// hours
-				$relativeDate .= ($relativeDate ? ', ' : '') . $hours . ' ' . ($hours==1 ? 'hour':'hours');
-				//$relativeDate .= $minutes > 0 ? ($relativeDate ? ', ' : '') . $minutes . ' ' . ($minutes==1 ? 'minute':'minutes') : '';
+				$relativeDate = ($relativeDate ? ', ' : '') . $hours . ' ' . ($hours==1 ? 'hour':'hours');
 			} elseif (abs($minutes) > 0) {
 				// minutes only
-				$relativeDate .= ($relativeDate ? ', ' : '') . $minutes . ' ' . ($minutes==1 ? 'minute':'minutes');
+				$relativeDate = ($relativeDate ? ', ' : '') . $minutes . ' ' . ($minutes==1 ? 'minute':'minutes');
 			} else {
 				// seconds only
-				$relativeDate .= ($relativeDate ? ', ' : '') . $seconds . ' ' . ($seconds==1 ? 'second':'seconds');
+				if($seconds==0){
+					return 'Just now';
+				}else{
+					$relativeDate .= ($relativeDate ? ', ' : '') . $seconds . ' ' . ($seconds==1 ? 'second':'seconds');
+				}
 			}
 
 			if (!$backwards) {
 				$relativeDate = sprintf('%s ago', $relativeDate);
 			}
+			return 'About ' . $relativeDate;
 		}
-		return $relativeDate;
 	}
 	
 	

@@ -17,7 +17,22 @@
 class ProjectScreen extends NAppRecord
 {
 	
+	/**
+	 * the associated NFile record for the screen image
+	 * @var NFile 
+	 */
 	private $_file;
+	
+	/**
+	 * @var array of width and height
+	 */
+	private $_size;
+	
+	/**
+	 * store the comments collection for this screen
+	 * @var array of ProjectComment objects 
+	 */
+	private $_comments;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -43,6 +58,9 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	/**
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * !!!! NOTE IF YOU CHANGE THIS FUNCTION YOU MUST CHANGE THE JAVASCRIPT EQUIVELANT ON THE details/index.php PAGE
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 * initially when first uploaded the screens name is equivelant to the filename, this function
 	 * formats the filename so it a-lookedy-nice.
 	 * @param string $filename
@@ -50,9 +68,10 @@ class ProjectScreen extends NAppRecord
 	 */
 	public function formatFileName($filename){
 		// remove file extension
-		$name = substr($filename, 0,strrpos($filename,'.'));
+		$name = preg_replace("/\.[^\.]*$/", '', $filename);
+		//$name = substr($filename, 0,strrpos($filename,'.'));
 		// convert dashes to spaces
-		$name = str_replace('-', ' ', $name);
+		$name = str_replace(array('-','_'), ' ', $name);
 		return $name;
 	}
 	
@@ -64,8 +83,12 @@ class ProjectScreen extends NAppRecord
 	public function getFile(){
 		if($this->_file === null) 
 			$this->_file = NFileManager::get()->getFile($this->file_id);
+		if($this->_file === null)
+			throw new CHttpException (404,'whoops, no screen found');
 		return $this->_file;		
 	}
+	
+	
 	
 	/**
 	 * Uses the top left pixel to determin the background color
@@ -97,10 +120,136 @@ class ProjectScreen extends NAppRecord
 	}
 	
 	
+	/**
+	 * produce an array of image width and height for the screens image file
+	 * @return array
+	 * [0] => image width in pixels
+	 * [1] => image height in pixels
+	 */
+	public function getSize(){
+		if($this->_size===null)
+			$this->_size = getimagesize($this->getFile()->getPath());
+		return $this->_size;
+	}
+	
+	/**
+	 * get the width of the screen image in pixels
+	 */
+	public function getWidth(){
+		$a = $this->getSize();
+		return $a[0];
+	}
+	
+	/**
+	 * get the height of the screen image in pixels
+	 */
+	public function getHeight(){
+		$a = $this->getSize();
+		return $a[1];
+	}
+	
+	/**
+	 * Gets the number of hotspots on the screen
+	 * 
+	 * @return integer
+	 */
+	public function getNumHotspots(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id));
+	}
+	
+	public function getNumTemplateHotspots(){
+		$tIds = $this->getTemplatesAppliedIds();
+		return ProjectHotSpot::model()->countByAttributes(array('template_id'=>$tIds));
+	}
+	
+	/**
+	 * Gets the number of screens that link to this screen
+	 * 
+	 * @return integer 
+	 */
+	public function getNumIncomingLinks(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id_link'=>$this->id));
+	}
+	
+	
+	
+	/**
+	 * Gets the number of screens that link to this screen
+	 * 
+	 * @return integer 
+	 */
+	public function getNumOutgoingLinks(){
+		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id,'screen_link_id'=>''));
+	}
+	
+	/**
+	 * Get the total number of comments this screen has
+	 * 
+	 * @return integer 
+	 */
+	public function getNumComments(){
+		return ProjectComment::model()->countByAttributes(array('screen_id'=>$this->id));
+	}
+	
+	
+	/**
+	 * get all templates for this project
+	 * @return array 
+	 */
+	public function getTemplates(){
+		$templates = ProjectTemplate::model()->findAllByAttributes(array('project_id'=>$this->project_id));
+		return $templates;
+	}
+	
+	/**
+	 * returns an aray of template id's that are applied to this screen
+	 * @return array 
+	 */
+	public function getTemplatesAppliedIds(){
+		$ts = array();
+		$appliedTs = ProjectScreenTemplate::model()->findAllByAttributes(array('screen_id'=>$this->id));
+		foreach($appliedTs as $t){
+			$ts[] = $t->template_id;
+		}
+		return $ts;
+	}
+	
+	/**
+	 * return all the hotspots applied to the screen through templates
+	 * @param $onlyLinked if true only returns spots that have active links to other screens
+	 * @return array 
+	 */
+	public function getTemplateHotspots($onlyLinked=false){
+		$tIds = $this->getTemplatesAppliedIds();
+		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
+		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tIds),$condition);
+	}
+	
+	/**
+	 * get hotspots on this screen
+	 * @param $onlyLinked if true only returns spots that have active links to other screens
+	 * @return array 
+	 */
+	public function getHotspots($onlyLinked=false){
+		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
+		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0),$condition);
+	}
+
+	
+	/**
+	 * get all comments on this screen
+	 * @return array 
+	 */
+	public function getComments(){
+		// lets cache results of getcomments as its called a few times
+		if($this->_comments === null)
+			$this->_comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$this->id));
+		return $this->_comments;
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
-	
 	
 	
 	public function schema(){
@@ -111,7 +260,15 @@ class ProjectScreen extends NAppRecord
 				'file_id'=>'int',
 				'name'=>'string',
 				'home_page'=>'bool',
-				'sort'=>'int'
+				'sort'=>'int(5) NULL DEFAULT  \'0\' '
+			),
+			'keys'=>array(
+				array('sort'),
+				array('file_id'),
+				array('project_id')
+			),
+			'foreignKeys'=>array(
+				array('project_screen','project_id','project_project','id','CASCADE','CASCADE')
 			)
 		);
 	}

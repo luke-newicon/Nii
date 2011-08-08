@@ -26,7 +26,7 @@ class NAppRecord extends NActiveRecord
     /**
      * Returns the database connection used by active record.
      * By default, the "db" application component is used as the database connection.
-     * You may override this method if you want to use a different database connection.
+     * If the self::$db is null then it ses the database to the connection returned by Nii::getMyDb();
      * @return CDbConnection the database connection used by active record.
      */
     public function getDbConnection()

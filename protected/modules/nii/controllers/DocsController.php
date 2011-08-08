@@ -14,10 +14,14 @@
  *
  * @author steve
  */
-class DocsController extends NController 
+class DocsController extends AController 
 {
 	public function acitonIndex(){
 		
 		$this->render('index');
+	}
+	
+	public function actionFilelocation(){
+		echo NFileManager::get()->location;
 	}
 }

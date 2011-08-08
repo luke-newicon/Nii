@@ -16,7 +16,7 @@
  * @property string category
  * @property boolean deleted
  */
-class NFile extends NActiveRecord
+class NFile extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -32,7 +32,7 @@ class NFile extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'file';
+		return '{{nii_file}}';
 	}
 
 
@@ -123,7 +123,7 @@ class NFile extends NActiveRecord
 				'id'=>'pk',
 				'uploaded_by'=>'int',
 				'description'=>'text',
-				'uploaded'=>'timestamp NULL DEFAULT NULL',
+				'uploaded'=>'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',
 				'original_name'=>'string',
 				'filed_name'=>'string',
 				'size'=>'string',
@@ -162,6 +162,7 @@ class NFile extends NActiveRecord
 		$this->mime = $mime;
 		$this->file_path = 'xxx';
 		$this->category = $category;
+		$this->uploaded_by = Yii::app()->user->getId();
 		$this->save();
 		return $this->id;
 	}

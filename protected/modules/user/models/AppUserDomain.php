@@ -18,6 +18,10 @@ class AppUserDomain extends NActiveRecord
 {
 	
 	
+	public function tableName(){
+		return '{{user_appdomain_user}}';
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}

@@ -17,7 +17,11 @@ defined('DS') or define('DS',DIRECTORY_SEPARATOR);
  */
 class Nii extends CWebApplication
 {
-	
+	/**
+	 * prefix of the the new subdomain databases
+	 * @var type 
+	 */
+	public $prefix = 'nii_';
 
 	public $domain = false;
 
@@ -32,7 +36,7 @@ class Nii extends CWebApplication
 			// set up application context using the subdomain
 			$host = Yii::app()->request->getHostInfo();
 			// define the hostname!
-			$subdomain = trim(str_replace(array('http://',$this->hostname),'',$host),'.');
+			$subdomain = trim(str_replace(array('http://', $this->hostname),'',$host),'.');
 			//echo $subdomain;
 			//echo $subdomain;
 			if($subdomain==''){
@@ -45,6 +49,7 @@ class Nii extends CWebApplication
 				}else{
 					$this->setSubDomain($dom->domain);
 					$this->defaultController = 'app';
+					$this->configSubDomain();
 				}
 			}
 		}
@@ -57,6 +62,19 @@ class Nii extends CWebApplication
 
 		// run the application (process the request)
 		parent::run();
+	}
+	
+	/**
+	 * this is run when a subdomain is initialised.
+	 * changes file paths etc to make specific to the subdomain environment
+	 */
+	public function configSubDomain(){
+		// to prevent cache affecting other subdomains lets create a specific runtime folder for each subdomain
+		$runtime = Yii::getPathOfAlias('app.runtime').DS.$this->getSubDomain();
+		if(!file_exists($runtime)){
+			mkdir($runtime);
+		}
+		$this->runtimePath = $runtime;
 	}
 	
 	/**
@@ -91,7 +109,8 @@ class Nii extends CWebApplication
 	 * @param type $event 
 	 */
 	public function registrationComplete($event){
-		$this->createApp($event->params['user']->domain);
+		if ($this->domain)
+			$this->createApp($event->params['user']->domain);
 		
 		// add signed up user to own db user table
 	}
@@ -103,7 +122,7 @@ class Nii extends CWebApplication
 		$sql = "CREATE DATABASE `$dbName`";
 		$cmd = Yii::app()->db->createCommand($sql);
 		$cmd->execute();
-		
+		// TODO: create a mysql user with the name of the subdomain.
 		// install the tables and run each modules install
 		$db = Yii::app()->getMyDb();
 		$this->install();
@@ -118,11 +137,8 @@ class Nii extends CWebApplication
 	}
 	
 	
-	
-	public $prefix = 'spanner_';
 	public function getMyDbName(){
 		$subdomain = $this->getSubDomain();
-		
 		return $this->prefix.$subdomain;
 	}
 	
@@ -145,7 +161,7 @@ class Nii extends CWebApplication
 				'class' => 'CDbConnection',
 				'connectionString' => "mysql:host=localhost;dbname={$dbName}",
 				'emulatePrepare' => true,
-				'username' => 'newicon',
+				'username' => 'newicon',// should probably use a specific username generated for this db
 				'password' => 'bonsan',
 				'charset' => 'utf8',
 				'tablePrefix' =>'',

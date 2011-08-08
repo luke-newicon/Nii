@@ -1,9 +1,3 @@
-.NTextareaMarkdown{padding:10px;}
-.NTextareaMarkdown .input,.NTextareaMarkdown{border:1px solid #CCC;}
-.NTextareaMarkdown .buttons .btn.btnN.btnToolbar {padding: 3px;}
-.NTextareaMarkdown .buttons{margin-bottom:2px;}
-.NTextareaMarkdown .buttons .help_button{margin: 7px;}
-.NTextareaMarkdown .previewBox{padding-left:2px;margin-top:3px;}
 
 /** Markdown Formatting **/
 blockquote {background: none repeat scroll 0 0 #EEE;border: 1px dotted;margin: 10px;padding: 10px;}

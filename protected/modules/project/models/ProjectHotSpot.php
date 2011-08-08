@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectHotSpot extends NActiveRecord 
+class ProjectHotSpot extends NAppRecord 
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -26,7 +26,7 @@ class ProjectHotSpot extends NActiveRecord
 	
 	public function rules(){
 		return array(
-			array('screen_id,width,height,left,top,screen_id_link','safe')
+			array('screen_id,width,height,left,top,screen_id_link,fixed_scroll','safe')
 		);
 	}
 
@@ -43,15 +43,26 @@ class ProjectHotSpot extends NActiveRecord
 	}
 	
 	public function schema(){
+		
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
 				'screen_id'=>'int',
+				'template_id'=>'int NULL DEFAULT \'0\'',
 				'width'=>'int',
 				'height'=>'int',
 				'left'=>'int',
 				'top'=>'int',
-				'screen_id_link'=>'int'
+				'screen_id_link'=>'int',
+				'fixed_scroll'=>'TINYINT(1) NULL DEFAULT  \'0\''
+			),
+			'keys'=>array(
+				array('template_id'),
+				array('screen_id'),
+				array('screen_id_link')
+			),
+			'foreignKeys'=>array(
+				array('project_hotspot','screen_id','project_screen','id','CASCADE','CASCADE'),
 			)
 		);
 	}

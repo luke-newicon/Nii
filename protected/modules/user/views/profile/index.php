@@ -12,6 +12,6 @@
 	</div>
 </div>
 <?php else: ?>
-No contact record 
+
 
 <?php endif; ?>

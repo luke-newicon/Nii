@@ -148,11 +148,14 @@ class NFileManager extends CApplicationComponent
 		$categoryLoc = array_key_exists($category, $this->categories) ? $this->categories[$category] : $category;
 		
 		if($this->locationIsAbsolute)
-			$targetPath = $this->location.DS.$categoryLoc.DS;
+			$targetPath = $this->location.DS.$categoryLoc;
 		else
-			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc.DS;
+			$targetPath = Yii::app()->basePath.DS.$this->location.DS.$categoryLoc;
+		// if path doesn't exist atempt to create it.
+		if(!file_exists($targetPath))
+			mkdir($targetPath);
 		
-		return $targetPath;
+		return $targetPath.DS;
 	}
 	
 	/**
@@ -164,7 +167,7 @@ class NFileManager extends CApplicationComponent
 	 * @return string system path to the file
 	 */
 	public function getFilePath($file){
-		return $this->getPath($file->category) . DIRECTORY_SEPARATOR . $file->filed_name;
+		return $this->getPath($file->category) . $file->filed_name;
 	}
 	
 	/**
@@ -253,6 +256,7 @@ class NFileManager extends CApplicationComponent
 		return $newFile->id;
 	}
 
+
 	/**
 	 * Remove a file from the system
 	 * 
@@ -329,13 +333,13 @@ class NFileManager extends CApplicationComponent
 				header('Content-Disposition: attachment; filename=' . $safeName);
 
 				header("Pragma: public");
-				header("Expires: 0");
+				header("ExpiresDefault: access plus 10 years");
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 			}
 			echo $data;
 
-			//Once the file has been read, this code stops anything else from being rendered onto the bottom of it.
-			Yii::app()->end();
+			// Once the file has been read, this code stops anything else from being rendered onto the bottom of it.
+			exit();
 		} else {
 			throw new CHttpException(404, Yii::t('app', 'The specified file cannot be found.'));
 		}
@@ -345,15 +349,15 @@ class NFileManager extends CApplicationComponent
 	/**
 	 * deletes a file from the server and removes the associated database record.
 	 * @param int $fileId
-	 * @return boolean true on success false on failure 
 	 */
 	public function deleteFile($fileId){
 		$f = NFile::model()->findByPk($fileId);
 		$filePath = $this->getFilePath($f);
-		if(unlink($filePath)){
-			$f->delete();
-			return true;
-		}
+		// it is possible if upload directories have changed or db and filesystem is out of sync
+		// for threr to be no file so first lets check there is a file available for deletion
+		if(file_exists($filePath))
+			unlink($filePath);
+		$f->delete();
 		return false;
 	}
 	

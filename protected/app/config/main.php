@@ -13,13 +13,14 @@ $JQUERY_THEME = 'nii';
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
-	'basePath'=>dirname(dirname(__FILE__)),
+	
+	'basePath'=>Yii::getPathOfAlias('app'),
 	'name'=>'Newicon',
+	'domain'=>true,
 	'timezone'=>'Europe/London',
-	'hostname'=>'localhost',
+	'hostname'=>'local.ape-project.org',
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
@@ -34,7 +35,7 @@ return array(
 		'modules.user.models.*',
         'modules.user.components.*',
 	),
-	'theme'=>'classic',
+	'theme'=>'nii',
 
 	'modulePath'=>Yii::getPathOfAlias('modules'),
 	'modules'=>array(
@@ -48,12 +49,23 @@ return array(
 				'ext.gtc',   // Gii Template Collection
 			),
 		),
-		'crm',
-		'kashflow',
-		'email',
-		'user',
+		//'crm',
+		//'kashflow',
+		//'email',
+		'user'=>array(
+			'registrationCaptcha'=>false,
+			'termsRequired'=>false,
+			'returnUrl'=>array('/project/index/index'),
+			'profileUrl'=>array('/project/index/index'),
+			'sendActivationMail'=>true,
+			'activeAfterRegister'=>true,
+			'usernameRequired'=>false,
+			'showUsernameField'=>false
+		),
 		'project',
-		'hosting',
+		//'hosting',
+		//'account',
+		//'payment',
 		'dev'=>array(
 			'modules'=>array('kanban')
 		),
@@ -62,13 +74,18 @@ return array(
 
 	// application components
 	'components'=>array(
-
+		'sprite'=>array(
+			'class'=>'nii.components.sprite.NSprite',
+			'imageFolderPath'=>array(
+				Yii::getPathOfAlias('modules.project.images')
+			)
+		),
 		'user'=>array(
 			'class'=>'NWebUser',
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 			'loginUrl' => array("/user/account/login"),
-			
+			//'returnUrl'=>''
 		),
 		'authManager'=>array(
 			'class'=>'CDbAuthManager',
@@ -85,6 +102,8 @@ return array(
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+				'login'=>'/user/account/login',
+				'logout'=>'/user/account/logout'
 			),
 			'showScriptName'=>false,
 		),
@@ -121,9 +140,26 @@ return array(
 			// An array of different sizes which can be reffered to throughout the program
 			'types'=>array(
 				'grid'=>array(
-					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')),
+					'resize' => array('width'=>150, 'height'=>150, 'master'=>'width', 'scale'=>'down')
+				),
+				'project-drop-down'=>array(
+					'resize' => array('width'=>24, 'height'=>24, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-32'=>array(
+					'resize' => array('width'=>32, 'height'=>32, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-48'=>array(
+					'resize' => array('width'=>48, 'height'=>48, 'master'=>'max', 'scale'=>'down')
+				),
+				'project-drop-down-48-crop'=>array(
+					'resize' => array('width'=>48, 'height'=>48, 'master'=>'width', 'scale'=>'down'),
+					'crop' => array('width'=>48, 'height'=>48, 'top'=>'top', 'left'=>'center')
+				),
+				'project-drop-down-16'=>array(
+					'resize' => array('width'=>16, 'height'=>16, 'master'=>'max', 'scale'=>'down')
+				),
 			),
-			'notFoundImage'=>'NoPhoto.png'
+			'notFoundImage'=>Yii::getPathOfAlias('base.images.newicon').'.png',
         ),
 		'log'=>array(
 			'class'=>'CLogRouter',
@@ -186,7 +222,7 @@ return array(
 		),
 		'fileManager'=>array(
 			'class'=>'NFileManager',
-			'location'=>Yii::getPathOfAlias('base.uploads'),
+			'location'=>Yii::getPathOfAlias('base.protected.app.runtime'),
 			'locationIsAbsolute'=>true,
 			'defaultCategory' => 'attachments',
 			'categories' => array(

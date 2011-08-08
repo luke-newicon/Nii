@@ -2,34 +2,72 @@
 	.uploading{width:50px;height:100px;border:1px solid #ccc;float:left;background:#fff;}
 	
 	
-	.projectBox{background-color:#fff;border:2px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;box-shadow:0px 0px 3px #ccc;}
-	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
-	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;}
+	
 	.projList li{display:inline-block;float:left;margin:15px;}
-	.projImg{border:1px solid #ccc; height:158px;margin-bottom:20px;display:block;background-color:#f1f1f1;}
+	.projImg{border:1px solid #ccc; height:158px;margin-bottom:15px;display:block;background-color:#f1f1f1;}
 	
 	.projName{height:40px;}
-	.projName .name,a.addProject{font-size:120%;font-weight:bold;}
+	.projName .name,a.addProject{font-size:120%;font-weight:bold;width:200px;overflow:hidden;}
 	
 	.plupload input{cursor:pointer;}
 	
 	
 	
-	#dropzone{border:1px solid #999;border-radius:10px;background-color:#ccc;width:400px;min-height:150px;}
+	#dropzone{border:1px solid #555;background-color:#909090;}
 	#dropzone.miniDrop{display:none;}
-	#dropzone.dragging{background-color:#000;display:block;}
+	#dropzone.dragging{background-color:#666;display:block;}
 	
 	
-	.functions{visibility: hidden;}
-	.hover .functions{visibility:visible;}
+	.projectBox{background-color:#fff;position:relative;background-color:#fff;border:1px solid #ccc;width:200px;height:240px;padding:10px;border-radius:8px;}
+	.projectBox.details{box-shadow:none;border:2px dashed #ccc;}
+	.projectBox:hover,.projectBox.details:hover{box-shadow:0px 0px 10px #aaa;background-color:#fff;}
+	
+	.projFuns{position:absolute;bottom:5px;right:10px;display:none;}
+	.projectBox.hover .projFuns{position:absolute;bottom:5px;right:10px;display:block;}
+	
+	.main,html,body{background-color:#f9f9f9;}
+	
+	
+	.pending{border-style: dashed;background-color:#f1f1f1;}
+	.uploading{border-style:solid;background-color:#f1f1f1;}
+
+	.sortablePlaceholder{background-color:#f1f1f1;border:1px dotted #ccc;}
+	
+	.plupload{cursor:pointer;}
+	
+	#progress{position:fixed;display:none;z-index:10;width:300px;}
+	.ui-progressbar{background:-webkit-gradient(linear,center bottom,center top,from(#aaa), to(#666));background:-moz-linear-gradient(center top,#666, #aaa);border:1px solid #bbb;height:22px;}
+	
+	
 	
 </style>
-<h1 class="project"><?php echo $project->name; ?></h1>
 
-
-<div class="toolbar">
-	<a href="" class="btn btnN">Delete</a>
+<div class="toolbar plm" >
+	<div class="line">
+		<div class="unit titleBarText">
+			<a href="<?php echo NHtml::url('/project/index/index'); ?>">Projects</a>
+		</div>
+		<div class="unit toolbarArrow"></div>
+		<div class="unit titleBarText mrm">
+			<span><?php echo $project->name; ?></span>
+		</div>
+		<div class="unit">
+			<div style="margin:12px 5px;width:0px;height:20px;border-left:1px solid #ababab;border-right:1px solid #fff;"></div>
+		</div>
+		<div class="unit plm" >
+			<a href="#" id="pickfiles" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/upload.png'; ?>"/></a>
+		</div>
+		<div class="unit plm">
+			<a href="#" class="delete" style="padding-top:14px;display:block;" ><img src="<?php echo ProjectModule::get()->getAssetsUrl().'/trash.png'; ?>"/></a>
+		</div>
+		<div class="lastUnit plm">
+<!--			<a href="#" class="upload" style="padding-top:14px;display:block;" >Collaborator</a>-->
+		</div>
+	</div>
 </div>
+<div id="drop" class="dropzone" style="display:none;">
+</div>
+<br />
 
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
@@ -47,19 +85,18 @@
  )); ?>
 
 
+<?php if(count($screens) === 0): ?>
+<div id="no-screens-info" ></div>
+<?php endif; ?>
 
-<div id="dropzone" class="mll miniDrop">
-	
+
+<div id="progress" class="pam blackpop">
+	<div class="bar"></div>
+	<div class="qty">Uploading <span class="current" style="font-weight:bold;"></span> of <span class="total" style="font-weight:bold;"></span> - <span class="percent"></span> <span class="size"></span></div>
 </div>
-<div id="container">
-	<a class="btn btnN" id="pickfiles" href="#">Select files...</a>
-<!--	<a id="uploadfiles" href="#">[Upload files]</a>-->
-</div>
-
-
 
 <ul class="noBull projList">
-	<?php foreach($project->getScreens() as $screen): ?>
+	<?php foreach($screens as $screen): ?>
 	<li>
 		<?php $this->renderPartial('_project-screen',array('screen'=>$screen)); ?>
 	</li>
@@ -71,24 +108,43 @@
 // Custom example logic
 $(function(){
 	
+	
+	$('.toolbar').delegate('.delete','click',function(){
+		$projectBox = $(this).closest('.projectBox');
+		if(confirm('Are you sure you want to delete this project?')){
+			$.post("<?php echo NHtml::url('/project/index/delete') ?>",{id:<?php echo $project->id; ?>},function(){
+				location.href = "<?php echo NHtml::url('/project/index/index'); ?>";
+			});
+		}
+	});
+	
+	
 	var timer = {};
-	window.ondragenter = function(e){
+	window.addEventListener("dragenter", function(e){
 		//$('#dropzone').show();
 		clearTimeout(timer);
 		$('#dropzone').addClass('dragging');
-	};
+		$('#drop').show().addClass('dragging').width($(window).width()-40).height($(window).height()-40)
+			.position({'my':'center','at':'center','of':$(window)})
+	}, false);
+	
 	window.addEventListener( 'dragover', function(){
 		clearTimeout(timer);
+		timer = setTimeout(function(){
+			$('#drop').fadeOut('fast');
+			$('#dropzone').removeClass('dragging');
+		},150);
 		$('#dropzone').addClass('dragging');
+		$('#drop').show();
 	}, true );
 	
-	window.addEventListener("dragleave", function(){
+	window.addEventListener("dragleave", function(e){
 		if(timer)
 			clearTimeout(timer);
 		timer = setTimeout(function(){
+			$('#drop').fadeOut('fast');
 			$('#dropzone').removeClass('dragging');
-		},300);
-		
+		},150);
 	}, false);
 	
 	
@@ -96,7 +152,7 @@ $(function(){
 	var uploader = new plupload.Uploader({
 		runtimes : 'html5,flash,silverlight,browserplus',
 		browse_button : 'pickfiles',
-		container : 'container',
+		//container : 'container',
 		max_file_size : '10mb',
 		url : '<?php echo NHtml::url(array('/project/details/upload/','projectId'=>$project->id)) ?>',
 		flash_swf_url:"/newicon/Nii/assets/79029962/plupload.flash.swf",
@@ -105,7 +161,7 @@ $(function(){
 			{title : "Image files", extensions : "jpg,gif,png"},
 			{title : "Zip files", extensions : "zip"}
 		],
-		drop_element:'dropzone'
+		drop_element:'drop'
 		//resize : {width : 320, height : 240, quality : 90}
 	});
 	
@@ -121,22 +177,66 @@ $(function(){
 
 	uploader.init();
 
+	var totalPercent;
+	var totalImages;
+	var currentImage;
+	var doPercent = function(){
+		//$('#progress .percent').html(totalPercent+'%');
+		if(currentImage+1 <= totalImages)
+			$('#progress .current').html(currentImage+1);
+		$('#progress .total').html(totalImages);
+		$("#progress .bar").progressbar({value: totalPercent});
+		$("#progress .percent").html(totalPercent + '% complete');
+	};
+	
 	uploader.bind('FilesAdded', function(up, files) {
-		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number);
-		
-		$.each(files, function(i, file) {
-			$('#dropzone').append(
-				'<div class="uploading" id="' + file.id + '">' +
-				file.name + ' (' + plupload.formatSize(file.size) + ')' +
-			'</div>');
+		$('#no-screens-info').fadeOut();
+		//if (up.files.length > $max_file_number) up.splice($max_file_number, up.files.length-$max_file_number)
+		if(!$('#progress').is(':visible'))
+			$('#progress').fadeIn().position({'my':'center','at':'center','of':$(window)});
+		$.each(files.reverse(), function(i, file) {
+			screenName = file.name.replace(/\.[^\.]*$/, '');
+			screenName = screenName.replace(/-/g, " ");
+			screenName = screenName.replace(/_/g, " ");
+			var content = '<li><div class="projectBox pending" id="' + file.id + '">' +
+				'<a class="projImg loading-fb" href="#"></a>' +
+				'<div class="projName"><div class="name">'+screenName+'</div></div>' +
+				'<div class="progress" style="height:10px;position:absolute;bottom:10px;width:180px;left:10px;"></div>' +
+			'</div></li>';
+			
+			// lookup the name
+			// remove the file name
+			
+			$exists = $('.projectBox[data-name="'+screenName+'"]');
+			if($exists.length!=0){
+				$exists.closest('li').replaceWith(content);
+			}else{
+				$('.projList').prepend(content);
+			}
 		});
+		totalPercent = 0;
+		currentImage = 0;
+		totalImages = files.length;
+		//doPercent();
 		up.refresh(); // Reposition Flash/Silverlight
 		if(up.files.length > 0) uploader.start();
 	});
 
 	uploader.bind('UploadProgress', function(up, file) {
 		//alert(file.percent);
-		$('#' + file.id + " strong").html(file.percent + "%");
+		var $box = $('#' + file.id);
+		if(!$box.is('uploading')){
+			$box.removeClass('pending').addClass('uploading');
+			$box.animate({backgroundColor: "#fff"});
+		}
+			
+		//	$box.removeClass('pending').addClass('uploading');
+		$('#'+file.id+' .progress').progressbar({value:file.percent});
+		currentPercent = file.percent;
+		// work out total upload progress
+		console.log(uploader);
+		totalPercent = uploader.total.percent;
+		doPercent();
 	});
 
 	uploader.bind('Error', function(up, err) {
@@ -150,31 +250,74 @@ $(function(){
 	});
 
 	uploader.bind('FileUploaded', function(up, file, info) {
+		currentImage = currentImage + 1;
+		doPercent();
+		
+		
 		console.log(info);
 		var r = $.parseJSON(info.response);
 		if(r.error != undefined){
 			alert(r.error.message);
 		}
-		$('#' + file.id + " strong").html("100%");
-		$('#' + file.id).remove();
-		$('.projList').append('<li>'+r.result+'</li>')
 		
+		if(r.replacement){
+			$('.projectBox[data-id="'+r.id+'"]').closest('li').hide('normal', function(){$(this).remove();});
+		}
+		var $box = $(r.result);
+		$('#' + file.id).replaceWith($box);
+		$box.addClass('uploaded');
+		$box.find('.projImg').addClass('loading');
+		// check to see if it is a replacement
+		
+		// when the DOM is ready
+		var img = new Image();
+		// wrap our new image in jQuery, then:
+		$(img).load(function () {
+			// set the image hidden by default    
+			$(this).hide();
+			$box.find('.projImg')
+			// remove the loading class (so no background spinner), 
+			.removeClass('loading')
+			// then insert our image
+			.append(this);
+			 $(this).fadeIn();
+		})
+		.error(function () {
+			// show broken image graphic here
+			alert('oops broken image');
+		})
+		.attr('src', r.src);
+		//$('#' + file.id).remove();
+		//$('.projList').append('<li>'+r.result+'</li>')
+		
+	});
+	uploader.bind('UploadComplete', function(up, file, info) {
+		$('#progress').fadeOut();
 	});
 	
 	
+	
+	/*
+	 * Screen cards
+	 *  
+	 */
 	// delete the images
 	$('.projList').delegate('.deleteScreen','click',function(){
 		$projectBox = $(this).closest('.projectBox');
-		if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name').text()+'" screen?')){
+		if(confirm('Are you sure you want to delete the "'+$projectBox.find('.projName .name:first').text()+'" screen?')){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
-			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){
-			});
+			$.post("<?php echo NHtml::url('/project/details/deleteScreen') ?>",{screenId:$projectBox.data('id')},function(){});
 		}
 		return false;
 	})
 	.sortable({
+		cancel:'.btn,.addScreen',
+		items:'li:not(.addScreen)',
+		revert:100,
+		placeholder:'projectBox sortablePlaceholder',
+		opacity:0.8,
 		stop:function(){
 			var order = {};
 			$('.projList li').each(function(i,el){
@@ -191,5 +334,46 @@ $(function(){
 	// add hover class when hovering over a screen
 	$('.projList').delegate('.projectBox','mouseenter',function(){$(this).addClass("hover");});
 	$('.projList').delegate('.projectBox','mouseleave',function(){$(this).removeClass("hover");});
+	
+	$('.upload').click(function(){
+		$('.droppy').slideToggle(200);
+		$('#no-screens-info').fadeOut();
+	});
+	
+	
+	
+	$('.projList').delegate('.screenInfo','click',function(){
+		var $pBox = $(this).closest('.projectBox');
+		var info='';
+		$.post("<?php echo NHtml::url('/project/details/info') ?>",{screen_id:$pBox.attr('data-id')},function(r){
+			info = r;
+		});
+		$pBox.addClass('noShadow').flip({
+			direction:'rl',
+			speed:150,
+			color:'#fff',
+			content:$pBox.find('.screenFlip'),
+			onEnd:function(){
+				$pBox.removeClass('noShadow');
+				// only set the html once the ajax has returned.
+				checkInfo();
+			}
+		});
+		var checkInfo=function(){
+			if(info=='')
+				setTimeout(checkInfo,50);
+			else
+				$pBox.find('.screen-info').html(info).removeClass('loading');
+		};
+		return false;
+	});
+	$('.projList').delegate('.revertFlip','click',function(){
+		var $pBox = $(this).closest('.projectBox');
+		$pBox.addClass('noShadow').revertFlip();
+		return false;
+	});
+	
+	
+	
 });
 </script>

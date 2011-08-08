@@ -16,3 +16,12 @@
 	</div>
 </body>
 <?php $this->renderPartial('//layouts/admin/_footer'); ?>
+<script>
+	$(function(){
+		setTimeout(function(){
+			$.post("<?php echo NHtml::url('/nii/index/heartbeat'); ?>",function(r){
+				if(r.success == true) return true;
+			})
+		},15000);
+	});
+</script>

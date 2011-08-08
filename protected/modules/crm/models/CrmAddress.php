@@ -215,9 +215,9 @@ class CrmAddress extends CrmActiveRecord
 			'keys'=>array(
 				array('contact_id')
 			),
-			'foreignKeys'=>array(
-				array('crm_address_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
-			)
+//			'foreignKeys'=>array(
+//				array('crm_address_contact', 'contact_id', 'crm_contact', 'id', 'CASCADE', 'CASCADE')
+//			)
 		);
 	}
 	

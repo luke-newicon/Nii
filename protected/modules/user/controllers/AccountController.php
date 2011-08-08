@@ -1,6 +1,6 @@
 <?php
 
-class AccountController extends Controller {
+class AccountController extends NController {
 
 	/**
 	 * @var string the default layout for the controller view.
@@ -35,6 +35,7 @@ class AccountController extends Controller {
 	public function actionLogin() {
 		if (Yii::app()->user->isGuest) {
 			$model = new UserLogin;
+			$this->performAjaxValidation($model, 'userloginform');
 			// collect user input data
 			if (isset($_POST['UserLogin'])) {
 				$model->attributes = $_POST['UserLogin'];
@@ -45,6 +46,9 @@ class AccountController extends Controller {
 					$user->lastvisit = time();
 					$user->save();
 					$this->redirect(Yii::app()->getModule('user')->returnUrl);
+				}else{
+					// check domain
+					$this->transferToDomain($model->getUserIdentity());
 				}
 			}
 			// display the login form
@@ -53,6 +57,30 @@ class AccountController extends Controller {
 			$this->redirect(Yii::app()->getModule('user')->returnUrl);
 		}
 	}
+	
+	/**
+	 * This function handles the scenario where a user is logging in from the wrong domain.
+	 * It redirects the browser to the correct domain for the user and reposts the login form.
+	 * @param UserLogin $userLogin 
+	 */
+	public function transferToDomain($userIdentity){
+		if (UserModule::get()->domain) {
+			// if the user is trying to log into the wrong subdomain but is a valid user
+			if ($userIdentity!==null && $userIdentity->errorCode == UserIdentity::ERROR_DOMAIN) {
+				// unbelievable that it comes to this...
+				// but even the paypal IPN modules in magento and zen cart use this method
+				// To post data to a redirect page
+				if($userIdentity->getUser()->domain==''){
+					$url = 'http://'.Yii::app()->hostname.'/user/account/login';
+				}else{
+					$url = 'http://'.$userIdentity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+				}
+				echo $this->render('transfer',array('userIdentity'=>$userIdentity, 'action'=>$url),true);
+				exit();
+			}
+		}
+	}
+	
 
 	/**
 	 * Logout the current user and redirect to returnLogoutUrl.
@@ -61,7 +89,6 @@ class AccountController extends Controller {
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->getModule('user')->returnLogoutUrl);
 	}
-
 
 
 	/**
@@ -74,17 +101,13 @@ class AccountController extends Controller {
 		
 		$user = new RegistrationForm;
 		
-		$domain = new AppDomain;
-		$contact = null;
 		// populate array of models to validate
 		$models[] = $user;
-		if($userModule->useCrm){
-			$contact = new CrmContact;
-			$models[] = $contact;
-		}		
-		if($userModule->domain) 
+
+		if($userModule->domain) {
+			$domain = new AppDomain;
 			$models[] = $domain;
-		
+		}
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
 		{	
@@ -116,16 +139,7 @@ class AccountController extends Controller {
 						$domain->save();
 						$user->domain = $domain->domain;
 					}
-					
 					$user->save();
-
-					// if crm module installed
-					if($userModule->useCrm){
-						$contact->type = CrmContact::TYPE_USER;
-						$contact->user_id = $user->id;
-						$contact->save();
-					}
-					
 
 					if ($userModule->sendActivationMail) {
 						$activationUrl = $this->makeActivationLink($user, '/user/account/activation');
@@ -137,37 +151,38 @@ class AccountController extends Controller {
 					}
 
 					// if users can login imediately after registration
-					if (($userModule->loginNotActive ||($userModule->activeAfterRegister && $userModule->sendActivationMail==false)) && $userModule->autoLogin) {
-						$identity=new UserIdentity($user->username,$soucePassword);
+					if (($userModule->loginNotActive ||($userModule->activeAfterRegister)) && $userModule->autoLogin) {
+						$username = ($user->username=='')?$user->email:$user->username;
+						$identity=new UserIdentity($username,$_POST['RegistrationForm']['password']);
 						$identity->authenticate();
-						Yii::app()->user->login($identity,0);
+						
+						// call external events!
+						$e = new CEvent($this, array('user'=>$user));
+						$userModule->onRegistrationComplete($e);
+				
+						$this->transferToDomain($identity);
+
 						$this->redirect($userModule->returnUrl);
+						
 					} else {
 						if (!$userModule->activeAfterRegister && !$userModule->sendActivationMail) {
-							Yii::app()->user->setFlash('registration',
-								UserModule::t("Thank you for your registration. Contact Admin to activate your account."));
+							Yii::app()->user->setFlash('registration', UserModule::t("Thank you for your registration. Contact Admin to activate your account."));
 						} elseif($userModule->activeAfterRegister && $userModule->sendActivationMail==false) {
-							Yii::app()->user->setFlash('registration',
-								UserModule::t("Thank you for your registration. Please {{login}}.",
-									array('{{login}}'=>CHtml::link(UserModule::t('Login'),$userModule->loginUrl))));
+							Yii::app()->user->setFlash('registration', UserModule::t("Thank you for your registration. Please {{login}}.", array('{{login}}'=>CHtml::link(UserModule::t('Login'),$userModule->loginUrl))));
 						} elseif($userModule->loginNotActive) {
-							Yii::app()->user->setFlash('registration',
-								UserModule::t("Thank you for your registration. Please check your email or login."));
+							Yii::app()->user->setFlash('registration', UserModule::t("Thank you for your registration. Please check your email or login."));
 						} else {
-							Yii::app()->user->setFlash('registration',
-								UserModule::t("Thank you for your registration. Please check your email."));
+							Yii::app()->user->setFlash('registration', UserModule::t("Thank you for your registration. Please check your email."));
 						}
-						//$this->refresh();
 					}
 					// call external events!
 					$e = new CEvent($this, array('user'=>$user));
 					$userModule->onRegistrationComplete($e);
 				}
 			}
-			$this->render('registration',array('model'=>$user,'contact'=>$contact,'domain'=>$domain));
+			$this->render('registration',array('model'=>$user,'domain'=>$domain));
 		}
 	}
-
 	
 
 	/**
@@ -177,14 +192,20 @@ class AccountController extends Controller {
 		$email = NData::base64UrlDecode($_GET['e']);
 		$activekey = $_GET['activekey'];
 		if ($email&&$activekey) {
-			$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
-			if (isset($find) && $find->status==1) {
+			$user = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
+			if(isset($user) && $user->email_verified == 0 && $user->status == 1){
+				// user is active but has not verified his email
+				$user->email_verified = 1;
+				$user->save();
+				$this->render('message',array('title'=>UserModule::t("Email Verfied"),'content'=>UserModule::t("Thank you! We now know you are you!")));
+			} elseif (isset($user) && $user->status==1 && $user->email_verified==1) {
 			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is active.")));
-			} elseif(isset($find->activekey) && $this->checkActivationKey($find, $activekey)) {
-				$find->activekey = crypt(microtime());
-				$find->status = 1;
-				$find->save();
-			    $this->render('message',array('title'=>UserModule::t("User activation"),'content'=>UserModule::t("Your account is activated.")));
+			} elseif(isset($user->activekey) && $this->checkActivationKey($user, $activekey)) {
+				$user->activekey = crypt(microtime());
+				$user->status = 1;
+				$user->email_verified = 1;
+				$user->save();
+			    $this->render('activation');
 				$e = new CEvent($this, array('user'=>$user));
 				UserModule::get()->onActivation($e);
 			} else {
@@ -293,6 +314,4 @@ class AccountController extends Controller {
 			}
 		}
 	}
-
-
 }

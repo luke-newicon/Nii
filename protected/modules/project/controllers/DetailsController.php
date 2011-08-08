@@ -17,15 +17,16 @@
 class DetailsController extends AController 
 {
 	public function actionIndex($project){
+		$this->layout = 'index';
 		$p = Project::model()->findByAttributes(array('name'=>$project));
 		if($p===null)
 			throw new CHttpException(404, 'Ooops no page found for this project');
 		
-		$this->render('index', array('project'=>$p));
+		$this->render('index', array('project'=>$p, 'screens'=>$p->getScreens()));
 	}
 	
-	public function actionUpload($projectId){
-		$this->layout = 'ajax';
+	
+	public function pluploadProcess(&$targetDir, &$fileName, &$orginalName){
 		// HTTP headers for no cache etc
 		header('Content-type: text/plain; charset=UTF-8');
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -43,7 +44,7 @@ class DetailsController extends AController
 		@set_time_limit(5 * 60);
 
 		// Uncomment this one to fake upload time
-		//usleep(100000);
+		//sleep(5);
 		// Get parameters
 		$chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
 		$chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
@@ -142,47 +143,45 @@ class DetailsController extends AController
 		}
 		$fileContents = file_get_contents($targetDir . DIRECTORY_SEPARATOR . $fileName);
 		unlink($targetDir . DIRECTORY_SEPARATOR . $fileName);
-		$id = NFileManager::get()->addFile($fileName, $fileContents);
-		$p = new ProjectScreen;
-		$p->file_id = $id;
-		$p->project_id = $projectId;
-		$p->name = ProjectScreen::model()->formatFileName($orginalName);
-		$p->save();
-		$res = $this->render('_project-screen',array('screen'=>$p),true);
-		// Return JSON-RPC response
-		die('{"jsonrpc" : "2.0", "result" : '.json_encode($res).', "id" : "id"}');
+		return $fileContents;
 	}
 	
-	/**
-	 * render the individual screen view
-	 * @param int $id 
-	 */
-	public function actionScreen($id){
+	public function actionUpload($projectId){
+		$this->layout = 'ajax';
 		
-		$this->layout = 'index';
+		// upload the file and return contents
+		$fileContents = $this->pluploadProcess($targetDir, $fileName, $orginalName);
 		
-		$screen = ProjectScreen::model()->findByPk($id);
-		$project = Project::model()->findByPk($screen->project_id);
-		if($screen===null) throw new CHttpException (404,'whoops, no screen found');
+		$id = NFileManager::get()->addFile($fileName, $fileContents);
 		
-		$file = $screen->getFile();
-		if($file===null) throw new CHttpException (404,'whoops, no screen found');
+		$name = ProjectScreen::model()->formatFileName($orginalName);
 		
-		$rgb = $screen->guessBackgroundColor();
-		$info = getimagesize($file->getPath());
+		$s = ProjectScreen::model()->findByAttributes(array('name'=>$name,'project_id'=>$projectId));
+		$replacement=false;
+		if($s===null){
+			$s = new ProjectScreen;
+		}else{
+			// delete current file
+			NFileManager::get()->deleteFile($s->file_id);
+			$replacement=true;
+		}
+		$s->file_id = $id;
+		$s->project_id = $projectId;
+		$s->name = ProjectScreen::model()->formatFileName($orginalName);
+		$s->save();
+		$res = $this->renderPartial('_project-screen',array('screen'=>$s,'loadIn'=>true), true, false);
 		
-		// get all the hotspots on the screen
-		$hotspots = ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$screen->id));
-		$this->render('screen',array(
-			'project'=>$project,
-			'screen'=>$screen,
-			'file'=>$file,
-			'width'=>$info[0],
-			'height'=>$info[1],
-			'rgb'=>$rgb,
-			'hotspots'=>$hotspots
-		));
+		// Return JSON-RPC response
+		$ret = array(
+			'jsonrpc' => '2.0',
+			'result' => $res,
+			'src'=> NHtml::urlImageThumb($s->file_id, 'projectThumb'),
+			'id' => $s->id,
+			'replacement'=>$replacement
+		);
+		die(json_encode($ret));
 	}
+	
 	
 	/**
 	 * adds a hotspot to a screen
@@ -237,4 +236,14 @@ class DetailsController extends AController
 			array('sort' => new CDbExpression("CASE id $sql END"))
 		);
 	}
+	
+	
+	/**
+	 * loads gui to display the flipped info for a screen
+	 */
+	public function actionInfo(){
+		$screen = ProjectScreen::model()->findByPk($_POST['screen_id']);
+		echo $this->renderPartial('_screen-info',array('screen'=>$screen));
+	}
+
 }

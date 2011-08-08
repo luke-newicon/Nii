@@ -39,7 +39,7 @@ class NMarkdown extends CMarkdown
 		 *   )
 		 *   (?:                           # One or more:
 		 * 	[^\s()<>]+                      # Run of non-space, non-()<>
-		 * 	|                               #   or
+		 * 	|                               # or
 		 * 	\(([^\s()<>]+|(\([^\s()<>]+\)))*\)  # balanced parens, up to 2 levels
 		 *   )+
 		 *   (?:                           # End with:

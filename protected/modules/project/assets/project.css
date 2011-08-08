@@ -10,7 +10,34 @@
    TODO customize this sample style
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
+.addNewProj{background:url('add-project.png') no-repeat left top;}
 
+.toolbarArrow{background:url('toolbar-bc-arrow.png') no-repeat right 0px;height:45px;width:25px;margin:0px 10px 0px 5px;}
+.toolbar{height:46px;box-shadow:inset 0px 1px 0px #fff, 0px 2px 2px #ccc;border:1px solid #bbb;
+		background:-moz-linear-gradient(center top , #ebebeb, #d1d1d1) repeat scroll 0 0 transparent;
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#d1d1d1');
+		background: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#d1d1d1));}
+.titleBarText{height:33px;padding-top:13px;font-weight:normal;font-family: Arial;font-size:14px;text-shadow:0px 1px 0px #fff;}
 
+/*.dropzone{background:#909090 url('dropzone-shadow.png') repeat-x left top;}*/
 
+.dropzone{background:url('drop-images.png') no-repeat center center;border-radius:10px;border:5px solid #666;background-color:#fff;filter:alpha(opacity=90);opacity:0.9;position:absolute;z-index:9999;height:150px;background-color:#fff;}
 
+.loading{background: url(spinner.gif) no-repeat center center;}
+.loading-fb{background: url(fb-spinner.gif) no-repeat center center;}
+.ui-progressbar-value{background:#ccc url('pbar-ani.gif') repeat-x left top;border:1px solid #E78F08}
+#no-screens-info{background: url("no-images.png") no-repeat scroll center 10px #F9F9F9;border: 3px solid #AAAAAA;border-radius: 15px 15px 15px 15px;height: 215px;margin: 10px;}
+
+.projectBox.noShadow.hover.projectBox.noShadow:hover,.projectBox.noShadow,.noShadow{box-shadow:none;}
+
+/**
+ * awesome black popup box used for loading progress bar on upload screens.
+ */
+.blackpop{border-radius:5px;opacity:0.9;color:#fff;text-shadow:0 -1px 0 #000;box-shadow:0px 0px 5px #444, inset 0px 1px 0px #ccc;background:-webkit-gradient(linear,center bottom,center top,from(#333), to(#999));background:-moz-linear-gradient(center top , #999999, #333333) repeat scroll 0 0 transparent;border:1px solid #333;}
+
+.commentSpot{background:url('comment-spot-red.png') no-repeat top left;color: white;height: 27px;padding-right: 5px;padding-top: 6px;position: absolute;text-align: center;width: 32px; z-index: 100;}
+.lbl{font-weight:bold;display:block;}
+
+/** popup form tip things */
+.triangle{background:url("triangle.png") no-repeat top left;width:19px;height:34px;left:-19px;top:10px;position:absolute;}
+.triangle-verticle{background:url("triangle-verticle.png") no-repeat top left;width:30px;height:22px;left:50%;margin-left:-12px;top:-29px;position:absolute;}

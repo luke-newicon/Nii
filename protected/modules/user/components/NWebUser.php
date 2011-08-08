@@ -21,6 +21,7 @@ class NWebUser extends CWebUser
 	
 	private $_contact;
 	
+	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
 	 * If no user is logged in then this function will return null
@@ -88,33 +89,23 @@ class NWebUser extends CWebUser
 	 * @return type 
 	 */
 	public function getName(){
-		if($this->getIsGuest()){
-			return $this->guestName;
-		}else{
-			// this code should probably delegate to the CrmContact object
-			if(UserModule::get()->useCrm) {
-				$c = $this->contact;
-				if($c !== null){
-					if($c->first_name != '' && $c->last_name != ''){
-						return $c->first_name.' '.$c->last_name;
-					}
-					if($c->first_name != ''){
-						return $c->last_name;
-					}
-					if($c->last_name != ''){
-						return $c->last_name;
-					}
-				}
-			}
-			if($this->record !== null){
-				if($this->record->username !== null)
-					return $this->record->username;
-				else
-					return $this->record->email;
-			}
-			throw new CException('No record found for the logged in user');
+		if($this->record !== null){
 		}
+		return parent::getName();
 	}
 	
+	/**
+	 * get the current users email address
+	 */
+	public function getEmail(){
+		if($this->record !== null){
+			return $this->record->email;
+		}
+			
+		return $this->username;
+		
+	}
+	
+
 
 }

@@ -16,6 +16,23 @@ class UserIdentity extends CUserIdentity
 	const ERROR_STATUS_BAN=5;
 	const ERROR_DOMAIN=6;
 	
+	
+	/**
+	 * Gets the ActiveRecord User model
+	 * 
+	 * @return User 
+	 */
+	public function getUser(){
+		if($this->_user === null){
+			if (strpos($this->username,"@")) {
+				$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$this->username));
+			} else {
+				$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('username'=>$this->username));
+			}
+		}
+		return $this->_user;
+	}
+	
 	/**
 	 * Authenticates a user.
 	 * The example implementation makes sure if the username and password
@@ -26,18 +43,13 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		if (strpos($this->username,"@")) {
-			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$this->username));
-		} else {
-			$this->_user=UserModule::userModel()->notsafe()->findByAttributes(array('username'=>$this->username));
-		}
+		$this->getUser();
 		if($this->_user===null)
 			if (strpos($this->username,"@")) {
 				$this->errorCode=self::ERROR_EMAIL_INVALID;
 			} else {
 				$this->errorCode=self::ERROR_USERNAME_INVALID;
 			}
-			
 		else if(!$this->_user->checkPassword($this->password))
 			$this->errorCode=self::ERROR_PASSWORD_INVALID;
 		else if($this->_user->status==0&&Yii::app()->getModule('user')->loginNotActive==false)
@@ -55,7 +67,6 @@ class UserIdentity extends CUserIdentity
 					}
 				}
 			}
-			
 			$this->_loginUser($this->_user);
 		}
 		return !$this->errorCode;
@@ -66,7 +77,7 @@ class UserIdentity extends CUserIdentity
 		if($user){
 			$this->_user = $user;
 			$this->_id = $this->_user->id;
-			$this->username = $this->_user->username;
+			$this->username = ($user->username==null)?$user->email:$user->username;
             $this->errorCode = self::ERROR_NONE;
 		}
 	}

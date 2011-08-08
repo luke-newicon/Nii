@@ -17,7 +17,7 @@ class Image {
 
 	// Master Dimension
 	const NONE = 'none';
-	const AUTO = 'auto';
+	const MAX = 'max';
 	const HEIGHT = 'height';
 	const WIDTH = 'width';
 	const MIN = 'min'; // Added by Luke to add proper resizing for thumbnails (steve: how descriptive. a proper job?)
@@ -108,7 +108,7 @@ class Image {
 		);
 
 		// Load configuration
-        if ($config === null){
+        if ($config === null) {
             $this->config = array(
                 'driver'=>'GD',
                 'params'=>array(),
@@ -162,7 +162,7 @@ class Image {
 	 * @throws  Kohana_Exception
 	 * @param   integer  width
 	 * @param   integer  height
-	 * @param   integer  one of: Image::NONE, Image::AUTO, Image::WIDTH, Image::HEIGHT
+	 * @param   integer  one of: Image::NONE, Image::MAX, Image::WIDTH, Image::HEIGHT
 	 * @return  object
 	 */
 	public function resize($width, $height, $master = NULL)
@@ -179,7 +179,7 @@ class Image {
 		if ($master === NULL)
 		{
 			// Maintain the aspect ratio by default
-			$master = Image::AUTO;
+			$master = Image::MAX;
 		}
 		elseif ( ! $this->valid_size('master', $master))
 			throw new CException('image invalid master');
@@ -446,7 +446,7 @@ class Image {
 			break;
 			case 'master':
 				if ($value !== Image::NONE AND
-				    $value !== Image::AUTO AND
+				    $value !== Image::MAX AND
 				    $value !== Image::WIDTH AND
 				    $value !== Image::HEIGHT AND
 					$value !== Image::MIN) // Added by Luke to add proper resizing for thumbnails

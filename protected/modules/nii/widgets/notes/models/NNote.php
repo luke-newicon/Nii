@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "notes".
+ * This is the model class for table "note".
  *
- * The followings are the available columns in table 'notes':
+ * The followings are the available columns in table 'note':
  * @property string $id
  * @property string $user_id
  * @property string $added
@@ -15,7 +15,7 @@ class NNote extends NAppRecord
 {
     /**
      * Returns the static model of the specified AR class.
-     * @return Notes the static model class
+     * @return Note the static model class
      */
     public static function model($className=__CLASS__)
     {
@@ -27,7 +27,7 @@ class NNote extends NAppRecord
      */
     public function tableName()
     {
-        return '{{notes}}';
+        return '{{nii_note}}';
     }
 
     /**

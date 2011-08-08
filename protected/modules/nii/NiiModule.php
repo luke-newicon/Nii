@@ -15,7 +15,6 @@ class NiiModule extends NWebModule
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
-		
 	}
 	
 	public function registerScripts(){
@@ -23,9 +22,12 @@ class NiiModule extends NWebModule
 		Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.metadata.js');
 		$cs->registerScriptFile($this->getAssetsUrl().'/js/tipsy/javascripts/jquery.tipsy.js');
+		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
+		$cs->registerScriptFile($this->getAssetsUrl().'/js/jquery.hotkeys.js');
+		
+		Yii::app()->sprite->registerSpriteCss();// register the sprite css file
 		$cs->registerCssFile($this->getAssetsUrl().'/oocss/all.css');
 		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
-		$cs->registerScriptFile($this->getAssetsUrl().'/js/nii.js');
 	}
 	
 	/**
@@ -41,14 +43,20 @@ class NiiModule extends NWebModule
 			'jquery.tipsy.js'=>false,
 			'jquery.tipsy.css'=>false,
 			'jquery.metadata.js'=>false,
+			'tipsy.css'=>false,
+			'jquery.hotkeys.js'=>false,
 			'nii.js'=>false,
 			'all.css'=>false,
-			'tipsy.css'=>false
+			'sprite.css'=>false
 		);
 	}
 	
+	
+	
+	
 	public function install(){
 		Yii::import('nii.widgets.notes.models.NNote');
+		Yii::import('nii.models.*');
 		NNote::install();
 		NFile::install();
 	}

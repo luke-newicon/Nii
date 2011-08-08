@@ -42,10 +42,6 @@ class NActiveForm extends CActiveForm
 	public function init(){
 		// add small script to add focus class to parent .field element
 		$cs = Yii::app()->clientScript;
-		$cs->registerScript('NActiveForm#focusfields','
-			$(":input").focus(function(){$(this).closest(".field").addClass("focus");})
-				.blur(function(){$(this).closest(".field").removeClass("focus");});
-		');
 		parent::init();
 	}
 	

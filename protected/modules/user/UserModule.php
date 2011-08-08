@@ -10,18 +10,7 @@
 
 class UserModule extends NWebModule
 {
-	/**
-	 * @var int
-	 * @desc items on page
-	 */
-	public $user_page_size = 10;
-	
-	/**
-	 * @var int
-	 * @desc items on page
-	 */
-	public $fields_page_size = 10;
-	
+
 	/**
 	 * @var boolean
 	 * @desc use email for activation user account
@@ -36,15 +25,22 @@ class UserModule extends NWebModule
 	
 	/**
 	 * @var boolean
-	 * @desc activate user on registration (only $sendActivationMail = false)
+	 * @desc activate user on registration (required $sendActivationMail = false)
 	 */
 	public $activeAfterRegister=false;
 	
 	/**
 	 * @var boolean
-	 * @desc login after registration (need loginNotActiv or activeAfterRegister = true)
+	 * @desc login after registration (requires loginNotActive or activeAfterRegister = true)
 	 */
 	public $autoLogin=true;
+	
+	/**
+	 * how long the cookie should last that identifies the user
+	 * @var int (number of seconds) 
+	 */
+	public $rememberMeDuration = 2592000; // 30 days = (3600*24*30)
+	
 	
 	public $registrationUrl = array("/user/account/registration");
 	public $recoveryUrl = array("/user/account/recovery");
@@ -77,6 +73,7 @@ class UserModule extends NWebModule
 	/**
 	 * Whether to make the app user module domain specific 
 	 * (also adds required domain field to the user signup form)
+	 * This will be automatically set by nii's domain property
 	 * @var boolean 
 	 */
 	public $domain = false;
@@ -122,6 +119,8 @@ class UserModule extends NWebModule
 		// this method is called when the module is being created
 		// you may place code here to customize the module or the application
 
+		// remember Yii app should be pointing to Nii!
+		$this->domain = Yii::app()->domain;
 		// import the module-level models and components
 		$this->setImport(array(
 			'user.models.*',
@@ -153,17 +152,6 @@ class UserModule extends NWebModule
         }
 	}
 
-	public function beforeControllerAction($controller, $action)
-	{
-		if(parent::beforeControllerAction($controller, $action))
-		{
-			// this method is called before any module controller action is performed
-			// you may place customized code here
-			return true;
-		}
-		else
-			return false;
-	}
 	
 	/**
 	 * @param $str
@@ -227,7 +215,7 @@ class UserModule extends NWebModule
 	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
 	    $message = wordwrap($message, 70);
 	    $message = str_replace("\n.", "\n..", $message);
-	    return mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
+	    mail($email,'=?UTF-8?B?'.base64_encode($subject).'?=',$message,$headers);
 	}
 	
 	/**
@@ -266,6 +254,17 @@ class UserModule extends NWebModule
 	 */
 	public static function get(){
 		return Yii::app()->getModule('user');
+	}
+	
+	/**
+	 * check the password is correct
+	 * @param string $dbPass the initial password stored in the database
+	 * @param type $checkPass the password to check against
+	 * @return boolean 
+	 */
+	public static function checkPassword($dbPass,$checkPass) {
+		$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
+		return ($dbPass == crypt($checkPass, $salt));
 	}
 	
 	

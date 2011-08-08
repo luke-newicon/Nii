@@ -18,6 +18,7 @@ class IndexController extends AController
 { 
 	//put your code here
 	public function actionIndex(){
+		$this->layout = 'index';
 		$projects = Project::model()->findAll(array('order'=>'id DESC'));
 		$this->render('index',array('projects'=>$projects));
 	}
@@ -38,4 +39,13 @@ class IndexController extends AController
 			'project'=>$pStamp
 		));
 	}
+	
+	public function actionDelete(){
+		$p = Project::model()->findByPk($_POST['id']);
+		if($p===null)
+			throw new CHttpException(404,'Can not find the specified project');
+		$p->delete();
+	}
+	
+	
 }

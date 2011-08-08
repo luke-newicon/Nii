@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class Project extends NActiveRecord
+class Project extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -46,6 +46,12 @@ class Project extends NActiveRecord
 		);
 	}
 	
+	public function relations(){
+		return array(
+			'comments'=>array(self::HAS_MANY, 'ProjectComment', 'project_id'),
+		);
+	}
+	
 	/**
 	 * get all project screens
 	 * @return array of ProjectScreen
@@ -54,11 +60,14 @@ class Project extends NActiveRecord
 		return ProjectScreen::model()->findAllByAttributes(array('project_id'=>$this->id),array('order'=>'sort ASC'));
 	}
 	
-	public function getScreensListData(){
-		$arr = array(0=>'- Select Linking Image -');
-		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
-		return $arr + $ret ;
+	
+	/**
+	 * return all of the generated project links
+	 */
+	public function getLinks(){
+		return ProjectLink::model()->findAllByAttributes(array('project_id'=>$this->id));
 	}
+	
 	
 	/**
 	 * gets the title image from the screens
@@ -67,10 +76,76 @@ class Project extends NActiveRecord
 	public function getImageId(){
 		$screen = ProjectScreen::model()->find('project_id=:id AND home_page = 1',array('id'=>$this->id));
 		if($screen===null)
-			$screen = ProjectScreen::model()->find('project_id=:id',array('id'=>$this->id));
+			$screen = ProjectScreen::model()->find(array('condition'=>'project_id=:id','params'=>array('id'=>$this->id),'order'=>'sort ASC'));
 		if($screen===null)
 			return -99;
 		return $screen->file_id;
+	}
+	
+	
+	private $_numComments;
+	/**
+	 * Get the total number of comments this project has
+	 * 
+	 * @return integer 
+	 */
+	public function getNumComments(){
+		if($this->_numComments === null){
+			$screens = array();
+			foreach($this->getScreens() as $s)
+				$screens[] = $s->id;
+			$this->_numComments = ProjectComment::model()->countByAttributes(array('screen_id'=>$screens));
+		}
+		
+		return $this->_numComments;
+	}
+	
+	/**
+	 * get the total number of screens this project has
+	 * @return integer
+	 */
+	public function getNumScreens(){
+		return ProjectScreen::model()->countByAttributes(array('project_id'=>$this->id));
+	}
+	
+	/**
+	 * get a list of project screens,
+	 * this is used to populate the javascript array for the autocomplete screen selection
+	 * @return array 
+	 */
+	public function getScreenList(){
+		$screenList = array();
+		foreach($this->getScreens() as $i=>$s){
+			$screenList[] = array(
+				'value'=>$s->id,
+				'label'=>$s->name, // get transformed into html by search
+				'name'=>$s->name,
+				'src'=>NHtml::urlImageThumb($s->file_id, 'project-drop-down-48-crop'),
+				'bigSrc'=>NHtml::urlFile($s->file_id, $s->name)
+			);
+		}
+		return $screenList;
+	}
+	
+	
+	/**
+	 * populate a select box with all the projects screens
+	 * @return array 
+	 */
+	public function getScreensListData($notSelected='- Select linking image -'){
+		$arr = array(0=>$notSelected);
+		$ret = CHtml::listData($this->getScreens(), 'id', 'name');
+		return $arr + $ret ;
+	}
+	
+	/**
+	 * get the start screen for the preview.
+	 */
+	public function getHomeScreen(){
+		$screen = ProjectScreen::model()->findByAttributes(array('project_id'=>$this->id,'sort'=>0));
+		if($screen===null)
+			throw new CHtppException(404, 'Oops I couldn\'t find the home screen');
+		return $screen;
 	}
 	
 }

@@ -83,10 +83,13 @@ class User extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username'=>UserModule::t("username"),
-			'password'=>UserModule::t("password"),
-			'verifyPassword'=>UserModule::t("Retype Password"),
-			'email'=>UserModule::t("E-mail"),
+			'name'=>'Name',
+			'company'=>'Company',
+			'username'=>UserModule::t("Username"),
+			'password'=>UserModule::t("Password"),
+			'verifyPassword'=>UserModule::t("Password, again!"),
+			'email'=>UserModule::t("E-mail Address"),
+			'email_verified' => UserModule::t("Email Verified"),
 			'verifyCode'=>UserModule::t("Verification Code"),
 			'id' => UserModule::t("Id"),
 			'activekey' => UserModule::t("activation key"),
@@ -113,7 +116,7 @@ class User extends NActiveRecord
                 'condition'=>'superuser=1',
             ),
             'notsafe'=>array(
-            	'select' => 'id, username, password, email, activekey, createtime, lastvisit, superuser, status, domain',
+            	'select' => 'id, username, password, email, email_verified, activekey, createtime, lastvisit, superuser, status, domain',
             ),
         );
     }
@@ -148,12 +151,11 @@ class User extends NActiveRecord
 	 * @param string $password
 	 * @return boolean
 	 */
-	public function checkPassword($checkPassword){
+	public function checkPassword($checkPass){
 		// uses a salt so that two people with the same password will have
 		// different encrypted password values
 		// creates a unique salt from each password
-		$salt = substr($this->password, 0, CRYPT_SALT_LENGTH);
-		return ($this->password == crypt($checkPassword, $salt));
+		return (UserModule::checkPassword($this->password, $checkPass));
 	}
 
 
@@ -163,22 +165,23 @@ class User extends NActiveRecord
 	}
 	
 	/**
+	 * CANT DO IT THIS WAY OTHERWISE FORMS END UP WITH BIG CRYPTED PASSWORDS AS THEIR VALUES
 	 * ensure that everytime the password field is set it gets encrypted.
 	 * 
 	 * @param string $name
 	 * @param mixed $value 
 	 */
-	public function __set($name, $value){
-		if($name == 'password'){
-			parent::__set($name, $this->cryptPassword($value));
-		}else{
-			parent::__set($name, $value);
-		}
-	}
+//	public function __set($name, $value){
+//		if($name == 'password'){
+//			parent::__set($name, $this->cryptPassword($value));
+//		}else{
+//			parent::__set($name, $value);
+//		}
+//	}
 
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
-			//$this->password = $this->cryptPassword($this->password);
+			$this->password = $this->cryptPassword($this->password);
 			$this->activekey = $this->cryptPassword(microtime().$this->password);
 			$this->createtime=time();
 		}
@@ -213,15 +216,18 @@ class User extends NActiveRecord
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
+				'name'=>'string',
+				'company'=>'string',
 				'username'=>'string',
 				'password'=>'string NOT NULL',
 				'email'=>'string NOT NULL',
+				'email_verified'=>'boolean NOT NULL DEFAULT 0',
 				'activekey'=>'string NOT NULL',
 				'createtime'=>'int',
 				'lastvisit'=>'int',
 				'superuser'=>'boolean NOT NULL DEFAULT 0',
 				'status'=>'boolean NOT NULL DEFAULT 0',
-				'domain'=>'string'
+				'domain'=>'string',
 			),
 			'keys'=>array(
 				array('username', 'username', true),

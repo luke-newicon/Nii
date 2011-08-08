@@ -61,18 +61,41 @@ class IndexController extends Controller
 		Yii::app()->clientScript->registerScriptFile("$url/swfobject.js");
 		$this->render('webcam',array('url'=>$url));
 	}
+	
 	public function actionWebcamSave(){
 		if(isset($GLOBALS["HTTP_RAW_POST_DATA"])){
 			$jpg = $GLOBALS["HTTP_RAW_POST_DATA"];
 			$img = $_GET["img"];
 			$filename = "images/poza_". mktime(). ".jpg";
 			file_put_contents($filename, $jpg);
-		} else{
+		} else {
 			echo "Encoded JPEG information not received.";
 		}
 	}
 	
 	public function actionInstall(){
 		Yii::app()->install();
+	}
+	
+	public function actionSprite(){
+		Yii::import('modules.nii.components.sprite.NSprite');
+		$s = new NSprite();
+		$sprite = $s->getAssetsUrl().'/sprite.png';
+		$css = $s->getPublishedAssetsPath(false).'/sprite.css';
+		$m = new NMarkdown();
+		echo $m->transform(file_get_contents($css));
+		echo '<img src="'.$sprite.'" />';
+	}
+	
+	
+	public function actionTestMail(){
+		if(mail('steve@newicon.net', 'hello', 'what the func!@')){
+			echo 'it sent!';
+		}
+		echo 'mailled';
+	}
+	
+	public function actionInstallApp($subdomain){
+		Yii::app()->createApp($subdomain);
 	}
 }
