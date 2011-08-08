@@ -16,7 +16,7 @@ return array(
 	
 	'basePath'=>Yii::getPathOfAlias('app'),
 	'name'=>'Newicon',
-	'domain'=>true,
+	'domain'=>false,
 	'timezone'=>'Europe/London',
 	'hostname'=>'local.ape-project.org',
 	// preloading 'log' component

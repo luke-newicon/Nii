@@ -53,12 +53,14 @@
  * 
  * Gotchas & TODOs:
  * ----------------
- * The principles these widgets are based upon assume the model data is linked to is an CActiveRecord model 
- * that has ONE column as the primary key.
- * In other words it is not yet possible to use these widgets on tables with joint primary keys.
- * If there is an efficient way to store a joint primary key in one column (the model_id) then i would like to know. 
- * Ideally it would still be easy to write SQL queries to link the data. PHP solution that would work would be to store 
- * a unique indexed string with the column and index of all joint keys. e.g:
+ * The principles these widgets are based upon assume the model data is linked 
+ * to is an CActiveRecord model that has ONE column as the primary key.
+ * 
+ * In other words it is not yet possible to use these widgets on tables with 
+ * joint primary keys. If there is an efficient way to store a joint primary key
+ * in one column (the model_id) then i would like to know. Ideally it would 
+ * still be easy to write SQL queries to link the data. PHP solution that would 
+ * work would be to store a unique indexed string with the column and index of all joint keys. e.g:
  * model_id = 'some_id:13,some_other_id:23' the model_id could then be split and placed into a customer query related to 
  * a joint primary key, the disadvantage is that this would make it difficult to write custom SQL but it would work for 90% of 
  * the functionality of the widget.
@@ -77,6 +79,13 @@ class NAttributeWidget extends CWidget
 	
 	public $cat;
 	
-
+	/**
+	 * get the model class name for the passed in $this->model
+	 * 
+	 * @return type 
+	 */
+	public function getModelClass(){
+		return get_class($this->model);
+	}
 	
 }
