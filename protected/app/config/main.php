@@ -13,6 +13,7 @@ $JQUERY_THEME = 'nii';
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return array(
+	
 	'basePath'=>Yii::getPathOfAlias('app'),
 	'name'=>'Newicon',
 	'domain'=>true,
@@ -20,7 +21,6 @@ return array(
 	'hostname'=>'local.ape-project.org',
 	// preloading 'log' component
 	'preload'=>array('log','NFileManager'),
-
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',

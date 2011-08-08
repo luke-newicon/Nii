@@ -14,6 +14,7 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 
 /**
  * Nii jQuery Plugin
+ * Handy setup, initialisation and other nii related goodies.
  *
  * Copyright (c) 2011 Newicon
  * Dual licensed under the MIT and GPL licenses.
@@ -21,26 +22,33 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
  * http://docs.jquery.com/License
  */
 (function($) {
-	$.nii = {
-		form : function () {
-			alert('oi');
+	$.fn.nii = {
+		/**
+		 * find all elements that have tooltips and activate tipsy!
+		 * add data-tip="{-tipsy options-}" title="tooltip text" to any element
+		 */
+		tipsy:function(){
+			$('*[data-tip]').tipsy($(this).metadata({type:'attr',name:'data-tip'}));
+		},
+		/**
+		 * initialise form elements
+		 */
+		form:function(){
+			// focus 
+			$('.niiform').unbind();
+			$('body').delegate(':input','focusin.niiform',function(){$(this).closest(".field").addClass("focus");});
+			$('body').delegate(':input','focusout.niiform',function(){$(this).closest(".field").removeClass("focus");});
+			$('.inFieldLabel').inFieldLabels({fadeDuration:0});
 		}
+		
+		
 	};
 })(jQuery);
 jQuery(function($){
 	// add tipsy
-	var $el = $('*[data-tip]');
-	$el.each(function(i,t){
-		$ele = $(t);
-		$ele.tipsy($ele.metadata({type:'attr',name:'data-tip'}));
-	});
-	
+	$.fn.nii.tipsy();
 	// form stuff
-	$('body').delegate(':input','focusin',function(){$(this).closest(".field").addClass("focus");})
-	$('body').delegate(':input','focusout',function(){$(this).closest(".field").removeClass("focus");})
-		
-	// infield labels
-	$('.inFieldLabel').inFieldLabels({fadeDuration:0});
+	$.fn.nii.form();
 });
 
 

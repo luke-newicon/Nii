@@ -30,21 +30,6 @@ class NiiModule extends NWebModule
 		$cs->registerCssFile($this->getAssetsUrl().'/js/tipsy/stylesheets/tipsy.css');
 	}
 	
-	public function beforeControllerAction($controller, $action)
-	{
-		if(parent::beforeControllerAction($controller, $action))
-		{
-			if(!Yii::app()->getRequest()->getIsAjaxRequest()){
-				// register scripts here;
-			}
-			// this method is called before any module controller action is performed
-			// you may place customized code here
-			return true;
-		}
-		else
-			return false;
-	}
-	
 	/**
 	 * return array of the scripts not to include from ajax
 	 * note: these will likely mirror the scripts registered on every page load by
