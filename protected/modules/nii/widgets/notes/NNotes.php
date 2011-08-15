@@ -72,16 +72,58 @@
 class NNotes extends NAttributeWidget
 {
 	/**
-	 *
+	 * Whether or not to display a user picture in the add section
 	 * @var boolean 
 	 */
 	public $displayUserPic = true;
-	public $emptyText = 'There are no notes attached to this item';
+	
+	/**
+	 * The text that gets displayed if there are no notes present.
+	 * @var String 
+	 */
+	public $emptyText = 'None';
+	
+	/**
+	 * Whether the user can add notes
+	 * @var boolean 
+	 */
 	public $canAdd = false;
-	public $ajaxController = array('/nii/index/NNotes');
+	
+	public $ajaxLocation = '';
+	
+	/**
+	 * Whether the user can edit notes
+	 * @var boolean 
+	 */
+	public $canEdit = false;
+	
+	/*
+	 * Whether the user can delete notes
+	 * @var boolean
+	 */
+	public $canDelete = false;
+	
+	public $userNameFunction = 'getUsername()';
+	
+	/**
+	 * The message to display in the add new text box when no text is present
+	 * @var text 
+	 */
 	public $newNoteText = 'New note...';
 	
+	/**
+	 * Whether to hide the text box if no text is present
+	 * @todo Code this in so it works!
+	 * @var boolean 
+	 */
+	public $hideTextBoxOnEmpty = false;
+	
 	public function run(){
+		
+		// If no ajax location set then use default
+		if(!$this->ajaxLocation)
+			$this->ajaxLocation = Yii::app()->createAbsoluteUrl('/nii/index/NNotes');
+		
 		//The id of the item the notes should relate to
 		$model = $this->getModelClass();
 		$id = $this->model->getPrimaryKey();
@@ -89,92 +131,35 @@ class NNotes extends NAttributeWidget
 		// Includes the style sheet
 		$assetFolder = $this->getAssetsDir();
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
+		
+		yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
 
 		// this javascript support multiple note widgets on one page and 
 		// therefore must obtain the specific information from the data 
 		// attributes of the notes wrapper div
-		
-		
 		yii::app()->clientScript->registerScript('NNote','
-			
 
 			$(document).ready(function(){
-				// Adds a new note to the system
-				$(".NNotes .newNote .add").click(function(event){
-					var $data = $(this).closest(".NNotes").data();
-					var $base = $(this).closest(".newNote");
-					var note = $base.find(".note .NTextareaMarkdown textarea").val();
-
-					var $note = $base.find(".note");
-					$note.fadeTo(1,0.5);
-					$note.find("textarea").attr("disabled","disabled");
-
-					var $adding = $base.find(".adding");
-					$adding.show();
-					$adding.position({my:"center", at:"center", of:$note});
-
-					$.ajax({
-						url: $data.ajaxcontroller,
-						type: "POST",
-						data: ({itemId : $data.id,model:$data.area,note:note,profilePic:"'.$this->getProfilePic().'"}),
-						success: function(){
-						}
-					});
-				});
-
-				// Shows the edit box when entered
-				$(".NNotes .newNoteBox").click(function() {
-					$(this).hide();
-					$(this).parent().children(".markdownInput").fadeIn("medium",function() {
-						$(this).find(\'textarea\').focus();
-					 });
-				});
-
-				// Closes the edit box if no text entered
-//				$(".NNotes .newNote .note .inputBox textarea").blur(function() {
-//					if($(this).val()==""){
-//						$(this).closest(".markdownInput").hide();
-//						$(this).closest(".note").find(".newNoteBox").fadeIn("medium");
-//					}
-//				});
-
-			   // If there is not a value in the notes button then
-			   // you should not be able to submit it
-			   $(".NNotes .newNote .note .inputBox").keyup(function() {
-					var notesValue = $(this).children(\'textarea\').val();
-					var addButton = $(this).parent().parent().parent().find(\'.add\');
-
-					if(notesValue==""){
-						$(addButton).attr("disabled", "disabled");
-					}else{
-						$(addButton).removeAttr(\'disabled\');
-					}
-				});
+				$(".NNotes").NNotes({location:"testing",ajaxLocation:"'.$this->ajaxLocation.'",itemId:'.$id.',model:"'.$model.'"});
 			 });');
 		
 		$notesTable = NNote::model()->tableName();
-
-		// Gets the data to initially display when the widget loads.
-		$data = Yii::app()->db->createCommand()
-			->select('n.id,
-				user_id,
-				u.username,
-				added,
-				n.note')
-			->from($notesTable.' n')
-			->join('user_user u', 'u.id=n.user_id')
-			->where('item_id=:itemId AND area=:area', array(':itemId'=>$id,':area'=>$model))
-			->order('id DESC')
-			->queryAll();
-
-		$this->render('overall',array('data'=>$data,
+		
+		$dataProvider=new CActiveDataProvider("NNote",array(
+		'criteria'=>array(
+			'order'=>'id DESC',
+		)));
+		
+		$this->render('overall',array(
 			'emptyText'=>$this->emptyText,
 			'displayUserPic'=>$this->displayUserPic,
 			'profilePic'=>$this->getProfilePic(),
 			'canAdd'=>$this->canAdd,
+			'dataProvider'=>$dataProvider,
+			'canEdit'=>$this->canEdit,
+			'canDelete'=>$this->canDelete,
 			'area'=>$model,
 			'id'=>$id,
-			'ajaxController'=>CHtml::normalizeUrl($this->ajaxController),
 			'newNoteText'=>$this->newNoteText
 		));
 	}

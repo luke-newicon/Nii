@@ -100,6 +100,10 @@ class User extends NActiveRecord
 		);
 	}
 	
+	public function getUsername(){
+		return 'a';
+	}
+	
 	public function scopes()
     {
         return array(

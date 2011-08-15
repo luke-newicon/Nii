@@ -5,18 +5,18 @@
 		</div>
 	<?php endif;?>
 	<div class="unit note lastUnit">
+		<p class="userInformation man">
+			<?php echo yii::app()->getUser()->name;?>
+		</p>
 		<div class="markdownInput" style="display:none;">
 			<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',
 					array('name'=>$area.'_nnote'));?>
 			<div class="txtR">
-				<input type="button" value="Add" style="margin: 10px 0px;" class="btn btnN add">
+				<input type="button" value="Add" class="btn btnN add add-note-button">
 			</div>
 		</div>
 		<div class="newNoteBox">
 			<div class="fakebox">New Note...</div>
-			<p class="userInformation man">
-				<?php echo yii::app()->getUser()->name;?>
-			</p>
 		</div>
 	</div>
 </div>

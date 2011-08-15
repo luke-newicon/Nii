@@ -13,6 +13,8 @@
  */
 class NNote extends NAppRecord
 {
+	
+	public $username;
     /**
      * Returns the static model of the specified AR class.
      * @return Note the static model class
