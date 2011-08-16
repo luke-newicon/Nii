@@ -89,6 +89,10 @@ class NNotes extends NAttributeWidget
 	 */
 	public $canAdd = false;
 	
+	/**
+	 * The location to ajax to
+	 * @var string 
+	 */
 	public $ajaxLocation = '';
 	
 	/**
@@ -119,10 +123,10 @@ class NNotes extends NAttributeWidget
 	public $hideTextBoxOnEmpty = false;
 	
 	public function run(){
-		
 		// If no ajax location set then use default
 		if(!$this->ajaxLocation)
-			$this->ajaxLocation = Yii::app()->createAbsoluteUrl('/nii/index/NNotes');
+			$this->ajaxLocation = Yii::app()->createAbsoluteUrl(
+				'/nii/index/NNotes');
 		
 		//The id of the item the notes should relate to
 		$model = $this->getModelClass();
@@ -131,23 +135,21 @@ class NNotes extends NAttributeWidget
 		// Includes the style sheet
 		$assetFolder = $this->getAssetsDir();
 		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
-		
 		yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
 
 		// this javascript support multiple note widgets on one page and 
 		// therefore must obtain the specific information from the data 
 		// attributes of the notes wrapper div
-		yii::app()->clientScript->registerScript('NNote','
-
-			$(document).ready(function(){
-				$(".NNotes").NNotes({location:"testing",ajaxLocation:"'.$this->ajaxLocation.'",itemId:'.$id.',model:"'.$model.'"});
-			 });');
+		$js = '$("#NNotes'.$id.'").NNotes({ajaxLocation:"'.$this->ajaxLocation.'",itemId:'.$id.',model:"'.$model.'"});';
+		yii::app()->clientScript->registerScript('NNote'+$id, $js, CClientScript::POS_READY);
 		
 		$notesTable = NNote::model()->tableName();
 		
 		$dataProvider=new CActiveDataProvider("NNote",array(
 		'criteria'=>array(
 			'order'=>'id DESC',
+			'condition'=>'item_id = :itemId',
+			'params'=>array(':itemId'=>$id)
 		)));
 		
 		$this->render('overall',array(

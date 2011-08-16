@@ -38,7 +38,6 @@ class NMarkdownInput extends CInputWidget
 	 */
 	public $displayButtons = true;
 	
-	
 	public function run() {
 		// The location of the markdown widgets asset folder
 		$assetLocation = dirname(__FILE__) . DIRECTORY_SEPARATOR. 'assets';
@@ -47,6 +46,7 @@ class NMarkdownInput extends CInputWidget
 		$ajaxLocation = NHtml::url($this->action);
 		
 		$nameId = $this->resolveNameID();
+		
 		$id = $nameId[1];
 
 		// Includes the markdown style sheet
