@@ -15,6 +15,7 @@
 				'dataProvider'=>$dataProvider,
 				'itemView'=>'_line',
 				'id'=>$id.'_notelist',
+				'afterAjaxUpdate'=>'function(){$("#'.$id.'_notelist").NNotes("highlightNote");}',
 				'emptyText'=>'None',
 				'htmlOptions'=>array('class'=>'list-view NNotes-list'),
 				'viewData'=>array(

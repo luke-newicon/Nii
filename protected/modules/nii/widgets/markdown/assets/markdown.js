@@ -55,7 +55,6 @@
 			$md.find('.edit').bind('click.markdown',function(){
 				return $md.markdown('edit');
 			});
-//			return this.each(function(){
 		}
 	};
 	$.fn.markdown = function( method ) {

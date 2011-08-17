@@ -2,7 +2,7 @@
 	.note p {margin:0px;}
 </style>
 
-<div class="line note note<?php echo $data->id?>" data-noteId="<?php echo $data->id; ?>">
+<div class="line note note<?php echo $data->id?>" data-noteId="<?php echo $data->id; ?>" style="padding: 6px 6px 12px;margin:0px;">
 	<?php if($displayUserPic):?>
 		<div class="unit profilePic">
 			<img width="50" src="<?php //echo $profilePic;?>"/>

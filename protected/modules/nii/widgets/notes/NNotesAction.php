@@ -25,6 +25,9 @@ class NNotesAction extends CAction
 			case "deleteNote":
 				$this->deleteNote();
 				break;
+			case "updateNote":
+				$this->updateNote();
+				break;
 		}
 	}
 	
@@ -33,26 +36,31 @@ class NNotesAction extends CAction
 	 * @return boolean 
 	 */
 	private function saveNote(){
-		if(isset($_REQUEST['model']) &&
-			isset($_REQUEST['noteNumber'])&&
-			isset($_REQUEST['note'])){
-				$model = $_REQUEST['model'];
-				$noteNumber = $_REQUEST['noteNumber'];
-				$note = $_REQUEST['note'];
-			}else{
-				return false;
-			}
-			
-		$n = new NNote;
-			$n->user_id = yii::app()->user->id;
-			$n->area = $model;
-			$n->item_id = $noteNumber;
-			$n->note = $note;
+		
+		$session=new CHttpSession;
+		$objectVariables = $session['test'];
+		if($objectVariables['canAdd']){
+			if(isset($_REQUEST['model']) &&
+				isset($_REQUEST['noteNumber'])&&
+				isset($_REQUEST['note'])){
+					$model = $_REQUEST['model'];
+					$noteNumber = $_REQUEST['noteNumber'];
+					$note = $_REQUEST['note'];
+				}else{
+					return false;
+				}
 
-		if($n->save())
-			return true;
-		else
-			return false;
+			$n = new NNote;
+				$n->user_id = yii::app()->user->id;
+				$n->area = $model;
+				$n->item_id = $noteNumber;
+				$n->note = $note;
+
+			if($n->save())
+				echo $n->id;
+			else
+				return false;
+		}
 	}
 	
 	/**
@@ -72,11 +80,30 @@ class NNotesAction extends CAction
 	}
 	
 	private function editNote(){
-		if(isset($_REQUEST['noteId']))
+		$session=new CHttpSession;
+		$objectVariables = $session['test'];
+		
+		if($objectVariables['canEdit']){
+			if(isset($_REQUEST['noteId']))
+				$noteId = $_REQUEST['noteId'];
+			else
+				return false;
+			$note = NNote::model()->findByPk($noteId);
+			echo $note->note;
+		}
+	}
+	
+	private function updateNote(){
+		if(isset($_REQUEST['noteId']) &&
+			isset($_REQUEST['noteText'])){
 			$noteId = $_REQUEST['noteId'];
-		else
+			$noteText = $_REQUEST['noteText'];
+		}else{
 			return false;
+		}
+		
 		$note = NNote::model()->findByPk($noteId);
-		echo $note->note;
+			$note->note = $noteText;
+		$note->save();
 	}
 }

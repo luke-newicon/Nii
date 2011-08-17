@@ -12,6 +12,7 @@
 			<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',
 					array('name'=>$area.'_nnote','htmlOptions'=>array("class"=>"noteInput")));?>
 			<div class="txtR">
+				<input type="button" value="Cancel" class="btn btnN nnote-cancel-button">
 				<input type="button" value="Add" class="btn btnN add add-note-button">
 			</div>
 		</div>

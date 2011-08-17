@@ -101,6 +101,8 @@ class NNotes extends NAttributeWidget
 	 */
 	public $canEdit = false;
 	
+	public $canEditMine = false;
+	
 	/*
 	 * Whether the user can delete notes
 	 * @var boolean
@@ -123,14 +125,22 @@ class NNotes extends NAttributeWidget
 	public $hideTextBoxOnEmpty = false;
 	
 	public function run(){
+		
+		 
 		// If no ajax location set then use default
 		if(!$this->ajaxLocation)
-			$this->ajaxLocation = Yii::app()->createAbsoluteUrl(
-				'/nii/index/NNotes');
+			$this->ajaxLocation = Yii::app()->createAbsoluteUrl('/nii/index/NNotes');
 		
 		//The id of the item the notes should relate to
 		$model = $this->getModelClass();
 		$id = $this->model->getPrimaryKey();
+		
+		// Store session information for each instance of the plugin
+		$session=new CHttpSession;
+		$session['test'] = array(
+			'canEdit'=>$this->canEdit,
+			'canDelete'=>$this->canDelete,
+			'canAdd'=>$this->canAdd);
 
 		// Includes the style sheet
 		$assetFolder = $this->getAssetsDir();
