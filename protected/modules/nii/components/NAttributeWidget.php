@@ -98,9 +98,13 @@ class NAttributeWidget extends CWidget
 	 * To apply multiple widgets to the same model the "type" property allows
 	 */
 	public function getId(){
-		$id = $this->model->getPrimaryKey();
 		$widget = get_class($this);
-		return "$widget-$id-{$this->type}";
+		return self::getWidgetId($widget, $this->model, $this->type);
 	}
 	
+	public static function getWidgetId($widget,$model,$type=null) {
+		$id = $model->getPrimaryKey();
+		return "$widget-$id".(($type)?'-'.$type:'');		
+	}
+
 }
