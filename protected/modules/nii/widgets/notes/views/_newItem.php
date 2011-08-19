@@ -5,9 +5,6 @@
 		</div>
 	<?php endif;?>
 	<div class="unit note lastUnit">
-		<p class="userInformation man">
-			<?php echo yii::app()->getUser()->name;?>
-		</p>
 		<div class="markdownInput" style="display:none;">
 			<div class="field">
 				<?php $this->widget('modules.nii.widgets.markdown.NMarkdownInput',
@@ -19,8 +16,7 @@
 			</div>
 		</div>
 		<div class="newNoteBox">
-			<div class="fakebox">New Note...</div>
+			<?php echo $this->addNoteButtonHtml; ?>
 		</div>
 	</div>
 </div>
-<hr/>

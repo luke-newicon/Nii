@@ -34,7 +34,7 @@ class User extends NActiveRecord
 	{
 		return Yii::app()->getModule('user')->tableUsers;
 	}
-
+	
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -200,6 +200,10 @@ class User extends NActiveRecord
 			// Display guest photo
 			Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
 		}
+	}
+	
+	public function getName($userId){
+		return 'GuestEE';
 	}
 	
 	

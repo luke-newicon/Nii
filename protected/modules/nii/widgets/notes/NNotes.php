@@ -125,7 +125,11 @@ class NNotes extends NAttributeWidget
 	 */
 	public $hideTextBoxOnEmpty = false;
 	
-	
+	/**
+	 * the html that when clicked will enable the user to add a note
+	 * @var string 
+	 */
+	public $addNoteButtonHtml = '<div class="fakebox">New Note...</div>';
 	
 	public function run(){
 		
