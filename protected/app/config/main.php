@@ -16,7 +16,7 @@ return array(
 	
 	'basePath'=>Yii::getPathOfAlias('app'),
 	'name'=>'Newicon',
-	'domain'=>true,
+	'domain'=>false,
 	'timezone'=>'Europe/London',
 	'hostname'=>'local.ape-project.org',
 	// preloading 'log' component
@@ -49,9 +49,9 @@ return array(
 				'ext.gtc',   // Gii Template Collection
 			),
 		),
-		//'crm',
+		'crm',
 		//'kashflow',
-		//'email',
+		'email',
 		'user'=>array(
 			'registrationCaptcha'=>false,
 			'termsRequired'=>false,
@@ -69,7 +69,8 @@ return array(
 		'dev'=>array(
 			'modules'=>array('kanban')
 		),
-		'nii'
+		'nii',
+		'writer'
 	),
 
 	// application components
