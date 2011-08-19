@@ -17,7 +17,7 @@
 				'itemView'=>'_line',
 				'id'=>$id.'-notelist',
 				'afterAjaxUpdate'=>'function(){$("#'.$id.'-notelist").NNotes("highlightNote");}',
-				'emptyText'=>'None',
+				'emptyText'=>$emptyText,
 				'htmlOptions'=>array('class'=>'list-view NNotes-list'),
 				'viewData'=>array(
 					'canEdit'=>$canEdit,

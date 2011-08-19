@@ -100,8 +100,6 @@ class User extends NActiveRecord
 		);
 	}
 	
-
-	
 	public function scopes()
     {
         return array(
@@ -214,7 +212,6 @@ class User extends NActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('username',$this->username,true);
 		$user = UserModule::get()->userClass;
 		return new CActiveDataProvider($user, array(
