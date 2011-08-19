@@ -51,7 +51,7 @@ class NNotesAction extends CAction
 				}
 
 			$n = new NNote;
-			$user = yii::app()->user->record;
+			$user = Yii::app()->user->record;
 			if ($user) $n->user_id = $user->id; 
 			$n->model = $model;
 			$n->model_id = $modelId;

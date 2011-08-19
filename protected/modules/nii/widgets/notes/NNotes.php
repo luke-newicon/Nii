@@ -152,14 +152,14 @@ class NNotes extends NAttributeWidget
 		*/
 		// Includes the style sheet
 		$assetFolder = $this->getAssetsDir();
-		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
-		yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
+		Yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
+		Yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
 
 		// this javascript support multiple note widgets on one page and 
 		// therefore must obtain the specific information from the data 
 		// attributes of the notes wrapper div
 		$js = '$("#'.$id.'").NNotes({ajaxLocation:"'.$this->ajaxLocation.'",itemId:"'.$id.'",model:"'.$model.'"});';
-		yii::app()->clientScript->registerScript($id, $js, CClientScript::POS_READY);
+		Yii::app()->clientScript->registerScript($id, $js, CClientScript::POS_READY);
 		
 		$notesTable = NNote::model()->tableName();
 		
@@ -187,7 +187,7 @@ class NNotes extends NAttributeWidget
 	public function getAssetsDir()
 	{
 		$assetLocation = Yii::getPathOfAlias('nii.widgets.notes.assets');
-		return yii::app()->getAssetManager()->publish($assetLocation);
+		return Yii::app()->getAssetManager()->publish($assetLocation);
 	}
 	
 	public function getProfilePic()

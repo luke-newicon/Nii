@@ -117,6 +117,7 @@
 			});
 		},
 		
+		// Switches to the add new note text entry screen
 		addNewNoteSwitch : function(){
 			var $newNoteBox = $(this).find(".newNoteBox");
 			$newNoteBox.hide();
@@ -139,6 +140,8 @@
 		
 		
 		// SWITCH TO EDIT ------------------------------------------------------
+		// Switches the markdown area to edit mode. Note the area needs to be
+		// active for the change to be visible.
 		editNoteSwitch : function(){
 			var id = this.attr('id');
 			$('#'+id+' .markdownInput').markdown("edit");
