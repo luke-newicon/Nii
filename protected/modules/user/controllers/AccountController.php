@@ -104,10 +104,9 @@ class AccountController extends NController {
 		// populate array of models to validate
 		$models[] = $user;
 
-		if($userModule->domain) {
-			$domain = new AppDomain;
-			$models[] = $domain;
-		}
+		$domain = new AppDomain;
+		$models[] = $domain;
+		
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
 		{	

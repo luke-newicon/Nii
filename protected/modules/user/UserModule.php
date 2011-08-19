@@ -300,10 +300,7 @@ class UserModule extends NWebModule
 		AuthItemChild::install();
 		User::install();
 		AppDomain::install();
-		if($this->domain){
-			AppUserDomain::install();
-		}
-		//$this->runMySql();
+		AppUserDomain::install();
 	}
 	
 }
