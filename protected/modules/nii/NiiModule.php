@@ -15,6 +15,8 @@ class NiiModule extends NWebModule
 	public function init(){
 		// register nii js goodness#
 		$this->registerScripts();
+		Yii::import('nii.models.*');
+		Yii::import('nii.widgets.notes.models.NNote');
 	}
 	
 	public function registerScripts(){
@@ -55,8 +57,6 @@ class NiiModule extends NWebModule
 	
 	
 	public function install(){
-		Yii::import('nii.widgets.notes.models.NNote');
-		Yii::import('nii.models.*');
 		NNote::install();
 		NFile::install();
 	}

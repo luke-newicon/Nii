@@ -3,30 +3,107 @@
  * This file contains interaction with the widget
  *
  * @author matthewturner
+ * @version 0.1
  */
 class NNotesAction extends CAction 
 {
-
-	public $displayUserPic = false;
-
-	public $line;
-
 	public function run() {
-		$model = $_REQUEST['model'];
-		$itemId = $_REQUEST['itemId'];
-		$note = $_REQUEST['note'];
-
-		// use require incase not in the context of nii module
-		require dirname(__FILE__).DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'NNote.php';
-
-		$n = new NNote;
-		$n->user_id = yii::app()->user->id;
-		$n->area = $model;
-		$n->item_id = $itemId;
-		$n->note = $note;
-		$n->save();
+		if(isset($_REQUEST['action']))
+			$action = $_REQUEST['action'];
+		else
+			return false;
 		
-		echo $this->getController()->widget('nii.widgets.notes.NNotes')->getNote($n);
+		$ds = DIRECTORY_SEPARATOR;
+		require dirname(__FILE__).$ds.'models'.$ds.'NNote.php';
+		switch ($action){
+			case "addNote":
+				$this->saveNote();
+				break;
+			case "editNote":
+				$this->editNote();
+				break;
+			case "deleteNote":
+				$this->deleteNote();
+				break;
+			case "updateNote":
+				$this->updateNote();
+				break;
+		}
+	}
+	
+	/**
+	 * Save a note in the system
+	 * @return boolean 
+	 */
+	private function saveNote(){
+		
+		$session=new CHttpSession;
+		$objectVariables = $session['test'];
+		if($objectVariables['canAdd']){
+			if(isset($_REQUEST['model']) &&
+				isset($_REQUEST['noteNumber'])&&
+				isset($_REQUEST['note'])){
+					$model = $_REQUEST['model'];
+					$noteNumber = $_REQUEST['noteNumber'];
+					$note = $_REQUEST['note'];
+				}else{
+					return false;
+				}
+
+			$n = new NNote;
+				$n->user_id = yii::app()->user->id;
+				$n->area = $model;
+				$n->item_id = $noteNumber;
+				$n->note = $note;
+
+			if($n->save())
+				echo $n->id;
+			else
+				return false;
+		}
+	}
+	
+	/**
+	 * Delete a note from the system
+	 * @return boolean
+	 */
+	private function deleteNote(){
+		if(isset($_REQUEST['noteId']))
+			$noteId = $_REQUEST['noteId'];
+		else
+			return false;
+		
+		if(NNote::model()->deleteByPk($noteId))
+			return true;
+		else
+			return false;
+	}
+	
+	private function editNote(){
+		$session=new CHttpSession;
+		$objectVariables = $session['test'];
+		
+		if($objectVariables['canEdit']){
+			if(isset($_REQUEST['noteId']))
+				$noteId = $_REQUEST['noteId'];
+			else
+				return false;
+			$note = NNote::model()->findByPk($noteId);
+			echo $note->note;
+		}
+	}
+	
+	private function updateNote(){
+		if(isset($_REQUEST['noteId']) &&
+			isset($_REQUEST['noteText'])){
+			$noteId = $_REQUEST['noteId'];
+			$noteText = $_REQUEST['noteText'];
+		}else{
+			return false;
+		}
+		
+		$note = NNote::model()->findByPk($noteId);
+			$note->note = $noteText;
+		$note->save();
 	}
 }
-?>

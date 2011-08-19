@@ -98,4 +98,8 @@ class IndexController extends Controller
 	public function actionInstallApp($subdomain){
 		Yii::app()->createApp($subdomain);
 	}
+	
+	public function actionNotes(){
+		$this->render('notes');
+	}
 }

@@ -13,6 +13,8 @@
  */
 class NNote extends NAppRecord
 {
+	
+	public $username;
     /**
      * Returns the static model of the specified AR class.
      * @return Note the static model class
@@ -38,26 +40,11 @@ class NNote extends NAppRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('item_id', 'numerical', 'integerOnly'=>true),
             array('user_id', 'length', 'max'=>10),
-            array('area', 'length', 'max'=>50),
-            array('added, note', 'safe'),
-            // The following rule is used by search().
-            // Please remove those attributes that should not be searched.
-            array('id, user_id, added, area, item_id, note', 'safe', 'on'=>'search'),
+            array('added, note, model, model_id, model_cat', 'safe'),
         );
     }
 
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-        );
-    }
 
     /**
      * @return array customized attribute labels (name=>label)
@@ -74,29 +61,6 @@ class NNote extends NAppRecord
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-     */
-    public function search()
-    {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
-        $criteria=new CDbCriteria;
-
-        $criteria->compare('id',$this->id,true);
-        $criteria->compare('user_id',$this->user_id,true);
-        $criteria->compare('added',$this->added,true);
-        $criteria->compare('area',$this->area,true);
-        $criteria->compare('item_id',$this->item_id);
-        $criteria->compare('note',$this->note,true);
-
-        return new CActiveDataProvider(get_class($this), array(
-            'criteria'=>$criteria,
-        ));
-    }
-	
 
 	public static function install($className=__CLASS__){
 		parent::install($className);
@@ -106,15 +70,16 @@ class NNote extends NAppRecord
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
+				'model'=>'string',
+				'model_id'=>'string',
+				'model_cat'=>'string',
 				'user_id'=>'int',
 				'added'=>'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
-				'area'=>'string',
-				'item_id'=>'int',
 				'note'=>'text',
 			),
 			'keys'=>array(
 				array('user_id'),
-				array('item_id')
+				array('model_id')
 			)
 		);
 	}

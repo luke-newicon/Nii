@@ -50,11 +50,11 @@ class NWebUser extends CWebUser
 		return $this->_contact;
 	}
 	
-	
-	
-	
 	public function isSuper(){
-		return ($this->record ===null)?false:$this->record->superuser;
+		// If I am not logged in then I cannot be a super user
+		if(Yii::app()->getUser()->isGuest)
+			return false;
+		return $this->record->superuser;
 	}
 	
 	/**
