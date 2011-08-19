@@ -2,18 +2,18 @@
 	.note p {margin:0px;}
 </style>
 
-<div class="line note note<?php echo $data->id?>" data-noteId="<?php echo $data->id; ?>" style="padding: 6px 6px 12px;margin:0px;">
+<div class="line note note<?php echo $data->id; ?>" data-noteId="<?php echo $data->id; ?>">
 	<?php if($displayUserPic):?>
 		<div class="unit profilePic">
-			<img width="50" src="<?php //echo $profilePic;?>"/>
+			<?php User::model()->getProfileImage($data->user_id);?>
 		</div>
 	<?php endif;?>
 	<p class="userInformation">
-			<?php if($data->username):?>
-				<?php echo $data->username;?>
-			<?php else:?>
+			<?php if ($data->username) : ?>
+				<?php echo $data->username; ?>
+			<?php else : ?>
 				Guest
-			<?php endif;?>
+			<?php endif; ?>
 			, <?php echo NTime::timeAgoInWordsShort($data->added);?>
 	</p>
 	<div class="note" style="display: block;line-height: 1em;">

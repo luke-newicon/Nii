@@ -9,7 +9,7 @@
 		'itemId'        : null,
 		'ajaxLocation'  : '',
 		'model'         : '',
-		'noteNumber'    : '',
+		'model-id'    : '',
 		'listId'		: ''
 	};
 	var methods={
@@ -162,7 +162,7 @@
 						$('#'+settings.itemId +' .note.note'+noteId+' .nnote-edit').hide();
 						$('#'+settings.itemId +' .note.note'+noteId+' .nnote-cancel').show();
 						$item.html(
-						"<div><textarea class=\"nnote-update-note\" style=\"border:1px solid #CCCCCC;\" rows=\"2\" cols=\"160\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn btnN nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn btnN nnote-edit-note\" value=\"Update\"/></div>");
+						"<div class=\"field\"><div class=\"inputBox\"><textarea class=\"nnote-update-note\" rows=\"2\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn btnN nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn btnN nnote-edit-note\" value=\"Update\"/></div></div>");
 					}
 				});
 		},
@@ -218,7 +218,7 @@
 				url: settings.ajaxLocation,
 				type: "POST",
 				data: ({
-					noteNumber:$(this).data('notenumber'),
+					model_id:$(this).data('model-id'),
 					model:dModel,
 					note:dNote,
 					action:'addNote'}),

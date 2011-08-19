@@ -100,9 +100,7 @@ class User extends NActiveRecord
 		);
 	}
 	
-	public function getUsername(){
-		return 'a';
-	}
+
 	
 	public function scopes()
     {
@@ -163,26 +161,21 @@ class User extends NActiveRecord
 	}
 
 
-
+	
 	public function cryptPassword($password){
 		return crypt($password);
 	}
 	
+	
+	
+	
 	/**
-	 * CANT DO IT THIS WAY OTHERWISE FORMS END UP WITH BIG CRYPTED PASSWORDS AS THEIR VALUES
+	 * CANT DO IT BY OVERRIDING __set OTHERWISE FORMS END UP WITH BIG CRYPTED PASSWORDS AS THEIR VALUES
 	 * ensure that everytime the password field is set it gets encrypted.
 	 * 
 	 * @param string $name
 	 * @param mixed $value 
 	 */
-//	public function __set($name, $value){
-//		if($name == 'password'){
-//			parent::__set($name, $this->cryptPassword($value));
-//		}else{
-//			parent::__set($name, $value);
-//		}
-//	}
-
 	public function  beforeSave() {
 		if ($this->getScenario()=='insert'){
 			$this->password = $this->cryptPassword($this->password);
@@ -192,6 +185,23 @@ class User extends NActiveRecord
 		$this->lastvisit=time();
 		return parent::beforeSave();
 	}
+	
+	
+	/**
+	 * called on static instance
+	 * @param int $id 
+	 * @param type $size 
+	 */
+	public function getProfileImage($id=null, $size='profile'){
+		if($id!=null){
+			$user = User::model()->findByPk($id);
+			Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>$user->email));
+		}else{
+			// Display guest photo
+			Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
+		}
+	}
+	
 	
 	/**
 	 * Retrieves the list of Users based on the current search/filter conditions.
@@ -207,6 +217,9 @@ class User extends NActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	
+	
 
 	public static function getCurrentUser(){
 		return UserModule::userModel()->findByPk(Yii::app()->user->getId());
@@ -243,5 +256,7 @@ class User extends NActiveRecord
 		);
 	}
 
+	
+	
 
 }
