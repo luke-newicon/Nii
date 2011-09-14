@@ -108,9 +108,8 @@ class NWebUser extends CWebUser
 		}
 			
 		return $this->username;
-		
 	}
 	
-
+	
 
 }

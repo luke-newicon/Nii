@@ -16,8 +16,23 @@
  */
 class DocsController extends AController 
 {
-	public function acitonIndex(){
-		
+	
+	
+	// @todo Change this back
+	public function accessRules() {
+		return array(
+			array('allow',
+			'actions' => array(
+				'index'),
+			'users' => array('*'),
+			),
+			array('deny',
+			'users' => array('*'),
+			),
+		);
+	}
+	
+	public function actionIndex(){
 		$this->render('index');
 	}
 	

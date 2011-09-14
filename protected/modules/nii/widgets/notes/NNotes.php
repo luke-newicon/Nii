@@ -1,4 +1,5 @@
 <?php
+Yii::import('nii.widgets.notes.models.NNote');
 /**
  * What is this widget?
  * Enables notes to be recorded against items in the website.
@@ -124,42 +125,49 @@ class NNotes extends NAttributeWidget
 	 */
 	public $hideTextBoxOnEmpty = false;
 	
+	/**
+	 * the html that when clicked will enable the user to add a note
+	 * @var string 
+	 */
+	public $addNoteButtonHtml = '<div class="fakebox">New Note...</div>';
+	
 	public function run(){
 		
 		 
 		// If no ajax location set then use default
 		if(!$this->ajaxLocation)
-			$this->ajaxLocation = Yii::app()->createAbsoluteUrl('/nii/index/NNotes');
+			$this->ajaxLocation = Yii::app()->createAbsoluteUrl('/nii/index/notes');
 		
 		//The id of the item the notes should relate to
 		$model = $this->getModelClass();
-		$id = $this->model->getPrimaryKey();
-		
+		$id = $this->getId();
+		$modelId = $this->model->getPrimaryKey();
 		// Store session information for each instance of the plugin
+		/*
 		$session=new CHttpSession;
 		$session['test'] = array(
 			'canEdit'=>$this->canEdit,
 			'canDelete'=>$this->canDelete,
 			'canAdd'=>$this->canAdd);
-
+		*/
 		// Includes the style sheet
 		$assetFolder = $this->getAssetsDir();
-		yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
-		yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
+		Yii::app()->clientScript->registerCssFile("$assetFolder/style.css");
+		Yii::app()->clientScript->registerScriptFile("$assetFolder/notes.js");
 
 		// this javascript support multiple note widgets on one page and 
 		// therefore must obtain the specific information from the data 
 		// attributes of the notes wrapper div
-		$js = '$("#NNotes'.$id.'").NNotes({ajaxLocation:"'.$this->ajaxLocation.'",itemId:'.$id.',model:"'.$model.'"});';
-		yii::app()->clientScript->registerScript('NNote'+$id, $js, CClientScript::POS_READY);
+		$js = '$("#'.$id.'").NNotes({ajaxLocation:"'.$this->ajaxLocation.'",itemId:"'.$id.'",model:"'.$model.'"});';
+		Yii::app()->clientScript->registerScript($id, $js, CClientScript::POS_READY);
 		
 		$notesTable = NNote::model()->tableName();
 		
 		$dataProvider=new CActiveDataProvider("NNote",array(
 		'criteria'=>array(
 			'order'=>'id DESC',
-			'condition'=>'item_id = :itemId',
-			'params'=>array(':itemId'=>$id)
+			'condition'=>'model_id = :itemId',
+			'params'=>array(':itemId'=>$modelId)
 		)));
 		
 		$this->render('overall',array(
@@ -170,8 +178,8 @@ class NNotes extends NAttributeWidget
 			'dataProvider'=>$dataProvider,
 			'canEdit'=>$this->canEdit,
 			'canDelete'=>$this->canDelete,
-			'area'=>$model,
 			'id'=>$id,
+			'modelId'=>$modelId,
 			'newNoteText'=>$this->newNoteText
 		));
 	}
@@ -179,7 +187,7 @@ class NNotes extends NAttributeWidget
 	public function getAssetsDir()
 	{
 		$assetLocation = Yii::getPathOfAlias('nii.widgets.notes.assets');
-		return yii::app()->getAssetManager()->publish($assetLocation);
+		return Yii::app()->getAssetManager()->publish($assetLocation);
 	}
 	
 	public function getProfilePic()
@@ -194,4 +202,9 @@ class NNotes extends NAttributeWidget
 			'profilePic'=>$this->getProfilePic()),
 			true);
 	}
+	
+	public static function install(){
+		NNote::install();
+	}
+	
 }

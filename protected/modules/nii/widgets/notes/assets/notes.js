@@ -9,7 +9,7 @@
 		'itemId'        : null,
 		'ajaxLocation'  : '',
 		'model'         : '',
-		'noteNumber'    : '',
+		'model-id'    : '',
 		'listId'		: ''
 	};
 	var methods={
@@ -65,14 +65,14 @@
 			
 			// Delete note button
 			this.delegate(".nnote-delete", "click", function(){
-				var noteId = $(this).parent().parent().parent().data('noteid');
+				var noteId = $(this).parent().parent().parent().parent().data('noteid');
 				$('#'+id).NNotes("deleteNote",noteId);
 				return false;
 			});
 			
 			// Edit note button
 			this.delegate(".nnote-edit", "click", function(){
-				var noteId = $(this).parent().parent().parent().data('noteid');
+				var noteId = $(this).parent().parent().parent().parent().data('noteid');
 				$('#'+id).NNotes("editNote",noteId);
 				return false;
 			});
@@ -83,16 +83,16 @@
 				return false;
 			});
 			
-//			// Cancel note button
-//			this.delegate(".noteInput", "focusout", function(){
-//				if($(this).val()==""){
-//					$('#'+id).NNotes("closeEditView");
-//				}
-//			});
+			// Cancel note button
+			this.delegate(".noteInput", "focusout", function(){
+				if($(this).val()==""){
+					$('#'+id).NNotes("closeEditView");
+				}
+			});
 			
 			// Updates a note
 			this.delegate(".nnote-edit-note", "click", function(){
-				var noteId = $(this).parent().parent().parent().data('noteid');
+				var noteId = $(this).parent().parent().parent().parent().parent().data('noteid');
 				var noteText = $(this).parent().parent().find('.nnote-update-note').val();
 				
 				$.ajax({
@@ -113,18 +113,23 @@
 			
 			// Clicking in the textbox
 			this.find(".newNoteBox").click(function(){
-				$(this).hide();
-				
-				var $addNoteButton = $(this).parent().parent().find('.add-note-button');
-				$addNoteButton.css('color','#ccc');
-				$addNoteButton.attr('disabled','disabled');
-				
-				$(this).parent().children(".markdownInput").fadeIn(
-				"medium",function(){
-					$(this).find('textarea').focus();
-				 });
-				 return false;
+				$('#'+id).NNotes("addNewNoteSwitch");
 			});
+		},
+		
+		// Switches to the add new note text entry screen
+		addNewNoteSwitch : function(){
+			var $newNoteBox = $(this).find(".newNoteBox");
+			$newNoteBox.hide();
+				
+			var $addNoteButton = $(this).find('.add-note-button');
+			$addNoteButton.css('color','#ccc');
+			$addNoteButton.attr('disabled','disabled');
+
+			$(this).find(".markdownInput").fadeTo(0,0.1);
+			$(this).find(".markdownInput").fadeTo(500,1);
+			$(this).find('textarea').focus();
+			return false;
 		},
 		
 		// PREVIEW A NOTE ------------------------------------------------------
@@ -135,6 +140,8 @@
 		
 		
 		// SWITCH TO EDIT ------------------------------------------------------
+		// Switches the markdown area to edit mode. Note the area needs to be
+		// active for the change to be visible.
 		editNoteSwitch : function(){
 			var id = this.attr('id');
 			$('#'+id+' .markdownInput').markdown("edit");
@@ -151,18 +158,15 @@
 		// EDIT A NOTE ---------------------------------------------------------
 		editNote: function(noteId){
 			var id = this.attr('id');
-			var $item = $('#'+id+' .note'+noteId + ' .note');
-			var text = $item.html();
+			var $item = $('#'+id+' .note'+noteId+'.note .nnote-text');
 			
 			$.ajax({
 					url: settings.ajaxLocation,
 					type: "POST",
 					data: ({noteId:noteId,action:'editNote'}),
 					success: function(note){
-						$('#'+settings.itemId +' .note.note'+noteId+' .nnote-edit').hide();
-						$('#'+settings.itemId +' .note.note'+noteId+' .nnote-cancel').show();
 						$item.html(
-						"<div><textarea class=\"nnote-update-note\" style=\"border:1px solid #CCCCCC;\" rows=\"2\" cols=\"160\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn btnN nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn btnN nnote-edit-note\" value=\"Update\"/></div>");
+						"<div class=\"field\"><div class=\"inputBox\"><textarea class=\"nnote-update-note\" rows=\"2\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn btnN nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn btnN nnote-edit-note\" value=\"Update\"/></div></div>");
 					}
 				});
 		},
@@ -218,7 +222,7 @@
 				url: settings.ajaxLocation,
 				type: "POST",
 				data: ({
-					noteNumber:$(this).data('notenumber'),
+					model_id:$(this).data('model-id'),
 					model:dModel,
 					note:dNote,
 					action:'addNote'}),

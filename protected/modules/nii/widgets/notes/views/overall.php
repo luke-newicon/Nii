@@ -1,27 +1,30 @@
-<div id="NNotes<?php echo $id;?>" class="NNotes" data-noteNumber="<?php echo $id;?>">
+<div id="<?php echo $id; ?>" class="NNotes" data-model-id="<?php echo $modelId; ?>">
 	<div class="NNotes-input">
-			<?php if($canAdd): ?>
-				<?php $this->render(
-						'_newItem',array(
-							'displayUserPic'=>$displayUserPic,
-							'profilePic'=>$profilePic,
-							'area'=>$area,
-							'id'=>$id));?>
-			<?php endif;?>
+		<?php if($canAdd): ?>
+			<?php $this->render(
+				'_newItem',array(
+					'displayUserPic'=>$displayUserPic,
+					'profilePic'=>$profilePic,
+					'id'=>$id)
+				);
+			?>
+		<?php endif; ?>
 	</div>
 	<div>
 		<?php
 			$this->widget('zii.widgets.CListView', array(
 				'dataProvider'=>$dataProvider,
 				'itemView'=>'_line',
-				'id'=>$id.'_notelist',
-				'afterAjaxUpdate'=>'function(){$("#'.$id.'_notelist").NNotes("highlightNote");}',
-				'emptyText'=>'None',
+				'id'=>$id.'-notelist',
+				'afterAjaxUpdate'=>'function(){$("#'.$id.'-notelist").NNotes("highlightNote");}',
+				'emptyText'=>$emptyText,
 				'htmlOptions'=>array('class'=>'list-view NNotes-list'),
 				'viewData'=>array(
 					'canEdit'=>$canEdit,
 					'canDelete'=>$canDelete,
-					'displayUserPic'=>$displayUserPic)));
+					'displayUserPic'=>$displayUserPic
+				)
+			));
 		?>
 	</div>
 </div>

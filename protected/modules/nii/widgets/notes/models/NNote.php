@@ -40,7 +40,7 @@ class NNote extends NAppRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('user_id', 'length', 'max'=>10),
+            array('user_id', 'length', 'max'=>11),
             array('added, note, model, model_id, model_cat', 'safe'),
         );
     }
@@ -56,7 +56,7 @@ class NNote extends NAppRecord
             'user_id' => 'User',
             'added' => 'Added',
             'area' => 'Area',
-            'item_id' => 'Item',
+            'model_id' => 'Item',
             'note' => 'Note',
         );
     }
@@ -72,7 +72,7 @@ class NNote extends NAppRecord
 				'id'=>'pk',
 				'model'=>'string',
 				'model_id'=>'string',
-				'model_cat'=>'string',
+				'type'=>'string',
 				'user_id'=>'int',
 				'added'=>'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
 				'note'=>'text',

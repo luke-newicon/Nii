@@ -37,24 +37,26 @@ class NNotesAction extends CAction
 	 */
 	private function saveNote(){
 		
-		$session=new CHttpSession;
-		$objectVariables = $session['test'];
-		if($objectVariables['canAdd']){
+		//$session=new CHttpSession;
+		//$objectVariables = $session['test'];
+		//if($objectVariables['canAdd']){
 			if(isset($_REQUEST['model']) &&
-				isset($_REQUEST['noteNumber'])&&
+				isset($_REQUEST['model_id'])&&
 				isset($_REQUEST['note'])){
 					$model = $_REQUEST['model'];
-					$noteNumber = $_REQUEST['noteNumber'];
+					$modelId = $_REQUEST['model_id'];
 					$note = $_REQUEST['note'];
-				}else{
-					return false;
-				}
+			//	}else{
+			//		return false;
+			//	}
 
 			$n = new NNote;
-				$n->user_id = yii::app()->user->id;
-				$n->area = $model;
-				$n->item_id = $noteNumber;
-				$n->note = $note;
+			$user = Yii::app()->user->record;
+			if ($user) $n->user_id = $user->id; 
+			$n->model = $model;
+			$n->model_id = $modelId;
+			//$n->type = $noteNumber;
+			$n->note = $note;
 
 			if($n->save())
 				echo $n->id;

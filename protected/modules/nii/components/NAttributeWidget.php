@@ -28,7 +28,7 @@
  * The related database table will contain the following columns that this widget understands
  * model     : the associated yii model class name, this class must implement the CActiveRecord::model($className) function
  * model_id  : the id of the associated model 
- * model_cat : a category that can further specify the data, this allows multiple widgets per model, 
+ * type : a category that can further specify the data, this allows multiple widgets per model, 
  *             for example: a product model may require:
  *             - PDF attahments for Certificates of compliance 
  *             - PDF attachments for installation instructions, 
@@ -40,13 +40,13 @@
  * ---------------
  * 
  * <h2>Installation Documents</h2>
- * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'cat'=>'installation', 'fileTypes'=>array('pdf')))
+ * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'type'=>'installation', 'fileTypes'=>array('pdf')))
  * 
  * <h2>Certificates of Compliance</h2>
- * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'cat'=>'certificates', 'canEdit'=>false, 'fileTypes'=>array('pdf')))
+ * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'type'=>'certificates', 'canEdit'=>false, 'fileTypes'=>array('pdf')))
  * 
  * <h2>Additional Images</h2>
- * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'cat'=>'images', 'fileTypes'=>array('png', 'jpg')))
+ * $this->widget('nii.widgets.attributes.NAttachements', array('model'=>$product, 'type'=>'images', 'fileTypes'=>array('png', 'jpg')))
  *
  * The main consistent properties managed, understood amd required by this class are "model" and "model_cat"
  * 
@@ -77,7 +77,11 @@ class NAttributeWidget extends CWidget
 	 */
 	public $model;
 	
-	public $cat;
+	/**
+	 * tghe type used to categorise the attribute widget, useful when using multiple on a page etc
+	 * @var string 
+	 */
+	public $type = '';
 	
 	/**
 	 * get the model class name for the passed in $this->model
@@ -88,4 +92,19 @@ class NAttributeWidget extends CWidget
 		return get_class($this->model);
 	}
 	
+	/**
+	 * will return a id for widget based on the type text and model associated 
+	 * with it.
+	 * To apply multiple widgets to the same model the "type" property allows
+	 */
+	public function getId(){
+		$widget = get_class($this);
+		return self::getWidgetId($widget, $this->model, $this->type);
+	}
+	
+	public static function getWidgetId($widget,$model,$type=null) {
+		$id = $model->getPrimaryKey();
+		return "$widget-$id".(($type)?'-'.$type:'');		
+	}
+
 }
