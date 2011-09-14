@@ -35,7 +35,7 @@ class NHtml extends CHtml
 			$getArray[0] = $route; 
 			$route = $getArray;
 		}
-		return self::normalizeUrl($route);
+		return Yii::app()->createUrl($route[0],array_splice($route,1));;
 	}
 
 	public static function baseUrl(){
