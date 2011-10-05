@@ -15,7 +15,7 @@ require_once($nii);
 
 $rootConf = dirname(__FILE__).'/../config.php';
 if(file_exists($rootConf)){
-	 $rootConf = require $rootConf;
+	$rootConf = require $rootConf;
 	$config = require $config;
 	//unset($config['components']['db']);
 	$config = CMap::mergeArray($config, $rootConf);
