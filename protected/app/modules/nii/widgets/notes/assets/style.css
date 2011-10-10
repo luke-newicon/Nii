@@ -1,0 +1,9 @@
+.NNotes .unit {padding: 0 5px;}
+.NNotes .userInformation {color:#999999;}
+.NNotes .newNote .buttons .add input {height: 228px;}
+.NNotes .profilePic {padding-left: 0px;}
+.NNotes .userInformation { padding-top: 0px;}
+.NNotes hr {border:0px;border-top: 1px dashed #ccc;margin:5px;}
+.NNotes .noItems {color: #CCCCCC; padding: 5px;}
+.NNotes .newNoteBox .fakebox {border: 1px solid #CCCCCC;color: #CCCCCC;padding: 5px;}
+.NNotes .line.note{margin: 10px 0;}
