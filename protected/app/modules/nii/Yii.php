@@ -12,7 +12,6 @@
  */
 
 require(dirname(__FILE__).'/../../../yii/YiiBase.php');
-require(dirname(__FILE__) . '/../../app/config/Environment.php');
 require(dirname(__FILE__).'/Nii.php');
 /**
  * Yii is a helper class serving common framework functionalities.

@@ -11,15 +11,10 @@
 
 return array(
 
-	// Set yiiPath (relative to Environment.php)
-	//'yiiPath' => realpath(dirname(__FILE__) . '/../../../yii/framework/yii.php'),
-	//'yiitPath' => realpath(dirname(__FILE__) . '/../../../yii/framework/yiit.php'),
-
 	// Set YII_DEBUG and YII_TRACE_LEVEL flags
 	'yiiDebug' => true,
 	'yiiTraceLevel' => 3,
 	
-	// Static function Yii::setPathOfAlias()
 	'yiiSetPathOfAlias' => array(
 		// uncomment the following to define a path alias
 		//'local' => 'path/to/local-folder'
@@ -28,20 +23,21 @@ return array(
 	// This is the specific Web application configuration for this mode.
 	// Supplied config elements will be merged into the main config array.
 	'config' => array(
-		'hostname'=>'local.newicon.org',
-		'bannedSubDomains'=>array(
-			'www','hotspot','static'
-		),
-		
-		'domainDbHostname' => 'localhost',
-		'domainDbPrefix'=>'hotspot_',
-		'domainDb'=>array(
-			'username' => 'root',
-			'password' => '',
-			'schemaCachingDuration' => 3600,
-			'enableProfiling' => true,
-			'enableParamLogging' => true,
-		),
+//		settings for domain specific apps
+//		'hostname'=>'local.newicon.org',
+//		'bannedSubDomains'=>array(
+//			'www','hotspot','static'
+//		),
+//		
+//		'domainDbHostname' => 'localhost',
+//		'domainDbPrefix'=>'hotspot_',
+//		'domainDb'=>array(
+//			'username' => 'root',
+//			'password' => '',
+//			// 'schemaCachingDuration' => 3600,
+//			'enableProfiling' => true,
+//			'enableParamLogging' => true,
+//		),
 		
 		'modules'=>array(
 			'gii'=>array(

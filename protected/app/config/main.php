@@ -1,14 +1,13 @@
 <?php
 
-// uncomment the following to define a path alias
-//Yii::setPathOfAlias('modules',dirname(__FILE__).DS.'..'.DS.'..'.DS.'modules');
-// base is the publiic folder
-Yii::setPathOfAlias('domain',  dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-Yii::setPathOfAlias('public',  dirname(dirname(dirname(dirname(__FILE__)))));
-Yii::setPathOfAlias('htdocs',  Yii::getPathOfAlias('public.htdocs'));
-Yii::setPathOfAlias('app',     Yii::getPathOfAlias('public.protected.app'));
-Yii::setPathOfAlias('modules', Yii::getPathOfAlias('app.modules'));
-Yii::setPathOfAlias('nii',     Yii::getPathOfAlias('app.modules.nii'));
+// define variables to mimic alias paths, we can not access Yii::getPathOfAlias yet.
+// these variables are availiable in the other config files.
+$public  = realpath(dirname(dirname(dirname(dirname(__FILE__)))));
+$base    = realpath(dirname($public));
+$htdocs  = realpath("$public/htdocs");
+$app     = realpath("$public/protected/app");
+$modules = realpath("$public/protected/modules");
+$nii     = realpath("$modules/nii");
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
@@ -24,8 +23,12 @@ return array(
 
 	// Static function Yii::setPathOfAlias()
 	'yiiSetPathOfAlias' => array(
-		// uncomment the following to define a path alias
-		//'local' => 'path/to/local-folder'
+		'base'    => $base,
+		'public'  => $public,
+		'htdocs'  => $htdocs,
+		'app'     => $app,
+		'modules' => $modules,
+		'nii'     => $nii
 	),
 
 	// This is the main Web application configuration. Any writable
@@ -34,12 +37,9 @@ return array(
 		
 		'basePath'=>Yii::getPathOfAlias('app'),
 		
-//		'name'=>'Hotspot',
-		
 		'sourceLanguage'=>'en',
 		
-//		'domain'=>true,
-//		'timezone'=>'Europe/London',
+		'domain'=>false,
 		'hostname'=>'local.newicon.org',
 		// preloading 'log' component
 		'preload'=>array('log','NFileManager'),
@@ -123,11 +123,11 @@ return array(
 					),
 					'grid-thumbnail-person'=>array(
 						'resize' => array('width'=>24, 'height'=>24, 'master'=>'width', 'scale'=>'down'),
-						'noimage' => Yii::getPathOfAlias('base.htdocs.images.blank-profile').'.jpg',
+						'noimage' => realpath("$htdocs/images/blank-profile.jpg"),
 					),
 					'grid-thumbnail-organisation'=>array(
 						'resize' => array('width'=>24, 'height'=>24, 'master'=>'width', 'scale'=>'down'),
-						'noimage' => Yii::getPathOfAlias('base.htdocs.images.blank-profile-org').'.jpg',
+						'noimage' => realpath("$htdocs/images/blank-profile-org.jpg"),
 					),
 					'profile-main'=>array(
 						'resize' => array('width'=>145, 'height'=>180, 'master'=>'width', 'scale'=>'down')
@@ -139,7 +139,7 @@ return array(
 						'resize' => array('width'=>48, 'height'=>48, 'master'=>'width', 'scale'=>'down')
 					),
 				),
-				'notFoundImage'=>Yii::getPathOfAlias('base.htdocs.images.blank-profile').'.jpg',
+				'notFoundImage'=>realpath("$htdocs/images/blank-profile.jpg"),
 			),
 			'log'=>array(
 				'class'=>'CLogRouter',
@@ -148,16 +148,6 @@ return array(
 						'class'=>'CFileLogRoute',
 						'categories'=>'error'
 					),
-	//				array(
-	//					'class'=>'CWebLogRoute',
-	//					'levels'=>'error,trace',
-	//					'categories'=>'system.db.CDbCommand',
-	//					'showInFireBug'=>true,
-	//				),
-	//				array(
-	//                    'class'=>'CProfileLogRoute',
-	//					'showInFireBug'=>true,
-	//                ),
 					array(
 						'class'=>'NProfileLogRoute',
 					),
@@ -173,7 +163,7 @@ return array(
 			),
 			'fileManager'=>array(
 				'class'=>'NFileManager',
-				'location'=>Yii::getPathOfAlias('base').DIRECTORY_SEPARATOR.'files',
+				'location'=>realpath("$base/files"),
 				'locationIsAbsolute'=>true,
 				'defaultCategory' => 'attachments',
 				'categories' => array(
@@ -185,7 +175,7 @@ return array(
 			'sprite'=>array(
 				'class'=>'nii.components.sprite.NSprite',
 				'imageFolderPath'=>array(
-					Yii::getPathOfAlias('app.sprite'),
+					realpath("$app/sprite"),
 				),
 			),
 

@@ -1,11 +1,9 @@
 <?php
 
-//require_once (dirname(__FILE__).'/../yii/yii.php');
-require_once (dirname(__FILE__).'/../protected/app/Yii.php');
+
+require_once (dirname(__FILE__) . '/../protected/app/config/Environment.php');
 // set environment * new Environment('PRODUCTION'); (override mode)
 $env = new Environment(); 
-
-//$env->showDebug();
 
 if ($env->hasLocalConfig)
 	Yii::createWebApplication($env->config)->run();
@@ -15,6 +13,7 @@ else
 
 /**
  * debug print functionn
+ * TODO: move into a generic function file
  * @param mixed $debugObj
  */
 function dp($debugObj){	echo '<pre>'.CHtml::encode(print_r($debugObj,true)).'</pre>'; }

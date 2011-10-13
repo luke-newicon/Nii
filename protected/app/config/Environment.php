@@ -184,7 +184,7 @@ class Environment
 		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $this->yiiTraceLevel);
 		
 		// include the yii class file
-		require_once dirname(__FILE__).'/../../modules/nii/Yii.php';
+		require_once dirname(__FILE__).'/../../app/Yii.php';
 		$this->runYiiStatics();
 	}
 
