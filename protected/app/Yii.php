@@ -11,7 +11,6 @@
  * @since 1.0
  */
 
-require(dirname(__FILE__) .'/config/Environment.php');
 require(dirname(__FILE__).'/../../yii/YiiBase.php');
 require(dirname(__FILE__).'/modules/nii/Nii.php');
 /**

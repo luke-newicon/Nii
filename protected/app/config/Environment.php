@@ -177,9 +177,15 @@ class Environment
 	{
 		$this->_mode = $this->getMode($mode);
 		$this->setEnvironment();
+		
 		// set debug and trace level
-		defined('YII_DEBUG') or define('YII_DEBUG', $env->yiiDebug);
-		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
+		// these must be defined before including the Yii class.
+		defined('YII_DEBUG') or define('YII_DEBUG', $this->yiiDebug);
+		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $this->yiiTraceLevel);
+		
+		// include the yii class file
+		require_once dirname(__FILE__).'/../../modules/nii/Yii.php';
+		$this->runYiiStatics();
 	}
 
 	/**
