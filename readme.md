@@ -12,24 +12,10 @@ Application Components
  - NImage
    This component can manipulate images and also handles generating and caching various size image thumb nails.
    Dependant on NFileManager
-
-
-Widgets
--------
-
-
-
-Input Widgets
--------------
-
-- NTextareaMarkdown
-  Shows a textarea with a preview option to display the rendered markdown. Also provide a help link
-
-
+ 
 
 
 Modules included:
  
- - users (manages user authentication and authorisation permissions)
- - support (an email client module, should be renamed to emailclient module)
- - crm (basic crm functionality in a nice gui)
+ - nii (core module)
+ - user (manages user authentication and authorisation permissions)
