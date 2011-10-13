@@ -173,9 +173,6 @@ return array(
 			),
 			'sprite'=>array(
 				'class'=>'nii.components.sprite.NSprite',
-				'imageFolderPath'=>array(
-					realpath("$app/sprite"),
-				),
 			),
 
 			'widgetFactory'=>array(
