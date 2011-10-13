@@ -160,8 +160,8 @@ Class NSprite extends CApplicationComponent
 	 * @return void
 	 */
 	private function _generateImage(){
-		$total = $this->_totalSize(); 
-		if ($total['width']>0 && $total['height'] > 0) {
+		$total = $this->_totalSize();
+		if($total['width'] > 0 && $total['height'] > 0){
 			$sprite = imagecreatetruecolor($total['width'], $total['height']); 
 			imagesavealpha($sprite, true); 
 			$transparent = imagecolorallocatealpha($sprite, 0, 0, 0, 127); 
@@ -174,7 +174,7 @@ Class NSprite extends CApplicationComponent
 			}
 			$fp = $this->getPublishedAssetsPath().DIRECTORY_SEPARATOR.'sprite.png';
 			imagepng($sprite, $fp);
-			imagedestroy($sprite); 
+			ImageDestroy($sprite);
 		}
 	}
 	

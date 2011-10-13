@@ -6,7 +6,7 @@ $public  = realpath(dirname(dirname(dirname(dirname(__FILE__)))));
 $base    = realpath(dirname($public));
 $htdocs  = realpath("$public/htdocs");
 $app     = realpath("$public/protected/app");
-$modules = realpath("$public/protected/modules");
+$modules = realpath("$public/protected/app/modules");
 $nii     = realpath("$modules/nii");
 
 // This is the main Web application configuration. Any writable
@@ -21,7 +21,6 @@ return array(
 	'yiiDebug' => true,
 	'yiiTraceLevel' => 0,
 
-	// Static function Yii::setPathOfAlias()
 	'yiiSetPathOfAlias' => array(
 		'base'    => $base,
 		'public'  => $public,
@@ -35,7 +34,7 @@ return array(
 	// CWebApplication properties can be configured here.
 	'config' => array(
 		
-		'basePath'=>Yii::getPathOfAlias('app'),
+		'basePath'=>$app,
 		
 		'sourceLanguage'=>'en',
 		
@@ -59,7 +58,7 @@ return array(
 		),
 		'theme'=>'hotspot',
 
-		'modulePath'=>Yii::getPathOfAlias('modules'),
+		'modulePath'=>$modules,
 		'modules'=>array(
 			'user'=>array(
 				'registrationCaptcha'=>false,
