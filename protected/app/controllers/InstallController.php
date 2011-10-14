@@ -28,13 +28,15 @@ class InstallController extends Controller {
 			$model->installDb = false;
 		else
 			$model->installDb = true;
-				
-		if ($_POST['InstallForm'] && $model->installDb == true) {
+		
+		if (Yii::app()->request->getPost('InstallForm')){
+			
+			if ($model->installDb == true) {
 
 				$model->attributes = $_POST['InstallForm'];
-				
+
 				if ($model->validate()) {
-					
+
 					$config['name'] = $model->sitename;
 					$config['timezone'] = $model->timezone;
 					$config['hostname'] = $model->hostname;
@@ -43,11 +45,11 @@ class InstallController extends Controller {
 					$config['components']['db']['username'] = $model->db_username;
 					$config['components']['db']['password'] = $model->db_password;
 					$config['components']['db']['tablePrefix'] = $model->db_tablePrefix;
-					
+
 					$config['params']['adminEmail'] = $model->email;
 
-					$data = '<?php return '.var_export($config,true).';';
-					
+					$data = '<?php '."\n".'return '.var_export($config,true).';';
+
 					if ($model->installDb == true) {
 						$filename = Yii::getPathOfAlias('app.config.local').'.php';
 						file_put_contents($filename, $data);
@@ -55,32 +57,29 @@ class InstallController extends Controller {
 					}
 
 					Yii::app()->setComponents($config['components']);
-				
+
 				}
-		} else if ($_POST['InstallForm'] && $model->installDb == false) {
-			$model->attributes = $_POST['InstallForm'];
+			} else if ($model->installDb == false) {
+				$model->attributes = $_POST['InstallForm'];
+			}
+			
 		}
 		
-		if ($_POST['InstallForm']) {
-			
-			try { 
+		if (Yii::app()->request->getPost('InstallForm')) {
+			try {
 				Yii::app()->db->getConnectionStatus();
 
-				$models = array(
-					'Log','Setting','User',
-					'NNote','NFile','AuthItem','AuthAssignment','AuthItemChild',
-				);
-
-				foreach ($models as $m)
-					NActiveRecord::install($m);
-
-				Yii::app()->cache->flush();
-
-				$user = User::model()->findByAttributes(array('username'=>$model->username));
-				if (!$user->username)
-					$user = new User;
+				NActiveRecord::install('Setting');
+				NActiveRecord::install('Log');
 				
-				if ($user->username) {
+				Yii::app()->install();
+
+				// if the user already exists we will still make it work
+				$user = User::model()->findByAttributes(array('username'=>$model->username));
+				if ($user === null)
+					$user = new User;
+				// if the username
+				if ($user->getScenario() != 'insert') {
 					$user->password = $user->cryptPassword($model->password);
 					$user->activekey = $user->cryptPassword(microtime().$model->password);
 				} else {
@@ -98,6 +97,8 @@ class InstallController extends Controller {
 				}
 
 			} catch (Exception $e) {
+				if(YII_DEBUG)
+					throw new CException($e);
 				Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
 			}
 			
@@ -108,7 +109,7 @@ class InstallController extends Controller {
 			$local = require $localConfig;
 			$model->getLocalConfig($local);
 		}
-				
+		
 		$this->render('step1',
 			array(
 				'model'=>$model,
@@ -117,9 +118,13 @@ class InstallController extends Controller {
 	}
 	
 	public function actionStep2() {
+		
 		try { 
 			Yii::app()->db->getConnectionStatus();
 		} catch (Exception $e) {
+			if(YII_DEBUG){
+				throw new CException($e);
+			}
 			Yii::app()->user->setFlash('error-msg',"Couldn't connect to database. Please check the details and try again!");
 			$this->redirect (array('install/step1'));
 		}

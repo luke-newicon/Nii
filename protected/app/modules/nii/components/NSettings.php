@@ -323,7 +323,7 @@ class NSettings extends CApplicationComponent
 		$tableName=$connection->tablePrefix.str_replace(array('{{','}}'), '', $this->getTableName());
 		$sql='CREATE TABLE IF NOT EXISTS `'.$tableName.'` (
 		  `id` int(11) NOT NULL auto_increment,
-		  `category` varchar(64) NOT NULL default \'system\',
+		  `category` varchar(64) NOT NULL default "system",
 		  `key` varchar(255) NOT NULL,
 		  `value` text NOT NULL,
 		  PRIMARY KEY  (`id`),

@@ -69,7 +69,7 @@ return array(
 				'usernameRequired'=>false,
 				'showUsernameField'=>false
 			),
-			'nii',
+			'nii'=>array(),
 		),
 
 		// application components
@@ -99,12 +99,12 @@ return array(
 				),
 				'showScriptName'=>false,
 			),
-			'db'=>array(
-				'emulatePrepare' => true,
-				'charset' => 'utf8',
-				'enableProfiling'=>true,
-				'enableParamLogging'=>true,
-			),
+//			'db'=>array(
+//				'emulatePrepare' => true,
+//				'charset' => 'utf8',
+//				'enableProfiling'=>true,
+//				'enableParamLogging'=>true,
+//			),
 			'errorHandler'=>array(
 				// use 'site/error' action to display errors
 							'errorAction'=>'site/error',

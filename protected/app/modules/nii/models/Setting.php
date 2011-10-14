@@ -50,13 +50,13 @@ class Setting extends NActiveRecord
 		return array(
 			'columns' => array(
 				'id' => "pk",
-				'category' => "varchar(64) NOT NULL default \'system\'",
+				'category' => "varchar(64) NOT NULL default 'system'",
 				'key' => "varchar(255)",
 				'value' => "text",
 				'trashed' => "int(1) unsigned NOT NULL",
 			),
 			'keys' => array(
-				array('category_key','`category`,`key`')
+				array('category_key','category,key')
 			)
 		);
 	}

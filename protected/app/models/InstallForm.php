@@ -29,7 +29,7 @@ class InstallForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('sitename, hostname, email, db_host, db_name, db_username, username', 'required'),
+			array('sitename, hostname, email, db_host, db_name, db_username, username, timezone', 'required'),
 			array('db_tablePrefix, db_password, password', 'safe'),		
 		);
 	}
@@ -51,6 +51,7 @@ class InstallForm extends CFormModel
 			'admin_name' => 'Name',
 			'username' => 'Username',
 			'password' => 'Password',
+			'timezone' => 'Timezone'
 		);
 	}
 	

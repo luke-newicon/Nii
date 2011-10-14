@@ -233,11 +233,12 @@ class Environment
 		// Merge specific config into main config
 		$config = self::mergeArray($configMain, $configSpecific);
 
-		$localConf = dirname(__FILE__).'/../app/config/local.php';
-
-		if(file_exists($localConf)){
-			$localConf['config'] = require $localConf;
-			$config = CMap::mergeArray($config, $localConf);
+		
+		// load in local config
+		$localConfFile = dirname(__FILE__).'/local.php';
+		if(file_exists($localConfFile)){
+			$localConf = require $localConfFile;
+			$config['config'] = self::mergeArray($localConf, $config['config']);
 		}
 		
 		if (isset($config['config']['components']['db']['connectionString']))
@@ -278,13 +279,13 @@ class Environment
 	
 	/**
 	 * Merges two arrays into one recursively.
+	 * Taken from Yii's CMap::mergeArray, since php does not supply a native
+	 * We can not use Yii at this point.
+	 * function that produces the required result.
+	 * @see http://www.yiiframework.com/doc/api/1.1/CMap#mergeArray-detail
 	 * @param array $a array to be merged to
 	 * @param array $b array to be merged from
 	 * @return array the merged array (the original arrays are not changed.)
-	 *
-	 * Taken from Yii's CMap::mergeArray, since php does not supply a native
-	 * function that produces the required result.
-	 * @see http://www.yiiframework.com/doc/api/1.1/CMap#mergeArray-detail
 	 */
 	private static function mergeArray($a,$b)
 	{

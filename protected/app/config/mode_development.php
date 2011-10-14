@@ -52,20 +52,19 @@ return array(
 		),
 		'components'=>array(
 			
-			'db'=>array(
-//				'connectionString' => 'mysql:host=localhost;dbname=hotspot',
-				'emulatePrepare' => true,
-				// the next person who changes this section will get shot in the face!
-				// you can make specific config changes by putting a config.php file above the root 
-				// so it IS NOT GITTED!
-//				'username' => 'root',
-//				'password' => '',
-//				'charset' => 'utf8',
-//				'tablePrefix' =>'',
-				'schemaCachingDuration' => 3600,
-				'enableProfiling'=>true,
-				'enableParamLogging'=>true,
-			),
+//			'db'=>array(
+//				'emulatePrepare' => true,
+//				// the next person who changes this section will get shot in the face!
+//				// you can make specific config changes by putting a config.php file above the root 
+//				// so it IS NOT GITTED!
+////				'username' => 'root',
+////				'password' => '',
+////				'charset' => 'utf8',
+////				'tablePrefix' =>'',
+//				'schemaCachingDuration' => 3600,
+//				'enableProfiling'=>true,
+//				'enableParamLogging'=>true,
+//			),
 			'log'=>array(
 				'class'=>'CLogRouter',
 				'routes'=>array(
