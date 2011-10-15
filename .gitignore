@@ -25,7 +25,7 @@
 .buildpath
 .settings/
 .project
-
+nbproject
 
 # OS generated files #
 ######################
@@ -35,4 +35,8 @@ Icon?
 Thumbs.db
 
 uploads
-nbproject
+
+# Nii files #
+#############
+protected/app/config/local.php
+
