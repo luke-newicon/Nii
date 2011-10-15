@@ -52,8 +52,15 @@ class InstallController extends Controller {
 
 					if ($model->installDb == true) {
 						$filename = Yii::getPathOfAlias('app.config.local').'.php';
-						file_put_contents($filename, $data);
-						chmod($filename,0777);
+                        if(is_writable($filename)){
+                            file_put_contents($filename, $data);
+                            chmod($filename,0777);
+                        } else {
+                            // we can not create the configuration file so lets show the 
+                            // user a nice message with instruction to create her own.
+                            $this->render('create-config-file',array('config'=>$data, 'configFolder'=>dirname($filename)));
+                            Yii::app()->end();
+                        }
 					}
 
 					Yii::app()->setComponents($config['components']);
@@ -138,5 +145,15 @@ class InstallController extends Controller {
 		);
 		
 	}
+    
+    /**
+     * Enables the user to download the config file if the config folder is not writable 
+     * @param string $content the base64 encoed string of the config files content
+     */
+    public function actionConfigFile($content){
+        
+        Yii::app()->request->sendFile('local.php',base64_decode($content));
+        
+    }
 	
 }
