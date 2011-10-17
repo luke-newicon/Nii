@@ -20,108 +20,65 @@ class InstallController extends Controller {
 	
 	public function actionStep1() {
 		
+		
 		$model = new InstallForm;
 		
-		$comps = Yii::app()->getComponents(false);
+		$this->performAjaxValidation($model, 'installForm');
 		
-		if (isset($comps->db->connectionString))
-			$model->installDb = false;
-		else
-			$model->installDb = true;
+		// if the db component is already configured then we already have a configuration for the database.
+		// this enables the view to display the install user form, and hides the database details.
+		$comps = Yii::app()->getComponents(false);
+		$model->installDb = !array_key_exists('connectionString', $comps['db']);
+		
 		
 		if (Yii::app()->request->getPost('InstallForm')){
 			
-			if ($model->installDb == true) {
+			$model->attributes = $_POST['InstallForm'];
 
-				$model->attributes = $_POST['InstallForm'];
+			if ($model->validate()) {
 
-				if ($model->validate()) {
+				$config = $model->generateConfig();
 
-					$config['name'] = $model->sitename;
-					$config['timezone'] = $model->timezone;
-					$config['hostname'] = $model->hostname;
-
-					$config['components']['db']['connectionString'] = 'mysql:host='.$model->db_host.';dbname='.$model->db_name;
-					$config['components']['db']['username'] = $model->db_username;
-					$config['components']['db']['password'] = $model->db_password;
-					$config['components']['db']['tablePrefix'] = $model->db_tablePrefix;
-
-					$config['params']['adminEmail'] = $model->email;
-
-					$data = '<?php '."\n".'return '.var_export($config,true).';';
-
-					if ($model->installDb == true) {
-						$filename = Yii::getPathOfAlias('app.config.local').'.php';
-                        if(is_writable($filename)){
-                            file_put_contents($filename, $data);
-                            chmod($filename,0777);
-                        } else {
-                            // we can not create the configuration file so lets show the 
-                            // user a nice message with instruction to create her own.
-                            $this->render('create-config-file',array('config'=>$data, 'configFolder'=>dirname($filename)));
-                            Yii::app()->end();
-                        }
+				$data = '<?php '."\n".'return '.var_export($config,true).';';
+				
+				// install database tables and nii modules
+				$model->installDatabase();
+				
+				// inserts the admin user
+				$model->createUser();
+				
+				$filename = Yii::getPathOfAlias('app.config.local').'.php';
+				if(!file_exists($filename)){
+					if(is_writable($filename)){
+						file_put_contents($filename, $data);
+						chmod($filename,0777);
+					} else {
+						// we can not create the configuration file so lets show the 
+						// user a nice message with instruction to create her own.
+						$this->render('create-config-file',array('config'=>$data, 'configFolder'=>dirname($filename)));
+						Yii::app()->end();
 					}
-
-					Yii::app()->setComponents($config['components']);
-
-				}
-			} else if ($model->installDb == false) {
-				$model->attributes = $_POST['InstallForm'];
-			}
-			
-		}
-		
-		if (Yii::app()->request->getPost('InstallForm')) {
-			try {
-				Yii::app()->db->getConnectionStatus();
-
-				NActiveRecord::install('Setting');
-				NActiveRecord::install('Log');
-				
-				Yii::app()->install();
-
-				// if the user already exists we will still make it work
-				$user = User::model()->findByAttributes(array('username'=>$model->username));
-				if ($user === null)
-					$user = new User;
-				// if the username
-				if ($user->getScenario() != 'insert') {
-					$user->password = $user->cryptPassword($model->password);
-					$user->activekey = $user->cryptPassword(microtime().$model->password);
-				} else {
-					$user->password = $model->password;
 				}
 				
-				$user->username = $model->username;
-				$user->email = $model->email;
-				$user->superuser = 1;
-				$user->status = 1;
-
-				if ($user->validate()) {
-					$user->save();
-					$this->redirect (array('install/step2'));
+				// if the config file has been written then install has completed!
+				if(file_exists($filename)){
+					$this->redirect(array('install/step2'));
 				}
-
-			} catch (Exception $e) {
-				if(YII_DEBUG)
-					throw new CException($e);
-				Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
+				
 			}
 			
+		} else {
+			$localConfig = Yii::getPathOfAlias('app.config.local').'.php';
+			if (file_exists($localConfig)) {
+				$local = require $localConfig;
+				$model->getLocalConfig($local);
+			}
 		}
 		
-		$localConfig = Yii::getPathOfAlias('app.config.local').'.php';
-		if (file_exists($localConfig)) {
-			$local = require $localConfig;
-			$model->getLocalConfig($local);
-		}
+		$this->render('step1',array(
+			'model'=>$model,
+		));
 		
-		$this->render('step1',
-			array(
-				'model'=>$model,
-			)
-		);
 	}
 	
 	public function actionStep2() {
@@ -129,10 +86,10 @@ class InstallController extends Controller {
 		try { 
 			Yii::app()->db->getConnectionStatus();
 		} catch (Exception $e) {
-			if(YII_DEBUG){
-				throw new CException($e);
-			}
-			Yii::app()->user->setFlash('error-msg',"Couldn't connect to database. Please check the details and try again!");
+			if(YII_DEBUG)
+				Yii::app()->user->setFlash('error-msg-debug',$e->getMessage());
+			Yii::app()->user->setFlash('error',"Couldn't connect to database. Please check the details and try again!");
+			
 			$this->redirect (array('install/step1'));
 		}
 	

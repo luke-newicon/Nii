@@ -8,7 +8,6 @@
 class InstallForm extends CFormModel
 {
 	public $sitename;
-	public $hostname;
 	public $timezone;
 	public $db_host;
 	public $db_name;
@@ -21,6 +20,8 @@ class InstallForm extends CFormModel
 	
 	public $installDb;
 	
+	public $db;
+	
 	/**
 	 * Declares the validation rules.
 	 * The rules state that username and password are required,
@@ -29,9 +30,37 @@ class InstallForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('sitename, hostname, email, db_host, db_name, db_username, username, timezone', 'required'),
-			array('db_tablePrefix, db_password, password', 'safe'),		
+			array('sitename, email, db_host, db_name, db_username, username, password, timezone', 'required'),
+			array('db_tablePrefix, db_password', 'safe'),
+			array('db_host, db_name, db_username, db_password', 'validateDatabase'),
+			array('email', 'email'),
 		);
+	}
+	
+	/**
+	 * checks if the database connection details are valid,
+	 * attempts to connect to the databse, and interpret the error message if any
+	 * @param type $attribute
+	 * @param type $params 
+	 */
+	public function validateDatabase($attribute,$params){
+		// no point doing this if we already have errors
+			$config = $this->generateConfig();
+			try { 
+				Yii::app()->setComponents($config['components']);
+				Yii::app()->db->getConnectionStatus();
+			} catch (Exception $e){
+				Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
+				$msg = $e->getMessage();
+				if(preg_match('/\bUnknown database\b/i', $msg))
+					$this->addError('db_name','Unknown database name "'.$this->db_name.'"');
+				else if(preg_match('/\bUnknown .* server host\b/i', $msg))
+					$this->addError('db_host','Unknown host name "'.$this->db_host.'"');
+				else if(preg_match('/\bAccess denied for user\b/i', $msg))
+					$this->addError('db_password', 'Username and password combination is incorrect');
+				else
+					$this->addError('db',$e->getMessage());
+			}
 	}
 
 	/**
@@ -41,7 +70,6 @@ class InstallForm extends CFormModel
 	{
 		return array(
 			'sitename' => 'Site Name',
-			'hostname' => 'Host',
 			'email' => 'Email Address',
 			'db_host' => 'Host',
 			'db_name' => 'Database Name',
@@ -55,6 +83,10 @@ class InstallForm extends CFormModel
 		);
 	}
 	
+	/**
+	 * populates the model from a $local config array
+	 * @param array $local 
+	 */
 	public function getLocalConfig($local) {
 		
 		$db = $local['components']['db'];
@@ -67,10 +99,62 @@ class InstallForm extends CFormModel
 		$this->db_tablePrefix = $db['tablePrefix'];
 		
 		$this->sitename = $local['name'];
-		$this->hostname = $local['hostname'];
 		$this->timezone = $local['timezone'];
 		$this->email = $local['params']['adminEmail'];
 		
 	}
+	
+	
+	/**
+	 * generates a config array from the model properties.
+	 * @return array compatible with yii config to save as applications local config settings
+	 */
+	public function generateConfig(){
+		$config = array();
+		$config['name'] = $this->sitename;
+		$config['timezone'] = $this->timezone;
 
+		$config['components']['db']['connectionString'] = 'mysql:host='.$this->db_host.';dbname='.$this->db_name;
+		$config['components']['db']['username'] = $this->db_username;
+		$config['components']['db']['password'] = $this->db_password;
+		$config['components']['db']['tablePrefix'] = $this->db_tablePrefix;
+
+		$config['params']['adminEmail'] = $this->email;
+		return $config;
+	}
+	
+	
+	
+	public function installDatabase(){
+		// install tables and nii modules
+		NActiveRecord::install('Setting');
+		NActiveRecord::install('Log');
+		Yii::app()->install();
+	}
+	
+	public function createAdminUser(){
+		// add the admin user
+		// if the user already exists we will still make it work
+		$user = User::model()->findByAttributes(array('username'=>$this->username));
+		if ($user === null)
+			$user = new User;
+		if ($user->getScenario() != 'insert') {
+			$user->password = $user->cryptPassword($this->password);
+			$user->activekey = $user->cryptPassword(microtime().$this->password);
+		} else {
+			$user->password = $this->password;
+		}
+
+		$user->username = $this->username;
+		$user->email = $this->email;
+		$user->superuser = 1;
+		$user->status = 1;
+
+		if ($user->validate()) {
+			return $user->save();
+		} else {
+			return false;
+		}
+	}
+	
 }

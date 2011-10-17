@@ -10,7 +10,7 @@
 code, pre { padding: 0 3px 2px; font-family: Monaco, Andale Mono, Courier New, monospace; font-size: 12px; -webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 </style>
 <div class="alert-message">
-    Oops I can not save the configuration file, because the config directory is not writable.
+	Install was successful but I can not save the configuration file, because the config directory is not writable.
  <br/>
 </div>
 
@@ -19,7 +19,7 @@ code, pre { padding: 0 3px 2px; font-family: Monaco, Andale Mono, Courier New, m
     <br/><br/><em>(Or you can make the config folder writable and hit refresh)</em>
 </p>
 
-For the techies, the contents of the configuration file is:
+For the techies, the contents of the local.php configuration file is:
 <?php $this->beginWidget('CTextHighlighter', array('language'=>'php','showLineNumbers'=>true, 'lineNumberStyle'=>true)); ?>
 <?php echo $config; ?>
 <?php $this->endWidget(); ?>
