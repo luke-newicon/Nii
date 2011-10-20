@@ -74,7 +74,12 @@ class IndexController extends Controller
 	}
 	
 	public function actionInstall(){
-		Yii::app()->install();
+		// lets also flush the cache incase schema chaching is on
+		Yii::app()->cache->flush();
+		
+		Yii::app()->installAll();
+		echo 'modules and db installed.';
+		Yii::app()->cache->flush();
 	}
 	
 	public function actionSprite(){

@@ -56,7 +56,7 @@ return array(
 			'application.modules.user.models.*',
 			'application.modules.user.components.*',
 		),
-		'theme'=>'hotspot',
+		'theme'=>'nii',
 
 		'modulePath'=>$modules,
 		'modules'=>array(

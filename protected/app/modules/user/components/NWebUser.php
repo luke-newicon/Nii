@@ -17,10 +17,37 @@
 class NWebUser extends CWebUser 
 {
 
+	/**
+	 * Store the NActiveRecor User model object
+	 * @var NActiveRecord
+	 */
 	private $_user;
 	
-	private $_contact;
 	
+	public function init(){
+		parent::init();
+	}
+	
+	
+	protected function afterLogin($fromCookie){
+		// sometimes the user has not been defined (often when restoring from cookie
+		// to catch this we just manually force it if it aint defined
+		if(!Yii::app()->user)
+			Yii::app()->user = $this;
+		
+		if($this->record === null){
+			// something went badly wrong as we cant find the logged in users record
+			throw new CException('Unable to retrieve the logged in users\'s db record');
+		}
+		
+		$this->record->lastvisit = time();
+		// record the number of times the user has logged in;
+		$this->record->logins = $this->record->logins + 1;
+		
+		$this->record->save();
+		// set message so the system can determin when a user has just logged in
+		$this->setJustLoggedIn();
+	}
 	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
@@ -36,25 +63,14 @@ class NWebUser extends CWebUser
 		return $this->_user;
 	}
 	
-	/**
-	 * returns the related contact CrmContact record if it exists, or null if it does not.
-	 * 
-	 * @return CrmContact | null
-	 */
-	public function getContact(){
-		if($this->getRecord() === null)
-			return null;
-		if(UserModule::get()->useCrm && $this->_contact===null){
-			$this->_contact = $this->getRecord()->contact;
-		}
-		return $this->_contact;
-	}
 	
+	
+	/**
+	 * is the user a superuser? i.e. have the superuser database table row column superuser set to 1.
+	 * @return boolean 
+	 */
 	public function isSuper(){
-		// If I am not logged in then I cannot be a super user
-		if(Yii::app()->getUser()->isGuest)
-			return false;
-		return $this->record->superuser;
+		return ($this->record ===null)?false:$this->record->superuser;
 	}
 	
 	/**
@@ -79,25 +95,23 @@ class NWebUser extends CWebUser
 		return Yii::app()->user->checkAccess($route);	
 	}
 
-
 	/**
 	 * Finds the most suitable representation for the users name
 	 * Often users may not have all fields so finds one that is not empty.
 	 * 
-	 * first it checks to see if there is a related crm contact record.
-	 * if there is it uses first and last name
-	 * if there is not it uses the default user table, if no username is supplied uses the email
 	 * @return string 
 	 */
 	public function getName(){
 		$name = parent::getName();
+		// if the name is an email address return the first part
+		if($this->record !== null && $this->record->first_name != ''){
+			return $this->record->first_name . ' ' . $this->record->last_name;
+		}
 		if (($pos = strpos($name,"@"))) {
 			$name = strtok($name,'@');
 		}
 		return $name;
 	}
-	
-	
 	
 	/**
 	 * get the current users email address
@@ -108,8 +122,42 @@ class NWebUser extends CWebUser
 		}
 			
 		return $this->username;
+		
+	}
+	
+	public function getImageUrl($imageSize=40){
+		return Yii::app()->getController()->createWidget('nii.widgets.Gravatar', array(
+			'email'=>$this->getEmail(),
+			'size'=>$imageSize
+				
+		))->getUrl();
 	}
 	
 	
-
+	/**
+	 * This function returns true if the user has arived at the current page
+	 * from logging in.
+	 * This is useful for displaying logged in welcome messages or help boxes
+	 */
+	public function hasJustLoggedIn(){
+		return Yii::app()->user->hasFlash('justloggedin');
+	}
+	
+	/**
+	 * stores a variable in the session identifying that the user has just logged in
+	 * @see self::hasJustLoggedIn
+	 */
+	public function setJustLoggedIn(){
+		if(Yii::app()->user)
+			Yii::app()->user->setFlash('justloggedin','');
+	}
+	
+	/**
+	 * 
+	 * @return UserSettings
+	 */
+	public function getSettings(){
+		return UserSettings::getInstance();
+	}
+	
 }

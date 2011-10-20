@@ -42,21 +42,54 @@ class UserModule extends NWebModule
 	public $rememberMeDuration = 2592000; // 30 days = (3600*24*30)
 	
 	
+	/**
+	 * The route to the user registration page
+	 * @var mixed route
+	 */
 	public $registrationUrl = array("/user/account/registration");
+	
+	/**
+	 * The route to the recovery page (allows you to recover your password)
+	 * @var mixed route
+	 */
 	public $recoveryUrl = array("/user/account/recovery");
+	
+	/**
+	 * the route to the login page
+	 * @var mixed route
+	 */
 	public $loginUrl = array("/user/account/login");
+	
+	/**
+	 * the url to go to once a user successfully logs in.
+	 * @var mixed route
+	 */
 	public $logoutUrl = array("/user/account/logout");
-	public $profileUrl = array("/user/profile/index");
+	
+	/**
+	 * where to go on successful login
+	 * @var mixed route 
+	 */
 	public $returnUrl = array("/user/dashboard");
+	/**
+	 * the page to go to after logout
+	 * @var mixed route 
+	 */
 	public $returnLogoutUrl = array("/user/account/login");
 
+	/**
+	 * The class name of the User model
+	 * This is a last resort it is better to use behaviours to add functionality
+	 * @var string 
+	 */
 	public $userClass = 'User';
 
-	public $fieldsMessage = '';
 
-	
+	/**
+	 * The database tablename for the user model
+	 * @var string 
+	 */
 	public $tableUsers = '{{user_user}}';
-	public $tableProfiles = '{{crm_contact}}';
 
 	/**
 	 * Whether a user must proide a unique username
@@ -92,11 +125,7 @@ class UserModule extends NWebModule
 	 */
 	public $registrationCaptcha = true;
 
-	/**
-	 * This is set to false automatically if the CRM module is not loaded
-	 * @var type 
-	 */
-	public $useCrm = true;
+
 	
 	static private $_user;
 	static private $_admin;
@@ -108,11 +137,6 @@ class UserModule extends NWebModule
 	 */
 	public $componentBehaviors=array();
 
-	public function  preinit() {
-		if(Yii::app()->getModule('crm') === null)
-			$this->useCrm = false;
-		parent::preinit();
-	}
 
 	public function init()
 	{
@@ -127,8 +151,6 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 
-//		if(!Yii::app()->user->isGuest)
-//			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
 		
 		// add to the main config
 		Yii::app()->components = array(
@@ -211,7 +233,7 @@ class UserModule extends NWebModule
 	 * Send mail method
 	 */
 	public static function sendMail($email,$subject,$message) {
-    	$adminEmail = Yii::app()->params['adminEmail'];
+            $adminEmail = Yii::app()->params['adminEmail'];
 	    $headers = "MIME-Version: 1.0\r\nFrom: $adminEmail\r\nReply-To: $adminEmail\r\nContent-Type: text/html; charset=utf-8";
 	    $message = wordwrap($message, 70);
 	    $message = str_replace("\n.", "\n..", $message);
@@ -263,8 +285,17 @@ class UserModule extends NWebModule
 	 * @return boolean 
 	 */
 	public static function checkPassword($dbPass,$checkPass) {
-		$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
-		return ($dbPass == crypt($checkPass, $salt));
+		//$salt = substr($dbPass, 0, CRYPT_SALT_LENGTH);
+		return ($dbPass == crypt($checkPass, $dbPass));
+	}
+	
+	/**
+	 *
+	 * @param type $password
+	 * @return type function used to crypt the password.
+	 */
+	public static function passwordCrypt($password){
+		return crypt($password);
 	}
 	
 	
@@ -277,8 +308,9 @@ class UserModule extends NWebModule
 	 * When a user finishes successfull registration.
 	 * This is when registration form has been successfully completed
 	 * and the user added to the database
-	 * @param CEvent $event contains a user parameter with the user active record
-	 * object in it.
+	 * @param CEvent $event contains the following properties:
+	 *  - CEvent $user = the user active record object.
+	 *  - CEvent $plan = a string identifying a plan passed to the registration form
 	 */
 	public function onRegistrationComplete($event){
 		$this->raiseEvent('onRegistrationComplete', $event);
@@ -294,13 +326,19 @@ class UserModule extends NWebModule
 	}
 	
 	
+	/**
+	 * user module installation
+	 * @return void
+	 */
 	public function install(){
 		AuthItem::install();
 		AuthAssignment::install();
 		AuthItemChild::install();
 		User::install();
-		AppDomain::install();
-		AppUserDomain::install();
+		if($this->domain){
+			AppDomain::install();
+			//AppUserDomain::install();
+		}
 	}
 	
 }

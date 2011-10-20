@@ -3,7 +3,6 @@ $this->breadcrumbs=array(
 	UserModule::t("Registration"),
 );
 ?>
-
 <h1><?php echo UserModule::t("Registration"); ?></h1>
 
 <?php if(Yii::app()->user->hasFlash('registration')): ?>
@@ -12,99 +11,114 @@ $this->breadcrumbs=array(
 </div>
 <?php else: ?>
 
-<div class="form">
-<?php $form=$this->beginWidget('CActiveForm', array(
+
+<?php $form=$this->beginWidget('nii.widgets.NActiveForm', array(
 	'id'=>'registration-form',
 	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'htmlOptions' => array('enctype'=>'multipart/form-data'),
+	'focus'=>''
 )); ?>
 
-	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
-
-	<?php echo $form->errorSummary(array($model)); ?>
-
-	<?php if(UserModule::get()->showUsernameField): ?>
-		<div class="row">
-		<?php echo $form->labelEx($model,'username'); ?>
-		<?php echo $form->textField($model,'username'); ?>
-		<?php echo $form->error($model,'username'); ?>
-		</div>
-	<?php endif; ?>
+<div class="line" style="font-size:15px;">
 	
-	<div class="row">
-	<?php echo $form->labelEx($model,'email'); ?>
-	<?php echo $form->textField($model,'email'); ?>
-	<?php echo $form->error($model,'email'); ?>
-	</div>
-
-	<?php  // show fields from linked CRM module ?>
-	<?php if(UserModule::get()->useCrm): ?>
-		<div class="row">
-		<?php echo $form->labelEx($contact,'first name'); ?>
-		<?php echo $form->textField($contact,'first_name'); ?>
-		<?php echo $form->error($contact,'first_name'); ?>
+	<div class="unit size2of5">
+		<?php echo $form->errorSummary(array($model)); ?>
+		<div>
+			<?php if (UserModule::get()->showUsernameField) : ?>
+				<div class="field mbl <?php echo ($model->hasErrors('username'))?'error':''; ?>">
+					<div class="inputContainer">
+						<?php echo $form->labelEx($model,'username', array('class'=>'inFieldLabel')); ?>
+						<div class="inputBox">
+							<?php echo $form->textField($model,'username'); ?>
+						</div>
+					</div>
+					<?php echo $form->error($model,'username'); ?>
+				</div>
+			<?php endif; ?>
+			<div class="field mbl <?php echo ($model->hasErrors('email'))?'error':''; ?>">
+				<div class="inputContainer">
+					<?php echo $form->labelEx($model,'email', array('class'=>'inFieldLabel')); ?>
+					<div class="inputBox">
+						<?php echo $form->textField($model,'email'); ?>
+					</div>
+				</div>
+				<?php echo $form->error($model,'email'); ?>
+			</div>
+			<div class="field line mbl <?php echo ($model->hasErrors('password')||$model->hasErrors('verifyPassword'))?'error':''; ?>">
+				<div class="unit size1of2">
+					<div class="field man">
+						<div class="inputContainer">
+							<?php echo $form->labelEx($model,'password', array('class'=>'inFieldLabel')); ?>
+							<div class="inputBox">
+								<?php echo $form->passwordField($model,'password'); ?>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<div class="lastUnit">
+					<div class="field man mls">
+						<div class="inputContainer">
+							<?php echo $form->labelEx($model,'verifyPassword', array('class'=>'inFieldLabel')); ?>
+							<div class="inputBox">
+								<?php echo $form->passwordField($model,'verifyPassword'); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php echo $form->error($model,'password'); ?>
+				<?php echo $form->error($model,'verifyPassword'); ?>
+			</div>
 		</div>
-
-		<div class="row">
-		<?php echo $form->labelEx($contact,'last name'); ?>
-		<?php echo $form->textField($contact,'last_name'); ?>
-		<?php echo $form->error($contact,'last_name'); ?>
-		</div>
-	<?php endif; ?>
-
-	<div class="row">
-	<?php echo $form->labelEx($model,'password'); ?>
-	<?php echo $form->passwordField($model,'password'); ?>
-	<?php echo $form->error($model,'password'); ?>
-	<p class="hint">
-	<?php echo UserModule::t("Minimal password length 4 symbols."); ?>
-	</p>
-	</div>
-
-	<div class="row">
-	<?php echo $form->labelEx($model,'verifyPassword'); ?>
-	<?php echo $form->passwordField($model,'verifyPassword'); ?>
-	<?php echo $form->error($model,'verifyPassword'); ?>
-	</div>
-
-
-
-	<?php if (UserModule::doCaptcha('registration')): ?>
-	<div class="row">
-		<?php echo $form->labelEx($model,'verifyCode'); ?>
-
-		<?php $this->widget('CCaptcha'); ?>
-		<?php echo $form->textField($model,'verifyCode'); ?>
-		<?php echo $form->error($model,'verifyCode'); ?>
-
-		<p class="hint"><?php echo UserModule::t("Please enter the letters as they are shown in the image above."); ?>
-		<br/><?php echo UserModule::t("Letters are not case-sensitive."); ?></p>
-	</div>
-	<?php endif; ?>
-	
-	<?php if(UserModule::get()->domain): ?>
-		<h2>Select your site address!</h2>
-		<div class="row">
-			https://<?php echo $form->textField($domain,'domain'); ?>.<?php echo Yii::app()->hostname; ?>
+		<?php if(Yii::app()->domain): ?>
+		<div class="field mbl <?php echo ($domain->hasErrors('domain'))?'error':''; ?>">
+			<div class="inputContainer">
+				<div class="line">
+					<?php echo $form->labelEx($domain,'domain',array('class'=>'inFieldLabel')); ?>
+					<div class="unit size1of2">
+						<div class="inputBox">
+						<?php echo $form->textField($domain,'domain'); ?>
+						</div>
+					</div>
+					<div class="lastUnit">
+						<label class="mlm" for="AppDomain_domain" style="color:#999;">.<?php echo Yii::app()->hostname; ?></label>
+					</div>
+				</div>
+			</div>
 			<?php echo $form->error($domain,'domain'); ?>
+			<span class="hint">This is only set once. It can be your company or agency name.</span>
 		</div>
-	<?php endif; ?>
-		
-		
-	<?php if(UserModule::get()->termsRequired): ?>
-		<h2>Terms</h2>
-		<div class="row">
-			<?php echo $form->checkBox($model,'terms'); ?>
-			<label for="<?php echo CHtml::activeId($model,'terms'); ?>" style="display:inline;font-weight:normal;">I have read and accept the </label><a href="#">terms and conditions</a>
-			<?php echo $form->error($model,'terms'); ?>
-		</div>
-	<?php endif; ?>
+		<?php  endif; ?>
+		<?php if (UserModule::doCaptcha('registration')): ?>
+		<div class="field">
+			<?php echo $form->labelEx($model,'verifyCode'); ?>
 
-	<div class="row submit">
-		<?php echo CHtml::submitButton(UserModule::t("Register")); ?>
+			<?php $this->widget('CCaptcha'); ?>
+			<?php echo $form->textField($model,'verifyCode'); ?>
+			<?php echo $form->error($model,'verifyCode'); ?>
+
+			<p class="hint pan"><?php echo UserModule::t("Please enter the letters as they are shown in the image above."); ?>
+			<br/><?php echo UserModule::t("Letters are not case-sensitive."); ?></p>
+		</div>
+		<?php endif; ?>
+
+			
+		<div class="field submit line mtl">
+			<p class="hint" style="line-height:16px;">By singing up you agree to the <a href="<?php echo NHtml::url('site/terms'); ?>">terms and conditions</a></p>
+			<?php echo CHtml::submitButton(UserModule::t("Register"),array('class'=>'btn aristo primary large pll prl','style'=>'width:100%','onclick'=>'$(this).val(\'Loading...\').addClass(\'disabled\')')); ?>
+		</div>
 	</div>
-
+	<div class="lastUnit pll">
+		<div class="line">
+			<div class="unit">
+				<img style="padding-left:50px" src="<?php echo Yii::app()->theme->baseUrl.'/images/whitefade.png' ?>" />
+			</div>
+			<div class="lastUnit">				
+				
+			</div>
+		</div>
+	</div>
+</div>
 <?php $this->endWidget(); ?>
-</div><!-- form -->
 <?php endif; ?>

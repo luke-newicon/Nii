@@ -1,6 +1,7 @@
 <?php
 
-class IndexController extends AController {
+class IndexController extends AController 
+{
 
 	/**
 	 * Lists all models.
@@ -24,8 +25,4 @@ class IndexController extends AController {
 		$this->render('view',array('model'=>$model));
 	}
 	
-	public function actionInstall(){
-		$this->getModule()->install();
-	}
-
 }

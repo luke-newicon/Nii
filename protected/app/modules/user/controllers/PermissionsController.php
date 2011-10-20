@@ -18,6 +18,21 @@ class PermissionsController extends AController {
 
 	public $defaultAction='roles';
 
+	
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array( 
+			array('deny',  // deny all users
+				'expression'=>'!$user->isSuper()'
+			),
+		);
+	}
+	
 	/**
 	 * Setup the authorisation heirarchy
 	 * Tasks can have child operations.

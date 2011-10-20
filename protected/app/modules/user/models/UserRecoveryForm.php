@@ -28,8 +28,9 @@ class UserRecoveryForm extends CFormModel {
 	 */
 	public function attributeLabels()
 	{
+		$usernameLabel = (UserModule::get()->usernameRequired)?'Username or Email':'Email';
 		return array(
-			'login_or_email'=>UserModule::t("username or email"),
+			'login_or_email'=>$usernameLabel,
 		);
 	}
 	

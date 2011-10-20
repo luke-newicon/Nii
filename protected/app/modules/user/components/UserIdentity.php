@@ -9,6 +9,10 @@ class UserIdentity extends CUserIdentity
 {
 	private $_id;
 	
+	/**
+	 * store the user record
+	 * @var NActiveRecord 
+	 */
 	private $_user;
 	
 	const ERROR_EMAIL_INVALID=3;
@@ -71,7 +75,15 @@ class UserIdentity extends CUserIdentity
 		}
 		return !$this->errorCode;
 	}
+	
 
+	/**
+	 * This function does not perform the user login. That is done by Yii::app()->user->login($UserIdentity (this class), $duration)
+	 * The command that performs the login is called in the UserLogin model form object
+	 * This function adds additional data to the user identity class before logging in.
+	 * 
+	 * @param NActiveRecord $user 
+	 */
 	protected function _loginUser($user)
 	{
 		if($user){
