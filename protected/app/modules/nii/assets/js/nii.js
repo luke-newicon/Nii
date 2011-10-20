@@ -53,9 +53,16 @@ jQuery(function($){
 });
 
 
+/**
+ * Overrides and adds functions to the standard yiiactiveform js 
+ * 
+ * 
+ */
 (function()
 {
-	// Define overriding method.
+	/**
+	 * makes drawing an individual form fields error message slightly more sexy
+	 */
 	if(jQuery.fn.yiiactiveform != undefined){
 		jQuery.fn.yiiactiveform.updateInput = function(attribute, messages, form) 
 		{
@@ -82,36 +89,84 @@ jQuery(function($){
 			return hasError;
 
 		}
+			
+		/**
+		 * The form to draw the validation on.
+		 * Draws the validatiion for each field
+		 * 
+		 * @param $form the jquery form object
+		 * @param data the json validation result (as returned by CActiveForm::validate)
+		 */
+		$.fn.yiiactiveform.drawValidation = function($form, data){
+			var hasError=false;
+			$.each($form.data('settings').attributes, function(){
+				hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+				var attribute = this;
+				if(attribute.afterValidateAttribute!=undefined) {
+					afterValidateAttribute($form,attribute,data,hasError);
+				}
+			});
+		}
 		
 		/**
-		 * Function to call the validation on the whole form. Pass in the jquery form object
-		 * @param $form jquery form element object
+		 * Validates the form in its entirety, 
+		 * the successCallback is ONLY called if no validation messages are returned.
+		 * 
+		 * @form string|jquery form the form to validate
+		 * @successCallback function the function to call on successful validation
+		 * @errorCallback functon optional the ajax error callback
 		 */
-		$.fn.yiiactiveform.doValidate = function($form){
-			$.fn.yiiactiveform.validate($('#billing-info-form'), function(data){
-				var settings = $.fn.yiiactiveform.getSettings($('#billing-info-form'));
-				$form = $('#billing-info-form');
-				// Code copied from yiiactiveform.js
-				var hasError = false;
-				$.each(settings.attributes, function(i, attribute){
-					hasError = $.fn.yiiactiveform.updateInput(attribute, data, $form) || hasError;
-				});
-				$.fn.yiiactiveform.updateSummary($form, data);
-				if(settings.afterValidate==undefined || settings.afterValidate($form, data, hasError)) {
-					if(!hasError) {
-						validated = true;
-						var $button = $form.data('submitObject') || $form.find(':submit:first');
-						// TODO: if the submission is caused by "change" event, it will not work
-						if ($button.length)
-							$button.click();
-						else  // no submit button in the form
-							$form.submit();
-						return false;
+		$.fn.yiiactiveform.doValidate = function(form, successCallback, errorCallback){
+			var $form = $(form);
+			var settings = $form.data('settings');
+			console.log(settings);
+			var messages = {};
+			var needAjaxValidation = false;
+			$.each(settings.attributes, function(){
+				var msg = [];
+				//if (this.clientValidation != undefined && (settings.submitting || this.status == 2 || this.status == 3)) {
+					var value = $('#'+this.inputID, $form).val();
+					this.clientValidation(value, msg, this);
+					if (msg.length) {
+						messages[this.id] = msg;
 					}
-				}
-				settings.submitting=false;
-				// end duplicated code
+				//}
+				if (this.enableAjaxValidation)
+					needAjaxValidation = true;
 			});
+			
+			if(needAjaxValidation){
+				$.ajax({
+					url : settings.validationUrl,
+					type : $form.attr('method'),
+					data : $form.serialize()+'&'+settings.ajaxVar+'='+$form.attr('id'),
+					dataType : 'json',
+					success : function(data) {
+						if (data != null && typeof data == 'object') {
+							$.each(settings.attributes, function() {
+								if (!this.enableAjaxValidation)
+									delete data[this.id];
+							});
+							$.fn.yiiactiveform.drawValidation($form, $.extend({}, messages, data));
+						}
+
+						// we only call the success callback if the form is valid!
+						if (data.length==0 && successCallback!=undefined)
+							successCallback();
+
+					},
+					error : function() {
+						if (errorCallback!=undefined) {
+							errorCallback();
+						}
+					}
+				});
+			}else{
+				$.fn.yiiactiveform.drawValidation($form, messages);
+				// we only call the success callback if the form is valid!
+				if (data.length==0 && successCallback!=undefined)
+					successCallback();
+			}
 		}
 	}
 })();
