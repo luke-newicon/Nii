@@ -127,8 +127,8 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 
-		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
+//		if(!Yii::app()->user->isGuest)
+//			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'Users'), array('/user/index/index'));
 		
 		// add to the main config
 		Yii::app()->components = array(

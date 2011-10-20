@@ -23,6 +23,7 @@ class NWebModule extends CWebModule
 {
     public $defaultController = 'index';
 	
+	public static $items = array();
 	
 	
 	/**

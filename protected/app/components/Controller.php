@@ -32,8 +32,9 @@ class Controller extends NController
 //		);
 	}
 	
-/**
+		/**
          * Returns a nested array of timzones by continant. Suitable for input into
+		 * TODO: move into a suitable model or helper class. This is not to do with control of requests.
          */
         public static function getTimeZones()
         {
