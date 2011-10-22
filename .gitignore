@@ -25,18 +25,17 @@
 .buildpath
 .settings/
 .project
-nbproject
+
 
 # OS generated files #
 ######################
-.DS_store?
+.DS_Store?
 ehthumbs.db
 Icon?
 Thumbs.db
 
 uploads
-
-# Nii files #
-#############
-protected/app/config/local.php
-
+nbproject
+/modules/nii/widgets/fancybox/assets/_notes/
+files/*
+config.php
