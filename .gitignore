@@ -29,7 +29,7 @@
 
 # OS generated files #
 ######################
-.DS_Store?
+.DS_Store
 ehthumbs.db
 Icon?
 Thumbs.db
@@ -39,3 +39,7 @@ nbproject
 /modules/nii/widgets/fancybox/assets/_notes/
 files/*
 config.php
+
+# Nii files #
+#############
+protected/app/config/local.php
