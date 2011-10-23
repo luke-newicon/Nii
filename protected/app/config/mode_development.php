@@ -38,7 +38,8 @@ return array(
 			'email',
 			'dev'=>array(
 				'modules'=>array('kanban')
-			)
+			),
+			'test'
 		),
 		'components'=>array(
 			

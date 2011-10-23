@@ -23,7 +23,7 @@ class TUserProfile extends CWidget
 	
 	public function run()
 	{
-		$contact = User::getUserProfile();
-		$this->render('userProfileMenu',array('user'=>Yii::app()->user,'contact'=>$contact));
+//		$contact = User::getUserProfile();
+//		$this->render('userProfileMenu',array('user'=>Yii::app()->user,'contact'=>$contact));
 	}
 }

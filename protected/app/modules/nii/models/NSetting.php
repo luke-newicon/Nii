@@ -9,7 +9,7 @@
  * @property string $setting_name
  * @property string $setting_value
  */
-class Setting extends NActiveRecord
+class NSetting extends NActiveRecord
 {
 	
 	public static function install($className=__CLASS__){

@@ -47,5 +47,15 @@ class NWebModule extends CWebModule
 	
 	public function install(){}
 	
+	public function settingsPage(){
+		if(method_exists($this,'settings') && $this->settings()){
+			$config['elements'] = $this->settings();
+			$model = new Setting;
+			$form = new CForm($config,$model);
+			//echo $form;
+		} else {
+			return 'No settings for this module';
+		}
+	}
 	
 }
