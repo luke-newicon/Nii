@@ -146,7 +146,7 @@ class Nii extends CWebApplication
 	 */
 	public function getNiiModules($exclude=array()){
 		$exclude = array_merge(array('gii'), $exclude);
-		$modules = array();
+		$retModules = array();
 		
 		
 		// first load nii
@@ -166,10 +166,10 @@ class Nii extends CWebApplication
 			// initialises each module
 			$module = Yii::app()->getModule($name);
 			if($module instanceOf NWebModule)
-				$modules[$name] = $module;
+				$retModules[$name] = $module;
 		}
 				
-		return $modules;
+		return $retModules;
 	}
 	
 	
