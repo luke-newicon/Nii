@@ -58,4 +58,8 @@ class NWebModule extends CWebModule
 		}
 	}
 	
+	public function getSettingsPage(){
+		return array('/admin/settingsPage','module'=>$this->name);
+	}
+	
 }

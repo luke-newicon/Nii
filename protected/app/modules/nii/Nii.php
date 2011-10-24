@@ -146,14 +146,14 @@ class Nii extends CWebApplication
 	 */
 	public function getNiiModules($exclude=array()){
 		$exclude = array_merge(array('gii'), $exclude);
-		$m = array();
-		foreach(Yii::app()->getModules() as $module => $v){
-			if (in_array($module, $exclude)) continue;
-			$module = Yii::app()->getModule($module);
+		$modules = array();
+		foreach(Yii::app()->getModules() as $name => $config){
+			if (in_array($name, $exclude)) continue;
+			$module = Yii::app()->getModule($name);
 			if($module instanceOf NWebModule)
-				$m[] = $module;
+				$modules[$name] = $module;
 		}
-		return $m;
+		return $modules;
 	}
 	
 	
