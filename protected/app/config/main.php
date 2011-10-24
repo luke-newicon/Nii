@@ -65,6 +65,9 @@ return array(
 		),
 		// application components
 		'components' => array(
+			'settings'=>array(
+				'class' => 'NSettings',
+			),
 			'user' => array(
 				'class' => 'NWebUser',
 				// enable cookie-based authentication

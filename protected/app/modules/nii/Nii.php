@@ -108,16 +108,16 @@ class Nii extends CWebApplication
 			}
 		}
 		
-		
-		
 		// initialise modules
 		$this->getNiiModules();
+	
 
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
 		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
 		// run the application (process the request)
 		parent::run();
+		
 	}
 	
 	
@@ -142,17 +142,33 @@ class Nii extends CWebApplication
 	 * are not already, thus running each modules initialisation (init) method
 	 * 
 	 * @param array $exclude modules to exclude from the returned array
-	 * @return array 
+	 * @return array 'module name'=>$module object
 	 */
 	public function getNiiModules($exclude=array()){
 		$exclude = array_merge(array('gii'), $exclude);
 		$modules = array();
-		foreach(Yii::app()->getModules() as $name => $config){
+		
+		
+		// first load nii
+		Yii::app()->getModule('nii');
+		
+		// get core modules
+		$modules = Yii::app()->getModules();
+		
+		// add active modules
+		if(($activeMods = Yii::app()->settings->get('modules','system_modules')) !== null){
+			$modules = array_merge($modules, $activeMods);
+		}
+		
+		// load the modules
+		foreach($modules as $name => $config){
 			if (in_array($name, $exclude)) continue;
+			// initialises each module
 			$module = Yii::app()->getModule($name);
 			if($module instanceOf NWebModule)
 				$modules[$name] = $module;
 		}
+				
 		return $modules;
 	}
 	

@@ -18,6 +18,9 @@ class NiiModule extends NWebModule
 	
 	
 	public function init(){
+		
+		$this->loadSettings();
+		
 		if(Yii::app()->domain){
 			// this is important it makes the cache specific to the domain application instance.
 			// The cache is shared across the application. Therefore the cache id must be specific to each users application

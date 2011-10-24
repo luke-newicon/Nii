@@ -11,6 +11,12 @@ class AdminController extends AController {
 	}
 	
 	public function actionModules(){
+		
+		dp(NWebModule::getNiiModules());
+		
+		
+		
+		
 		$this->render('modules');
 	}
 	

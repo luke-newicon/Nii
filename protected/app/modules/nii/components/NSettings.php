@@ -38,7 +38,7 @@ class NSettings extends CApplicationComponent
 
 
     /**
-     * CmsSettings::set()
+     * NSettings::set()
      * 
      * @param string $category name of the category 
      * @param mixed $key 
@@ -72,7 +72,7 @@ class NSettings extends CApplicationComponent
     }
 
     /**
-     * CmsSettings::get()
+     * NSettings::get()
      * 
      * @param string $category name of the category
      * @param mixed $key 
