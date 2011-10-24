@@ -1,0 +1,41 @@
+/* core application stylesheet */
+
+h1, h2, h3, h4, h5, h6, ul, ol, dl, p, blockquote, .media {margin:0px 0px 10px;}
+
+body{background:#fff url("../images/top-bg.png") repeat-x left -40px;}
+.head{}
+/*.bigHead{height:78px}*/
+.page{position:relative;}
+.mainMenu{height:56px;overflow:hidden;position:relative;}
+.mainMenu ul{margin:0px;display:inline-block;position:absolute;height:56px;width:56px;}
+.mainMenu li{margin:8px;list-style:none;float:left;}
+.mainMenu a{box-shadow:1px 1px 0 #FFFFFF;display:block;background:#FFFFFF;width:32px;height:32px;border:4px solid #AAA;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}
+.mainMenu img{margin:7px;}
+
+
+/** fix yii buttons in grid **/
+.button-column img {display: inline;}
+
+.leftCol{width:150px;padding:10px;margin-right:10px;}
+.title{position:absolute;left:200px;top:18px;}
+.loginMenu{position:absolute;top:0px;right:0px;padding:10px;top:9px;}
+
+.loginPage{width:500px;padding-top:125px;}
+
+.loginBox{border:6px solid #DDD;padding:20px;-webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;}
+
+/**
+ * faded class should be used by the application to demark 
+ * text that is not as important as normal body text 
+ * A good example would be displaying model data
+ * name: Steven O'Brien The name label could have a faded class applied as it is less important information. 
+ * typically the class will often make the text slightly less visible. or maybe a more appriopriate name would be .label
+ * @Todo: move into oocss core
+ */
+.faded{color:#787878;}
+.spinner{background:url('../images/ajax-loader.gif');width:31px; height:31px;}
+.hidden{display:none;}
+
+.footer{background:#DDDDDD;padding:20px;}
+
+.errorMessage{color:#ff0000;}

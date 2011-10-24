@@ -14,6 +14,11 @@ class AdminController extends AController {
 		$this->render('modules');
 	}
 	
+	public function actionModuleState($module,$state=0){
+		// This is where the module is activated / deactivated
+		echo CJSON::encode(array('success'=>'The "'.Yii::app()->getModule($module)->name.'" module was successfully '.($state?'activated':'deactivated')));
+	}
+	
 	public function actionSettings(){
 		$settings = new Setting;
 		$this->render('settings',array('settings'=>$settings));

@@ -49,7 +49,7 @@ return array(
 			'application.modules.user.models.*',
 			'application.modules.user.components.*',
 		),
-		'theme' => 'nii',
+		'theme' => 'default',
 		'modulePath' => $modules,
 		'modules' => array(
 			'user' => array(
