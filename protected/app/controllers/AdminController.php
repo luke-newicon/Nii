@@ -19,7 +19,7 @@ class AdminController extends AController {
 		$this->render('settings',array('settings'=>$settings));
 	}
 	
-	public function actionSettingsTab($module){
+	public function actionSettingsPage($module){
 		echo Yii::app()->getModule($module)->settingsPage();
 	}
 	
