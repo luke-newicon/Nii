@@ -5,12 +5,8 @@
 		<meta name="language" content="en" />
 
 		<title><?php echo CHtml::encode($this->pageTitle); ?></title>
-		
-<!--		<link rel="stylesheet" type="text/css" href="<?php echo $this->coreAssets; ?>/oocss/all.css" />-->
-		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" />
-<!--		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />-->
-		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style.css" />
-<!--		<script tyle="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/javascript/functions.js"></script>-->
+		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
 	</head>
 	<body class="<?php echo Yii::app()->controller->action->id; ?>">
 		<div class="page">
