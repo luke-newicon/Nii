@@ -337,7 +337,6 @@ class UserModule extends NWebModule
 		User::install();
 		if($this->domain){
 			AppDomain::install();
-			//AppUserDomain::install();
 		}
 	}
 	

@@ -54,31 +54,22 @@ defined('DS') or define('DS', DIRECTORY_SEPARATOR);
  * {{{
  * <?php
  * // set environment
- * require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
+ * require_once (dirname(__FILE__) . '/../protected/app/config/Environment.php');
+ * // set environment - new Environment('PRODUCTION'); (override mode)
  * $env = new Environment();
- * //$env = new Environment('PRODUCTION'); //override mode
  * 
- * // set debug and trace level
- * defined('YII_DEBUG') or define('YII_DEBUG', $env->yiiDebug);
- * defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
- * 
- * // run Yii app
- * //$env->showDebug(); // show produced environment configuration
- * require_once($env->yiiPath);
- * $env->runYiiStatics(); // like Yii::setPathOfAlias()
  * Yii::createWebApplication($env->config)->run();
- * }}}
  * 
  * ===Structure of config directory===
  * 
  * Your protected/config/ directory will look like this:
  * 
- *  * config/main.php                     Global configuration
- *  * config/mode_development.php         Mode-specific configurations
- *  * config/mode_test.php
- *  * config/mode_staging.php
- *  * config/mode_production.php
- *  * config/local.php                    Local override for mode-specific config
+ *   config/main.php                     Global configuration
+ *   config/mode_development.php         Mode-specific configurations
+ *   config/mode_test.php
+ *   config/mode_staging.php
+ *   config/mode_production.php
+ *   config/local.php                    Local override for mode-specific config
  * 
  * ===Modify your config/main.php===
  * 

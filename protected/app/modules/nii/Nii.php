@@ -178,20 +178,23 @@ class Nii extends CWebApplication
 	
 	/**
 	 * install all loops through each registered database and runs the install of each module against it.
+	 * This is useful for multi site subdomain systems
 	 */
 	public function installAll(){
 		NAppRecord::$db = null;
 		$this->install();
 		FB::log('finished main install');
-		// need to loop through databases
-		$doms = AppDomain::model()->findAll();
-		foreach($doms as $d){
-			FB::log('install '.$this->domainDbPrefix.$d->domain);
-			// get the specific database for this domain
-			$db = $this->domainDbPrefix.$d->domain;
-			NAppRecord::$db = $this->_getDb($db);
-			foreach($this->getNiiModules() as $m){
-				$m->install();
+		// need to loop through sub databases if on a multi site install
+		if($this->domain){
+			$doms = AppDomain::model()->findAll();
+			foreach($doms as $d){
+				FB::log('install '.$this->domainDbPrefix.$d->domain);
+				// get the specific database for this domain
+				$db = $this->domainDbPrefix.$d->domain;
+				NAppRecord::$db = $this->_getDb($db);
+				foreach($this->getNiiModules() as $m){
+					$m->install();
+				}
 			}
 		}
 	}
