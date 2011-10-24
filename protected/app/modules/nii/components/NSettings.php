@@ -89,7 +89,7 @@ class NSettings extends CApplicationComponent
     public function get($key='', $category='system', $default=null)
     {
 		if(!$this->hasDbComponent())
-			return null;
+			return $default;
 		
         if(!isset($this->loaded[$category]))
             $this->load($category);

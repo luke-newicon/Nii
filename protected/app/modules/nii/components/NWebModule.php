@@ -37,6 +37,21 @@ class NWebModule extends CWebModule
 	
 	
 	/**
+	 * During module activation we want to access module info but not call the modules init function
+	 * 
+	 * @param type $id
+	 * @param type $parent
+	 * @param type $config 
+	 */
+	public function __construct($id, $parent, $config = null, $activate=true) {
+		// if activate is false don't bother setting up the module officially
+		// during module activation we want an instance of the module that we can use
+		// but that does not set its self up and call its init functions or attach to the application
+		if($activate)
+			parent::__construct($id, $parent, $config);
+	}
+	
+	/**
 	 * preInit is used to load in the database specific settings.
 	 * Thus the init function has access to all module settings.
 	 */
@@ -91,20 +106,6 @@ class NWebModule extends CWebModule
 	public function loadSettings(){
 		if(($config = Yii::app()->settings->get(__CLASS__)) !== null)
 			$this->configure($config);
-	}
-	
-	public static function getNiiModules(){
-		Yii::beginProfile('getModules');
-		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
-		$mods = array();
-		foreach($modFiles as $m){
-			$modName = basename($m);
-			if (!strpos($modName, 'Module'))
-				continue;
-			$mod = str_replace('.php','',$modName);
-		}
-		Yii::endProfile('getModules');
-		return $mods;
 	}
 	
 	

@@ -108,6 +108,8 @@ class Nii extends CWebApplication
 			}
 		}
 		
+		
+		
 		// initialise modules
 		$this->getNiiModules();
 	
@@ -170,6 +172,27 @@ class Nii extends CWebApplication
 		}
 				
 		return $retModules;
+	}
+	
+	
+	/**
+	 * Gets all modules available for install / activation
+	 * @return array ('moduleName'=>'module zombie object')
+	 */
+	public function getAllNiiMAodules(){
+		Yii::beginProfile('getAllModules');
+		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
+		$mods = array();
+		foreach($modFiles as $m){
+			$modName = basename($m);
+			if (!strpos($modName, 'Module'))
+				continue;
+			$mod = str_replace('.php','',$modName);
+			$moduleObj = new $mod($mod, null, null, false);
+			$mods[$mod] = $moduleObj;
+		}
+		Yii::endProfile('getAllModules');
+		return $mods;
 	}
 	
 	
