@@ -34,8 +34,6 @@ class NSettings extends CApplicationComponent
 	
     public function init()
     {
-		if ($this->hasDbComponent())
-			FB::log('oi!');
         parent::init();
 		if ($this->hasDbComponent())
         Yii::app()->attachEventHandler('onEndRequest', array($this, 'whenRequestEnds'));
@@ -239,7 +237,11 @@ class NSettings extends CApplicationComponent
     }
 	
 	protected function hasDbComponent(){
-		return Yii::app()->hasComponent($this->dbComponentId);
+		// the db component may already exist in the config.
+		// only the install process will define its connectionString
+		// the default yii::app()->hasComponent function will trigger the db component 'connection string not defined' error
+		$comps = Yii::app()->getComponents(false);
+		return isset($comps->db->connectionString);
 	}
 
     protected function addDbItem($category='system', $key, $value)
