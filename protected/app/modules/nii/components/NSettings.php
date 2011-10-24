@@ -30,9 +30,14 @@ class NSettings extends CApplicationComponent
 	protected $_tableName='{{nii_settings}}';
 	public $dbEngine='InnoDB';
 	
+	
+	
     public function init()
     {
+		if ($this->hasDbComponent())
+			FB::log('oi!');
         parent::init();
+		if ($this->hasDbComponent())
         Yii::app()->attachEventHandler('onEndRequest', array($this, 'whenRequestEnds'));
     }
 
@@ -48,7 +53,7 @@ class NSettings extends CApplicationComponent
      * @return CmsSettings
      */
     public function set($key='', $value='', $category='system', $toDatabase=true)
-    { 
+    {
         if(is_array($key))
         {
             foreach($key AS $k=>$v)
@@ -85,6 +90,9 @@ class NSettings extends CApplicationComponent
      */
     public function get($key='', $category='system', $default=null)
     {
+		if(!$this->hasDbComponent())
+			return null;
+		
         if(!isset($this->loaded[$category]))
             $this->load($category);
 
@@ -158,6 +166,9 @@ class NSettings extends CApplicationComponent
      */
     public function load($category)
     {        
+		if(!$this->hasDbComponent())
+			return array();
+		
         $items=$this->getCacheComponent()->get($category.'_'.$this->cacheId);
         $this->loaded[$category]=true;
         
@@ -226,6 +237,10 @@ class NSettings extends CApplicationComponent
 	{
         return Yii::app()->getComponent($this->dbComponentId);
     }
+	
+	protected function hasDbComponent(){
+		return Yii::app()->hasComponent($this->dbComponentId);
+	}
 
     protected function addDbItem($category='system', $key, $value)
     {
@@ -319,6 +334,8 @@ class NSettings extends CApplicationComponent
 	 */
 	protected function createTable()
 	{
+		if(!$this->hasDbComponent())
+			return
 		$connection=$this->getDbComponent();
 		$tableName=$connection->tablePrefix.str_replace(array('{{','}}'), '', $this->getTableName());
 		$sql='CREATE TABLE IF NOT EXISTS `'.$tableName.'` (

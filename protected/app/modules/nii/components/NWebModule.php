@@ -102,12 +102,6 @@ class NWebModule extends CWebModule
 			if (!strpos($modName, 'Module'))
 				continue;
 			$mod = str_replace('.php','',$modName);
-			$configFile = dirname($m).DS.'config'.DS.'config.php';
-			$config = array();
-			if(file_exists($configFile)){
-				$config = include($configFile); 
-			}
-			$mods[$mod] = $config;
 		}
 		Yii::endProfile('getModules');
 		return $mods;
