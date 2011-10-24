@@ -7,7 +7,7 @@ class SettingsController extends AController {
 		
 //		$this->performAjaxValidation($model, 'TestSettingForm');
 		
-		if($_POST['TestSetting'])
+		if(isset($_POST['TestSetting']))
 			$model->validate();
 		
 		$this->render('index',array('model'=>$model));

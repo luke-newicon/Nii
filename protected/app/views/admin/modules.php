@@ -4,7 +4,7 @@
 $modules = Yii::app()->niiModules;
 
 foreach($modules as $name => $module){
-	$data[] = array('name'=>$name);
+	$data[] = array('id' => $name, 'name'=>$name);
 }
 
 $dataProvider = new CArrayDataProvider($data);
