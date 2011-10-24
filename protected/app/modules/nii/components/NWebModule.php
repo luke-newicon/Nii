@@ -103,6 +103,7 @@ class NWebModule extends CWebModule
 				continue;
 			$mod = str_replace('.php','',$modName);
 			$configFile = dirname($m).DS.'config'.DS.'config.php';
+			$config = array();
 			if(file_exists($configFile)){
 				$config = include($configFile); 
 			}
