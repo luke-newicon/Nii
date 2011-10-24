@@ -11,6 +11,7 @@
 class UserModule extends NWebModule
 {
 
+	public $name = 'Users';
 	/**
 	 * @var boolean
 	 * @desc use email for activation user account

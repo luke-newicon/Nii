@@ -11,6 +11,7 @@ Yii::import('nii.models.*');
 class NiiModule extends NWebModule
 {
 	
+	public $name = 'Nii';
 	
 	public $juiThemeUrl;
 	

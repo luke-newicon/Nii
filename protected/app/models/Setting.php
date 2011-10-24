@@ -228,7 +228,7 @@ class Setting extends NActiveRecord
 	}
 	
 	public function getTabs(){
-		$tabs = array('general' => array('ajax' => array('/admin/settingsTab','module'=>'admin')));
+		$tabs = array('General' => array('ajax' => array('/admin/settingsPage','module'=>'admin')));
 		foreach(Yii::app()->niiModules as $name => $module){
 			$tabs[$module->name] = array('ajax' => $module->settingsPage);
 		}

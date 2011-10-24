@@ -1,7 +1,7 @@
 <?php
 $config = array(
 	'id' => 'TestSettingForm',
-	'elements' => $model->settings(),
+	'elements' => Yii::app()->getModule('test')->settings(),
 	'buttons' => array(
 		'save'=>array(
             'type'=>'submit',

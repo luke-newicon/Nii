@@ -26,7 +26,9 @@ class AdminController extends AController {
 	}
 	
 	public function actionSettingsPage($module){
-		echo Yii::app()->getModule($module)->settingsPage();
+		$this->layout = '//layouts/ajax';
+		$module = Yii::app()->getModule($module);
+		$this->render('settingsPage',array('title'=>$module->name,'content'=>$module->settingsPage()));
 	}
 	
 	/**
