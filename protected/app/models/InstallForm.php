@@ -31,8 +31,8 @@ class InstallForm extends CFormModel
 	{
 		return array(
 			array('sitename, email, db_host, db_name, db_username, username, password, timezone', 'required'),
-			array('db_tablePrefix, db_password', 'safe'),
 			array('db_host, db_name, db_username, db_password', 'validateDatabase'),
+			array('db_tablePrefix, db_password', 'safe'),
 			array('email', 'email'),
 		);
 	}
@@ -56,9 +56,10 @@ class InstallForm extends CFormModel
 					$this->addError('db_name','Unknown database name "'.$this->db_name.'"');
 				else if(preg_match('/\bUnknown .* server host\b/i', $msg))
 					$this->addError('db_host','Unknown host name "'.$this->db_host.'"');
-				else if(preg_match('/\bAccess denied for user\b/i', $msg))
+				else if(preg_match('/\bAccess denied for user\b/i', $msg)) {
+					$this->addError('db_username', 'Username and password combination is incorrect');
 					$this->addError('db_password', 'Username and password combination is incorrect');
-				else
+				} else
 					$this->addError('db',$e->getMessage());
 			}
 	}

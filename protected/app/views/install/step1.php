@@ -124,4 +124,7 @@ $this->endWidget(); ?>
 		$('#installForm').submit();
 		return false;
 	}); 
+	$('#<?php echo CHtml::activeId($model, 'db_username'); ?>, #<?php echo CHtml::activeId($model, 'db_password'); ?>').change(function(){
+		$.fn.yiiactiveform.doValidate('#installForm', {attributes:['<?php echo CHtml::activeId($model, 'db_username'); ?>','<?php echo CHtml::activeId($model, 'db_password'); ?>']})
+	});
 </script>

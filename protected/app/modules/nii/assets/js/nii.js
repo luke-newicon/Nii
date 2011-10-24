@@ -97,16 +97,16 @@ jQuery(function($){
 		 * @param $form the jquery form object
 		 * @param data the json validation result (as returned by CActiveForm::validate)
 		 */
-		$.fn.yiiactiveform.drawValidation = function($form, data){
-			var hasError=false;
-			$.each($form.data('settings').attributes, function(){
-				hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
-				var attribute = this;
-				if(attribute.afterValidateAttribute!=undefined) {
-					afterValidateAttribute($form,attribute,data,hasError);
-				}
-			});
-		}
+//		$.fn.yiiactiveform.drawValidation = function($form, data){
+//			var hasError=false;
+//			$.each($form.data('settings').attributes, function(){
+//				hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+//				var attribute = this;
+//				if(attribute.afterValidateAttribute!=undefined) {
+//					afterValidateAttribute($form,attribute,data,hasError);
+//				}
+//			});
+//		}
 		
 		/**
 		 * Validates the form in its entirety, 
@@ -116,7 +116,72 @@ jQuery(function($){
 		 * @successCallback function the function to call on successful validation
 		 * @errorCallback functon optional the ajax error callback
 		 */
-		$.fn.yiiactiveform.doValidate = function(form, successCallback, errorCallback){
+//		$.fn.yiiactiveform.doValidate = function(form, successCallback, errorCallback){
+//			var $form = $(form);
+//			var settings = $form.data('settings');
+//			console.log(settings);
+//			var messages = {};
+//			var needAjaxValidation = false;
+//			$.each(settings.attributes, function(){
+//				var msg = [];
+//				if (this.clientValidation != undefined) {
+//					var value = $('#'+this.inputID, $form).val();
+//					this.clientValidation(value, msg, this);
+//					if (msg.length) {
+//						messages[this.id] = msg;
+//					}
+//				}
+//				if (this.enableAjaxValidation)
+//					needAjaxValidation = true;
+//			});
+//			
+//			if(needAjaxValidation){
+//				$.ajax({
+//					url : settings.validationUrl,
+//					type : $form.attr('method'),
+//					data : $form.serialize()+'&'+settings.ajaxVar+'='+$form.attr('id'),
+//					dataType : 'json',
+//					success : function(data) {
+//						if (data != null && typeof data == 'object') {
+//							$.each(settings.attributes, function() {
+//								if (!this.enableAjaxValidation)
+//									delete data[this.id];
+//							});
+//							$.fn.yiiactiveform.drawValidation($form, $.extend({}, messages, data));
+//						}
+//
+//						// we only call the success callback if the form is valid!
+//						if (data.length==0 && successCallback!=undefined)
+//							successCallback();
+//
+//					},
+//					error : function() {
+//						if (errorCallback!=undefined) {
+//							errorCallback();
+//						}
+//					}
+//				});
+//			}else{
+//				$.fn.yiiactiveform.drawValidation($form, messages);
+//				// we only call the success callback if the form is valid!
+//				if (data.length==0 && successCallback!=undefined)
+//					successCallback();
+//			}
+//		}
+		
+		
+		/**
+		 * @param form the string form id or jquery form element
+		 * @options options object
+		 * success: function to call when the form successfully validates
+		 * error: the ajax error callback
+		 * attributes: array of element id's to validate (defaults to undefined, meaning validate all attributes)
+		 */
+		$.fn.yiiactiveform.doValidate = function(form, options){
+			
+			if(options == undefined)
+				options = {};
+			
 			var $form = $(form);
 			var settings = $form.data('settings');
 			console.log(settings);
@@ -124,13 +189,19 @@ jQuery(function($){
 			var needAjaxValidation = false;
 			$.each(settings.attributes, function(){
 				var msg = [];
-				//if (this.clientValidation != undefined && (settings.submitting || this.status == 2 || this.status == 3)) {
+				if (this.clientValidation != undefined) {
 					var value = $('#'+this.inputID, $form).val();
 					this.clientValidation(value, msg, this);
 					if (msg.length) {
-						messages[this.id] = msg;
+						if (options.attributes == undefined)
+							messages[this.id] = msg;
+						else
+							// options.attributes have been defined so only add a message to the specific fields 
+							// we want to validate
+							if ($.inArray(this.id,options.attributes) != -1)
+								messages[this.id] = msg;
 					}
-				//}
+				}
 				if (this.enableAjaxValidation)
 					needAjaxValidation = true;
 			});
@@ -146,27 +217,59 @@ jQuery(function($){
 							$.each(settings.attributes, function() {
 								if (!this.enableAjaxValidation)
 									delete data[this.id];
+								// remove the attributes that we do not want to redraw
+								if(options.attributes != undefined && ($.inArray(this.id, options.attributes) == -1))
+									delete data[this.id];
+								
 							});
-							$.fn.yiiactiveform.drawValidation($form, $.extend({}, messages, data));
+							$.fn.yiiactiveform.drawValidation($form, options.attributes, $.extend({}, messages, data));
 						}
 
 						// we only call the success callback if the form is valid!
-						if (data.length==0 && successCallback!=undefined)
-							successCallback();
+						if (data.length==0 && options.success!=undefined)
+							options.success();
 
 					},
 					error : function() {
-						if (errorCallback!=undefined) {
-							errorCallback();
+						if (options.error!=undefined) {
+							options.error();
 						}
 					}
 				});
 			}else{
-				$.fn.yiiactiveform.drawValidation($form, messages);
+				$.fn.yiiactiveform.drawValidation($form, options.attributes, messages);
 				// we only call the success callback if the form is valid!
-				if (data.length==0 && successCallback!=undefined)
-					successCallback();
+				if (data != undefined && data.length==0 && options.success!=undefined)
+					options.success();
 			}
+		}
+		
+		/**
+		 * The form to draw the validation on.
+		 * Draws the validatiion for each field
+		 * 
+		 * @param $form the jquery form object
+		 * @param attributes an array of field id's to draw the validation for, leave undefined for all.
+		 * @param data the json validation result (as returned by CActiveForm::validate)
+		 * 
+		 */
+		$.fn.yiiactiveform.drawValidation = function($form, attributes, data){
+			var hasError=false;
+			$.each($form.data('settings').attributes, function(){
+				if(attributes != undefined){
+					if ($.inArray(this.id, attributes) != -1) {
+						hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+						if(this.afterValidateAttribute!=undefined) {
+							afterValidateAttribute($form,this,data,hasError);
+						}
+					}
+				} else {
+					hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+					if(this.afterValidateAttribute!=undefined) {
+						afterValidateAttribute($form,this,data,hasError);
+					}
+				}
+			});
 		}
 	}
 })();

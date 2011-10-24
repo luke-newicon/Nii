@@ -64,7 +64,9 @@ class InstallController extends Controller {
 					}
 				}
 			}
-		} else {
+		}
+				
+		if (Yii::app()->request->getPost('InstallForm')) {
 			$localConfig = Yii::getPathOfAlias('app.config.local') . '.php';
 			if (file_exists($localConfig)) {
 				$local = require $localConfig;
@@ -91,10 +93,7 @@ class InstallController extends Controller {
 
 		$model = new InstallForm;
 
-		$this->render('success', array(
-			'model' => $model,
-				)
-		);
+		$this->render('success', array('model' => $model));
 	}
 
 	/**
