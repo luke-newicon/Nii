@@ -1,7 +1,7 @@
 <?php
 
 
-$modules = Yii::app()->niiModules;
+$modules = Yii::app()->niiModulesAll;
 
 foreach($modules as $id => $module){
 	$data[] = array(

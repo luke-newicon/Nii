@@ -12,8 +12,6 @@ class AdminController extends AController {
 	
 	public function actionModules(){
 		
-		dp(Yii::app()->getAllNiiModules());
-		
 		$this->render('modules');
 	}
 	

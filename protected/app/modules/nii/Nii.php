@@ -179,7 +179,7 @@ class Nii extends CWebApplication
 	 * Gets all modules available for install / activation
 	 * @return array ('moduleName'=>'module zombie object')
 	 */
-	public function getAllNiiMAodules(){
+	public function getNiiModulesAll(){
 		Yii::beginProfile('getAllModules');
 		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
 		$mods = array();
