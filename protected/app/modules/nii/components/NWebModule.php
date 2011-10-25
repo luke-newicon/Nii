@@ -35,6 +35,13 @@ class NWebModule extends CWebModule
 {
     public $defaultController = 'index';
 	
+	/**
+	 * enabled property, yii's config accepts a config parameter.
+	 * 
+	 * @var boolean
+	 */
+	public $enabled;
+	
 	private $_id;
 	/**
 	 * During module activation we want to access module info but not call the modules init function
@@ -119,17 +126,12 @@ class NWebModule extends CWebModule
 	 * @return void
 	 */
 	public function loadSettings(){
-		if(($config = Yii::app()->settings->get(__CLASS__)) !== null)
-			$this->configure($config);
+		$moduleConfig = Yii::app()->settings->get('system_modules');
+		if(array_key_exists($this->id, $moduleConfig)){
+			$this->configure($moduleConfig[$this->id]);
+		}
 	}
 	
-	/**
-	 * 
-	 */
-	public function isActive(){
-		// $sysMods = Yii::app()->settings->get('system_modules');
-		//return (array_key_exists('', $sysMods));
-	}
 	
 	public function getName(){
 		return $this->_id;

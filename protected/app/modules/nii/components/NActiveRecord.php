@@ -17,18 +17,6 @@
 class NActiveRecord extends CActiveRecord
 {
 	
-	/**
-	 * Shorthand method to Yii::app()->db->createCommand()
-	 *
-	 * @return CDbCommand
-	 */
-	public function cmd(){
-		return Yii::app()->db->createCommand()->from($this->tableName());
-	}
-
-	public function cmdSelect($select='*'){
-		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
-	}
 	
 	/**
 	 * proxies to getPrimaryKey method
@@ -172,9 +160,23 @@ class NActiveRecord extends CActiveRecord
 	}
 	
 	/**
+	 * removes the table from the database and destroys all data
+	 * BE CAREFUL!
+	 */
+	public static function uninstall($className){
+		$tbl = NActiveRecord::model($className)->getRealTableName();
+		Yii::app()->db->createCommand()->dropTable($tbl);
+		
+	}
+	
+	
+	/**
 	 * an event called after installing the table, may be used to add rows as part
 	 * of the install, you will want to check the table has been created successfully
+	 * 
+	 * <code>
 	 * Yii::app()->getMyDb()->getSchema()->getTable($sender->tableName());
+	 * </code>
 	 * 
 	 * @param CEvent $event 
 	 */

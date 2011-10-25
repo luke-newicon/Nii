@@ -1,24 +1,5 @@
 <?php
 
-$coreModules = array(
-	'nii', 'user', 'admin'
-);
-
-$data = array();
-foreach($allModules as $id => $module){
-	if(in_array($id, $coreModules))
-		continue;
-	$data[] = array(
-		'id' => $id,
-		'name'=>$module->name,
-		'description' => $module->description,
-		'version' => $module->version,
-		'enabled' => array_key_exists($id, $systemModules) ? $systemModules[$id]['enabled'] : 0
-	);
-}
-
-
-FB::log($data,'$data');
 
 $dataProvider = new CArrayDataProvider($data);
 
@@ -61,6 +42,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 				success: function(msg){
 					if(msg.success){
 						alert(msg.success);
+						
 //						$.fn.yiiGridView.update('modules-grid');
 					}
 				}

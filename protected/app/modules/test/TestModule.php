@@ -1,6 +1,7 @@
 <?php
 
-class TestModule extends NWebModule {
+class TestModule extends NWebModule
+{
 
 	
 //	public $settingsPage = array('/test/settings');
