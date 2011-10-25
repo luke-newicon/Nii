@@ -1,25 +1,22 @@
 <?php
 
-class TestModule extends NWebModule
-{
+class TestModule extends NWebModule {
 
-	
-//	public $settingsPage = array('/test/settings');
-	public $name = 'Test Module';
+	public $name = 'Test';
 	public $description = 'Lukes test module for testing lots of good module stuff';
 	public $version = '0.0.1b';
-	
-	public function init(){
+
+	public function init() {
 		Yii::import('test.models.*');
-		Yii::app()->getModule('admin')->menu->addItem('Test Module',array('/test/index/index'));
-		Yii::app()->getModule('admin')->menu->addItem('First page',array('/test/index/index'),'Test Module');
-		Yii::app()->getModule('admin')->menu->addItem('Good page',array('/test/index/good'),'Admin');
-		Yii::app()->getModule('admin')->menu->addItem('Test Dashboard',array('/test/index/dashboard'),'Home');
+		Yii::app()->getModule('admin')->menu->addItem('Test Module', array('/test/index/index'));
+		Yii::app()->getModule('admin')->menu->addItem('First page', array('/test/index/index'), 'Test Module');
+		Yii::app()->getModule('admin')->menu->addItem('Good page', array('/test/index/good'), 'Admin');
+		Yii::app()->getModule('admin')->menu->addItem('Test Dashboard', array('/test/index/dashboard'), 'Home');
 	}
-	
-	public function settings(){
+
+	public function settings() {
 		return array(
-			'id' => array('type' => 'text'),
+			'My test settings' => array('/test/settings'),
 		);
 	}
 

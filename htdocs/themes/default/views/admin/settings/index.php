@@ -1,6 +1,6 @@
 <div id="settings-tabs" class="ui-tabs-vertical">
 	<ul>
-		<?php foreach ($settings->tabs as $id => $tab) : ?>
+		<?php foreach ($settings as $id => $tab) : ?>
 			<li data-id="<?php echo $id ?>" title="<?php echo $id ?>"><?php echo CHtml::link($tab['name'], $tab['url']) ?></li>
 		<?php endforeach; ?>
 	</ul>

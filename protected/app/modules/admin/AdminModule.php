@@ -8,6 +8,8 @@ class AdminModule extends NWebModule {
 
 	public function init() {
 		Yii::import('admin.components.*');
+		Yii::import('admin.models.*');
+		
 		$adminMenu = new AdminMenu;
 		$this->setComponent('menu', $adminMenu);
 		
@@ -18,14 +20,11 @@ class AdminModule extends NWebModule {
 		$this->menu->addItem('Settings',array('/admin/settings/index'),'Admin');
 	}
 	
-//	public function settings(){
-//		return array(
-//			'url' => array('/admin/settings')
-//		);
-//	}
-	
-	public function getSettingsPage(){
-		return array('/admin/settings/general');
+	public function settings(){
+		return array(
+			'General' => array('/admin/settings/general'),
+			'Presentation' => array('/admin/settings/presentation'),
+		);
 	}
 
 }
