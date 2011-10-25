@@ -1,6 +1,8 @@
+<?php if (Yii::app()->user->hasFlash('success')) : ?>
+<div class="alert-message success"><?php echo Yii::app()->user->getFlash('success'); ?></div>
+<?php endif; ?>
+
 <?php
-
-
 $dataProvider = new CArrayDataProvider($data);
 
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -30,7 +32,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
 ));
 ?>
 
-<?php FB::log(Yii::app()->user->getFlash('success'), 'success'); ?>
+
+
 
 <script>
 	jQuery(function($){

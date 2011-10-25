@@ -51,8 +51,10 @@ Class ModulesController extends AController
 	 * @param string $module the module id
 	 */
 	public function actionEnable($module){
-		$m = Yii::app()->activateModule($module);
 		$this->updateModule($module, 1);
+		$m = Yii::app()->activateModule($module);
+		$m->install();
+		
 		Yii::app()->user->setFlash('success',"Module successfully enabled");
 		$this->redirect(array('/admin/modules/index'));
 	}
@@ -83,6 +85,8 @@ Class ModulesController extends AController
 		$sysMods = CMap::mergeArray($sysMods, $update);
 		// save the settings back
 		Yii::app()->settings->set('system_modules', $sysMods);
+		// update yii's module configuration
+		Yii::app()->configure(array('modules'=>$sysMods));
 	}
 	
 	

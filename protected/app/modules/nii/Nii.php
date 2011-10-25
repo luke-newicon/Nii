@@ -200,7 +200,7 @@ class Nii extends CWebApplication
 	 * function to activate a module.
 	 * this function enables the system to add additional functionality during module activation
 	 * @param type $moduleId
-	 * @return type 
+	 * @return NWebModule 
 	 */
 	public function activateModule($moduleId){
 		$m = Yii::app()->getModule($moduleId);
