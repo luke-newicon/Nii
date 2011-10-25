@@ -4,23 +4,7 @@
 	<div id="sitelogo"><a href="<?php echo Yii::app()->baseUrl; ?>"><img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.gif" /></a></div>
 	<?php if (!Yii::app()->user->isGuest) { ?>
 	<div class="menu">
-		<?php $this->widget('zii.widgets.CMenu', array('items' => $this->menu,'id'=>'mainMenu')); ?>
-		<?php 
-		/**
-		 * Display the 'Actions' drop-down menu if items have been specified in the controller action
-		 */
-//		if ($this->actionsMenu) {
-//			$s = '<span class="icon fam-bullet-arrow-down" style="float: right"></span>'.$this->t('Actions');
-//			$actionsMenu =  array(
-//				array('label' => $s, 'url' => '#', 'items'=>$this->actionsMenu, 'linkOptions' => array(
-//						'class' => 'actionsTitle',
-//						'onclick'=>'return false;',
-//					),
-//				),
-//			);
-//			$this->widget('zii.widgets.CMenu', array('items' => $actionsMenu, 'htmlOptions'=>array('class'=>'actionsMenu'), 'encodeLabel'=>false));
-//		}
-		?>
+		<?php $this->widget('zii.widgets.CMenu', array('items' => Yii::app()->getModule('admin')->menu->items,'id'=>'mainMenu','activateParents'=>true)); ?>
 	</div>
 	<div class="subMenu"></div>
 	<?php } ?>

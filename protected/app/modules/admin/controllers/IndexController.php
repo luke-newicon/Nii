@@ -9,10 +9,7 @@ class IndexController extends AController {
 	public function actionDashboard(){
 		$this->render('dashboard');
 	}
-	
-	
-	
-	
+
 	public function actionSettings(){
 		$settings = new Setting;
 		$this->render('settings',array('settings'=>$settings));
