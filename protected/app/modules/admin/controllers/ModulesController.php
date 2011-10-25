@@ -4,14 +4,18 @@ Class ModulesController extends AController
 {
 	
 	/**
-	 * action to display a list of modules available to be activated and installed.
+	 * action to display a list of modules available to be enabled/disabled and installed.
 	 */
 	public function actionIndex(){
 		
 		$this->render('index', array('data'=>$this->moduleListData()));
 	}
 	
-	
+	/**
+	 * Gathers an array suitable for a dataprovider 
+	 * 
+	 * @return array 
+	 */
 	public function moduleListData(){
 		
 		// get a list of all modules
@@ -21,12 +25,11 @@ Class ModulesController extends AController
 		$systemModules = Yii::app()->settings->get('system_modules', 'system', array());
 		
 		
-		$coreModules = array(
-			'nii', 'user', 'admin'
-		);
+		$coreModules = array('nii', 'user', 'admin');
 
 		$data = array();
 		foreach($allModules as $id => $module){
+			// skip if the module is a core module
 			if(in_array($id, $coreModules))
 				continue;
 			$data[] = array(
@@ -43,27 +46,43 @@ Class ModulesController extends AController
 	}
 	
 	/**
-	 * handles module activate and deactivate ajax requests.
+	 * Enables and activates a module
+	 * 
 	 * @param string $module the module id
-	 * @param bool $activate 
 	 */
-	public function actionModuleState($moduleId,$enabled=0){
-		// This is where the module is activated / deactivated
-		try {
-			$m = Yii::app()->activateModule($moduleId);
-			
-			// update the modules enabled state by merging with the current settings
-			$sysMods = Yii::app()->settings->get('system_modules', 'system', array());
-			$update = array(strtolower($moduleId) => array('enabled'=>$enabled));
-			$sysMods = CMap::mergeArray($sysMods, $update);
-			$sysMods = Yii::app()->settings->set('system_modules', $sysMods);
-				
-			echo CJSON::encode(array('success'=>'The "'.$m->name.'" module was successfully '.($enabled?'activated':'deactivated')));
-			
-		} catch(Exception $e) {
-			echo CJSON::encode(array('error'=>'The module errored '.($state?'activated':'deactivated')));
-		}
-		
+	public function actionEnable($module){
+		$m = Yii::app()->activateModule($module);
+		$this->updateModule($module, 1);
+		Yii::app()->user->setFlash('success',"Module successfully enabled");
+		$this->redirect(array('/admin/modules/index'));
+	}
+	
+	/**
+	 * Disables a module
+	 * 
+	 * @param string $module the modulde id
+	 */
+	public function actionDisable($module){
+		$this->updateModule($module, 0);
+		Yii::app()->user->setFlash('success',"Module successfully disabled");
+		$this->redirect(array('/admin/modules/index'));
+	}
+	
+	/**
+	 * Enables or disables a module
+	 * 
+	 * @param string $module the module id
+	 * @param int $enabled 
+	 */
+	public function updateModule($module, $enabled=0){
+		// get the current module settings
+		$sysMods = Yii::app()->settings->get('system_modules', 'system', array());
+		// create the array format for the affected module
+		$update = array(strtolower($module) => array('enabled'=>$enabled));
+		// merge the update with the existing settings
+		$sysMods = CMap::mergeArray($sysMods, $update);
+		// save the settings back
+		Yii::app()->settings->set('system_modules', $sysMods);
 	}
 	
 	

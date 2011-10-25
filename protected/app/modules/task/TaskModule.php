@@ -15,16 +15,18 @@ class TaskModule extends NWebModule
 	public $name = 'Tasks';
 	public $description = 'Task management module';
 	public $version = '0.0.1';
+	public $settingsPage = array('tasks/settings');
 	
 	public function init(){
 		// register menu items
 		// Yii::app()->getModule('admin')->registerMenuItem('Tasks');
+		// $this->menu('admin')->addItem('Task',array('tasks/index'),'Admin',array('before'=>'settings'));
 	}
 	
+	
+	
 	public function settings(){
-		return array(
-			'id' => array('type' => 'text'),
-		);
+		return array('tasks/settings');
 	}
 	
 	public function install(){
@@ -34,6 +36,19 @@ class TaskModule extends NWebModule
 	public function uninstall(){
 		NActiveRecord::uninstall('TaskTask');
 	}
+	
+	
+	
+	public function getMenu(){
+		return array(
+			'admin' => array(
+				'Tasks'=>array(
+					'url'=>'tasks/index/index',
+					'items'=>array())
+			)
+		);
+	}
+	
 	
 	
 

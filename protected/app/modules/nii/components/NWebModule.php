@@ -126,7 +126,7 @@ class NWebModule extends CWebModule
 	 * @return void
 	 */
 	public function loadSettings(){
-		$moduleConfig = Yii::app()->settings->get('system_modules');
+		$moduleConfig = Yii::app()->settings->get('system_modules', 'system', array());
 		if(array_key_exists($this->id, $moduleConfig)){
 			$this->configure($moduleConfig[$this->id]);
 		}

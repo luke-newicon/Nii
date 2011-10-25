@@ -3,8 +3,6 @@
 
 $dataProvider = new CArrayDataProvider($data);
 
-
-
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'modules-grid',
 	'dataProvider'=>$dataProvider,
@@ -25,28 +23,22 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'name' => 'enabled',
 			'type' => 'raw',
 			'htmlOptions' => array('width'=>'100','align'=>'center'),
-			'value' => 'CHtml::dropDownList("enabled[".$data["id"]."]",$data["enabled"], array("disabled","active"), array("class"=>"module-enabled","data-module"=>$data["id"]))',
-		)
+			'value' => '($data["enabled"]) ? CHtml::link("Disable", array("/admin/modules/disable","module"=>$data["id"]), array("class"=>"btn aristo disable")) : CHtml::link("Enable", array("/admin/modules/enable","module"=>$data["id"]), array("class"=>"btn aristo primary enable"))',
+		),
+		
 	),
 ));
 ?>
 
+<?php FB::log(Yii::app()->user->getFlash('success'), 'success'); ?>
+
 <script>
 	jQuery(function($){
-		$('.module-enabled').live('change',function(){
-			var module = $(this).attr('data-module');
-			var enabled = $(this).val();
-			$.ajax({
-				url: '<?php echo CHtml::normalizeUrl(array('/admin/index/moduleState')) ?>?moduleId='+module+'&enabled='+enabled,
-				dataType: 'json',
-				success: function(msg){
-					if(msg.success){
-						alert(msg.success);
-						
-//						$.fn.yiiGridView.update('modules-grid');
-					}
-				}
-			});
+		$('.btn.enable,.btn.disable').live('click',function(){
+			if($(this).is('.enable'))
+				$(this).html('Enabling').addClass('disabled');
+			else
+				$(this).html('Disabling').addClass('disabled');
 		});
 	});
 </script>

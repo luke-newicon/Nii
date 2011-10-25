@@ -253,6 +253,7 @@ class NSettings extends CApplicationComponent
 
     protected function addDbItem($category='system', $key, $value)
     {
+		Yii::beginProfile('NSettings addDbItem');
         $connection=$this->getDbComponent();
         $command=$connection->createCommand('SELECT id FROM '.$this->getTableName().' WHERE `category`=:cat AND `key`=:key LIMIT 1');
         $command->bindParam(':cat', $category);
@@ -269,6 +270,7 @@ class NSettings extends CApplicationComponent
         $command->bindParam(':key', $key);
         $command->bindParam(':value', $value);
         $command->execute();
+		Yii::endProfile('NSettings addDbItem');
     }
 
     protected function whenRequestEnds()
@@ -335,6 +337,8 @@ class NSettings extends CApplicationComponent
             foreach($this->cacheNeedsFlush AS $catName)
                 $this->getCacheComponent()->delete($catName.'_'.$this->cacheId);
         }   
+		
+		FB::log(Yii::app()->settings->get('', 'system'), 'system settings');
     }
 	
 
