@@ -88,6 +88,7 @@ class NSettings extends CApplicationComponent
      */
     public function get($key='', $category='system', $default=null)
     {
+		Yii::beginProfile("getSetting $key");
 		if(!$this->hasDbComponent())
 			return $default;
 		

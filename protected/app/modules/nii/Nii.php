@@ -152,11 +152,10 @@ class Nii extends CWebApplication
 		$modules = Yii::app()->getModules();
 
 		// add active modules
-		if(($activeMods = Yii::app()->settings->get('system_modules', 'system', array())) !== null){
+		if(($activeMods = Yii::app()->settings->get('system_modules', 'system')) !== null){
 			// add the active modules to the configuration
 			$this->configure(array('modules'=>$activeMods));
 			$modules = CMap::mergeArray($modules, $activeMods);
-			
 		}
 		
 		// load the modules
