@@ -16,5 +16,5 @@
  */
 class DevModule extends NWebModule
 {
-	
+	public $name = 'Developer';
 }

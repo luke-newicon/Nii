@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends AController {
+class IndexController extends AController {
 
 	public function actionIndex() {
 		$this->redirect(array('dashboard'));
@@ -42,7 +42,7 @@ class AdminController extends AController {
 			$sysMods = CMap::mergeArray($sysMods, $update);
 			$sysMods = Yii::app()->settings->set('system_modules', $sysMods);
 				
-			echo CJSON::encode(array('success'=>'The "'.$m.'" module was successfully '.($enabled?'activated':'deactivated')));
+			echo CJSON::encode(array('success'=>'The "'.$m->name.'" module was successfully '.($enabled?'activated':'deactivated')));
 			
 		} catch(Exception $e) {
 			echo CJSON::encode(array('error'=>'The module errored '.($state?'activated':'deactivated')));
@@ -56,7 +56,9 @@ class AdminController extends AController {
 	}
 	
 	public function actionSettingsPage($module){
-		echo Yii::app()->getModule($module)->settingsPage();
+		$this->layout = '//layouts/ajax';
+		$module = Yii::app()->getModule($module);
+		$this->render('settingsPage',array('title'=>$module->name,'content'=>$module->settingsPage()));
 	}
 	
 	/**

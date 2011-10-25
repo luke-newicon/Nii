@@ -52,6 +52,7 @@ return array(
 		'theme' => 'default',
 		'modulePath' => $modules,
 		'modules' => array(
+			'admin',
 			'user' => array(
 				'registrationCaptcha' => false,
 				'termsRequired' => false,

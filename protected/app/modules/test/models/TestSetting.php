@@ -28,11 +28,5 @@ class TestSetting extends CFormModel {
 			'size' => 'Size',
 		);
 	}
-	
-	public function settings(){
-		return array(
-			'id' => array('type' => 'text'),
-		);
-	}
 
 }

@@ -86,17 +86,29 @@ class NWebModule extends CWebModule
 	
 	public function settingsPage(){
 		if(method_exists($this,'settings') && $this->settings()){
-			$config['elements'] = $this->settings();
-			$model = new Setting;
+			$modelname = ucwords($this->id).'Setting';
+			$model = new $modelname;
+			
+			$config = array(
+				'id' => $modelname.'Form',
+				'elements' => $this->settings(),
+				'buttons' => array(
+					'save'=> array(
+						'type' => 'submit',
+						'label' => 'Save',
+					),
+				),
+			);
+			
 			$form = new CForm($config,$model);
-			//echo $form;
+			return $form;
 		} else {
 			return 'No settings for this module';
 		}
 	}
 	
 	public function getSettingsPage(){
-		return array('/admin/settingsPage','module'=>$this->name);
+		return array('/admin/settings/page','module'=>$this->id);
 	}
 	
 	/**

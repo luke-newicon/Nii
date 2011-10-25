@@ -1,15 +1,17 @@
 <?php
 Yii::import('nii.models.*');
 /**
- * Yii-User module
- * 
- * @author Mikhail Mangushev <mishamx@gmail.com> 
- * @link http://yii-user.googlecode.com/
- * @license http://www.opensource.org/licenses/bsd-license.php
- * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
+ * NiiModule class file.
+ *
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://github.com/newicon/Nii
+ * @copyright Copyright &copy; 2009-2011 Newicon Ltd
+ * @license http://newicon.net/framework/license/
  */
 class NiiModule extends NWebModule
 {
+	
+	public $name = 'Nii';
 	
 	/**
 	 * to change the jquery ui theme point this to the theme folder.

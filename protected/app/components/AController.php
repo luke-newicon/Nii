@@ -11,16 +11,16 @@ class AController extends NController {
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
 	 */
-	public $layout = '//layouts/admin';
+	public $layout = '//layouts/admin1column';
 
 	public function init() {
 		Yii::app()->errorHandler->errorAction = 'admin/error';
 		
 		$this->menu = array(
-			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>$this->parentActive('admin'),
+			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>($this->parentActive('admin/index')||$this->parentActive('admin/settings')),
 				'items' => array(
-					'modules' => array('label' => 'Modules', 'url' => array('/admin/modules')),
-					'settings' => array('label' => 'Settings', 'url' => array('/admin/settings')),
+					'modules' => array('label' => 'Modules', 'url' => array('/admin/index/modules')),
+					'settings' => array('label' => 'Settings', 'url' => array('/admin/settings/index')),
 				),
 			),
 		);

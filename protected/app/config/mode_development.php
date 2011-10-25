@@ -35,9 +35,6 @@ return array(
 					'ext.gtc',   // Gii Template Collection
 				),
 			),
-			'email'=>array(
-				//'enabled'=>false
-			),
 			'dev'=>array(
 				'modules'=>array('kanban')
 			),

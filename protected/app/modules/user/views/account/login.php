@@ -10,7 +10,7 @@ $form = $this->beginWidget('nii.widgets.NActiveForm', array(
 ?>
 
 <div class="shadowBlockLarge paddedBlock w400">
-<div style="text-align:center; margin-bottom: 16px;"><img src="<?php echo Yii::app()->baseUrl; ?>/images/logo.gif" /></div>
+<div style="text-align:center; margin-bottom: 16px;"><img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.gif" /></div>
 
 <div style="margin-left: 12px;">
 <h2><?php echo UserModule::t("Login"); ?></h2>

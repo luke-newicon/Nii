@@ -18,6 +18,8 @@
 class EmailModule extends NWebModule
 {
 	
+	public $name = 'Emails';
+	
 	/**
 	 * @label Email Address
 	 * @guideText The email email address that messages will be sent from e.g. email@newicon.net

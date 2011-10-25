@@ -1,6 +1,6 @@
 <?php
 /**
- * NApp class file.
+ * Nii class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -145,13 +145,12 @@ class Nii extends CWebApplication
 		$exclude = array_merge(array('gii'), $exclude);
 		$retModules = array();
 		
-		
 		// first load nii
 		Yii::app()->getModule('nii');
 		
 		// get core modules
 		$modules = Yii::app()->getModules();
-		
+
 		// add active modules
 		if(($activeMods = Yii::app()->settings->get('system_modules', 'system', array())) !== null){
 			// add the active modules to the configuration

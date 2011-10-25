@@ -1,7 +1,7 @@
 <?php
 
 $coreModules = array(
-	'nii', 'user'
+	'nii', 'user', 'admin'
 );
 
 $data = array();
@@ -56,7 +56,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			var module = $(this).attr('data-module');
 			var enabled = $(this).val();
 			$.ajax({
-				url: '<?php echo CHtml::normalizeUrl(array('/admin/moduleState')) ?>?moduleId='+module+'&enabled='+enabled,
+				url: '<?php echo CHtml::normalizeUrl(array('/admin/index/moduleState')) ?>?moduleId='+module+'&enabled='+enabled,
 				dataType: 'json',
 				success: function(msg){
 					if(msg.success){
