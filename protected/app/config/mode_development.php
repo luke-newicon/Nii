@@ -35,11 +35,12 @@ return array(
 					'ext.gtc',   // Gii Template Collection
 				),
 			),
-			'email',
+			'email'=>array(
+				//'enabled'=>false
+			),
 			'dev'=>array(
 				'modules'=>array('kanban')
 			),
-			'test'
 		),
 		'components'=>array(
 			

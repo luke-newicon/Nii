@@ -1,19 +1,28 @@
 <?php
 
+$coreModules = array(
+	'nii', 'user'
+);
 
-$modules = Yii::app()->niiModulesAll;
-
-foreach($modules as $id => $module){
+$data = array();
+foreach($allModules as $id => $module){
+	if(in_array($id, $coreModules))
+		continue;
 	$data[] = array(
 		'id' => $id,
 		'name'=>$module->name,
 		'description' => $module->description,
 		'version' => $module->version,
-		'state' => true,
+		'enabled' => array_key_exists($id, $systemModules) ? $systemModules[$id]['enabled'] : 0
 	);
 }
 
+
+FB::log($data,'$data');
+
 $dataProvider = new CArrayDataProvider($data);
+
+
 
 $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'modules-grid',
@@ -32,22 +41,22 @@ $this->widget('zii.widgets.grid.CGridView', array(
 			'header' => 'Version',
 		),
 		array(
-			'name' => 'state',
+			'name' => 'enabled',
 			'type' => 'raw',
 			'htmlOptions' => array('width'=>'100','align'=>'center'),
-			'value' => 'CHtml::dropDownList("state[".$data["id"]."]",$data["state"], array("disabled","active","reinstall"), array("class"=>"module-state","data-module"=>$data["id"]))',
-		),
+			'value' => 'CHtml::dropDownList("enabled[".$data["id"]."]",$data["enabled"], array("disabled","active"), array("class"=>"module-enabled","data-module"=>$data["id"]))',
+		)
 	),
 ));
 ?>
 
 <script>
 	jQuery(function($){
-		$('.module-state').live('change',function(){
+		$('.module-enabled').live('change',function(){
 			var module = $(this).attr('data-module');
-			var state = $(this).val();
+			var enabled = $(this).val();
 			$.ajax({
-				url: '<?php echo CHtml::normalizeUrl(array('/admin/moduleState')) ?>?module='+module+'&state='+state,
+				url: '<?php echo CHtml::normalizeUrl(array('/admin/moduleState')) ?>?moduleId='+module+'&enabled='+enabled,
 				dataType: 'json',
 				success: function(msg){
 					if(msg.success){

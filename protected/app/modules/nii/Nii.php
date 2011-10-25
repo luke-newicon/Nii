@@ -108,12 +108,9 @@ class Nii extends CWebApplication
 			}
 		}
 		
-		
-		
 		// initialise modules
 		$this->getNiiModules();
 	
-
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
 		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
@@ -121,8 +118,6 @@ class Nii extends CWebApplication
 		parent::run();
 		
 	}
-	
-	
 	
 	
 	/**
@@ -140,7 +135,7 @@ class Nii extends CWebApplication
 	
 	/**
 	 * gets all NWebModules in the app and returns them in an array,
-	 * Actively calls the getModule on each module thus instantiating each if they
+	 * This activates each module, it calls the getModule on each module thus instantiating each if they
 	 * are not already, thus running each modules initialisation (init) method
 	 * 
 	 * @param array $exclude modules to exclude from the returned array
@@ -158,15 +153,18 @@ class Nii extends CWebApplication
 		$modules = Yii::app()->getModules();
 		
 		// add active modules
-		if(($activeMods = Yii::app()->settings->get('modules','system_modules')) !== null){
-			$modules = array_merge($modules, $activeMods);
+		if(($activeMods = Yii::app()->settings->get('system_modules', 'system', array())) !== null){
+			// add the active modules to the configuration
+			$this->configure(array('modules'=>$activeMods));
+			$modules = CMap::mergeArray($modules, $activeMods);
+			
 		}
 		
 		// load the modules
 		foreach($modules as $name => $config){
 			if (in_array($name, $exclude)) continue;
 			// initialises each module
-			$module = Yii::app()->getModule($name);
+			$module = Yii::app()->activateModule($name);
 			if($module instanceOf NWebModule)
 				$retModules[$name] = $module;
 		}
@@ -177,10 +175,13 @@ class Nii extends CWebApplication
 	
 	/**
 	 * Gets all modules available for install / activation
+	 * looks in the modules folder and finds all module class files.
+	 * Each module is instantiated in an isolated environment. It's init and preInit function is not called
+	 * and it is not attached to the application object
+	 * 
 	 * @return array ('moduleName'=>'module zombie object')
 	 */
 	public function getNiiModulesAll(){
-		Yii::beginProfile('getAllModules');
 		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
 		$mods = array();
 		foreach($modFiles as $m){
@@ -188,11 +189,24 @@ class Nii extends CWebApplication
 			if (!strpos($modName, 'Module'))
 				continue;
 			$mod = str_replace('.php','',$modName);
-			$moduleObj = new $mod($mod, null, null, false);
-			$mods[$mod] = $moduleObj;
+			$modId = strtolower(str_replace('Module','', $mod));
+			Yii::import("modules.$modId.$mod");
+			$moduleObj = new $mod($modId, null, null, false);
+			$mods[$modId] = $moduleObj;
 		}
-		Yii::endProfile('getAllModules');
 		return $mods;
+	}
+	
+	
+	/**
+	 * function to activate a module.
+	 * this function enables the system to add additional functionality during module activation
+	 * @param type $moduleId
+	 * @return type 
+	 */
+	public function activateModule($moduleId){
+		$m = Yii::app()->getModule($moduleId);
+		return $m;
 	}
 	
 	
@@ -275,24 +289,26 @@ class Nii extends CWebApplication
 	}
 	
 	
+	/**
+	 * returns the name of the database used on this specific sub domain
+	 * used for multisite applications
+	 * @return string the database name 
+	 */
 	public function getDomainDbName(){
 		$subdomain = $this->getSubDomain();
-		FB::log($this->domainDbPrefix.$subdomain, 'get domain db name');
 		return $this->domainDbPrefix.$subdomain;
 	}
 	
 	/**
-	 * get the database specific to this subdomain, or the database specified by
-	 * $dbName
+	 * get the database connection object specific to this subdomain
+	 * returns the main database connection if there is no subdomain
 	 * 
-	 * @param string $dbName
 	 * @return CDbConnection 
 	 */
 	public function getSubDomainDb(){
 		// if there is no subdomain return the main database
 		if($this->getSubDomain() == ''){
 			$db = Yii::app()->getDb();
-			FB::log($db, 'db');
 			return $db;
 		}
 		// get the database name secific to the current subdomain
@@ -319,6 +335,10 @@ class Nii extends CWebApplication
 		return $this->$component;
 	}
 	
+	/**
+	 * function called when the system needs to be installed 
+	 * this must be called instead of the run function
+	 */
 	public function goToInstall() {
 		$route = explode('/',Yii::app()->getUrlManager()->parseUrl($this->getRequest()));
 		if ($route[0] != 'install') {

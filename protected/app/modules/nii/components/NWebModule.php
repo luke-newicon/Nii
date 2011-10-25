@@ -35,7 +35,7 @@ class NWebModule extends CWebModule
 {
     public $defaultController = 'index';
 	
-	
+	private $_id;
 	/**
 	 * During module activation we want to access module info but not call the modules init function
 	 * 
@@ -47,6 +47,7 @@ class NWebModule extends CWebModule
 		// if activate is false don't bother setting up the module officially
 		// during module activation we want an instance of the module that we can use
 		// but that does not set its self up and call its init functions or attach to the application
+		$this->_id = $id;
 		if($activate)
 			parent::__construct($id, $parent, $config);
 	}
@@ -81,6 +82,8 @@ class NWebModule extends CWebModule
 	
 	public function install(){}
 	
+	public function uninstall(){}
+	
 	public function settingsPage(){
 		if(method_exists($this,'settings') && $this->settings()){
 			$config['elements'] = $this->settings();
@@ -108,6 +111,16 @@ class NWebModule extends CWebModule
 			$this->configure($config);
 	}
 	
+	/**
+	 * 
+	 */
+	public function isActive(){
+		// $sysMods = Yii::app()->settings->get('system_modules');
+		//return (array_key_exists('', $sysMods));
+	}
 	
+	public function getName(){
+		return $this->_id;
+	}
 	
 }

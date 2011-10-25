@@ -11,9 +11,18 @@ Yii::import('nii.models.*');
 class NiiModule extends NWebModule
 {
 	
-	
+	/**
+	 * to change the jquery ui theme point this to the theme folder.
+	 * if blank defaults to assets folder nii theme
+	 * @var string url path to the jquery ui theme folder 
+	 */
 	public $juiThemeUrl;
 	
+	/**
+	 * jquery ui theme name
+	 * defaults to nii.
+	 * @var string 
+	 */
 	public $juiTheme = 'nii';
 	
 	
