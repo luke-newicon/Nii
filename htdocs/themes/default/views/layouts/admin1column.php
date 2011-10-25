@@ -3,9 +3,9 @@
 	<div class="page liquid">
 		<?php $this->renderPartial('//layouts/admin/_head'); ?>
 		<div class="body">
+			<?php $this->renderPartial('//layouts/_messages'); ?>
+			<?php $this->renderPartial('//layouts/_breadcrumbs'); ?>
 			<div class="main">
-				<?php $this->renderPartial('//layouts/_messages'); ?>
-				<?php $this->renderPartial('//layouts/_breadcrumbs'); ?>
 				<?php echo $content; ?>
 			</div>
 		</div>

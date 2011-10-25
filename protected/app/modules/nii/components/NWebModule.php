@@ -105,7 +105,7 @@ class NWebModule extends CWebModule
 	}
 	
 	public function getSettingsPage(){
-		return array('/admin/settingsPage','module'=>$this->id);
+		return array('/admin/settings/page','module'=>$this->id);
 	}
 	
 	/**

@@ -562,36 +562,34 @@ h3 span.programme-title {
 
 /* @group Vertical tabs */
 
-div#tabs.vertical {
+.ui-tabs-vertical {
 	padding: 0;
 }
 
-div#tabs.vertical div.ui-tabs-panel {
-	/*width: 760px;*/
+.ui-tabs-vertical div.ui-tabs-panel {
 	margin-left: 152px;
 	box-shadow: 0px 0px 6px #999;
 	background: white;
 	margin-bottom: 16px;
 	border-radius: 0;
 	margin-right: 0;
-	min-height: 200px;
-	z-index: 100!important;
-	max-width: 1048px;
+	min-height: 400px;
+	z-index: 100 !important;
 }
 
-div.vertical ul.ui-tabs-nav {
+.ui-tabs-vertical ul.ui-tabs-nav {
 	left: 0px;
 	top: 5px;
 	list-style: none;
 	border: none;
 	position: absolute;
 }
-div.vertical ul.ui-tabs-nav li,
-div.vertical ul.ui-tabs-nav li.ui-state-active {
+.ui-tabs-vertical ul.ui-tabs-nav li,
+.ui-tabs-vertical ul.ui-tabs-nav li.ui-state-active {
 }
 
 
-div.vertical ul.ui-tabs-nav li {
+.ui-tabs-vertical ul.ui-tabs-nav li {
 	display: block;
 	float: none;
 	border-radius: 0;
@@ -600,15 +598,16 @@ div.vertical ul.ui-tabs-nav li {
 	z-index: 0;
 }
 
-div.vertical ul.ui-tabs-nav li.ui-state-active {}
+.ui-tabs-vertical ul.ui-tabs-nav li.ui-state-active {}
 
-div.vertical ul.ui-tabs-nav li a,
-div.vertical ul.ui-tabs-nav li.ui-state-active a {
+.ui-tabs-vertical ul.ui-tabs-nav li a,
+.ui-tabs-vertical ul.ui-tabs-nav li.ui-state-active a {
 	float: none;
 	display: block;
 	line-height: 16px;
 	height: 16px;
 	padding: 4px 6px;
+	border:1px solid #AAA;
 	border-radius: 5px 0 0 5px;
 	width: 135px;	
 	border-right: none!important;
@@ -620,7 +619,7 @@ div.vertical ul.ui-tabs-nav li.ui-state-active a {
 
 
 
-div.vertical ul.ui-tabs-nav li.ui-state-active a {
+.ui-tabs-vertical ul.ui-tabs-nav li.ui-state-active a {
 	z-index: 100;
 	background: white;
 	box-shadow: none!important;
@@ -628,19 +627,22 @@ div.vertical ul.ui-tabs-nav li.ui-state-active a {
 }
 
 
-div.vertical ul.ui-tabs-nav li.level-2 a,
-div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+.ui-tabs-vertical ul.ui-tabs-nav li.level-2 a,
+.ui-tabs-vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
 	margin-left: 10px;
 	width: 125px;
 }
 
-div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+.ui-tabs-vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
 	width: 127px;
 }
 
-div.vertical ul.ui-tabs-nav li a:hover {
+.ui-tabs-vertical ul.ui-tabs-nav li a:hover {
 	color: #0c57a8;
 }
+
+.ui-tabs .ui-widget-header{border-top:none;background:none;border-radius:0}
+.ui-tabs-vertical .ui-widget-header{border:none}
 
 
 #addTabs {

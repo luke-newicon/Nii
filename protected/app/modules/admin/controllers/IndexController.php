@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends AController {
+class IndexController extends AController {
 
 	public function actionIndex() {
 		$this->redirect(array('dashboard'));
