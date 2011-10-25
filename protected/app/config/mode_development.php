@@ -23,8 +23,6 @@ return array(
 	// This is the specific Web application configuration for this mode.
 	// Supplied config elements will be merged into the main config array.
 	'config' => array(
-
-		
 		'modules'=>array(
 			'gii'=>array(
 				'class'=>'system.gii.GiiModule',
@@ -35,12 +33,11 @@ return array(
 					'ext.gtc',   // Gii Template Collection
 				),
 			),
-			'dev'=>array(
-				'modules'=>array('kanban')
-			),
+//			'dev'=>array(
+//				'modules'=>array('kanban')
+//			),
 		),
 		'components'=>array(
-			
 			'log'=>array(
 				'class'=>'CLogRouter',
 				'routes'=>array(

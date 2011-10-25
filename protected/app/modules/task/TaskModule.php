@@ -11,7 +11,6 @@ class TaskModule extends NWebModule
 {
 
 	
-//	public $settingsPage = array('/test/settings');
 	public $name = 'Tasks';
 	public $description = 'Task management module';
 	public $version = '0.0.1';
