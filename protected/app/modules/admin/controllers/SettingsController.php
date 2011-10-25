@@ -13,4 +13,8 @@ class SettingsController extends AController {
 		$this->render('page',array('title'=>$module->name,'content'=>$module->settingsPage()));
 	}
 	
+	public function actionGeneral(){
+		$this->render('general');
+	}
+	
 }

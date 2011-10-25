@@ -10,7 +10,6 @@ class TestModule extends NWebModule {
 	
 	public function init(){
 		Yii::import('test.models.*');
-		echo 'im the test module and this is my message';
 	}
 	
 	public function settings(){

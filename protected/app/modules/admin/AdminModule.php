@@ -7,13 +7,16 @@ class AdminModule extends NWebModule {
 	public $version = '1.0';
 
 	public function init() {
-		Yii::import('test.models.*');
 	}
-
-//	public function settings() {
+	
+//	public function settings(){
 //		return array(
-//			'id' => array('type' => 'text'),
+//			'url' => array('/admin/settings')
 //		);
 //	}
+	
+	public function getSettingsPage(){
+		return array('/admin/settings/general');
+	}
 
 }
