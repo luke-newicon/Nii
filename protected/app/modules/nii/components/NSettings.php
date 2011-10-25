@@ -88,7 +88,6 @@ class NSettings extends CApplicationComponent
      */
     public function get($key='', $category='system', $default=null)
     {
-		Yii::beginProfile("getSetting $key");
 		if(!$this->hasDbComponent())
 			return $default;
 		
@@ -173,24 +172,31 @@ class NSettings extends CApplicationComponent
         
         if(!$items)
         {
+			Yii::beginProfile("getSetting category $category");
             $connection=$this->getDbComponent();
             $command=$connection->createCommand('SELECT `key`, `value` FROM '.$this->getTableName().' WHERE category=:cat');
             $command->bindParam(':cat', $category);
             $result=$command->queryAll();
+			
             
-            if(empty($result))
+            if(empty($result)){
+				Yii::endProfile("getSetting category $category");
                 return;
+			}
 
             $items=array();
             foreach($result AS $row)
                 $items[$row['key']] = @unserialize($row['value']);
             $this->getCacheComponent()->add($category.'_'.$this->cacheId, $items, $this->cacheTime); 
+			
+			Yii::endProfile("getSetting category $category");
         }
 
         if(isset($this->items[$category]))
             $items=array_merge($items, $this->items[$category]);
         
         $this->set($items, null, $category, false); 
+	
         return $items;
     }
     

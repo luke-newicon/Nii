@@ -14,16 +14,21 @@ class AController extends NController {
 	public $layout = '//layouts/admin1column';
 
 	public function init() {
-		Yii::app()->errorHandler->errorAction = 'admin/error';
+		Yii::app()->errorHandler->errorAction = 'admin/index/error';
 		
 		$this->menu = array(
-			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>($this->parentActive('admin/index')||$this->parentActive('admin/settings')),
+			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>($this->parentActive('admin/index')||$this->parentActive('admin/settings')||$this->parentActive('admin/modules')),
 				'items' => array(
-					'modules' => array('label' => 'Modules', 'url' => array('/admin/index/modules')),
+					'modules' => array('label' => 'Modules', 'url' => array('/admin/modules/index')),
 					'settings' => array('label' => 'Settings', 'url' => array('/admin/settings/index')),
 				),
 			),
 		);
+	}
+	
+	
+	public function active(){
+		
 	}
 	
 	public function parentActive($controller) {

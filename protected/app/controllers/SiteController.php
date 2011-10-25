@@ -44,7 +44,7 @@ class SiteController extends Controller {
 	public function actionSupport() {
 		$this->render('support');
 	}
-
+	
 	/**
 	 * This is the action to handle external exceptions.
 	 */
