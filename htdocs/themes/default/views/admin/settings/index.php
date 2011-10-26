@@ -1,3 +1,4 @@
+<h3>Settings</h3>
 <div id="settings-tabs" class="ui-tabs-vertical">
 	<ul>
 		<?php foreach ($settings as $id => $tab) : ?>

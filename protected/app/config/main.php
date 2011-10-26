@@ -48,6 +48,7 @@ return array(
 			'application.widgets.*',
 			'application.modules.user.models.*',
 			'application.modules.user.components.*',
+			'application.extensions.bootstrap.components.*',
 		),
 		'theme' => 'default',
 		'modulePath' => $modules,
@@ -66,6 +67,9 @@ return array(
 		),
 		// application components
 		'components' => array(
+			'bootstrap'=>array(
+				'class'=>'Bootstrap',
+			),
 			'settings'=>array(
 				'class' => 'NSettings',
 			),

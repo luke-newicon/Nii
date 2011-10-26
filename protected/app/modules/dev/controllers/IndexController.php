@@ -107,4 +107,8 @@ class IndexController extends Controller
 	public function actionNotes(){
 		$this->render('notes');
 	}
+	
+	public function actionBootstrap(){
+		$this->redirect($this->getModule('dev')->assetsUrl.'/bootstrap/docs/index.html');
+	}
 }
