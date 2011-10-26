@@ -52,8 +52,15 @@ class InstallController extends Controller {
 
 					if ($model->installDb == true) {
 						$filename = Yii::getPathOfAlias('app.config.local').'.php';
-						file_put_contents($filename, $data);
-						chmod($filename,0777);
+                        if (is_writable(Yii::getPathOfAlias('app.config'))) {
+                            file_put_contents($filename, $data);
+                            chmod($filename,0777);
+                        } else {
+                            // we can not create the configuration file so lets show the 
+                            // user a nice message with instruction to create her own.
+                            $this->render('create-config-file',array('config'=>$data, 'configFolder'=>dirname($filename)));
+                            Yii::app()->end();
+                        }
 					}
 
 					Yii::app()->setComponents($config['components']);
@@ -66,42 +73,44 @@ class InstallController extends Controller {
 		}
 		
 		if (Yii::app()->request->getPost('InstallForm')) {
-			try {
-				Yii::app()->db->getConnectionStatus();
+            if ($model->validate()) {
+                try { 
 
-				NActiveRecord::install('Setting');
-				NActiveRecord::install('Log');
-				
-				Yii::app()->install();
+                    Yii::app()->db->getConnectionStatus();
 
-				// if the user already exists we will still make it work
-				$user = User::model()->findByAttributes(array('username'=>$model->username));
-				if ($user === null)
-					$user = new User;
-				// if the username
-				if ($user->getScenario() != 'insert') {
-					$user->password = $user->cryptPassword($model->password);
-					$user->activekey = $user->cryptPassword(microtime().$model->password);
-				} else {
-					$user->password = $model->password;
-				}
-				
-				$user->username = $model->username;
-				$user->email = $model->email;
-				$user->superuser = 1;
-				$user->status = 1;
+                    NActiveRecord::install('Setting');
+                    NActiveRecord::install('Log');
 
-				if ($user->validate()) {
-					$user->save();
-					$this->redirect (array('install/step2'));
-				}
+                    Yii::app()->install();
 
-			} catch (Exception $e) {
-				if(YII_DEBUG)
-					throw new CException($e);
-				Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
-			}
-			
+                    // if the user already exists we will still make it work
+                    $user = User::model()->findByAttributes(array('username'=>$model->username));
+                    if ($user === null)
+                        $user = new User;
+                    // if the username
+                    if ($user->getScenario() != 'insert') {
+                        $user->password = $user->cryptPassword($model->password);
+                        $user->activekey = $user->cryptPassword(microtime().$model->password);
+                    } else {
+                        $user->password = $model->password;
+                    }
+
+                    $user->username = $model->username;
+                    $user->email = $model->email;
+                    $user->superuser = 1;
+                    $user->status = 1;
+
+                    if ($user->validate()) {
+                        $user->save();
+                        $this->redirect (array('install/step2'));
+                    }
+
+                } catch (Exception $e) {
+                    if(YII_DEBUG)
+                        throw new CException($e);
+                    Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
+                }
+            }
 		}
 		
 		$localConfig = Yii::getPathOfAlias('app.config.local').'.php';
@@ -138,5 +147,15 @@ class InstallController extends Controller {
 		);
 		
 	}
+    
+    /**
+     * Enables the user to download the config file if the config folder is not writable 
+     * @param string $content the base64 encoed string of the config files content
+     */
+    public function actionConfigFile($content){
+        
+        Yii::app()->request->sendFile('local.php',base64_decode($content));
+        
+    }
 	
 }
