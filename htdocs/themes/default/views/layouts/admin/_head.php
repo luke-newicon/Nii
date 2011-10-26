@@ -5,22 +5,22 @@
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
 					<h3><a href="<?php echo Yii::app()->baseUrl ?>">Nii</a></h3>
-					<?php $this->widget('zii.widgets.CMenu',array(
-						'items' => Yii::app()->getModule('admin')->menu->items,
+					<?php
+					$this->widget('zii.widgets.CMenu', array(
+						'items' => Yii::app()->getModule('admin')->menu->getItems('main'),
 						'id' => 'mainMenu',
 						'activateParents' => true,
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
-					)); ?>
+					));
+					?>
 					<ul class="nav secondary-nav">
-						<li class="menu">
-							<a class="menu" href="#">Admin</a>
-							<ul class="menu-dropdown">
-								<li><a href="#">Secondary link</a></li>
-								<li><a href="#">Something else here</a></li>
-								<li class="divider"></li>
-								<li><a href="#">Another link</a></li>
-							</ul>
+						<li>
+							<form action="">
+								<input type="text" placeholder="Search">
+							</form>
 						</li>
+					</ul>
+					<ul class="nav secondary-nav">
 						<li class="menu">
 							<a class="menu" href="#">Luke Spencer</a>
 							<ul class="menu-dropdown">
@@ -30,12 +30,16 @@
 								<li><a href="#">Logout</a></li>
 							</ul>
 						</li>
-						<li>
-							<form action="">
-								<input type="text" placeholder="Search">
-							</form>
-						</li>
 					</ul>
+					<?php
+					$this->widget('zii.widgets.CMenu', array(
+						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),
+						'id' => 'mainMenu',
+						'activateParents' => true,
+						'htmlOptions' => array('class' => 'nav secondary-nav'),
+						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
+					));
+					?>
                 </div>
 			</div>
 		</div>
