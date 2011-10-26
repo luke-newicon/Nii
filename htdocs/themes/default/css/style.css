@@ -1,23 +1,21 @@
+/* Bootstrap overrides - Could maybe go in a seperate file? */
+a:focus{outline:none}
+.topbar{position:static}
+
+
+
+
+/* Site Styles */
 body{font-family:Helvetica-light, arial,sans-serif;}
 body{background:url('../images/bg-top.png') repeat-x left -53px;}
 
 /*h1, h2, h3{font-family:"Arial Black",Arial,sans-serif;}*/
 
-
 /**
  * head and menu style
  */
-.head{
-/*	padding: 4px 16px 35px 16px;*/
-	background-color: #fff;
-	position: relative;
-	padding-top:40px;
-}
-
-#sitelogo {
-	width: 194px;
-}
-
+.head{position:relative;background:#FFFFFF}
+#sitelogo{padding:10px}
 
 /* @group User Profile Menu */
 

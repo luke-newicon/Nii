@@ -1,4 +1,4 @@
-<h3>Dashboard</h3>
+<h2>Dashboard</h2>
 <?php
 $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 	'items' => array(

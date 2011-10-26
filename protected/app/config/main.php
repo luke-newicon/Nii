@@ -63,7 +63,7 @@ return array(
 				'usernameRequired' => false,
 				'showUsernameField' => false
 			),
-			'nii' => array(),
+			'nii',
 		),
 		// application components
 		'components' => array(

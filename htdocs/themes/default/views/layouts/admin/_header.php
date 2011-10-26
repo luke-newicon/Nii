@@ -7,6 +7,7 @@
 		<?php Yii::app()->bootstrap->registerBootstrap(); ?>
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-tabs.js'); ?>
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-dropdown.js'); ?>
+		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-modal.js'); ?>
 		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
 	</head>

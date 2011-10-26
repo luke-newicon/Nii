@@ -6,6 +6,7 @@ class AdminMenu extends CApplicationComponent {
 	
 	public function addItem($menu,$label,$url=null,$parent=null,$options=array()){
 		if($parent){
+			$this->_menus[$menu][$parent]['itemOptions']['class'] = 'menu';
 			$this->_menus[$menu][$parent]['linkOptions']['class'] = 'menu';
 			$this->_menus[$menu][$parent]['items'][$label]['label'] = $label;
 			if($url)

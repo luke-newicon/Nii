@@ -39,7 +39,7 @@ class AdminController extends AController
 
 		$dataProvider=new CActiveDataProvider($user, array(
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->controller->module->user_page_size,
+//				'pageSize'=>Yii::app()->controller->module->user_page_size,
 			),
 		));
 
@@ -97,14 +97,18 @@ class AdminController extends AController
 	{
 		$user = UserModule::get()->userClass;
 		$model = new $user;
+		
 		if(isset($_POST[$user]))
 		{
 			$model->attributes=$_POST[$user];
 			if($model->validate()) {
 				//$model->password=crypt($model->password);
 				$model->save();
-				$this->redirect(array('view','id'=>$model->id));
+				echo CJSON::encode(array('success'=>'User successfully saved'));
+			} else {
+				echo CJSON::encode(array('error'=>'User failed to save'));
 			}
+			Yii::app()->end();
 		}
 
 		$this->render('create',array(
