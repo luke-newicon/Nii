@@ -31,6 +31,7 @@ return array(
 				'ipFilters'=>array('127.0.0.1','::1'),
 				'generatorPaths'=>array(
 					'ext.gtc',   // Gii Template Collection
+					'ext.bootstrap.gii',
 				),
 			),
 //			'dev'=>array(

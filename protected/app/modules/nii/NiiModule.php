@@ -69,9 +69,9 @@ class NiiModule extends NWebModule
 					'js/gritter/js/jquery.gritter.min.js',
 				),
 				'css'=>array(
-					'oocss/all.css',
-					'js/tipsy/stylesheets/tipsy.css',
-					'js/gritter/css/jquery.gritter.css',
+//					'oocss/all.css',
+//					'js/tipsy/stylesheets/tipsy.css',
+//					'js/gritter/css/jquery.gritter.css',
 				),
 				'depends'=>array('jquery.ui')
 			)

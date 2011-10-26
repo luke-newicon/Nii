@@ -8,7 +8,7 @@ class AdminMenu extends CApplicationComponent {
 		if($parent){
 			$this->_items[$parent]['items'][$label] = array('label' => $label, 'url' => $url);
 		} else {
-			$this->_items[$label] = array('label' => $label, 'url' => $url);
+			$this->_items[$label] = array('label' => $label, 'url' => $url, 'linkOptions' => array('class' => 'menu'));
 		}
 		return $this;
 	}
