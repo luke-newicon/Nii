@@ -97,14 +97,10 @@ return array(
 				),
 				'showScriptName' => false,
 			),
-//			'db'=>array(
-//				'emulatePrepare' => true,
-//				'charset' => 'utf8',
-//				'enableProfiling'=>true,
-//				'enableParamLogging'=>true,
-//			),
+
 			'errorHandler' => array(
 				// use 'site/error' action to display errors
+				'class' => 'NErrorHandler',
 				'errorAction' => 'site/error',
 			),
 			'image' => array(

@@ -18,8 +18,8 @@ class TaskModule extends NWebModule
 	
 	public function init(){
 		Yii::app()->getModule('admin')->menu->addItem('Tasks', array('/task/index/index'));
-		Yii::app()->getModule('admin')->menu->addItem('Tasks', array('/task/index/index'), 'Tasks');
-		Yii::app()->getModule('admin')->menu->addItem('Actions', array('/task/index/actions'), 'Tasks');
+		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/index/index'), 'Tasks');
+		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/index/actions'), 'Tasks');
 	}
 	
 	
@@ -29,11 +29,11 @@ class TaskModule extends NWebModule
 	}
 	
 	public function install(){
-		NActiveRecord::install('TaskTask');
+		//NActiveRecord::install('TaskTask');
 	}
 	
 	public function uninstall(){
-		NActiveRecord::uninstall('TaskTask');
+		//NActiveRecord::uninstall('TaskTask');
 	}
 	
 	

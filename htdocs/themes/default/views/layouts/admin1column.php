@@ -3,7 +3,6 @@
 	<div class="page liquid">
 		<?php $this->renderPartial('//layouts/admin/_head'); ?>
 		<div class="body">
-			<?php $this->renderPartial('//layouts/_messages'); ?>
 			<?php $this->renderPartial('//layouts/_breadcrumbs'); ?>
 			<div class="main">
 				<?php echo $content; ?>

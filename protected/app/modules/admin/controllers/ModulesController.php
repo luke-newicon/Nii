@@ -46,16 +46,45 @@ Class ModulesController extends AController
 	}
 	
 	/**
+	 * store the current module being enabled or disabled.
+	 * @var string the module id. 
+	 */
+	public $currentModule;
+	
+	/**
 	 * Enables and activates a module
 	 * 
 	 * @param string $module the module id
 	 */
 	public function actionEnable($module){
-		$this->updateModule($module, 1);
-		$m = Yii::app()->activateModule($module);
-		$m->install();
+		$this->currentModule = $module;
+		Yii::app()->attachEventHandler('onError', array($this, 'handleModulePhpError'));
+		try {
+			$this->updateModule($this->currentModule, 1);
 		
-		Yii::app()->user->setFlash('success',"Module successfully enabled");
+			$m = Yii::app()->activateModule($this->currentModule);
+			$m->install();
+
+			Yii::app()->user->setFlash('success',"Module successfully enabled");
+			
+		} catch(CException $e){
+			$this->updateModule($this->currentModule, 0);
+			Yii::app()->user->setFlash('error',"Module successfully enabled");
+		}
+		$this->redirect(array('/admin/modules/index'));
+	}
+	
+	/**
+	 * Handles the onError event raised by Yii::app() if there is a php execution error in the module
+	 * being enabled / disabled
+	 * @param CErrorEvent $event 
+	 */
+	public function handleModulePhpError($event){
+		$event->handled = true;
+		// the module raised a php error so we want to disable the module.
+		$this->updateModule($this->currentModule, 0);
+		Yii::app()->user->setFlash('error',"Module caused an error");
+		Yii::app()->user->setFlash('error-block-message',"PHP error message: {$event->message}, <br /> File: {$event->file} <br /> Line: {$event->line}");
 		$this->redirect(array('/admin/modules/index'));
 	}
 	
