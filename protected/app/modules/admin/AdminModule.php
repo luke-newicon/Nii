@@ -19,6 +19,9 @@ class AdminModule extends NWebModule {
 		$this->menu->addItem('secondary','Admin',array('/admin/modules/index'));
 		$this->menu->addItem('secondary','Modules',array('/admin/modules/index'),'Admin');
 		$this->menu->addItem('secondary','Settings',array('/admin/settings/index'),'Admin');
+		$this->menu->addItem('secondary','Luke Spencer',array('/admin/modules/index'));
+		$this->menu->addItem('secondary','Account',array('/user/account/index'),'Luke Spencer');
+		$this->menu->addItem('secondary','Settings',array('/admin/settings/index'),'Luke Spencer');
 	}
 	
 	public function settings(){

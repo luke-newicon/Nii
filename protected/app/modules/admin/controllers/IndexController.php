@@ -10,10 +10,10 @@ class IndexController extends AController {
 		$this->render('dashboard');
 	}
 
-	public function actionSettings(){
-		$settings = new Setting;
-		$this->render('settings',array('settings'=>$settings));
-	}
+//	public function actionSettings(){
+//		$settings = new Setting;
+//		$this->render('settings',array('settings'=>$settings));
+//	}
 	
 	public function actionSettingsPage($module){
 		$this->layout = '//layouts/ajax';

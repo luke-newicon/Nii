@@ -1,22 +1,19 @@
 <h3>Settings</h3>
-<div id="settings-tabs" class="ui-tabs-vertical">
-	<ul>
-		<?php foreach ($settings as $id => $tab) : ?>
-			<li data-id="<?php echo $id ?>" title="<?php echo $id ?>"><?php echo CHtml::link($tab['name'], $tab['url']) ?></li>
-		<?php endforeach; ?>
-	</ul>
+<?php
+$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
+	'id' => 'SettingsTabs',
+	'items' => $settings['items'],
+));
+?>
+<div class="tab-content">
+	<?php foreach($settings['pages'] as $page) : ?>
+	<div id="<?php echo $page['id'] ?>" data-ajax-url="<?php echo CHtml::normalizeUrl($page['data-ajax-url']) ?>">
+		<?php echo CHtml::normalizeUrl($page['data-ajax-url']) ?>
+	</div>
+	<?php endforeach ?>
 </div>
-<div id="user"></div>
 <script>
-	$(function() {
-		$("#settings-tabs").tabs({
-			ajaxOptions: {
-				error: function( xhr, status, index, anchor ) {
-					$( anchor.hash ).html("Error loading tab. Please try again.");
-				}
-			},
-			cache: true,
-			tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>'
-		});
+	jQuery(function($){
+		$('#SettingsTabs').tabs();
 	});
 </script>
