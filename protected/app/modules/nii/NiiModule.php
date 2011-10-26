@@ -1,23 +1,35 @@
 <?php
 Yii::import('nii.models.*');
 /**
- * Yii-User module
- * 
- * @author Mikhail Mangushev <mishamx@gmail.com> 
- * @link http://yii-user.googlecode.com/
- * @license http://www.opensource.org/licenses/bsd-license.php
- * @version $Id: UserModule.php 105 2011-02-16 13:05:56Z mishamx $
+ * NiiModule class file.
+ *
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://github.com/newicon/Nii
+ * @copyright Copyright &copy; 2009-2011 Newicon Ltd
+ * @license http://newicon.net/framework/license/
  */
 class NiiModule extends NWebModule
 {
 	
+	public $name = 'Nii';
 	
+	/**
+	 * to change the jquery ui theme point this to the theme folder.
+	 * if blank defaults to assets folder nii theme
+	 * @var string url path to the jquery ui theme folder 
+	 */
 	public $juiThemeUrl;
 	
+	/**
+	 * jquery ui theme name
+	 * defaults to nii.
+	 * @var string 
+	 */
 	public $juiTheme = 'nii';
 	
 	
 	public function init(){
+		
 		if(Yii::app()->domain){
 			// this is important it makes the cache specific to the domain application instance.
 			// The cache is shared across the application. Therefore the cache id must be specific to each users application
@@ -57,9 +69,9 @@ class NiiModule extends NWebModule
 					'js/gritter/js/jquery.gritter.min.js',
 				),
 				'css'=>array(
-					'oocss/all.css',
-					'js/tipsy/stylesheets/tipsy.css',
-					'js/gritter/css/jquery.gritter.css',
+//					'oocss/all.css',
+//					'js/tipsy/stylesheets/tipsy.css',
+//					'js/gritter/css/jquery.gritter.css',
 				),
 				'depends'=>array('jquery.ui')
 			)

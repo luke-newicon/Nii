@@ -9,9 +9,20 @@ class UserLogin extends CFormModel
 {
 	public $username;
 	public $password;
-	public $rememberMe;
+	public $rememberMe = 1;
 
+	/**
+	 * records wheteher there is an error with the domain the user is logging into 
+	 */
+	public $domain;
+	
+	/**
+	 *
+	 * @var UserIdentity 
+	 */
 	private $_userIdentity;
+	
+	
 	/**
 	 * Declares the validation rules.
 	 * The rules state that username and password are required,
@@ -34,21 +45,57 @@ class UserLogin extends CFormModel
 	 */
 	public function attributeLabels()
 	{
+		$usernameLabel = (UserModule::get()->usernameRequired)?'Username or Email':'Email';
 		return array(
-			'rememberMe'=>UserModule::t("Remember me next time on this computer"),
-			'username'=>UserModule::t("username or email"),
-			'password'=>UserModule::t("password"),
+			'rememberMe'=>UserModule::t("Keep me logged in for 30 days"),
+			'username'=>UserModule::t($usernameLabel),
+			'password'=>UserModule::t("Password"),
 		);
 	}
 	
+	/**
+	 * return the useridentity
+	 * @return UserIdentity
+	 */
 	public function getUserIdentity(){
 		return $this->_userIdentity;
 	}
 	
+	
+	/**
+	 * this function called the models validate method which in turn will call, the authentication rule, 
+	 * which logins in a user if it is successful.
+	 * @return boolean 
+	 */
+	public function login(){
+		if($this->validate()){
+			Yii::app()->user->login($this->_userIdentity,$this->getDuration());
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * The "remember me" login duration
+	 * @return int 
+	 */
+	public function getDuration(){
+		return $this->rememberMe ? UserModule::get()->rememberMeDuration : 0;
+	}
+	
+	
+	/**
+	 * This function returns true if the only error is that a user is logging in to the wrong doomain
+	 */
+	public function isValidButWrongDomain(){
+		return (!$this->hasErrors('username') && !$this->hasErrors('password') && $this->hasErrors('domain'));
+	}
 
 	/**
 	 * Authenticates the password.
 	 * This is the 'authenticate' validator as declared in rules().
+	 * It also performs the logining in of a user
+	 * @return void
 	 */
 	public function authenticate($attribute,$params)
 	{
@@ -57,12 +104,8 @@ class UserLogin extends CFormModel
 		{
 			$this->_userIdentity=new UserIdentity($this->username,$this->password);
 			$this->_userIdentity->authenticate();
-			$duration=$this->rememberMe ? UserModule::get()->rememberMeDuration : 0;
 			switch($this->_userIdentity->errorCode)
 			{
-				case UserIdentity::ERROR_NONE:
-					Yii::app()->user->login($this->_userIdentity,$duration);
-					break;
 				case UserIdentity::ERROR_EMAIL_INVALID:
 					$this->addError("username",UserModule::t("Email is incorrect."));
 					break;
@@ -79,9 +122,12 @@ class UserLogin extends CFormModel
 					$this->addError("password",UserModule::t("Password is incorrect."));
 					break;
 				case UserIdentity::ERROR_DOMAIN:
-					$this->addError("username",UserModule::t("You do not have access to this address, ."));
+					$this->addError('domain', 'You do not have access to the current domain');
+					
+				case UserIdentity::ERROR_NONE:
 					break;
 			}
 		}
 	}
+	
 }

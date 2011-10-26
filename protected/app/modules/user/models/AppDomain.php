@@ -42,11 +42,20 @@ class AppDomain extends NActiveRecord
 			array('domain','required'),
 			array('domain', 'match', 'pattern' => '/^[A-Za-z0-9_]+$/u','message' => UserModule::t("Incorrect characters (A-z0-9).")),
 			array('domain','length', 'max'=>50, 'min' => 2,'message' =>UserModule::t("The address must be between 3 and 250 characters long")),
-			array('domain', 'unique', 'message'=>'This address already exists')
+			array('domain', 'unique', 'message'=>'This address already exists'),
+			array('domain', 'domainCheck')
 		);
 	}
 
-
+	/**
+	 * check the subdomain
+	 * @param type $attribute
+	 * @param type $params 
+	 */
+	public function domainCheck($attribute,$params){
+		if(in_array($this->domain, Yii::app()->bannedSubDomains))
+			$this->addError($attribute,'This domain already exists');
+	}
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

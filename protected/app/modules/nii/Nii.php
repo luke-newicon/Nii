@@ -1,6 +1,6 @@
 <?php
 /**
- * NApp class file.
+ * Nii class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -108,19 +108,16 @@ class Nii extends CWebApplication
 			}
 		}
 		
-		
-		
 		// initialise modules
 		$this->getNiiModules();
-
+	
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
 		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
 		// run the application (process the request)
 		parent::run();
+		
 	}
-	
-	
 	
 	
 	/**
@@ -138,21 +135,75 @@ class Nii extends CWebApplication
 	
 	/**
 	 * gets all NWebModules in the app and returns them in an array,
-	 * Actively calls the getModule on each module thus instantiating each if they
+	 * This activates each module, it calls the getModule on each module thus instantiating each if they
 	 * are not already, thus running each modules initialisation (init) method
 	 * 
 	 * @param array $exclude modules to exclude from the returned array
-	 * @return array 
+	 * @return array 'module name'=>$module object
 	 */
 	public function getNiiModules($exclude=array()){
 		$exclude = array_merge(array('gii'), $exclude);
-		$m = array();
-		foreach(Yii::app()->getModules() as $module=>$v){
-			if (in_array($module, $exclude)) continue;
-			$module = Yii::app()->getModule($module);
-			if($module instanceOf NWebModule)
-				$m[] = $module;
+		$retModules = array();
+		
+		// first load nii
+		Yii::app()->getModule('nii');
+		
+		// get core modules
+		$modules = Yii::app()->getModules();
+
+		// add active modules
+		if(($activeMods = Yii::app()->settings->get('system_modules', 'system')) !== null){
+			// add the active modules to the configuration
+			$this->configure(array('modules'=>$activeMods));
+			$modules = CMap::mergeArray($modules, $activeMods);
 		}
+		
+		// load the modules
+		foreach($modules as $name => $config){
+			if (in_array($name, $exclude)) continue;
+			// initialises each module
+			$module = Yii::app()->activateModule($name);
+			if($module instanceOf NWebModule)
+				$retModules[$name] = $module;
+		}
+				
+		return $retModules;
+	}
+	
+	
+	/**
+	 * Gets all modules available for install / activation
+	 * looks in the modules folder and finds all module class files.
+	 * Each module is instantiated in an isolated environment. It's init and preInit function is not called
+	 * and it is not attached to the application object
+	 * 
+	 * @return array ('moduleName'=>'module zombie object')
+	 */
+	public function getNiiModulesAll(){
+		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
+		$mods = array();
+		foreach($modFiles as $m){
+			$modName = basename($m);
+			if (!strpos($modName, 'Module'))
+				continue;
+			$mod = str_replace('.php','',$modName);
+			$modId = strtolower(str_replace('Module','', $mod));
+			Yii::import("modules.$modId.$mod");
+			$moduleObj = new $mod($modId, null, null, false);
+			$mods[$modId] = $moduleObj;
+		}
+		return $mods;
+	}
+	
+	
+	/**
+	 * function to activate a module.
+	 * this function enables the system to add additional functionality during module activation
+	 * @param type $moduleId
+	 * @return NWebModule 
+	 */
+	public function activateModule($moduleId){
+		$m = Yii::app()->getModule($moduleId);
 		return $m;
 	}
 	
@@ -178,20 +229,23 @@ class Nii extends CWebApplication
 	
 	/**
 	 * install all loops through each registered database and runs the install of each module against it.
+	 * This is useful for multi site subdomain systems
 	 */
 	public function installAll(){
 		NAppRecord::$db = null;
 		$this->install();
 		FB::log('finished main install');
-		// need to loop through databases
-		$doms = AppDomain::model()->findAll();
-		foreach($doms as $d){
-			FB::log('install '.$this->domainDbPrefix.$d->domain);
-			// get the specific database for this domain
-			$db = $this->domainDbPrefix.$d->domain;
-			NAppRecord::$db = $this->_getDb($db);
-			foreach($this->getNiiModules() as $m){
-				$m->install();
+		// need to loop through sub databases if on a multi site install
+		if($this->domain){
+			$doms = AppDomain::model()->findAll();
+			foreach($doms as $d){
+				FB::log('install '.$this->domainDbPrefix.$d->domain);
+				// get the specific database for this domain
+				$db = $this->domainDbPrefix.$d->domain;
+				NAppRecord::$db = $this->_getDb($db);
+				foreach($this->getNiiModules() as $m){
+					$m->install();
+				}
 			}
 		}
 	}
@@ -233,24 +287,26 @@ class Nii extends CWebApplication
 	}
 	
 	
+	/**
+	 * returns the name of the database used on this specific sub domain
+	 * used for multisite applications
+	 * @return string the database name 
+	 */
 	public function getDomainDbName(){
 		$subdomain = $this->getSubDomain();
-		FB::log($this->domainDbPrefix.$subdomain, 'get domain db name');
 		return $this->domainDbPrefix.$subdomain;
 	}
 	
 	/**
-	 * get the database specific to this subdomain, or the database specified by
-	 * $dbName
+	 * get the database connection object specific to this subdomain
+	 * returns the main database connection if there is no subdomain
 	 * 
-	 * @param string $dbName
 	 * @return CDbConnection 
 	 */
 	public function getSubDomainDb(){
 		// if there is no subdomain return the main database
 		if($this->getSubDomain() == ''){
 			$db = Yii::app()->getDb();
-			FB::log($db, 'db');
 			return $db;
 		}
 		// get the database name secific to the current subdomain
@@ -277,6 +333,10 @@ class Nii extends CWebApplication
 		return $this->$component;
 	}
 	
+	/**
+	 * function called when the system needs to be installed 
+	 * this must be called instead of the run function
+	 */
 	public function goToInstall() {
 		$route = explode('/',Yii::app()->getUrlManager()->parseUrl($this->getRequest()));
 		if ($route[0] != 'install') {

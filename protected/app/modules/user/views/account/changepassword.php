@@ -8,27 +8,27 @@ $this->breadcrumbs=array(
 <h1><?php echo UserModule::t("Change Password"); ?></h1>
 
 
-<div class="form">
+<div style="width:400px;">
 <?php echo CHtml::beginForm(); ?>
 
 	<p class="note"><?php echo UserModule::t('Fields with <span class="required">*</span> are required.'); ?></p>
 	<?php echo CHtml::errorSummary($form); ?>
 	
-	<div class="row">
-	<?php echo CHtml::activeLabelEx($form,'password'); ?>
-	<?php echo CHtml::activePasswordField($form,'password'); ?>
-	<p class="hint">
-	<?php echo UserModule::t("Minimal password length 4 symbols."); ?>
-	</p>
+	<div class="field">
+		<?php echo CHtml::activeLabelEx($form,'password',array('class'=>'inFieldLabel')); ?>
+		<div class="inputBox">
+			<?php echo CHtml::activePasswordField($form,'password'); ?>
+		</div>
 	</div>
 	
-	<div class="row">
-	<?php echo CHtml::activeLabelEx($form,'verifyPassword'); ?>
-	<?php echo CHtml::activePasswordField($form,'verifyPassword'); ?>
+	<div class="field">
+		<?php echo CHtml::activeLabelEx($form,'verifyPassword',array('class'=>'inFieldLabel')); ?>
+		<div class="inputBox">
+			<?php echo CHtml::activePasswordField($form,'verifyPassword'); ?>
+		</div>
 	</div>
 	
-	
-	<div class="row submit">
+	<div class="field submit">
 	<?php echo CHtml::submitButton(UserModule::t("Save"),array('class'=>'btn aristo')); ?>
 	</div>
 

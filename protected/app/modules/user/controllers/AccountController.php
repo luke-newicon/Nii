@@ -5,7 +5,7 @@ class AccountController extends NController {
 	/**
 	 * @var string the default layout for the controller view.
 	 */
-	public $layout = '//layouts/login';
+	public $layout = 'login';
 
 	public function accessRules() {
 		return array(
@@ -13,6 +13,10 @@ class AccountController extends NController {
 				'actions' => array('login', 'logout', 'registration','activation', 'recovery', 'captcha'),
 				'users' => array('*')
 			),
+			array('deny',
+				'actions'=> array('index'),
+				'users' => array('?')
+			)
 		);
 	}
 
@@ -34,29 +38,35 @@ class AccountController extends NController {
 	 */
 	public function actionLogin() {
 		if (Yii::app()->user->isGuest) {
-			$model = new UserLogin;
-			$this->performAjaxValidation($model, 'userloginform');
+			$userLogin = new UserLogin;
+			$this->performAjaxValidation($userLogin, 'userloginform');
 			// collect user input data
 			if (isset($_POST['UserLogin'])) {
-				$model->attributes = $_POST['UserLogin'];
-				// validate user input and redirect to previous page if valid
-				if ($model->validate()) {
-					// add last visit;
-					$user = UserModule::userModel()->notsafe()->findByPk(Yii::app()->user->id);
-					$user->lastvisit = time();
-					$user->save();
+				$userLogin->attributes = $_POST['UserLogin'];
+				// validate that the username and password are valid
+				if ($userLogin->login()) {
 					$this->redirect(Yii::app()->getModule('user')->returnUrl);
 				}else{
 					// check domain
-					$this->transferToDomain($model->getUserIdentity());
+					if($userLogin->isValidButWrongDomain()){
+						$this->transferToDomain($userLogin->getUserIdentity());
+					}
 				}
 			}
 			// display the login form
-			$this->render('login', array('model' => $model));
+			$this->render('login', array('model' => $userLogin));
 		} else {
 			$this->redirect(Yii::app()->getModule('user')->returnUrl);
 		}
 	}
+	
+	/**
+	 * action to manage your own account (user must be logged in)
+	 */
+	public function actionIndex(){
+		$this->render('index',array('model'=>Yii::app()->user->record));
+	}
+	
 	
 	/**
 	 * This function handles the scenario where a user is logging in from the wrong domain.
@@ -64,6 +74,7 @@ class AccountController extends NController {
 	 * @param UserLogin $userLogin 
 	 */
 	public function transferToDomain($userIdentity){
+		
 		if (UserModule::get()->domain) {
 			// if the user is trying to log into the wrong subdomain but is a valid user
 			if ($userIdentity!==null && $userIdentity->errorCode == UserIdentity::ERROR_DOMAIN) {
@@ -71,9 +82,10 @@ class AccountController extends NController {
 				// but even the paypal IPN modules in magento and zen cart use this method
 				// To post data to a redirect page
 				if($userIdentity->getUser()->domain==''){
-					$url = 'http://'.Yii::app()->hostname.'/user/account/login';
+					$url = NHtml::url('/user/account/login');
 				}else{
-					$url = 'http://'.$userIdentity->getUser()->domain.'.'.Yii::app()->hostname.'/user/account/login';
+					$schema = (Yii::app()->https) ? 'https://' : 'http://';
+					$url = $schema . $userIdentity->getUser()->domain.'.'.Yii::app()->hostname . NHtml::url('/user/account/login');
 				}
 				echo $this->render('transfer',array('userIdentity'=>$userIdentity, 'action'=>$url),true);
 				exit();
@@ -95,18 +107,21 @@ class AccountController extends NController {
 	 * Registration user
 	 */
 	public function actionRegistration() {
+
 		$userModule = UserModule::get();
 		// array of models to validate
 		$models = array();
 		
 		$user = new RegistrationForm;
+		$domain = null;
 		
 		// populate array of models to validate
 		$models[] = $user;
 
-		$domain = new AppDomain;
-		$models[] = $domain;
-		
+		if($userModule->domain) {
+			$domain = new AppDomain;
+			$models[] = $domain;
+		}
 		// ajax validator
 		if(isset($_POST['ajax']) && $_POST['ajax']==='registration-form')
 		{	
@@ -115,7 +130,7 @@ class AccountController extends NController {
 		}
 
 		if (Yii::app()->user->id) {
-			$this->redirect($userModule->profileUrl);
+			$this->redirect($userModule->returnUrl);
 		} else {
 			if(isset($_POST['RegistrationForm'])) {
 				// validate all models enabled
@@ -132,12 +147,15 @@ class AccountController extends NController {
 					$user->createtime=time();
 					$user->superuser=0;
 					$user->status=(($userModule->activeAfterRegister)?User::STATUS_ACTIVE:User::STATUS_NOACTIVE);
-					
 					// prossess domain
 					if($userModule->domain){
 						$domain->save();
 						$user->domain = $domain->domain;
 					}
+					
+					$user->trial = 1;
+					$user->trial_ends_at = date('Y-m-d',mktime(0,0,0,date("m"),date("d") +30, date("Y")));
+					
 					$user->save();
 
 					if ($userModule->sendActivationMail) {
@@ -260,8 +278,6 @@ class AccountController extends NController {
 	}
 
 
-
-
 	/**
 	 * Recovery password
 	 */
@@ -281,12 +297,12 @@ class AccountController extends NController {
 						if($form2->validate()) {
 							// if account is not active make it active
 							if ($find->status==0) {
-								$find->status = 1;
+                                $find->status = 1;
 							}
-							$find->password = $form2->password;
+							$find->password = UserModule::passwordCrypt($form2->password);
 							$find->save();
-							Yii::app()->user->setFlash('recoveryMessage',UserModule::t("New password is saved."));
-							$this->redirect(Yii::app()->controller->module->recoveryUrl);
+							Yii::app()->user->setFlash('success',UserModule::t("A new password has been saved. You can now log in using your new password."));
+							$this->redirect(Yii::app()->controller->module->loginUrl);
 						}
 					}
 					$this->render('changepassword',array('form'=>$form2));
@@ -305,7 +321,7 @@ class AccountController extends NController {
 						$message = UserModule::t("You have requested password recovery from {site_name}. To receive a new password, go to {activation_url}.",array('{site_name}'=>Yii::app()->name, '{activation_url}'=>$activation_url));
 						UserModule::sendMail($user->email,$subject,$message);
 
-						Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Please check your email. instructions have been sent to your email address."));
+						Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Please check your email. Instructions have been sent to your email address."));
 						$this->refresh();
 					}
 				}

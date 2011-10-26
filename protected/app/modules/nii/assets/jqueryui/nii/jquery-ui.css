@@ -580,3 +580,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .solid .ui-widget-header {background: none repeat scroll 0 0 transparent;border-width: 0 0 1px;}
 .solid {border: medium none;}
 .solid.ui-tabs .ui-tabs-nav li a {padding: 0.4em 1em;}
+
+/**
+ * nii styles
+ */
+.ui-widget-header{background: -moz-linear-gradient(top, #ebebeb 0%, #cacaca 99%);background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ebebeb), color-stop(99%,#cacaca));background: -webkit-linear-gradient(top, #ebebeb 0%,#cacaca 99%);background: -o-linear-gradient(top, #ebebeb 0%,#cacaca 99%);background: -ms-linear-gradient(top, #ebebeb 0%,#cacaca 99%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebebeb', endColorstr='#cacaca',GradientType=0 );background: linear-gradient(top, #ebebeb 0%,#cacaca 99%);border-top:1px solid #666;border-bottom:1px solid #666;}

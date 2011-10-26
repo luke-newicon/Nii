@@ -30,15 +30,18 @@ class NSettings extends CApplicationComponent
 	protected $_tableName='{{nii_settings}}';
 	public $dbEngine='InnoDB';
 	
+	
+	
     public function init()
     {
         parent::init();
-        Yii::app()->attachEventHandler('onEndRequest', array($this, 'whenRequestEnds'));
+		if ($this->hasDbComponent())
+			Yii::app()->attachEventHandler('onEndRequest', array($this, 'whenRequestEnds'));
     }
 
 
     /**
-     * CmsSettings::set()
+     * NSettings::set()
      * 
      * @param string $category name of the category 
      * @param mixed $key 
@@ -48,7 +51,7 @@ class NSettings extends CApplicationComponent
      * @return CmsSettings
      */
     public function set($key='', $value='', $category='system', $toDatabase=true)
-    { 
+    {
         if(is_array($key))
         {
             foreach($key AS $k=>$v)
@@ -72,7 +75,7 @@ class NSettings extends CApplicationComponent
     }
 
     /**
-     * CmsSettings::get()
+     * NSettings::get()
      * 
      * @param string $category name of the category
      * @param mixed $key 
@@ -85,6 +88,9 @@ class NSettings extends CApplicationComponent
      */
     public function get($key='', $category='system', $default=null)
     {
+		if(!$this->hasDbComponent())
+			return $default;
+		
         if(!isset($this->loaded[$category]))
             $this->load($category);
 
@@ -158,29 +164,39 @@ class NSettings extends CApplicationComponent
      */
     public function load($category)
     {        
+		if(!$this->hasDbComponent())
+			return array();
+		
         $items=$this->getCacheComponent()->get($category.'_'.$this->cacheId);
         $this->loaded[$category]=true;
         
         if(!$items)
         {
+			Yii::beginProfile("getSetting category $category");
             $connection=$this->getDbComponent();
             $command=$connection->createCommand('SELECT `key`, `value` FROM '.$this->getTableName().' WHERE category=:cat');
             $command->bindParam(':cat', $category);
             $result=$command->queryAll();
+			
             
-            if(empty($result))
+            if(empty($result)){
+				Yii::endProfile("getSetting category $category");
                 return;
+			}
 
             $items=array();
             foreach($result AS $row)
                 $items[$row['key']] = @unserialize($row['value']);
             $this->getCacheComponent()->add($category.'_'.$this->cacheId, $items, $this->cacheTime); 
+			
+			Yii::endProfile("getSetting category $category");
         }
 
         if(isset($this->items[$category]))
             $items=array_merge($items, $this->items[$category]);
         
         $this->set($items, null, $category, false); 
+	
         return $items;
     }
     
@@ -226,9 +242,18 @@ class NSettings extends CApplicationComponent
 	{
         return Yii::app()->getComponent($this->dbComponentId);
     }
+	
+	protected function hasDbComponent(){
+		// the db component may already exist in the config.
+		// only the install process will define its connectionString
+		// the default yii::app()->hasComponent function will trigger the db component 'connection string not defined' error
+		
+		return isset(Yii::app()->db->connectionString);
+	}
 
     protected function addDbItem($category='system', $key, $value)
     {
+		Yii::beginProfile('NSettings addDbItem');
         $connection=$this->getDbComponent();
         $command=$connection->createCommand('SELECT id FROM '.$this->getTableName().' WHERE `category`=:cat AND `key`=:key LIMIT 1');
         $command->bindParam(':cat', $category);
@@ -245,6 +270,7 @@ class NSettings extends CApplicationComponent
         $command->bindParam(':key', $key);
         $command->bindParam(':value', $value);
         $command->execute();
+		Yii::endProfile('NSettings addDbItem');
     }
 
     protected function whenRequestEnds()
@@ -311,6 +337,8 @@ class NSettings extends CApplicationComponent
             foreach($this->cacheNeedsFlush AS $catName)
                 $this->getCacheComponent()->delete($catName.'_'.$this->cacheId);
         }   
+		
+		FB::log(Yii::app()->settings->get('', 'system'), 'system settings');
     }
 	
 
@@ -319,6 +347,8 @@ class NSettings extends CApplicationComponent
 	 */
 	protected function createTable()
 	{
+		if(!$this->hasDbComponent())
+			return
 		$connection=$this->getDbComponent();
 		$tableName=$connection->tablePrefix.str_replace(array('{{','}}'), '', $this->getTableName());
 		$sql='CREATE TABLE IF NOT EXISTS `'.$tableName.'` (

@@ -35,20 +35,6 @@ $this->breadcrumbs=array(
 	<?php echo $form->error($model,'email'); ?>
 	</div>
 
-	<?php  // show fields from linked CRM module ?>
-	<?php if($contact): ?>
-		<div class="row">
-		<?php echo $form->labelEx($contact,'first name'); ?>
-		<?php echo $form->textField($contact,'first_name'); ?>
-		<?php echo $form->error($contact,'first_name'); ?>
-		</div>
-
-		<div class="row">
-		<?php echo $form->labelEx($contact,'last name'); ?>
-		<?php echo $form->textField($contact,'last_name'); ?>
-		<?php echo $form->error($contact,'last_name'); ?>
-		</div>
-	<?php endif; ?>
 
 	<div class="row">
 	<?php echo $form->labelEx($model,'password'); ?>
@@ -60,9 +46,9 @@ $this->breadcrumbs=array(
 	</div>
 	
 	<div class="row">
-	<?php echo $form->labelEx($model,'verifyPassword'); ?>
-	<?php echo $form->passwordField($model,'verifyPassword'); ?>
-	<?php echo $form->error($model,'verifyPassword'); ?>
+	<?php //echo $form->labelEx($model,'verifyPassword'); ?>
+	<?php //echo $form->passwordField($model,'verifyPassword'); ?>
+	<?php //echo $form->error($model,'verifyPassword'); ?>
 	</div>
 	
 	

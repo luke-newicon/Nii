@@ -1,5 +1,7 @@
 <?php
-defined('DS') or define('DS',DIRECTORY_SEPARATOR);
+
+defined('DS') or define('DS', DIRECTORY_SEPARATOR);
+
 /**
  * @name Environment
  * @author Marco van 't Wout | Tremani
@@ -52,31 +54,22 @@ defined('DS') or define('DS',DIRECTORY_SEPARATOR);
  * {{{
  * <?php
  * // set environment
- * require_once(dirname(__FILE__) . '/protected/extensions/yii-environment/Environment.php');
+ * require_once (dirname(__FILE__) . '/../protected/app/config/Environment.php');
+ * // set environment - new Environment('PRODUCTION'); (override mode)
  * $env = new Environment();
- * //$env = new Environment('PRODUCTION'); //override mode
  * 
- * // set debug and trace level
- * defined('YII_DEBUG') or define('YII_DEBUG', $env->yiiDebug);
- * defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $env->yiiTraceLevel);
- * 
- * // run Yii app
- * //$env->showDebug(); // show produced environment configuration
- * require_once($env->yiiPath);
- * $env->runYiiStatics(); // like Yii::setPathOfAlias()
  * Yii::createWebApplication($env->config)->run();
- * }}}
  * 
  * ===Structure of config directory===
  * 
  * Your protected/config/ directory will look like this:
  * 
- *  * config/main.php                     Global configuration
- *  * config/mode_development.php         Mode-specific configurations
- *  * config/mode_test.php
- *  * config/mode_staging.php
- *  * config/mode_production.php
- *  * config/local.php                    Local override for mode-specific config
+ *   config/main.php                     Global configuration
+ *   config/mode_development.php         Mode-specific configurations
+ *   config/mode_test.php
+ *   config/mode_staging.php
+ *   config/mode_production.php
+ *   config/local.php                    Local override for mode-specific config
  * 
  * ===Modify your config/main.php===
  * 
@@ -139,166 +132,152 @@ defined('DS') or define('DS',DIRECTORY_SEPARATOR);
  * }}}
  *
  */
-class Environment
-{
-	// Environment settings (extend Environment class if you want to change these)
-	const SERVER_VAR = 'YII_ENVIRONMENT'; //Apache SetEnv var
-	const CONFIG_DIR = '.'; //relative to Environment.php
+class Environment {
+    // Environment settings (extend Environment class if you want to change these)
+    const SERVER_VAR = 'YII_ENVIRONMENT'; //Apache SetEnv var
+    const CONFIG_DIR = '.'; //relative to Environment.php
+    // Valid modes (extend Environment class if you want to change or add to these)
+    const MODE_DEVELOPMENT = 100;
+    const MODE_TEST = 200;
+    const MODE_STAGING = 300;
+    const MODE_PRODUCTION = 400;
 
-	// Valid modes (extend Environment class if you want to change or add to these)
-	const MODE_DEVELOPMENT = 100;
-	const MODE_TEST = 200;
-	const MODE_STAGING = 300;
-	const MODE_PRODUCTION = 400;
+    // Selected mode
+    private $_mode;
+    // Environment Yii properties
+    public $yiiPath; // path to yii.php
+    public $yiitPath; // path to yiit.php
+    public $yiiDebug; // int
+    public $yiiTraceLevel; // int
+    public $hasLocalConfig = false;
+    // Environment Yii statics to run
+    // @see http://www.yiiframework.com/doc/api/1.1/YiiBase#setPathOfAlias-detail
+    public $yiiSetPathOfAlias = array(); // array with "$alias=>$path" elements
+    // Web application config
+    public $config;    // config array
 
-	// Selected mode
-	private $_mode;
+    /**
+     * Initilizes the Environment class with the given mode
+     * @param constant $mode used to override automatically setting mode
+     */
 
-	// Environment Yii properties
-	public $yiiPath; // path to yii.php
-	public $yiitPath; // path to yiit.php
-	public $yiiDebug; // int
-	public $yiiTraceLevel; // int
-	
-	public $hasLocalConfig = false;
-	
-	// Environment Yii statics to run
-	// @see http://www.yiiframework.com/doc/api/1.1/YiiBase#setPathOfAlias-detail
-	public $yiiSetPathOfAlias = array();	// array with "$alias=>$path" elements
-	
-	// Web application config
-	public $config;				// config array
+    function __construct($mode = null) {
+        $this->_mode = $this->getMode($mode);
+        $this->setEnvironment();
 
-	/**
-	 * Initilizes the Environment class with the given mode
-	 * @param constant $mode used to override automatically setting mode
-	 */
-	function __construct($mode = null)
-	{
-		$this->_mode = $this->getMode($mode);
-		$this->setEnvironment();
-		
-		// set debug and trace level
-		// these must be defined before including the Yii class.
-		defined('YII_DEBUG') or define('YII_DEBUG', $this->yiiDebug);
-		defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $this->yiiTraceLevel);
-		
-		// include the yii class file
-		require_once dirname(__FILE__).'/../../app/Yii.php';
-		$this->runYiiStatics();
-	}
+        // set debug and trace level
+        // these must be defined before including the Yii class.
+        defined('YII_DEBUG') or define('YII_DEBUG', $this->yiiDebug);
+        defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', $this->yiiTraceLevel);
 
-	/**
-	 * Get current environment mode depending on environment variable.
-	 * Override this function if you want to change this method.
-	 * @param string $mode
-	 * @return string
-	 */
-	private function getMode($mode = null)
-	{
-		// If not manually set
-		if (!isset($mode))
-		{
-			// Return mode based on Apache server var
-			if (isset($_SERVER[constant(get_class($this).'::SERVER_VAR')]))
-				$mode = $_SERVER[constant(get_class($this).'::SERVER_VAR')];
-			else
-				throw new Exception('"SetEnv '.constant(get_class($this).'::SERVER_VAR').' <mode>" not defined in Apache config.');
-		}
-		
-		// Check if mode is valid
-		if (!defined(get_class($this).'::MODE_'.$mode))
-			throw new Exception('Invalid Environment mode supplied or selected');
+        // include the yii class file
+        require_once dirname(__FILE__) . '/../../app/Yii.php';
+        $this->runYiiStatics();
+    }
 
-		return $mode;
-	}
+    /**
+     * Get current environment mode depending on environment variable.
+     * Override this function if you want to change this method.
+     * @param string $mode
+     * @return string
+     */
+    private function getMode($mode = null) {
+        // If not manually set
+        if (!isset($mode)) {
+            // Return mode based on Apache server var
+            if (isset($_SERVER[constant(get_class($this) . '::SERVER_VAR')]))
+                $mode = $_SERVER[constant(get_class($this) . '::SERVER_VAR')];
+            else
+                throw new Exception('"SetEnv ' . constant(get_class($this) . '::SERVER_VAR') . ' <mode>" not defined in Apache config.');
+        }
 
-	/**
-	 * Sets the environment and configuration for the selected mode
-	 */
-	private function setEnvironment()
-	{
-		// Load main config
-		$fileMainConfig = dirname(__FILE__).DIRECTORY_SEPARATOR.constant(get_class($this).'::CONFIG_DIR').DIRECTORY_SEPARATOR.'main.php';
-		if (!file_exists($fileMainConfig))
-			throw new Exception('Cannot find main config file "'.$fileMainConfig.'".');
-		$configMain = require($fileMainConfig);
+        // Check if mode is valid
+        if (!defined(get_class($this) . '::MODE_' . $mode))
+            throw new Exception('Invalid Environment mode supplied or selected');
 
-		// Load specific config
-		$fileSpecificConfig = dirname(__FILE__).DIRECTORY_SEPARATOR.constant(get_class($this).'::CONFIG_DIR').DIRECTORY_SEPARATOR.'mode_'.strtolower($this->_mode).'.php';
-		if (!file_exists($fileSpecificConfig))
-			throw new Exception('Cannot find mode specific config file "'.$fileSpecificConfig.'".');
-		$configSpecific = require($fileSpecificConfig);
+        return $mode;
+    }
 
-		// Merge specific config into main config
-		$config = self::mergeArray($configMain, $configSpecific);
+    /**
+     * Sets the environment and configuration for the selected mode
+     */
+    private function setEnvironment() {
+        // Load main config
+        $fileMainConfig = dirname(__FILE__) . DIRECTORY_SEPARATOR . constant(get_class($this) . '::CONFIG_DIR') . DIRECTORY_SEPARATOR . 'main.php';
+        if (!file_exists($fileMainConfig))
+            throw new Exception('Cannot find main config file "' . $fileMainConfig . '".');
+        $configMain = require($fileMainConfig);
 
-		
-		// load in local config
-		$localConfFile = dirname(__FILE__).'/local.php';
-		if(file_exists($localConfFile)){
-			$localConf = require $localConfFile;
-			$config['config'] = self::mergeArray($localConf, $config['config']);
-		}
-		
-		if (isset($config['config']['components']['db']['connectionString']))
-			$this->hasLocalConfig = true;
+        // Load specific config
+        $fileSpecificConfig = dirname(__FILE__) . DIRECTORY_SEPARATOR . constant(get_class($this) . '::CONFIG_DIR') . DIRECTORY_SEPARATOR . 'mode_' . strtolower($this->_mode) . '.php';
+        if (!file_exists($fileSpecificConfig))
+            throw new Exception('Cannot find mode specific config file "' . $fileSpecificConfig . '".');
+        $configSpecific = require($fileSpecificConfig);
 
-		// Set attributes
-		$this->yiiPath = $config['yiiPath'];
-		$this->yiitPath = $config['yiitPath'];
-		$this->yiiDebug = $config['yiiDebug'];
-		$this->yiiTraceLevel = $config['yiiTraceLevel'];
-		$this->config = $config['config'];
-		$this->config['params']['environment'] = strtolower($this->_mode);
+        // Merge specific config into main config
+        $config = self::mergeArray($configMain, $configSpecific);
 
-		// Set Yii statics
-		$this->yiiSetPathOfAlias = $config['yiiSetPathOfAlias'];
-	}
 
-	/**
-	 * Run Yii static functions.
-	 * Call this function after including the Yii framework in your bootstrap file.
-	 */
-	public function runYiiStatics()
-	{
-		// Yii::setPathOfAlias();
-		foreach($this->yiiSetPathOfAlias as $alias => $path) {
-			Yii::setPathOfAlias($alias, $path);
-		}
-	}
-	
-	/**
-	 * Show current Environment class values
-	 */
-	public function showDebug()
-	{
-		echo '<div style="position: absolute; bottom: 0; z-index: 99; height: 250px; overflow: auto; background-color: #ddd; color: #000; border: 1px solid #000; margin: 5px; padding: 5px;">
-			<pre>'.htmlspecialchars(print_r($this, true)).'</pre></div>';
-	}
-	
-	/**
-	 * Merges two arrays into one recursively.
-	 * Taken from Yii's CMap::mergeArray, since php does not supply a native
-	 * We can not use Yii at this point.
-	 * function that produces the required result.
-	 * @see http://www.yiiframework.com/doc/api/1.1/CMap#mergeArray-detail
-	 * @param array $a array to be merged to
-	 * @param array $b array to be merged from
-	 * @return array the merged array (the original arrays are not changed.)
-	 */
-	private static function mergeArray($a,$b)
-	{
-		foreach($b as $k=>$v)
-		{
-			if(is_integer($k))
-				$a[]=$v;
-			else if(is_array($v) && isset($a[$k]) && is_array($a[$k]))
-				$a[$k]=self::mergeArray($a[$k],$v);
-			else
-				$a[$k]=$v;
-		}
-		return $a;
-	}
+        // load in local config
+        $localConfFile = dirname(__FILE__) . '/local.php';
+        if (file_exists($localConfFile)) {
+            $localConf = require $localConfFile;
+            $config['config'] = self::mergeArray($localConf, $config['config']);
+            $this->hasLocalConfig = true;
+        }
+
+
+        // Set attributes
+        $this->yiiPath = $config['yiiPath'];
+        $this->yiitPath = $config['yiitPath'];
+        $this->yiiDebug = $config['yiiDebug'];
+        $this->yiiTraceLevel = $config['yiiTraceLevel'];
+        $this->config = $config['config'];
+        $this->config['params']['environment'] = strtolower($this->_mode);
+
+        // Set Yii statics
+        $this->yiiSetPathOfAlias = $config['yiiSetPathOfAlias'];
+    }
+
+    /**
+     * Run Yii static functions.
+     * Call this function after including the Yii framework in your bootstrap file.
+     */
+    public function runYiiStatics() {
+        // Yii::setPathOfAlias();
+        foreach ($this->yiiSetPathOfAlias as $alias => $path) {
+            Yii::setPathOfAlias($alias, $path);
+        }
+    }
+
+    /**
+     * Show current Environment class values
+     */
+    public function showDebug() {
+        echo '<div style="position: absolute; bottom: 0; z-index: 99; height: 250px; overflow: auto; background-color: #ddd; color: #000; border: 1px solid #000; margin: 5px; padding: 5px;">
+			<pre>' . htmlspecialchars(print_r($this, true)) . '</pre></div>';
+    }
+
+    /**
+     * Merges two arrays into one recursively.
+     * Taken from Yii's CMap::mergeArray, since php does not supply a native
+     * We can not use Yii at this point.
+     * function that produces the required result.
+     * @see http://www.yiiframework.com/doc/api/1.1/CMap#mergeArray-detail
+     * @param array $a array to be merged to
+     * @param array $b array to be merged from
+     * @return array the merged array (the original arrays are not changed.)
+     */
+    private static function mergeArray($a, $b) {
+        foreach ($b as $k => $v) {
+            if (is_integer($k))
+                $a[] = $v;
+            else if (is_array($v) && isset($a[$k]) && is_array($a[$k]))
+                $a[$k] = self::mergeArray($a[$k], $v);
+            else
+                $a[$k] = $v;
+        }
+        return $a;
+    }
 
 }

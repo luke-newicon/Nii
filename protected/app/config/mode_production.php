@@ -17,22 +17,6 @@ return array(
 	// This is the main Web application configuration. Any writable
 	// CWebApplication properties can be configured here.
 	'config' => array(
-//		settings for domain specific apps
-//		'hostname'=>'hotspot-app.com',
-//		'bannedSubDomains'=>array(
-//			'www','hotspot','static'
-//		),
-//		
-//		'domainDbHostname' => 'localhost',
-//		'domainDbPrefix'=>'hotspot_',
-//		'domainDb'=>array(
-//			'username' => 'newicon',
-//			'password' => 'bonsan',
-//			'schemaCachingDuration' => 3600,
-//			'enableProfiling' => true,
-//			'enableParamLogging' => true,
-//		),
-
 		// application components
 		'components'=>array(
 			'db'=>array(

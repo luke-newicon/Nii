@@ -8,11 +8,19 @@ class RegistrationForm extends User
 {
 	public $verifyPassword;
 	public $verifyCode;
+	/**
+	 * the plan string id
+	 * @var string
+	 */
+	public $plan='';
+	public $trial;
+	public $trial_ends_at;
 	
 	public $terms;
 	
 	public function rules() {
 		$rules = array(
+			array('plan, trial, trial_ends_at','safe'),
 			array('password, verifyPassword, email', 'required'),
 			array('username', 'length', 'max'=>75, 'min' => 3,'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
 			array('password', 'length', 'max'=>128, 'min' => 4,'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
@@ -42,9 +50,6 @@ class RegistrationForm extends User
 		if($this->password != $this->verifyPassword){
 			$this->addError("verifyPassword",UserModule::t("Retype Password is incorrect."));
 		}
-//		if (UserModule::checkPassword($this->password, $this->verifyPassword) === false) {
-//			$this->addError("verifyPassword",UserModule::t("Retype Password is incorrect."));
-//		}
 	}
 	
 }

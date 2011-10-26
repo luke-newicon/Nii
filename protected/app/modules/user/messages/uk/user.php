@@ -127,10 +127,4 @@ return array(
 	'The value of the default field (database).' => 'Значення поля за замовчуванням (база даних).',
 	'Display order of fields.' => 'Порядок відображення полів.',
     'Not visited' => 'Користувач не відвідував сайт',
-
-    
-    
-    
-    
-    
 );

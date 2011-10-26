@@ -226,5 +226,4 @@ class Setting extends NActiveRecord
 			)
 		);
 	}
-	
 }

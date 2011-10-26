@@ -39,7 +39,8 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 			$('body').delegate(':input','focusin.niiform',function(){$(this).closest(".field").addClass("focus");});
 			$('body').delegate(':input','focusout.niiform',function(){$(this).closest(".field").removeClass("focus");});
 			$('.inFieldLabel').inFieldLabels({fadeDuration:0});
-		}
+		},
+		
 	};
 })(jQuery);
 
@@ -53,9 +54,16 @@ jQuery(function($){
 });
 
 
+/**
+ * Overrides and adds functions to the standard yiiactiveform js 
+ * 
+ * 
+ */
 (function()
 {
-	// Define overriding method.
+	/**
+	 * makes drawing an individual form fields error message slightly more sexy
+	 */
 	if(jQuery.fn.yiiactiveform != undefined){
 		jQuery.fn.yiiactiveform.updateInput = function(attribute, messages, form) 
 		{
@@ -82,35 +90,106 @@ jQuery(function($){
 			return hasError;
 
 		}
-		
+			
 		/**
-		 * Function to call the validation on the whole form. Pass in the jquery form object
-		 * @param $form jquery form element object
+		 * @param form the string form id or jquery form element
+		 * @param options options object
+		 * - success    : function to call when the form successfully validates
+		 * - error      : the ajax error callback
+		 * - attributes : array of element id's to validate (defaults to undefined, meaning validate all attributes)
 		 */
-		$.fn.yiiactiveform.doValidate = function($form){
-			$.fn.yiiactiveform.validate($('#billing-info-form'), function(data){
-				var settings = $.fn.yiiactiveform.getSettings($('#billing-info-form'));
-				$form = $('#billing-info-form');
-				// Code copied from yiiactiveform.js
-				var hasError = false;
-				$.each(settings.attributes, function(i, attribute){
-					hasError = $.fn.yiiactiveform.updateInput(attribute, data, $form) || hasError;
-				});
-				$.fn.yiiactiveform.updateSummary($form, data);
-				if(settings.afterValidate==undefined || settings.afterValidate($form, data, hasError)) {
-					if(!hasError) {
-						validated = true;
-						var $button = $form.data('submitObject') || $form.find(':submit:first');
-						// TODO: if the submission is caused by "change" event, it will not work
-						if ($button.length)
-							$button.click();
-						else  // no submit button in the form
-							$form.submit();
-						return false;
+ 		$.fn.yiiactiveform.doValidate = function(form, options){
+			
+			if(options == undefined)
+				options = {};
+			
+			var $form = $(form);
+			var settings = $form.data('settings');
+			console.log(settings);
+			var messages = {};
+			var needAjaxValidation = false;
+			$.each(settings.attributes, function(){
+				var msg = [];
+				if (this.clientValidation != undefined) {
+					var value = $('#'+this.inputID, $form).val();
+					this.clientValidation(value, msg, this);
+					if (msg.length) {
+						if (options.attributes == undefined)
+							messages[this.id] = msg;
+						else
+							// options.attributes have been defined so only add a message to the specific fields 
+							// we want to validate
+							if ($.inArray(this.id,options.attributes) != -1)
+								messages[this.id] = msg;
 					}
 				}
-				settings.submitting=false;
-				// end duplicated code
+				if (this.enableAjaxValidation)
+					needAjaxValidation = true;
+			});
+			
+			if(needAjaxValidation){
+				$.ajax({
+					url : settings.validationUrl,
+					type : $form.attr('method'),
+					data : $form.serialize()+'&'+settings.ajaxVar+'='+$form.attr('id'),
+					dataType : 'json',
+					success : function(data) {
+						if (data != null && typeof data == 'object') {
+							$.each(settings.attributes, function() {
+								if (!this.enableAjaxValidation)
+									delete data[this.id];
+								// remove the attributes that we do not want to redraw
+								if(options.attributes != undefined && ($.inArray(this.id, options.attributes) == -1))
+									delete data[this.id];
+								
+							});
+							$.fn.yiiactiveform.drawValidation($form, options.attributes, $.extend({}, messages, data));
+						}
+
+						// we only call the success callback if the form is valid!
+						if (data.length==0 && options.success!=undefined)
+							options.success();
+
+					},
+					error : function() {
+						if (options.error!=undefined) {
+							options.error();
+						}
+					}
+				});
+			}else{
+				$.fn.yiiactiveform.drawValidation($form, options.attributes, messages);
+				// we only call the success callback if the form is valid!
+				if (data != undefined && data.length==0 && options.success!=undefined)
+					options.success();
+			}
+		}
+		
+		/**
+		 * The form to draw the validation on.
+		 * Draws the validatiion for each field
+		 * 
+		 * @param $form the jquery form object
+		 * @param attributes an array of field id's to draw the validation for, leave undefined for all.
+		 * @param data the json validation result (as returned by CActiveForm::validate)
+		 * 
+		 */
+		$.fn.yiiactiveform.drawValidation = function($form, attributes, data){
+			var hasError=false;
+			$.each($form.data('settings').attributes, function(){
+				if(attributes != undefined){
+					if ($.inArray(this.id, attributes) != -1) {
+						hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+						if(this.afterValidateAttribute!=undefined) {
+							afterValidateAttribute($form,this,data,hasError);
+						}
+					}
+				} else {
+					hasError = $.fn.yiiactiveform.updateInput(this, data, $form) || hasError;
+					if(this.afterValidateAttribute!=undefined) {
+						afterValidateAttribute($form,this,data,hasError);
+					}
+				}
 			});
 		}
 	}
