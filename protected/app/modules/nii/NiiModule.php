@@ -61,7 +61,6 @@ class NiiModule extends NWebModule
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/jquery.metadata.js', 
-					'js/tipsy/javascripts/jquery.tipsy.js',
 					'js/nii.js', 
 					'js/jquery.hotkeys.js',
 					'js/backbone/underscore-1.1.7.min.js',
@@ -69,7 +68,7 @@ class NiiModule extends NWebModule
 					'js/gritter/js/jquery.gritter.min.js',
 				),
 				'css'=>array(
-//					'oocss/all.css',
+					'oocss/all.css',
 //					'js/tipsy/stylesheets/tipsy.css',
 //					'js/gritter/css/jquery.gritter.css',
 				),

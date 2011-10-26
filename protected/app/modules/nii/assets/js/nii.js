@@ -28,7 +28,7 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 		 * add data-tip="{-tipsy options-}" title="tooltip text" to any element
 		 */
 		tipsy:function(){
-			$('*[data-tip]').tipsy($(this).metadata({type:'attr',name:'data-tip'}));
+			//$('*[data-tip]').twipsy($(this).metadata({type:'attr',name:'data-tip'}));
 		},
 		/**
 		 * initialise form elements

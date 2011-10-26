@@ -37,10 +37,6 @@ class InstallController extends Controller {
 
 			if ($model->validate()) {
 
-				$config = $model->generateConfig();
-
-				$data = '<?php ' . "\n" . 'return ' . var_export($config, true) . ';';
-
 				// install database tables and nii modules
 				$model->installDatabase();
 
@@ -49,11 +45,14 @@ class InstallController extends Controller {
 
 				$filename = Yii::getPathOfAlias('app.config.local') . '.php';
 				
-
 				// if the config file has been written then install has completed!
 				if (file_exists($filename)) {
 					$this->redirect(array('install/step2'));
 				} else {
+                    // create local file contents
+                    $config = $model->generateConfig();
+                    $data = '<?php ' . "\n" . 'return ' . var_export($config, true) . ';';
+                    
 					if (is_writable(dirname($filename))) {
 						file_put_contents($filename, $data);
 					} else {

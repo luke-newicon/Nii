@@ -173,11 +173,14 @@ class NSettings extends CApplicationComponent
         if(!$items)
         {
 			Yii::beginProfile("getSetting category $category");
+            try{
             $connection=$this->getDbComponent();
             $command=$connection->createCommand('SELECT `key`, `value` FROM '.$this->getTableName().' WHERE category=:cat');
             $command->bindParam(':cat', $category);
             $result=$command->queryAll();
-			
+            }catch (CDbException $e){
+                return;
+            }
             
             if(empty($result)){
 				Yii::endProfile("getSetting category $category");
@@ -247,8 +250,11 @@ class NSettings extends CApplicationComponent
 		// the db component may already exist in the config.
 		// only the install process will define its connectionString
 		// the default yii::app()->hasComponent function will trigger the db component 'connection string not defined' error
-		
-		return isset(Yii::app()->db->connectionString);
+		 try{
+            return isset(Yii::app()->db->connectionString);
+        } catch (CDbException $e){
+           return false; 
+        }
 	}
 
     protected function addDbItem($category='system', $key, $value)
@@ -345,11 +351,9 @@ class NSettings extends CApplicationComponent
 	/**
 	 * create the settings table
 	 */
-	protected function createTable()
+	public function createTable()
 	{
-		if(!$this->hasDbComponent())
-			return
-		$connection=$this->getDbComponent();
+		$connection=Yii::app()->db;
 		$tableName=$connection->tablePrefix.str_replace(array('{{','}}'), '', $this->getTableName());
 		$sql='CREATE TABLE IF NOT EXISTS `'.$tableName.'` (
 		  `id` int(11) NOT NULL auto_increment,
@@ -363,9 +367,9 @@ class NSettings extends CApplicationComponent
         $command->execute();
 	}
 	
-	public static function install(){
-		$s = new NSettings;
-		$s->createTable();
+	public static function install()
+    {
+        Yii::app()->settings->createTable();
 	}
 	
     
