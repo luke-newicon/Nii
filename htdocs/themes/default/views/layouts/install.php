@@ -14,7 +14,6 @@
 				<div class="main">
 					<div class="shadowBlockLarge pam w700" style="margin: 0 auto;">
 						<h1>Installation</h1>
-						<?php $this->renderPartial('//layouts/_messages'); ?>
 						<?php echo $content; ?>
 					</div>
 				</div>

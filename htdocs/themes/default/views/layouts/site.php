@@ -13,7 +13,6 @@
 			<?php $this->renderPartial('//layouts/site/_head'); ?>
 			<div class="body">
 				<div class="main">
-					<?php $this->renderPartial('//layouts/_messages'); ?>
 					<?php echo $content; ?>
 				</div>
 			</div>
