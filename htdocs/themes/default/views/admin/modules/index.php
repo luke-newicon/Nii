@@ -6,7 +6,7 @@
 <?php
 $dataProvider = new CArrayDataProvider($data);
 
-$this->widget('zii.widgets.grid.CGridView', array(
+$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'id'=>'modules-grid',
 	'dataProvider'=>$dataProvider,
 	'columns'=>array(
