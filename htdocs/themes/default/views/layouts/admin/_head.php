@@ -4,7 +4,7 @@
 		<div class="topbar">
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
-					<h3><a href="<?php echo Yii::app()->baseUrl ?>">Nii</a></h3>
+					<h3><a href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a></h3>
 					<?php
 					$this->widget('zii.widgets.CMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('main'),
@@ -20,23 +20,14 @@
 							</form>
 						</li>
 					</ul>
-					<ul class="nav secondary-nav">
-						<li class="menu">
-							<a class="menu" href="#">Luke Spencer</a>
-							<ul class="menu-dropdown">
-								<li><a href="#">Settings</a></li>
-								<li><a href="#">Account</a></li>
-								<li class="divider"></li>
-								<li><a href="#">Logout</a></li>
-							</ul>
-						</li>
-					</ul>
 					<?php
+					Yii::app()->getModule('admin')->menu->addDivider('secondary','Luke Spencer');
+					Yii::app()->getModule('admin')->menu->addItem('secondary','Logout',array('/user/account/logout'),'Luke Spencer');
 					$this->widget('zii.widgets.CMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),
 						'id' => 'mainMenu',
 						'activateParents' => true,
-						'htmlOptions' => array('class' => 'nav secondary-nav'),
+						'htmlOptions' => array('class' => 'secondary-nav'),
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
 					));
 					?>

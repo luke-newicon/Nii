@@ -151,6 +151,8 @@ class UserModule extends NWebModule
 			'user.models.*',
 			'user.components.*',
 		));
+		
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/index'),'Admin');
 
 		
 		// add to the main config

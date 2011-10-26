@@ -27,10 +27,12 @@ class SettingsController extends AController {
 		foreach (Yii::app()->niiModules as $name => $module) {
 			if (method_exists($module, 'settings')) {
 				foreach ($module->settings() as $page => $url) {
-					$settings[$page] = array('name' => $page, 'url' => $url, 'ajax' => true);
+					$settings['items'][] = array('label' => $page, 'url' => '#'.$page);
+					$settings['pages'][] = array('id' => $page, 'data-ajax-url' => $url);
 				}
 			}
 		}
+		$settings['items'][0]['itemOptions']['class'] = 'active';
 		return $settings;
 	}
 

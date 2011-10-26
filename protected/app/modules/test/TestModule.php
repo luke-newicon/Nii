@@ -12,11 +12,12 @@ class TestModule extends NWebModule {
 		Yii::app()->getModule('admin')->menu->addItem('main','First page', array('/test/index/index'), 'Test Module');
 		Yii::app()->getModule('admin')->menu->addItem('secondary','Good page', array('/test/index/good'), 'Admin');
 		Yii::app()->getModule('admin')->menu->addItem('main','Test Dashboard', array('/test/index/dashboard'), 'Home');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Test User Settings', array('/test/index/good'), 'Luke Spencer');
 	}
 
 	public function settings() {
 		return array(
-			'My test settings' => array('/test/settings'),
+			'test' => array('/test/settings'),
 		);
 	}
 
