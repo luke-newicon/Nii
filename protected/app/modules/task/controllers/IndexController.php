@@ -7,6 +7,6 @@
 Class IndexController extends AController
 {
 	public function actionIndex(){
-		echo 'hello';
+		$this->render('index');
 	}
 }
