@@ -44,4 +44,26 @@ class BootDataColumn extends CDataColumn
 
 		parent::renderHeaderCell();
 	}
+	
+		/**
+	 * Renders the filter cell content.
+	 * This method will render the {@link filter} as is if it is a string.
+	 * If {@link filter} is an array, it is assumed to be a list of options, and a dropdown selector will be rendered.
+	 * Otherwise if {@link filter} is not false, a text field is rendered.
+	 * @since 1.1.1
+	 */
+	protected function renderFilterCellContent()
+	{
+		if(is_string($this->filter))
+			echo $this->filter;
+		else if($this->filter!==false && $this->grid->filter!==null && $this->name!==null && strpos($this->name,'.')===false)
+		{
+			if(is_array($this->filter))
+				echo '<div class="input">'.CHtml::activeDropDownList($this->grid->filter, $this->name, $this->filter, array('id'=>false,'prompt'=>'')).'</div>';
+			else if($this->filter===null)
+				echo '<div class="input">'.CHtml::activeTextField($this->grid->filter, $this->name, array('id'=>false)).'</div>';
+		}
+		else
+			parent::renderFilterCellContent();
+	}
 }

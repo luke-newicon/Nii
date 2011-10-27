@@ -70,6 +70,8 @@ html,body{height:100%}
 }
 /* @end */
 
+.grid-view .filters input, .grid-view .filters select{border:none;width:auto}
+
 /* @group Main Menu */
 
 /*.menu{height:25px;border-radius:5px;position:relative;margin-top: 3px;}
