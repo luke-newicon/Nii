@@ -1,15 +1,16 @@
-<h2>Users</h2>
-<!--<a class="btn btnN" href="<?php echo NHtml::url('/user/admin/create'); ?>">Add User</a>-->
-<a class="btn primary" data-controls-modal="modal-add-user" data-backdrop="static" >Add a User</a>
+<div class="page-header">
+	<h3>Users</h3>
+	<div class="action-buttons">
+		<a class="btn primary" data-controls-modal="modal-add-user" data-backdrop="static" >Add a User</a>
+	</div>
+</div>
 <?php $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'id' => 'user-grid',
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
 	'columns' => array(
 		array(
-			'name' => 'username',
-			'type'=>'raw',
-			'value' => 'CHtml::link(CHtml::encode($data->username), array("admin/view","id"=>$data->id))',
+			'name' => 'name',
 		),
 		array(
 			'name'=>'email',

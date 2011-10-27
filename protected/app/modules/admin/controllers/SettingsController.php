@@ -28,11 +28,12 @@ class SettingsController extends AController {
 			if (method_exists($module, 'settings')) {
 				foreach ($module->settings() as $page => $url) {
 					$settings['items'][] = array('label' => $page, 'url' => '#'.$page);
-					$settings['pages'][] = array('id' => $page, 'data-ajax-url' => $url);
+					$settings['pages'][]['htmlOptions'] = array('id' => $page, 'data-ajax-url' => CHtml::normalizeUrl($url));
 				}
 			}
 		}
 		$settings['items'][0]['itemOptions']['class'] = 'active';
+		$settings['pages'][0]['htmlOptions']['class'] = 'active';
 		return $settings;
 	}
 

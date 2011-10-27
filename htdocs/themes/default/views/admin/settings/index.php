@@ -1,14 +1,15 @@
-<h3>Settings</h3>
 <?php
-$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
-	'id' => 'SettingsTabs',
-	'items' => $settings['items'],
-));
+	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
+		'id' => 'SettingsTabs',
+		'items' => $settings['items'],
+		'heading' => 'Settings',
+	));
 ?>
 <div class="tab-content">
 	<?php foreach($settings['pages'] as $page) : ?>
-	<div id="<?php echo $page['id'] ?>" data-ajax-url="<?php echo CHtml::normalizeUrl($page['data-ajax-url']) ?>">
-		<?php echo CHtml::normalizeUrl($page['data-ajax-url']) ?>
+	<div<?php echo CHtml::renderAttributes($page['htmlOptions']) ?>>
+		<h3><?php echo $page['htmlOptions']['id'] ?> Settings</h3>
+		<?php echo $page['htmlOptions']['data-ajax-url'] ?>
 	</div>
 	<?php endforeach ?>
 </div>

@@ -1,4 +1,3 @@
-<h2>Dashboard</h2>
 <?php
 $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 	'items' => array(
@@ -6,5 +5,6 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		array('label'=>'Tab 1', 'url'=>'#'),
 		array('label'=>'Tab 2', 'url'=>'#'),
 		array('label'=>'Tab 3', 'url'=>'#'),
-	)
+	),
+	'heading' => 'Dashboard',
 ));

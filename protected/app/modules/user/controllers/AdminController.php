@@ -95,12 +95,13 @@ class AdminController extends AController
 	 */
 	public function actionCreate()
 	{
-		$user = UserModule::get()->userClass;
-		$model = new $user;
+		$model = new UserAddForm;
 		
-		if(isset($_POST[$user]))
+		$this->performAjaxValidation($model, 'add-user-form');
+		
+		if(isset($_POST['UserAddForm']))
 		{
-			$model->attributes=$_POST[$user];
+			$model->attributes=$_POST['UserAddForm'];
 			if($model->validate()) {
 				//$model->password=crypt($model->password);
 				$model->save();

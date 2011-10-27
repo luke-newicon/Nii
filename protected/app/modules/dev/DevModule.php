@@ -19,8 +19,6 @@ class DevModule extends NWebModule
 	public $name = 'Developer';
 	
 	public function init() {
-		Yii::app()->getModule('admin')->menu->addItem('main','Developer', array('/dev/admin/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main','Developer', array('/dev/admin/index'), 'Developer');
-		Yii::app()->getModule('admin')->menu->addItem('main','Bootstrap', array('/dev/admin/bootstrap'), 'Developer');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Developer', array('/dev/admin/index'),'Admin');
 	}
 }
