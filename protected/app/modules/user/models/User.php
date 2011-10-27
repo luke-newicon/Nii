@@ -57,7 +57,7 @@ class User extends NActiveRecord
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username, domain', 'safe', 'on'=>'search'),
-			array('first_name, last_name, company, plan, trial, trial_ends_at, logins', 'safe'),
+			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins', 'safe'),
 		);
 		
 		
@@ -102,7 +102,7 @@ class User extends NActiveRecord
 			'company'=>'Company',
 			'username'=>UserModule::t("Username"),
 			'password'=>UserModule::t("Password"),
-			'verifyPassword'=>UserModule::t("Password, again!"),
+			'verifyPassword'=>UserModule::t("Verify Password"),
 			'email'=>UserModule::t("E-mail Address"),
 			'email_verified' => UserModule::t("Email Verified"),
 			'verifyCode'=>UserModule::t("Verification Code"),
@@ -252,5 +252,8 @@ class User extends NActiveRecord
 		);
 	}
 
+	public function getName(){
+		return $this->first_name . ' ' . $this->last_name;
+	}
 
 }

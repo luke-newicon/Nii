@@ -1,9 +1,9 @@
 /* Bootstrap overrides - Could maybe go in a seperate file? */
 a:focus{outline:none}
-.topbar{position:static}
-
-
-
+.topbar{position:static;height:auto}
+.page-header{overflow:hidden}
+.page-header h1,.page-header h2,.page-header h3{float:left}
+.page-header .action-buttons{float:right}
 
 /* Site Styles */
 body{background:url('../images/bg-top.png') repeat-x left -53px;}

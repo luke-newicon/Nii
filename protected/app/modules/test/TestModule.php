@@ -17,8 +17,12 @@ class TestModule extends NWebModule {
 
 	public function settings() {
 		return array(
-			'test' => array('/test/settings'),
+			'Test' => array('/test/settings/index'),
 		);
 	}
+	
+	public function install(){}
+	
+	public function uninstall(){}
 
 }

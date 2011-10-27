@@ -13,7 +13,7 @@
 					<?php if(false) : ?>
 					<ul>
 						<li class="menu">
-							<a href="<?php echo Yii::app()->baseUrl ?>">Home</a>
+							<a href="<?php echo Yii::app()->baseUrl ?>">Dashboard</a>
 						</li>
 					</ul>
 					<?php else : ?>

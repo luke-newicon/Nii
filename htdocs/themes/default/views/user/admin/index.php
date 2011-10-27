@@ -4,7 +4,8 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 	'items' => array(
 		array('label'=>'Users', 'url'=>'#users', 'active' => true),
 		array('label'=>'Roles', 'url'=>'#roles'),
-	)
+	),
+	'heading' => 'Permissions',
 ));
 ?>
 <div class="tab-content">

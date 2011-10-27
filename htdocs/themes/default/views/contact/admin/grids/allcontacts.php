@@ -1,13 +1,12 @@
+<?php $this->pageTitle = Yii::app()->name . ' - All Contacts'; ?>
+<div class="page-header">
+	<h2>All Contacts</h2>
+</div>
 <?php
-$this->pageTitle=Yii::app()->name . ' - All Contacts';
-?>
-<h2>All Contacts</h2>
-<?php 
-
 $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-	'dataProvider'=>$dataProvider,
-	'filter'=>$model,
-	'id'=> 'ContactAllGrid',
+	'dataProvider' => $dataProvider,
+	'filter' => $model,
+	'id' => 'ContactAllGrid',
 //	'scopes' => array(
 //		'items' => array(
 //			'default' => array(
@@ -17,5 +16,5 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 //	),
 //	'enableButtons'=>true,
 	//'columns'=>$model->columns(Setting::visibleColumns('Contact')),
-	'columns' => array('name','city','county','email'),
+	'columns' => array('name', 'city', 'county', 'email'),
 ));
