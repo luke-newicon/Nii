@@ -25,7 +25,9 @@ class TaskModule extends NWebModule
 	
 	
 	public function settings(){
-		return array('tasks/settings');
+		return array(
+			'Tasks' => array('tasks/settings')
+		);
 	}
 	
 	public function install(){

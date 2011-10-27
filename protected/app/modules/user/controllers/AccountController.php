@@ -5,7 +5,7 @@ class AccountController extends NController {
 	/**
 	 * @var string the default layout for the controller view.
 	 */
-	public $layout = 'login';
+	public $layout = '//layouts/login';
 
 	public function accessRules() {
 		return array(
