@@ -6,7 +6,9 @@ a:focus{outline:none}
 .page-header .action-buttons{float:right}
 
 /* Site Styles */
-body{background:url('../images/bg-top.png') repeat-x left -53px;}
+/*body{background:url('../images/bg-top.png') repeat-x left -53px;}*/
+html,body{height:100%}
+.login-page{background:url('../images/background.jpg') no-repeat center top}
 
 /*h1, h2, h3{font-family:"Arial Black",Arial,sans-serif;}*/
 
@@ -473,10 +475,10 @@ a.cancelLink {
 	padding: 3px 0px;
 }
 
-.inputLabel, .inputContainer {
+/*.inputLabel, .inputContainer {
 	display: block;
 	float: left;
-}
+}*/
 
 .inputInline {
 	display: inline-block;
@@ -637,9 +639,9 @@ h3 span.programme-title {
 	color: #666;
 }
 
-.field {
+/*.field {
 	padding: 0;
-}
+}*/
 
 .topLine {
 	border-top: 1px solid #eee;

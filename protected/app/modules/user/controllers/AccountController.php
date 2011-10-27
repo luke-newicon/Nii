@@ -39,7 +39,7 @@ class AccountController extends NController {
 	public function actionLogin() {
 		if (Yii::app()->user->isGuest) {
 			$userLogin = new UserLogin;
-			$this->performAjaxValidation($userLogin, 'userloginform');
+			$this->performAjaxValidation($userLogin, 'login-user-form');
 			// collect user input data
 			if (isset($_POST['UserLogin'])) {
 				$userLogin->attributes = $_POST['UserLogin'];

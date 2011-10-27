@@ -28,13 +28,17 @@
 /* Resets the input elements styles, make expand to fit container (.input) */
 .input input,.input select,.input textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
-.field{margin:5px 0px;position:relative;}
+.field{margin:5px 0px;padding:5px;position:relative;}
 /* padding and margin break widths so remove them, the input elements pading is defined by padding on .input*/
 input.btn{width:auto;}
 /* make required * red have to use span element here becuase that's what yii creates */
 span.required { color:#CC0000 }
 /* the input container class can be used to wrap the inputBox class it ensures positioning is not skewed by error messages appearing within the .field container */
-.inputContainer {position:relative;}
+.inputContainer{position:relative;}
+
+.field label{float:left;padding-top:6px}
+.field .inputContainer{margin-left:120px}
+.field .checkbox label{float:none;padding-top:0}
 
 /* Default Skin */
 /* make a nice looking input, defines padding and input box style */
@@ -51,4 +55,4 @@ span.required { color:#CC0000 }
 /* .inFieldLabel you may need to tweak the positions for different forms */
 .inFieldLabel{position:absolute;cursor:text;left:8px;top:0px;color:#999;line-height:24px;top:50%;margin-top:-12px;}
 
-.errorMessage{color: red;font-size: 0.9em;}
+.errorMessage{color:red;font-size:0.9em;padding:3px}

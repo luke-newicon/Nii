@@ -13,18 +13,16 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
 		<script>
 			jQuery(function($){
-				$('#modal-login-user').modal({backdrop:'static'});
-				
-				setTimeout('$("#modal-login-user").modal("show")',1000);
+				$('#modal-login-user').modal({backdrop:'static',show:true});
 			});
 		</script>
 	</head>
-	<body>
+	<body class="login-page">
 		<div class="page">
 			<div class="main">
 				<div class="modal hide fade" id="modal-login-user">
 					<div class="modal-header">
-						<h3>Welcome to Nii</h3>
+						<h3>Welcome to <?php echo Yii::app()->name ?></h3>
 					</div>
 					<div class="modal-body">
 						<?php echo $content; ?>
@@ -34,6 +32,14 @@
 					</div>
 				</div>
 			</div>
+			<script>
+				jQuery(function($){
+					$('#user-login').click(function(){
+						$('#login-user-form').submit();
+						return false;
+					});
+				});
+			</script>
 		</div>
 	</body>
 </html>

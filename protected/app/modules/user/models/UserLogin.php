@@ -9,7 +9,7 @@ class UserLogin extends CFormModel
 {
 	public $username;
 	public $password;
-	public $rememberMe = 1;
+	public $rememberMe;
 
 	/**
 	 * records wheteher there is an error with the domain the user is logging into 
