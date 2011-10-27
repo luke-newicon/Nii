@@ -1,3 +1,18 @@
-@import url("oocss/core/core.css");
-@import url("oocss/plugins/plugins.css");
-@import url("nii/all.css");
+/* core */
+/*@import url("libraries.css");*/
+
+@import url("oocss/core/template/template.css");
+@import url("oocss/core/grid/grids.css");
+@import url("oocss/core/module/mod.css");
+@import url("oocss/core/module/mod_skins.css");
+
+@import url("oocss/core/media/media.css");
+
+@import url("oocss/core/spacing/space.css");
+
+@import url("nii/core/grid.css");
+@import url("nii/core/module/mod_skins.css");
+/*@import url("nii/plugins/buttons/buttons.css");*/
+@import url("nii/plugins/forms/forms.css");
+
+/*@import url("nii/plugins/tabs/tabs.css");*/

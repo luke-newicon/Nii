@@ -203,8 +203,38 @@ class Nii extends CWebApplication
 	 * @return NWebModule 
 	 */
 	public function activateModule($moduleId){
-		$m = Yii::app()->getModule($moduleId);
-		return $m;
+		try {
+			
+			$m = Yii::app()->getModule($moduleId);
+			return $m;
+			
+		} catch(Exception $e) {
+			// error activating the module. e.g. may not exist!
+			// this can be caused by deleting the module files before disabling
+			$this->updateModule($moduleId);
+			Yii::app()->user->setFlash('error', "Unable to load the '$moduleId' module ");
+			if(Yii::app()->controller)
+				Yii::app()->controller->redirect(array('/admin/modules/index'));
+		}
+	}
+	
+    /**
+	 * Enables or disables a module
+	 * 
+	 * @param string $module the module id
+	 * @param int $enabled 
+	 */
+	public function updateModule($module, $enabled=0){
+		// get the current module settings
+		$sysMods = Yii::app()->settings->get('system_modules', 'system', array());
+		// create the array format for the affected module
+		$update = array(strtolower($module) => array('enabled'=>$enabled));
+		// merge the update with the existing settings
+		$sysMods = CMap::mergeArray($sysMods, $update);
+		// save the settings back
+		Yii::app()->settings->set('system_modules', $sysMods);
+		// update yii's module configuration
+		Yii::app()->configure(array('modules'=>$sysMods));
 	}
 	
 	

@@ -60,16 +60,16 @@ Class ModulesController extends AController
 		$this->currentModule = $module;
 		Yii::app()->attachEventHandler('onError', array($this, 'handleModulePhpError'));
 		try {
-			$this->updateModule($this->currentModule, 1);
+			Yii::app()->updateModule($this->currentModule, 1);
 		
 			$m = Yii::app()->activateModule($this->currentModule);
 			$m->install();
 
 			Yii::app()->user->setFlash('success',"Module successfully enabled");
 			
-		} catch(CException $e){
-			$this->updateModule($this->currentModule, 0);
-			Yii::app()->user->setFlash('error',"Module successfully enabled");
+		} catch(Exception $e){
+			Yii::app()->updateModule($this->currentModule, 0);
+			Yii::app()->user->setFlash('error',"Unable to load the '$module' module ");
 		}
 		$this->redirect(array('/admin/modules/index'));
 	}
@@ -82,7 +82,7 @@ Class ModulesController extends AController
 	public function handleModulePhpError($event){
 		$event->handled = true;
 		// the module raised a php error so we want to disable the module.
-		$this->updateModule($this->currentModule, 0);
+		Yii::app()->updateModule($this->currentModule, 0);
 		Yii::app()->user->setFlash('error',"Module caused an error");
 		Yii::app()->user->setFlash('error-block-message',"PHP error message: {$event->message}, <br /> File: {$event->file} <br /> Line: {$event->line}");
 		$this->redirect(array('/admin/modules/index'));
@@ -94,28 +94,9 @@ Class ModulesController extends AController
 	 * @param string $module the modulde id
 	 */
 	public function actionDisable($module){
-		$this->updateModule($module, 0);
+		Yii::app()->updateModule($module, 0);
 		Yii::app()->user->setFlash('success',"Module successfully disabled");
 		$this->redirect(array('/admin/modules/index'));
-	}
-	
-	/**
-	 * Enables or disables a module
-	 * 
-	 * @param string $module the module id
-	 * @param int $enabled 
-	 */
-	public function updateModule($module, $enabled=0){
-		// get the current module settings
-		$sysMods = Yii::app()->settings->get('system_modules', 'system', array());
-		// create the array format for the affected module
-		$update = array(strtolower($module) => array('enabled'=>$enabled));
-		// merge the update with the existing settings
-		$sysMods = CMap::mergeArray($sysMods, $update);
-		// save the settings back
-		Yii::app()->settings->set('system_modules', $sysMods);
-		// update yii's module configuration
-		Yii::app()->configure(array('modules'=>$sysMods));
 	}
 	
 	

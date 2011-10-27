@@ -1,14 +1,3 @@
-<?php if (Yii::app()->user->hasFlash('success')) : ?>
-<div class="alert-message success"><?php echo Yii::app()->user->getFlash('success'); ?></div>
-<?php endif; ?>
-
-<?php if (Yii::app()->user->hasFlash('error')) : ?>
-<div class="alert-message error"><?php echo Yii::app()->user->getFlash('error'); ?></div>
-<?php endif; ?>
-
-<?php if (Yii::app()->user->hasFlash('error-block-message')) : ?>
-<div class="alert-message block-message error"><?php echo Yii::app()->user->getFlash('error-block-message'); ?></div>
-<?php endif; ?>
 <h3>Modules</h3>
 <?php
 $dataProvider = new CArrayDataProvider($data);

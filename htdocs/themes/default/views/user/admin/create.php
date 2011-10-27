@@ -12,40 +12,40 @@ $form = $this->beginWidget('CActiveForm', array(
 ));
 ?>
 	<fieldset>
-		<div class="clearfix">
-			<?php echo $form->labelEx($model, 'username'); ?>
+		<div class="clearfix field">
+			<?php echo $form->labelEx($model, 'username', array('class'=>'inFieldLabel')); ?>
 			<div class="input">
 				<?php echo $form->textField($model, 'username', array('size' => 30)); ?>
-				<?php echo $form->error($model, 'username'); ?>
 			</div>
+			<?php echo $form->error($model, 'username'); ?>
 		</div>
-		<div class="clearfix">
-			<?php echo $form->labelEx($model, 'password'); ?>
+		<div class="clearfix field">
+			<?php echo $form->labelEx($model, 'password', array('class'=>'inFieldLabel')); ?>
 			<div class="input">
 				<?php echo $form->passwordField($model, 'password', array('size' => 20, 'maxlength' => 128)); ?>
-				<?php echo $form->error($model, 'password'); ?>
 			</div>
+			<?php echo $form->error($model, 'password'); ?>
 		</div>
-		<div class="clearfix">
-			<?php echo $form->labelEx($model, 'email'); ?>
+		<div class="clearfix field">
+			<?php echo $form->labelEx($model, 'email', array('class'=>'inFieldLabel')); ?>
 			<div class="input">
 				<?php echo $form->textField($model, 'email', array('size' => 20, 'maxlength' => 128)); ?>
-				<?php echo $form->error($model, 'email'); ?>
 			</div>
+			<?php echo $form->error($model, 'email'); ?>
 		</div>
-		<div class="clearfix">
+		<div class="clearfix field">
 			<?php echo $form->labelEx($model, 'superuser'); ?>
 			<div class="input">
 				<?php echo $form->dropDownList($model, 'superuser', User::itemAlias('AdminStatus')); ?>
-				<?php echo $form->error($model, 'superuser'); ?>
 			</div>
+			<?php echo $form->error($model, 'superuser'); ?>
 		</div>
-		<div class="clearfix">
+		<div class="clearfix field">
 			<?php echo $form->labelEx($model, 'status'); ?>
 			<div class="input">
 				<?php echo $form->dropDownList($model, 'status', User::itemAlias('UserStatus')); ?>
-				<?php echo $form->error($model, 'status'); ?>
 			</div>
+			<?php echo $form->error($model, 'status'); ?>
 		</div>
 	</fieldset>
 <?php $this->endWidget(); ?>

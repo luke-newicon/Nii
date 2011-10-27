@@ -1,5 +1,5 @@
 /* core */
-@import url("libraries.css");
+/*@import url("libraries.css");*/
 
 @import url("template/template.css");
 /*@import url("template/template_debug.css");*/
@@ -15,10 +15,10 @@
 @import url("media/media.css");
 /*@import url("media/media_debug.css");*/
 
-@import url("content.css");
-@import url("heading/heading.css");
+/*@import url("content.css");*/
+/*@import url("heading/heading.css");*/
 @import url("spacing/space.css");
 
-@import url("table/table.css");
-@import url("table/table_skins.css");
+/*@import url("table/table.css");
+@import url("table/table_skins.css");*/
 /*@import url("table/table_debug.css");*/

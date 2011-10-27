@@ -64,7 +64,12 @@ class PluploadWidget extends CWidget {
 
     public $callbacks = array();
 
-    public function init() {        
+    
+    public function init(){
+        // dont do anything here so that we can use $this->createWidget() to access the widget object directly
+    }
+    
+    public function setup() {        
         $css = "";
 		$this->registerScript();
         
@@ -163,16 +168,17 @@ class PluploadWidget extends CWidget {
         $jqueryScript .= "} ";
 
         $uniqueId = 'Yii.' . __CLASS__ . '#' . $this->id;
-//        Yii::app()->clientScript->registerScript($uniqueId.".end", stripcslashes($jqueryScript), CClientScript::POS_END);
-//        Yii::app()->clientScript->registerScript($uniqueId.".ready", "do_plupload_$fnUniqueId();", CClientScript::POS_READY);
-//        if (strlen($css) > 0)
-//            Yii::app()->clientScript->registerCss($uniqueId.".css", $css);
+    }
+    
+    
+    public function getAssetsUrl(){
+        $localPath = dirname(__FILE__) . "/" . self::ASSETS_DIR_NAME;
+        return Yii::app()->getAssetManager()->publish($localPath);
     }
 	
 	
 	public function registerScript(){
-		$localPath = dirname(__FILE__) . "/" . self::ASSETS_DIR_NAME;
-        $publicPath = Yii::app()->getAssetManager()->publish($localPath);
+        $publicPath = $this->getAssetsUrl();
 
         if(!isset($this->config['flash_swf_url'])) {
             $flashUrl = $publicPath . "/" . self::FLASH_FILE_NAME;
@@ -224,9 +230,9 @@ class PluploadWidget extends CWidget {
 
     public function run()
     {
+        $this->setup();
 //        echo "<div id=\"$this->id\">";
 //        echo "<p>".Yii::t('plupload', "Your browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.")."</p>";
-//		echo "</div>";
+//        echo "</div>";
     }
 }
-?>

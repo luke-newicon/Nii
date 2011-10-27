@@ -167,6 +167,7 @@ class UserModule extends NWebModule
 			)
 		);
 		
+		
 	}
 	
 	public function getBehaviorsFor($componentName){

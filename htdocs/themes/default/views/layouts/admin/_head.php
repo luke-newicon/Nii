@@ -1,4 +1,3 @@
-<div id="message"></div>
 <div class="head">
 	<?php if(false) : ?>
 		<div id="sitelogo">
@@ -55,6 +54,4 @@
 			$('.topbar').dropdown();
 		});
 	</script>
-	<?php if (!Yii::app()->user->isGuest)
-		$this->widget('app.widgets.user.TUserProfile', array('id' => 'profileMenuWidget')); ?>
 </div>

@@ -53,7 +53,7 @@ return array(
 		'theme' => 'default',
 		'modulePath' => $modules,
 		'modules' => array(
-			'admin',
+			
 			'user' => array(
 				'registrationCaptcha' => false,
 				'termsRequired' => false,
@@ -63,6 +63,7 @@ return array(
 				'usernameRequired' => false,
 				'showUsernameField' => false
 			),
+			'admin',
 			'nii',
 		),
 		// application components
@@ -156,7 +157,7 @@ return array(
 			),
 			'fileManager' => array(
 				'class' => 'NFileManager',
-				'location' => realpath("$base/files"),
+				'location' => realpath("$base/uploads"),
 				'locationIsAbsolute' => true,
 				'defaultCategory' => 'attachments',
 				'categories' => array(

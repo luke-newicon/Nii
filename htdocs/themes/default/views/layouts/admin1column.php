@@ -3,7 +3,26 @@
 	<div class="page liquid">
 		<?php $this->renderPartial('//layouts/admin/_head'); ?>
 		<div class="body">
-			<?php $this->renderPartial('//layouts/_breadcrumbs'); ?>
+			<?php //$this->renderPartial('//layouts/_breadcrumbs'); ?>
+			<?php
+			// probably move this into a widget in the admin module.
+			// Needs some javascript to go with it so that flash messages can also be added via javascript function
+			// for ajax events,
+
+			// Responds to success, error, info, and warning flash message categories
+			$flashes = array('success', 'error', 'info', 'warning');
+			?>
+			<?php foreach($flashes as $k => $flashKey): ?>
+				<?php if(Yii::app()->user->hasFlash($flashKey)): ?>
+					<div data-alert class="alert-message fade in <?php echo $flashKey ?>">
+						<a class="close" href="#">×</a>
+						<p><?php echo Yii::app()->user->getFlash($flashKey); ?></p>
+					</div>
+				<?php endif; ?>
+			<?php endforeach; ?>
+			<?php if (Yii::app()->user->hasFlash('error-block-message')) : ?>
+				<div class="alert-message block-message error"><?php echo Yii::app()->user->getFlash('error-block-message'); ?></div>
+			<?php endif; ?>
 			<div class="main">
 				<?php echo $content; ?>
 			</div>

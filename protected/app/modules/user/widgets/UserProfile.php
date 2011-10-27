@@ -16,7 +16,7 @@
  *
  * @author steve
  */
-class TUserProfile extends CWidget 
+class UserProfile extends CWidget 
 {
 
 	public $size = 25;

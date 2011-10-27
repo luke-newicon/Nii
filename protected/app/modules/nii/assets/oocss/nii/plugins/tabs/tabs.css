@@ -1,11 +1,10 @@
 /** tabs **/
-.tabs .bd li li{display:block;}
-.tabs.wp-tabs .tabControl{background:url('skin/wp-tabs-bg.gif') repeat-x 0 100%;padding:0px 0px 0px 5px;height:28px;display:block;}
-.tabs.wp-tabs .tabControl li{display:block;height:28px;float:left;line-height:28px;border:none;margin:0 5px 5px 0;}
-.tabs.wp-tabs .tabControl li a{background:url('skin/wp-tabs.png');padding:0 0 0 15px;outline:none;}
-.tabs.wp-tabs .tabControl li span{background:url('skin/wp-tabs.png') 100% 0;padding:0 15px 0 0;}
-.tabs.wp-tabs .tabControl li.current a{background-position:0 -28px;}
-.tabs.wp-tabs .tabControl li.current span{background-position:100% -28px;}
+.tabs.wp-tabs {background:url('skin/wp-tabs-bg.gif') repeat-x 0 100%;padding:0px 0px 0px 5px;height:28px;display:block;}
+.tabs.wp-tabs li{display:block;height:28px;float:left;line-height:28px;border:none;margin:0 5px 5px 0;}
+.tabs.wp-tabs li a{background:url('skin/wp-tabs.png');padding:0 0 0 15px;outline:none;}
+.tabs.wp-tabs li {background:url('skin/wp-tabs.png') 100% 0;padding:0 15px 0 0;}
+.tabs.wp-tabs li.active a{background-position:0 -28px;}
+.tabs.wp-tabs li.active {background-position:100% -28px;}
 
-.tabs.wp-tabs .tabControl li a:hover{background-position:0 -28px;}
-.tabs.wp-tabs .tabControl li a:hover span{background-position:100% -28px;}
+.tabs.wp-tabs li a:hover{background-position:0 -28px;}
+.tabs.wp-tabs li a:hover {background-position:100% -28px;}

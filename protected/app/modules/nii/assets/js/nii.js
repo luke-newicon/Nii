@@ -39,7 +39,7 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 			$('body').delegate(':input','focusin.niiform',function(){$(this).closest(".field").addClass("focus");});
 			$('body').delegate(':input','focusout.niiform',function(){$(this).closest(".field").removeClass("focus");});
 			$('.inFieldLabel').inFieldLabels({fadeDuration:0});
-		},
+		}
 		
 	};
 })(jQuery);
