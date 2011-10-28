@@ -13,7 +13,7 @@
  *
  * @author steve
  */
-class IndexController extends Controller
+class IndexController extends AController
 {
 	public function actionIndex(){
 		$this->render('index');
@@ -108,7 +108,7 @@ class IndexController extends Controller
 		$this->render('notes');
 	}
 	
-	public function actionBootstrap(){
-		$this->redirect($this->getModule('dev')->assetsUrl.'/bootstrap/docs/index.html');
+	public function actionOocss(){
+		$this->render('oocss');
 	}
 }

@@ -14,16 +14,17 @@ $form = $this->beginWidget('NActiveForm', array(
 ?>
 <div class="alert-message block-message info">Please enter your details below to login to the system.</div>
 <fieldset>
-	<div class="clearfix field">
+	<div class="field <?php echo $model->hasErrors('username') ? 'error':'';  ?>">
 		<?php echo $form->labelEx($model, 'username'); ?>
 		<div class="inputContainer">
+			<?php echo $form->labelEx($model, 'username', array('class'=>'inFieldLabel')); ?>
 			<div class="input">
 				<?php echo $form->textField($model, 'username'); ?>
 			</div>
 			<?php echo $form->error($model, 'username'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'password'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -32,7 +33,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'password'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<div class="checkbox">
 			<?php echo $form->checkBox($model, 'rememberMe', array('class' => 'inputInline')); ?>
 			<?php echo $form->labelEx($model, 'rememberMe'); ?>
