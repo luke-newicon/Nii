@@ -39,6 +39,24 @@ class BootGridView extends CGridView
 
 		parent::initColumns();
 	}
+	
+	/**
+	 * Creates a {@link CDataColumn} based on a shortcut column specification string.
+	 * @param string $text the column specification string
+	 * @return CDataColumn the column instance
+	 */
+	protected function createDataColumn($text)
+	{
+		if(!preg_match('/^([\w\.]+)(:(\w*))?(:(.*))?$/',$text,$matches))
+			throw new CException(Yii::t('zii','The column must be specified in the format of "Name:Type:Label", where "Type" and "Label" are optional.'));
+		$column=new BootDataColumn($this);
+		$column->name=$matches[1];
+		if(isset($matches[3]) && $matches[3]!=='')
+			$column->type=$matches[3];
+		if(isset($matches[5]))
+			$column->header=$matches[5];
+		return $column;
+	}
 
 
 }
