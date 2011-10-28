@@ -14,7 +14,7 @@ class AdminController extends AController
 	{
 		return array( 
 			array('allow',
-				'actions'=>array('index','roles','assignRoles','view','create','update','changePassword','delete','impersonate'),
+				'actions'=>array('index','roles','assignRoles','view','create','update','account','changePassword','delete','impersonate'),
 				'expression'=>'$user->isSuper()'
 			),
 			array('deny',  // deny all users
@@ -131,7 +131,8 @@ class AdminController extends AController
 			
 			if($model->validate()) {
 				$model->save();
-				// if we are updating our own information from this form we need to reloggin
+				// if we are updating our own information from this form we need
+				// to reloggin
 				if(Yii::app()->user->id == $model->id){
 					$ui = UserIdentity::impersonate($model->id);
 					Yii::app()->user->login($ui,0);
@@ -141,6 +142,33 @@ class AdminController extends AController
 		}
 
 		$this->render('update',array(
+			'model'=>$model,
+		));
+	}
+	
+	/**
+	 * User profile screen, allows the user to update their own profile
+	 * information
+	 */
+	public function actionAccount()
+	{
+		$model = UserAccountForm::model()->findByPk(Yii::app()->user->record->id);
+		
+		$this->performAjaxValidation($model, 'user-account-form');
+		
+		if(isset($_POST['UserAccountForm']))
+		{
+			$model->attributes=$_POST['UserAccountForm'];
+			if($model->validate()) {
+				$model->save();
+				echo CJSON::encode(array('success'=>'User successfully saved'));
+			} else {
+				echo CJSON::encode(array('error'=>'User failed to save'));
+			}
+			Yii::app()->end();
+		}
+
+		$this->render('account',array(
 			'model'=>$model,
 		));
 	}

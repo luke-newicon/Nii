@@ -16,5 +16,10 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 //	),
 //	'enableButtons'=>true,
 	//'columns'=>$model->columns(Setting::visibleColumns('Contact')),
-	'columns' => array('name', 'city', 'county', 'email'),
+	'columns' => array(
+		'name',
+		'city',
+		'county',
+		'email',
+	),
 ));
