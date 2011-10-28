@@ -56,7 +56,7 @@ class User extends NActiveRecord
 			array('email', 'required'),
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
-			array('username, domain', 'safe', 'on'=>'search'),
+			array('username, domain, name, email', 'safe', 'on'=>'search'),
 			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins', 'safe'),
 		);
 		
@@ -136,12 +136,12 @@ class User extends NActiveRecord
         );
     }
 	
-	public function defaultScope()
-    {
-        return array(
-            'select' => 'id, first_name, last_name, company, username, email, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins',
-        );
-    }
+//	public function defaultScope()
+//    {
+//        return array(
+//            'select' => 'id, first_name, last_name, company, username, email, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins',
+//        );
+//    }
 	
 	public static function itemAlias($type,$code=NULL) {
 		$_items = array(
@@ -203,10 +203,15 @@ class User extends NActiveRecord
 	public function search()
 	{
 		$criteria=new CDbCriteria;
-
+		
+		if($this->name)
+			$criteria->addCondition("first_name LIKE '%$this->name%' OR last_name LIKE '%$this->name%'");
+		
 		$criteria->compare('username',$this->username,true);
+		$criteria->compare('email',$this->email,true);
+		
 		$user = UserModule::get()->userClass;
-		return new CActiveDataProvider($user, array(
+		return new NActiveDataProvider($user, array(
 			'criteria'=>$criteria,
 		));
 	}
@@ -252,8 +257,16 @@ class User extends NActiveRecord
 		);
 	}
 
+	private $_name;
+	
 	public function getName(){
-		return $this->first_name . ' ' . $this->last_name;
+		if(empty($this->_name))
+			$this->_name = $this->first_name . ($this->last_name ? ' ' . $this->last_name : '');
+		return $this->_name;
+	}
+	
+	public function setName($name){
+		$this->_name = $name;
 	}
 
 }

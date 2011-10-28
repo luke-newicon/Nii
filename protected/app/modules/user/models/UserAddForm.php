@@ -3,6 +3,14 @@
 class UserAddForm extends User {
 	
 	public $verifyPassword;
+	
+	/**
+	 * Returns the static model of the specified AR class.
+	 * @return CActiveRecord the static model class
+	 */
+	public static function model($className=__CLASS__) {
+		return parent::model($className);
+	}
 
 	public function rules() {
 		return array(
