@@ -20,7 +20,7 @@ class AdminModule extends NWebModule {
 		$this->menu->addItem('secondary','Modules',array('/admin/modules/index'),'Admin');
 		$this->menu->addItem('secondary','Settings',array('/admin/settings/index'),'Admin');
 		$this->menu->addItem('secondary','Luke Spencer',array('/user/account/index'));
-		$this->menu->addItem('secondary','Account',array('/user/admin/account'),'Luke Spencer');
+		$this->menu->addItem('secondary','Account',array('/user/admin/account'),'Luke Spencer',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
 		$this->menu->addItem('secondary','Settings',array('/user/account/settings'),'Luke Spencer');
 	}
 	

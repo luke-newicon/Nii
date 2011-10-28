@@ -2,7 +2,7 @@
 	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		'id' => 'SettingsTabs',
 		'items' => $settings['items'],
-		'heading' => 'Settings',
+		'heading' => 'Application Settings',
 	));
 ?>
 <div class="tab-content">

@@ -34,15 +34,15 @@ class AdminController extends AController
 	{
 		$user = UserModule::get()->userClass;
 		$model = new $user('search');
-		if(isset($_GET[$user]))
+		
+		$model->unsetAttributes();
+		if(isset($_GET[$user])){
 			$model->attributes = $_GET[$user];
+			$model->name = $_GET[$user]['name'];
+		}
 
-		$dataProvider=new CActiveDataProvider($user, array(
-			'pagination'=>array(
-//				'pageSize'=>Yii::app()->controller->module->user_page_size,
-			),
-		));
-
+		$dataProvider = $model->search();
+		
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 			'model'=>$model
@@ -160,6 +160,7 @@ class AdminController extends AController
 		{
 			$model->attributes=$_POST['UserAccountForm'];
 			if($model->validate()) {
+				$model->password = cryptPassword($model->password);
 				$model->save();
 				echo CJSON::encode(array('success'=>'User successfully saved'));
 			} else {
@@ -167,10 +168,37 @@ class AdminController extends AController
 			}
 			Yii::app()->end();
 		}
+		
+		// Password should not be sent to the user
+		$model->password = '';
 
 		$this->render('account',array(
 			'model'=>$model,
 		));
+		
+//		$user = Yii::app()->user->record;
+//		$userPassword = new UserChangePassword;
+//		if($user === null)
+//			throw new CHttpException(404, 'User does not exist');
+//		
+//		// if the change password form is empty dont bother validating it
+//		if(isset($_POST['UserChangePassword']['password']) && $_POST['UserChangePassword']['password'] != '')
+//			$this->performAjaxValidation(array($user,$userPassword) , 'user-form');
+//		else
+//			$this->performAjaxValidation($user , 'user-form');
+//		
+//		// form submited to update user details
+//		if (Yii::app()->request->getIsPostRequest() && isset($_POST['User'])) {
+//			$user->attributes = $_POST['User'];
+//			// handle password change
+//			$userPassword->attributes = $_POST['UserChangePassword'];
+//			if ($userPassword->validate()) {
+//				$user->password = UserModule::passwordCrypt($userPassword->password);
+//			}
+//			$user->save();
+//		}
+//		
+//		echo $this->renderPartial('personal-info', array('user'=>$user, 'userPassword'=>$userPassword), true, true);
 	}
 
 	public function actionChangePassword($id){
