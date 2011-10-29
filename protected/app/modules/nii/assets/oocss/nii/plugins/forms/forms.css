@@ -27,6 +27,11 @@
  
 /* Resets the input elements styles, make expand to fit container (.input) */
 .input input,.input select,.input textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
+
+textarea {height: auto;}
+label, input, select, textarea {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 13px;line-height: 18px;}
+
+
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
 .field{margin:5px 0px;position:relative;}
 /* padding and margin break widths so remove them, the input elements pading is defined by padding on .input*/
@@ -59,14 +64,17 @@ span.required {color:#CC0000}
 .hint, .help-block{color:#bbbbbb;font-size:80%;line-height:18px}
 
 
-
-.stacked .lbl {display: block;float: none;font-weight: bold;line-height: 20px;padding-top: 0;text-align: left;width: auto;}
-
 /* .inFieldLabel you may need to tweak the positions for different forms */
-.inFieldLabel{position:absolute;cursor:text;left:7px;top:0px;color:#999;top:50%;margin-top:-7px;}
+.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 /* yii's default class for error form validation messages */
 .errorMessage{color:red;font-size:0.9em;padding:3px}
 
+/** form layouts */
+.stacked .lbl {display: block;float: none;font-weight: bold;line-height: 20px;padding-top: 0;text-align: left;width: auto;}
+
+
+.float .lbl {float: left; padding-top: 6px; text-align: right; width: 130px;margin-left:-150px;font-size: 13px;line-height: 18px;}
+.float .field, .float.field{margin-left:150px;}{margin-left:150px;}
 
 
 
