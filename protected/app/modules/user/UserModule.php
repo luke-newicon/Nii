@@ -335,10 +335,17 @@ class UserModule extends NWebModule
 	 * @return void
 	 */
 	public function install(){
+		// Install the auth tables
 		AuthItem::install();
 		AuthAssignment::install();
 		AuthItemChild::install();
+		// Create the default roles
+		Yii::app()->authManager->createRole('view','Viewer');
+		Yii::app()->authManager->createRole('edit','Editor');
+		Yii::app()->authManager->createRole('admin','Administrator');
+		// Install the user table
 		User::install();
+		// If there is an app domain install it
 		if($this->domain){
 			AppDomain::install();
 		}

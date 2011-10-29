@@ -56,7 +56,7 @@ class User extends NActiveRecord
 			array('email', 'required'),
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
-			array('username, domain, name, email', 'safe', 'on'=>'search'),
+			array('username, domain, name, email, roleName', 'safe', 'on'=>'search'),
 			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins', 'safe'),
 		);
 		
@@ -88,6 +88,7 @@ class User extends NActiveRecord
 	public function relations()
 	{
 		return array(
+			'role' => array(self::HAS_ONE, 'AuthAssignment', 'userid'),
 		);
 	}
 
@@ -209,6 +210,12 @@ class User extends NActiveRecord
 		
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('email',$this->email,true);
+		$criteria->compare('status',$this->status,true);
+		$criteria->compare('superuser',$this->superuser,true);
+		$criteria->compare('role.itemname',$this->roleName,true);
+		
+		$criteria->with = array('role');
+		$criteria->together = true;
 		
 		$user = UserModule::get()->userClass;
 		return new NActiveDataProvider($user, array(
@@ -267,6 +274,28 @@ class User extends NActiveRecord
 	
 	public function setName($name){
 		$this->_name = $name;
+	}
+	
+	public function getRoleDescription(){
+		if($this->role)
+			return Yii::app()->authManager->getAuthItem($this->role->itemname)->description;
+	}
+	
+	private $_roleName;
+	
+	public function getRoleName(){
+		if(empty($this->_roleName) && $this->role)
+			$this->_roleName = $this->role->itemname;
+		return $this->_roleName;
+	}
+	
+	public function setRoleName($roleName){
+		$this->_roleName = $roleName;
+	}
+	
+	public function setUserRole($roleName){
+		if($this->role)
+			$this->role->itemname = $roleName;
 	}
 
 }
