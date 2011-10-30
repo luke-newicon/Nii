@@ -20,7 +20,7 @@
 						<h3><a href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a></h3>
 					<?php endif; ?>
 					<?php
-					$this->widget('zii.widgets.CMenu', array(
+					$this->widget('nii.widgets.NMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('main'),
 						'id' => 'mainMenu',
 						'activateParents' => true,
@@ -38,14 +38,14 @@
 					Yii::app()->getModule('admin')->menu->addDivider('user','User');
 					Yii::app()->getModule('admin')->menu->addItem('user','Logout',array('/user/account/logout'),'User');
 					Yii::app()->getModule('admin')->menu->setUsername(Yii::app()->user->name);
-					$this->widget('zii.widgets.CMenu', array(
+					$this->widget('nii.widgets.NMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('user'),
 						'id' => 'userMenu',
 						'activateParents' => true,
 						'htmlOptions' => array('class' => 'secondary-nav'),
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
 					));
-					$this->widget('zii.widgets.CMenu', array(
+					$this->widget('nii.widgets.NMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),
 						'id' => 'secondaryMenu',
 						'activateParents' => true,

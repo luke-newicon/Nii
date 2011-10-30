@@ -12,7 +12,7 @@ class AdminController extends AController {
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index', 'users', 'roles', 'addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
+				'actions' => array('index', 'settings', 'users', 'roles', 'addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
 				'expression' => '$user->isSuper()'
 			),
 			array('deny', // deny all users
@@ -26,6 +26,10 @@ class AdminController extends AController {
 	 */
 	public function actionIndex() {
 		$this->render('index');
+	}
+	
+	public function actionSettings(){
+		$this->render('settings');
 	}
 
 	/**

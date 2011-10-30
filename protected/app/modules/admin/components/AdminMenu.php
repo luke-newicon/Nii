@@ -10,6 +10,14 @@ class AdminMenu extends CApplicationComponent {
 			$this->_menus[$menu][$parent]['linkOptions']['class'] = 'menu';
 			$this->_menus[$menu][$parent]['items'][$label] = $options;
 			$this->_menus[$menu][$parent]['items'][$label]['label'] = $label;
+			if(isset($options['notice'])){
+				$this->_menus[$menu][$parent]['items'][$label]['notice'] = $options['notice'];
+				if(isset($this->_menus[$menu][$parent]['notice'])){
+					$this->_menus[$menu][$parent]['notice'] += ((int)$options['notice'] ? $options['notice'] : 1);
+				} else {
+					$this->_menus[$menu][$parent]['notice'] = ((int)$options['notice'] ? $options['notice'] : 1);
+				}
+			}
 			if($url)
 				$this->_menus[$menu][$parent]['items'][$label]['url'] = $url;
 		} else {

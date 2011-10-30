@@ -9,6 +9,7 @@
 	'template' => '{items}',
 	'dataProvider' => $dataProvider,
 	'enableSorting' => false,
+	'enablePagination' => false,
 	'columns' => $columns,
 )); ?>
 <div class="modal hide fade" id="modal-add-role">
