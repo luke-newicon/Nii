@@ -53,46 +53,39 @@
                     <div class="line">
                         <div class="unit size1of4">
                             <div class="pam">
-                                <code>.field.focus</code>
-                                <div class="lastUnit">
-                                    <div class="field focused">
-                                        <div class="input">
-                                            <input id="username" name="username" />
-                                        </div>
-                                    </div>	
-                                </div>
+                                <p><code>.field.focus</code></p>
+								<div class="field focused">
+									<div class="input">
+										<input id="username" name="username" />
+									</div>
+								</div>	
                                 <p> you can also use <code>.focused</code> to manually control the focused style as the <code>.focus</code> class will be removed on input blur.</p>
                             </div>
                         </div>
                         <div class="unit size1of4">
                             <div class="pam">
-                                <code>.field.error</code>
-                                <div class="lastUnit">
-                                    <div class="field error">
-                                        <div class="input">
-                                            <input id="username" name="username" />
-                                        </div>
-                                    </div>	
-                                </div>
+                                <p><code>.field.error</code></p>
+								<div class="field error">
+									<div class="input">
+										<input id="username" name="username" />
+									</div>
+								</div>	
                                 <p>The error class is applied by yii when using yii client side form validation. You have to add this manually on page refresh.</p>
                             </div>
                         </div>
                         <div class="unit size1of4">
                             <div class="pam">
-                                <code>.field.success</code>
-                                <div class="lastUnit">
-                                    <div class="field success">
-                                        <div class="input">
-                                            <input id="username" name="username" />
-                                        </div>
-                                    </div>	
-                                </div>
-
+                                <p><code>.field.success</code></p>
+								<div class="field success">
+									<div class="input">
+										<input id="username" name="username" />
+									</div>
+								</div>	
                             </div>
                         </div>
                         <div class="lastUnit">
                             <div class="pam">
-                                <code>.field.validating</code>
+                                <p><code>.field.validating</code></p>
                                 <div class="field validating">
                                     <div class="input">
                                         <input id="username" name="username" />
@@ -279,13 +272,13 @@
                         <div class="field">
 
                             <label class="lbl" for="xlInput">X-Large input</label>
-                            <div class="input">
+                            <div class="input xlarge">
                                 <input id="xlInput" name="xlInput" size="30" type="text" />
                             </div>
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="normalSelect">Select</label>
-                            <div class="input">
+                            <div class="input large">
                                 <select name="normalSelect" id="normalSelect">
                                     <option>1</option>
                                     <option>2</option>
@@ -297,8 +290,8 @@
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="mediumSelect">Select</label>
-                            <div class="input">
-                                <select class="medium" name="mediumSelect" id="mediumSelect">
+                            <div class="input medium">
+                                <select name="mediumSelect" id="mediumSelect">
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -309,8 +302,8 @@
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="multiSelect">Multiple select</label>
-                            <div class="input">
-                                <select class="medium" multiple="multiple" name="multiSelect" id="multiSelect">
+                            <div class="input medium">
+                                <select multiple="multiple" name="multiSelect" id="multiSelect">
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -321,32 +314,32 @@
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl">Uneditable input</label>
-                            <div class="input uneditable-input">
+                            <div class="input uneditable-input large">
 <!--								<input readonly value="some read only value"/>-->
                                 <span>Some value here</span>
                             </div>
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="disabledInput">Disabled input</label>
-                            <div class="input">
-                                <input class="xlarge disabled" id="disabledInput" name="disabledInput" size="30" type="text" placeholder="Disabled input here… carry on." disabled />
+                            <div class="input disabled xlarge">
+                                <input id="disabledInput" name="disabledInput" size="30" type="text" placeholder="Disabled input here… carry on." disabled />
                             </div>
                         </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="disabledInput">Disabled textarea</label>
-                            <div class="input">
-                                <textarea class="xxlarge" name="textarea" id="textarea" rows="3" disabled></textarea>
+                            <div class="input disabled xxlarge">
+                                <textarea name="textarea" id="textarea" rows="3" disabled></textarea>
                             </div>
                         </div><!-- /field -->
                         <div class="field error">
                             <label class="lbl" for="xlInput2">X-Large input</label>
-                            <div class="input">
-                                <input class="xlarge error" id="xlInput2" name="xlInput2" size="30" type="text" />
+                            <div class="input xlarge">
+                                <input id="xlInput2" name="xlInput2" size="30" type="text" />
                             </div>
                             <span class="help-inline">Small snippet of help text</span>
                         </div><!-- /field -->
                     </fieldset>
-                    <fieldset>
+                    <fieldset >
                         <legend>Example form legend</legend>
                         <div class="field">
                             <label class="lbl" for="prependedInput">Prepended text</label>
@@ -382,7 +375,7 @@
                             </div>
                         </div><!-- /field -->
                     </fieldset>
-                    <fieldset >
+                    <fieldset class="float">
                         <legend>Example form legend</legend>
                         <div class="field">
                             <label class="lbl" id="optionsCheckboxes">List of options</label>
@@ -406,7 +399,7 @@
                                         </label>
                                     </li>
                                     <li>
-                                        <label class="disabled">
+                                        <label>
                                             <input type="checkbox" name="optionsCheckboxes" value="option2" disabled />
                                             <span>Option four cannot be checked as it is disabled.</span>
                                         </label>
@@ -417,45 +410,59 @@
                                 </span>
                         </div><!-- /field -->
                         <div class="field">
-                            <label>Date range</label>
-                            <div class="input">
-                                <div class="inline-inputs">
-                                    <input class="small" type="text" value="May 1, 2011" />
-                                    <input class="mini" type="text" value="12:00am" />
-                                    to
-                                    <input class="small" type="text" value="May 8, 2011" />
-                                    <input class="mini" type="text" value="11:59pm" />
-                                    <span class="help-inline">All times are shown as Pacific Standard Time (GMT -08:00).</span>
-                                </div>
-                            </div>
+                            <label class="lbl">Date range</label>
+							<div class="line">
+								<div class="unit size1of5">
+									<div class="input">
+										<input class="small" type="text" value="May 1, 2011" />
+									</div>
+								</div>
+								<div class="unit size1of5">
+									<div class="input">
+										<input class="mini" type="text" value="12:00am" />
+									</div>
+								</div>
+								<div class="unit size1of5">
+									to
+								</div>
+								<div class="unit size1of5">
+									<div class="input">
+										<input class="small" type="text" value="May 8, 2011" />
+									</div>
+								</div>
+								<div class="lastUnit">
+									<div class="input">
+										<input class="mini" type="text" value="11:59pm" />
+									</div>
+								</div>
+							</div>
+							<span class="hint">All times are shown as Pacific Standard Time (GMT -08:00).</span>
                         </div><!-- /field -->
                         <div class="field">
-                            <label for="textarea">Textarea</label>
+                            <label class="lbl" for="textarea">Textarea</label>
                             <div class="input">
                                 <textarea class="xxlarge" id="textarea2" name="textarea2" rows="3"></textarea>
-                                <span class="help-block">
-                                    Block of help text to describe the field above if need be.
-                                </span>
                             </div>
+							<span class="hint">
+								Block of help text to describe the field above if need be.
+							</span>
                         </div><!-- /field -->
                         <div class="field">
-                            <label id="optionsRadio">List of options</label>
-                            <div class="input">
-                                <ul class="inputs-list">
-                                    <li>
-                                        <label>
-                                            <input type="radio" checked name="optionsRadios" value="option1" />
-                                            <span>Option one is this and that&mdash;be sure to include why it’s great</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input type="radio" name="optionsRadios" value="option2" />
-                                            <span>Option two can is something else and selecting it will deselect options 1</span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
+                            <label class="lbl" id="optionsRadio">List of options</label>
+							<ul class="inputs-list">
+								<li>
+									<label>
+										<input type="radio" checked name="optionsRadios" value="option1" />
+										<span>Option one is this and that&mdash;be sure to include why it’s great</span>
+									</label>
+								</li>
+								<li>
+									<label>
+										<input type="radio" name="optionsRadios" value="option2" />
+										<span>Option two can is something else and selecting it will deselect options 1</span>
+									</label>
+								</li>
+							</ul>
                         </div><!-- /field -->
                         <div class="actions">
                             <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>

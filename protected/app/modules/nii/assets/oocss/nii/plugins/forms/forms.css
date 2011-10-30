@@ -76,6 +76,7 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 form fieldset {margin-bottom: 18px;padding-top: 18px;}
 fieldset legend {color: #404040;display: block;font-size: 19.5px;line-height: 1;padding-left: 150px;}
 
+.field.error label {color:#9D261D;}
 /* 
  * bootstrap styles 
  * ----------------
@@ -96,5 +97,5 @@ xxlarge{width:530px;}
 
 .uneditable-input {border-color: #EEEEEE; cursor: not-allowed;color: #808080;font-size: 13px; height: 18px;line-height: 18px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;}
 
-.disabled{background-color: #F5F5F5;border-color: #DDDDDD;box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset}
+.disabled{background-image:none;background-color: #F5F5F5;border-color: #DDDDDD;box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset}
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor: not-allowed;}
