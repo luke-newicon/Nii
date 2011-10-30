@@ -1,6 +1,6 @@
 <?php
 
-class UserAddForm extends User {
+class UserEditForm extends User {
 	
 	public $verifyPassword;
 	
@@ -14,7 +14,7 @@ class UserAddForm extends User {
 
 	public function rules() {
 		return array(
-			array('first_name, last_name, email, username, password, verifyPassword', 'required'),
+			array('first_name, last_name, email, username', 'required'),
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username', 'unique', 'message' => UserModule::t("This username address already exists.")),

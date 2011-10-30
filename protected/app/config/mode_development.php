@@ -54,6 +54,11 @@ return array(
 					array(
 						'class'=>'NProfileLogRoute',
 					),
+					array(
+						'class'=>'CWebLogRoute',
+						'categories'=>'system.db.CDbCommand',
+						'showInFireBug'=>true,
+					),
 				),
 			),
 		)

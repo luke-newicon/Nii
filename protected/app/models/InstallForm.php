@@ -150,9 +150,14 @@ class InstallForm extends CFormModel
 		$user->email = $this->email;
 		$user->superuser = 1;
 		$user->status = 1;
+		$user->roleName = 'admin';
 
 		if ($user->validate()) {
 			return $user->save();
+			if($user->save())
+				return $user->saveRole();
+			else
+				return false;
 		} else {
 			return false;
 		}

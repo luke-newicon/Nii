@@ -13,18 +13,18 @@
 Yii::import('zii.widgets.grid.CDataColumn');
 class BootDataColumn extends CDataColumn
 {
-	/**
-	 * Initializes the column.
-	 */
-	public function init()
-	{
-		if (isset($this->headerHtmlOptions['class']))
-			$this->headerHtmlOptions['class'] .= ' header';
-		else
-			$this->headerHtmlOptions['class'] = 'header';
-
-		parent::init();
-	}
+//	/**
+//	 * Initializes the column.
+//	 */
+//	public function init()
+//	{
+//		if (isset($this->headerHtmlOptions['class']))
+//			$this->headerHtmlOptions['class'] .= ' header';
+//		else
+//			$this->headerHtmlOptions['class'] = 'header';
+//
+//		parent::init();
+//	}
 
 	/**
 	 * Renders the header cell.
@@ -33,6 +33,12 @@ class BootDataColumn extends CDataColumn
 	{
 		if ($this->grid->enableSorting && $this->sortable && $this->name !== null)
 		{
+			
+			if (isset($this->headerHtmlOptions['class']))
+				$this->headerHtmlOptions['class'] .= ' header';
+			else
+				$this->headerHtmlOptions['class'] = 'header';
+			
 			$sortDir = $this->grid->dataProvider->getSort()->getDirection($this->name);
 
 			if ($sortDir !== null)

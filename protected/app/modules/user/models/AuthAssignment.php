@@ -36,10 +36,10 @@ class AuthAssignment extends NActiveRecord
 	public function rules() {
 		return array(
 			array('itemname, userid', 'required'),
-			array('name', 'nameExists'),
-			array('name', 'length', 'max'=>64, 'min'=>1),
-			array('description', 'safe'),
-			array('name, description, type', 'safe', 'on'=>'search'),
+			array('itemname', 'nameExists'),
+			array('itemname, userid', 'length', 'max'=>64, 'min'=>1),
+			array('bizrule, data', 'safe'),
+			array('itemname, userid', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,9 +49,10 @@ class AuthAssignment extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'itemname'			=> 'Name',
-			'bizRule'		=> 'Business rule',
-			'data'			=> 'Data',
+			'itemname' => 'Name',
+			'userid' => 'User',
+			'bizrule' => 'Business rule',
+			'data' => 'Data',
 		);
 	}
 
@@ -74,8 +75,8 @@ class AuthAssignment extends NActiveRecord
 	public function nameExists($attribute, $params)
 	{
 		// Make sure that an authorization item with the name does already exist
-		if(Yii::app()->getAuthManager()->getAuthItem($this->name)===null )
-			$this->addError('name', Yii::t('user','An item with the name ":name" does not exists.', array(':name'=>$this->name)));
+		if(Yii::app()->getAuthManager()->getAuthItem($this->itemname)===null )
+			$this->addError('itemname', Yii::t('user','A permission with the name ":name" does not exists.', array(':name'=>$this->itemname)));
 	}
 
 

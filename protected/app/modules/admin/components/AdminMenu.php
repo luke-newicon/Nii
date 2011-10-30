@@ -35,4 +35,8 @@ class AdminMenu extends CApplicationComponent {
 		return $this->_menus[$menu];
 	}
 	
+	public function setUsername($username){
+		$this->_menus['user']['User']['label'] = $username;
+	}
+	
 }

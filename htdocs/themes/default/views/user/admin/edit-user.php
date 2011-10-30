@@ -1,16 +1,17 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
-	'id' => 'add-user-form',
+	'id' => 'edit-user-form',
+	'enableAjaxValidation' => true,
+	'enableClientValidation' => false,
 	'clientOptions' => array(
 		'validateOnSubmit' => true,
 		'validateOnChange' => true,
-		'inputContainer' => '.clearfix'
 	),
-	'focus' => array($model, 'name'),
+	'focus' => array($model, 'first_name'),
 ));
 ?>
 <fieldset>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'first_name'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -19,7 +20,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'first_name'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'last_name'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -28,7 +29,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'last_name'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'email'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -37,7 +38,16 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'email'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
+		<?php echo $form->labelEx($model, 'username'); ?>
+		<div class="inputContainer">
+			<div class="input">
+				<?php echo $form->textField($model, 'username'); ?>
+			</div>
+			<?php echo $form->error($model, 'username'); ?>
+		</div>
+	</div>
+	<div class="field">
 		<?php echo $form->labelEx($model, 'password'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -46,7 +56,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'password'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'verifyPassword'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -55,7 +65,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'verifyPassword'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'superuser'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -64,7 +74,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'superuser'); ?>
 		</div>
 	</div>
-	<div class="clearfix field">
+	<div class="field">
 		<?php echo $form->labelEx($model, 'status'); ?>
 		<div class="inputContainer">
 			<div class="input">
@@ -73,5 +83,17 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'status'); ?>
 		</div>
 	</div>
+	<div class="field">
+		<?php echo $form->labelEx($model, 'roleName'); ?>
+		<div class="inputContainer">
+			<div class="input">
+				<?php echo $form->dropDownList($model, 'roleName', CHtml::listData(Yii::app()->authManager->roles,'name','description')) ?>
+			</div>
+			<?php echo $form->error($model, 'roleName'); ?>
+		</div>
+	</div>
+	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
+		<input type="submit" class="btn primary" value="Save" />
+	<?php endif; ?>
 </fieldset>
 <?php $this->endWidget(); ?>

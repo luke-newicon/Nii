@@ -34,9 +34,9 @@ class InstallController extends Controller {
 		if (Yii::app()->request->getPost('InstallForm')) {
 
 			$model->attributes = $_POST['InstallForm'];
-
+			
 			if ($model->validate()) {
-
+				
 				// install database tables and nii modules
 				$model->installDatabase();
 

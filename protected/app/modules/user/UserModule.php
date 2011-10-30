@@ -152,6 +152,12 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 		
+		Yii::app()->getModule('admin')->menu->addMenu('user');
+		
+		Yii::app()->getModule('admin')->menu->addItem('user','User',array('/user/account/index'));
+		Yii::app()->getModule('admin')->menu->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
+		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/account/settings'),'User');
+		
 		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/index'),'Admin');
 
 		
@@ -335,10 +341,20 @@ class UserModule extends NWebModule
 	 * @return void
 	 */
 	public function install(){
+		// Install the auth tables
 		AuthItem::install();
 		AuthAssignment::install();
 		AuthItemChild::install();
+		// Create the default roles
+		if(!Yii::app()->authManager->getAuthItem('admin'))
+			Yii::app()->authManager->createRole('admin','Administrator');
+		if(!Yii::app()->authManager->getAuthItem('edit'))
+			Yii::app()->authManager->createRole('edit','Editor');
+		if(!Yii::app()->authManager->getAuthItem('view'))
+			Yii::app()->authManager->createRole('view','Viewer');
+		// Install the user table
 		User::install();
+		// If there is an app domain install it
 		if($this->domain){
 			AppDomain::install();
 		}

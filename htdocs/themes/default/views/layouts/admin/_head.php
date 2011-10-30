@@ -35,11 +35,19 @@
 						</li>
 					</ul>
 					<?php
-					Yii::app()->getModule('admin')->menu->addDivider('secondary','Luke Spencer');
-					Yii::app()->getModule('admin')->menu->addItem('secondary','Logout',array('/user/account/logout'),'Luke Spencer');
+					Yii::app()->getModule('admin')->menu->addDivider('user','User');
+					Yii::app()->getModule('admin')->menu->addItem('user','Logout',array('/user/account/logout'),'User');
+					Yii::app()->getModule('admin')->menu->setUsername(Yii::app()->user->name);
+					$this->widget('zii.widgets.CMenu', array(
+						'items' => Yii::app()->getModule('admin')->menu->getItems('user'),
+						'id' => 'userMenu',
+						'activateParents' => true,
+						'htmlOptions' => array('class' => 'secondary-nav'),
+						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
+					));
 					$this->widget('zii.widgets.CMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),
-						'id' => 'mainMenu',
+						'id' => 'secondaryMenu',
 						'activateParents' => true,
 						'htmlOptions' => array('class' => 'secondary-nav'),
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),

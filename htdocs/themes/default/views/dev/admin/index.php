@@ -11,9 +11,9 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 ?>
 <div class="tab-content">
 	<div id="cache" class="active">
-		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flush-assets')) ?>">Flush Assets Folder</a>
+		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushAssets')) ?>">Flush Assets Folder</a>
 		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushCache')) ?>">Flush Cache (includes schema)</a>
-		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flush-runtime')) ?>">Flush Runtime Folder</a>
+		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushRuntime')) ?>">Flush Runtime Folder</a>
 	</div>
 	<div id="bootstrap">
 		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/bootstrap')) ?>" target="_blank">Launch Bootstrap Site</a>
