@@ -251,9 +251,9 @@
 							<div class="field">
 								<label class="lbl">Email:</label>
 								<div class="inputContainer">
-									<label for="email" class="inFieldLabel" >It is the thing with the @ in it</label>
+									<label for="email2" class="inFieldLabel" >It is the thing with the @ in it</label>
 									<div class="input">
-										<input type="text" id="email" name="username_3">
+										<input type="text" id="email2" name="wmail">
 									</div>
 								</div>
 							</div>
@@ -261,9 +261,9 @@
 							<div class="field">
 								<label class="lbl">Comment:</label>
 								<div class="inputContainer">
-									<label for="comment" class="inFieldLabel" >Enter a nice comment</label>
+									<label for="comment2" class="inFieldLabel" >Enter a nice comment</label>
 									<div class="input">
-										<textarea id="comment" name="comment"></textarea>
+										<textarea id="comment2" name="comment2"></textarea>
 									</div>
 								</div>
 							</div>
@@ -282,7 +282,7 @@
                             <div class="input">
                                 <input id="xlInput" name="xlInput" size="30" type="text" />
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="normalSelect">Select</label>
                             <div class="input">
@@ -294,7 +294,7 @@
                                     <option>5</option>
                                 </select>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="mediumSelect">Select</label>
                             <div class="input">
@@ -306,7 +306,7 @@
                                     <option>5</option>
                                 </select>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
                             <label class="lbl" for="multiSelect">Multiple select</label>
                             <div class="input">
@@ -318,45 +318,46 @@
                                     <option>5</option>
                                 </select>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
                             <label class="lbl">Uneditable input</label>
-                            <div class="input">
-                                <span class="uneditable-input">Some value here</span>
+                            <div class="input uneditable-input">
+<!--								<input readonly value="some read only value"/>-->
+                                <span>Some value here</span>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
-                            <label for="disabledInput">Disabled input</label>
+                            <label class="lbl" for="disabledInput">Disabled input</label>
                             <div class="input">
                                 <input class="xlarge disabled" id="disabledInput" name="disabledInput" size="30" type="text" placeholder="Disabled input here… carry on." disabled />
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field">
-                            <label for="disabledInput">Disabled textarea</label>
+                            <label class="lbl" for="disabledInput">Disabled textarea</label>
                             <div class="input">
                                 <textarea class="xxlarge" name="textarea" id="textarea" rows="3" disabled></textarea>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="field error">
-                            <label for="xlInput2">X-Large input</label>
+                            <label class="lbl" for="xlInput2">X-Large input</label>
                             <div class="input">
                                 <input class="xlarge error" id="xlInput2" name="xlInput2" size="30" type="text" />
                             </div>
                             <span class="help-inline">Small snippet of help text</span>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                     </fieldset>
                     <fieldset>
                         <legend>Example form legend</legend>
-                        <div class="clearfix">
-                            <label for="prependedInput">Prepended text</label>
+                        <div class="field">
+                            <label class="lbl" for="prependedInput">Prepended text</label>
                             <div class="input">
                                 <div class="input-prepend">
                                     <span class="add-on">@</span>
                                     <input class="medium" id="prependedInput" name="prependedInput" size="16" type="text" />
                                 </div>
                             </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label for="prependedInput2">Prepended checkbox</label>
                             <div class="input">
                                 <div class="input-prepend">
@@ -364,8 +365,8 @@
                                     <input class="mini" id="prependedInput2" name="prependedInput2" size="16" type="text" />
                                 </div>
                             </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label for="appendedInput">Appended checkbox</label>
                             <div class="input">
                                 <div class="input-append">
@@ -373,19 +374,18 @@
                                     <label class="add-on active"><input type="checkbox" name="" id="" value="" checked="checked" /></label>
                                 </div>
                             </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label for="fileInput">File input</label>
                             <div class="input">
                                 <input class="input-file" id="fileInput" name="fileInput" type="file" />
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                     </fieldset>
-                    <fieldset>
+                    <fieldset >
                         <legend>Example form legend</legend>
-                        <div class="clearfix">
-                            <label id="optionsCheckboxes">List of options</label>
-                            <div class="input">
+                        <div class="field">
+                            <label class="lbl" id="optionsCheckboxes">List of options</label>
                                 <ul class="inputs-list">
                                     <li>
                                         <label>
@@ -415,9 +415,8 @@
                                 <span class="help-block">
                                     <strong>Note:</strong> Labels surround all the options for much larger click areas and a more usable form.
                                 </span>
-                            </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label>Date range</label>
                             <div class="input">
                                 <div class="inline-inputs">
@@ -429,8 +428,8 @@
                                     <span class="help-inline">All times are shown as Pacific Standard Time (GMT -08:00).</span>
                                 </div>
                             </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label for="textarea">Textarea</label>
                             <div class="input">
                                 <textarea class="xxlarge" id="textarea2" name="textarea2" rows="3"></textarea>
@@ -438,8 +437,8 @@
                                     Block of help text to describe the field above if need be.
                                 </span>
                             </div>
-                        </div><!-- /clearfix -->
-                        <div class="clearfix">
+                        </div><!-- /field -->
+                        <div class="field">
                             <label id="optionsRadio">List of options</label>
                             <div class="input">
                                 <ul class="inputs-list">
@@ -457,7 +456,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div><!-- /clearfix -->
+                        </div><!-- /field -->
                         <div class="actions">
                             <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>
                         </div>

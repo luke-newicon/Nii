@@ -33,7 +33,7 @@ label, input, select, textarea {font-family: "Helvetica Neue",Helvetica,Arial,sa
 
 
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
-.field{margin:5px 0px;position:relative;}
+.field{margin-bottom:18px;position:relative;}
 /* padding and margin break widths so remove them, the input elements pading is defined by padding on .input*/
 input.btn{width:auto;}
 /* make required * red have to use span element here becuase that's what yii creates */
@@ -42,9 +42,9 @@ span.required {color:#CC0000}
 .inputContainer{position:relative;}
 
 
-.field .checkbox label{float:none;padding-top:0}
+label{float:none;padding-top:0;color:#404040;}
 
-/* Default Skin */
+/* Input boxes and input states */
 /* make a nice looking input, defines padding and input box style */
 .input {background-image: url('skin/input-bg.png');background-position:top left;background-repeat:repeat-x;background-color:#fff;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:5px;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;box-shadow:0px 1px 0px rgba(255,255,255,0.5);-moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);}
 .focus .input, .focused .input {border-color:rgba(82, 168, 236, 0.8);box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6); background-image:none;}
@@ -59,23 +59,42 @@ span.required {color:#CC0000}
 .validating.focus .input,.validating.focused .input{}
 
 
-
 /* formHint style */
 .hint, .help-block{color:#bbbbbb;font-size:80%;line-height:18px}
 
 
 /* .inFieldLabel you may need to tweak the positions for different forms */
-.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
+label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 /* yii's default class for error form validation messages */
 .errorMessage{color:red;font-size:0.9em;padding:3px}
 
 /** form layouts */
 .stacked .lbl {display: block;float: none;font-weight: bold;line-height: 20px;padding-top: 0;text-align: left;width: auto;}
-
-
 .float .lbl {float: left; padding-top: 6px; text-align: right; width: 130px;margin-left:-150px;font-size: 13px;line-height: 18px;}
-.float .field, .float.field{margin-left:150px;}{margin-left:150px;}
+.float .field, .float.field{margin-left:150px;}
+
+form fieldset {margin-bottom: 18px;padding-top: 18px;}
+fieldset legend {color: #404040;display: block;font-size: 19.5px;line-height: 1;padding-left: 150px;}
+
+/* 
+ * bootstrap styles 
+ * ----------------
+ */
+.inputs-list li:first-child {padding-top: 6px;}
+.inputs-list {margin: 0 0 5px; width: 100%;}
+.inputs-list li{display: block; padding: 0; width: 100%;}
+.inputs-list label {display: block;float: none;line-height: 18px;padding: 0;text-align: left;white-space: normal;width: auto;}
+/* width styles */
+.xsmall,.mini{width:60px;}
+.small{width:90px;}
+.medium{width:150px;}
+.large{width:210px;}
+.xlarge{width:270px;}
+xxlarge{width:530px;}
 
 
 
+.uneditable-input {border-color: #EEEEEE; cursor: not-allowed;color: #808080;font-size: 13px; height: 18px;line-height: 18px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;}
 
+.input.disabled{background-color: #F5F5F5;border-color: #DDDDDD}
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor: not-allowed;}
