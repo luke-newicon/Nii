@@ -15,7 +15,7 @@ html,body{height:100%}
  */
 .head{position:relative;background:#FFFFFF}
 #sitelogo{padding:10px}
-.main{padding:20px;}
+.body{padding:15px;}
 /**
  * Override the default yii grid styles.
  */

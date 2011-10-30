@@ -344,7 +344,7 @@ class NSettings extends CApplicationComponent
                 $this->getCacheComponent()->delete($catName.'_'.$this->cacheId);
         }   
 		
-		FB::log(Yii::app()->settings->get('', 'system'), 'system settings');
+//		FB::log(Yii::app()->settings->get('', 'system'), 'system settings');
     }
 	
 

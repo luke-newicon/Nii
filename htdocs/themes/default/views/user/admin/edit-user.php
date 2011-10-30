@@ -92,5 +92,8 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'roleName'); ?>
 		</div>
 	</div>
+	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
+		<input type="submit" class="btn primary" value="Save" />
+	<?php endif; ?>
 </fieldset>
 <?php $this->endWidget(); ?>

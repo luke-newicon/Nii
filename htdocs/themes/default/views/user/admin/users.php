@@ -17,27 +17,15 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			'htmlOptions' => array('class' => 'edit-user'),
 		),
 		array(
+			'name' => 'username',
+			'type' => 'raw',
+			'value' => 'CHtml::link($data->username, Yii::app()->controller->createUrl("editUser",array("id"=>$data->primaryKey)))',
+			'htmlOptions' => array('class' => 'edit-user'),
+		),
+		array(
 			'name' => 'email',
 			'type' => 'raw',
 			'value' => 'CHtml::link(CHtml::encode($data->email), "mailto:".$data->email)',
-		),
-		array(
-			'name' => 'createtime',
-			'value' => 'date("d.m.Y H:i:s",$data->createtime)',
-		),
-		array(
-			'name' => 'lastvisit',
-			'value' => '(($data->lastvisit)?date("d.m.Y H:i:s",$data->lastvisit):UserModule::t("Not visited"))',
-		),
-		array(
-			'name' => 'status',
-			'filter' => User::itemAlias("UserStatus"),
-			'value' => 'User::itemAlias("UserStatus",$data->status)',
-		),
-		array(
-			'name' => 'superuser',
-			'filter' => User::itemAlias("AdminStatus"),
-			'value' => 'User::itemAlias("AdminStatus",$data->superuser)',
 		),
 		array(
 			'name' => 'roleName',
@@ -45,10 +33,15 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			'filter' => CHtml::listData(Yii::app()->authManager->roles,'name','description'),
 			'value' => '$data->roleDescription',
 		),
-//		array(
-//			'class' => 'CButtonColumn',
-//			'updateButtonUrl' => 'Yii::app()->controller->createUrl("editUser",array("id"=>$data->primaryKey))',
-//		),
+		array(
+			'name' => 'status',
+			'filter' => User::itemAlias("UserStatus"),
+			'value' => 'User::itemAlias("UserStatus",$data->status)',
+		),
+		array(
+			'name' => 'lastvisit',
+			'value' => '(($data->lastvisit)?date("d.m.Y H:i:s",$data->lastvisit):UserModule::t("Not visited"))',
+		),
 	),
 ));
 ?>
@@ -84,7 +77,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			return false;
 		});
 				
-		$('#add-user-form').live("submit",function(){
+		$('#modal-add-user').delegate('#add-user-form','submit',function(){
 			$.ajax({
 				url: $(this).attr('action'),
 				data: jQuery('#add-user-form').serialize(),
@@ -107,7 +100,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		
 		$('#modal-edit-user').modal({backdrop:'static'});
 		
-		$('#user-grid .edit-user a').live('click',function(){
+		$('#users').delegate('#user-grid .edit-user a','click',function(){
 			$('#modal-edit-user').modal('show');
 			$('#modal-edit-user .modal-body').load($(this).attr('href'));
 			return false;
@@ -118,7 +111,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			return false;
 		});
 				
-		$('#edit-user-form').live("submit",function(){
+		$('#modal-edit-user').delegate('#edit-user-form','submit',function(){
 			$.ajax({
 				url: $(this).attr('action'),
 				data: jQuery('#edit-user-form').serialize(),

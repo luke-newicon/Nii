@@ -33,7 +33,7 @@
 			return false;
 		});
 				
-		$('#add-role-form').live("submit",function(){
+		$('#modal-add-role').delegate('#add-role-form','submit',function(){
 			$.ajax({
 				url: "<?php echo CHtml::normalizeUrl(array('/user/admin/addRole')) ?>",
 				data: jQuery('#add-role-form').serialize(),

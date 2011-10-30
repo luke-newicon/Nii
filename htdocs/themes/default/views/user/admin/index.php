@@ -14,9 +14,10 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 </div>
 <script>
 	jQuery(function($){
+		// Add the tabbing functionality
 		$('#UserTabs').tabs();
-		$('#UserTabs a').click(function(){
-			var $tab = $($(this).attr('href'));
+		// Function for loading tab content by ajax
+		var loadTab = function($tab){
 			var ajaxUrl = $tab.attr('data-ajax-url');
 			if(ajaxUrl){
 				$tab.load(ajaxUrl, function(response, status, xhr) {
@@ -26,6 +27,12 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 					}
 				});
 			}
+		}
+		// Load the tab when clicked
+		$('#UserTabs a').click(function(){
+			loadTab($($(this).attr('href')));
 		});
+		// Load any active tabs
+		loadTab($('.tab-content .active'));
 	});
 </script>

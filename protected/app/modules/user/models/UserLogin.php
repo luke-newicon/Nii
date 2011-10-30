@@ -45,7 +45,7 @@ class UserLogin extends CFormModel
 	 */
 	public function attributeLabels()
 	{
-		$usernameLabel = (UserModule::get()->usernameRequired)?'Username or Email':'Email';
+		$usernameLabel = (UserModule::get()->usernameRequired)?'Username':'Username / Email';
 		return array(
 			'rememberMe'=>UserModule::t("Keep me logged in for 30 days"),
 			'username'=>UserModule::t($usernameLabel),

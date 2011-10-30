@@ -67,7 +67,6 @@ class AccountController extends NController {
 		$this->render('index',array('model'=>Yii::app()->user->record));
 	}
 	
-	
 	/**
 	 * This function handles the scenario where a user is logging in from the wrong domain.
 	 * It redirects the browser to the correct domain for the user and reposts the login form.
