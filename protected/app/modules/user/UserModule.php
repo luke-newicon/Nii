@@ -154,9 +154,9 @@ class UserModule extends NWebModule
 		
 		Yii::app()->getModule('admin')->menu->addMenu('user');
 		
-		Yii::app()->getModule('admin')->menu->addItem('user','User',array('/user/account/index'));
+		Yii::app()->getModule('admin')->menu->addItem('user','User',array('/user/admin'));
 		Yii::app()->getModule('admin')->menu->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
-		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/account/settings'),'User');
+		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
 		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/index'),'Admin');
 
@@ -172,8 +172,23 @@ class UserModule extends NWebModule
 				'defaultRoles'=>array('authenticated', 'guest'),
 			)
 		);
-		
-		
+	}
+	
+	public function permissions() {
+		return array(
+			'user' => array('label' => 'Users', 'roles' => array('admin','edit','view'), 'items' => array(
+				'user/admin/index' => array('label' => 'User main page', 'roles' => array('admin','edit','view')),
+				'user/admin/settings' => array('label' => 'User settings', 'roles' => array('admin','edit','view')),
+				'user/admin/users' => array('label' => 'User management', 'roles' => array('admin')),
+				'user/admin/roles' => array('label' => 'Role management', 'roles' => array('admin')),
+				'user/admin/addUser' => array('label' => 'Add a user', 'roles' => array('admin')),
+				'user/admin/editUser' => array('label' => 'Edit a user', 'roles' => array('admin')),
+				'user/admin/delete' => array('label' => 'Delete a user', 'roles' => array('admin')),
+				'user/admin/account' => array('label' => 'User account', 'roles' => array('admin','edit','view')),
+				'user/admin/changePassword' => array('label' => 'Change password', 'roles' => array('admin','edit','view')),
+				'user/admin/impersonate' => array('label' => 'Impersonate a user', 'roles' => array('admin')),
+			)),
+		);
 	}
 	
 	public function getBehaviorsFor($componentName){
