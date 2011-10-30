@@ -59,7 +59,7 @@ class AdminController extends AController {
 			'name' => 'id',
 			'header' => 'Action',
 			'type' => 'raw',
-			'value' => '$data[\'label\'].\' <span class="label pull-right">\'.$data[\'id\'].\'</span>\'',
+			'value' => '$data[\'label\'].\' <span class="pull-right"><span class="label">\'.$data[\'id\'].\'</span></span>\'',
 		);
 
 		foreach (Yii::app()->authManager->roles as $role) {
@@ -74,7 +74,11 @@ class AdminController extends AController {
 
 		$default['admin'] = true;
 
-		$dataProvider = new CArrayDataProvider($this->getPermissions($default));
+		$dataProvider = new CArrayDataProvider($this->getPermissions($default),
+				array(
+					'pagination' => false,
+				)
+		);
 
 		$this->render('roles', array(
 			'dataProvider' => $dataProvider,

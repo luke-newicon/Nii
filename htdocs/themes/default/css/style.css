@@ -21,5 +21,4 @@ html,body{height:100%}
  */
 .grid-view .filters input, .grid-view .filters select{border:none;}
 
-/* Tried to right align the menu dropdown notifications but doesnt sit right */
-/*.menu-dropdown .menu-notice{display:block;float:right;height:14px;line-height:14px;margin:1px 0}*/
+.menu-dropdown .menu-notice{float:right;}

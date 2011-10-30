@@ -17,9 +17,9 @@ class TaskModule extends NWebModule
 	public $settingsPage = array('tasks/settings');
 	
 	public function init(){
-		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/index/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/index/index'), 'Tasks');
-		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/index/actions'), 'Tasks');
+		Yii::app()->getModule('admin')->menu->addItem('main','Tasks','#');
+		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/admin/index'), 'Tasks',array('notice'=>1));
+		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
 	}
 	
 	

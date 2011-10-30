@@ -158,7 +158,8 @@ class UserModule extends NWebModule
 		Yii::app()->getModule('admin')->menu->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
 		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/index'),'Admin');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/roles'),'Admin');
 
 		
 		// add to the main config

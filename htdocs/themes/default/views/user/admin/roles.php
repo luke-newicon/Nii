@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h3>Roles</h3>
+	<h2>Permissions</h2>
 	<div class="action-buttons">
 		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="static" >Add a Role</a>
 	</div>

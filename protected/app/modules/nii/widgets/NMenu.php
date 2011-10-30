@@ -6,7 +6,7 @@ class NMenu extends CMenu {
 	
 	public $enableNotifications = true;
 	
-	public $noticeHtmlOptions = array('class'=>'menu-notice label warning');
+	public $noticeHtmlOptions = array('class'=>'label warning');
 	
 	/**
 	 * Renders the content of a menu item.
@@ -22,7 +22,7 @@ class NMenu extends CMenu {
 			$label=$this->linkLabelWrapper===null ? $item['label'] : '<'.$this->linkLabelWrapper.'>'.$item['label'].'</'.$this->linkLabelWrapper.'>';
 			if($this->enableNotifications && isset($item['notice'])){
 				$noticeHtmlOptions = isset($item['noticeHtmlOptions']) ? $item['noticeHtmlOptions'] : $this->noticeHtmlOptions;
-				$label = $label . ' ' . CHtml::tag('span',$noticeHtmlOptions,$item['notice']);
+				$label = $label . ' <span class="menu-notice">' . CHtml::tag('span',$noticeHtmlOptions,$item['notice']) . '</span>';
 			}
 			return CHtml::link($label,$item['url'],isset($item['linkOptions']) ? $item['linkOptions'] : array());
 		}
