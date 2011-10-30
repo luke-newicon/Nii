@@ -53,4 +53,23 @@ class NActiveForm extends CActiveForm
 		// todo add nii input widget
 	}
 	
+	
+	/**
+	 * Renders an HTML label for a model attribute.
+	 * This method is a wrapper of {@link CHtml::activeLabelEx}.
+	 * Please check {@link CHtml::activeLabelEx} for detailed information
+	 * about the parameters for this method.
+	 * @param CModel $model the data model
+	 * @param string $attribute the attribute
+	 * @param array $htmlOptions additional HTML attributes.
+	 * @return string the generated label tag
+	 */
+	public function labelEx($model,$attribute,$htmlOptions=array())
+	{
+		if(empty($htmlOptions)){
+			$htmlOptions = array('class'=>'lbl');
+		}
+		return parent::labelEx($model, $attribute, $htmlOptions);
+	}
+	
 }
