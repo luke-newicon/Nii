@@ -505,7 +505,20 @@
                         <div class="actions">
                             <input type="submit" class="btn primary" value="Save changes">&nbsp;<button type="reset" class="btn">Cancel</button>
                         </div>
+						
+						
+						
+						
                     </fieldset>
+					
+					
+					<fieldset>
+						<legend>Groovy boxes</legend>
+						<p>Advanced form fields</p>
+						<div class="field">
+							
+						</div>
+					</fieldset>
                 </form>
 
             </div>
