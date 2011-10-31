@@ -324,7 +324,7 @@ class AccountController extends NController {
 						$this->refresh();
 					}
 				}
-				$this->render('recovery',array('form'=>$form));
+				$this->render('recovery',array('model'=>$form));
 			}
 		}
 	}

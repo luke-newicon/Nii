@@ -2,7 +2,7 @@
 
 <div class="modal hide<?php echo $model->hasErrors() ? '' : ' fade' ?>" id="modal-login-user">
 	<div class="modal-header">
-		<h3>Welcome to <?php echo Yii::app()->name ?><?php echo $model->hasErrors() ? ' Hello' : ''; ?></h3>
+		<h3>Welcome to <?php echo Yii::app()->name ?></h3>
 	</div>
 	<div class="modal-body">
 		<?php
@@ -57,7 +57,6 @@
 		<a id="password-recovery" class="btn" style="float:left" href="<?php echo CHtml::normalizeUrl(Yii::app()->getModule('user')->recoveryUrl) ?>">Password Recovery</a>
 	</div>
 </div>
-
 <script>
 	jQuery(function($){
 		$('#modal-login-user.hide').modal({backdrop:'static',show:true});
