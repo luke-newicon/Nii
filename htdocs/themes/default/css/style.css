@@ -4,10 +4,11 @@ a:focus{outline:none}
 .page-header{overflow:hidden}
 .page-header h1,.page-header h2,.page-header h3{float:left}
 .page-header .action-buttons{float:right}
+.modal-backdrop,.modal-backdrop.fade.in{opacity:0.5}
 
 /* Site Styles */
 html,body{height:100%}
-.login-page{background:url('../images/background.jpg') no-repeat center top}
+.login-page{background:url('../images/background.jpg') no-repeat left top}
 
 
 /**
