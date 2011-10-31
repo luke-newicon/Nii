@@ -28,7 +28,7 @@ class BootTabs extends CMenu
 		{
 			echo CHtml::openTag('ul',$this->htmlOptions)."\n";
 			if($this->heading)
-				echo CHtml::tag('li',array(),CHtml::tag('h2',array('style'=>'margin-right:20px'),$this->heading));
+				echo CHtml::tag('li',array('class'=>'heading'),'<h2>'.$this->heading.'</h2>');
 			$this->renderMenuRecursive($items);
 			echo CHtml::closeTag('ul');
 		}

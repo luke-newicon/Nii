@@ -3,18 +3,28 @@
 		'id' => 'SettingsTabs',
 		'items' => $settings['items'],
 		'heading' => 'Application Settings',
+		'htmlOptions' => array('class' => 'tabs vertical'),
 	));
 ?>
-<div class="tab-content">
+<div class="tab-content vertical">
 	<?php foreach($settings['pages'] as $page) : ?>
 	<div<?php echo CHtml::renderAttributes($page['htmlOptions']) ?>>
-		<h3><?php echo $page['htmlOptions']['id'] ?> Settings</h3>
-		<?php echo $page['htmlOptions']['data-ajax-url'] ?>
+		Loading...
 	</div>
 	<?php endforeach ?>
 </div>
 <script>
 	jQuery(function($){
+		var loadPage = function($page){
+			$page.load($page.attr('data-ajax-url'));
+		}
+		
+		$('#SettingsTabs a').click(function(){
+			loadPage($($(this).attr('href')));
+		});
+		
 		$('#SettingsTabs').tabs();
+		
+		loadPage($('.tab-content .active'));
 	});
 </script>

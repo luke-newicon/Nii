@@ -65,14 +65,14 @@ class AdminController extends AController {
 		foreach (Yii::app()->authManager->roles as $role) {
 			$columns[] = array(
 				'name' => $role->name,
-				'header' => $role->description,
+//				'header' => $role->description,
 				'type' => 'raw',
 				'value' => 'CHtml::checkBox(\'Role[\'.$data[\'id\'].\'][' . $role->name . ']\',$data[\'' . $role->name . '\'])',
 			);
 			$default[$role->name] = false;
 		}
 
-		$default['admin'] = true;
+		$default['Administrator'] = true;
 
 		$dataProvider = new CArrayDataProvider($this->getPermissions($default),
 				array(
@@ -89,28 +89,31 @@ class AdminController extends AController {
 	public function getPermissions($default=array()) {
 		foreach (Yii::app()->niiModules as $name => $module) {
 			if (method_exists($module, 'permissions')) {
-				foreach ($module->permissions() as $action => $permission) {
-					$data = array('id' => $action, 'label' => $permission['label']);
-					$data += $default;
-					if ($permission['roles']) {
-						foreach ($permission['roles'] as $role) {
-							$data[$role] = true;
-						}
-					}
-
-					$permissions[] = $data;
-
-					if (isset($permission['items'])) {
-						$parent = $permission;
-						foreach ($parent['items'] as $action => $permission) {
-							$data = array('id' => $action, 'label' => $parent['label'] . ' - ' . $permission['label']);
-							$data += $default;
-							if ($permission['roles']) {
-								foreach ($permission['roles'] as $role) {
-									$data[$role] = true;
-								}
+				$modulePermissions = $module->permissions();
+				if(is_array($modulePermissions)){
+					foreach ($module->permissions() as $action => $permission) {
+						$data = array('id' => $action, 'label' => $permission['label']);
+						$data += $default;
+						if ($permission['roles']) {
+							foreach ($permission['roles'] as $role) {
+								$data[$role] = true;
 							}
-							$permissions[] = $data;
+						}
+
+						$permissions[] = $data;
+
+						if (isset($permission['items'])) {
+							$parent = $permission;
+							foreach ($parent['items'] as $action => $permission) {
+								$data = array('id' => $action, 'label' => $parent['label'] . ' - ' . $permission['label']);
+								$data += $default;
+								if ($permission['roles']) {
+									foreach ($permission['roles'] as $role) {
+										$data[$role] = true;
+									}
+								}
+								$permissions[] = $data;
+							}
 						}
 					}
 				}

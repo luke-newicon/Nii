@@ -23,8 +23,8 @@ class AdminModule extends NWebModule {
 	
 	public function settings(){
 		return array(
-			'General' => array('/admin/settings/general'),
-			'Presentation' => array('/admin/settings/presentation'),
+			'general' => '/admin/settings/general',
+			'presentation' => '/admin/settings/presentation',
 		);
 	}
 

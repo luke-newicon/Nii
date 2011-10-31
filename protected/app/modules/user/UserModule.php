@@ -177,17 +177,17 @@ class UserModule extends NWebModule
 	
 	public function permissions() {
 		return array(
-			'user' => array('label' => 'Users', 'roles' => array('admin','edit','view'), 'items' => array(
-				'user/admin/index' => array('label' => 'User main page', 'roles' => array('admin','edit','view')),
-				'user/admin/settings' => array('label' => 'User settings', 'roles' => array('admin','edit','view')),
-				'user/admin/users' => array('label' => 'User management', 'roles' => array('admin')),
-				'user/admin/roles' => array('label' => 'Role management', 'roles' => array('admin')),
-				'user/admin/addUser' => array('label' => 'Add a user', 'roles' => array('admin')),
-				'user/admin/editUser' => array('label' => 'Edit a user', 'roles' => array('admin')),
-				'user/admin/delete' => array('label' => 'Delete a user', 'roles' => array('admin')),
-				'user/admin/account' => array('label' => 'User account', 'roles' => array('admin','edit','view')),
-				'user/admin/changePassword' => array('label' => 'Change password', 'roles' => array('admin','edit','view')),
-				'user/admin/impersonate' => array('label' => 'Impersonate a user', 'roles' => array('admin')),
+			'user' => array('label' => 'Users', 'roles' => array('Administrator','Editor','Viewer'), 'items' => array(
+				'user/admin/index' => array('label' => 'User main page', 'roles' => array('Administrator','Editor','Viewer')),
+				'user/admin/settings' => array('label' => 'User settings', 'roles' => array('Administrator','Editor','Viewer')),
+				'user/admin/users' => array('label' => 'User management', 'roles' => array('Administrator')),
+				'user/admin/roles' => array('label' => 'Role management', 'roles' => array('Administrator')),
+				'user/admin/addUser' => array('label' => 'Add a user', 'roles' => array('Administrator')),
+				'user/admin/editUser' => array('label' => 'Edit a user', 'roles' => array('Administrator')),
+				'user/admin/delete' => array('label' => 'Delete a user', 'roles' => array('Administrator')),
+				'user/admin/account' => array('label' => 'User account', 'roles' => array('Administrator','Editor','Viewer')),
+				'user/admin/changePassword' => array('label' => 'Change password', 'roles' => array('Administrator','Editor','Viewer')),
+				'user/admin/impersonate' => array('label' => 'Impersonate a user', 'roles' => array('Administrator')),
 			)),
 		);
 	}
@@ -362,12 +362,12 @@ class UserModule extends NWebModule
 		AuthAssignment::install();
 		AuthItemChild::install();
 		// Create the default roles
-		if(!Yii::app()->authManager->getAuthItem('admin'))
-			Yii::app()->authManager->createRole('admin','Administrator');
-		if(!Yii::app()->authManager->getAuthItem('edit'))
-			Yii::app()->authManager->createRole('edit','Editor');
-		if(!Yii::app()->authManager->getAuthItem('view'))
-			Yii::app()->authManager->createRole('view','Viewer');
+		if(!Yii::app()->authManager->getAuthItem('Administrator'))
+			Yii::app()->authManager->createRole('Administrator');
+		if(!Yii::app()->authManager->getAuthItem('Editor'))
+			Yii::app()->authManager->createRole('Editor');
+		if(!Yii::app()->authManager->getAuthItem('Viewer'))
+			Yii::app()->authManager->createRole('Viewer');
 		// Install the user table
 		User::install();
 		// If there is an app domain install it

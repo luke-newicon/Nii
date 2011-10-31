@@ -17,16 +17,20 @@ class TestModule extends NWebModule {
 
 	public function settings() {
 		return array(
-			'Test' => array('/test/settings/index'),
+			'test' => '/test/settings/index',
+			'test2' => array(
+				'label' => 'Another Test',
+				'url' => array('/test/settings/index'),
+			),
 		);
 	}
 
 	public function permissions() {
 		return array(
-			'test' => array('label' => 'Test Module', 'roles' => array('admin','edit','view'), 'items' => array(
-				'test/index/index' => array('label' => 'The test module main page', 'roles' => array('admin','edit','view')),
-				'test/index/good' => array('label' => 'The test module good page', 'roles' => array('admin','edit')),
-				'test/settings/index' => array('label' => 'The test module settings page', 'roles' => array('admin')),
+			'test' => array('label' => 'Test Module', 'roles' => array('Administrator','Editor','Viewer'), 'items' => array(
+				'test/index/index' => array('label' => 'The test module main page', 'roles' => array('Administrator','Editor','Viewer')),
+				'test/index/good' => array('label' => 'The test module good page', 'roles' => array('Administrator','Editor')),
+				'test/settings/index' => array('label' => 'The test module settings page', 'roles' => array('Administrator')),
 			)),
 		);
 	}

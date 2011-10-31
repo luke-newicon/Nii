@@ -22,14 +22,6 @@ class TaskModule extends NWebModule
 		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
 	}
 	
-	
-	
-	public function settings(){
-		return array(
-			'Tasks' => array('tasks/settings')
-		);
-	}
-	
 	public function install(){
 		//NActiveRecord::install('TaskTask');
 	}
@@ -38,19 +30,30 @@ class TaskModule extends NWebModule
 		//NActiveRecord::uninstall('TaskTask');
 	}
 	
+	public function activate(){
+		
+	}
 	
+	public function deactivate(){
+		
+	}
 	
-	public function getMenu(){
+	public function menus(){
+		
+	}
+	
+	public function notifications(){
+		
+	}
+	
+	public function settings(){
 		return array(
-			'admin' => array(
-				'Tasks'=>array(
-					'url'=>'tasks/index/index',
-					'items'=>array())
-			)
+			'tasks' => 'tasks/settings',
 		);
 	}
 	
-	
-	
+	public function permissions(){
+		return array();
+	}
 
 }

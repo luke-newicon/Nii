@@ -13,7 +13,7 @@ class SiteModule extends NWebModule {
 	
 	public function settings(){
 		return array(
-			'Website' => array('/site/admin/settings'),
+			'website' => '/site/admin/settings',
 		);
 	}
 

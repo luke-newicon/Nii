@@ -15,7 +15,7 @@ class AppModule extends NWebModule {
 
 	public function settings() {
 		return array(
-			'Applications' => array('/app/settings/index'),
+			'applications' => '/app/settings/index',
 		);
 	}
 	

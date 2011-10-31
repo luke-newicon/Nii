@@ -15,6 +15,7 @@
 //				'validateOnChange' => true,
 //			),
 			'focus' => array($model, 'username'),
+			'htmlOptions' => array('class' => 'float'),
 		));
 		?>
 		<?php if($model->hasErrors()) : ?>
@@ -41,13 +42,12 @@
 					<?php echo $form->error($model, 'password'); ?>
 				</div>
 			</div>
-			<div class="field" style="float:right">
-				<div class="checkbox">
-					<?php echo $form->checkBox($model, 'rememberMe', array('class' => 'inputInline')); ?>
-					<?php echo $form->labelEx($model, 'rememberMe'); ?>
-				</div>
+			<div class="field">
+				<label>
+					<?php echo $form->checkBox($model, 'rememberMe'); ?>
+					<?php echo $model->getAttributeLabel('rememberMe'); ?>
+				</label>
 			</div>
-			<?php //echo CHtml::link(UserModule::t("Lost Password?"), Yii::app()->getModule('user')->recoveryUrl); ?>
 			<input type="submit" class="hide" />
 		</fieldset>
 		<?php $this->endWidget(); ?>

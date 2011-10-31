@@ -232,6 +232,16 @@ class NHtml extends CHtml
 	public static function urlFile($id, $name='', $downloadable=false){
 		return NFileManager::get()->getUrl($id, $name, $downloadable);
 	}
-   
-
+	/**
+	 * Generates a user friendly attribute label.
+	 * This is done by replacing underscores or dashes with blanks and
+	 * changing the first letter of each word to upper case.
+	 * For example, 'department_name' or 'DepartmentName' becomes 'Department Name'.
+	 * @param string $name the column name
+	 * @return string the attribute label
+	 */
+	public static function generateAttributeLabel($name)
+	{
+		return ucwords(trim(strtolower(str_replace(array('-','_','.'),' ',preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name)))));
+	}
 }
