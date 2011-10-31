@@ -418,7 +418,7 @@
 										<input type="text" value="12:00am" />
 									</div>
 								</div>
-								<div class="unit">&nbsp;to&nbsp;</div>
+								<div class="unit pts">&nbsp;to&nbsp;</div>
 								<div class="field unit">
 									<div class="input joinedRight small">
 										<input type="text" value="May 8, 2011" />
@@ -432,10 +432,37 @@
 							</div>
 							<span class="hint">All times are shown as Pacific Standard Time (GMT -08:00).</span>
                         </div><!-- /field -->
+						 <div class="field">
+                            <label class="lbl" for="date">Date range</label>
+							<div class="line">
+								<div class="field unit mrs">
+									<div class="input small">
+										<input id="date" type="text" value="May 1, 2011" />
+									</div>
+								</div>
+								<div class="field unit mrs">
+									<div class="input mini">
+										<input type="text" value="12:00am" />
+									</div>
+								</div>
+								<div class="unit mrs pts">&nbsp;to&nbsp;</div>
+								<div class="field unit mrs">
+									<div class="input small">
+										<input type="text" value="May 8, 2011" />
+									</div>
+								</div>
+								<div class="field unit">
+									<div class="input mini">
+										<input type="text" value="11:59pm" />
+									</div>
+								</div>
+							</div>
+							<span class="hint">All times are shown as Pacific Standard Time (GMT -08:00).</span>
+                        </div><!-- /field -->
 						<div class="field stacked">
                             <label class="lbl" for="first_name">Name</label>
 							<div class="line">
-								<div class="field unit">
+								<div class="field unit mrs">
 									<div class="input small">
 										<input id="first_name" type="text" value="" />
 									</div>
