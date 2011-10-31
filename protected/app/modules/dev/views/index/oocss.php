@@ -154,71 +154,67 @@
         <div class="row">
             <div class="span4">
                 <h2>Form Layouts</h2>
-                <p>Forms support two main layouts, stacked and float which can be applied to all elements within the form, or individually to each field block (a div with class of <code>.field</code> containing the input elements)</p>
+                <p>Forms support two main layouts, stacked and float, these must be applied individually to each field block (a div with class of <code>.field</code> containing the input elements)</p>
             </div>
             <div class="span12">
                 <h2>Stacked Form layouts</h2>
 
                 <p>
-                    To create a stacked form field layout use the <code>.stacked</code> class, this can be applied to a field block (a div with class of <code>.field</code>).
-                    The stacked layout will make elements (typically <code>label</code> elements) with class <code>.lbl</code> stacked.
-                </p>
-                <p>
-                    The stacked class can will apply to all child <code>.field</code> clocks containing <code>.lbl</code> elements. Therefore you can apply <code>.stacked</code> class to the parent <code>form</code> element, or add them individually to <code>.field</code> elements.
+                    To create a stacked form field layout use the <code>.stacked</code> class.
                 </p>
 
 
-                        <form class="stacked" >
+				<form>
 
-                            <div class="field">
-                                <label class="lbl" for="name">Name:</label>
-                                <div class="input">
-                                    <input type="text" id="name" name="name">
-                                </div>
-                            </div>
+					<div class="field stacked">
+						<label class="lbl" for="name">Name:</label>
+						<div class="input">
+							<input type="text" id="name" name="name">
+						</div>
+					</div>
 
-                            <div class="field">
-                                <label class="lbl" for="email">Email:</label>
-                                <div class="inputContainer">
-                                    <label for="email" class="inFieldLabel" >It is the thing with the @ in it</label>
-                                    <div class="input">
-                                        <input type="text" id="email" name="username_3">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="field">
-								<label class="lbl" for="comment">Comment:</label>
-                                <div class="inputContainer">
-                                    <label for="comment" class="inFieldLabel" >Enter a nice comment</label>
-                                    <div class="input">
-                                        <textarea id="comment" name="comment"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+					<div class="field stacked">
+						<label class="lbl" for="email">Email:</label>
+						<div class="inputContainer">
+							<label for="email" class="inFieldLabel" >It is the thing with the @ in it</label>
+							<div class="input">
+								<input type="text" id="email" name="username_3">
+							</div>
+						</div>
+					</div>
 
-                        </form>
+					<div class="field stacked">
+						<label class="lbl" for="comment">Comment:</label>
+						<div class="inputContainer">
+							<label for="comment" class="inFieldLabel" >Enter a nice comment</label>
+							<div class="input">
+								<textarea id="comment" name="comment"></textarea>
+							</div>
+						</div>
+					</div>
+
+				</form>
                 
 				
 				
 
-                    <?php $this->beginWidget('CTextHighlighter', array('language' => 'html')); ?>
-    <form class="stacked" style="width:250px;">
+				<?php $this->beginWidget('CTextHighlighter', array('language' => 'html')); ?>
+	<form>
 
-        <div class="field">
-            <label class="lbl" for="name">Name:</label>
-            <div class="input"><input type="text" id="name" name="name"></div>
-        </div>
+		<div class="field stacked">
+			<label class="lbl" for="name">Name:</label>
+			<div class="input"><input type="text" id="name" name="name"></div>
+		</div>
 
-        <div class="field">
-            <label class="lbl" for="email">Email:</label>
-            <div class="inputContainer">
-                <label for="email" class="inFieldLabel" >It is the thing with the @ in it</label>
-                <div class="input"><input type="text" id="email" name="username_3"></div>
-            </div>
-        </div>
-		
-		<div class="field">
+		<div class="field stacked">
+			<label class="lbl" for="email">Email:</label>
+			<div class="inputContainer">
+				<label for="email" class="inFieldLabel" >It is the thing with the @ in it</label>
+				<div class="input"><input type="text" id="email" name="username_3"></div>
+			</div>
+		</div>
+
+		<div class="field stacked">
 			<label class="lbl" for="comment">Comment:</label>
 			<div class="inputContainer">
 				<label for="comment" class="inFieldLabel" >Enter a nice comment</label>
@@ -228,55 +224,55 @@
 			</div>
 		</div>
 
-    </form>
-                    <?php $this->endWidget(); ?>
+	</form>
+				<?php $this->endWidget(); ?>
                 
-				
-						<form class="float" >
-							
-							<div class="field">
-								<label class="lbl">Name:</label>
-								<div class="input">
-									<input type="text" id="username_3" name="username_3">
-								</div>
+
+				<form >
+
+					<div class="field float">
+						<label class="lbl">Name:</label>
+						<div class="input">
+							<input type="text" id="username_3" name="username_3">
+						</div>
+					</div>
+
+					<div class="field float">
+						<label class="lbl">Email:</label>
+						<div class="inputContainer">
+							<label for="email2" class="inFieldLabel" >It is the thing with the @ in it</label>
+							<div class="input">
+								<input type="text" id="email2" name="wmail">
 							</div>
+						</div>
+					</div>
 
-							<div class="field">
-								<label class="lbl">Email:</label>
-								<div class="inputContainer">
-									<label for="email2" class="inFieldLabel" >It is the thing with the @ in it</label>
-									<div class="input">
-										<input type="text" id="email2" name="wmail">
-									</div>
-								</div>
+					<div class="field float">
+						<label class="lbl">Comment:</label>
+						<div class="inputContainer">
+							<label for="comment2" class="inFieldLabel" >Enter a nice comment</label>
+							<div class="input">
+								<textarea id="comment2" name="comment2"></textarea>
 							</div>
+						</div>
+					</div>
 
-							<div class="field">
-								<label class="lbl">Comment:</label>
-								<div class="inputContainer">
-									<label for="comment2" class="inFieldLabel" >Enter a nice comment</label>
-									<div class="input">
-										<textarea id="comment2" name="comment2"></textarea>
-									</div>
-								</div>
-							</div>
-
-						</form>
-				
+				</form>
 
 
 
-                <form class="float">
+
+                <form>
                     <fieldset>
                         <legend>Example form legend</legend>	
-                        <div class="field">
+                        <div class="field float">
 
                             <label class="lbl" for="xlInput">X-Large input</label>
                             <div class="input xlarge">
                                 <input id="xlInput" name="xlInput" size="30" type="text" />
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="normalSelect">Select</label>
                             <div class="input large">
                                 <select name="normalSelect" id="normalSelect">
@@ -288,7 +284,7 @@
                                 </select>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="mediumSelect">Select</label>
                             <div class="input medium">
                                 <select name="mediumSelect" id="mediumSelect">
@@ -300,7 +296,7 @@
                                 </select>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="multiSelect">Multiple select</label>
                             <div class="input medium">
                                 <select multiple="multiple" name="multiSelect" id="multiSelect">
@@ -312,26 +308,26 @@
                                 </select>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl">Uneditable input</label>
                             <div class="input uneditable-input large">
 <!--								<input readonly value="some read only value"/>-->
                                 <span>Some value here</span>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="disabledInput">Disabled input</label>
                             <div class="input disabled xlarge">
                                 <input id="disabledInput" name="disabledInput" size="30" type="text" placeholder="Disabled input here… carry on." disabled />
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="disabledInput">Disabled textarea</label>
                             <div class="input disabled xxlarge">
                                 <textarea name="textarea" id="textarea" rows="3" disabled></textarea>
                             </div>
                         </div><!-- /field -->
-                        <div class="field error">
+                        <div class="field error float">
                             <label class="lbl" for="xlInput2">X-Large input</label>
                             <div class="input xlarge">
                                 <input id="xlInput2" name="xlInput2" size="30" type="text" />
@@ -341,7 +337,7 @@
                     </fieldset>
                     <fieldset >
                         <legend>Example form legend</legend>
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" for="prependedInput">Prepended text</label>
                             <div class="input">
                                 <div class="input-prepend">
@@ -350,7 +346,7 @@
                                 </div>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label for="prependedInput2">Prepended checkbox</label>
                             <div class="input">
                                 <div class="input-prepend">
@@ -359,7 +355,7 @@
                                 </div>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label for="appendedInput">Appended checkbox</label>
                             <div class="input">
                                 <div class="input-append">
@@ -368,7 +364,7 @@
                                 </div>
                             </div>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label for="fileInput">File input</label>
                             <div class="input">
                                 <input class="input-file" id="fileInput" name="fileInput" type="file" />
@@ -410,36 +406,51 @@
                                 </span>
                         </div><!-- /field -->
                         <div class="field">
-                            <label class="lbl">Date range</label>
+                            <label class="lbl" for="date">Date range</label>
 							<div class="line">
-								<div class="unit size1of5">
-									<div class="input">
-										<input class="small" type="text" value="May 1, 2011" />
+								<div class="field unit">
+									<div class="input joinedRight small">
+										<input id="date" type="text" value="May 1, 2011" />
 									</div>
 								</div>
-								<div class="unit size1of5">
-									<div class="input">
-										<input class="mini" type="text" value="12:00am" />
+								<div class="field unit">
+									<div class="input joinedLeft mini">
+										<input type="text" value="12:00am" />
 									</div>
 								</div>
-								<div class="unit size1of5">
-									to
-								</div>
-								<div class="unit size1of5">
-									<div class="input">
-										<input class="small" type="text" value="May 8, 2011" />
+								<div class="unit">&nbsp;to&nbsp;</div>
+								<div class="field unit">
+									<div class="input joinedRight small">
+										<input type="text" value="May 8, 2011" />
 									</div>
 								</div>
-								<div class="lastUnit">
-									<div class="input">
-										<input class="mini" type="text" value="11:59pm" />
+								<div class="field unit">
+									<div class="input joinedLeft mini">
+										<input type="text" value="11:59pm" />
 									</div>
 								</div>
 							</div>
 							<span class="hint">All times are shown as Pacific Standard Time (GMT -08:00).</span>
                         </div><!-- /field -->
+						<div class="field stacked">
+                            <label class="lbl" for="first_name">Name</label>
+							<div class="line">
+								<div class="field unit">
+									<div class="input small">
+										<input id="first_name" type="text" value="" />
+									</div>
+									<label class="hint">First</label>
+								</div>
+								<div class="field unit">
+									<div class="input small">
+										<input id="last_name" type="text" value="" />
+									</div>
+									<label class="hint">Last</label>
+								</div>
+							</div>
+                        </div><!-- /field -->
                         <div class="field">
-                            <label class="lbl" for="textarea">Textarea</label>
+                            <label class="lbl" for="textarea2">Textarea</label>
                             <div class="input">
                                 <textarea class="xxlarge" id="textarea2" name="textarea2" rows="3"></textarea>
                             </div>
@@ -447,7 +458,7 @@
 								Block of help text to describe the field above if need be.
 							</span>
                         </div><!-- /field -->
-                        <div class="field">
+                        <div class="field float">
                             <label class="lbl" id="optionsRadio">List of options</label>
 							<ul class="inputs-list">
 								<li>

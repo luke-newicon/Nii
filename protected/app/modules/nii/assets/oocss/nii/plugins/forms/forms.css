@@ -69,14 +69,19 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 .errorMessage{color:red;font-size:0.9em;padding:3px}
 
 /** form layouts */
-.stacked .lbl {display: block;float: none;font-weight: bold;line-height: 20px;padding-top: 0;text-align: left;width: auto;}
-.float .lbl {float: left; padding-top: 6px; text-align: right; width: 130px;margin-left:-150px;font-size: 13px;line-height: 18px;}
+.lbl {display:block;float:none;font-weight:bold;line-height: 20px;padding-top: 0;text-align: left;width: auto;}
+.float .lbl {float:left;padding-top:6px;font-weight:normal;text-align:right;width:130px;margin-left:-150px;font-size: 13px;line-height: 18px;}
 .float .field, .float.field{margin-left:150px;}
+
+/* if a field is within a field then we most likely don't want bottom margin */
+.field .field{margin-bottom:0px;margin-left:0px;}
+.field.error .lbl {color:#9D261D;}
+
 
 form fieldset {margin-bottom: 18px;padding-top: 18px;}
 fieldset legend {color: #404040;display: block;font-size: 19.5px;line-height: 1;padding-left: 150px;}
 
-.field.error label {color:#9D261D;}
+
 /* 
  * bootstrap styles 
  * ----------------
@@ -93,9 +98,17 @@ fieldset legend {color: #404040;display: block;font-size: 19.5px;line-height: 1;
 .xlarge{width:270px;}
 xxlarge{width:530px;}
 
-
-
 .uneditable-input {border-color: #EEEEEE; cursor: not-allowed;color: #808080;font-size: 13px; height: 18px;line-height: 18px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;}
 
 .disabled{background-image:none;background-color: #F5F5F5;border-color: #DDDDDD;box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset}
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor: not-allowed;}
+
+/** complex elements */
+.joinedRight{border-radius:3px 0px 0px 3px;}
+.joinedLeft{border-radius:0px 3px 3px 0px; border-left:0px;}
+/* style checkboxes and radios for consistency across broswers */
+input[type=checkbox],input[type=radio]{cursor:pointer;}
+input[type=checkbox],input[type=radio]{width:auto;height:auto;padding:0;margin:3px 0;*margin-top:0;line-height:normal;border:none;}
+input[type=file]{background-color:#ffffff;padding:initial;border:initial;line-height:initial;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
+select[multiple]{height:inherit;}
+input[type=file]:focus,input[type=checkbox]:focus,select:focus{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;outline:1px dotted #666;}

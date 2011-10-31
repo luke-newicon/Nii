@@ -73,15 +73,6 @@ class IndexController extends AController
 		}
 	}
 	
-	public function actionInstall(){
-		// lets also flush the cache incase schema chaching is on
-		Yii::app()->cache->flush();
-		
-		Yii::app()->installAll();
-		echo 'modules and db installed.';
-		Yii::app()->cache->flush();
-	}
-	
 	public function actionSprite(){
 		Yii::import('modules.nii.components.sprite.NSprite');
 		$s = new NSprite();
@@ -100,9 +91,6 @@ class IndexController extends AController
 		echo 'mailled';
 	}
 	
-	public function actionInstallApp($subdomain){
-		Yii::app()->createApp($subdomain);
-	}
 	
 	public function actionNotes(){
 		$this->render('notes');

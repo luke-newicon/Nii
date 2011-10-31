@@ -46,4 +46,24 @@ class AdminController extends AController {
 		Yii::app()->user->setFlash('success','Runtime folder succesfully flushed');
 		$this->redirect('index');
 	}
+	
+	/**
+	 * Runs the main application installation
+	 */
+	public function actionInstall(){
+		// lets also flush the cache incase schema chaching is on
+		try {
+			Yii::app()->cache->flush();
+			Yii::app()->installAll();
+			Yii::app()->cache->flush();
+			Yii::app()->user->setFlash('success','Modules and db installed.');
+		} catch (Exception $e){
+			throw $e;
+		}
+		
+		$this->redirect('index');
+	}
+	
+	
+	
 }
