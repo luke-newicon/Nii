@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AuthItem class file.
  *
@@ -9,78 +10,58 @@
  */
 
 /**
- * Description of AuthItem
+ * Description of AuthItemChild
  *
- * @author steve
- * @property $name;
- * @property $description;
- * @property $bizRule;
- * @property $data;
+ * @property $parent;
+ * @property $child;
  */
-class AuthItemChild extends NActiveRecord
-{
+class AuthItemChild extends NActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
 	 */
-	public static function model($className=__CLASS__)
-	{
+	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-	
-	public function  tableName() {
+
+	public function tableName() {
 		return '{{auth_item_child}}';
 	}
 
 	public function rules() {
 		return array(
 			array('parent,child', 'required'),
-			array('parent,child', 'length', 'max'=>64, 'min'=>1),
-			array('parent,child', 'safe'),
+			array('parent,child', 'length', 'max' => 64, 'min' => 1),
 		);
 	}
 
 	/**
-	* Declares attribute labels.
-	*/
-	public function attributeLabels()
-	{
-		return array(
-			'parent'			=> 'Parent',
-			'child'	=> 'Child',
-		);
-	}
-
-	/**
-	 * @return array relational rules.
+	 * Declares attribute labels.
 	 */
-	public function relations()
-	{
+	public function attributeLabels() {
 		return array(
+			'parent' => 'Parent',
+			'child' => 'Child',
 		);
 	}
 
-
-
-	public static function install($className=__CLASS__){
+	public static function install($className=__CLASS__) {
 		parent::install($className);
 	}
-	
-	public function schema(){
+
+	public function schema() {
 		return array(
-			'columns'=>array(
-				'parent'=>'varchar(64) not null',
-				'child'=>'varchar(64) not null',
-				0=>'PRIMARY KEY (parent,child)',
+			'columns' => array(
+				'parent' => 'varchar(64) not null',
+				'child' => 'varchar(64) not null',
+				0 => 'PRIMARY KEY (parent,child)',
 			),
-			'foreignKeys'=>array(
-				array('parent','parent', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
-				array('child','child', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
+			'foreignKeys' => array(
+				array('parent', 'parent', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
+				array('child', 'child', '{{auth_item}}', 'name', 'CASCADE', 'CASCADE'),
 			)
 		);
 	}
-	
-
 
 }

@@ -12,7 +12,7 @@ class AdminController extends AController {
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index', 'settings', 'users', 'roles', 'addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
+				'actions' => array('index', 'settings', 'users', 'permissions', 'permission', 'updatePermission','addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
 				'expression' => '$user->isSuper()'
 			),
 			array('deny', // deny all users
@@ -27,8 +27,8 @@ class AdminController extends AController {
 	public function actionIndex() {
 		$this->render('index');
 	}
-	
-	public function actionSettings(){
+
+	public function actionSettings() {
 		$this->render('settings');
 	}
 
@@ -53,69 +53,122 @@ class AdminController extends AController {
 		));
 	}
 
-	public function actionRoles() {
-
-		$columns[] = array(
-			'name' => 'id',
-			'header' => 'Action',
-			'type' => 'raw',
-			'value' => '$data[\'label\'].\' <span class="pull-right"><span class="label">\'.$data[\'id\'].\'</span></span>\'',
-		);
-
-		foreach (Yii::app()->authManager->roles as $role) {
-			$columns[] = array(
-				'name' => $role->name,
-//				'header' => $role->description,
-				'type' => 'raw',
-				'value' => 'CHtml::checkBox(\'Role[\'.$data[\'id\'].\'][' . $role->name . ']\',$data[\'' . $role->name . '\'])',
-			);
-			$default[$role->name] = false;
-		}
-
-		$default['Administrator'] = true;
-
-		$dataProvider = new CArrayDataProvider($this->getPermissions($default),
-				array(
-					'pagination' => false,
-				)
-		);
-
-		$this->render('roles', array(
-			'dataProvider' => $dataProvider,
-			'columns' => $columns,
-		));
-	}
-
-	public function getPermissions($default=array()) {
+	public function actionPermissions() {
 		foreach (Yii::app()->niiModules as $name => $module) {
 			if (method_exists($module, 'permissions')) {
 				$modulePermissions = $module->permissions();
-				if(is_array($modulePermissions)){
-					foreach ($module->permissions() as $action => $permission) {
-						$data = array('id' => $action, 'label' => $permission['label']);
-						$data += $default;
-						if ($permission['roles']) {
-							foreach ($permission['roles'] as $role) {
-								$data[$role] = true;
-							}
-						}
+				if (is_array($modulePermissions)) {
+					foreach ($modulePermissions as $id => $permission) {
+						$label = isset($permission['label']) ? $permission['label'] : NHtml::generateAttributeLabel($id);
+						$url = isset($permission['url']) ? CHtml::normalizeUrl($permission['url']) : CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $id, 'module' => $name));
+						$permissions['items'][] = array('label' => $label, 'url' => '#' . $id);
+						$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $id, 'data-ajax-url' => $url));
+					}
+				}
+			}
+		}
 
-						$permissions[] = $data;
+		$permissions['items'][0]['itemOptions']['class'] = 'active';
+		$permissions['pages'][0]['htmlOptions']['class'] = 'active';
 
-						if (isset($permission['items'])) {
-							$parent = $permission;
-							foreach ($parent['items'] as $action => $permission) {
-								$data = array('id' => $action, 'label' => $parent['label'] . ' - ' . $permission['label']);
-								$data += $default;
-								if ($permission['roles']) {
-									foreach ($permission['roles'] as $role) {
-										$data[$role] = true;
-									}
-								}
-								$permissions[] = $data;
-							}
+		$this->render('permissions', array(
+			'permissions' => $permissions,
+		));
+	}
+
+	public function actionPermission($id, $module) {
+//		$columns[] = array(
+//			'name' => 'id',
+//			'header' => 'Tasks',
+//			'type' => 'raw',
+//			'value' => '$data["label"].$data["operations"]',
+//		);
+//
+//		foreach (Yii::app()->authManager->roles as $role) {
+//			$role_id = NHtml::generateAttributeId($role->name);
+//			$columns[] = array(
+//				'name' => $role_id,
+//				'type' => 'raw',
+//				'value' => 'CHtml::checkBox(\'Role[\'.$data[\'id\'].\'][' . $role_id . ']\',$data[\'' . $role_id . '\'])',
+//				'htmlOptions' => array('width' => '100px'),
+//			);
+////			$default[$role->name] = false;
+//		}
+
+//		$default['Administrator'] = true;
+
+//		$dataProvider = new CArrayDataProvider(
+//			$this->getPermissions($id, $module),
+//			array('pagination' => false)
+//		);
+		
+		$columns[] = array(
+			'name' => 'description',
+			'header' => 'Tasks',
+		);
+		
+		foreach (Yii::app()->authManager->roles as $role) {
+			$role_id = NHtml::generateAttributeId($role->name);
+			$columns[] = array(
+				'name' => 'role_id',
+				'type' => 'raw',
+				'header' => $role->name,
+				'value' => 'CHtml::checkBox(\'Permission[\'.$data->name.\'][' . $role_id . ']\',$data->getRole(\'' . $role_id . '\'))',
+				'htmlOptions' => array('width' => '100px'),
+			);
+//			$default[$role->name] = false;
+		}
+		
+		$model = new UserTask;
+
+		$this->render('permission', array(
+			'id' => $id . '-permissions',
+			'dataProvider' => $model->search(),
+			'columns' => $columns,
+		));
+	}
+	
+	public function actionUpdatePermission(){
+		if(isset($_POST['Permission'])){
+			foreach($_POST['Permission'] as $taskName => $role){
+				foreach($role as $roleName => $child){
+					if($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName))
+						Yii::app()->authManager->addItemChild($roleName, $taskName);
+					else
+						Yii::app()->authManager->removeItemChild($roleName, $taskName);
+				}
+			}
+		}
+		// TODO: Create json return for showing success / error
+	}
+
+	public function getPermissions($id, $moduleName) {
+		$module = Yii::app()->getModule($moduleName);
+		if (method_exists($module, 'permissions')) {
+			$modulePermissions = $module->permissions();
+			if (is_array($modulePermissions)) {
+				foreach ($modulePermissions[$id]['tasks'] as $taskId => $task) {
+					$data = array('id' => $taskId, 'label' => $task['description']);
+					if(isset($task['roles'])) {
+						foreach (Yii::app()->authManager->roles as $role) {
+							if (in_array($role->name, $task['roles']))
+								$data[NHtml::generateAttributeId($role->name)] = true;
+							elseif (array_key_exists($role->name, $task['roles']))
+								$data[NHtml::generateAttributeId($role->name)] = $task['roles'][$role->name];
+							else
+								$data[NHtml::generateAttributeId($role->name)] = false;
 						}
 					}
+					$operations = '';
+					if(isset($task['operations'])){
+						$operations .= '<div>';
+						foreach($task['operations'] as $operation){
+							$operations .= '<span class="label">'.$operation.'</span> ';
+						}
+						$operations .= '<div>';
+					}
+					$data['operations'] = $operations;
+					$permissions[] = $data;
 				}
 			}
 		}

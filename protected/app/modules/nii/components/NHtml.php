@@ -244,4 +244,8 @@ class NHtml extends CHtml
 	{
 		return ucwords(trim(strtolower(str_replace(array('-','_','.'),' ',preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name)))));
 	}
+	
+	public static function generateAttributeId($label){
+		return str_replace(array(' '), '_', $label);
+	}
 }

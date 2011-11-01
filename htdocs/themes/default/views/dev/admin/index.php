@@ -23,7 +23,7 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/index/oocss')) ?>" target="_blank">Launch Nii Oocss Site</a>
 	</div>
 	<div id="database">
-		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/install')) ?>" target="_blank">Run Install</a>
+		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/install')) ?>">Run Install</a>
 		<p class="hint">Runs the main application installation and calls the install function on each active module.</p>
 	</div>
 </div>

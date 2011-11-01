@@ -4,14 +4,36 @@
 		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="static" >Add a Role</a>
 	</div>
 </div>
-<?php $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-	'id' => 'roles-grid',
-	'template' => '{items}',
-	'dataProvider' => $dataProvider,
-	'enableSorting' => false,
-	'enablePagination' => false,
-	'columns' => $columns,
-)); ?>
+<?php
+	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
+		'id' => 'permissions-tabs',
+		'items' => $permissions['items'],
+//		'heading' => 'Application Settings',
+		'htmlOptions' => array('class' => 'tabs vertical'),
+	));
+?>
+<div class="tab-content vertical">
+	<?php foreach($permissions['pages'] as $page) : ?>
+	<div<?php echo CHtml::renderAttributes($page['htmlOptions']) ?>>
+		Loading...
+	</div>
+	<?php endforeach ?>
+</div>
+<script>
+	jQuery(function($){
+		var loadPage = function($page){
+			$page.load($page.attr('data-ajax-url'));
+		}
+		
+		$('#permissions-tabs a').click(function(){
+			loadPage($($(this).attr('href')));
+		});
+		
+		$('#permissions-tabs').tabs();
+		
+		loadPage($('.tab-content .active'));
+	});
+</script>
 <div class="modal hide fade" id="modal-add-role">
 	<div class="modal-header">
 		<a class="close" href="#">×</a>

@@ -25,15 +25,15 @@ class TestModule extends NWebModule {
 		);
 	}
 
-	public function permissions() {
-		return array(
-			'test' => array('label' => 'Test Module', 'roles' => array('Administrator','Editor','Viewer'), 'items' => array(
-				'test/index/index' => array('label' => 'The test module main page', 'roles' => array('Administrator','Editor','Viewer')),
-				'test/index/good' => array('label' => 'The test module good page', 'roles' => array('Administrator','Editor')),
-				'test/settings/index' => array('label' => 'The test module settings page', 'roles' => array('Administrator')),
-			)),
-		);
-	}
+//	public function permissions() {
+//		return array(
+//			'test' => array('label' => 'Test Module', 'roles' => array('Administrator','Editor','Viewer'), 'items' => array(
+//				'test/index/index' => array('label' => 'The test module main page', 'roles' => array('Administrator','Editor','Viewer')),
+//				'test/index/good' => array('label' => 'The test module good page', 'roles' => array('Administrator','Editor')),
+//				'test/settings/index' => array('label' => 'The test module settings page', 'roles' => array('Administrator')),
+//			)),
+//		);
+//	}
 
 	public function install() {
 		
