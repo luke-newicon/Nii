@@ -58,6 +58,10 @@ label{float:none;padding-top:0;color:#404040;}
 .validating .input{/*border-color:#ccc;*/}/* this class is applied when the form is validating the input, typically when sending the ajax response to check validation */
 .validating.focus .input,.validating.focused .input{}
 
+/*.input:hover{border-color: #999999 #aaaaaa #aaaaaa;}
+.focus .input:hover,.focused .input:hover{border-color:rgba(82, 168, 236, 0.8);}
+.error .input:hover{border-color:#c99393 #e2a3a3 #e2a3a3;}
+.success .input:hover{border-color:#94c78c #a4da9b #a4da9b;}*/
 
 /* formHint style */
 .hint, .help-block{color:#bbbbbb;font-size:80%;line-height:18px}
