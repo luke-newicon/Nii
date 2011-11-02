@@ -5,23 +5,6 @@ class AdminController extends AController {
 	private $_model;
 
 	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
-	public function accessRules() {
-		return array(
-			array('allow',
-				'actions' => array('index', 'settings', 'users', 'permissions', 'permission', 'updatePermission', 'addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
-				'expression' => '$user->isSuper()'
-			),
-			array('deny', // deny all users
-				'users' => array('*'),
-			),
-		);
-	}
-
-	/**
 	 * Manages all models.
 	 */
 	public function actionIndex() {
@@ -103,13 +86,11 @@ class AdminController extends AController {
 						if ($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName)) {
 							Yii::app()->authManager->addItemChild($roleName, $taskName);
 							echo CJSON::encode(array('success' => 'Permission successfully added'));
-							exit;
 						} else {
 							if (Yii::app()->authManager->removeItemChild($roleName, $taskName))
 								echo CJSON::encode(array('success' => 'Permission successfully removed'));
 							else
 								echo CJSON::encode(array('error' => 'Permission failed to be removed'));
-							exit;
 						}
 					}
 				}
@@ -117,6 +98,7 @@ class AdminController extends AController {
 		} catch (CException $e) {
 			echo CJSON::encode(array('error' => 'Permission failed to be added'));
 		}
+		Yii::app()->end();
 	}
 
 	public function getPermissions($id, $moduleName) {
@@ -153,14 +135,22 @@ class AdminController extends AController {
 	}
 
 	public function actionAddRole() {
-		$model = new AuthItem;
+		$model = new UserRole;
 
 		$this->performAjaxValidation($model, 'add-role-form');
 
-		if (isset($_POST['AuthItem'])) {
-			$model->attributes = $_POST['AuthItem'];
+		if (isset($_POST['UserRole'])) {
+			$model->attributes = $_POST['UserRole'];
+			$model->description = $model->name;
+			$model->name = 'role-'.NHtml::generateAttributeId($model->description);
 			if ($model->validate()) {
 				Yii::app()->authManager->createRole($model->name, $model->description);
+				if($model->copy){
+					foreach(Yii::app()->authManager->getItemChildren($model->copy) as $child){
+						if(!Yii::app()->authManager->hasItemChild($model->name,$child->name))
+							Yii::app()->authManager->addItemChild($model->name,$child->name);
+					}
+				}
 				echo CJSON::encode(array('success' => 'Role successfully saved'));
 			} else {
 				echo CJSON::encode(array('error' => 'Role failed to save'));

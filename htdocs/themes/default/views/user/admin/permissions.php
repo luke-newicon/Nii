@@ -1,7 +1,7 @@
 <div class="page-header">
 	<h2>Permissions</h2>
 	<div class="action-buttons">
-		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="static" >Add a Role</a>
+		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="true" >Add a Role</a>
 	</div>
 </div>
 <?php
@@ -64,7 +64,7 @@
 				type: "post",
 				success: function(response){ 
 					if (response.success) {
-						$.fn.yiiGridView.update('roles-grid');
+						$.fn.yiiGridView.update($('.tab-content .active .grid-view').attr('id'));
 						$('#modal-add-role').modal('hide');
 					} else {
 						alert(response.error);

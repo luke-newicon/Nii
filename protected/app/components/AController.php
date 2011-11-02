@@ -41,10 +41,20 @@ class AController extends NController {
 	 * from unauthenticated users unless explicitly set
 	 * @return array
 	 */
+//	public function accessRules() {
+//		return array(
+//			array('deny',
+//				'users' => array('?'),
+//			),
+//		);
+//	}
 	public function accessRules() {
 		return array(
-			array('deny',
-				'users' => array('?'),
+			array('allow',
+				'expression' => '$user->checkAccessToRoute()',
+			),
+			array('deny', // deny all users
+				'users' => array('*'),
 			),
 		);
 	}

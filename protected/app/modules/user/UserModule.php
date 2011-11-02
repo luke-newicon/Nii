@@ -179,15 +179,14 @@ class UserModule extends NWebModule
 		return array(
 			'user' => array('description' => 'Users',
 				'tasks' => array(
-					'view' => array('description' => 'View users',
+					'view' => array('description' => 'View Users',
 						'roles' => array('administrator','editor','viewer'),
 						'operations' => array(
 							'user/admin/index',
 							'user/admin/users',
-							'user/admin/permissions',
 						),
 					),
-					'manage' => array('description' => 'Manage users',
+					'manage' => array('description' => 'Manage Users',
 						'roles' => array('administrator','editor'),
 						'operations' => array(
 							'user/admin/addUser',
@@ -196,30 +195,19 @@ class UserModule extends NWebModule
 							'user/admin/changePassword',
 						),
 					),
-					'impersonate' => array('description' => 'Impersonate a user',
+					'permissions' => array('description' => 'Manage Permissions',
+						'roles' => array('administrator'),
+						'operations' => array(
+							'user/admin/permissions',
+							'user/admin/permission',
+							'user/admin/updatePermission',
+							'user/admin/addRole',
+						),
+					),
+					'impersonate' => array('description' => 'Impersonate a User',
 						'roles' => array('administrator'),
 						'operations' => array(
 							'user/admin/impersonate',
-						),
-					),
-				),
-			),
-			'roles' => array('description' => 'Roles',
-				'tasks' => array(		
-					'print' => array('description' => 'Print a user',
-						'roles' => array('administrator','editor'),
-						'operations' => array(
-							'user/admin/print',
-						),
-					),
-				),
-			),
-			'steve' => array('description' => 'Steves Permissions',
-				'tasks' => array(		
-					'makelove' => array('description' => 'Make love to a user',
-						'roles' => array('administrator','viewer'),
-						'operations' => array(
-							'user/admin/print',
 						),
 					),
 				),
