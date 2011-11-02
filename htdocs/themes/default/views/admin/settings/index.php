@@ -2,7 +2,7 @@
 	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		'id' => 'SettingsTabs',
 		'items' => $settings['items'],
-		'heading' => 'Application Settings',
+		'heading' => 'Settings',
 		'htmlOptions' => array('class' => 'tabs vertical'),
 	));
 ?>

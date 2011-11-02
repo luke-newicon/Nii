@@ -10,7 +10,7 @@ a:focus{outline:none}
 .tabs .heading{margin-right:20px}
 
 /* Vertical Tabs */
-.tabs.vertical{width:250px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px}
+.tabs.vertical{width:200px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px}
 .tabs.vertical > li{float:none;left:1px;margin-top:2px}
 .tabs.vertical > li > a{border-radius:4px 0 0 4px;margin-right:0px;padding:0 12px;line-height:30px}
 .tabs.vertical > li > a:hover{border-color:#EEEEEE #DDDDDD #EEEEEE #EEEEEE}

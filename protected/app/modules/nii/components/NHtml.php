@@ -246,6 +246,6 @@ class NHtml extends CHtml
 	}
 	
 	public static function generateAttributeId($label){
-		return str_replace(array(' '), '_', $label);
+		return strtolower(str_replace(array(' '), '_', $label));
 	}
 }

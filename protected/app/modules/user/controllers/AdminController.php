@@ -54,17 +54,12 @@ class AdminController extends AController {
 	}
 
 	public function actionPermissions() {
-		foreach (Yii::app()->niiModules as $name => $module) {
-			if (method_exists($module, 'permissions')) {
-				$modulePermissions = $module->permissions();
-				if (is_array($modulePermissions)) {
-					foreach ($modulePermissions as $id => $permission) {
-						$label = isset($permission['label']) ? $permission['label'] : NHtml::generateAttributeLabel($id);
-						$url = isset($permission['url']) ? CHtml::normalizeUrl($permission['url']) : CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $id, 'module' => $name));
-						$permissions['items'][] = array('label' => $label, 'url' => '#' . $id);
-						$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $id, 'data-ajax-url' => $url));
-					}
-				}
+		if(Yii::app()->authManager->getAuthItem('task-admin-permissions')){
+			foreach(Yii::app()->authManager->getItemChildren('task-admin-permissions') as $task){
+				$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
+				$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
+				$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
+				$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
 			}
 		}
 
@@ -76,54 +71,26 @@ class AdminController extends AController {
 		));
 	}
 
-	public function actionPermission($id, $module) {
-//		$columns[] = array(
-//			'name' => 'id',
-//			'header' => 'Tasks',
-//			'type' => 'raw',
-//			'value' => '$data["label"].$data["operations"]',
-//		);
-//
-//		foreach (Yii::app()->authManager->roles as $role) {
-//			$role_id = NHtml::generateAttributeId($role->name);
-//			$columns[] = array(
-//				'name' => $role_id,
-//				'type' => 'raw',
-//				'value' => 'CHtml::checkBox(\'Role[\'.$data[\'id\'].\'][' . $role_id . ']\',$data[\'' . $role_id . '\'])',
-//				'htmlOptions' => array('width' => '100px'),
-//			);
-////			$default[$role->name] = false;
-//		}
-
-//		$default['Administrator'] = true;
-
-//		$dataProvider = new CArrayDataProvider(
-//			$this->getPermissions($id, $module),
-//			array('pagination' => false)
-//		);
-		
+	public function actionPermission($id) {
 		$columns[] = array(
 			'name' => 'description',
 			'header' => 'Tasks',
 		);
 		
 		foreach (Yii::app()->authManager->roles as $role) {
-			$role_id = NHtml::generateAttributeId($role->name);
 			$columns[] = array(
-				'name' => 'role_id',
 				'type' => 'raw',
-				'header' => $role->name,
-				'value' => 'CHtml::checkBox(\'Permission[\'.$data->name.\'][' . $role_id . ']\',$data->getRole(\'' . $role_id . '\'))',
-				'htmlOptions' => array('width' => '100px'),
+				'header' => $role->description,
+				'value' => '$data->displayRoleCheckbox(\''.$role->name.'\')',
+				'htmlOptions' => array('width' => '30px'),
 			);
-//			$default[$role->name] = false;
 		}
 		
 		$model = new UserTask;
 
 		$this->render('permission', array(
 			'id' => $id . '-permissions',
-			'dataProvider' => $model->search(),
+			'dataProvider' => $model->search($id),
 			'columns' => $columns,
 		));
 	}

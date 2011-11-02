@@ -91,32 +91,36 @@ class NWebModule extends CWebModule
 	
 	public function uninstall(){}
 	
-	public function settingsPage(){
-		if(method_exists($this,'settings') && $this->settings()){
-			$modelname = ucwords($this->id).'Setting';
-			$model = new $modelname;
-			
-			$config = array(
-				'id' => $modelname.'Form',
-				'elements' => $this->settings(),
-				'buttons' => array(
-					'save'=> array(
-						'type' => 'submit',
-						'label' => 'Save',
-					),
-				),
-			);
-			
-			$form = new CForm($config,$model);
-			return $form;
-		} else {
-			return 'No settings for this module';
-		}
-	}
+	public function settings(){}
 	
-	public function getSettingsPage(){
-		return array('/admin/settings/page','module'=>$this->id);
-	}
+	public function permissions(){}
+	
+//	public function settingsPage(){
+//		if(method_exists($this,'settings') && $this->settings()){
+//			$modelname = ucwords($this->id).'Setting';
+//			$model = new $modelname;
+//			
+//			$config = array(
+//				'id' => $modelname.'Form',
+//				'elements' => $this->settings(),
+//				'buttons' => array(
+//					'save'=> array(
+//						'type' => 'submit',
+//						'label' => 'Save',
+//					),
+//				),
+//			);
+//			
+//			$form = new CForm($config,$model);
+//			return $form;
+//		} else {
+//			return 'No settings for this module';
+//		}
+//	}
+//	
+//	public function getSettingsPage(){
+//		return array('/admin/settings/page','module'=>$this->id);
+//	}
 	
 	/**
 	 * loads the modules database settings and applies them to the module.
@@ -135,6 +139,37 @@ class NWebModule extends CWebModule
 	
 	public function getName(){
 		return $this->_id;
+	}
+	
+	public function installPermissions(){
+		if(!Yii::app()->authManager->getAuthItem('task-admin-permissions'))
+			Yii::app()->authManager->createTask('task-admin-permissions', 'Admin Permissions');
+		foreach($this->permissions() as $id => $permissions){
+			if(!Yii::app()->authManager->getAuthItem('task-'.$id))
+				Yii::app()->authManager->createTask('task-'.$id, $permissions['description']);
+			if(!Yii::app()->authManager->hasItemChild('task-admin-permissions', 'task-'.$id))
+				Yii::app()->authManager->addItemChild('task-admin-permissions', 'task-'.$id);
+			foreach($permissions['tasks'] as $taskName => $task){
+				if(!Yii::app()->authManager->getAuthItem('task-'.$id.'-'.$taskName)){
+					Yii::app()->authManager->createTask('task-'.$id.'-'.$taskName, $task['description']);
+					if(!Yii::app()->authManager->hasItemChild('task-'.$id, 'task-'.$id.'-'.$taskName))
+						Yii::app()->authManager->addItemChild('task-'.$id, 'task-'.$id.'-'.$taskName);
+					// Only apply tasks to roles if the task doesn't exist
+					foreach($task['roles'] as $role){
+						if(Yii::app()->authManager->getAuthItem('role-'.$role)){
+							if(!Yii::app()->authManager->hasItemChild('role-'.$role, 'task-'.$id.'-'.$taskName))
+								Yii::app()->authManager->addItemChild('role-'.$role, 'task-'.$id.'-'.$taskName);
+						}
+					}
+				}
+				foreach($task['operations'] as $operation){
+					if(!Yii::app()->authManager->getAuthItem($operation))
+						Yii::app()->authManager->createOperation($operation);
+					if(!Yii::app()->authManager->hasItemChild('task-'.$id.'-'.$taskName, $operation))
+						Yii::app()->authManager->addItemChild('task-'.$id.'-'.$taskName, $operation);
+				}
+			}
+		}
 	}
 	
 }

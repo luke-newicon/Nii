@@ -2,8 +2,6 @@
 
 class UserTask extends AuthItem {
 	
-	public $role_id;
-
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
@@ -30,12 +28,16 @@ class UserTask extends AuthItem {
 		);
 	}
 	
-	public function search(){
+	public function search($parent){
 		return new NActiveDataProvider($this);
 	}
 	
 	public function getRole($roleName){
 		return Yii::app()->authManager->hasItemChild($roleName, $this->name);
+	}
+	
+	public function displayRoleCheckbox($roleName){
+		return CHtml::checkBox('Permission['.$this->name.']['.$roleName.']',$this->getRole($roleName));
 	}
 
 }
