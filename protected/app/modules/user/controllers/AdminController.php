@@ -12,7 +12,7 @@ class AdminController extends AController {
 	public function accessRules() {
 		return array(
 			array('allow',
-				'actions' => array('index', 'settings', 'users', 'permissions', 'permission', 'updatePermission','addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
+				'actions' => array('index', 'settings', 'users', 'permissions', 'permission', 'updatePermission', 'addUser', 'addRole', 'editUser', 'account', 'changePassword', 'delete', 'impersonate'),
 				'expression' => '$user->isSuper()'
 			),
 			array('deny', // deny all users
@@ -54,8 +54,8 @@ class AdminController extends AController {
 	}
 
 	public function actionPermissions() {
-		if(Yii::app()->authManager->getAuthItem('task-admin-permissions')){
-			foreach(Yii::app()->authManager->getItemChildren('task-admin-permissions') as $task){
+		if (Yii::app()->authManager->getAuthItem('task-admin-permissions')) {
+			foreach (Yii::app()->authManager->getItemChildren('task-admin-permissions') as $task) {
 				$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
 				$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
 				$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
@@ -76,37 +76,47 @@ class AdminController extends AController {
 			'name' => 'description',
 			'header' => 'Tasks',
 		);
-		
+
 		foreach (Yii::app()->authManager->roles as $role) {
 			$columns[] = array(
 				'type' => 'raw',
 				'header' => $role->description,
-				'value' => '$data->displayRoleCheckbox(\''.$role->name.'\')',
+				'value' => '$data->displayRoleCheckbox(\'' . $role->name . '\')',
 				'htmlOptions' => array('width' => '30px'),
 			);
 		}
-		
-		$model = new UserTask;
+
+		$model = UserTask::model()->findByPk($id);
 
 		$this->render('permission', array(
 			'id' => $id . '-permissions',
-			'dataProvider' => $model->search($id),
+			'dataProvider' => $model->search(),
 			'columns' => $columns,
 		));
 	}
-	
-	public function actionUpdatePermission(){
-		if(isset($_POST['Permission'])){
-			foreach($_POST['Permission'] as $taskName => $role){
-				foreach($role as $roleName => $child){
-					if($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName))
-						Yii::app()->authManager->addItemChild($roleName, $taskName);
-					else
-						Yii::app()->authManager->removeItemChild($roleName, $taskName);
+
+	public function actionUpdatePermission() {
+		try {
+			if (isset($_POST['Permission'])) {
+				foreach ($_POST['Permission'] as $taskName => $role) {
+					foreach ($role as $roleName => $child) {
+						if ($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName)) {
+							Yii::app()->authManager->addItemChild($roleName, $taskName);
+							echo CJSON::encode(array('success' => 'Permission successfully added'));
+							exit;
+						} else {
+							if (Yii::app()->authManager->removeItemChild($roleName, $taskName))
+								echo CJSON::encode(array('success' => 'Permission successfully removed'));
+							else
+								echo CJSON::encode(array('error' => 'Permission failed to be removed'));
+							exit;
+						}
+					}
 				}
 			}
+		} catch (CException $e) {
+			echo CJSON::encode(array('error' => 'Permission failed to be added'));
 		}
-		// TODO: Create json return for showing success / error
 	}
 
 	public function getPermissions($id, $moduleName) {
@@ -116,7 +126,7 @@ class AdminController extends AController {
 			if (is_array($modulePermissions)) {
 				foreach ($modulePermissions[$id]['tasks'] as $taskId => $task) {
 					$data = array('id' => $taskId, 'label' => $task['description']);
-					if(isset($task['roles'])) {
+					if (isset($task['roles'])) {
 						foreach (Yii::app()->authManager->roles as $role) {
 							if (in_array($role->name, $task['roles']))
 								$data[NHtml::generateAttributeId($role->name)] = true;
@@ -127,10 +137,10 @@ class AdminController extends AController {
 						}
 					}
 					$operations = '';
-					if(isset($task['operations'])){
+					if (isset($task['operations'])) {
 						$operations .= '<div>';
-						foreach($task['operations'] as $operation){
-							$operations .= '<span class="label">'.$operation.'</span> ';
+						foreach ($task['operations'] as $operation) {
+							$operations .= '<span class="label">' . $operation . '</span> ';
 						}
 						$operations .= '<div>';
 					}

@@ -19,8 +19,16 @@
 				url: '<?php echo CHtml::normalizeUrl(array('/user/admin/updatePermission')) ?>',
 				data: data,
 				dataType: 'json',
-				type: 'post'
-				// TODO: Create repsonse action to show user if update was successful
+				type: 'post',
+				success: function(response){
+					if(response.success){
+						$checkbox.parent().addClass('success').delay(1000).removeClass('success',1000);
+					} else if(response.error){
+						alert(response.error);
+					} else {
+						alert(response);
+					}
+				}
 			});
 		});
 	});

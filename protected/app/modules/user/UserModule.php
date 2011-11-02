@@ -202,8 +202,22 @@ class UserModule extends NWebModule
 							'user/admin/impersonate',
 						),
 					),
+				),
+			),
+			'roles' => array('description' => 'Roles',
+				'tasks' => array(		
 					'print' => array('description' => 'Print a user',
 						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'user/admin/print',
+						),
+					),
+				),
+			),
+			'steve' => array('description' => 'Steves Permissions',
+				'tasks' => array(		
+					'makelove' => array('description' => 'Make love to a user',
+						'roles' => array('administrator','viewer'),
 						'operations' => array(
 							'user/admin/print',
 						),

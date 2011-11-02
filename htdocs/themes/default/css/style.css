@@ -32,6 +32,7 @@ html,body{height:100%}
  * Override the default yii grid styles.
  */
 .grid-view .filters input, .grid-view .filters select{border:none;}
+.grid-view tbody tr td.success{background-color:#D1EED1;border-color:#BFE7BF}
 
 .menu-dropdown .menu-notice{float:right;}
 

@@ -91,9 +91,13 @@ class NWebModule extends CWebModule
 	
 	public function uninstall(){}
 	
-	public function settings(){}
+	public function settings(){
+		return array();
+	}
 	
-	public function permissions(){}
+	public function permissions(){
+		return array();
+	}
 	
 //	public function settingsPage(){
 //		if(method_exists($this,'settings') && $this->settings()){
