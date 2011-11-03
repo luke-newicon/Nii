@@ -17,8 +17,9 @@ class AdminModule extends NWebModule {
 		$this->menu->addMenu('secondary');
 
 		$this->menu->addItem('secondary', 'Admin', '#');
-		$this->menu->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array('notice' => 'ALERT', 'noticeHtmlOptions' => array('class' => 'label important')));
 		$this->menu->addItem('secondary', 'Settings', array('/admin/settings/index'), 'Admin', array('notice' => 7));
+		$this->menu->addItem('secondary', 'Notifications', array('/admin/notifications/index'), 'Admin');
+		$this->menu->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array('notice' => 'ALERT', 'noticeHtmlOptions' => array('class' => 'label important')));
 	}
 	
 	public function install(){

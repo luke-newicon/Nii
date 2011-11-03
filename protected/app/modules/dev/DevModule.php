@@ -19,6 +19,7 @@ class DevModule extends NWebModule
 	public $name = 'Developer';
 	
 	public function init() {
+		Yii::app()->getModule('admin')->menu->addDivider('secondary','Admin');
 		Yii::app()->getModule('admin')->menu->addItem('secondary','Developer', array('/dev/admin/index'),'Admin');
 	}
 }
