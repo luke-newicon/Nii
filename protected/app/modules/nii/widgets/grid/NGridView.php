@@ -21,25 +21,21 @@ class NGridView extends CGridView {
 	  ),
 	 */
 	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n{pager}<div id='gridSettingsDialog'></div><div id='exportGridDialog'></div>";
-
 	public $scopes;
 	public $enableCustomScopes;
-	
 	public $defaultColumnClass = 'NDataColumn';
 	public $defaultScopeListClass = 'NScopeList';
 	public $selectableRows = 2;
-	
 	public $enableButtons = false;
-	public $buttons = array('export','print','update');
+	public $buttons = array('export', 'print', 'update');
 	public $buttonModelId = null;
-	
 	public $defaultExportButton = 'exportGrid';
 	public $defaultPrintButton = 'printGrid';
 	public $defaultUpdateButton = 'updateGridColumns';
 
 	public function init() {
 
-		if ($this->scopes['default'])
+		if (isset($this->scopes['default']))
 			$this->dataProvider->defaultScope = $this->scopes['default'];
 		parent::init();
 	}
@@ -111,63 +107,62 @@ class NGridView extends CGridView {
 			echo ' <input type="submit" value="Apply" class="button-secondary action" id="doaction"></div>';
 		}
 	}
-	
+
 	public function renderButtons() {
-		
+
 		if ($this->enableButtons && $this->buttons) {
 			echo '<span class="grid-buttons">';
 
 			foreach ($this->buttons as $button) {
 
 				if (!is_array($button)) {
-					$buttonVar = 'default'.ucfirst($button).'Button';
+					$buttonVar = 'default' . ucfirst($button) . 'Button';
 					if ($this->$buttonVar) {
 						$function = $this->$buttonVar;
 						$button = $this->{$function}();
 					}
-				} 
+				}
 
 				$options = ($button['htmlOptions']) ? $button['htmlOptions'] : array();
 				$label = $button['label'];
-				$url = $button['url'];	
+				$url = $button['url'];
 
 				if (is_array($button))
-					echo NHtml::link($label, $url,$options);
+					echo NHtml::link($label, $url, $options);
 			}
 			echo '</span>';
 		}
 	}
-	
+
 	public function exportGrid() {
 
 		if ($this->buttonModelId)
 			$model_id = $this->buttonModelId;
-				
+
 		$controller = Yii::app()->controller->uniqueid;
 		$action = Yii::app()->controller->action->id;
 		$model = get_class($this->dataProvider->model);
-	
+
 		$label = '';
 
 		return array(
 			'label' => $label, 'url' => '#',
-			'htmlOptions'=>array(
-				'onclick'=> Setting::exportGridDialog(
-					array('controller'=>$controller,'action'=>$action,'model'=>$model, 'model_id'=>$model_id, 'scope'=>$this->dataProvider->currentScope)
+			'htmlOptions' => array(
+				'onclick' => Setting::exportGridDialog(
+						array('controller' => $controller, 'action' => $action, 'model' => $model, 'model_id' => $model_id, 'scope' => $this->dataProvider->currentScope)
 				),
-				'title'=>'Export to CSV, Excel or ODS',
-				'class'=>'icon fam-table-go block-icon',
+				'title' => 'Export to CSV, Excel or ODS',
+				'class' => 'icon fam-table-go block-icon',
 			),
 		);
 	}
-	
+
 	public function printGrid() {
-		return array('label'=>'','url'=>'javascript:window.print()','htmlOptions'=>array('title'=>'Print', 'class'=>'icon fam-printer block-icon'));
+		return array('label' => '', 'url' => 'javascript:window.print()', 'htmlOptions' => array('title' => 'Print', 'class' => 'icon fam-printer block-icon'));
 	}
-	
-	
+
 	public function updateGridColumns() {
-		
+
 		$controller = Yii::app()->controller->uniqueid;
 		$action = Yii::app()->controller->action->id;
 		$model = get_class($this->dataProvider->model);
@@ -176,10 +171,10 @@ class NGridView extends CGridView {
 
 		return array(
 			'label' => $label, 'url' => '#',
-			'htmlOptions'=>array(
-				'onclick'=> Setting::gridSettingsDialog(array('controller'=>$controller,'action'=>$action,'model'=>$model)),
-				'title'=>'Update Visible Columns',
-				'class'=>'icon fam-cog block-icon',
+			'htmlOptions' => array(
+				'onclick' => Setting::gridSettingsDialog(array('controller' => $controller, 'action' => $action, 'model' => $model)),
+				'title' => 'Update Visible Columns',
+				'class' => 'icon fam-cog block-icon',
 			),
 		);
 	}

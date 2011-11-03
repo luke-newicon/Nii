@@ -36,7 +36,7 @@ class NScopeList extends CWidget {
 
 	public function createScopeItems() {
 		$render = '';
-		$scopes = $this->scopes['items'];
+		$scopes = isset($this->scopes['items']) ? $this->scopes['items'] : null;
 		
 		$customScopes = '';
 		
@@ -139,7 +139,7 @@ class NScopeList extends CWidget {
 		
 		if ($this->displayCurrentScopeDescription) {
 			
-			if ($currentScopeType=='custom') {
+			if (isset($currentScopeType) && $currentScopeType=='custom') {
 				$op = $fields['match'];
 				$rules = array();
 				
@@ -185,7 +185,7 @@ class NScopeList extends CWidget {
 				
 			}
 			
-			if ($currentDescription && $currentDescription != '')
+			if (isset($currentDescription) && $currentDescription != '')
 				$render .= '<div class="scopeDescription" style="clear:both; overflow:hidden;">'.$currentDescription.'</div>';
 		}
 
