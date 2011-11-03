@@ -26,9 +26,10 @@ THE SOFTWARE.
 	background-color: #F5F5F5;
 	border: 2px solid #E5E5E5;
 	font: 11px Verdana, Geneva, sans-serif;
-	margin-top: 5px;
+	margin-top: 45px;
 	padding: 10px;
 	max-width: 350px;
+	margin-right: 8px;
 }
 .uploadifyError {
 	background-color: #FDE5DD !important;

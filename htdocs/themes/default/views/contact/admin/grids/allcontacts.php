@@ -14,12 +14,14 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 //			),
 //		),
 //	),
-//	'enableButtons'=>true,
-	//'columns'=>$model->columns(Setting::visibleColumns('Contact')),
-	'columns' => array(
-		'name',
-		'city',
-		'county',
-		'email',
-	),
+	'enableButtons'=>false,
+	'enableCustomScopes'=>false,
+	'scopes'=>array('enableCustomScopes'=>false),
+	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
+//	'columns' => array(
+//		'name',
+//		'city',
+//		'county',
+//		'email',
+//	),
 ));

@@ -2,7 +2,7 @@
 
 // Attachments
 
-$this->widget('modules.nii.widgets.attachments.NAttachments',
+$this->widget('nii.widgets.attachments.NAttachments',
 	array(
 		'model'=>$model,
 		'canAdd'=>Yii::app()->user->checkAccess('editor'),

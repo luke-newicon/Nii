@@ -1,0 +1,25 @@
+/* 
+    Document   : relationships
+    Created on : Aug 19, 2011, 9:40:05 AM
+    Author     : robinwilliams
+    Description:
+        Specific styles for relationships widget
+*/
+
+div.relationship_widget {
+	position: relative;
+}
+
+div.relationship_item {
+	padding: 4px 3px;
+	display: block;
+	margin-bottom: 3px;
+	background-color: #fafafa;
+}
+
+a.relationship_delete_button {
+	display: none;
+}
+div.relationship_item:hover a.relationship_delete_button {
+	display: block;
+}

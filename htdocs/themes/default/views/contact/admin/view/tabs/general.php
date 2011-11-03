@@ -2,7 +2,7 @@
 
 // Relationships
 
-$this->widget('modules.nii.widgets.relationships.NRelationships',
+$this->widget('nii.widgets.relationships.NRelationships',
 	array(
 		'model'=>$model,
 		'canAdd'=>Yii::app()->user->checkAccess('editor'),

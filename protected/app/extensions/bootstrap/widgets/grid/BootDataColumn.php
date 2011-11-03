@@ -10,8 +10,8 @@
  * Thanks to Simo Jokela <rBoost@gmail.com> for writing the original version of this class.
  */
 
-Yii::import('zii.widgets.grid.CDataColumn');
-class BootDataColumn extends CDataColumn
+Yii::import('nii.widgets.grid.NDataColumn');
+class BootDataColumn extends NDataColumn
 {
 //	/**
 //	 * Initializes the column.
@@ -65,9 +65,9 @@ class BootDataColumn extends CDataColumn
 		else if($this->filter!==false && $this->grid->filter!==null && $this->name!==null && strpos($this->name,'.')===false)
 		{
 			if(is_array($this->filter))
-				echo '<div class="input">'.CHtml::activeDropDownList($this->grid->filter, $this->name, $this->filter, array('id'=>false,'prompt'=>'')).'</div>';
+				echo '<div class="field"><div class="input">'.CHtml::activeDropDownList($this->grid->filter, $this->name, $this->filter, array('id'=>false,'prompt'=>'')).'</div></div>';
 			else if($this->filter===null)
-				echo '<div class="input">'.CHtml::activeTextField($this->grid->filter, $this->name, array('id'=>false)).'</div>';
+				echo '<div class="field"><div class="input">'.CHtml::activeTextField($this->grid->filter, $this->name, array('id'=>false)).'</div></div>';
 		}
 		else
 			parent::renderFilterCellContent();
