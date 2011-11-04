@@ -28,13 +28,20 @@ class NWebUser extends CWebUser
 		parent::init();
 	}
 	
-	
+	/**
+	 * stores information after a user logs in. 
+	 * increments the number of logins for the user.
+	 * and updates the last visit time.
+	 * @param type $fromCookie
+	 * @return type 
+	 */
 	protected function afterLogin($fromCookie){
-		// sometimes the user has not been defined (often when restoring from cookie
-		// to catch this we just manually force it if it aint defined
-		if(!Yii::app()->user)
-			Yii::app()->user = $this;
 		
+		// if the user is a guest then they will not have a record.
+		if(Yii::app()->user->isGuest())
+			return false;
+		
+		// the user is not a guest and so should have a user record
 		if($this->record === null){
 			// something went badly wrong as we cant find the logged in users record
 			throw new CException('Unable to retrieve the logged in users\'s db record');
