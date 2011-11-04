@@ -77,7 +77,7 @@ class Contact extends NActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'photo'=>array(self::HAS_ONE, 'Attachment', 'model_id',
+			'photo'=>array(self::HAS_ONE, 'NAttachment', 'model_id',
 				'condition' => 'photo.model="'.__CLASS__.'" AND photo.type="contact-thumbnail" '),		
 			'student'=>array(self::HAS_ONE, 'Student', 'contact_id'),		
 			'staff'=>array(self::HAS_ONE, 'Staff', 'contact_id'),		
@@ -99,7 +99,7 @@ class Contact extends NActiveRecord
 			'name' => 'Name',
 			'photo' => 'Photo',
 			'title' => 'Title',
-			'givennames' => 'Given Names',
+			'givennames' => 'Firstname',
 			'lastname' => 'Surname',
 			'salutation' => 'Salutation/Nickname',
 			'dob' => 'DOB',
@@ -116,6 +116,7 @@ class Contact extends NActiveRecord
 			'tel_secondary' => 'Tel - Secondary',
 			'mobile' => 'Mobile',
 			'fax' => 'Fax',
+			'website' => 'Website URL',
 			'company_name' => 'Company Name',
 			'contact_name' => 'Contact Name',
 			'contact_type' => 'Contact Type',
@@ -157,6 +158,7 @@ class Contact extends NActiveRecord
 		$criteria->compare('tel_secondary',$this->tel_secondary,true);
 		$criteria->compare('mobile',$this->mobile,true);
 		$criteria->compare('fax',$this->fax,true);
+		$criteria->compare('website',$this->fax,true);
 		$criteria->compare('company_name',$this->company_name,true);
 		$criteria->compare('contact_name',$this->contact_name,true);
 		$criteria->compare('contact_type',$this->contact_type,true);
@@ -210,17 +212,17 @@ class Contact extends NActiveRecord
 //			array(
 //				'class'=>'CCheckBoxColumn',
 //			),
-			array(
-				'name' => 'photo',
-				'type'=>'raw',
-				'value' => '$data->getContactPhoto()',
-//				'exportValue' => '$data->getContactPhotoUrl()',
-				'visible'=>$visibleColumns['photo'],
-				'export'=>false,
-				'filter'=>false,
-				'header' => '',
-				'htmlOptions' => array('width'=>'24px'),
-			),
+//			array(
+//				'name' => 'photo',
+//				'type'=>'raw',
+//				'value' => '$data->getContactPhoto()',
+//	//				'exportValue' => '$data->getContactPhotoUrl()',
+//				'visible'=>$visibleColumns['photo'],
+//				'export'=>false,
+//				'filter'=>false,
+//				'header' => '',
+//				'htmlOptions' => array('width'=>'24px'),
+//			),
 			array(
 				'name' => 'name',
 				'type'=>'raw',
@@ -242,27 +244,27 @@ class Contact extends NActiveRecord
 				'name'=>'lastname',
 				'visible'=>$visibleColumns['lastname'],
 			),
-			array(
-				'name'=>'type',
-				'type'=>'raw',
-				'value' => '$data->getContactTypeList($data->contact_type)',
-				'exportValue' => '$data->getContactTypeListCsv($data->contact_type)',
-				'visible'=>$visibleColumns['type'],
-				'filter'=>$this->getRelationships(),
-				'htmlOptions'=>array('width'=>'150px'),
-			),
+//			array(
+//				'name'=>'type',
+//				'type'=>'raw',
+//				'value' => '$data->getContactTypeList($data->contact_type)',
+//				'exportValue' => '$data->getContactTypeListCsv($data->contact_type)',
+//				'visible'=>$visibleColumns['type'],
+//				'filter'=>$this->getRelationships(),
+//				'htmlOptions'=>array('width'=>'150px'),
+//			),
 			array(
 				'name'=>'addr1',
 				'visible'=>$visibleColumns['addr1'],
 			),
-			array(
-				'name'=>'addr2',
-				'visible'=>$visibleColumns['addr2'],
-			),
-			array(
-				'name'=>'addr3',
-				'visible'=>$visibleColumns['addr3'],
-			),
+//			array(
+//				'name'=>'addr2',
+//				'visible'=>$visibleColumns['addr2'],
+//			),
+//			array(
+//				'name'=>'addr3',
+//				'visible'=>$visibleColumns['addr3'],
+//			),
 			array(
 				'name'=>'city',
 				'visible'=>$visibleColumns['city'],
@@ -279,7 +281,7 @@ class Contact extends NActiveRecord
 			array(
 				'name'=>'postcode',
 				'visible'=>$visibleColumns['postcode'],
-				'htmlOptions'=>array('width'=>'60px'),
+				'htmlOptions'=>array('width'=>'70px'),
 			),
 			array(
 				'name'=>'email',
@@ -293,31 +295,30 @@ class Contact extends NActiveRecord
 				'visible'=>$visibleColumns['tel_primary'],
 				'htmlOptions'=>array('width'=>'100px','style'=>'text-align:center'),
 			),
-			array(
-				'name' => 'tel_secondary',
-				'visible'=>$visibleColumns['tel_secondary'],
-				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
-			),
-			array(
-				'name' => 'mobile',
-				'visible'=>$visibleColumns['mobile'],
-				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
-			),
+//			array(
+//				'name' => 'tel_secondary',
+//				'visible'=>$visibleColumns['tel_secondary'],
+//				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
+//			),
+//			array(
+//				'name' => 'mobile',
+//				'visible'=>$visibleColumns['mobile'],
+//				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
+//			),
 			array(
 				'name' => 'fax',
 				'visible'=>$visibleColumns['fax'],
 				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 			),
 			array(
-				'name'=>'dob',
-				'type'=>'raw',
-				'value'=>'THelper::formatGridDate($data->dob,"d/m/Y","")',
-				'visible'=>$visibleColumns['dob'],
+				'name' => 'website',
+				'visible'=>$visibleColumns['website'],
+				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
 			),
-			array(
-				'name' => 'comment',
-				'visible'=>$visibleColumns['comment'],
-			),
+//			array(
+//				'name' => 'comment',
+//				'visible'=>$visibleColumns['comment'],
+//			),
 		);
 	}
 	
@@ -424,11 +425,11 @@ class Contact extends NActiveRecord
 	public function getContactLink($tab=null, $showIcon=true) {
 		
 		$type = "grid-thumbnail-".strtolower($this->contact_type);
-		$label = $showIcon ? $this->getPhoto($type) . '<span>'.$this->name.'</span>' : $this->name;
+		$label = $showIcon ? $this->getPhoto($type) . '<span>'.$this->displayName.'</span>' : $this->displayName;
 		if ($tab)
-			return CHtml::link($label, array("contact/view","id"=>$this->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));
+			return CHtml::link($label, array("view","id"=>$this->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));
 		else
-			return CHtml::link($label, array("contact/view","id"=>$this->id),array('class'=>'grid-thumb-label'));
+			return CHtml::link($label, array("view","id"=>$this->id),array('class'=>'grid-thumb-label'));
 
 	}
 	
@@ -437,9 +438,9 @@ class Contact extends NActiveRecord
 		$label = $this->getPhoto($type);
 		if ($link) {
 			if ($tab)
-				return CHtml::link($label, array("contact/view","id"=>$this->id, 'selectedTab'=>$tab));
+				return CHtml::link($label, array("view","id"=>$this->id, 'selectedTab'=>$tab));
 			else
-				return CHtml::link($label, array("contact/view","id"=>$this->id));
+				return CHtml::link($label, array("view","id"=>$this->id));
 		}
 		else
 			return $label;
@@ -454,7 +455,7 @@ class Contact extends NActiveRecord
 	}
 		
 	public function getEmailLink() {
-		return THelper::emailLink($this->email);
+		return NHtml::emailLink($this->email);
 	}
 	
 	public function getFullAddress() {
@@ -467,6 +468,24 @@ class Contact extends NActiveRecord
 			'county'=>$this->county,
 			'postcode'=>$this->postcode,
 			'country'=>$this->country,
+		);
+		
+		$address = array();
+		
+		foreach ($addressLines as $addressLine) :
+			if ($addressLine) $address[] = $addressLine;
+		endforeach;
+		
+		return implode('<br />', $address);
+		
+	}
+	
+	public function getAddressFields() {
+		
+		$addressLines = array(
+			'addr1'=>$this->addr1,
+			'addr2'=>$this->addr2,
+			'addr3'=>$this->addr3,
 		);
 		
 		$address = array();
@@ -514,7 +533,7 @@ class Contact extends NActiveRecord
 	public function getDisplayName() {
 		
 		if ($this->contact_type == 'Person')
-			return $this->title . ' ' . $this->salutation . ' ('.$this->givennames.') ' . $this->lastname; 
+			return $this->title . ' ' . ($this->givennames ? $this->givennames . '  ':'') . $this->lastname; 
 		else 
 			return $this->name;
 		
@@ -566,6 +585,7 @@ class Contact extends NActiveRecord
 				'mobile' => "varchar(50)",
 				'tel_secondary' => "varchar(50)",
 				'fax' => "varchar(50)",
+				'website' => "varchar(255)",
 				'comment' => "text",
 				'company_name' => "varchar(255)",
 				'contact_name' => "varchar(255)",

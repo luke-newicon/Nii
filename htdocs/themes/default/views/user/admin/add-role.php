@@ -19,12 +19,12 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 	</div>
 	<div class="field">
-		<?php echo $form->labelEx($model, 'description'); ?>
+		<?php echo $form->labelEx($model, 'copy'); ?>
 		<div class="inputContainer">
 			<div class="input">
-				<?php echo $form->textField($model, 'description'); ?>
+				<?php echo $form->dropDownList($model, 'copy', NHtml::listData(Yii::app()->authManager->roles, 'name', 'description'), array('prompt' => 'No. Create from a blank role')); ?>
 			</div>
-			<?php echo $form->error($model, 'description'); ?>
+			<?php echo $form->error($model, 'copy'); ?>
 		</div>
 	</div>
 </fieldset>

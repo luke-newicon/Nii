@@ -6,9 +6,9 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
 
-Yii::import('zii.widgets.grid.CGridView');
+Yii::import('nii.widgets.grid.NGridView');
 Yii::import('ext.bootstrap.widgets.grid.BootDataColumn');
-class BootGridView extends CGridView
+class BootGridView extends NGridView
 {
 	/**
 	 * @property string the CSS class name for the container table.

@@ -102,12 +102,12 @@ class Setting extends NActiveRecord
 		$cols = array();
 		
 		$attributes = array('type'=>'grid_columns','setting_name'=>$controllerPath, 'user_id'=>Yii::app()->user->record->id);
-		$visibleColumns = $columns->findByAttributes($attributes)->setting_value;
+		$visibleColumns = $columns->findByAttributes($attributes) ? $columns->findByAttributes($attributes)->setting_value : null;
 		if ($visibleColumns) {
 			$cols = CJSON::decode($visibleColumns);
 		} else {
 			$attributes = array('type'=>'grid_columns','setting_name'=>$controllerPath, 'user_id'=>'0');
-			$visibleColumns = $columns->findByAttributes($attributes)->setting_value;
+			$visibleColumns = $columns->findByAttributes($attributes) ? $columns->findByAttributes($attributes)->setting_value : null;
 			if ($visibleColumns) {
 				$cols = CJSON::decode($visibleColumns);
 			}

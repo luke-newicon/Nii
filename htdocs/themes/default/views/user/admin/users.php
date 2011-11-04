@@ -1,7 +1,7 @@
 <div class="page-header">
 	<h2>Users</h2>
 	<div class="action-buttons">
-		<a class="btn primary" data-controls-modal="modal-add-user" data-backdrop="static">Add a User</a>
+		<a class="btn primary" data-controls-modal="modal-add-user" data-backdrop="true">Add a User</a>
 	</div>
 </div>
 <?php
@@ -100,7 +100,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		
 		$('#modal-edit-user').modal({backdrop:'static'});
 		
-		$('#users').delegate('#user-grid .edit-user a','click',function(){
+		$('.main').delegate('#user-grid .edit-user a','click',function(){
 			$('#modal-edit-user').modal('show');
 			$('#modal-edit-user .modal-body').load($(this).attr('href'));
 			return false;

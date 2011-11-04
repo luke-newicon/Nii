@@ -158,6 +158,8 @@ class NiiModule extends NWebModule
 		Yii::import('nii.models.*');
 		NNote::install();
 		NFile::install();
+		NAttachment::install();
+		NRelationship::install();
 		NSettings::install();
 	}
 	

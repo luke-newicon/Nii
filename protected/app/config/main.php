@@ -53,7 +53,6 @@ return array(
 		'theme' => 'default',
 		'modulePath' => $modules,
 		'modules' => array(
-			
 			'user' => array(
 				'registrationCaptcha' => false,
 				'termsRequired' => false,

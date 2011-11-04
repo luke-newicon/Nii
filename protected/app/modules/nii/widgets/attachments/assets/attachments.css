@@ -1,0 +1,25 @@
+/* 
+    Document   : attachments
+    Created on : Aug 19, 2011, 9:40:05 AM
+    Author     : robinwilliams
+    Description:
+        Specific styles for attachments widget
+*/
+
+div.attachment_widget {
+	position: relative;
+}
+
+div.attachment_item {
+	padding: 4px 3px;
+	display: block;
+	margin-bottom: 3px;
+	background-color: #fafafa;
+}
+
+a.attachment_delete_button {
+	display: none;
+}
+div.attachment_item:hover a.attachment_delete_button {
+	display: block;
+}

@@ -158,8 +158,13 @@ class UserModule extends NWebModule
 		Yii::app()->getModule('admin')->menu->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
 		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin');
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin');
+		Yii::app()->getModule('admin')->menu->addDivider('secondary','Admin');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/users'),
+		));
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/permissions'),
+		));
 
 		
 		// add to the main config
@@ -177,16 +182,18 @@ class UserModule extends NWebModule
 	
 	public function permissions() {
 		return array(
-			'user' => array('label' => 'Users',
+			'user' => array('description' => 'Users',
 				'tasks' => array(
-					'task-user-view' => array('description' => 'View users', 'roles' => array('Administrator','Editor','Viewer'),
+					'view' => array('description' => 'View Users',
+						'roles' => array('administrator','editor','viewer'),
 						'operations' => array(
 							'user/admin/index',
 							'user/admin/users',
-							'user/admin/permissions',
+							'menu-admin',
 						),
 					),
-					'task-user-manage' => array('description' => 'Manage users', 'roles' => array('Administrator','Editor'),
+					'manage' => array('description' => 'Manage Users',
+						'roles' => array('administrator','editor'),
 						'operations' => array(
 							'user/admin/addUser',
 							'user/admin/editUser',
@@ -194,7 +201,18 @@ class UserModule extends NWebModule
 							'user/admin/changePassword',
 						),
 					),
-					'task-user-impersonate' => array('description' => 'Impersonate a user', 'roles' => array('Administrator'),
+					'permissions' => array('description' => 'Manage Permissions',
+						'roles' => array('administrator'),
+						'operations' => array(
+							'user/admin/permissions',
+							'user/admin/permission',
+							'user/admin/updatePermission',
+							'user/admin/addRole',
+							'menu-admin',
+						),
+					),
+					'impersonate' => array('description' => 'Impersonate a User',
+						'roles' => array('administrator'),
 						'operations' => array(
 							'user/admin/impersonate',
 						),
@@ -202,29 +220,6 @@ class UserModule extends NWebModule
 				),
 			),
 		);
-	}
-	
-	public function installPermissions(){
-		if(method_exists($this, 'permissions')){
-			foreach($this->permissions() as $id => $permissions){
-				foreach($permissions['tasks'] as $taskName => $task){
-					if(!Yii::app()->authManager->getAuthItem($taskName)){
-						Yii::app()->authManager->createTask($taskName, $task['description']);
-						// Only apply tasks to roles if the task doesn't exist
-						foreach($task['roles'] as $role){
-							if(!Yii::app()->authManager->hasItemChild($role, $taskName))
-								Yii::app()->authManager->addItemChild($role, $taskName);
-						}
-					}
-					foreach($task['operations'] as $operation){
-						if(!Yii::app()->authManager->getAuthItem($operation))
-							Yii::app()->authManager->createOperation($operation);
-						if(!Yii::app()->authManager->hasItemChild($taskName, $operation))
-							Yii::app()->authManager->addItemChild($taskName, $operation);
-					}
-				}
-			}
-		}
 	}
 	
 	public function getBehaviorsFor($componentName){
@@ -397,12 +392,12 @@ class UserModule extends NWebModule
 		AuthAssignment::install();
 		AuthItemChild::install();
 		// Create the default roles
-		if(!Yii::app()->authManager->getAuthItem('Administrator'))
-			Yii::app()->authManager->createRole('Administrator');
-		if(!Yii::app()->authManager->getAuthItem('Editor'))
-			Yii::app()->authManager->createRole('Editor');
-		if(!Yii::app()->authManager->getAuthItem('Viewer'))
-			Yii::app()->authManager->createRole('Viewer');
+		if(!Yii::app()->authManager->getAuthItem('role-administrator'))
+			Yii::app()->authManager->createRole('role-administrator', 'Administrator');
+		if(!Yii::app()->authManager->getAuthItem('role-editor'))
+			Yii::app()->authManager->createRole('role-editor', 'Editor');
+		if(!Yii::app()->authManager->getAuthItem('role-viewer'))
+			Yii::app()->authManager->createRole('role-viewer', 'Viewer');
 		// Install the default permissions
 		$this->installPermissions();
 		// Install the user table

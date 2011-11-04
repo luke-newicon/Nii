@@ -17,13 +17,25 @@ class TaskModule extends NWebModule
 	public $settingsPage = array('tasks/settings');
 	
 	public function init(){
+		Yii::import('task.models.*');
 		Yii::app()->getModule('admin')->menu->addItem('main','Tasks','#');
 		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/admin/index'), 'Tasks',array('notice'=>1));
-		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
+//		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
 	}
 	
 	public function install(){
-		//NActiveRecord::install('TaskTask');
+		TaskTask::install();
+		$tasks = TaskTask::model()->findAll();
+		if(empty($tasks)){
+			$task = new TaskTask;
+			$task->name = 'My sample task';
+			$task->description = 'This task is a sample to show how the task system works';
+			$task->priority = 4;
+			$task->importance = 6;
+			$task->finish_date = '2011-10-11';
+			$task->owner = 'Steve O\'Brien';
+			$task->save();
+		}
 	}
 	
 	public function uninstall(){

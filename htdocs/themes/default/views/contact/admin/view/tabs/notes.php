@@ -11,7 +11,7 @@
 	}
 ?></h3>
 <?php
-$this->widget('modules.nii.widgets.notes.NNotes',
+$this->widget('nii.widgets.notes.NNotes',
 	array(
 		'model'=>$model,
 		'canAdd'=>Yii::app()->user->checkAccess('editor'),

@@ -25,161 +25,6 @@ class AdminController extends AController {
 			'model'=>$model,
 		));
 	}
-	
-	/**
-	 * This is the action to show the students grid
-	 */
-	public function actionStudent() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Students';
-		$class = 'Student';
-		$model = new Student('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$class]))
-			$model->attributes = $_GET[$class];
-
-		$this->render('grids/students',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
-	
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionAcademic() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Academics';
-		$contacts = 'Academic';
-		$model = new Academic('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/academics',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionStaff() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Members of Staff';
-		$contacts = 'Staff';
-		$model = new Staff('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/staff',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionTrainingfacility() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Training Facilities';
-		$contacts = 'Trainingfacility';
-		$model = new Trainingfacility('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/trainingfacilities',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}	
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionChurch() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Churches';
-		$contacts = 'Church';
-		$model = new Church('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/churches',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionDiocese() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Dioceses';
-		$contacts = 'Diocese';
-		$model = new Diocese('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/dioceses',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
-	
-	/**
-	 * This is the action to show the academics grid
-	 */
-	public function actionClergy() {
-		
-		$this->actionsMenu = $this->contactGridActions();
-				
-		$this->pageTitle = Yii::app()->name . ' - Clergy';
-		$contacts = 'Cleric';
-		$model = new Cleric('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
-
-		$this->render('grids/clergy',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model
-		));
-	}
 			
 	/**
 	 * View contact details
@@ -187,42 +32,34 @@ class AdminController extends AController {
 	 * @param string $selectedTab 
 	 */
 	public function actionView($id=null, $selectedTab=null) {
-		
-		if ($selectedTab) 
-			$this->activeChild = $selectedTab;
-		else
-			$this->activeChild = 'allcontacts';
-		if ($selectedTab == 'studentProgrammeList')
-			$this->activeChild = 'student';
-		
+				
 		$model = Contact::model()->findByPk($id);
-		$student = Student::model()->findByAttributes(array('contact_id'=>$id));
 		
 		$this->checkModelExists($model, "<strong>No contact exists for ID: ".$id."</strong>");
 		
-		if (THelper::checkAccess()) {
-			$this->actionsMenu = array(
-				array('label' => '<span class="icon fam-user-edit">'.$this->t('Edit Contact').'</span>', 'url' => array('/contact/edit','id'=>$id)),
-				array('label' => '<span class="icon fam-user-add">'.$this->t('Add Relationship').'</span>', 'url' => '#',
-					'linkOptions'=>array(
-						'onclick'=> $model->addRelationshipDialog()
-					)
-				),
-			);
-
-			// If the contact has student details, include the menu link for adding a programme
-			if ($student) {
-				array_push ($this->actionsMenu, 
-					array(
-						'label' => '<span class="icon fam-page-add">'.$this->t('Add Programme of Study').'</span>', 
-						'url' => '#',
-						'linkOptions'=>array(
-							'onclick'=> $model->addProgrammeDialog($id)
-						)
-					)
-				);
-			}
-		}
+//		if (THelper::checkAccess()) {
+//			$this->actionsMenu = array(
+//				array('label' => '<span class="icon fam-user-edit">'.$this->t('Edit Contact').'</span>', 'url' => array('/contact/edit','id'=>$id)),
+//				array('label' => '<span class="icon fam-user-add">'.$this->t('Add Relationship').'</span>', 'url' => '#',
+//					'linkOptions'=>array(
+//						'onclick'=> $model->addRelationshipDialog()
+//					)
+//				),
+//			);
+//
+//			// If the contact has student details, include the menu link for adding a programme
+//			if ($student) {
+//				array_push ($this->actionsMenu, 
+//					array(
+//						'label' => '<span class="icon fam-page-add">'.$this->t('Add Programme of Study').'</span>', 
+//						'url' => '#',
+//						'linkOptions'=>array(
+//							'onclick'=> $model->addProgrammeDialog($id)
+//						)
+//					)
+//				);
+//			}
+//		}
 		
 		$model->selectedTab = $selectedTab;
 		
@@ -241,7 +78,6 @@ class AdminController extends AController {
 			'Contact' => array('index'),
 			'Create Contact'
 		);	
-		$this->activeChild = 'allcontacts';
 			
 		$model = new Contact;
 		
@@ -303,7 +139,6 @@ class AdminController extends AController {
 	 */
 	public function actionEdit($id=null) {
 		
-		$this->activeChild = 'allcontacts';
 			
 		$model = Contact::model()->findByPk($id);			
 		$model->scenario = $model->contact_type;
@@ -323,13 +158,13 @@ class AdminController extends AController {
 				// If it saves, add the attachment
 				if ($model->photoID) {
 
-					$a = Attachment::model()->findByAttributes(array('model_id'=>$model->id,'type'=>'contact-thumbnail'));
+					$a = NAttachment::model()->findByAttributes(array('model_id'=>$model->id,'type'=>'contact-thumbnail'));
 					
 					if ($model->photoID == '-1') {
 						$a->delete();
 					} else {
 						if ($a === null)
-							$a = new Attachment;
+							$a = new NAttachment;
 
 						$a->file_id = $model->photoID;
 						$a->model = 'Contact';

@@ -10,7 +10,7 @@ a:focus{outline:none}
 .tabs .heading{margin-right:20px}
 
 /* Vertical Tabs */
-.tabs.vertical{width:250px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px}
+.tabs.vertical{width:200px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px}
 .tabs.vertical > li{float:none;left:1px;margin-top:2px}
 .tabs.vertical > li > a{border-radius:4px 0 0 4px;margin-right:0px;padding:0 12px;line-height:30px}
 .tabs.vertical > li > a:hover{border-color:#EEEEEE #DDDDDD #EEEEEE #EEEEEE}
@@ -31,8 +31,282 @@ html,body{height:100%}
 /**
  * Override the default yii grid styles.
  */
+.grid-view,.tab-content .grid-view{padding:0}
 .grid-view .filters input, .grid-view .filters select{border:none;}
+.grid-view tbody tr td.success{background-color:#D1EED1;border-color:#BFE7BF}
+.grid-view table th,.grid-view table td{padding:6px 7px}
+.grid-view .filters .input{padding:3px}
 
 .menu-dropdown .menu-notice{float:right;}
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
+
+a.grid-thumb-label {
+	text-decoration: none;
+}
+
+a.grid-thumb-label span {
+	margin-left: 5px;
+	display: inline-block;
+	line-height: 24px;
+	height: 24px;
+	vertical-align: top;
+}
+a.grid-thumb-label img {
+	display: inline-block; 
+}
+
+ul.yiiPager .first,
+ul.yiiPager .last {
+	display:inline;
+}
+
+ul.yiiPager .first,
+ul.yiiPager .last,
+ul.yiiPager .previous,
+ul.yiiPager .next {
+	margin-left: 5px;
+}
+
+ul.yiiPager .previous {
+	margin-right: 5px;
+}
+
+ul.yiiPager .hidden a {
+	color: #bbb;
+}
+
+.grid-buttons {
+	display: inline-block;
+	margin-bottom: 5px;
+	min-height: 20px;
+}
+
+div.scopes {
+	margin-bottom: 10px;
+}
+
+ul.scopes {
+	overflow: hidden;
+	clear: both;
+	margin-bottom: 5px;
+}
+
+ul.scopes li {
+	display: block;
+	float: left;
+	line-height: 16px;
+	margin: 0;
+	position: relative;
+}
+
+ul.scopes li.last {
+	border-right: none;
+	margin-right: 0;
+}
+
+ul.scopes li a {
+	float: left;
+	padding: 2px 8px;
+    margin-left: 5px;
+}
+
+ul.scopes li.first a {
+	padding-left: 0;
+	margin-left: 0px;
+}
+
+ul.scopes li a.current {
+    margin-right: 5px;
+}
+
+ul.scopes li a.current {
+	background-color: #E9E9E9;
+    border: 1px solid #CCCCCC;
+    font-weight: bold;
+    padding: 1px 6px;
+}
+
+ul.scopes li a span.count {
+	color: #666;
+	font-weight: normal;
+	font-size: .9em;
+	margin-left: 2px;
+}
+
+/*ul.scopes li.filter-li {
+	border-left: 1px solid #666;
+	border-right: none;
+	padding: 0 0 0 8px
+}*/
+
+
+ul.scopes li.custom-scope a {
+	color: #297acb;
+}
+
+ul.scopes li.addCustomScope a {
+	padding-left: 2px;
+	height: auto;
+	line-height: normal;
+	margin-top: -1px;
+}
+
+ul.scopes li.addCustomScope a span {
+	display: block;
+}
+
+.scopeEditButtons {
+	position: relative;
+/*	display: none;
+	right: 2px;
+	background-color: #fafafa;*/
+}
+
+ul.scopes .scopeEditButtons a {
+	padding: 0;
+	margin: 0;
+	margin-top: -1px;
+}
+ul.scopes .scopeEditButtons a span {
+	margin: 0 2px 0 0;
+}
+
+div.scopes .scopeDescription {
+/*	margin-left: 6px;*/
+	font-size: .9em;
+	color: #999;
+}
+
+#contact-general {
+	padding: 12px;
+	min-height: 145px;
+}
+
+.shadowBlockLarge {
+	
+	-webkit-box-shadow: 0px 0px 6px #999;
+	-moz-box-shadow: 0px 0px 6px #999;
+	box-shadow: 0px 0px 6px #999;
+	background: white;
+	margin-bottom: 16px;
+	max-width: 1200px;
+}
+
+.paddedBlock, .ui-tabs .ui-tabs-panel {
+	padding: 12px;
+}
+
+#contact-edit-button, .right-button {
+	float: right;
+	margin: 0 5px 10px 5px;
+}
+
+.contact-photo {
+	float: left;
+	margin-right: 10px;
+}
+
+h2.contact-title {
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+#contact-general-info {
+	width: 767px;
+	margin-left: 155px;
+}
+
+/* @group Vertical tabs */
+
+
+div#tabs.vertical {
+	padding: 0;
+}
+
+div#tabs.vertical div.ui-tabs-panel {
+	/*width: 760px;*/
+	margin-bottom: 16px;
+	border-radius: 0;
+	margin-right: 0;
+	min-height: 200px;
+	z-index: 100!important;
+	max-width: 1048px;
+	margin-left: 220px;
+}
+
+div.vertical ul.ui-tabs-nav {
+    border-bottom: medium none;
+    border-right: 1px solid #DDDDDD;
+	border-radius: 0;
+    margin: 0 20px 0 0;
+	padding-right: 0;
+    padding-bottom: 4px;
+    width: 200px;
+	float: left;
+}
+
+
+div.vertical ul.ui-tabs-nav li {
+	display: block;
+	float: none;
+	border-radius: 0;
+	border: none;
+	background: none;
+	z-index: 0;
+	padding-right: 0px;
+	margin-right: 0;
+}
+
+
+div.vertical ul.ui-tabs-nav li a,
+div.vertical ul.ui-tabs-nav li.ui-state-active a {
+	border: 1px solid transparent;
+	border-radius: 4px 0 0 4px;
+    line-height: 30px;
+    margin-right: -1px;
+    padding: 0 12px;
+	float: none;
+	display: block;
+	left: 1px;
+}
+
+
+div.vertical ul.ui-tabs-nav li a:hover {
+	background-color: #EEE;
+	border-color: #EEE #DDDDDD #EEE #EEE;
+}
+
+div.vertical ul.ui-tabs-nav li.ui-state-active a {
+/*	z-index: 100;
+	background: white;
+	box-shadow: none!important;
+	width: 137px;*/
+    background-color: #FFF;
+    border-color: #DDDDDD #DDDDDD transparent;
+    border-style: solid;
+    border-width: 1px;
+    color: #808080;
+	border-color: #DDDDDD transparent #DDDDDD #DDDDDD;
+    border-right: 1px solid transparent;
+}
+
+
+div.vertical ul.ui-tabs-nav li.level-2 a,
+div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+	margin-left: 10px;
+	width: 125px;
+}
+
+div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+	width: 127px;
+}
+
+
+
+#addTabs {
+	width: 130px;
+	float: left;
+}
+
+/* @end */
