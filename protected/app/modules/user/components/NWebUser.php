@@ -32,8 +32,8 @@ class NWebUser extends CWebUser
 	 * stores information after a user logs in. 
 	 * increments the number of logins for the user.
 	 * and updates the last visit time.
-	 * @param type $fromCookie
-	 * @return type 
+	 * @param boolean $fromCookie if restored from cookie
+	 * @return void 
 	 */
 	protected function afterLogin($fromCookie){
 		
