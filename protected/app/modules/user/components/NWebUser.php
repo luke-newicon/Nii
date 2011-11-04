@@ -37,10 +37,6 @@ class NWebUser extends CWebUser
 	 */
 	protected function afterLogin($fromCookie){
 		
-		// if the user is a guest then they will not have a record.
-		if(Yii::app()->user->isGuest())
-			return false;
-		
 		// the user is not a guest and so should have a user record
 		if($this->record === null){
 			// something went badly wrong as we cant find the logged in users record
