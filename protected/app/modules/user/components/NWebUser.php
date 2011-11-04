@@ -23,11 +23,6 @@ class NWebUser extends CWebUser
 	 */
 	private $_user;
 	
-	
-	public function init(){
-		parent::init();
-	}
-	
 	/**
 	 * stores information after a user logs in. 
 	 * increments the number of logins for the user.
@@ -36,7 +31,6 @@ class NWebUser extends CWebUser
 	 * @return void 
 	 */
 	protected function afterLogin($fromCookie){
-		
 		// the user is not a guest and so should have a user record
 		if($this->record === null){
 			// something went badly wrong as we cant find the logged in users record

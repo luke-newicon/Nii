@@ -44,6 +44,7 @@
 						'activateParents' => true,
 						'htmlOptions' => array('class' => 'secondary-nav'),
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
+						'encodeLabel' => false,
 					));
 					$this->widget('nii.widgets.NMenu', array(
 						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),

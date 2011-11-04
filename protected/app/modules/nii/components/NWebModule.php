@@ -146,13 +146,13 @@ class NWebModule extends CWebModule
 	}
 	
 	public function installPermissions(){
-		if(!Yii::app()->authManager->getAuthItem('task-admin-permissions'))
-			Yii::app()->authManager->createTask('task-admin-permissions', 'Admin Permissions');
+//		if(!Yii::app()->authManager->getAuthItem('task-admin-permissions'))
+//			Yii::app()->authManager->createTask('task-admin-permissions', 'Admin Permissions');
 		foreach($this->permissions() as $id => $permissions){
 			if(!Yii::app()->authManager->getAuthItem('task-'.$id))
 				Yii::app()->authManager->createTask('task-'.$id, $permissions['description']);
-			if(!Yii::app()->authManager->hasItemChild('task-admin-permissions', 'task-'.$id))
-				Yii::app()->authManager->addItemChild('task-admin-permissions', 'task-'.$id);
+//			if(!Yii::app()->authManager->hasItemChild('task-admin-permissions', 'task-'.$id))
+//				Yii::app()->authManager->addItemChild('task-admin-permissions', 'task-'.$id);
 			foreach($permissions['tasks'] as $taskName => $task){
 				if(!Yii::app()->authManager->getAuthItem('task-'.$id.'-'.$taskName)){
 					Yii::app()->authManager->createTask('task-'.$id.'-'.$taskName, $task['description']);

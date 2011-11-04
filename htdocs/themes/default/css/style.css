@@ -37,7 +37,8 @@ html,body{height:100%}
 .grid-view table th,.grid-view table td{padding:6px 7px}
 .grid-view .filters .input{padding:3px}
 
-.menu-dropdown .menu-notice{float:right;}
+.menu-notice{float:left;margin-right:5px}
+.menu-dropdown .menu-notice{float:right;margin:0px}
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
 
@@ -310,3 +311,18 @@ div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
 }
 
 /* @end */
+
+/*#mainMenu.ui-sortable li{
+    -moz-animation-name: wobble;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
+    -moz-animation-duration: 0.3s;
+}
+
+@-moz-keyframes wobble {
+	0% {-moz-transform: rotate(0deg);}
+	25% {-moz-transform: rotate(2deg);}
+	50% {-moz-transform: rotate(0deg);}
+	75% {-moz-transform: rotate(-2deg);}
+	100% {-moz-transform: rotate(0deg);}
+}*/

@@ -185,7 +185,7 @@ class UserModule extends NWebModule
 			'user' => array('description' => 'Users',
 				'tasks' => array(
 					'view' => array('description' => 'View Users',
-						'roles' => array('administrator','editor','viewer'),
+						'roles' => array('administrator'),
 						'operations' => array(
 							'user/admin/index',
 							'user/admin/users',
@@ -193,7 +193,7 @@ class UserModule extends NWebModule
 						),
 					),
 					'manage' => array('description' => 'Manage Users',
-						'roles' => array('administrator','editor'),
+						'roles' => array('administrator'),
 						'operations' => array(
 							'user/admin/addUser',
 							'user/admin/editUser',

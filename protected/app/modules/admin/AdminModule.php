@@ -68,7 +68,7 @@ class AdminModule extends NWebModule {
 						),
 					),
 					'dashboard' => array('description' => 'Dashboard',
-						'roles' => array('administrator'),
+						'roles' => array('administrator','editor','viewer'),
 						'operations' => array(
 							'admin/index/index',
 							'admin/index/dashboard',

@@ -11,8 +11,25 @@ class WikiModule extends NWebModule {
 		Yii::app()->getModule('admin')->menu->addItem('main','Wiki', array('/wiki/admin/index'));
 	}
 	
-	public function install(){}
+	public function install(){
+		$this->installPermissions();
+	}
 	
 	public function uninstall(){}
+	
+	public function permissions() {
+		return array(
+			'wiki' => array('description' => 'Wiki',
+				'tasks' => array(
+					'view' => array('description' => 'Wiki Module',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'wiki',
+						),
+					),
+				),
+			),
+		);
+	}
 
 }

@@ -37,12 +37,15 @@ class AdminController extends AController {
 	}
 
 	public function actionPermissions() {
-		if (Yii::app()->authManager->getAuthItem('task-admin-permissions')) {
-			foreach (Yii::app()->authManager->getItemChildren('task-admin-permissions') as $task) {
-				$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
-				$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
-				$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
-				$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
+		foreach(Yii::app()->niiModules as $module){
+			foreach($module->permissions() as $name => $permission){
+				$task = Yii::app()->authManager->getAuthItem('task-'.$name);
+				if($task){
+					$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
+					$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
+					$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
+					$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
+				}
 			}
 		}
 

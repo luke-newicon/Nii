@@ -29,7 +29,7 @@ class DevModule extends NWebModule
 		return array(
 			'dev' => array('description' => 'Developer',
 				'tasks' => array(
-					'view' => array('description' => 'View Developer',
+					'view' => array('description' => 'View Developer Options',
 						'roles' => array('administrator'),
 						'operations' => array(
 							'dev/admin/index',
