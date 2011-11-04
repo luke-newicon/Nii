@@ -21,6 +21,7 @@ class AdminMenu extends CApplicationComponent {
 			if($url)
 				$this->_menus[$menu][$parent]['items'][$label]['url'] = $url;
 		} else {
+			$this->_menus[$menu][$label] = $options;
 			$this->_menus[$menu][$label]['label'] = $label;
 			if($url)
 				$this->_menus[$menu][$label]['url'] = $url;

@@ -15,22 +15,19 @@ class AdminModule extends NWebModule {
 
 		$this->menu->addMenu('main');
 		$this->menu->addMenu('secondary');
-		
-//		dp('Hello');
-//		dp(Yii::app()->user->getRecord());
 
 		$this->menu->addItem('secondary', 'Admin', '#', null, array(
-//			'visible' => Yii::app()->user->checkAccess('admin/index/index'),
+			'visible' => Yii::app()->user->checkAccess('menu-admin'),
 		));
 		$this->menu->addItem('secondary', 'Settings', array('/admin/settings/index'), 'Admin', array(
-//			'visible' => Yii::app()->user->checkAccess('admin/settings/index'),
+			'visible' => Yii::app()->user->checkAccess('admin/settings/index'),
 			'notice' => 7,
 		));
 		$this->menu->addItem('secondary', 'Notifications', array('/admin/notifications/index'), 'Admin', array(
-//			'visible' => Yii::app()->user->checkAccess('admin/notifications/index'),
+			'visible' => Yii::app()->user->checkAccess('admin/notifications/index'),
 		));
 		$this->menu->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array(
-//			'visible' => Yii::app()->user->checkAccess('admin/modules/index'),
+			'visible' => Yii::app()->user->checkAccess('admin/modules/index'),
 			'notice' => 'ALERT',
 			'noticeHtmlOptions' => array('class' => 'label important'),
 		));
@@ -57,6 +54,7 @@ class AdminModule extends NWebModule {
 							'admin/modules/index',
 							'admin/modules/enable',
 							'admin/modules/disable',
+							'menu-admin',
 						),
 					),
 					'settings' => array('description' => 'Manage Settings',
@@ -66,6 +64,7 @@ class AdminModule extends NWebModule {
 							'admin/settings/page',
 							'admin/settings/general',
 							'admin/settings/presentation',
+							'menu-admin',
 						),
 					),
 					'dashboard' => array('description' => 'Dashboard',

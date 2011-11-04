@@ -1,6 +1,21 @@
 <?php
 
 class IndexController extends AController {
+	
+	public function accessRules() {
+		return array(
+			array('allow',
+				'expression' => '$user->checkAccessToRoute()',
+			),
+			array('allow',
+				'actions' => array('error'),
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('*'),
+			),
+		);
+	}
 
 	public function actionIndex() {
 		$this->redirect(array('dashboard'));

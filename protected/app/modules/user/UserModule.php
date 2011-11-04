@@ -159,8 +159,12 @@ class UserModule extends NWebModule
 		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
 		Yii::app()->getModule('admin')->menu->addDivider('secondary','Admin');
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin');
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin');
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/users'),
+		));
+		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/permissions'),
+		));
 
 		
 		// add to the main config
@@ -185,6 +189,7 @@ class UserModule extends NWebModule
 						'operations' => array(
 							'user/admin/index',
 							'user/admin/users',
+							'menu-admin',
 						),
 					),
 					'manage' => array('description' => 'Manage Users',
@@ -203,6 +208,7 @@ class UserModule extends NWebModule
 							'user/admin/permission',
 							'user/admin/updatePermission',
 							'user/admin/addRole',
+							'menu-admin',
 						),
 					),
 					'impersonate' => array('description' => 'Impersonate a User',
