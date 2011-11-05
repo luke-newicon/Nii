@@ -1,6 +1,6 @@
 <?php
 
-class AdminMenu extends CApplicationComponent {
+class NMenuManager extends CApplicationComponent {
 	
 	private $_menus = array();
 	

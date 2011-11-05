@@ -8,12 +8,12 @@ class TestModule extends NWebModule {
 
 	public function init() {
 		Yii::import('test.models.*');
-		Yii::app()->getModule('admin')->menu->addItem('main', 'Test Module', array('/test/index/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main', 'First page', array('/test/index/index'), 'Test Module');
-		Yii::app()->getModule('admin')->menu->addDivider('secondary','Admin');
-		Yii::app()->getModule('admin')->menu->addItem('secondary', 'Good page', array('/test/index/good'), 'Admin');
-		Yii::app()->getModule('admin')->menu->addItem('main', 'Test Dashboard', array('/test/index/dashboard'), 'Home');
-		Yii::app()->getModule('admin')->menu->addItem('user', 'Test User Settings', array('/test/index/good'), 'User');
+		Yii::app()->menus->addItem('main', 'Test Module', array('/test/index/index'));
+		Yii::app()->menus->addItem('main', 'First page', array('/test/index/index'), 'Test Module');
+		Yii::app()->menus->addDivider('secondary','Admin');
+		Yii::app()->menus->addItem('secondary', 'Good page', array('/test/index/good'), 'Admin');
+		Yii::app()->menus->addItem('main', 'Test Dashboard', array('/test/index/dashboard'), 'Home');
+		Yii::app()->menus->addItem('user', 'Test User Settings', array('/test/index/good'), 'User');
 	}
 
 	public function settings() {

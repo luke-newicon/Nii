@@ -152,21 +152,6 @@ class UserModule extends NWebModule
 			'user.components.*',
 		));
 		
-		Yii::app()->getModule('admin')->menu->addMenu('user');
-		
-		Yii::app()->getModule('admin')->menu->addItem('user','User',array('/user/admin'));
-		Yii::app()->getModule('admin')->menu->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
-		Yii::app()->getModule('admin')->menu->addItem('user','Settings',array('/user/admin/settings'),'User');
-		
-		Yii::app()->getModule('admin')->menu->addDivider('secondary','Admin');
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Users',array('/user/admin/users'),'Admin',array(
-			'visible' => Yii::app()->user->checkAccess('user/admin/users'),
-		));
-		Yii::app()->getModule('admin')->menu->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin',array(
-			'visible' => Yii::app()->user->checkAccess('user/admin/permissions'),
-		));
-
-		
 		// add to the main config
 		Yii::app()->components = array(
 			'authManager'=>array(

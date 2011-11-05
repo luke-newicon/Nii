@@ -10,26 +10,37 @@ class AdminModule extends NWebModule {
 		Yii::import('admin.components.*');
 		Yii::import('admin.models.*');
 
-		$adminMenu = new AdminMenu;
-		$this->setComponent('menu', $adminMenu);
+		Yii::app()->menus->addMenu('main');
+		Yii::app()->menus->addMenu('secondary');
 
-		$this->menu->addMenu('main');
-		$this->menu->addMenu('secondary');
-
-		$this->menu->addItem('secondary', 'Admin', '#', null, array(
+		Yii::app()->menus->addItem('secondary', 'Admin', '#', null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-admin'),
 		));
-		$this->menu->addItem('secondary', 'Settings', array('/admin/settings/index'), 'Admin', array(
+		Yii::app()->menus->addItem('secondary', 'Settings', array('/admin/settings/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/settings/index'),
 			'notice' => 7,
 		));
-		$this->menu->addItem('secondary', 'Notifications', array('/admin/notifications/index'), 'Admin', array(
+		Yii::app()->menus->addItem('secondary', 'Notifications', array('/admin/notifications/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/notifications/index'),
 		));
-		$this->menu->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array(
+		Yii::app()->menus->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/modules/index'),
 			'notice' => 'ALERT',
 			'noticeHtmlOptions' => array('class' => 'label important'),
+		));
+		
+		Yii::app()->menus->addMenu('user');
+		
+		Yii::app()->menus->addItem('user','User','#');
+		Yii::app()->menus->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
+		Yii::app()->menus->addItem('user','Settings',array('/user/admin/settings'),'User');
+		
+		Yii::app()->menus->addDivider('secondary','Admin');
+		Yii::app()->menus->addItem('secondary','Users',array('/user/admin/users'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/users'),
+		));
+		Yii::app()->menus->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/admin/permissions'),
 		));
 	}
 	

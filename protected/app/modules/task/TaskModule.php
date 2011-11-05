@@ -18,9 +18,9 @@ class TaskModule extends NWebModule
 	
 	public function init(){
 		Yii::import('task.models.*');
-		Yii::app()->getModule('admin')->menu->addItem('main','Tasks','#');
-		Yii::app()->getModule('admin')->menu->addItem('main','Tasks', array('/task/admin/index'), 'Tasks',array('notice'=>1));
-//		Yii::app()->getModule('admin')->menu->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
+		Yii::app()->menus->addItem('main','Tasks','#');
+		Yii::app()->menus->addItem('main','Tasks', array('/task/admin/index'), 'Tasks',array('notice'=>1));
+//		Yii::app()->menus->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
 	}
 	
 	public function install(){

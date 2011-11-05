@@ -7,10 +7,10 @@ class AppModule extends NWebModule {
 	public $version = '0.0.1b';
 
 	public function init() {
-		Yii::app()->getModule('admin')->menu->addItem('main','Applications', array('/app/admin/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main','Task Manager', array('/task/index/index'),'Applications');
-		Yii::app()->getModule('admin')->menu->addDivider('main','Applications');
-		Yii::app()->getModule('admin')->menu->addItem('main','Show all apps', array('/app/admin/index'),'Applications');
+		Yii::app()->menus->addItem('main','Applications', array('/app/admin/index'));
+		Yii::app()->menus->addItem('main','Task Manager', array('/task/index/index'),'Applications');
+		Yii::app()->menus->addDivider('main','Applications');
+		Yii::app()->menus->addItem('main','Show all apps', array('/app/admin/index'),'Applications');
 	}
 
 	public function settings() {

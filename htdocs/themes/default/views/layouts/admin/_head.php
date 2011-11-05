@@ -21,7 +21,7 @@
 					<?php endif; ?>
 					<?php
 					$this->widget('nii.widgets.NMenu', array(
-						'items' => Yii::app()->getModule('admin')->menu->getItems('main'),
+						'items' => Yii::app()->menus->getItems('main'),
 						'id' => 'mainMenu',
 						'activateParents' => true,
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
@@ -35,19 +35,19 @@
 						</li>
 					</ul>
 					<?php
-					Yii::app()->getModule('admin')->menu->addDivider('user','User');
-					Yii::app()->getModule('admin')->menu->addItem('user','Logout',array('/user/account/logout'),'User');
-					Yii::app()->getModule('admin')->menu->setUsername(Yii::app()->user->name);
+					Yii::app()->menus->addDivider('user','User');
+					Yii::app()->menus->addItem('user','Logout',array('/user/account/logout'),'User');
+					Yii::app()->menus->setUsername(Yii::app()->user->name);
 					$this->widget('nii.widgets.NMenu', array(
-						'items' => Yii::app()->getModule('admin')->menu->getItems('user'),
+						'items' => Yii::app()->menus->getItems('user'),
 						'id' => 'userMenu',
 						'activateParents' => true,
 						'htmlOptions' => array('class' => 'secondary-nav'),
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
-						'encodeLabel' => false,
+//						'encodeLabel' => false,
 					));
 					$this->widget('nii.widgets.NMenu', array(
-						'items' => Yii::app()->getModule('admin')->menu->getItems('secondary'),
+						'items' => Yii::app()->menus->getItems('secondary'),
 						'id' => 'secondaryMenu',
 						'activateParents' => true,
 						'htmlOptions' => array('class' => 'secondary-nav'),

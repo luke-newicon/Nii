@@ -67,8 +67,11 @@ return array(
 		),
 		// application components
 		'components' => array(
+			'menus' => array(
+				'class' => 'NMenuManager',
+			),
 			'bootstrap'=>array(
-				'class'=>'Bootstrap',
+				'class' => 'Bootstrap',
 			),
 			'settings'=>array(
 				'class' => 'NSettings',

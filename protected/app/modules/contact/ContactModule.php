@@ -8,8 +8,8 @@ class ContactModule extends NWebModule {
 
 	public function init() {
 		Yii::import('contact.models.*');
-		Yii::app()->getModule('admin')->menu->addItem('main','Contacts', array('/contact/admin/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main','All Contacts', array('/contact/admin/index'),'Contacts');
+		Yii::app()->menus->addItem('main','Contacts', array('/contact/admin/index'));
+		Yii::app()->menus->addItem('main','All Contacts', array('/contact/admin/index'),'Contacts');
 	}
 	
 	public function install(){

@@ -8,7 +8,7 @@ class WikiModule extends NWebModule {
 
 	public function init() {
 		Yii::import('test.models.*');
-		Yii::app()->getModule('admin')->menu->addItem('main','Wiki', array('/wiki/admin/index'));
+		Yii::app()->menus->addItem('main','Wiki', array('/wiki/admin/index'));
 	}
 	
 	public function install(){

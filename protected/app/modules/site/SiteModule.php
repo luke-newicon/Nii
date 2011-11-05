@@ -7,8 +7,8 @@ class SiteModule extends NWebModule {
 	public $version = '0.0.1';
 
 	public function init() {
-		Yii::app()->getModule('admin')->menu->addItem('main','Website', array('/site/admin/index'));
-		Yii::app()->getModule('admin')->menu->addItem('main','Pages', array('/site/admin/pages'), 'Website');
+		Yii::app()->menus->addItem('main','Website', array('/site/admin/index'));
+		Yii::app()->menus->addItem('main','Pages', array('/site/admin/pages'), 'Website');
 	}
 	
 	public function settings(){

@@ -18,7 +18,11 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			'name' => 'id',
 			'htmlOptions' => array('width' => '100px'),
 		),
-		'name',
+		'name' => array(
+			'name' => 'name',
+			'type' => 'raw',
+			'value' => '$data->editLink($data->name)',
+		),
 		'priority' => array(
 			'name' => 'priority',
 			'htmlOptions' => array('width' => '100px'),

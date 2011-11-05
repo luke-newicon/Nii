@@ -66,6 +66,10 @@ class TaskTask extends NActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+	
+	public function editLink($text){
+		return CHtml::link($text, array('/task/admin/editTask','id'=>$this->id()));
+	}
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
