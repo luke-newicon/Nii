@@ -106,6 +106,7 @@ class User extends NActiveRecord {
 			'lastvisit' => UserModule::t("Last visit"),
 			'superuser' => UserModule::t("Superuser"),
 			'status' => UserModule::t("Status"),
+			'roleName' => 'Role',
 		);
 	}
 
@@ -274,7 +275,7 @@ class User extends NActiveRecord {
 
 	public function getRoleDescription() {
 		if ($this->role)
-			return Yii::app()->authManager->getAuthItem($this->role->itemname)->description;
+			return $this->role->authitem->description;
 	}
 
 	private $_roleName;
@@ -305,6 +306,10 @@ class User extends NActiveRecord {
 		if ($this->password != $this->verifyPassword) {
 			$this->addError("verifyPassword", UserModule::t("Retype Password is incorrect."));
 		}
+	}
+	
+	public function editLink($text){
+		return CHtml::link($text, CHtml::normalizeUrl(array('/user/admin/editUser','id'=>$this->id())));
 	}
 
 }

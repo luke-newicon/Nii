@@ -18,9 +18,16 @@ class TaskModule extends NWebModule
 	
 	public function init(){
 		Yii::import('task.models.*');
-		Yii::app()->menus->addItem('main','Tasks','#');
-		Yii::app()->menus->addItem('main','Tasks', array('/task/admin/index'), 'Tasks',array('notice'=>1));
-//		Yii::app()->menus->addItem('main','Actions', array('/task/admin/actions'), 'Tasks',array('notice'=>3));
+		Yii::app()->menus->addItem('main', 'Tasks', '#', null, array(
+			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
+		));
+		Yii::app()->menus->addItem('main', 'Tasks', array('/task/admin/tasks'), 'Tasks', array(
+			'notice' => TaskTask::model()->count(),
+			'visible' => Yii::app()->user->checkAccess('task/admin/tasks'),
+		));
+//		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
+//			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
+//		));
 	}
 	
 	public function install(){
@@ -36,6 +43,7 @@ class TaskModule extends NWebModule
 			$task->owner = 'Steve O\'Brien';
 			$task->save();
 		}
+		$this->installPermissions();
 	}
 	
 	public function uninstall(){
@@ -64,8 +72,29 @@ class TaskModule extends NWebModule
 		);
 	}
 	
-	public function permissions(){
-		return array();
+	public function permissions() {
+		return array(
+			'task' => array('description' => 'Tasks',
+				'tasks' => array(
+					'view' => array('description' => 'View Tasks',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'task/admin/tasks',
+							'task/admin/viewTask',
+							'menu-tasks',
+						),
+					),
+					'manage' => array('description' => 'Add/Edit/Delete Tasks',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'task/admin/addTask',
+							'task/admin/editTask',
+							'task/admin/deleteTask',
+						),
+					),
+				),
+			),
+		);
 	}
 
 }

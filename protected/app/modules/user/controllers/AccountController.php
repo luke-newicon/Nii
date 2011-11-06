@@ -1,7 +1,7 @@
 <?php
 
 class AccountController extends NController {
-
+	
 	/**
 	 * @var string the default layout for the controller view.
 	 */

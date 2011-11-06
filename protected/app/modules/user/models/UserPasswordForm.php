@@ -4,7 +4,7 @@
  * UserChangePassword is the data structure for keeping
  * user change password form data. It is used by the 'changepassword' action of 'UserController'.
  */
-class UserChangePassword extends CFormModel {
+class UserPasswordForm extends CFormModel {
 	public $password;
 	public $verifyPassword;
 	

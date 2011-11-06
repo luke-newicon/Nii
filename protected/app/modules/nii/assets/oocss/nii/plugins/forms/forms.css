@@ -82,8 +82,9 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 .field.error .lbl {color:#9D261D;}
 
 
-form fieldset {margin-bottom: 18px;padding-top: 18px;}
-fieldset legend {color: #404040;display: block;font-size: 19.5px;line-height: 1;padding-left: 150px;}
+fieldset{margin-bottom:18px;padding-top:18px}
+fieldset legend{color:#404040;display:block;font-size:19.5px;line-height:1}
+.float legend{padding-left:150px}
 
 
 /* 

@@ -18,9 +18,14 @@ a:focus{outline:none}
 .tabs.vertical .heading{margin-right:0}
 .tab-content.vertical{display:table-cell;width:9999em}
 
+.modal-footer .btn.pull-left{float:left;margin-left:0;margin-right:5px}
+
 /* Site Styles */
 html,body{height:100%}
 .page{min-width:980px}
+
+.container.pull-left{float:none;margin-left:0}
+.container.pull-right{float:none;margin-right:0}
 
 /**
  * head and menu style
@@ -39,6 +44,9 @@ html,body{height:100%}
 
 .menu-notice{float:left;margin-right:5px}
 .menu-dropdown .menu-notice{float:right;margin:0px}
+
+form .unit,fieldset .unit{padding-right:5px}
+form .lastUnit,fieldset .lastUnit{padding-left:5px}
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
 

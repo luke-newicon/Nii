@@ -16,23 +16,27 @@ class AdminModule extends NWebModule {
 		Yii::app()->menus->addItem('secondary', 'Admin', '#', null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-admin'),
 		));
+		Yii::app()->menus->addItem('secondary', 'Upgrades', array('/admin/upgrades/index'), 'Admin', array(
+			'visible' => Yii::app()->user->checkAccess('admin/upgrades/index'),
+//			'notice' => 1,
+		));
 		Yii::app()->menus->addItem('secondary', 'Settings', array('/admin/settings/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/settings/index'),
-			'notice' => 7,
+//			'notice' => 7,
 		));
 		Yii::app()->menus->addItem('secondary', 'Notifications', array('/admin/notifications/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/notifications/index'),
 		));
 		Yii::app()->menus->addItem('secondary', 'Modules', array('/admin/modules/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('admin/modules/index'),
-			'notice' => 'ALERT',
-			'noticeHtmlOptions' => array('class' => 'label important'),
+//			'notice' => 'ALERT',
+//			'noticeHtmlOptions' => array('class' => 'label important'),
 		));
 		
 		Yii::app()->menus->addMenu('user');
 		
 		Yii::app()->menus->addItem('user','User','#');
-		Yii::app()->menus->addItem('user','Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
+		Yii::app()->menus->addItem('user','My Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
 		Yii::app()->menus->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
 		Yii::app()->menus->addDivider('secondary','Admin');

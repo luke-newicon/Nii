@@ -2,17 +2,28 @@
 
 class AdminController extends AController {
 
+	public function accessRules() {
+		return array(
+			array('allow',
+				'expression' => '$user->checkAccessToRoute()',
+			),
+			array('allow',
+				'actions' => array('account', 'password', 'settings'),
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('*'),
+			),
+		);
+	}
+
 	private $_model;
 
 	/**
 	 * Manages all models.
 	 */
 	public function actionIndex() {
-		$this->render('index');
-	}
-
-	public function actionSettings() {
-		$this->render('settings');
+		$this->redirect(array('users'));
 	}
 
 	/**
@@ -37,10 +48,10 @@ class AdminController extends AController {
 	}
 
 	public function actionPermissions() {
-		foreach(Yii::app()->niiModules as $module){
-			foreach($module->permissions() as $name => $permission){
-				$task = Yii::app()->authManager->getAuthItem('task-'.$name);
-				if($task){
+		foreach (Yii::app()->niiModules as $module) {
+			foreach ($module->permissions() as $name => $permission) {
+				$task = Yii::app()->authManager->getAuthItem('task-' . $name);
+				if ($task) {
 					$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
 					$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
 					$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
@@ -145,13 +156,13 @@ class AdminController extends AController {
 		if (isset($_POST['UserRole'])) {
 			$model->attributes = $_POST['UserRole'];
 			$model->description = $model->name;
-			$model->name = 'role-'.NHtml::generateAttributeId($model->description);
+			$model->name = 'role-' . NHtml::generateAttributeId($model->description);
 			if ($model->validate()) {
 				Yii::app()->authManager->createRole($model->name, $model->description);
-				if($model->copy){
-					foreach(Yii::app()->authManager->getItemChildren($model->copy) as $child){
-						if(!Yii::app()->authManager->hasItemChild($model->name,$child->name))
-							Yii::app()->authManager->addItemChild($model->name,$child->name);
+				if ($model->copy) {
+					foreach (Yii::app()->authManager->getItemChildren($model->copy) as $child) {
+						if (!Yii::app()->authManager->hasItemChild($model->name, $child->name))
+							Yii::app()->authManager->addItemChild($model->name, $child->name);
 					}
 				}
 				echo CJSON::encode(array('success' => 'Role successfully saved'));
@@ -161,25 +172,25 @@ class AdminController extends AController {
 			Yii::app()->end();
 		}
 
-		$this->render('add-role', array(
+		$this->render('role/add', array(
 			'model' => $model,
 		));
 	}
 
-	public function actionAssignRoles($userId) {
-		if (isset($_POST['roles'])) {
-			// loop through all roles
-			$auth = Yii::app()->getAuthManager();
-			foreach ($auth->getAuthItems(CAuthItem::TYPE_ROLE) as $role) {
-				$auth->revoke($role->name, $userId);
-				$postRoles = $_POST['roles'];
-				if (array_key_exists($role->name, $postRoles)) {
-					// add this role to the user
-					$auth->assign($role->name, $userId);
-				}
-			}
-		}
-	}
+//	public function actionAssignRoles($userId) {
+//		if (isset($_POST['roles'])) {
+//			// loop through all roles
+//			$auth = Yii::app()->getAuthManager();
+//			foreach ($auth->getAuthItems(CAuthItem::TYPE_ROLE) as $role) {
+//				$auth->revoke($role->name, $userId);
+//				$postRoles = $_POST['roles'];
+//				if (array_key_exists($role->name, $postRoles)) {
+//					// add this role to the user
+//					$auth->assign($role->name, $userId);
+//				}
+//			}
+//		}
+//	}
 
 	/**
 	 * Creates a new model.
@@ -195,16 +206,16 @@ class AdminController extends AController {
 			if ($model->validate()) {
 				if ($model->save()) {
 					$model->saveRole();
-					echo CJSON::encode(array('success' => 'User successfully saved'));
+					echo CJSON::encode(array('success' => 'User ' . $model->name . ' successfully added.'));
 				} else
-					echo CJSON::encode(array('error' => 'User failed to save'));
+					echo CJSON::encode(array('error' => 'User ' . $model->name . ' failed to add.'));
 			} else {
-				echo CJSON::encode(array('error' => 'User failed to validate'));
+				echo CJSON::encode(array('error' => 'User ' . $model->name . ' failed to validate when adding.'));
 			}
 			Yii::app()->end();
 		}
 
-		$this->render('add-user', array(
+		$this->render('user/add', array(
 			'model' => $model,
 		));
 	}
@@ -231,21 +242,50 @@ class AdminController extends AController {
 				}
 				if ($model->save()) {
 					$model->saveRole();
-					echo CJSON::encode(array('success' => 'User successfully saved'));
-				} else
-					echo CJSON::encode(array('error' => 'User failed to save'));
+					if (Yii::app()->request->isAjaxRequest) {
+						echo CJSON::encode(array('success' => 'User ' . $model->name . ' successfully saved.'));
+					} else {
+						Yii::app()->user->setFlash('success', 'User ' . $model->name . ' successfully saved.');
+						$this->redirect(array('users'));
+					}
+					Yii::app()->end();
+				} else {
+					if (Yii::app()->request->isAjaxRequest) {
+						echo CJSON::encode(array('error' => 'User ' . $model->name . ' failed to save.'));
+						Yii::app()->end();
+					} else {
+						Yii::app()->user->setFlash('error', 'User ' . $model->name . ' failed to save.');
+					}
+				}
 			} else {
-				echo CJSON::encode(array('error' => 'User failed to validate'));
+				if (Yii::app()->request->isAjaxRequest) {
+					echo CJSON::encode(array('error' => 'User ' . $model->name . ' failed to validate on save.'));
+					Yii::app()->end();
+				} else {
+					Yii::app()->user->setFlash('error', 'User ' . $model->name . ' failed to validate on save.');
+				}
 			}
-			Yii::app()->end();
 		}
 
 		// Password should not be sent to the user
 		$model->password = '';
 
-		$this->render('edit-user', array(
+		$this->render('user/edit', array(
 			'model' => $model,
 		));
+	}
+
+	public function actionDeleteUser($id) {
+		$model = $this->loadModel();
+		if (!(Yii::app()->user->record->id == $model->id())) {
+			if ($model->delete())
+				Yii::app()->user->setFlash('success', 'User ' . $model->name . ' successfully deleted');
+			else
+				Yii::app()->user->setFlash('error', 'User ' . $model->name . ' failed to delete');
+		} else {
+			Yii::app()->user->setFlash('error', '<strong>You can not delete yourself.</strong> Login as another user to remove the user ' . $model->name . '.');
+		}
+		$this->redirect(array('users'));
 	}
 
 	/**
@@ -260,20 +300,14 @@ class AdminController extends AController {
 		if (isset($_POST['UserAccountForm'])) {
 			$model->attributes = $_POST['UserAccountForm'];
 			if ($model->validate()) {
-				$model->password = $model->cryptPassword($model->password);
-				$model->verifyPassword = $model->cryptPassword($model->password);
-				if ($model->save())
+				if ($model->save()) {
 					echo CJSON::encode(array('success' => 'User successfully saved'));
-				else
-					echo CJSON::encode(array('error' => 'User failed to save'));
-			} else {
-				echo CJSON::encode(array('error' => 'User failed to validate'));
+					Yii::app()->end();
+				}
 			}
+			echo CJSON::encode(array('error' => 'User failed to save'));
 			Yii::app()->end();
 		}
-
-		// Password should not be sent to the user
-		$model->password = '';
 
 		$this->render('account', array(
 			'model' => $model,
@@ -304,37 +338,49 @@ class AdminController extends AController {
 //		echo $this->renderPartial('personal-info', array('user'=>$user, 'userPassword'=>$userPassword), true, true);
 	}
 
-	public function actionChangePassword($id) {
-		$model = $this->loadModel();
-		$cp = new UserChangePassword;
-		if (isset($_POST['UserChangePassword'])) {
-			$cp->attributes = $_POST['UserChangePassword'];
-			if ($cp->validate()) {
-				$model->password = $model->cryptPassword($cp->password);
-				$model->activekey = $model->cryptPassword(microtime() . $cp->password);
-				$model->save();
-				Yii::app()->user->setFlash('success', UserModule::t("A new password has been saved."));
+	public function actionPassword() {
+		$model = Yii::app()->user->record;
+		$form = new UserPasswordForm;
+		if (isset($_POST['UserPasswordForm'])) {
+			$form->attributes = $_POST['UserPasswordForm'];
+			if ($form->validate()) {
+				$model->password = $model->cryptPassword($form->password);
+				$model->activekey = $model->cryptPassword(microtime() . $form->password);
+				if ($model->save()) {
+					Yii::app()->user->setFlash('success', '<strong>Password updated.</strong>');
+					echo CJSON::encode(array('success' => 'Password updated.'));
+					Yii::app()->end();
+				}
 			}
+			Yii::app()->user->setFlash('error', '<strong>Password update failure.</strong>');
+			echo CJSON::encode(array('error' => 'Password update failure.'));
+			Yii::app()->end();
 		}
-		$this->render('changepassword', array('form' => $cp, 'model' => $model));
+		$this->render('password', array(
+			'model' => $form,
+		));
+	}
+	
+	public function actionSettings() {
+		$this->render('settings');
 	}
 
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 */
-	public function actionDelete() {
-		if (Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			$model = $this->loadModel();
-			$model->delete();
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if (!isset($_POST['ajax']))
-				$this->redirect(array('/user/admin'));
-		}
-		else
-			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
-	}
+//	/**
+//	 * Deletes a particular model.
+//	 * If deletion is successful, the browser will be redirected to the 'index' page.
+//	 */
+//	public function actionDelete() {
+//		if (Yii::app()->request->isPostRequest) {
+//			// we only allow deletion via POST request
+//			$model = $this->loadModel();
+//			$model->delete();
+//			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+//			if (!isset($_POST['ajax']))
+//				$this->redirect(array('/user/admin'));
+//		}
+//		else
+//			throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+//	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

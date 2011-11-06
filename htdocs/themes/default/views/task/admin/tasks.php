@@ -2,7 +2,9 @@
 <div class="page-header">
 	<h2>Tasks</h2>
 	<div class="action-buttons">
-		<a class="btn primary" data-controls-modal="modal-add-task" data-backdrop="static">Add a Task</a>
+		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
+			<a class="btn primary" data-controls-modal="modal-add-task" data-backdrop="static">Add a Task</a>
+		<?php endif; ?>
 	</div>
 </div>
 <?php
@@ -21,7 +23,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		'name' => array(
 			'name' => 'name',
 			'type' => 'raw',
-			'value' => '$data->editLink($data->name)',
+			'value' => '$data->viewLink($data->name)',
 		),
 		'priority' => array(
 			'name' => 'priority',
@@ -42,6 +44,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	),
 ));
 ?>
+<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
 <div class="modal hide fade" id="modal-add-task">
 	<div class="modal-header">
 		<a class="close" href="#">×</a>
@@ -86,3 +89,4 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		});
 	});
 </script>
+<?php endif; ?>

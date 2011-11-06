@@ -66,8 +66,8 @@ class NActiveForm extends CActiveForm
 	 */
 	public function labelEx($model,$attribute,$htmlOptions=array())
 	{
-		if(empty($htmlOptions)){
-			$htmlOptions = array('class'=>'lbl');
+		if (empty($htmlOptions)) {
+			$htmlOptions = array('class' => 'lbl');
 		}
 		return parent::labelEx($model, $attribute, $htmlOptions);
 	}

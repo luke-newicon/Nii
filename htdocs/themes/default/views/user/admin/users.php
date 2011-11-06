@@ -13,13 +13,13 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		array(
 			'name' => 'name',
 			'type' => 'raw',
-			'value' => 'CHtml::link($data->name, Yii::app()->controller->createUrl("editUser",array("id"=>$data->primaryKey)))',
+			'value' => '$data->editLink($data->name)',
 			'htmlOptions' => array('class' => 'edit-user'),
 		),
 		array(
 			'name' => 'username',
 			'type' => 'raw',
-			'value' => 'CHtml::link($data->username, Yii::app()->controller->createUrl("editUser",array("id"=>$data->primaryKey)))',
+			'value' => '$data->editLink($data->username)',
 			'htmlOptions' => array('class' => 'edit-user'),
 		),
 		array(
@@ -97,40 +97,5 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			});
 			return false;
 		});
-		
-		$('#modal-edit-user').modal({backdrop:'static'});
-		
-		$('.main').delegate('#user-grid .edit-user a','click',function(){
-			$('#modal-edit-user').modal('show');
-			$('#modal-edit-user .modal-body').load($(this).attr('href'));
-			return false;
-		});
-		
-		$('#edit-user-save').click(function(){
-			$('#edit-user-form').submit();
-			return false;
-		});
-				
-		$('#modal-edit-user').delegate('#edit-user-form','submit',function(){
-			$.ajax({
-				url: $(this).attr('action'),
-				data: jQuery('#edit-user-form').serialize(),
-				dataType: "json",
-				type: "post",
-				success: function(response){ 
-					if (response.success) {
-						$.fn.yiiGridView.update('user-grid');
-						$('#modal-edit-user').modal('hide');
-					} else {
-						alert(response.error);
-					}
-				},
-				error: function() {
-					alert("JSON failed to return a valid response");
-				}
-			});
-			return false;
-		});
-
 	});
 </script>

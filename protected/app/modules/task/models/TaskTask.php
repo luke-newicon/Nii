@@ -70,6 +70,10 @@ class TaskTask extends NActiveRecord {
 	public function editLink($text){
 		return CHtml::link($text, array('/task/admin/editTask','id'=>$this->id()));
 	}
+	
+	public function viewLink($text){
+		return CHtml::link($text, array('/task/admin/viewTask','id'=>$this->id()));
+	}
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);

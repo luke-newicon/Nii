@@ -6,8 +6,8 @@
  */
 
 Class AdminController extends AController {
-	
-	public function actionIndex(){
+
+	public function actionIndex() {
 		$this->redirect(array('tasks'));
 	}
 
@@ -42,11 +42,20 @@ Class AdminController extends AController {
 			Yii::app()->end();
 		}
 
-		$this->render('add-task', array(
+		$this->render('task/add', array(
 			'model' => $model,
 		));
 	}
-	
+
+	public function actionViewTask($id) {
+
+		$model = TaskTask::model()->findByPk($id);
+
+		$this->render('task/view', array(
+			'model' => $model,
+		));
+	}
+
 	public function actionEditTask($id) {
 
 		$model = TaskTask::model()->findByPk($id);
@@ -57,26 +66,37 @@ Class AdminController extends AController {
 			$model->attributes = $_POST['TaskTask'];
 			if ($model->validate()) {
 				$model->save();
-				if(Yii::app()->request->isAjaxRequest){
+				if (Yii::app()->request->isAjaxRequest) {
 					echo CJSON::encode(array('success' => 'Task successfully saved'));
-					Yii::app()->end();
-				}else{
-					Yii::app()->user->setFlash('success','Task successfully saved');
-					$this->redirect(array('tasks'));
+				} else {
+					Yii::app()->user->setFlash('success', 'Task successfully saved');
+					$this->redirect(array('viewTask', 'id' => $model->id()));
 				}
+				Yii::app()->end();
 			} else {
-				if(Yii::app()->request->isAjaxRequest){
+				if (Yii::app()->request->isAjaxRequest) {
 					echo CJSON::encode(array('error' => 'Task failed to save'));
 					Yii::app()->end();
 				} else {
-					Yii::app()->user->setFlash('error','Task failed to save');
+					Yii::app()->user->setFlash('error', 'Task failed to save');
 				}
 			}
 		}
 
-		$this->render('edit-task', array(
+		$this->render('task/edit', array(
 			'model' => $model,
 		));
+	}
+
+	public function actionDeleteTask($id) {
+
+		$model = TaskTask::model()->findByPk($id);
+
+		if ($model->delete())
+			Yii::app()->user->setFlash('success', 'Task successfully deleted');
+		else
+			Yii::app()->user->setFlash('success', 'Task failed to delete');
+		$this->redirect(array('tasks'));
 	}
 
 	public function actionActions() {

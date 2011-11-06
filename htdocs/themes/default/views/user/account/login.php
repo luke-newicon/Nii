@@ -54,7 +54,7 @@
 	</div>
 	<div class="modal-footer">
 		<a id="user-login" class="btn primary" href="#">Login</a>
-		<a id="password-recovery" class="btn" style="float:left" href="<?php echo CHtml::normalizeUrl(Yii::app()->getModule('user')->recoveryUrl) ?>">Password Recovery</a>
+		<a id="password-recovery" class="btn pull-left" href="<?php echo CHtml::normalizeUrl(Yii::app()->getModule('user')->recoveryUrl) ?>">Password Recovery</a>
 	</div>
 </div>
 <script>

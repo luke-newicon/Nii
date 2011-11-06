@@ -177,7 +177,7 @@ class UserModule extends NWebModule
 							'menu-admin',
 						),
 					),
-					'manage' => array('description' => 'Manage Users',
+					'manage' => array('description' => 'Add/Edit/Delete Users',
 						'roles' => array('administrator'),
 						'operations' => array(
 							'user/admin/addUser',
