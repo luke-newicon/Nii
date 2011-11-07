@@ -136,6 +136,7 @@ class NGridView extends CGridView {
 	}
 
 	public function exportGrid() {
+		$model_id = null;
 
 		if ($this->buttonModelId)
 			$model_id = $this->buttonModelId;

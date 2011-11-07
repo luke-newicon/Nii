@@ -8,13 +8,13 @@ a:focus{outline:none}
 .page-header .action-buttons{float:right;padding: 0 10px}
 .modal-backdrop,.modal-backdrop.fade.in{opacity:0.5}
 .actions{background:#F5F5F5;border-radius:0 0 3px 3px;border-top:1px solid #DDDDDD;border-bottom:1px solid #DDDDDD;margin-bottom:18px;margin-top:18px;padding:17px 10px 18px 150px;text-align:right}
+.container.pull-left{float:none;margin-left:0}
+.container.pull-right{float:none;margin-right:0}
+.modal-footer .btn.pull-left{float:left;margin-left:0;margin-right:5px}
 
 /* Site Styles */
 html,body{height:100%}
 .page{min-width:980px}
-
-.container.pull-left{float:none;margin-left:0}
-.container.pull-right{float:none;margin-right:0}
 
 /**
  * head and menu style

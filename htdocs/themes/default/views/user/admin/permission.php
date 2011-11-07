@@ -8,7 +8,7 @@
 )); ?>
 <script>
 	jQuery(function($){
-		$('.grid-view input[type=checkbox]').change(function(){
+		$('#<?php echo $id; ?> input[type=checkbox]').change(function(){
 			var $checkbox = $(this);
 			if($(this).is(':checked')){
 				var data = $checkbox.attr('name') + '=1';
@@ -30,6 +30,11 @@
 					}
 				}
 			});
+		});
+		
+		$('#<?php echo $id; ?> thead a').click(function(){
+			$('#modal-edit-role').modal('show');
+			return false;
 		});
 	});
 </script>

@@ -109,7 +109,7 @@ class Setting extends NActiveRecord
 		if ($visibleColumns) {
 			$cols = CJSON::decode($visibleColumns);
 		} else {
-			$attributes = array('type'=>'grid_columns','setting_name'=>$controllerPath, 'user_id'=>'0');
+			$attributes = array('type'=>'grid_columns','setting_name'=>$settingName, 'user_id'=>'0');
 			$visibleColumns = $columns->findByAttributes($attributes) ? $columns->findByAttributes($attributes)->setting_value : null;
 			if ($visibleColumns) {
 				$cols = CJSON::decode($visibleColumns);

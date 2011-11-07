@@ -53,18 +53,23 @@ class AdminController extends AController {
 				$task = Yii::app()->authManager->getAuthItem('task-' . $name);
 				if ($task) {
 					$label = $task->description ? $task->description : NHtml::generateAttributeLabel($task->name);
-					$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
-					$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
-					$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
+//					$url = CHtml::normalizeUrl(array('/user/admin/permission', 'id' => $task->name));
+//					$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
+//					$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
+					$tabs[$label] = array('ajax' => array('/user/admin/permission', 'id' => $task->name), 'id' => $task->name);
+					
 				}
 			}
 		}
 
-		$permissions['items'][0]['itemOptions']['class'] = 'active';
-		$permissions['pages'][0]['htmlOptions']['class'] = 'active';
-
+//		$permissions['items'][0]['itemOptions']['class'] = 'active';
+//		$permissions['pages'][0]['htmlOptions']['class'] = 'active';
+//
+//		$this->render('permissions', array(
+//			'permissions' => $permissions,
+//		));
 		$this->render('permissions', array(
-			'permissions' => $permissions,
+			'tabs' => $tabs,
 		));
 	}
 
@@ -77,7 +82,7 @@ class AdminController extends AController {
 		foreach (Yii::app()->authManager->roles as $role) {
 			$columns[] = array(
 				'type' => 'raw',
-				'header' => $role->description,
+				'header' => '<a href="#" data-role-name="'.$role->name.'">'.$role->description.'</a>',
 				'value' => '$data->displayRoleCheckbox(\'' . $role->name . '\')',
 				'htmlOptions' => array('width' => '30px'),
 			);
