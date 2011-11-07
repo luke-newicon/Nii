@@ -1,0 +1,1 @@
+<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/bootstrap')) ?>" target="_blank">Launch Bootstrap Site</a>

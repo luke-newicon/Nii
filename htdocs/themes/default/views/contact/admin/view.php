@@ -61,7 +61,7 @@
 		<div class="unit size2of3"><?php echo $model->comment; ?></div>
 	</div>
 </div>
-	<?php $this->widget('nii.widgets.NTabs', 
+<?php $this->widget('nii.widgets.NTabs', 
 	array(
 		'tabs' => array(
 			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
