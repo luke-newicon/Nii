@@ -44,8 +44,10 @@ class NTabs extends CJuiTabs {
 	 * and the token "{id}" with the tab ID.
 	 */
 	public $contentTemplate='<div id="{id}" class="tab-content">{content}</div>';
+		
+	public $title;
+	public $titleTemplate='<li class="heading"><h2>{title}</h2></li>';
 	
-	public $theme = 'nii';
 
 	/**
 	 * Run this widget.
@@ -64,6 +66,9 @@ class NTabs extends CJuiTabs {
 		$tabsOut = "";
 		$contentOut = "";
 		$tabCount = 0;
+		
+		if ($this->title)
+			$tabsOut .= strtr($this->titleTemplate, array('{title}'=>$this->title))."\n";
 
 		foreach($this->tabs as $title=>$content)
 		{

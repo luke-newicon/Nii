@@ -9,12 +9,15 @@
  *
  * @author matthewturner
  */
-class IndexController extends NController
+class IndexController extends AController
 {
+	
 	public function actions(){
 		return array(
 			'markdownPreview'=>'modules.nii.widgets.markdown.NMarkdownAction',
-			'NNotes'=>'modules.nii.widgets.notes.NNotesAction'
+			'notes'=>'modules.nii.widgets.notes.NNotesAction',
+			'attachments'=>'modules.nii.widgets.attachments.NAttachmentsAction',
+			'relationships'=>'modules.nii.widgets.relationships.NRelationshipsAction',
 		);
 	}
 	

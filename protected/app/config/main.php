@@ -170,10 +170,13 @@ return array(
 			),
 			'sprite' => array(
 				'class' => 'nii.components.sprite.NSprite',
+				'imageFolderPath'=>array(
+					realpath($app.'/sprite'),
+				),
 			),
 			'widgetFactory' => array(
 				'widgets' => array(
-					'TGridView' => array(
+					'NGridView' => array(
 						'template' => "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n{pager}",
 					),
 					'CGridView' => array(

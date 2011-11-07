@@ -4,62 +4,64 @@
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'contact-edit-button', 'class'=>'btn primary'));?>
 	</div>
 </div>
+<div class="shadowBlockLarge pam">
 <span class="contact-photo"><?php echo $model->getPhoto('profile-main'); ?></span>
 <h2 class="contact-title"><?php echo $model->displayName;  ?></h2>
-<div id="contact-general-info" class="line pbl">
+<div id="contact-general-info" class="line">
 	<div class="unit size1of2">
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Address')?></div>
-			<div class="unit size2of3"><?php echo $model->addressFields; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Address')?></div>
+			<div class="lastUnit"><?php echo $model->addressFields; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('City')?></div>
-			<div class="unit size2of3"><?php echo $model->city; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('City')?></div>
+			<div class="lastUnit"><?php echo $model->city; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('County')?></div>
-			<div class="unit size2of3"><?php echo $model->county; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('County')?></div>
+			<div class="lastUnit"><?php echo $model->county; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Post Code')?></div>
-			<div class="unit size2of3"><?php echo $model->postcode; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Post Code')?></div>
+			<div class="lastUnit"><?php echo $model->postcode; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Country')?></div>
-			<div class="unit size2of3"><?php echo $model->country; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Country')?></div>
+			<div class="lastUnit"><?php echo $model->country; ?></div>
 		</div>
 	</div>
-	<div class="lastUnit">
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Email - Home')?></div>
-			<div class="unit size2of3"><?php echo $model->getEmailLink(); ?></div>
+	<div class="lastUnit pll">
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Email - Home')?></div>
+			<div class="lastUnit"><?php echo $model->getEmailLink(); ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Email - Work')?></div>
-			<div class="unit size2of3"><?php echo $model->getEmailLink('work'); ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Email - Work')?></div>
+			<div class="lastUnit"><?php echo $model->getEmailLink('work'); ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Tel Home')?></div>
-			<div class="unit size2of3"><?php echo $model->tel_primary; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Tel Home')?></div>
+			<div class="lastUnit"><?php echo $model->tel_primary; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Tel Work')?></div>
-			<div class="unit size2of3"><?php echo $model->tel_secondary; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Tel Work')?></div>
+			<div class="lastUnit"><?php echo $model->tel_secondary; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Mobile')?></div>
-			<div class="unit size2of3"><?php echo $model->mobile; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Mobile')?></div>
+			<div class="lastUnit"><?php echo $model->mobile; ?></div>
 		</div>
-		<div class="line">
-			<div class="unit size1of3"><?=$this->t('Fax')?></div>
-			<div class="unit size2of3"><?php echo $model->fax; ?></div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Fax')?></div>
+			<div class="lastUnit"><?php echo $model->fax; ?></div>
 		</div>
 	</div>
 	<?php $this->renderPartial('view/_' . strtolower($model->contact_type), array('model' => $model)); ?>
-	<div class="line">
-		<div class="unit size1of3"><?=$this->t('Comment')?></div>
-		<div class="unit size2of3"><?php echo $model->comment; ?></div>
+	<div class="detailRow">
+		<div class="unit size1of6 detailLabel"><?=$this->t('Comment')?></div>
+		<div class="lastUnit"><?php echo $model->comment; ?></div>
 	</div>
+</div>
 </div>
 <?php $this->widget('nii.widgets.NTabs', 
 	array(

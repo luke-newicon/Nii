@@ -10,6 +10,8 @@
 		),
 		'htmlOptions' => array(
 			'id' => 'tabs',
-		)
+			'class' => 'vertical',
+		),
+//		'title' => 'Developer Tools',
 	)
 ); ?>

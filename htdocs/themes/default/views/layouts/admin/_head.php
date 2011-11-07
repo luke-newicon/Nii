@@ -1,5 +1,5 @@
 <div class="head">
-	<?php if(false) : ?>
+	<?php if(true) : ?>
 		<div id="sitelogo">
 			<a href="<?php echo Yii::app()->baseUrl; ?>">
 				<img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.gif" />
@@ -10,7 +10,7 @@
 		<div class="topbar">
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
-					<?php if(false) : ?>
+					<?php if(true) : ?>
 					<ul>
 						<li class="menu">
 							<a href="<?php echo Yii::app()->baseUrl ?>">Dashboard</a>

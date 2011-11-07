@@ -69,7 +69,10 @@ Class ModulesController extends AController
 			
 		} catch(Exception $e){
 			Yii::app()->updateModule($this->currentModule, 0);
-			Yii::app()->user->setFlash('error',"Unable to load the '$module' module ");
+			Yii::app()->user->setFlash('error',"Unable to load the '$module' module. ");
+			// rather than rethrowing it might be nice to add an extra part to the gui to show error details if your in debug mode.
+			if (YII_DEBUG)
+				throw new CException($e->getMessage());
 		}
 		$this->redirect(array('/admin/modules/index'));
 	}

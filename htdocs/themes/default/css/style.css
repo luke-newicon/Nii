@@ -1,3 +1,5 @@
+/* @override http://localhost/nii/htdocs/themes/default/css/style.css */
+
 /* Bootstrap overrides - Could maybe go in a seperate file? */
 a:focus{outline:none}
 .topbar{position:static;height:auto}
@@ -6,8 +8,6 @@ a:focus{outline:none}
 .page-header .action-buttons{float:right;padding: 0 10px}
 .modal-backdrop,.modal-backdrop.fade.in{opacity:0.5}
 .actions{background:#F5F5F5;border-radius:0 0 3px 3px;border-top:1px solid #DDDDDD;border-bottom:1px solid #DDDDDD;margin-bottom:18px;margin-top:18px;padding:17px 10px 18px 150px;text-align:right}
-
-.tabs .heading{margin-right:20px}
 
 /* Site Styles */
 html,body{height:100%}
@@ -38,6 +38,45 @@ form .unit,fieldset .unit{padding-right:5px}
 form .lastUnit,fieldset .lastUnit{padding-left:5px}
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
+
+.grid-view table {
+	margin-bottom: 0px;
+}
+
+.grid-view .grid-top-summary {
+	margin-bottom: 10px;
+	float: right;
+	text-align: right;
+}
+
+.grid-view .pagination {
+	margin-top: 10px;
+	text-align: right;
+}
+
+.grid-view-loading {
+    background-position: right 0;
+}
+
+.grid-view .grid-top-summary .summary,
+.grid-view .grid-top-summary .pagination {
+	display: inline-block;
+	margin-left: 7px;
+	margin-top: 0px;
+}
+.grid-view .grid-top-summary .pagination {
+	margin-bottom: 0;
+	height: 16px;
+}
+
+.pagination ul {
+	float: right;
+}
+
+.pagination a {
+	line-height: 20px;
+	padding: 0 7px;
+}
 
 a.grid-thumb-label {
 	text-decoration: none;
@@ -191,7 +230,11 @@ div.scopes .scopeDescription {
 	max-width: 1200px;
 }
 
-.paddedBlock, .ui-tabs .ui-tabs-panel {
+.paddedBlock {
+	padding: 12px;
+}
+
+div.vertical .ui-tabs .ui-tabs-panel {
 	padding: 12px;
 }
 
@@ -208,106 +251,16 @@ div.scopes .scopeDescription {
 h2.contact-title {
 	margin-top: 5px;
 	margin-bottom: 20px;
+    line-height: 1em;
+	margin-left: 210px;
 }
 
 #contact-general-info {
 	width: 767px;
-	margin-left: 155px;
-}
-
-/* @group Vertical tabs */
-
-
-div#tabs.vertical {
-	padding: 0;
-}
-
-div#tabs.vertical div.ui-tabs-panel {
-	/*width: 760px;*/
-	margin-bottom: 16px;
-	border-radius: 0;
-	margin-right: 0;
-	min-height: 200px;
-	z-index: 100!important;
-	max-width: 1048px;
-	margin-left: 220px;
-}
-
-div.vertical ul.ui-tabs-nav {
-    border-bottom: medium none;
-    border-right: 1px solid #DDDDDD;
-	border-radius: 0;
-    margin: 0 20px 0 0;
-	padding-right: 0;
-    padding-bottom: 4px;
-    width: 200px;
-	float: left;
+	margin-left: 210px;
 }
 
 
-div.vertical ul.ui-tabs-nav li {
-	display: block;
-	float: none;
-	border-radius: 0;
-	border: none;
-	background: none;
-	z-index: 0;
-	padding-right: 0px;
-	margin-right: 0;
-}
-
-
-div.vertical ul.ui-tabs-nav li a,
-div.vertical ul.ui-tabs-nav li.ui-state-active a {
-	border: 1px solid transparent;
-	border-radius: 4px 0 0 4px;
-    line-height: 30px;
-    margin-right: -1px;
-    padding: 0 12px;
-	float: none;
-	display: block;
-	left: 1px;
-}
-
-
-div.vertical ul.ui-tabs-nav li a:hover {
-	background-color: #EEE;
-	border-color: #EEE #DDDDDD #EEE #EEE;
-}
-
-div.vertical ul.ui-tabs-nav li.ui-state-active a {
-/*	z-index: 100;
-	background: white;
-	box-shadow: none!important;
-	width: 137px;*/
-    background-color: #FFF;
-    border-color: #DDDDDD #DDDDDD transparent;
-    border-style: solid;
-    border-width: 1px;
-    color: #808080;
-	border-color: #DDDDDD transparent #DDDDDD #DDDDDD;
-    border-right: 1px solid transparent;
-}
-
-
-div.vertical ul.ui-tabs-nav li.level-2 a,
-div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
-	margin-left: 10px;
-	width: 125px;
-}
-
-div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
-	width: 127px;
-}
-
-
-
-#addTabs {
-	width: 130px;
-	float: left;
-}
-
-/* @end */
 
 /*#mainMenu.ui-sortable li{
     -moz-animation-name: wobble;
@@ -323,3 +276,35 @@ div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
 	75% {-moz-transform: rotate(-2deg);}
 	100% {-moz-transform: rotate(0deg);}
 }*/
+
+
+.bbm {
+	border-bottom: 4px solid #eee;
+}
+.detailRow {
+	border-bottom: 1px solid #efefef;
+	min-height: 22px;
+	padding-top: 4px;
+	color: #444;
+}
+
+.detailRow .detailLabel {
+	color: #999;
+}
+
+.field {
+	padding: 0;
+}
+
+.topLine {
+	border-top: 1px solid #eee;
+	padding-top: 8px;
+}
+
+.lastLine {
+	padding-bottom: 8px;
+}
+
+.noDate, .noData {
+	color: #ccc;
+}

@@ -61,6 +61,9 @@ return array(
 					),
 				),
 			),
+			'db'=>array(
+				'tablePrefix'=>'',
+			),
 		)
 	),
 );

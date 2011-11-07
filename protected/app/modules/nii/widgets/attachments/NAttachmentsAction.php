@@ -37,7 +37,7 @@ class NAttachmentsAction extends CAction
 		$model_id = $_GET['model_id'];
 		$type = $_GET['type'];
 		
-		$model = new Attachment;
+		$model = new NAttachment;
 		
 		$controller = $this->getController();
 		$controller->render(
@@ -58,7 +58,7 @@ class NAttachmentsAction extends CAction
 		
 		if ($_REQUEST['Attachment']) {
 
-			$a = new Attachment;
+			$a = new NAttachment;
 			$a->attributes = $_REQUEST['Attachment'];
 
 			if($a->save())
@@ -79,7 +79,7 @@ class NAttachmentsAction extends CAction
 		else
 			return false;
 		
-		if(Attachment::model()->deleteByPk($id))
+		if(NAttachment::model()->deleteByPk($id))
 			return true;
 		else
 			return false;

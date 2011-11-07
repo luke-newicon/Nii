@@ -213,6 +213,8 @@ class Nii extends CWebApplication
 			// this can be caused by deleting the module files before disabling
 			$this->updateModule($moduleId);
 			Yii::app()->user->setFlash('error', "Unable to load the '$moduleId' module ");
+			if (YII_DEBUG)
+				throw new CException($e->getMessage());
 			if(Yii::app()->controller)
 				Yii::app()->controller->redirect(array('/admin/modules/index'));
 		}

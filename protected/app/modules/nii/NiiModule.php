@@ -119,6 +119,10 @@ class NiiModule extends NWebModule
 						'themeUrl' => $this->juiThemeUrl,
 						'theme' => $this->juiTheme,
 					),
+					'NTabs' => array(
+						'themeUrl' => $this->juiThemeUrl,
+						'theme' => $this->juiTheme,
+					),
 				)
 			),
 		));

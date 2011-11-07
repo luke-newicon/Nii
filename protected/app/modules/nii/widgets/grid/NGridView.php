@@ -124,6 +124,7 @@ class NGridView extends CGridView {
 				}
 
 				$options = ($button['htmlOptions']) ? $button['htmlOptions'] : array();
+				$options['data-gridId'] = $this->id;
 				$label = $button['label'];
 				$url = $button['url'];
 
@@ -166,13 +167,14 @@ class NGridView extends CGridView {
 		$controller = Yii::app()->controller->uniqueid;
 		$action = Yii::app()->controller->action->id;
 		$model = get_class($this->dataProvider->model);
+		$gridId = $this->id;
 
 		$label = '';
 
 		return array(
 			'label' => $label, 'url' => '#',
 			'htmlOptions' => array(
-				'onclick' => Setting::gridSettingsDialog(array('controller' => $controller, 'action' => $action, 'model' => $model)),
+				'onclick' => Setting::gridSettingsDialog(array('controller' => $controller, 'action' => $action, 'model' => $model, 'gridId'=>$gridId)),
 				'title' => 'Update Visible Columns',
 				'class' => 'icon fam-cog block-icon',
 			),

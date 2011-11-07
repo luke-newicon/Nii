@@ -8,7 +8,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	<div class="unit size1of3" id="fileSelector-<?php echo $id?>">
 				<span class="uploadButton btn btnN">Browse</span>
 				<?php
-				$this->widget('application.widgets.uploadify.UploadifyWidget', array(
+				$this->widget('nii.widgets.uploadify.UploadifyWidget', array(
 					'multi' => false,
 					'ID' => 'attachmentUpload',
 					'script' => Yii::app()->createAbsoluteUrl('nii/index/attachments/?action=uploadAttachment'),

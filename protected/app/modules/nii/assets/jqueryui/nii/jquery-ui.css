@@ -501,15 +501,172 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *
  * http://docs.jquery.com/UI/Tabs#theming
  */
-.ui-tabs { position: relative; padding: .2em; zoom: 1; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
-.ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; }
-.ui-tabs .ui-tabs-nav li { list-style: none; float: left; position: relative; top: 1px; margin: 0 .2em 1px 0; border-bottom: 0 !important; padding: 0; white-space: nowrap; }
-.ui-tabs .ui-tabs-nav li a { float: left; padding: .5em 1em; text-decoration: none; }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 1px; }
+.ui-tabs { position: relative; padding: 0; zoom: 1; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+/*.ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; 
+	margin-bottom: 20px;
+	border-color: #DDDDDD; }*/
+
+
+.ui-tabs-nav {
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  zoom: 1;
+}
+.ui-tabs-nav:before,
+.ui-tabs-nav:after
+{
+  display: table;
+  content: "";
+  zoom: 1;
+  *display: inline;
+}
+.ui-tabs-nav:after {
+  clear: both;
+}
+.ui-tabs-nav {
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+	text-shadow: none;
+}
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; }
 .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
-.ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: none; }
+.ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 0; background: none; clear: both; }
 .ui-tabs .ui-tabs-hide { display: none !important; }
+
+.ui-tabs li.heading{margin-right:20px}
+
+.ui-tabs-nav .ui-state-default {
+	background: none;
+	border: none;
+}
+
+.ui-tabs-nav > li {
+  float: left;
+  position: relative;
+  top: 1px;
+}
+.ui-tabs-nav > li > a {
+  display: block;
+  padding: 0 15px;
+  margin-right: 2px;
+  line-height: 36px;
+  border: 1px solid transparent;
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0;
+}
+.ui-tabs-nav > li > a:hover {
+  text-decoration: none;
+	background-color: #eee;
+  border-color: #eee #eee #ddd;
+}
+.ui-tabs-nav > li.ui-state-active > a {
+  color: #808080;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-bottom-color: transparent;
+}
+
+/* @group Vertical tabs */
+
+
+div.ui-tabs.vertical {
+	padding: 0;
+}
+
+div.ui-tabs.vertical div.ui-tabs-panel {
+	/*width: 760px;*/
+	margin-bottom: 16px;
+	border-radius: 0;
+	margin-right: 0;
+	min-height: 200px;
+	z-index: 100!important;
+	max-width: 996px;
+	margin-left: 200px;
+	clear: none;
+	-webkit-box-shadow: 0px 0px 6px #999;
+	-moz-box-shadow: 0px 0px 6px #999;
+	box-shadow: 0px 0px 6px #999;
+	background: white;
+	padding: 12px;
+}
+
+
+div.vertical ul.ui-tabs-nav {
+    border-bottom: medium none;
+/*    border-right: 1px solid #DDDDDD;*/
+	border-radius: 0;
+    margin: 5px 20px 0 0;
+	padding-right: 0;
+    padding-bottom: 4px;
+    width: 200px;
+	float: left;
+}
+
+
+div.vertical ul.ui-tabs-nav li {
+	display: block;
+	float: none;
+	border-radius: 0;
+	border: none;
+	background: none;
+	z-index: 0;
+	padding-right: 0px;
+	margin-right: 0;
+}
+
+
+div.vertical ul.ui-tabs-nav li a,
+div.vertical ul.ui-tabs-nav li.ui-state-active a {
+	border: 1px solid transparent;
+	border-radius: 4px 0 0 4px;
+    line-height: 30px;
+    margin-right: 0px;
+    padding: 0 12px;
+	float: none;
+	display: block;
+	left: 1px;
+	margin-bottom: 2px;
+}
+
+div.vertical ul.ui-tabs-nav li a:hover {
+	margin-right:-1px;
+	background: #eee url(images/vertical-tab-nav-bg.gif) repeat-y right top;
+	border-right: none;
+}
+
+div.vertical ul.ui-tabs-nav li.ui-state-active a {
+/*	z-index: 100;
+	background: white;
+	box-shadow: none!important;
+	width: 137px;*/
+	border-color: #DDDDDD transparent #DDDDDD #DDDDDD;
+    border-right: 1px solid transparent;
+	background: #fff;
+	background-image: none;
+}
+
+
+div.vertical ul.ui-tabs-nav li.level-2 a,
+div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+	margin-left: 10px;
+	width: 125px;
+}
+
+div.vertical ul.ui-tabs-nav li.level-2.ui-state-active a {
+	width: 127px;
+}
+
+
+#addTabs {
+	width: 130px;
+	float: left;
+}
+
+/* @end */
+
 /*
  * jQuery UI Datepicker 1.8.10
  *

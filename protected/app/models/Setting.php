@@ -92,16 +92,19 @@ class Setting extends NActiveRecord
 		));
 	}
 	
-	public static function visibleColumns($model=null, $controller=null, $action=null) {
+	public static function visibleColumns($model=null, $gridId=null, $controller=null, $action=null) {
 		if ($controller==null) $controller = Yii::app()->controller->uniqueid;
 		if ($action==null) $action = Yii::app()->controller->action->Id;
 		
-		$controllerPath =  $controller. '/' .$action ;
+		if ($gridId!=null)
+			$settingName = $gridId;
+		else
+			$settingName =  $controller. '/' .$action ;
 		$columns = new Setting;
 		
 		$cols = array();
 		
-		$attributes = array('type'=>'grid_columns','setting_name'=>$controllerPath, 'user_id'=>Yii::app()->user->record->id);
+		$attributes = array('type'=>'grid_columns','setting_name'=>$settingName, 'user_id'=>Yii::app()->user->record->id);
 		$visibleColumns = $columns->findByAttributes($attributes) ? $columns->findByAttributes($attributes)->setting_value : null;
 		if ($visibleColumns) {
 			$cols = CJSON::decode($visibleColumns);
@@ -180,7 +183,8 @@ class Setting extends NActiveRecord
 	public static function gridSettingsDialog($params=array()) {
 		
 		$dialog_id = 'gridSettingsDialog';
-		$url = CHtml::normalizeUrl(array('/users/gridSettingsDialog/','controller'=>$params['controller'],'action'=>$params['action'],'model'=>$params['model']));
+		$controller = str_replace('/', '_', $params['controller']);
+		$url = CHtml::normalizeUrl(array('/nii/grids/gridSettingsDialog/','controller'=>$controller,'action'=>$params['action'],'model'=>$params['model'], 'gridId'=>$params['gridId']));
 		return '$("#'.$dialog_id.'").dialog({
 			open: function(event, ui){
 				$("#'.$dialog_id.'").load("'.$url.'");
@@ -197,7 +201,7 @@ class Setting extends NActiveRecord
 	public static function exportGridDialog($params=array()) {
 		
 		$dialog_id = 'exportGridDialog';
-		$url = CHtml::normalizeUrl(array('/csv/exportDialog/','controller'=>$params['controller'],'action'=>$params['action'],'model'=>$params['model'],'model_id'=>$params['model_id'],'scope'=>$params['scope']));
+		$url = CHtml::normalizeUrl(array('/nii/csv/exportDialog/','controller'=>$params['controller'],'action'=>$params['action'],'model'=>$params['model'],'model_id'=>$params['model_id'],'scope'=>$params['scope']));
 		return '$("#'.$dialog_id.'").dialog({
 			open: function(event, ui){
 				$("#'.$dialog_id.'").load("'.$url.'");
