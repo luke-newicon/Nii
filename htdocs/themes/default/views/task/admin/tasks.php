@@ -8,53 +8,74 @@
 	</div>
 </div>
 <?php
-$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-	'dataProvider' => $dataProvider,
-	'filter' => $model,
-	'id' => 'task-grid',
-	'enableButtons' => false,
-	'enableCustomScopes' => false,
-	'scopes' => array('enableCustomScopes' => false),
-	'columns' => array(
-		'id' => array(
-			'name' => 'id',
-			'htmlOptions' => array('width' => '100px'),
-		),
-		'name' => array(
-			'name' => 'name',
-			'type' => 'raw',
-			'value' => '$data->viewLink($data->name)',
-		),
-		'priority' => array(
-			'name' => 'priority',
-			'htmlOptions' => array('width' => '100px'),
-		),
-		'importance' => array(
-			'name' => 'importance',
-			'htmlOptions' => array('width' => '100px'),
-		),
-		'finish_date' => array(
-			'name' => 'finish_date',
-			'htmlOptions' => array('width' => '100px'),
-		),
-		'owner' => array(
-			'name' => 'owner',
-			'htmlOptions' => array('width' => '250px'),
-		),
+$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
+	'id' => 'TaskTabs',
+	'items' => array(
+		array('label'=>'My Tasks', 'url'=>'#mytasks', 'active' => true),
+		array('label'=>'Group Tasks', 'url'=>'#grouptasks'),
 	),
+	'htmlOptions' => array('class' => 'tabs vertical'),
+//	'heading' => 'Developer Tools',
 ));
 ?>
-<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
-<div class="modal hide fade" id="modal-add-task">
-	<div class="modal-header">
-		<a class="close" href="#">×</a>
-		<h3>Add a Task</h3>
+<div class="tab-content vertical">
+	<div id="mytasks" class="active">
+		<?php
+		$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
+			'dataProvider' => $dataProvider,
+			'filter' => $model,
+			'id' => 'task-grid',
+			'enableButtons' => false,
+			'enableCustomScopes' => false,
+			'scopes' => array('enableCustomScopes' => false),
+			'columns' => array(
+				'id' => array(
+					'name' => 'id',
+					'htmlOptions' => array('width' => '100px'),
+				),
+				'name' => array(
+					'name' => 'name',
+					'type' => 'raw',
+					'value' => '$data->viewLink($data->name)',
+				),
+				'priority' => array(
+					'name' => 'priority',
+					'htmlOptions' => array('width' => '100px'),
+				),
+				'importance' => array(
+					'name' => 'importance',
+					'htmlOptions' => array('width' => '100px'),
+				),
+				'finish_date' => array(
+					'name' => 'finish_date',
+					'htmlOptions' => array('width' => '100px'),
+				),
+				'owner' => array(
+					'name' => 'owner',
+					'htmlOptions' => array('width' => '250px'),
+				),
+			),
+		));
+		?>
+		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
+		<div class="modal hide fade" id="modal-add-task">
+			<div class="modal-header">
+				<a class="close" href="#">×</a>
+				<h3>Add a Task</h3>
+			</div>
+			<div class="modal-body"></div>
+			<div class="modal-footer">
+				<a id="add-task-save" class="btn primary" href="#">Save</a>
+			</div>
+		</div>
 	</div>
-	<div class="modal-body"></div>
-	<div class="modal-footer">
-		<a id="add-task-save" class="btn primary" href="#">Save</a>
-	</div>
+	<div id="grouptasks"></div>
 </div>
+<script>
+	jQuery(function($){
+		$('#TaskTabs').tabs();
+	});
+</script>
 <script>
 	jQuery(function($){
 		
