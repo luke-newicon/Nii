@@ -149,9 +149,11 @@ class AdminController extends AController {
 			$model->attributes = $_POST['Contact'];
 			
 			if ($model->contact_type == 'Person') 
-				$model->name = $model->salutation . ' ' . $model->lastname;
+				$model->name = $model->givennames . ' ' . $model->lastname;
 			else
 				$model->name = $model->company_name;
+			
+			FB::log($model->attributes,'Contact model');
 
 			if ($model->save()) {
 				
@@ -180,7 +182,7 @@ class AdminController extends AController {
 				}
 				Log::insertLog('Updated contact details for '.$model->name.' (id: '.$model->id.')', $model);
 //				echo CJSON::encode(array('save'=>'Contact saved successfully.'));
-				$this->redirect(array("contact/view","id"=>$model->id));		
+				$this->redirect(array("admin/view","id"=>$model->id));		
 			} 		
 		}
 

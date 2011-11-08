@@ -128,6 +128,7 @@ class Setting extends NActiveRecord
 				}
 			}
 		}
+		
 		return $columns;
 		
 	}	

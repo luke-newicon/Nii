@@ -53,7 +53,7 @@ class Contact extends NActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, contact_type', 'required'),
-			array('name, givennames, lastname, salutation', 'length', 'max'=>255),
+			array('name, givennames, lastname', 'length', 'max'=>255),
 			array('title', 'length', 'max'=>9),
 			array('gender', 'length', 'max'=>1),
 			array('email', 'length', 'max'=>75),
@@ -63,8 +63,8 @@ class Contact extends NActiveRecord
 			array('dob, title, company_name, contact_name, photoID, comment, city', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, title, givennames, lastname, salutation, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, tel_primary, tel_secondary, mobile, fax, type, comment', 'safe', 'on'=>'search'),
-			array('givennames, lastname, salutation','required','on'=>'Person'),
+			array('id, name, title, givennames, lastname, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, tel_primary, tel_secondary, mobile, fax, type, comment', 'safe', 'on'=>'search'),
+			array('givennames, lastname','required','on'=>'Person'),
 			array('company_name, contact_name','required','on'=>'Organisation'),
 		);
 	}

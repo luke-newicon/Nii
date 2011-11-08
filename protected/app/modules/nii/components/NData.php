@@ -104,4 +104,84 @@ class NData
 		return number_format($pounds, 2);
 	}
 	
+	/**
+	 *	Defines visible columns for grid views
+	 * @param model $model
+	 * @param int $gridId
+	 * @return string 
+	 */
+	
+	public static function visibleColumns($model, $gridId) {
+				
+		// Get user settings
+		$cols = Yii::app()->user->settings->get('grid_columns_'.$gridId);
+	
+		// If user settings don't exist, check for system settings instead
+		if ($cols==null)
+			$cols = Yii::app()->settings->get('grid_columns_'.$gridId);
+		
+		// If neither exists, make array
+		if ($cols==null)
+			$cols = array();
+
+		$model = new $model;
+		$allcolumns = $model->columns(array());
+		$columns = array();
+		
+		foreach ($allcolumns as $col) {
+			if ($col['name']) {
+				if (array_key_exists($col['name'], $cols)) {
+					$columns[$col['name']] = $cols[$col['name']];
+				} else {
+					$columns[$col['name']] = '1';
+				}
+			}
+		}
+
+		return $columns;
+		
+	}
+	
+	public static function exportColumns($model, $gridId) {
+		
+		// Get user settings
+		$cols = Yii::app()->user->settings->get('export_columns_'.$gridId);
+	
+		// If user settings don't exist, check for system settings instead
+		if ($cols==null)
+			$cols = Yii::app()->settings->get('export_columns_'.$gridId);
+		
+		// If neither exists, make array
+		if ($cols==null)
+			$cols = array();
+
+		$model = new $model;
+		$allcolumns = $model->columns(array());
+		$columns = array();
+		
+		foreach ($allcolumns as $col) {
+			if ($col['name']) {
+				if (array_key_exists($col['name'], $cols)) {
+					$columns[$col['name']] = $cols[$col['name']];
+				} else {
+					$columns[$col['name']] = '1';
+				}
+			}
+		}
+
+		return $columns;
+	}
+	
+	public static function exportColumnsSql($model, $controller=null, $action=null) {
+		$allCols = self::exportColumns($model, $controller, $action);
+		$cols = array();
+		$check = new $model;
+		foreach ($allCols as $col => $value) {
+			if ($value == '1' || $value == true) {
+				$cols[$col] = $col; //Controller::checkExportCols($model, $col);
+			}
+		}
+		return $cols;
+	}
+	
 }

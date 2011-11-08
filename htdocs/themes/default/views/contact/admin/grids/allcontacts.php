@@ -20,5 +20,5 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'enableButtons'=>true,
 	'enableCustomScopes'=>false,
 	'scopes'=>array('enableCustomScopes'=>false),
-	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
+//	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
 ));

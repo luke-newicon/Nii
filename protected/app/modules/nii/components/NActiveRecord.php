@@ -196,5 +196,16 @@ class NActiveRecord extends CActiveRecord
 		return $realName;
 	}
 	
+	/**
+	 *	Generic parent function for displaying a model's columns in a grid (or exporting)
+	 * 
+	 * This function should be set in every model extending NActiveRecord and follow the structure that NGridView expects
+	 * 
+	 * @param array $visibleColumns
+	 * @return array 
+	 */
+	public function columns($visibleColumns=array()) {
+		return array();
+	}
 	
 }

@@ -24,7 +24,7 @@ return array(
 		'htdocs' => $htdocs,
 		'app' => $app,
 		'modules' => $modules,
-		'nii' => $nii
+		'nii' => $nii,
 	),
 	// This is the main Web application configuration. Any writable
 	// CWebApplication properties can be configured here.
@@ -137,7 +137,6 @@ return array(
 				),
 				'notFoundImage' => realpath("$htdocs/images/blank-profile.jpg"),
 			),
-
 			'cache' => array(
 				'class' => 'CFileCache',
 			),

@@ -37,6 +37,9 @@ class NGridView extends CGridView {
 
 		if (isset($this->scopes['default']))
 			$this->dataProvider->defaultScope = $this->scopes['default'];
+		// Configuring grid columns...
+		if ($this->columns==null)
+			$this->columns = $this->gridColumns($this->filter);
 		parent::init();
 	}
 
@@ -107,6 +110,10 @@ class NGridView extends CGridView {
 			echo ' <input type="submit" value="Apply" class="button-secondary action" id="doaction"></div>';
 		}
 	}
+	
+	/*
+	 *	@begin button functions
+	 */
 
 	public function renderButtons() {
 
@@ -144,14 +151,15 @@ class NGridView extends CGridView {
 		$controller = Yii::app()->controller->uniqueid;
 		$action = Yii::app()->controller->action->id;
 		$model = get_class($this->dataProvider->model);
+		$gridId = $this->id;
 
 		$label = '';
 
 		return array(
 			'label' => $label, 'url' => '#',
 			'htmlOptions' => array(
-				'onclick' => Setting::exportGridDialog(
-						array('controller' => $controller, 'action' => $action, 'model' => $model, 'model_id' => $model_id, 'scope' => $this->dataProvider->currentScope)
+				'onclick' => self::exportGridDialog(
+						array('controller' => $controller, 'action' => $action, 'model' => $model, 'model_id' => $model_id, 'gridId'=>$gridId, 'scope' => $this->dataProvider->currentScope)
 				),
 				'title' => 'Export to CSV, Excel or ODS',
 				'class' => 'icon fam-table-go block-icon',
@@ -165,8 +173,6 @@ class NGridView extends CGridView {
 
 	public function updateGridColumns() {
 
-		$controller = Yii::app()->controller->uniqueid;
-		$action = Yii::app()->controller->action->id;
 		$model = get_class($this->dataProvider->model);
 		$gridId = $this->id;
 
@@ -175,11 +181,55 @@ class NGridView extends CGridView {
 		return array(
 			'label' => $label, 'url' => '#',
 			'htmlOptions' => array(
-				'onclick' => Setting::gridSettingsDialog(array('controller' => $controller, 'action' => $action, 'model' => $model, 'gridId'=>$gridId)),
+				'onclick' => self::gridSettingsDialog(array('model' => $model, 'gridId'=>$gridId)),
 				'title' => 'Update Visible Columns',
 				'class' => 'icon fam-cog block-icon',
 			),
 		);
+	}
+	
+	/**
+	 *	@end button functions 
+	 */
+	
+	public function gridColumns($model) {
+		$model = $this->filter;
+		return $model->columns(NData::visibleColumns($this->filter, $this->id));
+	}	
+	
+			
+	public static function gridSettingsDialog($params=array()) {
+		
+		$dialog_id = 'gridSettingsDialog';
+		$url = CHtml::normalizeUrl(array('/nii/grid/gridSettingsDialog/','model'=>$params['model'], 'gridId'=>$params['gridId']));
+		return '$("#'.$dialog_id.'").dialog({
+			open: function(event, ui){
+				$("#'.$dialog_id.'").load("'.$url.'");
+			},
+			minHeight: 100, position: ["center", 100],
+			width: 400,
+			autoOpen: true,
+			title: "Update Visible Columns",
+			modal: true,
+		});
+		return false;';
+	}
+			
+	public static function exportGridDialog($params=array()) {
+		
+		$dialog_id = 'exportGridDialog';
+		$url = CHtml::normalizeUrl(array('/nii/grid/exportDialog/','model'=>$params['model'],'gridId'=>$params['gridId'],'model_id'=>$params['model_id'],'scope'=>$params['scope']));
+		return '$("#'.$dialog_id.'").dialog({
+			open: function(event, ui){
+				$("#'.$dialog_id.'").load("'.$url.'");
+			},
+			minHeight: 100, position: ["center", 100],
+			width: 400,
+			autoOpen: true,
+			title: "Select Columns to Export",
+			modal: true,
+		});
+		return false;';
 	}
 
 }
