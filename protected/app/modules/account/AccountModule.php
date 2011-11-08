@@ -2,6 +2,7 @@
 
 Class AccountModule extends NWebModule
 {
+	public $name = 'Hotspot Account';
 	
 	public function init(){
 		$this->setImport(array(

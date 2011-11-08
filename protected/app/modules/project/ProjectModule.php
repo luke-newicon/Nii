@@ -17,7 +17,8 @@
 class ProjectModule extends NWebModule
 {
 
-
+	public $name = 'Hotspot';
+	
 	public function init(){
 	
 		
@@ -50,6 +51,9 @@ class ProjectModule extends NWebModule
 		
 	}
 	
+	public function setup(){
+	}
+	
 	/**
 	 * Function handling the registrationComplete user event.
 	 * Used to send the welcome to hotspot email!
@@ -77,6 +81,8 @@ class ProjectModule extends NWebModule
 	}
 	
 	public function install(){
+		if(Yii::app()->getModule('account') === null)
+			throw new CException('Hotspot requires the "Hotspot Account" module. To be active before installation');
 		Project::install();
 		ProjectScreen::install();
 		ProjectHotSpot::install();
