@@ -28,7 +28,7 @@ html,body{height:100%}
 .grid-view,.tab-content .grid-view{padding:0}
 .grid-view .filters input, .grid-view .filters select{border:none;}
 .grid-view tbody tr td.success{background-color:#D1EED1;border-color:#BFE7BF}
-.grid-view table th,.grid-view table td{padding:6px 7px}
+/*.grid-view table th,.grid-view table td{padding:6px 7px}*/
 .grid-view .filters .input{padding:3px}
 
 .menu-notice{float:left;margin-right:5px}

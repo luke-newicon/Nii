@@ -79,33 +79,3 @@
 		)
 	)
 ); ?>
-<!--<div id="tabs" class="vertical">
-	<ul>
-		<li data-id="relationships"><?php echo CHtml::link($this->t('Relationships'), array('generalInfo','id'=>$model->id), array('class'=>'btn btnN')); ?></li>
-		<li data-id="notes"><?php echo CHtml::link($this->t('Notes'), array('notes', 'id' => $model->id), array('class' => 'btn btnN')); ?></li>
-		<li data-id="attachments"><?php echo CHtml::link($this->t('Attachments'), array('attachments', 'id' => $model->id), array('class' => 'btn btnN')); ?></li>
-	</ul>
-</div>
-<script>
-	$(function() {
-		<?php if ($model->selectedTab && in_array($model->selectedTab, $tabs)) { 
-			$selectedTab = true;?>
-		selectedIndex = $('#tabs li').index($('#tabs li[data-id="<?php echo $model->selectedTab ?>"]'));
-		<?php } ?>
-		$( "#tabs" ).tabs({
-			ajaxOptions: {
-				error: function( xhr, status, index, anchor ) {
-					$( anchor.hash ).html(
-						"Error loading tab. Please try again." );
-				}
-			},
-			<?php if (isset($selectedTab)) { ?>
-			selected: selectedIndex,
-			<?php } ?>
-			cache: true,
-			tabTemplate: '<li><a href="#{href}" class="btn btnN"><span>#{label}</span></a></li>'
-		});
-	});
-	
-
-</script>-->

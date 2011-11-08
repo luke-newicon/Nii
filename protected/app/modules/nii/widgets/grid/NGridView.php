@@ -20,7 +20,7 @@ class NGridView extends CGridView {
 	  ),
 	  ),
 	 */
-	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n{pager}<div id='gridSettingsDialog'></div><div id='exportGridDialog'></div>";
+	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n{pager}";
 	public $scopes;
 	public $enableCustomScopes;
 	public $defaultColumnClass = 'NDataColumn';

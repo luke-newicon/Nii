@@ -21,10 +21,4 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'enableCustomScopes'=>false,
 	'scopes'=>array('enableCustomScopes'=>false),
 	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
-//	'columns' => array(
-//		'name',
-//		'city',
-//		'county',
-//		'email',
-//	),
 ));

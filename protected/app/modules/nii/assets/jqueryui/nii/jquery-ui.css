@@ -586,17 +586,17 @@ div.ui-tabs.vertical div.ui-tabs-panel {
 	max-width: 996px;
 	margin-left: 200px;
 	clear: none;
-	-webkit-box-shadow: 0px 0px 6px #999;
+/*	-webkit-box-shadow: 0px 0px 6px #999;
 	-moz-box-shadow: 0px 0px 6px #999;
 	box-shadow: 0px 0px 6px #999;
 	background: white;
-	padding: 12px;
+	padding: 12px;*/
 }
 
 
 div.vertical ul.ui-tabs-nav {
     border-bottom: medium none;
-/*    border-right: 1px solid #DDDDDD;*/
+    border-right: 1px solid #DDDDDD;
 	border-radius: 0;
     margin: 5px 20px 0 0;
 	padding-right: 0;
@@ -623,7 +623,7 @@ div.vertical ul.ui-tabs-nav li.ui-state-active a {
 	border: 1px solid transparent;
 	border-radius: 4px 0 0 4px;
     line-height: 30px;
-    margin-right: 0px;
+    margin-right: -1px;
     padding: 0 12px;
 	float: none;
 	display: block;
@@ -633,7 +633,7 @@ div.vertical ul.ui-tabs-nav li.ui-state-active a {
 
 div.vertical ul.ui-tabs-nav li a:hover {
 	margin-right:-1px;
-	background: #eee url(images/vertical-tab-nav-bg.gif) repeat-y right top;
+/*	background: #eee url(images/vertical-tab-nav-bg.gif) repeat-y right top;*/
 	border-right: none;
 }
 
