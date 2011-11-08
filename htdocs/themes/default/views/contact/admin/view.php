@@ -4,29 +4,29 @@
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'contact-edit-button', 'class'=>'btn primary'));?>
 	</div>
 </div>
-<div class="shadowBlockLarge pam">
+<div class="well">
 <span class="contact-photo"><?php echo $model->getPhoto('profile-main'); ?></span>
 <h2 class="contact-title"><?php echo $model->displayName;  ?></h2>
 <div id="contact-general-info" class="line">
 	<div class="unit size1of2">
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Address')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Address')?></div>
 			<div class="lastUnit"><?php echo $model->addressFields; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('City')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('City')?></div>
 			<div class="lastUnit"><?php echo $model->city; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('County')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('County')?></div>
 			<div class="lastUnit"><?php echo $model->county; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Post Code')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Post Code')?></div>
 			<div class="lastUnit"><?php echo $model->postcode; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel detailLabel"><?=$this->t('Country')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Country')?></div>
 			<div class="lastUnit"><?php echo $model->country; ?></div>
 		</div>
 	</div>

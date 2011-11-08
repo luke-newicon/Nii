@@ -498,6 +498,23 @@ class Contact extends NActiveRecord
 		
 	}
 	
+	
+	public function createContactDialog() {
+		$dialog_id = 'createContactDialog';
+		$url = CHtml::normalizeUrl(array('admin/create/','dialog'=>true));
+		return '$("#'.$dialog_id.'").dialog({
+			open: function(event, ui){
+				$("#'.$dialog_id.'").load("'.$url.'");
+			},
+			minHeight: 100, position: ["center", 100],
+			width: 400,
+			autoOpen: true,
+			title: "Create a Contact",
+			modal: true,
+		});
+		return false;';
+	}
+	
 	public function addRelationshipDialog() {
 		$dialog_id = 'addRelationshipDialog';
 		$url = CHtml::normalizeUrl(array('/contact/addRelationship/','id'=>$this->id));
@@ -506,7 +523,7 @@ class Contact extends NActiveRecord
 				$("#'.$dialog_id.'").load("'.$url.'");
 			},
 			minHeight: 100, position: ["center", 100],
-			width: 400,
+			width: 600,
 			autoOpen: true,
 			title: "Add a Relationship",
 			modal: true,

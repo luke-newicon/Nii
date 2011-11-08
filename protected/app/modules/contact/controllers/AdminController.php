@@ -72,7 +72,7 @@ class AdminController extends AController {
 	 * Create a contact
 	 * @param string $type 
 	 */
-	public function actionCreate($type=null) {
+	public function actionCreate($type=null, $dialog=null) {
 		
 		$this->breadcrumbs = array(
 			'Contact' => array('index'),
@@ -125,6 +125,7 @@ class AdminController extends AController {
 			$this->render('create',array(
 				'c'=>$model,
 				'type'=>$type,
+				'dialog'=>$dialog,
 			));
 		} else {
 			throw new CHttpException("Couldn't load model 'Contact'");
