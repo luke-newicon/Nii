@@ -10,7 +10,6 @@ class UploadifyWidget extends CInputWidget {
 	 * @var string
 	 */
 	public $ID = 'fileUpload';
-
 	/**
 	 * Automatically upload files as they are added to the queue.
 	 * @var string
@@ -170,10 +169,10 @@ class UploadifyWidget extends CInputWidget {
 	public $onClearQueue;
 	/**
 	 * Triggers once for each file upload that is completed.(function)
-	 *
+	 * 
 	 * Example:
 	 * function(event, queueID, fileObj, response, data) {
-	 * 		alert(response);
+	 *		alert(response);
 	 * }
 	 * @var string
 	 */
@@ -230,14 +229,12 @@ class UploadifyWidget extends CInputWidget {
 	private $assetUrl;
 
 	public function init() {
-
 		$localPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';
 		$this->assetUrl = Yii::app()->getAssetManager()->publish($localPath);
 
 		Yii::app()->clientScript->registerScriptFile($this->assetUrl . '/js/swfobject.js');
 		Yii::app()->clientScript->registerScriptFile($this->assetUrl . '/js/jquery.uploadify.js');
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/css/uploadify.css');
-
 
 		if (!$this->uploader) {
 			$this->uploader = $this->assetUrl . '/images/uploadify.swf';
@@ -248,23 +245,21 @@ class UploadifyWidget extends CInputWidget {
 		if (!$this->script) {
 			$this->script = CHtml::normalizeUrl($this->route);
 		}
-		if ($this->route) {
+		if($this->route){
 			$this->scriptData['route'] = $this->route;
 		}
 
-		// Adding session id to authenicate
-		$this->scriptData['PHPSESSID'] = session_id();
 	}
 
 	public function getOptions() {
-		$options = array('auto', 'buttonImg', 'buttonText', 'cancelImg', 'checkScript',
-			'displayData', 'expressInstall', 'fileDataName', 'fileDesc', 'fileExt',
-			'folder', 'height', 'hideButton', 'method', 'multi', 'queueID',
-			'queueSizeLimit', 'removeCompleted', 'rollover', 'script', 'scriptAccess',
-			'scriptData', 'simUploadLimit', 'sizeLimit', 'uploader', 'width', 'wmode',
-			'onAllComplete', 'onCancel', 'onCheck', 'onClearQueue', 'onComplete',
-			'onError', 'onInit', 'onOpen', 'onProgess', 'onQueueFull', 'onSelect',
-			'onSelectOnce', 'onSWFReady');
+		$options = array('auto','buttonImg','buttonText','cancelImg','checkScript',
+			'displayData','expressInstall','fileDataName','fileDesc','fileExt',
+			'folder','height','hideButton','method','multi','queueID',
+			'queueSizeLimit','removeCompleted','rollover','script','scriptAccess',
+			'scriptData','simUploadLimit','sizeLimit','uploader','width','wmode',
+			'onAllComplete','onCancel','onCheck','onClearQueue','onComplete',
+			'onError','onInit','onOpen','onProgess','onQueueFull','onSelect',
+			'onSelectOnce','onSWFReady');
 
 		foreach ($options as $option) {
 			if($this->$option !== null){

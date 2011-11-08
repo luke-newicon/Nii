@@ -1,3 +1,4 @@
+<?php
 /*
 Uploadify v2.1.4
 Release Date: November 8, 2010
@@ -22,31 +23,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-.uploadifyQueueItem {
-	background-color: #F5F5F5;
-	border: 2px solid #E5E5E5;
-	font: 11px Verdana, Geneva, sans-serif;
-	margin-top: 5px;
-	padding: 10px;
-	max-width: 350px;
-}
-.uploadifyError {
-	background-color: #FDE5DD !important;
-	border: 2px solid #FBCBBC !important;
-}
-.uploadifyQueueItem .cancel {
-	float: right;
-}
-.uploadifyQueue .completed {
-	background-color: #E5E5E5;
-}
-.uploadifyProgress {
-	background-color: #E5E5E5;
-	margin-top: 10px;
-	width: 100%;
-}
-.uploadifyProgressBar {
-	background-color: #0099FF;
-	height: 3px;
-	width: 1px;
+if (!empty($_FILES)) {
+	$tempFile = $_FILES['Filedata']['tmp_name'];
+	$targetPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'wpii' . DIRECTORY_SEPARATOR . 'gallery';
+	$targetFile =  $targetPath . DIRECTORY_SEPARATOR . $_FILES['Filedata']['name'];
+	
+	// $fileTypes  = str_replace('*.','',$_REQUEST['fileext']);
+	// $fileTypes  = str_replace(';','|',$fileTypes);
+	// $typesArray = split('\|',$fileTypes);
+	// $fileParts  = pathinfo($_FILES['Filedata']['name']);
+	
+	// if (in_array($fileParts['extension'],$typesArray)) {
+		// Uncomment the following line if you want to make the directory if it doesn't exist
+		// mkdir(str_replace('//','/',$targetPath), 0755, true);
+		
+		move_uploaded_file($tempFile,$targetFile);
+		echo str_replace($_SERVER['DOCUMENT_ROOT'],'',$targetFile);
+	// } else {
+	// 	echo 'Invalid file type.';
+	// }
 }
