@@ -7,11 +7,17 @@ class WikiModule extends NWebModule {
 	public $version = '0.0.1b';
 
 	public function init() {
+		
 		Yii::import('test.models.*');
 		Yii::app()->menus->addItem('main','Wiki', array('/wiki/admin/index'));
 	}
 	
+	public function setup(){
+		
+	}
+	
 	public function install(){
+		throw new CException('oioi');
 		$this->installPermissions();
 	}
 	

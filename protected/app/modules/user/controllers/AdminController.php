@@ -48,6 +48,8 @@ class AdminController extends AController {
 	}
 
 	public function actionPermissions() {
+		$tabs = array();
+		FB::log(Yii::app()->niiModules);
 		foreach (Yii::app()->niiModules as $module) {
 			foreach ($module->permissions() as $name => $permission) {
 				$task = Yii::app()->authManager->getAuthItem('task-' . $name);

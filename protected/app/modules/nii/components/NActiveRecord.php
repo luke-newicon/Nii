@@ -196,4 +196,5 @@ class NActiveRecord extends CActiveRecord
 		return $realName;
 	}
 	
+	
 }

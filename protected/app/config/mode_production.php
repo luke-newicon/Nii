@@ -36,6 +36,16 @@ return array(
 			'fileManager'=>array(
 				'location'=>realpath("$base/files"),
 			),
+			// log errors to file runtime application.log
+			'log'=>array(
+				'class'=>'CLogRouter',
+				'routes'=>array(
+					array(
+						'class'=>'CFileLogRoute',
+						'levels'=>'error, warning'
+					)
+				),
+			),
 		),
 
 		// application-level parameters that can be accessed

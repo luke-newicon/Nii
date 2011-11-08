@@ -22,7 +22,7 @@ Class ModulesController extends AController
 		$allModules = Yii::app()->niiModulesAll;
 
 		// get the list of modules currently defined in the settings
-		$systemModules = Yii::app()->settings->get('system_modules', 'system', array());
+		$systemModules = Yii::app()->niiModulesActive;
 		
 		
 		$coreModules = array('nii', 'user', 'admin');
@@ -61,18 +61,23 @@ Class ModulesController extends AController
 		Yii::app()->attachEventHandler('onError', array($this, 'handleModulePhpError'));
 		try {
 			Yii::app()->updateModule($this->currentModule, 1);
-		
+			
 			$m = Yii::app()->activateModule($this->currentModule);
-			$m->install();
 
 			Yii::app()->user->setFlash('success',"Module successfully enabled");
 			
 		} catch(Exception $e){
 			Yii::app()->updateModule($this->currentModule, 0);
 			Yii::app()->user->setFlash('error',"Unable to load the '$module' module. ");
-			// rather than rethrowing it might be nice to add an extra part to the gui to show error details if your in debug mode.
-			if (YII_DEBUG)
-				throw new CException($e->getMessage());
+			if (YII_DEBUG){
+				ob_start();
+				Yii::app()->displayException($e);
+				$errorHtml = ob_get_clean();
+				$msg = '<strong>'.$e->getMessage().'</strong>';
+				$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
+				Yii::app()->user->setFlash('error-block-message', $msg);
+			}
+						//"PHP error message: {$e->getMessage()}, <br /> File: {$e->getFile()} <br /> Line: {$e->getLine()}");
 		}
 		$this->redirect(array('/admin/modules/index'));
 	}
@@ -87,7 +92,14 @@ Class ModulesController extends AController
 		// the module raised a php error so we want to disable the module.
 		Yii::app()->updateModule($this->currentModule, 0);
 		Yii::app()->user->setFlash('error',"Module caused an error");
-		Yii::app()->user->setFlash('error-block-message',"PHP error message: {$event->message}, <br /> File: {$event->file} <br /> Line: {$event->line}");
+		if (YII_DEBUG){
+			ob_start();
+			Yii::app()->displayError($event->code, $event->message, $event->file, $event->line);
+			$errorHtml = ob_get_clean();
+			$msg = '<strong>'.$e->getMessage().'</strong>';
+			$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
+			Yii::app()->user->setFlash('error-block-message', $msg);
+		}
 		$this->redirect(array('/admin/modules/index'));
 	}
 	

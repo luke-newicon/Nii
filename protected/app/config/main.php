@@ -137,23 +137,7 @@ return array(
 				),
 				'notFoundImage' => realpath("$htdocs/images/blank-profile.jpg"),
 			),
-//			'log' => array(
-//				'class' => 'CLogRouter',
-//				'routes' => array(
-//					array(
-//						'class' => 'CFileLogRoute',
-//						'categories' => 'error'
-//					),
-//					array(
-//						'class' => 'NProfileLogRoute',
-//					),
-//					array(
-//						'class' => 'CWebLogRoute',
-//						'categories' => 'firebug',
-//						'showInFireBug' => true,
-//					),
-//				),
-//			),
+
 			'cache' => array(
 				'class' => 'CFileCache',
 			),

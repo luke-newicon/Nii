@@ -19,6 +19,18 @@ class Nii extends CWebApplication
 {
 	
 	/**
+	 * The string key used by the setting component to store the module config array
+	 * @var string
+	 */
+	public $moduleSettingsKey = 'modules';
+	
+	/**
+	 * the string category used by the settings module to store the module config array
+	 * @var string 
+	 */
+	public $moduleSettingsCategory = 'config';
+	
+	/**
 	 * enable this app to support multiple subdomain instances
 	 * @var type 
 	 */
@@ -109,7 +121,7 @@ class Nii extends CWebApplication
 		}
 		
 		// initialise modules
-		$this->getNiiModules();
+		$this->setupNiiModules();
 	
 		// add event to do extra processing when a user signs up.
 		// change this to on activation... we only want to create new databases for real users
@@ -134,42 +146,66 @@ class Nii extends CWebApplication
 	}
 	
 	/**
-	 * gets all NWebModules in the app and returns them in an array,
-	 * This activates each module, it calls the getModule on each module thus instantiating each if they
-	 * are not already, thus running each modules initialisation (init) method
 	 * 
-	 * @param array $exclude modules to exclude from the returned array
-	 * @return array 'module name'=>$module object
+	 * setup all nii modules.
 	 */
-	public function getNiiModules($exclude=array()){
+	public function setupNiiModules($exclude=array()){
 		$exclude = array_merge(array('gii'), $exclude);
 		$retModules = array();
 		
 		// first load nii
 		Yii::app()->getModule('nii');
 		
+		$modules = $this->getNiiModules($exclude);
+		
+		// setup each module
+		foreach($modules as $m)
+			$m->setup();
+				
+		return $modules;
+	}
+	
+	/**
+	 * gets all NWebModules in the app and returns them in an array,
+	 * This initialises each module, it calls the getModule on each module thus instantiating each if they
+	 * are not already, thus running each modules initialisation (init) method
+	 * 
+	 * @param array $exclude modules to exclude from the returned array
+	 * @return array 'module name'=>$module object
+	 */
+	public function getNiiModules($exclude=array()){
 		// get core modules
 		$modules = Yii::app()->getModules();
-
+		
 		// add active modules
-		if(($activeMods = Yii::app()->settings->get('system_modules', 'system')) !== null){
+		$activeMods = $this->getNiiModulesActive();
+		if(!empty($activeMods)) {
 			// add the active modules to the configuration
 			$this->configure(array('modules'=>$activeMods));
 			$modules = CMap::mergeArray($modules, $activeMods);
 		}
-		
+		FB::log($activeMods);
 		// load the modules
-		foreach($modules as $name => $config){
+		foreach($modules as $name => $config) {
 			if (in_array($name, $exclude)) continue;
 			// initialises each module
-			$module = Yii::app()->activateModule($name);
-			if($module instanceOf NWebModule)
+			$module = Yii::app()->getModule($name);
+			if ($module instanceOf NWebModule)
 				$retModules[$name] = $module;
 		}
-				
+		
 		return $retModules;
 	}
 	
+
+	/**
+	 * returns a list of currently active modules.
+	 * To get a list of all modules including modules available for activation @see Nii::getNiiModules
+	 * @return array
+	 */
+	public function getNiiModulesActive(){
+		return Yii::app()->settings->get($this->moduleSettingsKey, $this->moduleSettingsCategory, array());
+	}
 	
 	/**
 	 * Gets all modules available for install / activation
@@ -196,8 +232,12 @@ class Nii extends CWebApplication
 	}
 	
 	
+	
 	/**
 	 * function to activate a module.
+	 * - This function get the module from the module id
+	 * - Runs the installation
+	 * - runs the setup
 	 * this function enables the system to add additional functionality during module activation
 	 * @param type $moduleId
 	 * @return NWebModule 
@@ -206,6 +246,8 @@ class Nii extends CWebApplication
 		try {
 			
 			$m = Yii::app()->getModule($moduleId);
+			$m->install();
+			$m->setup();
 			return $m;
 			
 		} catch(Exception $e) {
@@ -220,6 +262,8 @@ class Nii extends CWebApplication
 		}
 	}
 	
+	
+	
     /**
 	 * Enables or disables a module
 	 * 
@@ -228,13 +272,13 @@ class Nii extends CWebApplication
 	 */
 	public function updateModule($module, $enabled=0){
 		// get the current module settings
-		$sysMods = Yii::app()->settings->get('system_modules', 'system', array());
+		$sysMods = Yii::app()->settings->get($this->moduleSettingsKey, $this->moduleSettingsCategory, array());
 		// create the array format for the affected module
 		$update = array(strtolower($module) => array('enabled'=>$enabled));
 		// merge the update with the existing settings
 		$sysMods = CMap::mergeArray($sysMods, $update);
 		// save the settings back
-		Yii::app()->settings->set('system_modules', $sysMods);
+		Yii::app()->settings->set($this->moduleSettingsKey, $sysMods, $this->moduleSettingsCategory);
 		// update yii's module configuration
 		Yii::app()->configure(array('modules'=>$sysMods));
 	}

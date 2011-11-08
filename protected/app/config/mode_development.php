@@ -54,15 +54,15 @@ return array(
 					array(
 						'class'=>'NProfileLogRoute',
 					),
-					array(
-						'class'=>'CWebLogRoute',
-						'categories'=>'system.db.CDbCommand',
-						'showInFireBug'=>true,
-					),
 				),
 			),
+			// development mode we want to profile the database and have debug options
 			'db'=>array(
-				'tablePrefix'=>'',
+				'emulatePrepare' => true,
+				'charset' => 'utf8',
+				'tablePrefix' =>'',
+				'enableProfiling'=>true,
+				'enableParamLogging'=>true,
 			),
 		)
 	),

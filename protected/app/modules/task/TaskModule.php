@@ -18,6 +18,9 @@ class TaskModule extends NWebModule
 	
 	public function init(){
 		Yii::import('task.models.*');
+	}
+	
+	public function setup(){
 		Yii::app()->menus->addItem('main', 'Tasks', '#', null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
