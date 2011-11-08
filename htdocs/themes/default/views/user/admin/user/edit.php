@@ -1,8 +1,8 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'edit-user-form',
-	'enableAjaxValidation' => true,
-	'enableClientValidation' => false,
+//	'enableAjaxValidation' => true,
+//	'enableClientValidation' => false,
 	'clientOptions' => array(
 		'validateOnSubmit' => true,
 		'validateOnChange' => true,

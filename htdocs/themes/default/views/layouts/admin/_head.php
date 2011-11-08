@@ -1,9 +1,9 @@
 <div id="message"></div>
 <div class="head">
-	<?php if(true) : ?>
+	<?php if(Yii::app()->getModule('admin')->logo) : ?>
 		<div id="sitelogo">
 			<a href="<?php echo Yii::app()->baseUrl; ?>">
-				<img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/logo.gif" />
+				<img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/<?php echo Yii::app()->getModule('admin')->logo ?>" />
 			</a>
 		</div>
 	<?php endif; ?>
@@ -11,14 +11,14 @@
 		<div class="topbar">
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
-					<?php if(true) : ?>
-					<ul>
-						<li class="menu">
-							<a href="<?php echo CHtml::normalizeUrl(array('/admin/index/dashboard')) ?>">Dashboard</a>
-						</li>
-					</ul>
-					<?php else : ?>
+					<?php if(Yii::app()->getModule('admin')->menuAppname) : ?>
 						<h3><a href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a></h3>
+					<?php else : ?>
+						<ul>
+							<li class="menu">
+								<a href="<?php echo CHtml::normalizeUrl(array('/admin/index/dashboard')) ?>">Dashboard</a>
+							</li>
+						</ul>
 					<?php endif; ?>
 					<?php
 					$this->widget('nii.widgets.NMenu', array(

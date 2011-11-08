@@ -11,6 +11,17 @@ a:focus{outline:none}
 .container.pull-left{float:none;margin-left:0}
 .container.pull-right{float:none;margin-right:0}
 .modal-footer .btn.pull-left{float:left;margin-left:0;margin-right:5px}
+.tabs .heading{margin-right:20px}
+.tab-content > *{display:none}
+
+/* Vertical Tabs */
+.tabs.vertical{width:250px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px;float:left}
+.tabs.vertical > li{float:none;left:1px;margin-top:2px}
+.tabs.vertical > li > a{border-radius:4px 0 0 4px;margin-right:0px;padding:0 12px;line-height:30px}
+.tabs.vertical > li > a:hover{border-color:#EEEEEE #DDDDDD #EEEEEE #EEEEEE}
+.tabs.vertical > li.active > a{border-color:#DDDDDD;border-right:1px solid transparent}
+.tabs.vertical .heading{margin-right:0}
+.tab-content.vertical{display:table-cell;width:9999em}
 
 /* Site Styles */
 html,body{height:100%}

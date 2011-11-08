@@ -120,6 +120,9 @@ class Nii extends CWebApplication
 			}
 		}
 		
+		// Loads database settings to override config
+		$this->setupApplication();
+		
 		// initialise modules
 		$this->setupNiiModules();
 	
@@ -131,6 +134,12 @@ class Nii extends CWebApplication
 		
 	}
 	
+	/**
+	 * This function applies database settings to override config
+	 */
+	public function setupApplication(){
+		$this->configure(Yii::app()->settings->get('application','config'));
+	}
 	
 	/**
 	 * This is run when a subdomain is initialised.

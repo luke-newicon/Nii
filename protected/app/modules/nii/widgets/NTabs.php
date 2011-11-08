@@ -43,7 +43,7 @@ class NTabs extends CJuiTabs {
 	 * The token "{content}" in the template will be replaced with the panel content
 	 * and the token "{id}" with the tab ID.
 	 */
-	public $contentTemplate='<div id="{id}" class="tab-content">{content}</div>';
+	public $contentTemplate='<div id="{id}">{content}</div>';
 		
 	public $title;
 	public $titleTemplate='<li class="heading"><h2>{title}</h2></li>';

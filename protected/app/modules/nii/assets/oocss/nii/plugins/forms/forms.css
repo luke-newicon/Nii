@@ -33,7 +33,7 @@ label, input, select, textarea {font-family: "Helvetica Neue",Helvetica,Arial,sa
 
 
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
-.field{margin-bottom:5px;position:relative;}
+.field{margin-bottom:10px;position:relative;}
 /* padding and margin break widths so remove them, the input elements pading is defined by padding on .input*/
 input.btn{width:auto;}
 /* make required * red have to use span element here becuase that's what yii creates */
