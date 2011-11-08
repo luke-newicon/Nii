@@ -1,3 +1,4 @@
+<div id="message"></div>
 <div class="head">
 	<?php if(true) : ?>
 		<div id="sitelogo">

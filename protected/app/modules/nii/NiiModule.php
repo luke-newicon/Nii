@@ -63,6 +63,7 @@ class NiiModule extends NWebModule
 					'js/jquery.metadata.js', 
 //					'js/tipsy/javascripts/jquery.tipsy.js',
 					'js/nii.js', 
+					'js/functions.js',
 //					'js/jquery.hotkeys.js',
 //					'js/backbone/underscore-1.1.7.min.js',
 //					'js/backbone/backbone-0.5.3.min.js',

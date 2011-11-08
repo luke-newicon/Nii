@@ -423,5 +423,35 @@ class NHtml extends CHtml {
 		}
 		return parent::activeLabel($model, $attribute, $htmlOptions);
 	}
+	
+	public static function trashButton ($model, $modelName, $returnUrl=null, $successMsg=null) {
+
+		$label = AController::t('Delete this '.$modelName);
+		$className = get_class($model);
+		if (!$returnUrl)
+			$returnUrl = Yii::app()->controller->uniqueId . '/' . Yii::app()->controller->action->id;
+		
+		$params = array(
+			'model'=>$className,
+			'model_id'=>$model->id,
+			'name'=>$modelName,
+			'returnUrl'=>$returnUrl,
+		);
+		if ($successMsg)
+			$params['successMsg'] = $successMsg;
+		
+		$url = NHtml::url(array_merge(array('/admin/trash'),$params));
+		
+		return NHtml::btnLink($label,'#', null,
+			array(
+				'onclick'=> '
+					var answer = confirm("Are you sure you wish to delete this '.$modelName.'?");
+					if(!answer) { return; }
+					window.location = "'.$url.'";
+				',
+				'class'=>'trash-link btn danger'
+			)
+		);
+	}	
 
 }
