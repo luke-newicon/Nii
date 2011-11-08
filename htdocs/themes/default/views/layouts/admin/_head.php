@@ -7,6 +7,14 @@
 			</a>
 		</div>
 	<?php endif; ?>
+	<?php if(Yii::app()->getModule('admin')->topbarColor) : ?>
+		<style>
+			.topbar-inner, .topbar .fill{
+				background-color: <?php echo Yii::app()->getModule('admin')->topbarColor ?>;
+				background-image: -moz-linear-gradient(center top , <?php echo Yii::app()->getModule('admin')->topbarColor ?>, <?php echo Yii::app()->getModule('admin')->topbarColor ?>);
+			}
+		</style>
+	<?php endif; ?>
 	<div class="topbar-wrapper">
 		<div class="topbar">
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">

@@ -4,6 +4,7 @@
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'contact-edit-button', 'class'=>'btn primary'));?>
 	</div>
 </div>
+<div class="container pull-left">
 <div class="well">
 <span class="contact-photo"><?php echo $model->getPhoto('profile-main'); ?></span>
 <h2 class="contact-title"><?php echo $model->displayName;  ?></h2>
@@ -79,3 +80,4 @@
 		)
 	)
 ); ?>
+</div>

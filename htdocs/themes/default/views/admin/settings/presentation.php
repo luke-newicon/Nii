@@ -22,10 +22,22 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'logo'); ?>
 		</div>
 	</div>
+</fieldset>
+<fieldset>
+	<legend>Menu Settings</legend>
 	<div class="field">
 		<?php echo $form->checkBox($model, 'menuAppname'); ?>
 		<label>Show application name in menu bar.</label>
 		<?php echo $form->error($model, 'menuAppname'); ?>
+	</div>
+	<div class="field">
+		<?php echo $form->labelEx($model, 'topbarColor'); ?>
+		<div class="inputContainer">
+			<div class="input large">
+				<?php echo $form->textField($model, 'topbarColor'); ?>
+			</div>
+			<?php echo $form->error($model, 'topbarColor'); ?>
+		</div>
 	</div>
 	<div class="actions">
 		<input id="settings-presentation-save-2" type="submit" class="btn primary" value="Save" />

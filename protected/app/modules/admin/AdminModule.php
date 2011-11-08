@@ -8,6 +8,7 @@ class AdminModule extends NWebModule {
 	
 	public $logo;
 	public $menuAppname = true;
+	public $topbarColor;
 
 	public function init() {
 		Yii::import('admin.components.*');
