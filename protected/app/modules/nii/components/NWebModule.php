@@ -55,6 +55,7 @@ class NWebModule extends CWebModule
 		// during module activation we want an instance of the module that we can use
 		// but that does not set its self up and call its init functions or attach to the application
 		//$this->_id = $id;
+		$this->id = $id;
 		if($activate)
 			parent::__construct($id, $parent, $config);
 	}
