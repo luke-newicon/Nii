@@ -1,6 +1,6 @@
 <?php
 
-class CsvController extends Controller {
+class ExportController extends Controller {
 
 	public function actionDownload($filename=null) {
 		
@@ -11,7 +11,7 @@ class CsvController extends Controller {
 	/**
 	 * Allows the user to select which columns to export to CSV.
 	 */
-	public function actionExportDialog($model='Contact', $controller='contact', $action='index', $model_id=null, $scope=null) {
+	public function actionDialog($model='Contact', $controller='contact', $action='index', $model_id=null, $scope=null) {
 		
 		$className = $model;
 		$model = new $model;
@@ -30,7 +30,7 @@ class CsvController extends Controller {
 	/**
 	 * Allows the user to update their settings.
 	 */
-	public function actionProcessExport($model='Contact', $controller='contact', $action='index', $fileType='csv', $model_id=null, $scope=null) {
+	public function actionProcess($model='Contact', $controller='contact', $action='index', $fileType='csv', $model_id=null, $scope=null) {
 		
 		$settingName = $controller.'/'.$action;
 		

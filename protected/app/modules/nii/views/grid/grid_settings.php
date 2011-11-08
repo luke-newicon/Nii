@@ -1,9 +1,7 @@
 <form id="gridSettingsForm" method="post">
 <?php
-if (!$gridId)
-	$gridId = str_replace('/','',$controller).ucfirst($action).'Grid';
 $className = get_class($model);
-$columns = Setting::visibleColumns($className, $controller, $action);
+$columns = NData::visibleColumns($className, $gridId);
 foreach ($columns as $key=>$value) {
 	
 	echo '<div class="line">';
@@ -19,7 +17,7 @@ foreach ($columns as $key=>$value) {
 <script>
 	$(function(){
 
-		pageUrl = "<?php echo CHtml::normalizeUrl(array('grids/updateGridSettings/', 'settingName'=>$gridId)); ?>";
+		pageUrl = "<?php echo CHtml::normalizeUrl(array('grid/updateGridSettings/', 'key'=>$gridId)); ?>";
 
 		$("#gridSettingsForm").delegate(".gridSettingsSave","click",function(){
 			$.ajax({
