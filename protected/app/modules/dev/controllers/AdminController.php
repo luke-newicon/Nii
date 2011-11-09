@@ -50,7 +50,7 @@ class AdminController extends AController {
 		);
 		NFileHelper::deleteFilesRecursive(Yii::app()->runtimePath,$ignore);
 		Yii::app()->user->setFlash('success','Runtime folder succesfully flushed');
-		$this->redirect('index');
+		$this->redirect(array('index'));
 	}
 	
 }
