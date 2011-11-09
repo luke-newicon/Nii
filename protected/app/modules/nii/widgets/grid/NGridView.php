@@ -115,6 +115,9 @@ class NGridView extends CGridView {
 	 *	@begin button functions
 	 */
 
+	/**
+	 *	Render buttons in grid view. This function relies on $this->buttons, which is an array of the buttons to be displayed. 
+	 */
 	public function renderButtons() {
 
 		if ($this->enableButtons && $this->buttons) {
@@ -142,6 +145,10 @@ class NGridView extends CGridView {
 		}
 	}
 
+	/**
+	 *	Return options for the export columns button
+	 * @return array 
+	 */
 	public function exportGrid() {
 		$model_id = null;
 
@@ -166,11 +173,19 @@ class NGridView extends CGridView {
 			),
 		);
 	}
-
+	
+	/**
+	 *	Return options for the print grid button
+	 * @return array
+	 */
 	public function printGrid() {
 		return array('label' => '', 'url' => 'javascript:window.print()', 'htmlOptions' => array('title' => 'Print', 'class' => 'icon fam-printer block-icon'));
 	}
 
+	/**
+	 *	Return options for the grid columns update button
+	 * @return array 
+	 */
 	public function updateGridColumns() {
 
 		$model = get_class($this->dataProvider->model);
@@ -192,12 +207,26 @@ class NGridView extends CGridView {
 	 *	@end button functions 
 	 */
 	
+	/**
+	 *	Almighty function to return the columns to the grid view, including their visible status, as defined in NData
+	 * @param model $model
+	 * @return type 
+	 */
 	public function gridColumns($model) {
 		$model = $this->filter;
-		return $model->columns(NData::visibleColumns($this->filter, $this->id));
+		$visibleColumns = NData::visibleColumns($this->filter, $this->id);
+		$columns = $model->columns();
+		foreach($columns as $key=>$col) {
+			$columns[$key]['visible'] = (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null);
+		}
+		return $columns;
 	}	
 	
-			
+	/**
+	 *	Return javascript to be used in the updateGridColumns button (above)
+	 * @param array $params
+	 * @return string Javascript for 'onclick' of grid settings button
+	 */		
 	public static function gridSettingsDialog($params=array()) {
 		
 		$dialog_id = 'gridSettingsDialog';
@@ -241,6 +270,11 @@ class NGridView extends CGridView {
 		return false;';
 	}
 			
+	/**
+	 *	Return javascript to be used in the exportGrid button (above)
+	 * @param array $params
+	 * @return string Javascript for 'onclick' of export grid button
+	 */		
 	public static function exportGridDialog($params=array()) {
 		
 		$dialog_id = 'exportGridDialog';

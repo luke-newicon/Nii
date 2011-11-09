@@ -207,7 +207,7 @@ class Contact extends NActiveRecord
 		}
 	}
 	
-	public function columns($visibleColumns) {
+	public function columns() {
 		return array(
 //			array(
 //				'class'=>'CCheckBoxColumn',
@@ -217,7 +217,6 @@ class Contact extends NActiveRecord
 //				'type'=>'raw',
 //				'value' => '$data->getContactPhoto()',
 //	//				'exportValue' => '$data->getContactPhotoUrl()',
-//				'visible'=>$visibleColumns['photo'],
 //				'export'=>false,
 //				'filter'=>false,
 //				'header' => '',
@@ -227,97 +226,78 @@ class Contact extends NActiveRecord
 				'name' => 'name',
 				'type'=>'raw',
 				'value' => '$data->getContactLink(null,false)',
-				'visible'=>$visibleColumns['name'],
 				'htmlOptions'=>array('width'=>'200px'),
 			),
 			array(
 				'name'=>'title',
-				'visible'=>$visibleColumns['title'],
 				'filter'=> NHtml::enumItem($this, 'title'),
 				'htmlOptions'=>array('width'=>'50px'),
 			),
 			array(
 				'name'=>'givennames',
-				'visible'=>$visibleColumns['givennames'],
 			),
 			array(
 				'name'=>'lastname',
-				'visible'=>$visibleColumns['lastname'],
 			),
 //			array(
 //				'name'=>'type',
 //				'type'=>'raw',
 //				'value' => '$data->getContactTypeList($data->contact_type)',
 //				'exportValue' => '$data->getContactTypeListCsv($data->contact_type)',
-//				'visible'=>$visibleColumns['type'],
 //				'filter'=>$this->getRelationships(),
 //				'htmlOptions'=>array('width'=>'150px'),
 //			),
 			array(
 				'name'=>'addr1',
-				'visible'=>$visibleColumns['addr1'],
 			),
 //			array(
 //				'name'=>'addr2',
-//				'visible'=>$visibleColumns['addr2'],
 //			),
 //			array(
 //				'name'=>'addr3',
-//				'visible'=>$visibleColumns['addr3'],
 //			),
 			array(
 				'name'=>'city',
-				'visible'=>$visibleColumns['city'],
 				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
 				'name'=>'county',
-				'visible'=>$visibleColumns['county'],
 			),
 			array(
 				'name'=>'country',
-				'visible'=>$visibleColumns['country'],
 			),
 			array(
 				'name'=>'postcode',
-				'visible'=>$visibleColumns['postcode'],
 				'htmlOptions'=>array('width'=>'70px'),
 			),
 			array(
 				'name'=>'email',
 				'type'=>'raw',
 				'value'=>'$data->getEmailLink()',
-				'visible'=>$visibleColumns['email'],
 				'htmlOptions'=>array('width'=>'150px'),
 			),
 			array(
 				'name' => 'tel_primary',
-				'visible'=>$visibleColumns['tel_primary'],
 				'htmlOptions'=>array('width'=>'100px','style'=>'text-align:center'),
 			),
 //			array(
 //				'name' => 'tel_secondary',
-//				'visible'=>$visibleColumns['tel_secondary'],
 //				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 //			),
 //			array(
 //				'name' => 'mobile',
-//				'visible'=>$visibleColumns['mobile'],
 //				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 //			),
 			array(
 				'name' => 'fax',
-				'visible'=>$visibleColumns['fax'],
 				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 			),
 			array(
 				'name' => 'website',
-				'visible'=>$visibleColumns['website'],
 				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
 			),
 //			array(
 //				'name' => 'comment',
-//				'visible'=>$visibleColumns['comment'],
 //			),
 		);
 	}

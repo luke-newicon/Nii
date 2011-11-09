@@ -107,8 +107,8 @@ class NData
 	/**
 	 *	Defines visible columns for grid views
 	 * @param model $model
-	 * @param int $gridId
-	 * @return string 
+	 * @param string $gridId
+	 * @return array 
 	 */
 	
 	public static function visibleColumns($model, $gridId) {
@@ -142,6 +142,12 @@ class NData
 		
 	}
 	
+	/**
+	 *	Defines columns to be used for exporting grid data
+	 * @param model $model
+	 * @param string $gridId
+	 * @return array 
+	 */
 	public static function exportColumns($model, $gridId) {
 		
 		// Get user settings
@@ -172,6 +178,9 @@ class NData
 		return $columns;
 	}
 	
+	/**
+	 *	Not sure if this is still being used... May be able to delete, but check for usage first!
+	 */
 	public static function exportColumnsSql($model, $controller=null, $action=null) {
 		$allCols = self::exportColumns($model, $controller, $action);
 		$cols = array();
