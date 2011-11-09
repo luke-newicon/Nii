@@ -1,9 +1,9 @@
 <?php
-
+// WHAT?
 class NMenuManager extends CApplicationComponent {
 	
 	private $_menus = array();
-	
+	// WHAT DOES THIS DO  ?? 
 	public function addItem($menu,$label,$url=null,$parent=null,$options=array()){
 		if($parent){
 			$this->_menus[$menu][$parent]['itemOptions']['class'] = 'menu';

@@ -7,9 +7,6 @@
  */
 class NData
 {
-    public static function param($param, $defaultVal, $appendIfExists='', $prependIfExists=''){
-		return empty($param)?$defaultVal:$prependIfExists.$param.$appendIfExists;
-	}
 	
 	/**
 	 * replaces all occurances of $replaceArray keys in the subject string with
@@ -20,6 +17,34 @@ class NData
 	 */
 	public static function replace($subject, $replaceArray){
 		return str_replace(array_keys($replaceArray), array_values($replaceArray), $subject);
+	}
+	
+	/**
+	 * looks up the key in an array and returns it if it exists.  
+	 * If it does not exist it returns the value defined in $default
+	 * 
+	 * @param mixed $key
+	 * @param array $array
+	 * @param mixed $default
+	 * @return mixed 
+	 */
+	public static function getArrayItem($key, $array, $default=null){
+		return array_key_exists($key, $array) ? $array[$key] : $default;
+	}
+	
+	/**
+	 * Takes an array and lookup each key, if the key does not exist it creates it and populates it with the $default value
+	 *
+	 * @param array $keys an array list of keys
+	 * @param array $array 
+	 * @param mixed $default
+	 * @return array
+	 */
+	public static function getArrayItems($keys, $array, $default=null){
+		$ret = array();
+		foreach($keys as $key)
+			$ret[$key] = NData::getArrayItem($key, $array, $default);
+		return $ret;
 	}
 
 	/**
@@ -110,7 +135,6 @@ class NData
 	 * @param int $gridId
 	 * @return string 
 	 */
-	
 	public static function visibleColumns($model, $gridId) {
 				
 		// Get user settings

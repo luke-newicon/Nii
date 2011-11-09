@@ -208,6 +208,10 @@ class Contact extends NActiveRecord
 	}
 	
 	public function columns($visibleColumns) {
+		
+		// Temporary fix. 
+		$visibleColumns = NData::getArrayItems($this->attributeNames(),$visibleColumns, null);
+		
 		return array(
 //			array(
 //				'class'=>'CCheckBoxColumn',
@@ -223,6 +227,9 @@ class Contact extends NActiveRecord
 //				'header' => '',
 //				'htmlOptions' => array('width'=>'24px'),
 //			),
+			
+			
+			
 			array(
 				'name' => 'name',
 				'type'=>'raw',
