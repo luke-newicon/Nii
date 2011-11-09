@@ -592,8 +592,8 @@ div.ui-tabs.vertical div.ui-tabs-panel {
 	margin-right: 0;
 	min-height: 200px;
 	z-index: 100!important;
-	max-width: 996px;
-	margin-left: 200px;
+/*	max-width: 996px;*/
+	margin-left: 220px;
 	clear: none;
 /*	-webkit-box-shadow: 0px 0px 6px #999;
 	-moz-box-shadow: 0px 0px 6px #999;
@@ -607,7 +607,7 @@ div.vertical ul.ui-tabs-nav {
     border-bottom: medium none;
     border-right: 1px solid #DDDDDD;
 	border-radius: 0;
-    margin: 0 20px 0 0;
+    margin: 0;
 	padding-right: 0;
     padding-bottom: 4px;
     width: 200px;
