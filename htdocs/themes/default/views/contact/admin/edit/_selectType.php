@@ -15,10 +15,6 @@ $form=$this->beginWidget('NActiveForm', array(
 			</span>
 		</div>
 </div>
-<div class="actions">
-	<?php echo NHtml::btnLink($this->t('Continue'), '#', null, array('class' => 'btn primary contactContinue', 'id' => 'contactContinue')); ?>	
-	<?php echo CHtml::link($this->t('Cancel'), array("contact/view","id"=>$c->id), array('class'=>'btn cancelLink'));?>
-</div>
 <?php $this->endWidget(); ?>
 <script>
 $(function(){
@@ -27,5 +23,6 @@ $(function(){
 		window.location = url;
 		return;
 	}); 
+	
 });
 </script>

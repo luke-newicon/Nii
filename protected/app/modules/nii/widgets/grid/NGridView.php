@@ -211,6 +211,32 @@ class NGridView extends CGridView {
 			autoOpen: true,
 			title: "Update Visible Columns",
 			modal: true,
+			buttons: [
+				{
+					text: "Save",
+					class: "btn primary",
+					click: function() {
+						pageUrl = "'.CHtml::normalizeUrl(array('/nii/grid/updateGridSettings/', 'key'=>$params['gridId'])).'";
+						$.ajax({
+							url: pageUrl,
+							data: jQuery("#gridSettingsForm").serialize(),
+							dataType: "json",
+							type: "post",
+							success: function(response){ 
+								if (response.success) {
+									$("#gridSettingsDialog").dialog("close");
+									$.fn.yiiGridView.update("'.$params['gridId'].'");
+									showMessage(response.success);
+								}
+							},
+							error: function() {
+								alert ("JSON failed to return a valid response");
+							}
+						}); 
+						return false;
+					},
+				}
+			],
 		});
 		return false;';
 	}

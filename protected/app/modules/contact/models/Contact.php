@@ -511,6 +511,22 @@ class Contact extends NActiveRecord
 			autoOpen: true,
 			title: "Create a Contact",
 			modal: true,
+			buttons: [ 
+				{
+					text: "Continue",
+					class: "btn primary",
+					click : function () {
+						var url = "'.Yii::app()->baseUrl.'/contact/admin/create/type/"+$("#Contact_contact_type").val();
+						window.location = url;
+						return;
+					}
+				},
+				{
+					text: "Cancel",
+					click: function() { $(this).dialog("close"); },
+					class: "btn",
+				}
+			],
 		});
 		return false;';
 	}
