@@ -1,4 +1,4 @@
-<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushAssets','return'=>'jqueryui')) ?>">Flush Assets Folder</a>
+<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushAssets','return'=>'index#jqueryui')) ?>">Flush Assets Folder</a>
 <div class="line">
 <div class="unit size1of2">
 	<!-- Accordion -->
