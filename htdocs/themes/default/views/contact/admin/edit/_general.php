@@ -126,8 +126,9 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 	<div class="actions">
 		<?php
+		$cancelUrl = ($c->id) ? array('admin/view','id'=>$c->id) : array('admin/index');
 		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
-		echo NHtml::btn('Cancel', null, 'cancel') . '&nbsp;';
+		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
 		echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
 
 		?>		

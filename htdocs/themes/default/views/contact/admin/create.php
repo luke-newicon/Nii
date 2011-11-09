@@ -1,4 +1,4 @@
-<h2><?php echo $this->t('Create New Contact'); ?></h2>
+<?php if ($dialog==null) { ?><h2><?php echo $this->t('Create a Contact'); ?></h2><?php } ?>
 <?php
 
 $view = ($type == 'none') ? 'edit/_selectType' : 'edit/_general';
@@ -7,6 +7,6 @@ $this->renderPartial(
 	array(
 		'c'=>$c,
 		'type'=>$type,
-		'action'=>array('/contact/create','type'=>$type),
+		'action'=>array('admin/create','type'=>$type),
 	)
 );

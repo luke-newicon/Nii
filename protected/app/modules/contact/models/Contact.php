@@ -207,11 +207,7 @@ class Contact extends NActiveRecord
 		}
 	}
 	
-	public function columns($visibleColumns) {
-		
-		// Temporary fix. 
-		$visibleColumns = NData::getArrayItems($this->attributeNames(),$visibleColumns, null);
-		
+	public function columns() {
 		return array(
 //			array(
 //				'class'=>'CCheckBoxColumn',
@@ -221,110 +217,87 @@ class Contact extends NActiveRecord
 //				'type'=>'raw',
 //				'value' => '$data->getContactPhoto()',
 //	//				'exportValue' => '$data->getContactPhotoUrl()',
-//				'visible'=>$visibleColumns['photo'],
 //				'export'=>false,
 //				'filter'=>false,
 //				'header' => '',
 //				'htmlOptions' => array('width'=>'24px'),
 //			),
-			
-			
-			
 			array(
 				'name' => 'name',
 				'type'=>'raw',
 				'value' => '$data->getContactLink(null,false)',
-				'visible'=>$visibleColumns['name'],
 				'htmlOptions'=>array('width'=>'200px'),
 			),
 			array(
 				'name'=>'title',
-				'visible'=>$visibleColumns['title'],
 				'filter'=> NHtml::enumItem($this, 'title'),
 				'htmlOptions'=>array('width'=>'50px'),
 			),
 			array(
 				'name'=>'givennames',
-				'visible'=>$visibleColumns['givennames'],
 			),
 			array(
 				'name'=>'lastname',
-				'visible'=>$visibleColumns['lastname'],
 			),
 //			array(
 //				'name'=>'type',
 //				'type'=>'raw',
 //				'value' => '$data->getContactTypeList($data->contact_type)',
 //				'exportValue' => '$data->getContactTypeListCsv($data->contact_type)',
-//				'visible'=>$visibleColumns['type'],
 //				'filter'=>$this->getRelationships(),
 //				'htmlOptions'=>array('width'=>'150px'),
 //			),
 			array(
 				'name'=>'addr1',
-				'visible'=>$visibleColumns['addr1'],
 			),
 //			array(
 //				'name'=>'addr2',
-//				'visible'=>$visibleColumns['addr2'],
 //			),
 //			array(
 //				'name'=>'addr3',
-//				'visible'=>$visibleColumns['addr3'],
 //			),
 			array(
 				'name'=>'city',
-				'visible'=>$visibleColumns['city'],
 				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
 				'name'=>'county',
-				'visible'=>$visibleColumns['county'],
 			),
 			array(
 				'name'=>'country',
-				'visible'=>$visibleColumns['country'],
 			),
 			array(
 				'name'=>'postcode',
-				'visible'=>$visibleColumns['postcode'],
 				'htmlOptions'=>array('width'=>'70px'),
 			),
 			array(
 				'name'=>'email',
 				'type'=>'raw',
 				'value'=>'$data->getEmailLink()',
-				'visible'=>$visibleColumns['email'],
 				'htmlOptions'=>array('width'=>'150px'),
 			),
 			array(
 				'name' => 'tel_primary',
-				'visible'=>$visibleColumns['tel_primary'],
 				'htmlOptions'=>array('width'=>'100px','style'=>'text-align:center'),
 			),
 //			array(
 //				'name' => 'tel_secondary',
-//				'visible'=>$visibleColumns['tel_secondary'],
 //				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 //			),
 //			array(
 //				'name' => 'mobile',
-//				'visible'=>$visibleColumns['mobile'],
 //				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 //			),
 			array(
 				'name' => 'fax',
-				'visible'=>$visibleColumns['fax'],
 				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
 			),
 			array(
 				'name' => 'website',
-				'visible'=>$visibleColumns['website'],
 				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
 			),
 //			array(
 //				'name' => 'comment',
-//				'visible'=>$visibleColumns['comment'],
 //			),
 		);
 	}
@@ -505,6 +478,39 @@ class Contact extends NActiveRecord
 		
 	}
 	
+	
+	public function createContactDialog() {
+		$dialog_id = 'createContactDialog';
+		$url = CHtml::normalizeUrl(array('admin/create/','dialog'=>true));
+		return '$("#'.$dialog_id.'").dialog({
+			open: function(event, ui){
+				$("#'.$dialog_id.'").load("'.$url.'");
+			},
+			minHeight: 100, position: ["center", 100],
+			width: 400,
+			autoOpen: true,
+			title: "Create a Contact",
+			modal: true,
+			buttons: [ 
+				{
+					text: "Continue",
+					class: "btn primary",
+					click : function () {
+						var url = "'.Yii::app()->baseUrl.'/contact/admin/create/type/"+$("#Contact_contact_type").val();
+						window.location = url;
+						return;
+					}
+				},
+				{
+					text: "Cancel",
+					click: function() { $(this).dialog("close"); },
+					class: "btn",
+				}
+			],
+		});
+		return false;';
+	}
+	
 	public function addRelationshipDialog() {
 		$dialog_id = 'addRelationshipDialog';
 		$url = CHtml::normalizeUrl(array('/contact/addRelationship/','id'=>$this->id));
@@ -513,7 +519,7 @@ class Contact extends NActiveRecord
 				$("#'.$dialog_id.'").load("'.$url.'");
 			},
 			minHeight: 100, position: ["center", 100],
-			width: 400,
+			width: 600,
 			autoOpen: true,
 			title: "Add a Relationship",
 			modal: true,

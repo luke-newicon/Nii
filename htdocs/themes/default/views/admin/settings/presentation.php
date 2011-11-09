@@ -1,16 +1,16 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
-		'id' => 'studentForm',
-		'enableAjaxValidation' => false,
-		'enableClientValidation' => true,
-		'htmlOptions' => array('class' => 'float'),
-	));
+	'id' => 'settings-presentation-form',
+	'clientOptions' => array(
+		'validateOnSubmit' => true,
+		'validateOnChange' => true,
+	),
+	'htmlOptions' => array('class' => 'float'),
+));
 ?>
 <div class="page-header">
 	<h3>Presentation Settings</h3>
-	<div class="action-buttons">
-		<input id="settings-presentation-save" type="submit" class="btn primary" value="Save" />
-	</div>
+	<div class="action-buttons"></div>
 </div>
 <fieldset>
 	<div class="field">
@@ -22,22 +22,21 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'logo'); ?>
 		</div>
 	</div>
+</fieldset>
+<fieldset>
+	<legend>Menu Settings</legend>
 	<div class="field">
-		<?php echo $form->labelEx($model, 'color'); ?>
-		<div class="inputContainer">
-			<div class="input large">
-				<?php echo $form->textField($model, 'color'); ?>
-			</div>
-			<?php echo $form->error($model, 'color'); ?>
-		</div>
+		<?php echo $form->checkBox($model, 'menuAppname'); ?>
+		<label>Show application name in menu bar.</label>
+		<?php echo $form->error($model, 'menuAppname'); ?>
 	</div>
 	<div class="field">
-		<?php echo $form->labelEx($model, 'background'); ?>
+		<?php echo $form->labelEx($model, 'topbarColor'); ?>
 		<div class="inputContainer">
 			<div class="input large">
-				<?php echo $form->textField($model, 'background'); ?>
+				<?php echo $form->textField($model, 'topbarColor'); ?>
 			</div>
-			<?php echo $form->error($model, 'background'); ?>
+			<?php echo $form->error($model, 'topbarColor'); ?>
 		</div>
 	</div>
 	<div class="actions">

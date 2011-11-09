@@ -1,3 +1,4 @@
+<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-tabs.js'); ?>
 <?php
 	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		'id' => 'SettingsTabs',

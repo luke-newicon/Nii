@@ -3,6 +3,10 @@
 class AdminGeneralSetting extends CFormModel {
 
 	public $appname;
+	
+	public function init(){
+		$this->appname = Yii::app()->name;
+	}
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -20,6 +24,13 @@ class AdminGeneralSetting extends CFormModel {
 		return array(
 			'appname' => 'Application Name',
 		);
+	}
+	
+	public function save(){
+		$settings = array('name' => $this->appname);
+		$settings = CMap::mergeArray(Yii::app()->settings->get('application','config'), $settings);
+		Yii::app()->settings->set('application',$settings,'config');
+		return true;
 	}
 
 }

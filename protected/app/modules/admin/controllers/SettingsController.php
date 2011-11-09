@@ -20,33 +20,45 @@ class SettingsController extends AController {
 
 		if (isset($_POST['AdminGeneralSetting'])) {
 			$model->attributes = $_POST['AdminGeneralSetting'];
-			if ($model->validate())
-				echo CJSON::encode(array('success' => 'Settings successfully saved'));
-			else
-				echo CJSON::encode(array('error' => 'Settings failed to validate'));
-			Yii::app()->end();
+			if ($model->save()) {
+				Yii::app()->user->setFlash('success','General Settings successfully saved.');
+			} else
+				Yii::app()->user->setFlash('success','General Settings failed to save.');
+			$this->redirect(array('index'));
 		}
 
-		$this->render('general',array('model'=>$model));
+		$this->render('general', array('model' => $model));
 	}
-	
+
 	public function actionPresentation() {
 		$model = new AdminPresentationSetting;
-		$this->render('presentation',array('model'=>$model));
+		
+		$this->performAjaxValidation($model, 'settings-presentation-form');
+
+		if (isset($_POST['AdminPresentationSetting'])) {
+			$model->attributes = $_POST['AdminPresentationSetting'];
+			if ($model->save()) {
+				Yii::app()->user->setFlash('success','Presentation Settings successfully saved.');
+			} else
+				Yii::app()->user->setFlash('success','Presentation Settings failed to save.');
+			$this->redirect(array('index'));
+		}
+		
+		$this->render('presentation', array('model' => $model));
 	}
 
 	public function getSettings() {
 		foreach (Yii::app()->niiModules as $name => $module) {
 			if (method_exists($module, 'settings')) {
 				foreach ($module->settings() as $id => $setting) {
-					if(is_string($setting)){
+					if (is_string($setting)) {
 						$label = NHtml::generateAttributeLabel($id);
 						$url = CHtml::normalizeUrl(array($setting));
 					} else {
 						$label = isset($setting['label']) ? $setting['label'] : NHtml::generateAttributeLabel($id);
 						$url = isset($setting['url']) ? CHtml::normalizeUrl($setting['url']) : '#';
 					}
-					$settings['items'][] = array('label' => $label, 'url' => '#'.$id);
+					$settings['items'][] = array('label' => $label, 'url' => '#' . $id);
 					$page = array('label' => $label, 'htmlOptions' => array('id' => $id, 'data-ajax-url' => $url));
 					$settings['pages'][] = $page;
 				}

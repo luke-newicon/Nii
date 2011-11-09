@@ -13,26 +13,32 @@ class AdminController extends AController {
 	/**
 	 * Flush the cache
 	 */
-	public function actionFlushCache(){
+	public function actionFlushCache($return=null){
 		try {
 			Yii::app()->cache->flush();
 			Yii::app()->user->setFlash('success','Cache succesfully flushed');
 		}catch(Exception $e){
 			Yii::app()->user->setFlash('error','Cache flush failed');
 		}
-		$this->redirect('index');
+		if($return)
+			$this->redirect(array('index#'.$return));
+		else
+			$this->redirect(array('index'));
 	}
 	
 	/**
 	 * remove all assets from the assets folder
 	 */
-	public function actionFlushAssets(){
+	public function actionFlushAssets($return=null){
 		$ignore = array(
 			Yii::app()->getAssetManager()->basePath.'/.gitignore',
 		);
 		NFileHelper::deleteFilesRecursive(Yii::app()->getAssetManager()->basePath,$ignore);
 		Yii::app()->user->setFlash('success','Assets folder succesfully flushed');
-		$this->redirect('index');
+		if($return)
+			$this->redirect(array('index#'.$return));
+		else
+			$this->redirect(array('index'));
 	}
 	
 	/**
@@ -44,7 +50,7 @@ class AdminController extends AController {
 		);
 		NFileHelper::deleteFilesRecursive(Yii::app()->runtimePath,$ignore);
 		Yii::app()->user->setFlash('success','Runtime folder succesfully flushed');
-		$this->redirect('index');
+		$this->redirect(array('index'));
 	}
 	
 }
