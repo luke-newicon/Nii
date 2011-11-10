@@ -19,13 +19,13 @@ class IndexController extends AController
 	//put your code here
 	public function actionIndex(){
 		$this->layout = 'index';
-		$projects = Project::model()->findAll(array('order'=>'id DESC'));
+		$projects = HotspotProject::model()->findAll(array('order'=>'id DESC'));
 		
 		$this->render('index',array('projects'=>$projects));
 	}
 	
 	public function actionInstall(){
-		ProjectModule::get()->install();
+		HotspotModule::get()->install();
 	}
 	
 	public function actionCreate(){
@@ -51,7 +51,7 @@ class IndexController extends AController
 	}
 	
 	public function actionDelete(){
-		$p = Project::model()->findByPk($_POST['id']);
+		$p = HotspotProject::model()->findByPk($_POST['id']);
 		if($p===null)
 			throw new CHttpException(404,'Can not find the specified project');
 		$p->delete();
@@ -65,7 +65,7 @@ class IndexController extends AController
 	 */
 	public function actionPlanChange(){
 		$plan = Yii::app()->user->account->plan;
-		$projectCount = Project::model()->count();
+		$projectCount = HotspotProject::model()->count();
 		$ret = array('result'=>array(
 			'html'=>$this->renderPartial('_project-upgrade', array(), true),
 			'canCreateProject'=>!($plan['projects'] == $projectCount),

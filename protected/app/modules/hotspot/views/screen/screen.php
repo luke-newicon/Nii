@@ -159,7 +159,7 @@
 		 * CHotspot Model
 		 * --------------
 		 * 
-		 * Corresponds to ProjectHotSpot model
+		 * Corresponds to HotspotHotspot model
 		 */
 		window.CHotspot = Backbone.Model.extend({
 			defaults:{

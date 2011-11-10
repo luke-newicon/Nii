@@ -32,7 +32,7 @@ class ViewController extends NController {
 		$this->layout = 'view';
 		$link = $this->loadLink($h);
 		
-		$project = Project::model()->findByPk($link->project_id);
+		$project = HotspotProject::model()->findByPk($link->project_id);
 		if($project===null)
 			throw new CHttpException(404, 'Oops this project no loger exists');
 
@@ -126,7 +126,7 @@ class ViewController extends NController {
 		if($_POST['id'] == 0) 
 			$c = new ProjectComment;
 		else
-			$c = ProjectComment::model()->findByPk($_POST['id']);
+			$c = HotspotComment::model()->findByPk($_POST['id']);
 		$c->comment = $comment;
 		$c->screen_id = $sid;
 		$c->left = $_POST['left'];
@@ -158,7 +158,7 @@ class ViewController extends NController {
 	 */
 	public function actionDeleteComment(){
 		$link = $this->loadLink($_POST['hash']);
-		$com = ProjectComment::model()->findByPk($_POST['id']);
+		$com = HotspotComment::model()->findByPk($_POST['id']);
 		// bit of a quick check (not really secure, but who cares)
 		$ret = false;
 		if($com->email == $_POST['email'])

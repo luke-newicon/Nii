@@ -42,7 +42,7 @@ class ScreenController extends AController
 	 */
 	public function loadProject($id) {
 		if($this->project === null)
-			$this->project = Project::model()->findByPk($id);
+			$this->project = HotspotProject::model()->findByPk($id);
 		if($this->project === null)
 			throw new CHttpException(404, 'whoops, no project found');
 		return $this->project;
@@ -59,7 +59,7 @@ class ScreenController extends AController
 		
 		$hotspotArray = array_merge($project->getHotspotsArray(),$project->getTemplateHotspots());
 		
-		//$hotspotArray = ProjectHotSpot::model()->findAllByAttributes(array('project_id'=>$project->id));
+		//$hotspotArray = HotspotHotspot::model()->findAllByAttributes(array('project_id'=>$project->id));
 		
 		Yii::beginProfile('json encode');
 		$arr = array(

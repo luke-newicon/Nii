@@ -14,24 +14,23 @@
  *
  * @author steve
  */
-class ProjectModule extends NWebModule
+class HotspotModule extends NWebModule
 {
-
-	public $name = 'Hotspot';
 	
+	public $name = 'Hotspot';
+
 	public function init(){
 	
-		
 		$this->setImport(array(
-			'project.models.*',
-			'project.components.*',
+			'hotspot.models.*',
+			'hotspot.components.*',
 		));
 		
 		// relies on the image component NImage
 		Yii::app()->image->addType('projectThumb',array(
 			'resize' => array('width'=>198, 'height'=>158, 'master'=>'width', 'scale'=>'down'),
 			'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
-			'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
+			'noimage'=>Yii::getPathOfAlias('hotspot.assets.add-screens').'.png'
 		));
 		
 		Yii::app()->image->addType('projectSidebarThumb',array(
@@ -51,7 +50,8 @@ class ProjectModule extends NWebModule
 		
 	}
 	
-	public function setup(){
+	public function setup() {
+		
 	}
 	
 	/**
@@ -70,7 +70,7 @@ class ProjectModule extends NWebModule
 		{
 			if(!Yii::app()->getRequest()->getIsAjaxRequest()){
 				Yii::app()->clientScript->registerScriptFile($this->getAssetsUrl().'/jquery.flip.min.js');
-				Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/project.css');
+				Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/hotspot.css');
 			}
 			// this method is called before any module controller action is performed
 			// you may place customized code here
@@ -81,23 +81,23 @@ class ProjectModule extends NWebModule
 	}
 	
 	public function install(){
-		if(Yii::app()->getModule('account') === null)
+		if(Yii::app()->getModule('hotspot') === null)
 			throw new CException('Hotspot requires the "Hotspot Account" module. To be active before installation');
-		Project::install();
+		HotspotProject::install();
 		ProjectScreen::install();
-		ProjectHotSpot::install();
+		HotspotHotspot::install();
 		ProjectTemplate::install();
 		ProjectScreenTemplate::install();
-		ProjectComment::install();
+		HotspotComment::install();
 		ProjectLink::install();
 	}
 	
 	/**
 	 *
-	 * @return ProjectModule
+	 * @return HotspotModule
 	 */
 	public static function get(){
-		return Yii::app()->getModule('project');
+		return Yii::app()->getModule('hotspot');
 	}
 	
 	
@@ -118,14 +118,14 @@ class ProjectModule extends NWebModule
 		Yii::beginProfile('calculate total hotspots');
 		$templateCount = array();
 		foreach(ProjectTemplate::model()->findAll() as $t){
-			$templateCount[$t->id] = ProjectHotSpot::model()->countByAttributes(array('template_id'=>$t->id));
+			$templateCount[$t->id] = HotspotHotspot::model()->countByAttributes(array('template_id'=>$t->id));
 		}
 		$totalTemplateSpots = 0;
 		foreach(ProjectScreenTemplate::model()->findAll() as $st){
 			if(array_key_exists($st->template_id, $templateCount))
 				$totalTemplateSpots += $templateCount[$st->template_id];
 		}
-		$normHotspots = ProjectHotSpot::model()->countByAttributes(array('template_id'=>0));
+		$normHotspots = HotspotHotspot::model()->countByAttributes(array('template_id'=>0));
 		Yii::endProfile('calculate total hotspots');
 		return $normHotspots + $totalTemplateSpots;
 		
@@ -136,7 +136,7 @@ class ProjectModule extends NWebModule
 	 * @return int
 	 */
 	public static function totalProjects(){
-		return Project::model()->count();
+		return HotspotProject::model()->count();
 	}
 	
 	

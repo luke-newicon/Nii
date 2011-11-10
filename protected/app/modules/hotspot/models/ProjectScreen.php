@@ -189,13 +189,13 @@ class ProjectScreen extends NAppRecord
 	 * @return integer
 	 */
 	public function getNumHotspots(){
-		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id));
+		return HotspotHotspot::model()->countByAttributes(array('screen_id'=>$this->id));
 	}
 	
 	
 	public function getNumTemplateHotspots(){
 		$tIds = $this->getTemplatesAppliedIds();
-		return ProjectHotSpot::model()->countByAttributes(array('template_id'=>$tIds));
+		return HotspotHotspot::model()->countByAttributes(array('template_id'=>$tIds));
 	}
 	
 	/**
@@ -204,7 +204,7 @@ class ProjectScreen extends NAppRecord
 	 * @return integer 
 	 */
 	public function getNumIncomingLinks(){
-		return ProjectHotSpot::model()->countByAttributes(array('screen_id_link'=>$this->id));
+		return HotspotHotspot::model()->countByAttributes(array('screen_id_link'=>$this->id));
 	}
 	
 	
@@ -215,7 +215,7 @@ class ProjectScreen extends NAppRecord
 	 * @return integer 
 	 */
 	public function getNumOutgoingLinks(){
-		return ProjectHotSpot::model()->countByAttributes(array('screen_id'=>$this->id,'screen_link_id'=>''));
+		return HotspotHotspot::model()->countByAttributes(array('screen_id'=>$this->id,'screen_link_id'=>''));
 	}
 	
 	/**
@@ -224,7 +224,7 @@ class ProjectScreen extends NAppRecord
 	 * @return integer 
 	 */
 	public function getNumComments(){
-		return ProjectComment::model()->countByAttributes(array('screen_id'=>$this->id));
+		return HotspotComment::model()->countByAttributes(array('screen_id'=>$this->id));
 	}
 	
 	
@@ -258,7 +258,7 @@ class ProjectScreen extends NAppRecord
 	public function getTemplateHotspots($onlyLinked=false){
 		$tIds = $this->getTemplatesAppliedIds();
 		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
-		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tIds),$condition);
+		return HotspotHotspot::model()->findAllByAttributes(array('template_id'=>$tIds),$condition);
 	}
 	
 	/**
@@ -268,7 +268,7 @@ class ProjectScreen extends NAppRecord
 	 */
 	public function getHotspots($onlyLinked=false){
 		$condition = ($onlyLinked) ? 'screen_id_link != 0' : '';
-		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0),$condition);
+		return HotspotHotspot::model()->findAllByAttributes(array('screen_id'=>$this->id,'template_id'=>0),$condition);
 	}
 
 	
@@ -279,7 +279,7 @@ class ProjectScreen extends NAppRecord
 	public function getComments(){
 		// lets cache results of getcomments as its called a few times
 		if($this->_comments === null)
-			$this->_comments = ProjectComment::model()->findAllByAttributes(array('screen_id'=>$this->id));
+			$this->_comments = HotspotComment::model()->findAllByAttributes(array('screen_id'=>$this->id));
 		return $this->_comments;
 	}
 	
@@ -300,9 +300,9 @@ class ProjectScreen extends NAppRecord
 		// Delete the File image for this screen
 		NFileManager::get()->deleteFile($this->file_id);
 		// We need to delete the hostpots on this screen
-		ProjectHotSpot::model()->deleteAllByAttributes(array('screen_id'=>$this->id), 'template_id = 0');
+		HotspotHotspot::model()->deleteAllByAttributes(array('screen_id'=>$this->id), 'template_id = 0');
 		// We also need to delete hotspots that link to this screen, or maybe make them zombie spots.
-		ProjectHotSpot::model()->updateAll(array('screen_id_link'=>0),"screen_id_link = {$this->id}");
+		HotspotHotspot::model()->updateAll(array('screen_id_link'=>0),"screen_id_link = {$this->id}");
 		// need to delete the template links to this screen
 		ProjectScreenTemplate::model()->deleteAllByAttributes(array('screen_id'=>$this->id));
 		

@@ -691,7 +691,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 			}
 			
 			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
-				{ProjectHotSpot:{
+				{HotspotHotspot:{
 					hotspot_id:id,
 					screen_id:$('#canvas').attr('data-id'),
 					width:$spot.width(),

@@ -19,10 +19,10 @@
 <div id="help-window" title="Welcome to Hotspotx" style="display:none;padding:0px;">
 	<div class="line" style="border-bottom:1px solid #ccc;">
 		<div class="unit size3of4">
-			<h2 class="txtC mtl"><img style="display:inline;" src="<?php echo ProjectModule::get()->getAssetsUrl(); ?>/welcome-to-hotspot.png" /></h2>
+			<h2 class="txtC mtl"><img style="display:inline;" src="<?php echo HotspotModule::get()->getAssetsUrl(); ?>/welcome-to-hotspot.png" /></h2>
 			<p class="txtC mll mrl" style="color:#666;">Watch this quick getting started video to see how easy it is to start building beautiful, fully interactive website and web application prototypes</p>
 			<a href="#" class="txtC" style="display:block;">
-				<img style="display:inline;" src="<?php echo ProjectModule::get()->getAssetsUrl(); ?>/welcome-to-hotspot-video.png" />
+				<img style="display:inline;" src="<?php echo HotspotModule::get()->getAssetsUrl(); ?>/welcome-to-hotspot-video.png" />
 			</a>
 		</div>
 		<div class="lastUnit plm" style="font-size:12px;height:412px;background-color:#eeeeee;border-top:1px solid #fff;border-left:1px solid #e5e5e5;">

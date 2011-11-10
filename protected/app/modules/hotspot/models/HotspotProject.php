@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class Project extends NAppRecord
+class HotspotProject extends NAppRecord
 {
 	
 	/**
@@ -29,7 +29,7 @@ class Project extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_project}}';
+		return '{{hotspot_project}}';
 	}
 	
 	
@@ -140,22 +140,22 @@ class Project extends NAppRecord
 	 * and should not be discovered through specifc screens, as if these screens are all deleted you lose the ability 
 	 * to access the templates, to get the template hotspots call self::getTemplateHotspots
 	 * 
-	 * @return array ProjectHotSpot
+	 * @return array HotspotHotspot
 	 */
 	public function getHotspots(){
-		return ProjectHotSpot::model()->findAllByAttributes(array('screen_id'=>$this->getScreensIdArray()), 'template_id = 0');
+		return HotspotHotspot::model()->findAllByAttributes(array('screen_id'=>$this->getScreensIdArray()), 'template_id = 0');
 	}
 	
 	/**
 	 * get template hotspots, get all hotspots that are available as templates to this project
 	 * 
-	 * @return array of ProjectHotSpot template models
+	 * @return array of HotspotHotspot template models
 	 */
 	public function getTemplateHotspots(){
 		$ts = array();
 		foreach($this->getTemplates() as $k => $v)
 			$ts[] = $v->id;
-		return ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$ts));
+		return HotspotHotspot::model()->findAllByAttributes(array('template_id'=>$ts));
 	}
 	
 	/**
@@ -219,7 +219,7 @@ class Project extends NAppRecord
 			$screens = array();
 			foreach($this->getScreens() as $s)
 				$screens[] = $s->id;
-			$this->_numComments = ProjectComment::model()->countByAttributes(array('screen_id'=>$screens));
+			$this->_numComments = HotspotComment::model()->countByAttributes(array('screen_id'=>$screens));
 		}
 		
 		return $this->_numComments;
@@ -238,7 +238,7 @@ class Project extends NAppRecord
 	 * @return integer
 	 */
 	public function getHotspotCount(){
-		return ProjectHotSpot::model()->countByAttributes(array('project_id'=>$this->id, 'template_id'=>0));
+		return HotspotHotspot::model()->countByAttributes(array('project_id'=>$this->id, 'template_id'=>0));
 	}
 	
 	/**
@@ -294,7 +294,7 @@ class Project extends NAppRecord
 		parent::afterDelete();
 		// delete all screens and related project data
 		ProjectScreen::model()->deleteScreens($this->id);
-		ProjectComment::model()->deleteAllByAttributes(array('project_id'=>$this->id));
+		HotspotComment::model()->deleteAllByAttributes(array('project_id'=>$this->id));
 		ProjectLink::model()->deleteAllByAttributes(array('project_id'=>$this->id));
 	}
 	

@@ -16,7 +16,7 @@
 <br />
 <div id="overallStats"  class="pll">
 	<?php $screenCount = ProjectScreen::model()->count(); ?>
-	<?php $projectCount = Project::model()->count(); ?>
+	<?php $projectCount = HotspotProject::model()->count(); ?>
 	<p style="color:white;text-shadow:0px 1px 0px #000;">You have <?php echo ($screenCount == 1) ? "$screenCount screen" : "$screenCount screens"; ?> across <?php echo ($projectCount==1)?"$projectCount Project":"$projectCount Projects"; ?>.</p>
 </div>
 
@@ -31,13 +31,13 @@
 		<div id="createProject" class="projectBox details">
 			<div class="norm txtC">
 				<a href="#" class="projImg addNewProj addProject">
-					<img src="<?php echo ProjectModule::get()->getAssetsUrl().'/images/add-project.png'; ?>"  />
+					<img src="<?php echo HotspotModule::get()->getAssetsUrl().'/images/add-project.png'; ?>"  />
 				</a>
 				<a href="" class="btn aristo primary large addProject addProjectStyle">Create new project</a>
 			</div>
 			<div class="create" style="display:none;">
 				<div class="projImg" style="margin-bottom:15px;">
-					<img src="<?php echo ProjectModule::get()->getAssetsUrl().'/images/add-project.png'; ?>"  />
+					<img src="<?php echo HotspotModule::get()->getAssetsUrl().'/images/add-project.png'; ?>"  />
 				</div>
 				<div class="field">
 					<div class="inputBox" data-tip="{trigger:focus,gravity:'s'}" title="Type the new projects name">

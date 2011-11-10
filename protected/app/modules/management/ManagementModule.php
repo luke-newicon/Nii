@@ -22,10 +22,7 @@ class ManagementModule extends NWebModule
 	
 	public function setup(){
 		Yii::app()->menus->addItem('main','Management', array('/management/admin/index'));
-		
-//		Yii::app()->menus->addItem('main', 'Actions', array('/management/admin/actions'), 'Management', array(
-//			'visible' => Yii::app()->user->checkAccess('management/admin/actions'),
-//		));
+
 	}
 	
 	public function install(){

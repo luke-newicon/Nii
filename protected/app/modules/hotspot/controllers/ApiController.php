@@ -9,7 +9,7 @@ Class ApiController extends RestController
 	 * @return Project 
 	 */
 	public function loadProject($pid){
-		$p = Project::model()->findByPk($pid);
+		$p = HotspotProject::model()->findByPk($pid);
 		if($p===null)
 			throw new CHttpException(404,"No project with id:$pid found");
 		return $p;
@@ -130,7 +130,7 @@ Class ApiController extends RestController
 		return array(
 			'link'=>'ProjectLink',
 			'screen'=>'ProjectScreen',
-			'hotspot'=>'ProjectHotSpot',
+			'hotspot'=>'HotspotHotspot',
 		);
 	}
 	

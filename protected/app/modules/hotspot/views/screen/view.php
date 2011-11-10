@@ -30,11 +30,11 @@
 	<div id="preload">
 		<h1 style="padding-bottom:8px;">Visuals have been shared with you for review.</h1>
 		<div class="line">
-			<div class="unit size2of7"><img style="display:inline;" src="<?php echo ProjectModule::get()->assetsUrl; ?>/keys.png" /></div>
+			<div class="unit size2of7"><img style="display:inline;" src="<?php echo HotspotModule::get()->assetsUrl; ?>/keys.png" /></div>
 			<div class="lastUnit"><h1 style="font-size:22px;padding-top:8px;">Tap the Shift or H key to show hotspots</h1></div>
 		</div>
 		<ul class="ptl" style="font-size:11px;">
-			<li>The “H” key will hold the hotspots on the screen, you can tap “H” again or the shift key to hide the hotspots.</li>
+			<li>The ‚ÄúH‚Äù key will hold the hotspots on the screen, you can tap ‚ÄúH‚Äù again or the shift key to hide the hotspots.</li>
 			<li>The Shift key will show the hotspots only whilst it is pressed down.</li>
 		</ul>
 	</div>

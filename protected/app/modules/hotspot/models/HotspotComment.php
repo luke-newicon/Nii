@@ -1,7 +1,7 @@
 <?php
 
 /**
- * {name} class file.
+ * Project class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -10,11 +10,11 @@
  */
 
 /**
- * Description of ProjectHotSpots
+ * Description of Project
  *
  * @author steve
  */
-class ProjectHotSpot extends NAppRecord 
+class HotspotComment extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -23,18 +23,12 @@ class ProjectHotSpot extends NAppRecord
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
-	
-	public function rules(){
-		return array(
-			array('screen_id,project_id,width,height,left,top,screen_id_link,fixed_scroll,template_id','safe')
-		);
-	}
 
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_hotspot}}';
+		return '{{project_comment}}';
 	}
 	
 	
@@ -43,27 +37,24 @@ class ProjectHotSpot extends NAppRecord
 	}
 	
 	public function schema(){
-		
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
-				'screen_id'=>'int',
 				'project_id'=>'int',
-				'template_id'=>'int NULL DEFAULT \'0\'',
-				'width'=>'int',
-				'height'=>'int',
+				'screen_id'=>'int',
+				'comment'=>'text',
 				'left'=>'int',
 				'top'=>'int',
-				'screen_id_link'=>'int NULL DEFAULT \'0\'',
-				'fixed_scroll'=>'TINYINT(1) NULL DEFAULT  \'0\''
+				'time'=>'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+				'username'=>'text',
+				'email'=>'text'
 			),
 			'keys'=>array(
-				array('template_id'),
-				array('screen_id'),
-				array('screen_id_link'),
-				array('project_id'),
+				array('screen_id')
 			),
+			array('project_comment','screen_id','project_screen','id','CASCADE','CASCADE'),
 		);
 	}
+	
 	
 }

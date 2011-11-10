@@ -191,7 +191,7 @@
 </script>
 
 <script type="text/template" id="canvas-start-template">
-	<img style="display:inline;padding-top:8px;" src="<?php echo ProjectModule::get()->getAssetsUrl(); ?>/no-screens.png" />
+	<img style="display:inline;padding-top:8px;" src="<?php echo HotspotModule::get()->getAssetsUrl(); ?>/no-screens.png" />
 </script>
 
 

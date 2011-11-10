@@ -96,7 +96,7 @@ Class ModulesController extends AController
 			ob_start();
 			Yii::app()->displayError($event->code, $event->message, $event->file, $event->line);
 			$errorHtml = ob_get_clean();
-			$msg = '<strong>'.$e->getMessage().'</strong>';
+			$msg = '<strong>'.$event->message.'</strong>';
 			$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
 			Yii::app()->user->setFlash('error-block-message', $msg);
 		}

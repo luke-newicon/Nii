@@ -56,7 +56,7 @@
 				$('#linkTable tr:eq(1)').effect("highlight", {}, 2000);
 			});
 			$('#linkTable table tbody').prepend(r);
-			//$('#project-link').html('<a href="<?php echo NHtml::url(ProjectModule::get()->shareLink); ?>/'+r+'">'+r+'</a>');
+			//$('#project-link').html('<a href="<?php echo NHtml::url(HotspotModule::get()->shareLink); ?>/'+r+'">'+r+'</a>');
 		});
 		return false;
 	});

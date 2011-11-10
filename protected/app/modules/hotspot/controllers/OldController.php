@@ -56,7 +56,7 @@ class OldController extends AController
 		
 		$project = $this->loadProject($project);
 		$screen = $project->getStartScreen();
-		$project = Project::model()->findByPk($screen->project_id);
+		$project = HotspotProject::model()->findByPk($screen->project_id);
 		
 		
 		// get all the hotspots on the screen
@@ -141,7 +141,7 @@ class OldController extends AController
 		$st->screen_id = $_POST['screen'];
 		$st->save();
 		// need to get template hotspot info.
-		$hotspotRecords = ProjectHotSpot::model()->findAllByAttributes(array('template_id'=>$tid));
+		$hotspotRecords = HotspotHotspot::model()->findAllByAttributes(array('template_id'=>$tid));
 		$hotspots = array();
 		foreach($hotspotRecords as $hs){
 			$hotspots[] = $hs->getAttributes();
@@ -159,7 +159,7 @@ class OldController extends AController
 	public function actionAddTemplateSpot() {
 		$sid = $_POST['spot'];
 		$tid = $_POST['template'];
-		$s = ProjectHotSpot::model()->findByPk($sid);
+		$s = HotspotHotspot::model()->findByPk($sid);
 		$s->template_id = $tid;
 		$s->screen_id = 0;
 		$s->save();
@@ -171,7 +171,7 @@ class OldController extends AController
 		if($_POST['id'] == 0) 
 			$c = new ProjectComment;
 		else
-			$c = ProjectComment::model()->findByPk($_POST['id']);
+			$c = HotspotComment::model()->findByPk($_POST['id']);
 		$c->comment = $comment;
 		$c->screen_id = $sid;
 		$c->left = $_POST['left'];
@@ -184,7 +184,7 @@ class OldController extends AController
 	}
 	
 	public function actionDeleteComment() {
-		$c = ProjectComment::model()->findByPk($_POST['id']); 
+		$c = HotspotComment::model()->findByPk($_POST['id']); 
 		$c->delete();
 	}
 	
@@ -195,7 +195,7 @@ class OldController extends AController
 			throw new CHttpException(404,'no template found');
 		$success = $t->delete();
 		// delete all of the hotspots in this template
-		ProjectHotSpot::model()->deleteAllByAttributes(array('template_id'=>$id));
+		HotspotHotspot::model()->deleteAllByAttributes(array('template_id'=>$id));
 		echo json_encode(array('result'=>array('success'=>true)));
 	}
 
@@ -237,7 +237,7 @@ class OldController extends AController
 		if($link===null)
 			throw new CHttpException(404, 'Oops this page does not exist');
 		
-		$project = Project::model()->findByPk($link->project_id);
+		$project = HotspotProject::model()->findByPk($link->project_id);
 		if($project===null)
 			throw new CHttpException(404, 'Oops this project no loger exists');
 
@@ -299,7 +299,7 @@ class OldController extends AController
 	 */
 	public function loadProject($id) {
 		if($this->project === null)
-			$this->project = Project::model()->findByPk($id);
+			$this->project = HotspotProject::model()->findByPk($id);
 		if($this->project === null)
 			throw new CHttpException(404, 'whoops, no project found');
 		return $this->project;
