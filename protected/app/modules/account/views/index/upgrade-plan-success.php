@@ -1,0 +1,1 @@
+Thank you for subscribing! You have been successfully upgraded to the <?php echo $planTitle; ?> plan. 
