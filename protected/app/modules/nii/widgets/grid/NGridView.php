@@ -32,6 +32,8 @@ class NGridView extends CGridView {
 	public $defaultExportButton = 'exportGrid';
 	public $defaultPrintButton = 'printGrid';
 	public $defaultUpdateButton = 'updateGridColumns';
+	// ajax in only the bits we need.  should modify to be id's for performance
+	public $ajaxUpdate = '#ContactAllGrid .grid-top-summary, #ContactAllGrid thead .header, #ContactAllGrid tbody';
 
 	public function init() {
 
@@ -271,7 +273,7 @@ class NGridView extends CGridView {
 	}
 			
 	/**
-	 *	Return javascript to be used in the exportGrid button (above)
+	 * Return javascript to be used in the exportGrid button (above)
 	 * @param array $params
 	 * @return string Javascript for 'onclick' of export grid button
 	 */		

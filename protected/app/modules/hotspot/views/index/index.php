@@ -1,7 +1,7 @@
 <div class="toolbar">
 	<div class="line plm">
 		<div class="unit titleBarText">
-			<span class="hotspot-logo"><a style="width:auto;padding-left:20px;" class="icon hotspot-logo" href="<?php echo NHtml::url('/project/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
+			<span class="hotspot-logo"><a style="width:auto;padding-left:20px;" class="icon hotspot-logo" href="<?php echo NHtml::url('/hotspot/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
 		</div>
 		<div class="unit">
 			<?php $this->widget('account.widgets.TrialMessage'); ?>
@@ -85,7 +85,7 @@ $(function(){
 			$projectBox.closest('li').hide('normal', function(){
 				$(this).remove();
 			});
-			$.post("<?php echo NHtml::url('/project/index/delete') ?>",{id:$projectBox.data('id')}, function(r){
+			$.post("<?php echo NHtml::url('/hotspot/index/delete') ?>",{id:$projectBox.data('id')}, function(r){
 				window.projectLimit();
 			});
 		}
@@ -119,7 +119,7 @@ $(function(){
 		$('.norm').hide();
 		$('.create').show();
 		$('#createProject').addClass('creating')
-		$('#projectInput').val('').focus().closest('.input').tipsy("show");
+		$('#projectInput').val('').focus().closest('.input').twipsy("show");
 		return false;
 	});
 	$('#projectInput').keyup(function(e){
@@ -130,7 +130,7 @@ $(function(){
 	$('.cancelNewProject').click(function(){
 		$('.norm').show();
 		$('.create').hide();
-		$('#projectInput').closest('.input').tipsy("hide");
+		$('#projectInput').closest('.input').twipsy("hide");
 		$('#createProject').removeClass('creating')
 		return false;
 	});
@@ -138,8 +138,8 @@ $(function(){
 		var projName = $('#projectInput').val();
 		if(projName=='')
 			return false;
-		$('#projectInput').closest('.input').tipsy("hide");
-		$.post("<?php echo NHtml::url('/project/index/create'); ?>",{name:projName},function(r){
+		$('#projectInput').closest('.input').twipsy("hide");
+		$.post("<?php echo NHtml::url('/hotspot/index/create'); ?>",{name:projName},function(r){
 			// first lets check for errors.
 			if(r.error){
 				// now determine error.

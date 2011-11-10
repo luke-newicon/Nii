@@ -37,7 +37,7 @@
  * 
  * @property $cssParentClass
  * @property $sprites populated automatically if empty
- * @property mixed $imageFolderPath
+ * @property array $imageFolderPath an array of filepaths to find images to be added to the sprite
  * @author Steven OBrien <steven.obrien@newicon.net>
  * @package nii
  */
@@ -158,6 +158,7 @@ Class NSprite extends CApplicationComponent
 	 * @return void
 	 */
 	private function _generateImage(){
+		FB::log($this->_imageFolderPath, 'generate image sprite');
 		$total = $this->_totalSize();
 		if($total['width'] > 0 && $total['height'] > 0){
 			$sprite = imagecreatetruecolor($total['width'], $total['height']); 
@@ -269,20 +270,17 @@ Class NSprite extends CApplicationComponent
 	 */
 	public function findFiles(){
 		$options = array('fileTypes'=>array('png','gif','jpeg','jpg'));
-		if(is_array($this->getIconPath())){
-			// must be an array of folders
-			foreach($this->getIconPath() as $iFolder){
-				if(!is_dir($iFolder))
-					throw new CException("The folder path '$iFolder' does not exist.");
-				$files = CFileHelper::findFiles($iFolder, $options);
-				foreach($files as $p){
-					$this->sprites[] = array(
-						'imageFolder' => $iFolder,
-						'path' => trim(str_replace(realpath($iFolder), '', $p),DIRECTORY_SEPARATOR)
-					);
-				}
+		// must be an array of folders
+		foreach($this->getIconPath() as $iFolder){
+			if(!is_dir($iFolder))
+				throw new CException("The folder path '$iFolder' does not exist.");
+			$files = CFileHelper::findFiles($iFolder, $options);
+			foreach($files as $p){
+				$this->sprites[] = array(
+					'imageFolder' => $iFolder,
+					'path' => trim(str_replace(realpath($iFolder), '', $p),DIRECTORY_SEPARATOR)
+				);
 			}
-			
 		}
 	}
 	
@@ -294,17 +292,24 @@ Class NSprite extends CApplicationComponent
 	}
 	
 	/**
-	 *
-	 * @param array $value 
+	 * Set the imageFolderPath property
+	 * 
+	 * @param array $value an array of paths array('/file/path/1', 'file/path/2')
+	 * @return void
 	 */
-	public function setImageFolderPath($value, $merge=true){
+	public function setImageFolderPath($arrayPaths, $merge=true){
 		if ($merge)
-			$this->_imageFolderPath = array_merge($this->_imageFolderPath, $value);
+			$this->_imageFolderPath = array_merge($this->_imageFolderPath, $arrayPaths);
 		else
-			$this->_imageFolderPath = $value;
+			$this->_imageFolderPath = $arrayPaths;
 	}
 	
-	public function addImageFolderPath(){
+	/**
+	 * Add one path to the list of image paths.
+	 * @param string $path 
+	 */
+	public function addImageFolderPath($path){
+		$this->_imageFolderPath[] = $path;
 	}
 	
 }

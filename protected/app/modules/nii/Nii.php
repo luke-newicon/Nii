@@ -11,9 +11,11 @@
 defined('DS') or define('DS',DIRECTORY_SEPARATOR);
 
 /**
- * Nii 
+ * Nii The Nii application class.  It extends the Yii class.
+ * Yii::app() refers to this class.
  *
  * @author steve <steve@newicon.net>
+ * @property 
  */
 class Nii extends CWebApplication
 {
@@ -92,48 +94,26 @@ class Nii extends CWebApplication
 		
 		// for firephp
 		ob_start();
-		
-		if($this->domain){
-			
-			// set up application context using the subdomain
-			$host = Yii::app()->request->getHostInfo();
-			// define the hostname!
-			$schema = Yii::app()->request->getIsSecureConnection() ? 'https://' : 'http://';
-			$subdomain = trim(str_replace(array($schema, $this->hostname),'',$host),'.');
-			
-			// redirect if www.
-			if($subdomain=='www')
-				Yii::app()->request->redirect(str_replace('www.','',$host).Yii::app()->request->getUrl(), true, 301);
-
-			if($subdomain==''){
-				$this->defaultController = 'site';
-			} else {
-				//check domain
-				$dom = AppDomain::model()->findByPk($subdomain);
-				if($dom === null){
-					$this->catchAllRequest = array('error');
-				}else{
-					$this->setSubDomain($dom->domain);
-					$this->defaultController = 'app';
-					$this->configSubDomain();
-				}
-			}
+		// turn off FB logging when we are in production mode
+		if(!YII_DEBUG){
+			FB::setEnabled(false);
 		}
 		
+		
+		if($this->domain)
+			$this->setupDomainInstance();
+	
 		// Loads database settings to override config
 		$this->setupApplication();
 		
 		// initialise modules
-		$this->setupNiiModules();
+		$this->setupModules();
 	
-		// add event to do extra processing when a user signs up.
-		// change this to on activation... we only want to create new databases for real users
-		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
 		// run the application (process the request)
 		parent::run();
 		
 	}
-	
+		
 	/**
 	 * This function applies database settings to override config
 	 */
@@ -142,77 +122,84 @@ class Nii extends CWebApplication
 	}
 	
 	/**
-	 * This is run when a subdomain is initialised.
-	 * changes file paths etc to make specific to the subdomain environment
-	 */
-	public function configSubDomain(){
-		// to prevent cache affecting other subdomains lets create a specific runtime folder for each subdomain
-		$runtime = Yii::getPathOfAlias('app.runtime').DS.$this->getSubDomain();
-		if(!file_exists($runtime)){
-			mkdir($runtime);
-		}
-		$this->runtimePath = $runtime;
-	}
-	
-	/**
+	 * Setup all nii modules. Runs the setup function of each modules.
+	 * Core modules have their setup function executed first
 	 * 
-	 * setup all nii modules.
+	 * @return void
 	 */
-	public function setupNiiModules($exclude=array()){
-		$exclude = array_merge(array('gii'), $exclude);
-		$retModules = array();
+	public function setupModules(){
+		// Update the Yii::app()->modules configuration
+		$this->configureModules();
 		
-		// first load nii
-		Yii::app()->getModule('nii');
+		$this->initialiseModules();
 		
-		$modules = $this->getNiiModules($exclude);
+		FB::log($this->getModules(), 'modules');
+		// setup each module core 
+		foreach($this->getModules() as $name => $config){
+			if (in_array($name, $this->getExcludeModules())) continue;
+			if (Yii::app()->getModule($name) instanceof NWebModule)
+				Yii::app()->getModule($name)->setup();
+		}
 		
-		// setup each module
-		foreach($modules as $m)
-			$m->setup();
-				
-		return $modules;
+		// raise the onAfterModulesSetup event.
+		$this->onAfterModulesSetup(new CEvent($this));
+		
 	}
-	
+		
+	/**
+	 * Merges all modules into the Yii modules configuration array.
+	 * This must be called before any subsequent calls to Yii::app()->getModules();
+	 * @see Nii::setupModules
+	 * @return void
+	 */
+	public function configureModules(){
+		$activeMods = $this->getModulesActive();
+		if(!empty($activeMods))
+			// add the active modules to the end of configuration
+			$this->configure(array('modules'=>$activeMods));
+	}
+
 	/**
 	 * gets all NWebModules in the app and returns them in an array,
 	 * This initialises each module, it calls the getModule on each module thus instantiating each if they
 	 * are not already, thus running each modules initialisation (init) method
 	 * 
-	 * @param array $exclude modules to exclude from the returned array
-	 * @return array 'module name'=>$module object
+	 * @see Nii::setupModules
+	 * @return void
 	 */
-	public function getNiiModules($exclude=array()){
-		// get core modules
-		$modules = Yii::app()->getModules();
+	public function initialiseModules(){
 		
-		// add active modules
-		$activeMods = $this->getNiiModulesActive();
-		if(!empty($activeMods)) {
-			// add the active modules to the configuration
-			$this->configure(array('modules'=>$activeMods));
-			$modules = CMap::mergeArray($modules, $activeMods);
-		}
-		FB::log($activeMods);
-		// load the modules
-		foreach($modules as $name => $config) {
-			if (in_array($name, $exclude)) continue;
-			// initialises each module
-			$module = Yii::app()->getModule($name);
-			if ($module instanceOf NWebModule)
-				$retModules[$name] = $module;
+		// load the modules. Loops through all modules core modules are first in the configuration array
+		// and will therefore get initialised first
+		foreach($this->getModules() as $name => $config) {
+			if (!in_array($name, $this->getExcludeModules()) && Yii::app()->getModule($name) instanceof NWebModule)
+				Yii::app()->getModule($name);
 		}
 		
-		return $retModules;
 	}
 	
-
+	/**
+	 * retuns an array of core module keys
+	 * @return array list of module id strings
+	 */
+	public function getCoreModules(){
+		return array('nii', 'user', 'admin');
+	}
+	
+	/**
+	 * returns an array of modules to exclude from initialisation and setup
+	 * @return array list of module id strings
+	 */
+	public function getExcludeModules(){
+		return array('gii');
+	}
+		
 	/**
 	 * returns a list of currently active modules.
-	 * To get a list of all modules including modules available for activation @see Nii::getNiiModules
+	 * To get a list of all modules including modules available for activation
 	 * @return array
 	 */
-	public function getNiiModulesActive(){
+	public function getModulesActive(){
 		return Yii::app()->settings->get($this->moduleSettingsKey, $this->moduleSettingsCategory, array());
 	}
 	
@@ -224,7 +211,7 @@ class Nii extends CWebApplication
 	 * 
 	 * @return array ('moduleName'=>'module zombie object')
 	 */
-	public function getNiiModulesAll(){
+	public function getModulesAvailable(){
 		$modFiles = CFileHelper::findFiles(Yii::getPathOfAlias('modules'),array('fileTypes'=>array('php'), 'level'=>1));
 		$mods = array();
 		foreach($modFiles as $m){
@@ -240,8 +227,7 @@ class Nii extends CWebApplication
 		return $mods;
 	}
 	
-	
-	
+
 	/**
 	 * function to activate a module.
 	 * - This function get the module from the module id
@@ -271,8 +257,6 @@ class Nii extends CWebApplication
 		}
 	}
 	
-	
-	
     /**
 	 * Enables or disables a module
 	 * 
@@ -291,7 +275,6 @@ class Nii extends CWebApplication
 		// update yii's module configuration
 		Yii::app()->configure(array('modules'=>$sysMods));
 	}
-	
 	
 	/**
 	 * install all active modules
@@ -336,6 +319,38 @@ class Nii extends CWebApplication
 	}
 	
 	/**
+	 * Adds the necessary configurations to create a multiple site application.  
+	 * Each separate sub domain will act as an isolated application. Sharing global user details.
+	 */
+	public function setupDomainMultisite(){
+		// set up application context using the subdomain
+		$host = Yii::app()->request->getHostInfo();
+		// define the hostname!
+		$schema = Yii::app()->request->getIsSecureConnection() ? 'https://' : 'http://';
+		$subdomain = trim(str_replace(array($schema, $this->hostname),'',$host),'.');
+
+		// redirect if www.
+		if($subdomain=='www')
+			Yii::app()->request->redirect(str_replace('www.','',$host).Yii::app()->request->getUrl(), true, 301);
+
+		if($subdomain==''){
+			$this->defaultController = 'site';
+		} else {
+			//check domain
+			$dom = AppDomain::model()->findByPk($subdomain);
+			if($dom === null){
+				$this->catchAllRequest = array('error');
+			}else{
+				$this->setSubDomain($dom->domain);
+				$this->defaultController = 'app';
+				$this->configSubDomain();
+			}
+		}
+		// create a new application for the user on registratiion.
+		UserModule::get()->onRegistrationComplete = array($this, 'registrationComplete');
+	}
+	
+	/**
 	 * handles user onRegistrationComplete event
 	 * delegates to create App
 	 * @param type $event 
@@ -363,14 +378,35 @@ class Nii extends CWebApplication
 		$this->install();
 	}
 	
+	/**
+	 * get the subdomin
+	 * @return string 
+	 */
 	public function getSubDomain(){
 		return $this->_subDomain;
 	}
 	
+	/**
+	 * set the subdomin
+	 * @param string $subdomain
+	 * @return void 
+	 */
 	public function setSubDomain($subdomain){
 		$this->_subDomain = $subdomain;
 	}
 	
+	/**
+	 * This is run when a subdomain is initialised.
+	 * changes file paths etc to make specific to the subdomain environment
+	 */
+	public function configSubDomain(){
+		// to prevent cache affecting other subdomains lets create a specific runtime folder for each subdomain
+		$runtime = Yii::getPathOfAlias('app.runtime').DS.$this->getSubDomain();
+		if(!file_exists($runtime)){
+			mkdir($runtime);
+		}
+		$this->runtimePath = $runtime;
+	}
 	
 	/**
 	 * returns the name of the database used on this specific sub domain
@@ -400,7 +436,13 @@ class Nii extends CWebApplication
 		return $this->_getDb($dbName);
 	}
 	
-	
+	/**
+	 * Adds a new database component to Nii specific to the current domain application instance
+	 * and returns the resulting CDbConnection.
+	 *  
+	 * @param string $dbName the database name
+	 * @return CDbConnection 
+	 */
 	protected function _getDb($dbName){
 		if(!$this->hasComponent("{$dbName}_db")) {
 			$a = array(
@@ -428,6 +470,13 @@ class Nii extends CWebApplication
 			$this->catchAllRequest = array('install');
 		}
 		$this->run();
-	}	
+	}
+	
+	/**
+	 * Event called after nii has called the setup function of each module
+	 */
+	public function onAfterModulesSetup($event){
+		$this->raiseEvent('onAfterModulesSetup', $event);
+	}
 	
 }

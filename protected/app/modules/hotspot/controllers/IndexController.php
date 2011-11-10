@@ -29,7 +29,7 @@ class IndexController extends AController
 	}
 	
 	public function actionCreate(){
-		$p = new Project;
+		$p = new HotspotProject;
 		$name = $_POST['name'];
 		// todo: duplicate name check here?
 		$p->name = $name;

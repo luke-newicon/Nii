@@ -15,7 +15,7 @@
 	<div id="mainToolbar" class="toolbar" style="width:100%;">
 		<div class="line plm">
 			<div class="unit titleBarText">
-				<span class="hotspot-logo"><a style="width:auto;padding-left:20px;" class="icon hotspot-logo" href="<?php echo NHtml::url('/project/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
+				<span class="hotspot-logo"><a style="width:auto;padding-left:20px;" class="icon hotspot-logo" href="<?php echo NHtml::url('/hotspot/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
 			</div>
 			<div class="unit toolbarArrow"></div>
 			<div class="unit titleBarText">
@@ -190,7 +190,7 @@
 		 */
 		window.CHotspotList = Backbone.Collection.extend({
 			model:CHotspot,
-			url:'<?php echo NHtml::url(); ?>/api/project/<?php echo $project->id; ?>/hotspot',
+			url:'<?php echo NHtml::url(); ?>/api/hotspot/<?php echo $project->id; ?>/hotspot',
 			// return the number of hotspots on this screen
 			hotspotScreenCount:function(){
 				return this.getScreenHotspots().length;
@@ -343,7 +343,7 @@
 					order[screen.get('id')] = screen.get('sort');
 				}, this);
 				// sync to server
-				$.post("<?php echo NHtml::url('/project/screen/order') ?>",{order:order});
+				$.post("<?php echo NHtml::url('/hotspot/screen/order') ?>",{order:order});
 				window.hotspotFormView.renderTemplate();
 			},
 			comparator:function(screen){
@@ -400,7 +400,7 @@
 				template_id:null
 			},
 			destroy:function(){
-				$.post("<?php echo NHtml::url(array('/project/screen/deleteScreenTemplate')) ?>",{
+				$.post("<?php echo NHtml::url(array('/hotspot/screen/deleteScreenTemplate')) ?>",{
 					template_id:this.get('template_id'),
 					screen_id:this.get('screen_id')
 				});
@@ -550,7 +550,7 @@
 			totalPercent:0,
 			currentImage:0,
 			totalImages:0,
-			url:'<?php echo NHtml::url(array('/project/details/upload/','projectId'=>$project->id)) ?>',
+			url:'<?php echo NHtml::url(array('/hotspot/details/upload/','projectId'=>$project->id)) ?>',
 			initialize:function(){
                 // create the pluploader instance
 				this.uploader = new plupload.Uploader({

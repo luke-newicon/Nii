@@ -60,7 +60,7 @@ class ProjectLink extends NAppRecord
 	 * Get the url link for this link record. Can be used for a tag href attribute
 	 */
 	public function getLink(){
-		return NHtml::urlAbsolute(array('/project/view/index', 'h'=>'v'.$this->link));
+		return NHtml::urlAbsolute(array('/hotspot/view/index', 'h'=>'v'.$this->link));
 	}
 	
 	

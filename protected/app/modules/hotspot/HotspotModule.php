@@ -21,6 +21,8 @@ class HotspotModule extends NWebModule
 
 	public function init(){
 	
+		
+		
 		$this->setImport(array(
 			'hotspot.models.*',
 			'hotspot.components.*',
@@ -35,8 +37,8 @@ class HotspotModule extends NWebModule
 		
 		Yii::app()->image->addType('projectSidebarThumb',array(
 			'resize' => array('width'=>300, 'height'=>400, 'master'=>'width', 'scale'=>'down'),
-			//'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
-			//'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
+			// 'crop'  => array('width'=>198, 'height'=>158, 'left'=>'center', 'top'=>'top'),
+			// 'noimage'=>Yii::getPathOfAlias('project.assets.add-screens').'.png'
 		));
 		
 		$cs = Yii::app()->getClientScript();
@@ -51,7 +53,7 @@ class HotspotModule extends NWebModule
 	}
 	
 	public function setup() {
-		
+		Yii::app()->sprite->addImageFolderPath(Yii::getPathOfAlias('hotspot.images'));
 	}
 	
 	/**

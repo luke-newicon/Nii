@@ -7,11 +7,11 @@
 <div id="mainToolbar" class="toolbar screen" style="width:100%;">
 	<div class="line plm">
 		<div class="unit titleBarText">
-			<span class="hotspot-logo"><a href="<?php echo NHtml::url('/project/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
+			<span class="hotspot-logo"><a href="<?php echo NHtml::url('/hotspot/index/index'); ?>"><strong>HOT</strong>SPOT</a></span>
 		</div>
 		<div class="unit toolbarArrow"></div>
 		<div class="unit titleBarText">
-<!--			<a href="<?php echo NHtml::url(array('/project/details/index','project'=>$project->name)); ?>"><?php echo $project->name; ?></a>-->
+<!--			<a href="<?php echo NHtml::url(array('/hotspot/details/index','project'=>$project->name)); ?>"><?php echo $project->name; ?></a>-->
 			<?php echo $project->name; ?>
 		</div>
 <!--		<div class="unit toolbarArrow"></div>
@@ -48,7 +48,7 @@
 <?php $this->widget('nii.widgets.plupload.PluploadWidget', array(
     'config' => array(
         'runtimes' => 'html5,flash,silverlight',
-        'url' => NHtml::url(array('/project/details/upload/','projectId'=>$project->id)),
+        'url' => NHtml::url(array('/hotspot/details/upload/','projectId'=>$project->id)),
 		'filters'=>array(
 			array('title'=>'Image files', 'extensions'=>"jpg,gif,png")
 		),
@@ -114,8 +114,8 @@
 	<?php
 		$this->widget('zii.widgets.jui.CJuiTabs', array(
 			'tabs'=>array(
-				'My Plan'=>array('ajax'=>CHtml::normalizeUrl(array('/project/account/plan'))),
-				'My Profile'=>array('ajax'=>CHtml::normalizeUrl(array('/project/account/profile'))),
+				'My Plan'=>array('ajax'=>CHtml::normalizeUrl(array('/hotspot/account/plan'))),
+				'My Profile'=>array('ajax'=>CHtml::normalizeUrl(array('/hotspot/account/profile'))),
 			),
 			'headerTemplate'=>'<li class="ui-corner-left"><a href="{url}">{title}</a></li>',
 			//'options'=>array(),
@@ -223,7 +223,7 @@
 			browse_button : 'pickfiles',
 			//container : 'container',
 			max_file_size : '10mb',
-			url : '<?php echo NHtml::url(array('/project/details/upload/','projectId'=>$project->id)) ?>',
+			url : '<?php echo NHtml::url(array('/hotspot/details/upload/','projectId'=>$project->id)) ?>',
 			flash_swf_url:"/newicon/Nii/assets/79029962/plupload.flash.swf",
 			silverlight_xap_url:"/newicon/Nii/assets/79029962/plupload.silverlight.xap",
 			filters : [
@@ -433,7 +433,7 @@
 				$spot.attr('data-id','');
 			}
 			
-			$.post("<?php echo NHtml::url('/project/old/saveComment'); ?>",
+			$.post("<?php echo NHtml::url('/hotspot/old/saveComment'); ?>",
 				{
 					"screen":$('#canvas').attr('data-id'),
 					"comment":commentForm.$textarea.val(),
@@ -477,7 +477,7 @@
 				$spot.remove();
 				commentForm.$form.fadeOut('fast');
 			}else{
-				$.post("<?php echo NHtml::url('/project/old/deleteComment') ?>",
+				$.post("<?php echo NHtml::url('/hotspot/old/deleteComment') ?>",
 					{"id":$spot.attr('data-id')},
 					function(){
 						//$spot.remove();
@@ -690,7 +690,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 				var fixedScroll = 1;
 			}
 			
-			$.post("<?php echo NHtml::url('/project/details/saveHotspot'); ?>",
+			$.post("<?php echo NHtml::url('/hotspot/details/saveHotspot'); ?>",
 				{HotspotHotspot:{
 					hotspot_id:id,
 					screen_id:$('#canvas').attr('data-id'),
@@ -713,7 +713,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 			var $spot = $(this);
 			$spot.remove();
 			$('#spotForm').hide();
-			$.post("<?php echo NHtml::url('/project/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
+			$.post("<?php echo NHtml::url('/hotspot/details/deleteSpot'); ?>",{id:$spot.attr('data-id')});
 		},
 		setStateLink:function(){
 			this.removeAttr('data-disabled')
@@ -730,7 +730,7 @@ $.widget("ui.boxer", $.ui.mouse, {
 			// hotspots may not have a defined screen id, so be careful
 			var $spot = $(this);
 			if($spot.is('[data-screen]')){
-				location.href = "<?php echo NHtml::url('/project/old/index'); ?>/id/"+$spot.attr('data-screen');
+				location.href = "<?php echo NHtml::url('/hotspot/old/index'); ?>/id/"+$spot.attr('data-screen');
 			}
 		},
 		linkAjax:function(){
@@ -978,12 +978,12 @@ var spotForm = {
 			// we have selected no template so if the current spot is a template we want to unlink it.
 			spotForm.$spot.removeAttr('data-template').removeClass('spot-template');
 			// update db to unlink spot from template
-			$.post("<?php echo NHtml::url('/project/old/addTemplateSpot') ?>",
+			$.post("<?php echo NHtml::url('/hotspot/old/addTemplateSpot') ?>",
 				{'spot':spotForm.$spot.attr('data-id'), 'template':val});
 			return false;
 		}
 		// save it
-		$.post("<?php echo NHtml::url('/project/old/addTemplateSpot') ?>",
+		$.post("<?php echo NHtml::url('/hotspot/old/addTemplateSpot') ?>",
 		{'spot':spotForm.$spot.attr('data-id'), 'template':val},function(){
 			spotForm.$spot.attr('data-template',val).addClass('spot-template');
 			// need to ensure this template is now applied to the current screen
@@ -1282,7 +1282,7 @@ var toolbar = {
 		},
 		save:function(){
 			var pf = $.deparam($('#shareLinkForm').serialize());
-			$.post("<?php echo NHtml::url('/project/old/projectLink'); ?>", 
+			$.post("<?php echo NHtml::url('/hotspot/old/projectLink'); ?>", 
 			pf, function(r){});
 			return false;
 		}
@@ -1323,7 +1323,7 @@ var toolbar = {
 			var name = $('#template-'+id+'-rename').val();
 			$tpl.find('.display').show();$tpl.find('.editForm').hide();
 			$tpl.find('.templateName').html(name);
-			$.post("<?php echo NHtml::url('/project/old/renameTemplate'); ?>",{"id":id,"name":name},function(r){
+			$.post("<?php echo NHtml::url('/hotspot/old/renameTemplate'); ?>",{"id":id,"name":name},function(r){
 				// update the spotForm templates select box
 				spotForm.initTemplates();
 				$('#template-'+id+'-rename').val('');
@@ -1342,7 +1342,7 @@ var toolbar = {
 			});
 			$('#deleteOverlay .delete').one('click',function(){
 				var id = $tpl.attr('data-id');
-				$.post("<?php echo NHtml::url('/project/old/deleteTemplate'); ?>",{"id":id},function(r){
+				$.post("<?php echo NHtml::url('/hotspot/old/deleteTemplate'); ?>",{"id":id},function(r){
 					if(r.result.success){
 						$('#deleteOverlay').fadeOut();
 						$tpl.fadeOut().remove();
@@ -1356,7 +1356,7 @@ var toolbar = {
 		newTemplate:function(){
 			if($('#newTemplate').val() == '')
 				return false;
-			$.post("<?php echo NHtml::url('/project/old/addTemplate') ?>",
+			$.post("<?php echo NHtml::url('/hotspot/old/addTemplate') ?>",
 				{template:$('#newTemplate').val(),project:<?php echo $project->id; ?>}, 
 				function(r){
 					if(r.template_id){
@@ -1423,7 +1423,7 @@ var toolbar = {
 		applyTemplate:function($checkBox){
 			var templateId = $checkBox.val();
 			if($checkBox.is(':checked')){
-				$.post("<?php echo NHtml::url('/project/old/applyTemplate') ?>",
+				$.post("<?php echo NHtml::url('/hotspot/old/applyTemplate') ?>",
 				{'template':templateId,'screen':$('#canvas').attr('data-id')},function(hotspots){
 					// get template hotspot info and add hotspots
 					$(hotspots).map(function(){
@@ -1446,7 +1446,7 @@ var toolbar = {
 					})
 				},'json');
 			}else{
-				$.post("<?php echo NHtml::url('/project/old/removeTemplate') ?>",
+				$.post("<?php echo NHtml::url('/hotspot/old/removeTemplate') ?>",
 				{'template':templateId,'screen':$('#canvas').attr('data-id')},function(){
 					// remove template hotspots
 					$('#canvas').find('[data-template="'+templateId+'"]').remove();
@@ -1537,7 +1537,7 @@ var _doLoadScreen = function(screenId, maintainScroll){
 		screenId = initialScreen;
 	$('#screenPane .sidebarImg').removeClass('selected')
 	$('#sideSscreen-'+screenId).addClass('selected');
-	$.get("<?php echo NHtml::url('/project/old/load') ?>",{'id':screenId},function(r){
+	$.get("<?php echo NHtml::url('/hotspot/old/load') ?>",{'id':screenId},function(r){
 		$('#canvasWrap .canvasContent').html(r.canvas);
 		
 		commentForm.commentStore = r.commentsJson;

@@ -40,15 +40,17 @@ class NiiModule extends NWebModule
 		}
 		// register nii js goodness
 		$this->registerScripts();
+		Yii::app()->onAfterModulesSetup = array($this, 'afterSetup');
+	}
+	
+	public function afterSetup(){
+		// register the sprite css file
+		Yii::app()->sprite->registerSpriteCss();
 	}
 	
 	public function registerScripts(){
 		
 		$cs = Yii::app()->getClientScript();
-		
-		// register the sprite css file
-		Yii::app()->sprite->registerSpriteCss();
-		
 		
 		Yii::app()->getClientScript()->registerCoreScript('yiiactiveform');
 		
@@ -61,6 +63,7 @@ class NiiModule extends NWebModule
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/jquery.metadata.js', 
+					'js/bootstrap-twipsy.js', 
 //					'js/tipsy/javascripts/jquery.tipsy.js',
 					'js/nii.js', 
 					'js/functions.js',
@@ -153,7 +156,8 @@ class NiiModule extends NWebModule
 			'underscore-1.1.7.min.js'=>false,
 			'jquery.gritter.min.js'=>false,
 			'jquery.gritter.css'=>false,
-			'jquery.yiiactiveform.js'=>false
+			'jquery.yiiactiveform.js'=>false,
+			'bootstrap-twipsy.js'=>false, 
 		);
 	}
 	

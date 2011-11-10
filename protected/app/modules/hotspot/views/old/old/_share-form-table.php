@@ -47,7 +47,7 @@
 <script>
 	$('#savelink').click(function(){
 		var pf = $.deparam($('#shareLinkForm').serialize());
-		$.post("<?php echo NHtml::url('/project/screen/projectLink'); ?>", 
+		$.post("<?php echo NHtml::url('/hotspot/screen/projectLink'); ?>", 
 		{'ProjectLink':pf}, function(r){
 			// r is a new table row.
 			
@@ -70,7 +70,7 @@
 		$('#linkTable').delegate('.delete','click',function(){
 			var $tr = $(this).closest('tr');
 			if(confirm('Are you sure you want to delete this link. The link will no longer open a project view.')){
-				$.post("<?php echo NHtml::url('/project/screen/deleteLink'); ?>",{'id':$tr.attr('data-id')},function(){
+				$.post("<?php echo NHtml::url('/hotspot/screen/deleteLink'); ?>",{'id':$tr.attr('data-id')},function(){
 					$tr.remove();
 				});
 			}

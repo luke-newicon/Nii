@@ -53,6 +53,7 @@ return array(
 		'theme' => 'default',
 		'modulePath' => $modules,
 		'modules' => array(
+			'nii',
 			'user' => array(
 				'registrationCaptcha' => false,
 				'termsRequired' => false,
@@ -63,7 +64,6 @@ return array(
 				'showUsernameField' => false
 			),
 			'admin',
-			'nii',
 		),
 		// application components
 		'components' => array(

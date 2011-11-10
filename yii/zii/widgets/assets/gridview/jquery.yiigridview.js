@@ -181,14 +181,41 @@
 			type: 'GET',
 			url: $.fn.yiiGridView.getUrl(id),
 			success: function(data,status) {
-				$.each(settings.ajaxUpdate, function(i,v) {
-					var id='#'+v;
-					$(id).replaceWith($(id,'<div>'+data+'</div>'));
+				
+				//: nii hack code
+				
+				 var gridId = settings.ajaxUpdate[settings.ajaxUpdate.length-1];
+				 console.log(settings.ajaxUpdate)
+				 
+				 $.each(settings.ajaxUpdate, function(i,v) {
+					 
+					// dont replace the whole grid 
+					if(v == gridId && settings.ajaxUpdate.length > 1){
+						return
+					}
+					if(v == gridId && settings.ajaxUpdate.length == 1){
+						v = '#'+v;
+					}
+					
+					console.log("$("+v+").replaceWith($("+v+",'<div>'+data+'</div>'));");
+					$(v).replaceWith($(v,'<div>'+data+'</div>'));
 				});
+				id = gridId
 				if(settings.afterAjaxUpdate !== undefined)
 					settings.afterAjaxUpdate(id, data);
+				
 				$('#'+id).removeClass(settings.loadingClass);
 				$.fn.yiiGridView.selectCheckedRows(id);
+ 				// nii hack code
+				
+//				$.each(settings.ajaxUpdate, function(i,v) {
+//					var id='#'+v;
+//					$(id).replaceWith($(id,'<div>'+data+'</div>'));
+//				});
+//				if(settings.afterAjaxUpdate !== undefined)
+//					settings.afterAjaxUpdate(id, data);
+//				$('#'+id).removeClass(settings.loadingClass);
+//				$.fn.yiiGridView.selectCheckedRows(id);
 			},
 			error: function(XHR, textStatus, errorThrown) {
 				$('#'+id).removeClass(settings.loadingClass);

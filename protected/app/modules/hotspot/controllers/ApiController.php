@@ -80,7 +80,7 @@ Class ApiController extends RestController
 	
 	/**
 	 * The following actions enable CRUD operations for models within the context of the project.
-	 * E.g. api/project/2/hotspot if sent as a post will create a new hotspot under project with id 2
+	 * E.g. api/hotspot/2/hotspot if sent as a post will create a new hotspot under project with id 2
 	 */
 	
 	/**

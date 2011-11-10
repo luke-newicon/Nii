@@ -11,11 +11,10 @@
 @import url("oocss/core/spacing/space.css");
 
 @import url("nii/core/grid.css");
-/*@import url("nii/core/module/mod_skins.css");*/
 
 @import url("nii/plugins/buttons/buttons.css");
 @import url("nii/plugins/forms/forms.css");
+
+@import url("nii/core/content.css");
 /*@import url("oocss/core/content.css");*/
-.txtC{text-align:center;}.txtR{text-align:right;}.txtL{texta-laign:left;}
-a{outline: medium none;}
 /*@import url("nii/plugins/tabs/tabs.css");*/

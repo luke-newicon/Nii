@@ -19,18 +19,16 @@ Class ModulesController extends AController
 	public function moduleListData(){
 		
 		// get a list of all modules
-		$allModules = Yii::app()->niiModulesAll;
+		$allModules = Yii::app()->modulesAvailable;
 
 		// get the list of modules currently defined in the settings
-		$systemModules = Yii::app()->niiModulesActive;
+		$systemModules = Yii::app()->modulesActive;
 		
-		
-		$coreModules = array('nii', 'user', 'admin');
 
 		$data = array();
 		foreach($allModules as $id => $module){
 			// skip if the module is a core module
-			if(in_array($id, $coreModules))
+			if(in_array($id, Yii::app()->coreModules))
 				continue;
 			$data[] = array(
 				'id' => $id,
