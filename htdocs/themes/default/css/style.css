@@ -349,6 +349,33 @@ h2.contact-title {
 	border-color: #f00;
 }
 
+.uploadButton {
+	display: inline;
+    margin-left: 10px;
+    position: absolute;
+/*    width: 40px;*/
+}
+
+#contactPhoto object, .attachments_input object {
+	position: absolute;
+    margin-left: 10px;
+}
+
+#contactPhoto .btn {
+	padding: 5px 11px 6px;
+}
+
+#currentImage {
+	margin-bottom: 5px;
+	min-height: 145px;
+}
+
+#attachmentUploadQueue {
+	margin-left: 10px;
+    margin-top: 40px;
+    position: absolute;
+}
+
 /**
 * Extra form element sizing constratints, by pixel width
 */

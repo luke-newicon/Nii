@@ -48,10 +48,8 @@
 				value = $(this).val();
 				if(value==""){
 					$('#'+id+' .add-note-button').attr('disabled','disabled');
-					$('#'+id+' .add-note-button').css('color','#ccc');
 				}else{
 					$('#'+id+' .add-note-button').removeAttr('disabled');
-					$('#'+id+' .add-note-button').css('color','#000');
 				}
 			});
 				
@@ -123,7 +121,6 @@
 			$newNoteBox.hide();
 				
 			var $addNoteButton = $(this).find('.add-note-button');
-			$addNoteButton.css('color','#ccc');
 			$addNoteButton.attr('disabled','disabled');
 
 			$(this).find(".markdownInput").fadeTo(0,0.1);
@@ -166,7 +163,7 @@
 					data: ({noteId:noteId,action:'editNote'}),
 					success: function(note){
 						$item.html(
-						"<div class=\"field\"><div class=\"inputBox\"><textarea class=\"nnote-update-note\" rows=\"2\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn btnN nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn btnN nnote-edit-note\" value=\"Update\"/></div></div>");
+						"<div class=\"field\"><div class=\"input\"><textarea class=\"nnote-update-note\" rows=\"2\">"+note+"</textarea></div><div class=\"txtR\" style=\"margin:10px 0px;\"><input type=\"button\" class=\"btn nnote-edit-note-cancel\" value=\"Cancel\"/><input type=\"button\" style=\"margin-left:4px;\" class=\"btn primary nnote-edit-note\" value=\"Update\"/></div></div>");
 					}
 				});
 		},

@@ -3,5 +3,7 @@
 .NNotes .userInformation{ padding-top:0px;}
 .NNotes .newNoteBox .fakebox{border:1px solid #CCCCCC;color:#CCCCCC;padding:5px;}
 .NNotes .line.note{padding: 6px 6px 12px;margin:0px;margin-bottom:10px;background-color:#fafafa;}
+.NNotes .note p {margin:0px;}
 .NNotes .noItems{color:#CCCCCC;font-size:14px;padding:0;text-align:center;}
 .add-note-button{margin: 10px 0px 5px;}
+.NNotes a.nnote-delete { color: #900; }
