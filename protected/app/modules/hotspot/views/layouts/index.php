@@ -1,5 +1,5 @@
 <?php $this->renderPartial('//layouts/admin/_header'); ?>
-<body style="background-image:none;">
+<body>
 	<div class="page liquid">
 		<div class="body">
 			<div class="main">

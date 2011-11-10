@@ -46,61 +46,61 @@ class PermissionsController extends AController {
 	 * This does not impair functionality as the same can be achieved by using operations.
 	 *
 	 */
-	public function actionSetup(){
-		Yii::app()->getAuthManager()->clearAll();
-
-		$auth = Yii::app()->getAuthManager();
-		$auth->createRole('authenticated', 'Authenticated user', 'return !Yii::app()->user->isGuest;');
-		$auth->createRole('guest', 'Guest user', 'return Yii::app()->user->isGuest;');
-
-
-		$auth->createOperation('createSomething');
-		$role = $auth->createRole('minion');
-		$role->addChild('createSomething');
-		$auth->assign('minion', Yii::app()->user->id);
-		$auth=Yii::app()->authManager;
-		
-		
-		$auth->createOperation('createPost','create a post');
-		$auth->createOperation('readPost','read a post');
-		$auth->createOperation('updatePost','update a post');
-		$auth->createOperation('deletePost','delete a post');
-		$bizRule='return Yii::app()->user->id==$params["post"]->authID;';
-		$auth->createOperation('updateOwnPost','update a post by author himself',$bizRule);
-
-		//Yii::app()->user->checkAccess('readPost');
-
-		$posts = $auth->createTask('Posts','Manage Posts');
-		$posts->addChild('createPost');
-		$posts->addChild('readPost');
-		$posts->addChild('updatePost');
-		$posts->addChild('updateOwnPost');
-		$posts->addChild('deletePost');
-
-
-
-		$role=$auth->createRole('reader');
-		$role->addChild('readPost');
-
-		$role=$auth->createRole('author');
-		$role->addChild('reader');
-		$role->addChild('createPost');
-		$role->addChild('updateOwnPost');
-
-		$role=$auth->createRole('editor');
-		$role->addChild('reader');
-		$role->addChild('updatePost');
-
-		$role=$auth->createRole('admin');
-		$role->addChild('editor');
-		$role->addChild('author');
-		$role->addChild('deletePost');
-
-		$auth->createOperation('user/admin/test', 'user admin test');
-		$uTask = $auth->createTask('user/admin','User management');
-		$uTask->addChild('user/admin/test');
-		
-	}
+//	public function actionSetup(){
+//		Yii::app()->getAuthManager()->clearAll();
+//
+//		$auth = Yii::app()->getAuthManager();
+//		$auth->createRole('authenticated', 'Authenticated user', 'return !Yii::app()->user->isGuest;');
+//		$auth->createRole('guest', 'Guest user', 'return Yii::app()->user->isGuest;');
+//
+//
+//		$auth->createOperation('createSomething');
+//		$role = $auth->createRole('minion');
+//		$role->addChild('createSomething');
+//		$auth->assign('minion', Yii::app()->user->id);
+//		$auth=Yii::app()->authManager;
+//		
+//		
+//		$auth->createOperation('createPost','create a post');
+//		$auth->createOperation('readPost','read a post');
+//		$auth->createOperation('updatePost','update a post');
+//		$auth->createOperation('deletePost','delete a post');
+//		$bizRule='return Yii::app()->user->id==$params["post"]->authID;';
+//		$auth->createOperation('updateOwnPost','update a post by author himself',$bizRule);
+//
+//		//Yii::app()->user->checkAccess('readPost');
+//
+//		$posts = $auth->createTask('Posts','Manage Posts');
+//		$posts->addChild('createPost');
+//		$posts->addChild('readPost');
+//		$posts->addChild('updatePost');
+//		$posts->addChild('updateOwnPost');
+//		$posts->addChild('deletePost');
+//
+//
+//
+//		$role=$auth->createRole('reader');
+//		$role->addChild('readPost');
+//
+//		$role=$auth->createRole('author');
+//		$role->addChild('reader');
+//		$role->addChild('createPost');
+//		$role->addChild('updateOwnPost');
+//
+//		$role=$auth->createRole('editor');
+//		$role->addChild('reader');
+//		$role->addChild('updatePost');
+//
+//		$role=$auth->createRole('admin');
+//		$role->addChild('editor');
+//		$role->addChild('author');
+//		$role->addChild('deletePost');
+//
+//		$auth->createOperation('user/admin/test', 'user admin test');
+//		$uTask = $auth->createTask('user/admin','User management');
+//		$uTask->addChild('user/admin/test');
+//		
+//	}
 
 
 	public function actionRoles(){

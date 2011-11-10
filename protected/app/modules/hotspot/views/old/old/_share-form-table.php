@@ -29,7 +29,7 @@
 					<label for="makepassword">Password protect this link</label>
 					<div id="passwordBox" style="display:none;">
 						<label for="password" id="passwordHint" style="position:absolute;top:27px;left:23px;color:#ccc;">Enter a password</label>
-						<div class="inputBox" style="margin:2px 0px 0px 12px;width:200px;" >
+						<div class="input" style="margin:2px 0px 0px 12px;width:200px;" >
 							<input id="password" type="text" name="password" />
 						</div>
 					</div>

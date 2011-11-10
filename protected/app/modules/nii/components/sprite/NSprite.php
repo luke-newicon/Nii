@@ -68,12 +68,10 @@ Class NSprite extends CApplicationComponent
 	public $sprites = array();
 	
 	/**
-	 * Stores the path to the folder where the individual images that 
-	 * will be included in the spite are kept.
-	 * can be an array of imagefolder paths
+	 * Array of folder paths where images (to be added to the sprite) are stored.
 	 * @property mixed 
 	 */
-	public $imageFolderPath;
+	private $_imageFolderPath = array();
 	
 	/**
 	 * array of all image data
@@ -285,15 +283,31 @@ Class NSprite extends CApplicationComponent
 				}
 			}
 			
-		}else{
-			$files = CFileHelper::findFiles($this->getIconPath(), $options);
-			foreach($files as $p){
-				$this->sprites[] = array(
-					'imageFolder' => $this->getIconPath(),
-					'path' => trim(str_replace(realpath($this->getIconPath()), '', $p),'/')
-				);
-			}
 		}
 	}
 	
+	/**
+	 * Get the array of imageFolderPaths
+	 */
+	public function getImageFolderPath(){
+		return $this->_imageFolderPath;
+	}
+	
+	/**
+	 *
+	 * @param array $value 
+	 */
+	public function setImageFolderPath($value, $merge=true){
+		if ($merge)
+			$this->_imageFolderPath = array_merge($this->_imageFolderPath, $value);
+		else
+			$this->_imageFolderPath = $value;
+	}
+	
+	public function addImageFolderPath(){
+	}
+	
 }
+
+
+

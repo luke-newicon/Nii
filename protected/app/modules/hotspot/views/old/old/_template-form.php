@@ -9,7 +9,7 @@
 						<div class="unit size6of8">
 							<div class="field man">
 								<label class="inFieldLabel" for="newTemplate">Enter a new template name</label>
-								<div class="inputBox">
+								<div class="input">
 									<input id="newTemplate" name="newTemplate" type="text" autocomplete="off" />
 								</div>
 							</div>

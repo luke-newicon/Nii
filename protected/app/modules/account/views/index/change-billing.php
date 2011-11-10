@@ -29,7 +29,7 @@
 				<div class="unit size1of2">
 					<div class="field prm">
 						<?php echo $form->labelEx($billing, 'first_name', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox">
+						<div class="input">
 							<?php echo $form->textField($billing, 'first_name'); ?>
 						</div>
 					</div>
@@ -38,7 +38,7 @@
 				<div class="lastUnit">
 					<div class="field">
 						<?php echo $form->labelEx($billing, 'last_name', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox">
+						<div class="input">
 							<?php echo $form->textField($billing, 'last_name'); ?>
 						</div>
 					</div>
@@ -49,7 +49,7 @@
 				<div class="unit" style="width:225px;">
 					<div class="field prm">
 						<?php echo $form->labelEx($card, 'number', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox">
+						<div class="input">
 							<?php echo $form->textField($card, 'number'); ?>
 						</div>
 					</div>
@@ -64,7 +64,7 @@
 				<div class="unit" style="width:80px;">
 					<div class="inputContainer prm">
 						<?php echo $form->labelEx($card, 'verification_value', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox line">
+						<div class="input line">
 							<?php echo $form->textField($card, 'verification_value'); ?>
 						</div>
 					</div>
@@ -107,7 +107,7 @@
 			<h4 class="mtl">Billing Address</h4>
 <!--		<div class="field">
 				<label for="billing_company" class="inFieldLabel">Company</label>
-				<div class="inputBox">
+				<div class="input">
 					<input name="billing[company]" id="billing_company" type="text" />
 				</div>
 			</div>-->
@@ -115,7 +115,7 @@
 			<div class="line">
 				<div class="field">
 					<?php echo $form->labelEx($billing, 'address1', array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($billing, 'address1'); ?>
 					</div>
 
@@ -125,7 +125,7 @@
 			<div class="line">
 				<div class="field">
 					<?php echo $form->labelEx($billing, 'address2', array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($billing, 'address2'); ?>
 					</div>
 				</div>
@@ -135,7 +135,7 @@
 				<div class="unit size3of5">
 					<div class="field prm">
 						<?php echo $form->labelEx($billing, 'city', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox">
+						<div class="input">
 							<?php echo $form->textField($billing, 'city'); ?>
 						</div>
 					</div>
@@ -144,7 +144,7 @@
 				<div class="lastUnit">
 					<div class="field">
 						<?php echo $form->labelEx($billing, 'zip', array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox">
+						<div class="input">
 							<?php echo $form->textField($billing, 'zip'); ?>
 						</div>
 					</div>
@@ -154,7 +154,7 @@
 			<div class="line">
 				<div class="field">
 					<?php echo $form->labelEx($billing, 'state', array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($billing, 'state'); ?>
 					</div>
 				</div>

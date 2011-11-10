@@ -105,7 +105,7 @@ class AdminController extends AController {
 				foreach ($_POST['Permission'] as $taskName => $role) {
 					foreach ($role as $roleName => $child) {
 						if ($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName)) {
-							Yii::app()->authManager->addItemChild($roleName, $taskName);
+						Yii::app()->authManager->addItemChild($roleName, $taskName);
 							echo CJSON::encode(array('success' => 'Permission successfully added'));
 						} else {
 							if (Yii::app()->authManager->removeItemChild($roleName, $taskName))

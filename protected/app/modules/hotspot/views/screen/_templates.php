@@ -59,7 +59,7 @@
 		<div class="triangle" style="left: -19px; top: 1px;position:absolute;"></div>
 		<div class="spotFormPart plm prm">
 			<div class="field pbs">
-				<div id="screenList" class="line inputBox pan">
+				<div id="screenList" class="line input pan">
 					<div class="unit btn btnToolbarLeft" style="width:230px;padding:4px;height:16px;"><input id="screenListInput" placeholder="Link to screen -" /></div>
 					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:19px;height:14px;border-color:#bbb;border-width:0px 0px 0px 1px;border-radius:0px 3px 3px 0px;-moz-border-radius:0px 3px 3px 0px;-webkit-border-radius:0px 3px 3px 0px;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
 				</div>
@@ -116,7 +116,7 @@
 						<div class="unit size6of8">
 							<div class="field man">
 								<label class="inFieldLabel" for="newTemplate">Type a new template name</label>
-								<div class="inputBox">
+								<div class="input">
 									<input id="newTemplate" name="newTemplate" type="text" autocomplete="off" />
 								</div>
 							</div>
@@ -158,7 +158,7 @@
 	</div>
 	<div class="editForm line" style="display:none;margin:3px 0px;">
 		<div class="unit size4of5 field man">
-			<div class="inputBox" style="padding:1px 3px 1px 3px;"><input class="rename" value="<%= name %>" /></div>
+			<div class="input" style="padding:1px 3px 1px 3px;"><input class="rename" value="<%= name %>" /></div>
 		</div>
 		<div class="lastUnit txtR">
 			<div class="templateFuns">
@@ -181,7 +181,7 @@
 			<div id="passwordBox" class="mll field" style="<% (password == null || password == '') ? print('display:none') : print('display:bock');  %>">
 				<?php //echo CHtml::activeLabel($link, 'password',array('class'=>'inFieldLabel')); ?>
 				<label for="share-password" class="inFieldLabel">Password </label>
-				<div  class="inputBox" style="width:200px;">
+				<div  class="input" style="width:200px;">
 					<input id="share-password" name="share-password" type="password" autocomplete="off" value="<%= password %>" />
 				</div>
 			</div>

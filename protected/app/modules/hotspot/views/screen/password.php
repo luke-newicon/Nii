@@ -7,7 +7,7 @@
 		<h1>Visuals have been shared with you for review.</h1>
 		<div class="field unit size4of6 man mrs">
 			<label class="inFieldLabel" for="password" style="font-size:22px;">Enter the Password</label>
-			<div class="inputBox">
+			<div class="input">
 				<input style="font-size:22px;" id="password" name="password" type="password" />
 			</div>
 		</div>

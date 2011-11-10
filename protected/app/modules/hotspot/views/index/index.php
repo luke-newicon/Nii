@@ -40,7 +40,7 @@
 					<img src="<?php echo HotspotModule::get()->getAssetsUrl().'/images/add-project.png'; ?>"  />
 				</div>
 				<div class="field">
-					<div class="inputBox" data-tip="{trigger:focus,gravity:'s'}" title="Type the new projects name">
+					<div class="input" data-tip="{trigger:focus,gravity:'s'}" title="Type the new projects name">
 						<input id="projectInput" name="project" type="text" />
 					</div>
 				</div>
@@ -119,7 +119,7 @@ $(function(){
 		$('.norm').hide();
 		$('.create').show();
 		$('#createProject').addClass('creating')
-		$('#projectInput').val('').focus().closest('.inputBox').tipsy("show");
+		$('#projectInput').val('').focus().closest('.input').tipsy("show");
 		return false;
 	});
 	$('#projectInput').keyup(function(e){
@@ -130,7 +130,7 @@ $(function(){
 	$('.cancelNewProject').click(function(){
 		$('.norm').show();
 		$('.create').hide();
-		$('#projectInput').closest('.inputBox').tipsy("hide");
+		$('#projectInput').closest('.input').tipsy("hide");
 		$('#createProject').removeClass('creating')
 		return false;
 	});
@@ -138,7 +138,7 @@ $(function(){
 		var projName = $('#projectInput').val();
 		if(projName=='')
 			return false;
-		$('#projectInput').closest('.inputBox').tipsy("hide");
+		$('#projectInput').closest('.input').tipsy("hide");
 		$.post("<?php echo NHtml::url('/project/index/create'); ?>",{name:projName},function(r){
 			// first lets check for errors.
 			if(r.error){

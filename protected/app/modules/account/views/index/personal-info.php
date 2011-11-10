@@ -2,25 +2,25 @@
 <div class="line">
 	<div class="unit size1of4">
 		<div class="stat">
-			<div class="number"><?php echo ProjectModule::totalProjects(); ?></div>
+			<div class="number"><?php echo HotspotModule::totalProjects(); ?></div>
 			<div class="text">Projects <br /> Created</div>
 		</div>
 	</div>
 	<div class="unit size1of4">
 		 <div class="stat">
-			<div class="number"><?php echo ProjectModule::totalScreens(); ?></div>
+			<div class="number"><?php echo HotspotModule::totalScreens(); ?></div>
 			<div class="text">Screens <br /> Designed</div>
 		</div>
 	</div>
 	<div class="unit size1of4">
 		 <div class="stat">
-			<div class="number"><?php echo ProjectModule::totalHotspots(); ?></div>
+			<div class="number"><?php echo HotspotModule::totalHotspots(); ?></div>
 			<div class="text">Hotspots <br /> Created</div>
 		</div>
 	</div>
 	<div class="lastUnit">
 		 <div class="stat">
-			<div class="number"><?php echo ProjectModule::totalComments(); ?></div>
+			<div class="number"><?php echo HotspotModule::totalComments(); ?></div>
 			<div class="text">Comments <br /> Created</div>
 		</div>
 	</div>
@@ -47,7 +47,7 @@
 			<div class="unit size1of2">
 				<div class="field prm">
 					<?php echo $form->labelEx($user,'company',array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($user,'company'); ?>
 					</div>
 				</div>
@@ -61,7 +61,7 @@
 			<div class="unit size1of2">
 				<div class="field prm">
 					<?php echo $form->labelEx($user,'first_name',array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($user,'first_name'); ?>
 					</div>
 				</div>
@@ -70,7 +70,7 @@
 			<div class="lastUnit">
 				<div class="field">
 					<?php echo $form->labelEx($user,'last_name',array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($user,'last_name'); ?>
 					</div>
 				</div>
@@ -81,7 +81,7 @@
 			<div class="field">
 				<div class="inputContainer">
 					<?php echo $form->labelEx($user,'email',array('class'=>'inFieldLabel')); ?>
-					<div class="inputBox">
+					<div class="input">
 						<?php echo $form->textField($user,'email'); ?>
 					</div>
 				</div>
@@ -102,7 +102,7 @@
 	<div class="unit size1of2">
 		<div class="field prm">
 			<?php echo $form->labelEx($userPassword,'password',array('class'=>'inFieldLabel')); ?>
-			<div class="inputBox">
+			<div class="input">
 				<?php echo $form->passwordField($userPassword,'password'); ?>
 			</div>
 		</div>
@@ -111,7 +111,7 @@
 	<div class="lastUnit">
 		<div class="field">
 			<?php echo $form->labelEx($userPassword,'verifyPassword',array('class'=>'inFieldLabel')); ?>
-			<div class="inputBox">
+			<div class="input">
 				<?php echo $form->passwordField($userPassword,'verifyPassword'); ?>
 			</div>
 		</div>

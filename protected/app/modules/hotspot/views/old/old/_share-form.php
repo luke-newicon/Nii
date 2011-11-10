@@ -11,7 +11,7 @@
 					<label for="makepassword">Password protect this link</label>
 					<div id="passwordBox" class="mll field" style="<?php echo ($link->password==null)?'display:none;':''; ?>">
 						<?php echo CHtml::activeLabel($link, 'password',array('class'=>'inFieldLabel')); ?>
-						<div class="inputBox" style="width:200px;" >
+						<div class="input" style="width:200px;" >
 							<?php echo CHtml::activeTextField($link, 'password',array('autocomplete'=>'off')); ?>
 						</div>
 					</div>

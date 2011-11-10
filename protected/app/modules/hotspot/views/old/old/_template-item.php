@@ -21,7 +21,7 @@
 	</div>
 	<div class="editForm line" style="display:none;">
 		<div class="unit size4of5 field man">
-			<div class="inputBox"><input class="rename" data-id="<?php echo $template->id; ?>" id="template-<?php echo $template->id; ?>-rename" value="<?php echo $template->name; ?>" /></div>
+			<div class="input"><input class="rename" data-id="<?php echo $template->id; ?>" id="template-<?php echo $template->id; ?>-rename" value="<?php echo $template->name; ?>" /></div>
 		</div>
 		<div class="lastUnit txtR">
 			<div class="templateFuns">

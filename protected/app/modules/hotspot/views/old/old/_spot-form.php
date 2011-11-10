@@ -4,7 +4,7 @@
 		<div class="spotFormPart plm prm">
 			<div class="field pbs">
 				<label for="screenSelect" class="lbl">Link to: <a id="followlink" href="#">Follow</a></label>
-				<div id="screenList" class="line inputBox pan">
+				<div id="screenList" class="line input pan">
 					<div class="unit btn btnToolbarLeft" style="width:230px;padding:4px;height:16px;"><input id="screenListInput" placeholder="- select screen -" /></div>
 					<div class="lastUnit"><a href="#" class="btn btnN btnToolbarRight" style="width:19px;height:14px;border-color:#bbb;border-width:0px 0px 0px 1px;border-radius:0px 3px 3px 0px;-moz-border-radius:0px 3px 3px 0px;-webkit-border-radius:0px 3px 3px 0px;"><span class="icon fam-bullet-arrow-down">&nbsp;</span></a></div>
 				</div>

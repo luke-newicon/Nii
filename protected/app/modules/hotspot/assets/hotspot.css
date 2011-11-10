@@ -1,4 +1,4 @@
-html{background:url(backgrounds/linen.png) center top}
+html,body{background-image:url(backgrounds/linen.png);}
 .main{padding-top:46px}
 .addNewProj{background:url('images/add-project.png') no-repeat left top;}
 
