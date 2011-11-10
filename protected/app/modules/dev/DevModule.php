@@ -25,23 +25,23 @@ class DevModule extends NWebModule
 		));
 	}
 	
-	public function permissions() {
-		return array(
-			'dev' => array('description' => 'Developer',
-				'tasks' => array(
-					'view' => array('description' => 'View Developer Options',
-						'roles' => array('administrator'),
-						'operations' => array(
-							'dev/admin/index',
-							'menu-admin',
-						),
-					),
-				),
-			),
-		);
-	}
+//	public function permissions() {
+//		return array(
+//			'dev' => array('description' => 'Developer',
+//				'tasks' => array(
+//					'view' => array('description' => 'View Developer Options',
+//						'roles' => array('administrator'),
+//						'operations' => array(
+//							'dev/admin/index',
+//							'menu-admin',
+//						),
+//					),
+//				),
+//			),
+//		);
+//	}
 	
 	public function install(){
-		$this->installPermissions();
+//		$this->installPermissions();
 	}
 }

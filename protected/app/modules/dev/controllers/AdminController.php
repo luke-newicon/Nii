@@ -13,44 +13,48 @@ class AdminController extends AController {
 	/**
 	 * Flush the cache
 	 */
-	public function actionFlushCache($return=null){
+	public function actionFlushCache($return='index'){
 		try {
 			Yii::app()->cache->flush();
 			Yii::app()->user->setFlash('success','Cache succesfully flushed');
 		}catch(Exception $e){
 			Yii::app()->user->setFlash('error','Cache flush failed');
 		}
-		if($return)
-			$this->redirect(array('index#'.$return));
-		else
-			$this->redirect(array('index'));
+		$this->redirect(array($return));
 	}
 	
 	/**
 	 * remove all assets from the assets folder
 	 */
-	public function actionFlushAssets($return=null){
+	public function actionFlushAssets($return='index'){
 		$ignore = array(
 			Yii::app()->getAssetManager()->basePath.'/.gitignore',
 		);
 		NFileHelper::deleteFilesRecursive(Yii::app()->getAssetManager()->basePath,$ignore);
 		Yii::app()->user->setFlash('success','Assets folder succesfully flushed');
-		if($return)
-			$this->redirect(array('index#'.$return));
-		else
-			$this->redirect(array('index'));
+		$this->redirect(array($return));
 	}
 	
 	/**
 	 * remove all files from the runtime folder
 	 */
-	public function actionFlushRuntime(){
+	public function actionFlushRuntime($return='index'){
 		$ignore = array(
 			Yii::app()->runtimePath.'/.gitignore',
 		);
 		NFileHelper::deleteFilesRecursive(Yii::app()->runtimePath,$ignore);
 		Yii::app()->user->setFlash('success','Runtime folder succesfully flushed');
-		$this->redirect(array('index'));
+		$this->redirect(array($return));
+	}
+	
+	public function actionFlushPermissions($return='index'){
+		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemChildTable);
+		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemTable);
+		Yii::app()->cache->flush();
+		Yii::app()->installAll();
+		Yii::app()->cache->flush();
+		Yii::app()->user->setFlash('success','Permissions succesfully flushed');
+		$this->redirect(array($return));
 	}
 	
 }

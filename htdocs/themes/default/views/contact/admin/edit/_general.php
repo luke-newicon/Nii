@@ -9,14 +9,14 @@ $form = $this->beginWidget('NActiveForm', array(
 <div id="contact-general">
 	<div class="line">
 		<div class="unit size1of6" id="contactPhoto">
-			<div id="currentImage"><?php echo $c->getPhoto('profile-main'); ?></div>
-			<a href="#" class="removeButton btn btnN">Remove</a>
-			<span class="uploadButton btn btnN">Upload</span>
+			<div id="currentImage"><?php echo $c->getPhoto('profile-main-'.strtolower($type)); ?></div>
+			<a href="#" class="removeButton btn">Remove</a>
+			<span class="uploadButton btn primary">Upload</span>
 			<?php
 			$this->widget('nii.widgets.uploadify.UploadifyWidget', array(
 				'multi' => false,
 				'ID' => 'photoUpload',
-				'script' => Yii::app()->createAbsoluteUrl('contact/uploadPhoto'),
+				'script' => Yii::app()->createAbsoluteUrl('contact/admin/uploadPhoto'),
 				'onComplete' => 'js:function(event, queueID, fileObj, response, data){updateContactPhoto(response)}',
 				'hideButton' => true,
 				'wmode' => 'transparent',

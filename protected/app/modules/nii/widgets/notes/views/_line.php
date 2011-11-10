@@ -1,7 +1,3 @@
-<style>
-	.note p {margin:0px;}
-</style>
-
 <div class="line note note<?php echo $data->id; ?>" data-noteId="<?php echo $data->id; ?>">
 	<?php if($displayUserPic):?>
 		<div class="unit profilePic prm">
@@ -16,7 +12,8 @@
 		</div>
 		
 		<p class="hint">
-			<?php echo User::model()->getName($data->user_id) . ', ' . NTime::timeAgoInWordsShort($data->added);?>
+			<?php FB::log($user);
+			echo $data->name . ', ' . NTime::timeAgoInWordsShort($data->added);?>
 		</p>
 		<div style="height:10px;">
 		<div class="nnote-controls" style="display:none;">

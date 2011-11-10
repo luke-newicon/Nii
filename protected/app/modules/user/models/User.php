@@ -115,7 +115,7 @@ class User extends NActiveRecord {
 			'active' => array(
 				'condition' => 'status=' . self::STATUS_ACTIVE,
 			),
-			'notactvie' => array(
+			'notactive' => array(
 				'condition' => 'status=' . self::STATUS_NOACTIVE,
 			),
 			'banned' => array(
@@ -310,6 +310,21 @@ class User extends NActiveRecord {
 	
 	public function editLink($text){
 		return CHtml::link($text, CHtml::normalizeUrl(array('/user/admin/editUser','id'=>$this->id())));
+	}
+	
+	/**
+	 * called on static instance
+	 * @param int $id 
+	 * @param type $size 
+	 */
+	public function getProfileImage($id=null, $type='note-thumbnail'){
+//		if($id!=null){
+//			$user = User::model()->findByPk($id);
+//			if ($user->contact)
+//				return $user->contact->getPhoto($type);
+//		}
+			// Display guest photo
+			Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
 	}
 
 }

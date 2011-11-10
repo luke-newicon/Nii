@@ -5,10 +5,10 @@ $form = $this->beginWidget('NActiveForm', array(
 	));
 ?>
 <div class="line pbl">
-	<div class="unit size1of3">
+	<div class="unit">
 		<div class="field inputInline">
 			<?php echo $form->labelEx($model, 'contact_id'); ?>
-			<div class="inputBox w200">
+			<div class="input w200">
 				<?php
 					$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 						'name' => 'relatedName',
@@ -26,18 +26,18 @@ $form = $this->beginWidget('NActiveForm', array(
 			</div>
 		</div>
 	</div>
-	<div class="unit size1of3">
+	<div class="unit">
 		<div class="field inputInline">
 			<?php echo $form->labelEx($model, 'label') ?>
-			<div class="inputBox w200">
+			<div class="input w200">
 				<?php echo $form->textField($model, 'label'); ?>
 			</div>
 		</div>
 	</div>
 	<div class="lastUnit buttons" style="padding-top:20px;">
 		<?php
-		echo CHtml::link($this->t('Cancel'), '#', array('class' => 'relationshipCancel cancelLink', 'id' => 'relationshipCancel-'.$id));
-		echo NHtml::btnLink($this->t('Add'), '#', 'icon fam-add', array('class' => 'btn btnN relationshipSave', 'id' => 'relationshipSave-'.$id, 'style' => 'padding: 3px 5px;'));
+		echo CHtml::link($this->t('Cancel'), '#', array('class' => 'relationshipCancel cancelLink btn', 'id' => 'relationshipCancel-'.$id));
+		echo NHtml::btnLink($this->t('Add'), '#', 'icon fam-add', array('class' => 'btn primary relationshipSave', 'id' => 'relationshipSave-'.$id, 'style' => 'margin-left: 5px; padding-left: 7px;'));
 		?>	
 	</div>
 </div>

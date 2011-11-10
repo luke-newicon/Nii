@@ -65,7 +65,7 @@ class NRelationship extends CActiveRecord
 			'contact_id' => 'Name',
 			'model' => 'Model',
 			'model_id' => 'Related',
-			'label' => 'Relation (e.g. Spouse, Manager, Bishop)',
+			'label' => 'Relation (e.g. Spouse, Manager)',
 			'type' => 'Type',
 		);
 	}

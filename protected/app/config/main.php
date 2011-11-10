@@ -125,8 +125,12 @@ return array(
 						'resize' => array('width' => 24, 'height' => 24, 'master' => 'width', 'scale' => 'down'),
 						'noimage' => realpath("$htdocs/images/blank-profile-org.jpg"),
 					),
-					'profile-main' => array(
+					'profile-main-person' => array(
 						'resize' => array('width' => 145, 'height' => 180, 'master' => 'width', 'scale' => 'down')
+					),
+					'profile-main-organisation' => array(
+						'resize' => array('width' => 145, 'height' => 180, 'master' => 'width', 'scale' => 'down'),
+						'noimage' => realpath("$htdocs/images/blank-profile-org.jpg"),
 					),
 					'profile-menu' => array(
 						'resize' => array('width' => 40, 'height' => 40, 'master' => 'max', 'scale' => 'down')
@@ -142,7 +146,7 @@ return array(
 			),
 			'fileManager' => array(
 				'class' => 'NFileManager',
-				'location' => realpath("$base/uploads"),
+				'location' => realpath($public."/../files/uploads"),
 				'locationIsAbsolute' => true,
 				'defaultCategory' => 'attachments',
 				'categories' => array(

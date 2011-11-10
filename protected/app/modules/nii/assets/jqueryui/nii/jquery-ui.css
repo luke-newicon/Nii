@@ -556,7 +556,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   position: relative;
   top: 1px;
 }
-.ui-tabs-nav > li > a {
+.ui-tabs-nav > li > a, .ui-tabs-nav .ui-state-default a {
   display: block;
   padding: 0 15px;
   margin-right: 2px;
@@ -565,11 +565,13 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   -webkit-border-radius: 4px 4px 0 0;
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
+	color: #222222;
 }
 .ui-tabs-nav > li > a:hover {
   text-decoration: none;
 	background-color: #eee;
   border-color: #eee #eee #ddd;
+	color: #00438A;
 }
 .ui-tabs-nav > li.ui-state-active > a {
   color: #808080;
@@ -592,8 +594,7 @@ div.ui-tabs.vertical div.ui-tabs-panel {
 	margin-right: 0;
 	min-height: 200px;
 	z-index: 100!important;
-	max-width: 996px;
-	margin-left: 200px;
+	margin-left: 220px;
 	clear: none;
 /*	-webkit-box-shadow: 0px 0px 6px #999;
 	-moz-box-shadow: 0px 0px 6px #999;
@@ -607,11 +608,12 @@ div.vertical ul.ui-tabs-nav {
     border-bottom: medium none;
     border-right: 1px solid #DDDDDD;
 	border-radius: 0;
-    margin: 0 20px 0 0;
+    margin: 0;
 	padding-right: 0;
     padding-bottom: 4px;
     width: 200px;
-	float: left;
+	float: none;
+	position: absolute;
 }
 
 

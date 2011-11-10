@@ -117,17 +117,16 @@ class NFileManager extends CApplicationComponent
 
 			$up->addFilter('rename', array('target' => $targetPath . $filedName));
 			$up->receive();
-
 			
 			$info = $up->getFileInfo();
-			$upFile = new NFiles();
+			$upFile = new NFile;
 
 			if ($filedName)
 				$uploadedFileName = $filedName;
 			else
 				$uploadedFileName = $up->getFileName(null, false);
 
-			$upFile->addNewFile('', $origFileName, $uploadedFileName, $up->getFileSize(), CFileHelper::getMimeTypeByExtension($origFileName), $category);
+			$upFile->addNewFile('', $origFileName, $uploadedFileName, $up->getFileSize(), NHtml::getMimeTypeByExtension($origFileName), $category);
 			$this->lastFile = $upFile;
 			
 			return $upFile->id;	

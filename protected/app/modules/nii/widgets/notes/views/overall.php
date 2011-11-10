@@ -23,7 +23,7 @@
 				'viewData'=>array(
 					'canEdit'=>$canEdit,
 					'canDelete'=>$canDelete,
-					'displayUserPic'=>$displayUserPic
+					'displayUserPic'=>$displayUserPic,
 				)
 			));
 		?>

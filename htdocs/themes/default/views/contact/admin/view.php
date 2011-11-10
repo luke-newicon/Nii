@@ -6,7 +6,7 @@
 </div>
 <div class="container pull-left">
 <div class="well">
-<span class="contact-photo"><?php echo $model->getPhoto('profile-main'); ?></span>
+	<span class="contact-photo"><?php echo $model->getPhoto('profile-main-'.  strtolower($model->contact_type)); ?></span>
 <h2 class="contact-title"><?php echo $model->displayName;  ?></h2>
 <div id="contact-general-info" class="line">
 	<div class="unit size1of2">

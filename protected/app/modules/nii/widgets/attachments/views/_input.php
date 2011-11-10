@@ -5,8 +5,8 @@ $form = $this->beginWidget('NActiveForm', array(
 	));
 ?>
 <div class="line pbl">
-	<div class="unit size1of3" id="fileSelector-<?php echo $id?>">
-				<span class="uploadButton btn btnN">Browse</span>
+	<div class="unit size1of4" id="fileSelector-<?php echo $id?>">
+				<span class="uploadButton btn primary">Browse</span>
 				<?php
 				$this->widget('nii.widgets.uploadify.UploadifyWidget', array(
 					'multi' => false,
@@ -16,13 +16,13 @@ $form = $this->beginWidget('NActiveForm', array(
 //					'auto' => false,
 					'hideButton' => true,
 					'wmode' => 'transparent',
-					'width' => 64,
+					'width' => 74,
 				));
 				?>&nbsp;
 	</div>
 	<div class="unit size2of5">
 		<div class="field inputInline">
-			<div class="inputBox w350">
+			<div class="input w250">
 				<?php echo $form->labelEx($model, 'description', array('class'=>'inFieldLabel')) ?>
 				<?php echo $form->textField($model, 'description'); ?>
 			</div>
@@ -30,8 +30,9 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 	<div class="lastUnit buttons submitButtons">
 		<?php
-		echo CHtml::link($this->t('Cancel'), '#', array('class' => 'attachmentCancel cancelLink', 'id' => 'attachmentCancel-'.$id));
-		echo NHtml::btnLink($this->t('Add'), '#', 'icon fam-add', array('class' => 'btn btnN attachmentSave', 'id' => 'attachmentSave-'.$id, 'style' => 'padding: 3px 5px;'));
+		echo CHtml::link($this->t('Cancel'), '#', array('class' => 'attachmentCancel btn', 'id' => 'attachmentCancel-'.$id));
+		echo '&nbsp;';
+		echo NHtml::btnLink($this->t('Add'), '#', 'icon fam-add', array('class' => 'btn primary attachmentSave', 'id' => 'attachmentSave-'.$id, 'style' => 'padding-left: 7px;'));
 		?>	
 	</div>
 </div>
