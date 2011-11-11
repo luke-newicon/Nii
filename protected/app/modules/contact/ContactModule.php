@@ -22,6 +22,7 @@ class ContactModule extends NWebModule {
 							'contact/admin/index',
 							'contact/admin/view',
 							'menu-contact',
+							'nii/index/show',
 						),
 					),
 					'edit' => array('description' => 'Edit Contacts',
