@@ -306,8 +306,11 @@ class Nii extends CWebApplication
 	public function install(){
 		// only install for the main database
 		Yii::app()->cache->flush();
-		foreach($this->getNiiModules() as $m){
-			$m->install();
+		foreach($this->getModules() as $m => $config){
+			$m = Yii::app()->getModule($m);
+			if ($m instanceof NWebModule) {
+				$m->install();
+			}
 		}
 		Yii::app()->cache->flush();
 	}
