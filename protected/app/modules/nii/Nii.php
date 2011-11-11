@@ -288,9 +288,12 @@ class Nii extends CWebApplication
 	public function install(){
 		// only install for the main database
 		Yii::app()->cache->flush();
-		foreach($this->getNiiModules() as $m){
-			FB::log(get_class($m));
-			$m->install();
+		foreach($this->getModules() as $m => $config){
+			$m = Yii::app()->getModule($m);
+			if ($m instanceof NWebModule) {
+//				FB::log(get_class($m));
+				$m->install();
+			}
 		}
 		Yii::app()->cache->flush();
 	}
