@@ -48,7 +48,8 @@ class SettingsController extends AController {
 	}
 
 	public function getSettings() {
-		foreach (Yii::app()->niiModules as $name => $module) {
+		foreach (Yii::app()->modules as $name => $config) {
+			$module = Yii::app()->getModule($name);
 			if (method_exists($module, 'settings')) {
 				foreach ($module->settings() as $id => $setting) {
 					if (is_string($setting)) {
