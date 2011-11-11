@@ -10,7 +10,7 @@ class AdminController extends AController {
 		
 		//$this->actionsMenu = $this->contactGridActions();
 		
-//		$this->pageTitle = Yii::app()->name . ' - All Contacts';
+		$this->pageTitle = Yii::app()->name . ' - All Contacts';
 		
 		$contacts = 'Contact';
 		$model = new Contact('search');
@@ -32,6 +32,8 @@ class AdminController extends AController {
 	 * @param string $selectedTab 
 	 */
 	public function actionView($id=null, $selectedTab=null) {
+		
+		$this->pageTitle = Yii::app()->name . ' - View Contact';
 				
 		$model = Contact::model()->findByPk($id);
 		
@@ -73,6 +75,8 @@ class AdminController extends AController {
 	 * @param string $type 
 	 */
 	public function actionCreate($type=null, $dialog=null) {
+		
+		$this->pageTitle = Yii::app()->name . ' - Create a Contact';
 		
 		$this->breadcrumbs = array(
 			'Contact' => array('index'),
@@ -139,7 +143,8 @@ class AdminController extends AController {
 	 * @param int $id 
 	 */
 	public function actionEdit($id=null) {
-		
+
+		$this->pageTitle = Yii::app()->name . ' - Edit Contact';		
 			
 		$model = Contact::model()->findByPk($id);			
 		$model->scenario = $model->contact_type;
