@@ -5,26 +5,23 @@ Yii::import('zii.widgets.grid.CGridView');
 Yii::import('nii-grid.scopes.NScopeList');
 Yii::import('nii-grid.NDataColumn');
 
-class NGridView extends CGridView {
+class NGridView extends CGridView 
+{
 
-//	public $template = "{scopes}\n{summary}\n{items}\n{pager}";
-	/*
-	 * Example of scopes array in configuration
-	 * 'scopes' => array(
-	  'items' => array(
-	  'default' => 'All',
-	  'published' => 'Published',
-	  'draft' => 'Draft',
-	  'published.alpha' => 'Published (Alphabetical)',
-	  'published.alpha.recent' => 'Published (Recent, Alphabetical)',
-	  ),
-	  ),
+	
+	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n<div class=\"grid-bottom-summary\">{pager}</div>";
+	/**
+	 * ??
+	 * @var array 
 	 */
-	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n{pager}";
 	public $scopes;
 	public $enableCustomScopes;
 	public $defaultColumnClass = 'NDataColumn';
 	public $defaultScopeListClass = 'NScopeList';
+	/**
+	 * allow by default multiple rows to be selected
+	 * @var int 
+	 */
 	public $selectableRows = 2;
 	public $enableButtons = false;
 	public $buttons = array('export', 'print', 'update');
@@ -32,9 +29,23 @@ class NGridView extends CGridView {
 	public $defaultExportButton = 'exportGrid';
 	public $defaultPrintButton = 'printGrid';
 	public $defaultUpdateButton = 'updateGridColumns';
-	// ajax in only the bits we need.  should modify to be id's for performance
-	public $ajaxUpdate = '#ContactAllGrid .grid-top-summary, #ContactAllGrid thead .header, #ContactAllGrid tbody';
+	
+	/**
+	 * A string of jquery selectors to update separated by commas.
+	 * to refer to the grid id use '{grid_id}' (it is a good idea to use id's so that jquery runs faster, especially on IE)
+	 * @var string 
+	 */
+	public $ajaxUpdate = "#{grid_id} .grid-top-summary, #{grid_id} .grid-bottom-summary, #{grid_id}-head, #{grid_id}-body";
 
+	/**
+	 * 
+	 * @return string 
+	 */
+	public function getAjaxUpdate(){
+		if($this->_ajaxUpdate===null)
+			return "#{$this->id} .grid-top-summary, #{$this->id}-head, #{$this->id}-body";
+	}
+	
 	public function init() {
 
 		if (isset($this->scopes['default']))
@@ -44,6 +55,8 @@ class NGridView extends CGridView {
 			$this->columns = $this->gridColumns($this->filter);
 		parent::init();
 	}
+	
+	
 
 	/**
 	 * Creates column objects and initializes them.
@@ -80,6 +93,9 @@ class NGridView extends CGridView {
 		foreach ($this->columns as $column)
 			$column->init();
 	}
+	
+	
+	
 
 	protected function createDataColumn($text) {
 		if (!preg_match('/^([\w\.]+)(:(\w*))?(:(.*))?$/', $text, $matches))
@@ -146,7 +162,8 @@ class NGridView extends CGridView {
 			echo '</span>';
 		}
 	}
-
+	
+	
 	/**
 	 *	Return options for the export columns button
 	 * @return array 
@@ -292,6 +309,140 @@ class NGridView extends CGridView {
 			modal: true,
 		});
 		return false;';
+	}
+	
+	
+	
+	/**
+	 * Renders the data items for the grid view.
+	 */
+	public function renderItems()
+	{
+		if($this->dataProvider->getItemCount()>0 || $this->showTableOnEmpty)
+		{
+			echo "<table class=\"{$this->itemsCssClass}\">\n";
+			$this->renderTableHeader();
+			ob_start();
+			$this->renderTableBody();
+			$body=ob_get_clean();
+			$this->renderTableFooter();
+			echo $body; // TFOOT must appear before TBODY according to the standard.
+			echo "</table>";
+		}
+		else
+			$this->renderEmptyText();
+	}
+
+	/**
+	 * Renders the table header.
+	 */
+	public function renderTableHeader()
+	{
+		if(!$this->hideHeader)
+		{
+			echo "<thead>\n";
+
+			if($this->filterPosition===self::FILTER_POS_HEADER)
+				$this->renderFilter();
+
+			echo "<tr id=\"".$this->id.'-head'."\">\n";
+			foreach($this->columns as $column)
+				$column->renderHeaderCell();
+			echo "</tr>\n";
+
+			if($this->filterPosition===self::FILTER_POS_BODY)
+				$this->renderFilter();
+
+			echo "</thead>\n";
+		}
+		else if($this->filter!==null && ($this->filterPosition===self::FILTER_POS_HEADER || $this->filterPosition===self::FILTER_POS_BODY))
+		{
+			echo "<thead>\n";
+			$this->renderFilter();
+			echo "</thead>\n";
+		}
+	}
+
+	/**
+	 * Renders the filter.
+	 * @since 1.1.1
+	 */
+	public function renderFilter()
+	{
+		if($this->filter!==null)
+		{
+			echo "<tr class=\"{$this->filterCssClass}\">\n";
+			foreach($this->columns as $column)
+				$column->renderFilterCell();
+			echo "</tr>\n";
+		}
+	}
+
+	/**
+	 * Renders the table footer.
+	 */
+	public function renderTableFooter()
+	{
+		$hasFilter=$this->filter!==null && $this->filterPosition===self::FILTER_POS_FOOTER;
+		$hasFooter=$this->getHasFooter();
+		if($hasFilter || $hasFooter)
+		{
+			echo "<tfoot>\n";
+			if($hasFooter)
+			{
+				echo "<tr>\n";
+				foreach($this->columns as $column)
+					$column->renderFooterCell();
+				echo "</tr>\n";
+			}
+			if($hasFilter)
+				$this->renderFilter();
+			echo "</tfoot>\n";
+		}
+	}
+
+	/**
+	 * Copy of the parent renderTableBody
+	 * Renders the table body.
+	 */
+	public function renderTableBody()
+	{
+		$data=$this->dataProvider->getData();
+		$n=count($data);
+		echo "<tbody id=\"" . $this->getId() . '-body' . "\">\n";
+
+		if($n>0)
+		{
+			for($row=0;$row<$n;++$row)
+				$this->renderTableRow($row);
+		}
+		else
+		{
+			echo '<tr><td colspan="'.count($this->columns).'">';
+			$this->renderEmptyText();
+			echo "</td></tr>\n";
+		}
+		echo "</tbody>\n";
+	}
+
+	/**
+	 * Renders a table body row.
+	 * @param integer $row the row number (zero-based).
+	 */
+	public function renderTableRow($row)
+	{
+		if($this->rowCssClassExpression!==null)
+		{
+			$data=$this->dataProvider->data[$row];
+			echo '<tr class="'.$this->evaluateExpression($this->rowCssClassExpression,array('row'=>$row,'data'=>$data)).'">';
+		}
+		else if(is_array($this->rowCssClass) && ($n=count($this->rowCssClass))>0)
+			echo '<tr class="'.$this->rowCssClass[$row%$n].'">';
+		else
+			echo '<tr>';
+		foreach($this->columns as $column)
+			$column->renderDataCell($row);
+		echo "</tr>\n";
 	}
 
 }

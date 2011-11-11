@@ -183,12 +183,9 @@
 			success: function(data,status) {
 				
 				//: nii hack code
-				
 				 var gridId = settings.ajaxUpdate[settings.ajaxUpdate.length-1];
-				 console.log(settings.ajaxUpdate)
-				 
 				 $.each(settings.ajaxUpdate, function(i,v) {
-					 
+					v = v.replace('{grid_id}',gridId);
 					// dont replace the whole grid 
 					if(v == gridId && settings.ajaxUpdate.length > 1){
 						return

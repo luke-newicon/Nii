@@ -136,14 +136,34 @@ class Nii extends CWebApplication
 		FB::log($this->getModules(), 'modules');
 		// setup each module core 
 		foreach($this->getModules() as $name => $config){
-			if (in_array($name, $this->getExcludeModules())) continue;
-			if (Yii::app()->getModule($name) instanceof NWebModule)
-				Yii::app()->getModule($name)->setup();
+			if(!$this->isNiiModule($name)) continue;
+			Yii::app()->getModule($name)->setup();
 		}
 		
 		// raise the onAfterModulesSetup event.
 		$this->onAfterModulesSetup(new CEvent($this));
 		
+	}
+	
+	/**
+	 * return boolean true|false whether the module is a nii module
+	 * @param string $name the module name key
+	 */
+	public function isNiiModule($name){
+		return (!in_array($name, $this->getExcludeModules()) && Yii::app()->getModule($name) instanceof NWebModule);
+	}
+	
+	/**
+	 * Get all nii modules that are active
+	 */
+	public function getNiiModules(){
+		$ret = array();
+		foreach($this->getModules()  as $name => $config){
+			if(!$this->isNiiModule($name)) continue;
+			if ($config['enabled'] != true) continue;
+			$ret[] = Yii::app()->getModule($name);
+		}
+		return $ret;
 	}
 		
 	/**
@@ -153,7 +173,7 @@ class Nii extends CWebApplication
 	 * @return void
 	 */
 	public function configureModules(){
-		$activeMods = $this->getModulesActive();
+		$activeMods = $this->_getModulesDbConfig();
 		if(!empty($activeMods))
 			// add the active modules to the end of configuration
 			$this->configure(array('modules'=>$activeMods));
@@ -168,7 +188,6 @@ class Nii extends CWebApplication
 	 * @return void
 	 */
 	public function initialiseModules(){
-		
 		// load the modules. Loops through all modules core modules are first in the configuration array
 		// and will therefore get initialised first
 		foreach($this->getModules() as $name => $config) {
@@ -195,11 +214,10 @@ class Nii extends CWebApplication
 	}
 		
 	/**
-	 * returns a list of currently active modules.
-	 * To get a list of all modules including modules available for activation
+	 * returns a list of all modules configuration including modules available for activation
 	 * @return array
 	 */
-	public function getModulesActive(){
+	protected function _getModulesDbConfig(){
 		return Yii::app()->settings->get($this->moduleSettingsKey, $this->moduleSettingsCategory, array());
 	}
 	
@@ -289,7 +307,6 @@ class Nii extends CWebApplication
 		// only install for the main database
 		Yii::app()->cache->flush();
 		foreach($this->getNiiModules() as $m){
-			FB::log(get_class($m));
 			$m->install();
 		}
 		Yii::app()->cache->flush();
