@@ -1,6 +1,6 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
-	'id' => 'settings-presentation-form',
+	'id' => 'presentation-setting-form',
 	'clientOptions' => array(
 		'validateOnSubmit' => true,
 		'validateOnChange' => true,

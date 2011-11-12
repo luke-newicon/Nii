@@ -22,7 +22,7 @@ Class ModulesController extends AController
 		$allModules = Yii::app()->modulesAvailable;
 
 		// get the list of modules currently defined in the settings
-		$systemModules = Yii::app()->modulesActive;
+		$systemModules = Yii::app()->modules;
 		
 
 		$data = array();

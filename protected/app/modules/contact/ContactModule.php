@@ -5,11 +5,21 @@ class ContactModule extends NWebModule {
 	public $name = 'Contacts';
 	public $description = 'Module to manage contacts';
 	public $version = '0.0.1';
+	public $menu_label = 'Contacts';
 
 	public function init() {
 		Yii::import('contact.models.*');
-		Yii::app()->menus->addItem('main','Contacts', array('/contact/admin/index'));
-		Yii::app()->menus->addItem('main','All Contacts', array('/contact/admin/index'),'Contacts');
+	}
+
+	public function setup() {
+		Yii::app()->menus->addItem('main', $this->menu_label, array('/contact/admin/index'));
+		Yii::app()->menus->addItem('main', 'All ' . $this->menu_label, array('/contact/admin/index'), $this->menu_label);
+	}
+
+	public function settings() {
+		return array(
+			'contacts' => '/contact/settings/index',
+		);
 	}
 
 	public function permissions() {
@@ -17,7 +27,7 @@ class ContactModule extends NWebModule {
 			'contact' => array('description' => 'Contact',
 				'tasks' => array(
 					'view' => array('description' => 'View Contacts',
-						'roles' => array('administrator','editor','viewer'),
+						'roles' => array('administrator', 'editor', 'viewer'),
 						'operations' => array(
 							'contact/admin/index',
 							'contact/admin/view',
@@ -26,7 +36,7 @@ class ContactModule extends NWebModule {
 						),
 					),
 					'edit' => array('description' => 'Edit Contacts',
-						'roles' => array('administrator','editor'),
+						'roles' => array('administrator', 'editor'),
 						'operations' => array(
 							'contact/admin/edit',
 							'contact/admin/create',
@@ -37,8 +47,8 @@ class ContactModule extends NWebModule {
 			),
 		);
 	}
-	
-	public function install(){
+
+	public function install() {
 		Contact::install('Contact');
 		$this->installPermissions();
 	}

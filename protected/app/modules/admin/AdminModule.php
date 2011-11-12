@@ -13,7 +13,9 @@ class AdminModule extends NWebModule {
 	public function init() {
 		Yii::import('admin.components.*');
 		Yii::import('admin.models.*');
-
+	}
+	
+	public function setup(){
 		Yii::app()->menus->addMenu('main');
 		Yii::app()->menus->addMenu('secondary');
 

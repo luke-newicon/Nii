@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DevModule class file.
  *
@@ -14,17 +15,21 @@
  *
  * @author steve
  */
-class DevModule extends NWebModule
-{
+class DevModule extends NWebModule {
+
 	public $name = 'Developer';
-	
+
 	public function init() {
-		Yii::app()->menus->addDivider('secondary','Admin');
-		Yii::app()->menus->addItem('secondary','Developer', array('/dev/admin/index'),'Admin',array(
+		
+	}
+
+	public function setup() {
+		Yii::app()->menus->addDivider('secondary', 'Admin');
+		Yii::app()->menus->addItem('secondary', 'Developer', array('/dev/admin/index'), 'Admin', array(
 			'visible' => Yii::app()->user->checkAccess('dev/admin/index'),
 		));
 	}
-	
+
 //	public function permissions() {
 //		return array(
 //			'dev' => array('description' => 'Developer',
@@ -40,8 +45,9 @@ class DevModule extends NWebModule
 //			),
 //		);
 //	}
-	
-	public function install(){
+
+	public function install() {
 //		$this->installPermissions();
 	}
+
 }

@@ -1,6 +1,6 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
-	'id' => 'general-setting-form',
+	'id' => 'contact-setting-form',
 	'clientOptions' => array(
 		'validateOnSubmit' => true,
 		'validateOnChange' => true,
@@ -9,17 +9,17 @@ $form = $this->beginWidget('NActiveForm', array(
 ));
 ?>
 <div class="page-header">
-	<h3>General Settings</h3>
-	<div class="action-buttons"></div>
+	<h3>Contact Settings</h3>
 </div>
+<?php echo $form->errorSummary($model,'<p><strong>Please fix the following input errors:</strong></p>',null,array('class'=>'errorSummary alert-message block-message error')); ?>
 <fieldset>
 	<div class="field">
-		<?php echo $form->labelEx($model, 'appname'); ?>
+		<?php echo $form->labelEx($model, 'menu_label'); ?>
 		<div class="inputContainer">
 			<div class="input xlarge">
-				<?php echo $form->textField($model, 'appname'); ?>
+				<?php echo $form->textField($model, 'menu_label'); ?>
 			</div>
-			<?php echo $form->error($model, 'appname'); ?>
+			<?php echo $form->error($model, 'menu_label'); ?>
 		</div>
 	</div>
 	<div class="actions">

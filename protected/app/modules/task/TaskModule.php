@@ -71,7 +71,7 @@ class TaskModule extends NWebModule
 	
 	public function settings(){
 		return array(
-			'tasks' => 'tasks/settings',
+			'tasks' => '/task/settings/index',
 		);
 	}
 	

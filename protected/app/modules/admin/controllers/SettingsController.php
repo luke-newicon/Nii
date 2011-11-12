@@ -3,20 +3,20 @@
 class SettingsController extends AController {
 
 	public function actionIndex() {
-		$settings = $this->settings;
-		$this->render('index', array('settings' => $settings));
+		$this->render('index', array(
+			'settings' => $this->settings,
+		));
 	}
 
-	public function actionPage($module) {
-		$this->layout = '//layouts/ajax';
-		$module = Yii::app()->getModule($module);
-		$this->render('page', array('title' => $module->name, 'content' => $module->settingsPage()));
-	}
+//	public function actionPage($module) {
+//		$module = Yii::app()->getModule($module);
+//		$this->render('page', array('title' => $module->name, 'content' => $module->settingsPage()));
+//	}
 
 	public function actionGeneral() {
 		$model = new AdminGeneralSetting;
 
-		$this->performAjaxValidation($model, 'settings-general-form');
+		$this->performAjaxValidation($model, 'general-setting-form');
 
 		if (isset($_POST['AdminGeneralSetting'])) {
 			$model->attributes = $_POST['AdminGeneralSetting'];
@@ -24,7 +24,7 @@ class SettingsController extends AController {
 				Yii::app()->user->setFlash('success','General Settings successfully saved.');
 			} else
 				Yii::app()->user->setFlash('success','General Settings failed to save.');
-			$this->redirect(array('index'));
+			$this->redirect(array('/admin/settings/index#General'));
 		}
 
 		$this->render('general', array('model' => $model));
@@ -33,7 +33,7 @@ class SettingsController extends AController {
 	public function actionPresentation() {
 		$model = new AdminPresentationSetting;
 		
-		$this->performAjaxValidation($model, 'settings-presentation-form');
+		$this->performAjaxValidation($model, 'presentation-setting-form');
 
 		if (isset($_POST['AdminPresentationSetting'])) {
 			$model->attributes = $_POST['AdminPresentationSetting'];
@@ -41,7 +41,7 @@ class SettingsController extends AController {
 				Yii::app()->user->setFlash('success','Presentation Settings successfully saved.');
 			} else
 				Yii::app()->user->setFlash('success','Presentation Settings failed to save.');
-			$this->redirect(array('index'));
+			$this->redirect(array('/admin/settings/index#Presentation'));
 		}
 		
 		$this->render('presentation', array('model' => $model));
@@ -59,14 +59,15 @@ class SettingsController extends AController {
 						$label = isset($setting['label']) ? $setting['label'] : NHtml::generateAttributeLabel($id);
 						$url = isset($setting['url']) ? CHtml::normalizeUrl($setting['url']) : '#';
 					}
-					$settings['items'][] = array('label' => $label, 'url' => '#' . $id);
-					$page = array('label' => $label, 'htmlOptions' => array('id' => $id, 'data-ajax-url' => $url));
-					$settings['pages'][] = $page;
+//					$settings['items'][] = array('label' => $label, 'url' => '#' . $id);
+//					$page = array('label' => $label, 'htmlOptions' => array('id' => $id, 'data-ajax-url' => $url));
+//					$settings['pages'][] = $page;
+					$settings[$label] = array('id' => $id, 'ajax' => $url);
 				}
 			}
 		}
-		$settings['items'][0]['itemOptions']['class'] = 'active';
-		$settings['pages'][0]['htmlOptions']['class'] = 'active';
+//		$settings['items'][0]['itemOptions']['class'] = 'active';
+//		$settings['pages'][0]['htmlOptions']['class'] = 'active';
 		return $settings;
 	}
 
