@@ -57,10 +57,12 @@ class NDataColumn extends CDataColumn {
 		if($value===null){
 			echo $this->grid->nullDisplay;
 		} else {
-			if($this->type == 'text')
-				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $this->grid->filter->{$this->name});
-			elseif($this->type == 'raw')
-				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $this->grid->filter->{$this->name});
+			// THIS BREAKS THE PERMISSION GRID, NEEDS MORE WORK FOR HIGHLIGHTING SEARCH RESULTS
+//			if($this->type == 'text')
+//				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $this->grid->filter->{$this->name});
+//			elseif($this->type == 'raw')
+//				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $this->grid->filter->{$this->name});
+			echo $this->grid->getFormatter()->format($value,$this->type);
 		}
 	}
 	

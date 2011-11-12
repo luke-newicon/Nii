@@ -20,6 +20,7 @@ class DateInput extends CInputWidget {
 		
 		$inputDate = $this->model->getAttribute($this->attribute);
 
+		$dateDay = $dateMonth = $dateYear = null;
 		//Explodes the date into its various parts.
 		if ($inputDate && $inputDate != '0000-00-00') {
 			$date = explode('-', $inputDate);
