@@ -482,12 +482,15 @@ class Contact extends NActiveRecord
 	}
 	
 	public function getCountryName() {
-		$countries = self::getCountriesArray();
-		return $countries[$this->country];
+		$countries = NData::countries();
+		if (isset($countries[$this->country]))
+			return $countries[$this->country];
+		else
+			return $this->country;
 	}
 	
 	public static function getCountriesArray() {
-		$countries = require Yii::getPathOfAlias('nii').'/data/countries.php';
+		$countries = NData::countries();
 		return $countries;
 	}	
 	
