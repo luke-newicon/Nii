@@ -14,7 +14,7 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 		array('label'=>'My Tasks', 'url'=>'#mytasks', 'active' => true),
 		array('label'=>'Group Tasks', 'url'=>'#grouptasks'),
 	),
-	'htmlOptions' => array('class' => 'tabs vertical'),
+//	'htmlOptions' => array('class' => 'tabs vertical'),
 //	'heading' => 'Developer Tools',
 ));
 ?>

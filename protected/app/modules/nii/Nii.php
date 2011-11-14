@@ -190,11 +190,23 @@ class Nii extends CWebApplication
 	public function initialiseModules(){
 		// load the modules. Loops through all modules core modules are first in the configuration array
 		// and will therefore get initialised first
-		foreach($this->getModules() as $name => $config) {
-			if (!in_array($name, $this->getExcludeModules()) && Yii::app()->getModule($name) instanceof NWebModule)
-				Yii::app()->getModule($name);
+		try {
+			foreach($this->getModules() as $name => $config) {
+				if (!in_array($name, $this->getExcludeModules()) && Yii::app()->getModule($name) instanceof NWebModule)
+					Yii::app()->getModule($name);
+			}
+		} catch (Exception $e){
+			Yii::app()->updateModule($name, 0);
+			Yii::app()->user->setFlash('error',"Unable to load the '$name' module. ");
+			if (YII_DEBUG){
+				ob_start();
+				Yii::app()->displayException($e);
+				$errorHtml = ob_get_clean();
+				$msg = '<strong>'.$e->getMessage().'</strong>';
+				$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
+				Yii::app()->user->setFlash('error-block-message', $msg);
+			}
 		}
-		
 	}
 	
 	/**
@@ -239,6 +251,11 @@ class Nii extends CWebApplication
 			$mod = str_replace('.php','',$modName);
 			$modId = strtolower(str_replace('Module','', $mod));
 			Yii::import("modules.$modId.$mod");
+			
+			// check if the module has a valid module class
+			if(!@class_exists("$mod", true))
+				throw new CException('Can not find the module class for the "'.$mod.'" module');
+			
 			$moduleObj = new $mod($modId, null, null, false);
 			$mods[$modId] = $moduleObj;
 		}
