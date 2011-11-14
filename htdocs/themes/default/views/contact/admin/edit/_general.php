@@ -77,7 +77,7 @@ $form = $this->beginWidget('NActiveForm', array(
 					<div class="line field">
 						<div class="unit size1of3"><?= $form->labelEx($c,'country') ?></div>
 						<div class="lastUnit inputContainer">
-							<div class="input w180"><?php echo $form->textField($c, 'country', array('size' => 20)); ?></div>
+							<div class="input w180"><?php echo $form->dropDownList($c, 'country', Contact::getCountriesArray()); ?></div>
 						</div>
 					</div>
 				</div>

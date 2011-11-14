@@ -151,7 +151,7 @@ class AdminController extends AController {
 		
 		$this->performAjaxValidation($model);
 		
-		if ($_POST['Contact']) {
+		if (isset($_POST['Contact'])) {
 			$model->attributes = $_POST['Contact'];
 			
 			if ($model->contact_type == 'Person') 

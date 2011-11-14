@@ -265,6 +265,9 @@ class Contact extends NActiveRecord
 			),
 			array(
 				'name'=>'country',
+				'type'=>'raw',
+				'value' => '$data->countryName',
+				'filter' => Contact::model()->countriesArray,
 			),
 			array(
 				'name'=>'postcode',
@@ -478,6 +481,15 @@ class Contact extends NActiveRecord
 		
 	}
 	
+	public function getCountryName() {
+		$countries = self::getCountriesArray();
+		return $countries[$this->country];
+	}
+	
+	public static function getCountriesArray() {
+		$countries = require Yii::getPathOfAlias('nii').'/data/countries.php';
+		return $countries;
+	}	
 	
 	public function createContactDialog() {
 		$dialog_id = 'createContactDialog';

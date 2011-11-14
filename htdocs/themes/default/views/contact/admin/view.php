@@ -28,7 +28,7 @@
 		</div>
 		<div class="detailRow">
 			<div class="unit size1of3 detailLabel"><?=$this->t('Country')?></div>
-			<div class="lastUnit"><?php echo $model->country; ?></div>
+			<div class="lastUnit"><?php echo $model->countryName; ?></div>
 		</div>
 	</div>
 	<div class="lastUnit pll">
