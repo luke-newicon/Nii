@@ -8,17 +8,5 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-
-
-Class ProjectModule extends NWebModule 
-{
-	
-	public function init(){
-		
-	}
-	
-	public function setup(){
-		
-	}
-	
-}
+?>
+hello

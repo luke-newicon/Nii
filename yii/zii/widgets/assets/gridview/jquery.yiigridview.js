@@ -193,8 +193,6 @@
 					if(v == gridId && settings.ajaxUpdate.length == 1){
 						v = '#'+v;
 					}
-					
-					console.log("$("+v+").replaceWith($("+v+",'<div>'+data+'</div>'));");
 					$(v).replaceWith($(v,'<div>'+data+'</div>'));
 				});
 				id = gridId
@@ -205,6 +203,7 @@
 				$.fn.yiiGridView.selectCheckedRows(id);
  				// nii hack code
 				
+								
 //				$.each(settings.ajaxUpdate, function(i,v) {
 //					var id='#'+v;
 //					$(id).replaceWith($(id,'<div>'+data+'</div>'));
