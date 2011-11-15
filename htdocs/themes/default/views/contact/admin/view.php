@@ -9,6 +9,7 @@
 	<span class="contact-photo"><?php echo $model->getPhoto('profile-main-'.  strtolower($model->contact_type)); ?></span>
 <h2 class="contact-title"><?php echo $model->displayName;  ?></h2>
 <div id="contact-general-info" class="line">
+	<?php Yii::app()->getModule('contact')->onRenderContactAfterHeader($event); ?>
 	<div class="unit size1of2">
 		<div class="detailRow">
 			<div class="unit size1of3 detailLabel"><?=$this->t('Address')?></div>
@@ -57,11 +58,14 @@
 			<div class="lastUnit"><?php echo $model->fax; ?></div>
 		</div>
 	</div>
+	<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetails($event); ?>
 	<?php $this->renderPartial('view/_' . strtolower($model->contact_type), array('model' => $model)); ?>
+	<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails($event); ?>
 	<div class="detailRow">
 		<div class="unit size1of6 detailLabel"><?=$this->t('Comment')?></div>
 		<div class="lastUnit"><?php echo $model->comment; ?></div>
 	</div>
+	<?php Yii::app()->getModule('contact')->onRenderContactAfterComment($event); ?>
 </div>
 </div>
 <?php $this->widget('nii.widgets.NTabs', 

@@ -12,13 +12,14 @@ class AdminController extends AController {
 		
 		$this->pageTitle = Yii::app()->name . ' - All Contacts';
 		
-		$contacts = 'Contact';
-		$model = new Contact('search');
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+	
+		$model = new $contactModel('search');
 		
 		$model->unsetAttributes();
 		
-		if(isset($_GET[$contacts]))
-			$model->attributes = $_GET[$contacts];
+		if(isset($_GET[$contactModel]))
+			$model->attributes = $_GET[$contactModel];
 
 		$this->render('grids/allcontacts',array(
 			'dataProvider'=>$model->search(),
@@ -34,42 +35,25 @@ class AdminController extends AController {
 	public function actionView($id=null, $selectedTab=null) {
 		
 		$this->pageTitle = Yii::app()->name . ' - View Contact';
+		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
 				
-		$model = Contact::model()->findByPk($id);
+		$model = $contactModel::model()->findByPk($id);
 		
 		$this->checkModelExists($model, "<strong>No contact exists for ID: ".$id."</strong>");
 		
-//		if (THelper::checkAccess()) {
-//			$this->actionsMenu = array(
-//				array('label' => '<span class="icon fam-user-edit">'.$this->t('Edit Contact').'</span>', 'url' => array('/contact/edit','id'=>$id)),
-//				array('label' => '<span class="icon fam-user-add">'.$this->t('Add Relationship').'</span>', 'url' => '#',
-//					'linkOptions'=>array(
-//						'onclick'=> $model->addRelationshipDialog()
-//					)
-//				),
-//			);
-//
-//			// If the contact has student details, include the menu link for adding a programme
-//			if ($student) {
-//				array_push ($this->actionsMenu, 
-//					array(
-//						'label' => '<span class="icon fam-page-add">'.$this->t('Add Programme of Study').'</span>', 
-//						'url' => '#',
-//						'linkOptions'=>array(
-//							'onclick'=> $model->addProgrammeDialog($id)
-//						)
-//					)
-//				);
-//			}
-//		}
-		
 		$model->selectedTab = $selectedTab;
 		
-		$this->render('view',array(
+		$viewData = array(
 			'model'=>$model,
-		));
+		);
+		
+		$e = new CEvent($this, $viewData);
+		$this->render('view', array_merge($viewData, array('event'=>$e)));
 		
 	}
+	
+	
 	/**
 	 * Create a contact
 	 * @param string $type 
@@ -82,16 +66,18 @@ class AdminController extends AController {
 			'Contact' => array('index'),
 			'Create Contact'
 		);	
-			
-		$model = new Contact;
+		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		
+		$model = new $contactModel;
 		
 		if ($type)
 			$model->scenario = $type;
 
 		$this->performAjaxValidation($model);
 		
-		if (isset($_POST['Contact'])) {
-			$model->attributes = $_POST['Contact'];
+		if (isset($_POST[$contactModel])) {
+			$model->attributes = $_POST[$contactModel];
 			
 			if ($model->contact_type == 'Person') 
 				$model->name = $model->salutation . ' ' . $model->lastname;
@@ -106,7 +92,7 @@ class AdminController extends AController {
 					$a = new Attachment;
 
 					$a->file_id = $model->photoID;
-					$a->model = 'Contact';
+					$a->model = $contactModel;
 					$a->model_id = $model->id;
 					$a->type = 'contact-thumbnail';
 					if ($a->save()) {		
@@ -124,15 +110,19 @@ class AdminController extends AController {
 		
 		if ($type===null)
 			$type = 'none';
+		
+		$viewData = array(
+			'c'=>$model,
+			'type'=>$type,
+			'dialog'=>$dialog,
+		);
+
+		$e = new CEvent($this, $viewData);
 
 		if ($model) {
-			$this->render('create',array(
-				'c'=>$model,
-				'type'=>$type,
-				'dialog'=>$dialog,
-			));
+			$this->render('create', array_merge($viewData, array('event'=>$e)));
 		} else {
-			throw new CHttpException("Couldn't load model 'Contact'");
+			throw new CHttpException("Couldn't load model '$contactModel'");
 		}
 		
 	}
@@ -145,21 +135,23 @@ class AdminController extends AController {
 	public function actionEdit($id=null) {
 
 		$this->pageTitle = Yii::app()->name . ' - Edit Contact';		
-			
-		$model = Contact::model()->findByPk($id);			
+		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		
+		$model = $contactModel::model()->findByPk($id);			
 		$model->scenario = $model->contact_type;
 		
 		$this->performAjaxValidation($model);
 		
-		if (isset($_POST['Contact'])) {
-			$model->attributes = $_POST['Contact'];
+		if (isset($_POST[$contactModel])) {
+			$model->attributes = $_POST[$contactModel];
 			
 			if ($model->contact_type == 'Person') 
 				$model->name = $model->givennames . ' ' . $model->lastname;
 			else
 				$model->name = $model->company_name;
 			
-			FB::log($model->attributes,'Contact model');
+			FB::log($model->attributes,'$contactModel model');
 
 			if ($model->save()) {
 				
@@ -175,7 +167,7 @@ class AdminController extends AController {
 							$a = new NAttachment;
 
 						$a->file_id = $model->photoID;
-						$a->model = 'Contact';
+						$a->model = '$contactModel';
 						$a->model_id = $model->id;
 						$a->type = 'contact-thumbnail';
 						if ($a->save()) {
@@ -191,14 +183,17 @@ class AdminController extends AController {
 				$this->redirect(array("admin/view","id"=>$model->id));		
 			} 		
 		}
+		
+		$viewData = array(
+			'c'=>$model,
+		);
 
-
+		$e = new CEvent($this, $viewData);
+		
 		if ($model) {
-			$this->render('edit',array(
-				'c'=>$model,
-			));
+			$this->render('edit', array_merge($viewData, array('event'=>$e)));
 		} else {
-			throw new CHttpException("Couldn't load model 'Contact'");
+			throw new CHttpException("Couldn't load model '$contactModel'");
 		}
 		
 	}

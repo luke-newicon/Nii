@@ -7,5 +7,6 @@ $this->renderPartial(
 		'c'=>$c,
 		'type'=>$c->contact_type,
 		'action'=>array('admin/edit','id'=>$c->id,'type'=>$c->contact_type),
+		'event'=>$event,
 	)
 );

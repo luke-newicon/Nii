@@ -8,5 +8,6 @@ $this->renderPartial(
 		'c'=>$c,
 		'type'=>$type,
 		'action'=>array('admin/create','type'=>$type),
+		'event'=>$event,
 	)
 );

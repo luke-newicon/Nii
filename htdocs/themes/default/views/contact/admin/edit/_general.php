@@ -5,6 +5,8 @@ $form = $this->beginWidget('NActiveForm', array(
 		'enableAjaxValidation'=>false,
 		'enableClientValidation'=>true,
 	));
+
+$event = new CEvent($this, array('c'=>$c,'form'=>$form));
 ?>
 <div id="contact-general">
 	<div class="line">
@@ -27,7 +29,9 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 		<div class="lastUnit">
 			<div class="line">
-			<?php $this->renderPartial('edit/_' . strtolower($type), array('c' => $c, 'form' => $form)); ?>
+				<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit($event); ?>
+				<?php $this->renderPartial('edit/_' . strtolower($type), array('c' => $c, 'form' => $form)); ?>
+				<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetailsEdit($event); ?>
 			</div>
 			<div class="line">
 				<div class="unit size1of2">
@@ -57,7 +61,6 @@ $form = $this->beginWidget('NActiveForm', array(
 						<div class="lastUnit">
 							<div class="input w170"><?php echo $form->textField($c, 'city', array('size' => 30)); ?></div>
 							<?php echo $form->error($c,'city'); ?>
-							
 						</div>
 					</div>
 					<div class="line field">
@@ -113,15 +116,14 @@ $form = $this->beginWidget('NActiveForm', array(
 						</div>
 					</div>
 				</div>
-				
 			</div>
-			
-					<div class="line field">
-						<div class="unit size1of6"><?= $form->labelEx($c,'comment') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w400"><?php echo $form->textArea($c, 'comment',array('rows'=>6)); ?></div>
-						</div>
-					</div>
+			<div class="line field">
+				<div class="unit size1of6"><?= $form->labelEx($c,'comment') ?></div>
+				<div class="lastUnit inputContainer">
+					<div class="input w400"><?php echo $form->textArea($c, 'comment',array('rows'=>6)); ?></div>
+				</div>
+			</div>
+			<?php Yii::app()->getModule('contact')->onRenderContactAfterCommentEdit($event); ?>
 		</div>
 	</div>
 	<div class="actions">

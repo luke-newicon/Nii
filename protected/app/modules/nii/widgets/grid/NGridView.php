@@ -4,6 +4,7 @@ Yii::setPathOfAlias('nii-grid', dirname(__FILE__));
 Yii::import('zii.widgets.grid.CGridView');
 Yii::import('nii-grid.scopes.NScopeList');
 Yii::import('nii-grid.NDataColumn');
+Yii::import('nii-grid.NEavColumn');
 
 class NGridView extends CGridView 
 {

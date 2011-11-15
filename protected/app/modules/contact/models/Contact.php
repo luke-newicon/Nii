@@ -136,7 +136,7 @@ class Contact extends NActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=$this->getDbCriteria();
 		
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
@@ -164,10 +164,6 @@ class Contact extends NActiveRecord
 		$criteria->compare('contact_type',$this->contact_type,true);
 		$criteria->compare('comment',$this->comment,true);
 
-		if ($this->type) {
-			$criteria->addCondition($this->type.'.id > 0');
-		}		
-		
 		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
 		//$criteria->together = true;
 		
@@ -216,7 +212,7 @@ class Contact extends NActiveRecord
 //				'name' => 'photo',
 //				'type'=>'raw',
 //				'value' => '$data->getContactPhoto()',
-//	//				'exportValue' => '$data->getContactPhotoUrl()',
+//				'exportValue' => '$data->getContactPhotoUrl()',
 //				'export'=>false,
 //				'filter'=>false,
 //				'header' => '',
@@ -239,14 +235,6 @@ class Contact extends NActiveRecord
 			array(
 				'name'=>'lastname',
 			),
-//			array(
-//				'name'=>'type',
-//				'type'=>'raw',
-//				'value' => '$data->getContactTypeList($data->contact_type)',
-//				'exportValue' => '$data->getContactTypeListCsv($data->contact_type)',
-//				'filter'=>$this->getRelationships(),
-//				'htmlOptions'=>array('width'=>'150px'),
-//			),
 			array(
 				'name'=>'addr1',
 			),
@@ -299,10 +287,12 @@ class Contact extends NActiveRecord
 				'name' => 'website',
 				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
 			),
-//			array(
-//				'name' => 'comment',
-//			),
 		);
+		
+//		Yii::app()->getModule('contact')->getColumns();
+		
+		
+		
 	}
 	
 	public function getPhoto($type=null, $failOnNoLogo=false){
@@ -314,29 +304,6 @@ class Contact extends NActiveRecord
 			$src = Yii::app()->image->url(0,$type);
 		}
 		return '<img src="'.$src.'" />';
-	}
-	
-	public static function getRelationships($contactType='all') {
-		
-		$all = array();
-		
-		$Person = array(
-			'student' => 'Student',
-			'academic' => 'Academic',
-			'staff' => 'Staff',
-			'cleric' => 'Cleric',
-		);
-		
-		$Organisation = array(
-			'diocese' => 'Diocese',
-			'church' => 'Church',
-			'trainingfacility' => 'Training Facility'
-		);
-		
-		$all = array_merge($all, $Person);
-		$all = array_merge($all, $Organisation);
-		
-		return $$contactType;
 	}
 	
 	public function getContactTypes($contactType='all',$returnNotFound=false) {
@@ -392,17 +359,6 @@ class Contact extends NActiveRecord
 			return $r;
 		}
 			
-	}
-	
-	public function getLiveProgrammes() {
-		
-		$programmes = Programme::model()->findAll(array('order'=>'name'));
-		$return = array();
-		foreach ($programmes as $p) {
-			$return[$p->id] = $p->name;
-		}
-		return $return;
-		
 	}
 	
 	public function getContactLink($tab=null, $showIcon=true) {
@@ -526,38 +482,6 @@ class Contact extends NActiveRecord
 		return false;';
 	}
 	
-	public function addRelationshipDialog() {
-		$dialog_id = 'addRelationshipDialog';
-		$url = CHtml::normalizeUrl(array('/contact/addRelationship/','id'=>$this->id));
-		return '$("#'.$dialog_id.'").dialog({
-			open: function(event, ui){
-				$("#'.$dialog_id.'").load("'.$url.'");
-			},
-			minHeight: 100, position: ["center", 100],
-			width: 600,
-			autoOpen: true,
-			title: "Add a Relationship",
-			modal: true,
-		});
-		return false;';
-	}
-	
-	public static function addProgrammeDialog($id) {
-		$dialog_id = 'addProgrammeDialog';
-		$url = CHtml::normalizeUrl(array('/contact/addProgramme/','id'=>$id));
-		return '$("#'.$dialog_id.'").dialog({
-			open: function(event, ui){
-				$("#'.$dialog_id.'").load("'.$url.'");
-			},
-			minHeight: 100, position: ["center", 100],
-			width: 600,
-			autoOpen: true,
-			title: "Add a Programme of Study",
-			modal: true,
-		});
-		return false;';
-	}
-	
 	public function getDisplayName() {
 		
 		if ($this->contact_type == 'Person')
@@ -622,5 +546,34 @@ class Contact extends NActiveRecord
 				'trashed' => "int(1) unsigned NOT NULL",
 			), 
 			'keys' => array());
+	}
+	
+	function behaviors() {
+		return array(
+			'eavAttr' => array(
+				'class' => 'nii.components.behaviors.EEavBehavior',
+				// Table that stores attributes (required)
+				'tableName' => 'contact_eav',
+				// model id column
+				// Default is 'entity'
+				'entityField' => 'entity',
+				// attribute name column
+				// Default is 'attribute'
+				'attributeField' => 'attribute',
+				// attribute value column
+				// Default is 'value'
+				'valueField' => 'value',
+				// Model FK name
+				// By default taken from primaryKey
+				'modelTableFk' => 'primaryKey',
+				// Array of allowed attributes
+				// All attributes are allowed if not specified
+				// Empty by default
+				'safeAttributes' => array(),
+				// Attribute prefix. Useful when storing attributes for multiple models in a single table
+				// Empty by default
+				'attributesPrefix' => '',
+			)
+		);
 	}
 }
