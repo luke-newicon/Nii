@@ -16,7 +16,7 @@ class HftModule extends NWebModule
 	}
 	
 	public function setup() {
-		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donations/index'));
+		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donation/index'));
 
 		Yii::app()->getModule('contact')->contactModel = 'HftContact';
 		
@@ -57,6 +57,8 @@ class HftModule extends NWebModule
 	public function install() {
 		HftContact::install('HftContact');
 		HftContactSource::install('HftContactSource');
+		HftDonation::install('HftDonation');
+		HftDonationType::install('HftDonationType');
 		$this->installPermissions();
 	}
 	
