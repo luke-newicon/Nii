@@ -18,9 +18,16 @@
 				<?php echo $form->textField($c, 'lastname', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'Last name')); ?>
 			</div>
 		</div>
+		<div class="field nopad inputInline">
+			<div class="input w100">
+				<?= $form->labelEx($c, 'suffix', array('class'=>'inFieldLabel')) ?>
+				<?php echo $form->textField($c, 'suffix', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'Suffix')); ?>
+			</div>
+		</div>
 		<?php echo $form->error($c, 'title'); ?>
 		<?php echo $form->error($c, 'givennames'); ?>
 		<?php echo $form->error($c, 'lastname'); ?>
+		<?php echo $form->error($c, 'suffix'); ?>
 	</div>
 </div>
 <div class="line">

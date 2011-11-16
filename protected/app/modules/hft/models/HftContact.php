@@ -62,6 +62,7 @@ class HftContact extends Contact
 				array(
 					'name' => 'account_number',
 					'header' => 'Acc. #',
+				'htmlOptions'=>array('width'=>'60px'),
 				),
 			),
 			$columns, 

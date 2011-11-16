@@ -89,6 +89,14 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 						<div class="unit size1of3"><?= $form->labelEx($c,'email') ?></div>
 						<div class="lastUnit inputContainer">
 							<div class="input"><?php echo $form->textField($c, 'email', array('size' => 30)); ?></div>
+							<?php echo $form->error($c,'email'); ?>
+						</div>
+					</div>
+					<div class="line field">
+						<div class="unit size1of3"><?= $form->labelEx($c,'email_secondary') ?></div>
+						<div class="lastUnit inputContainer">
+							<div class="input"><?php echo $form->textField($c, 'email_secondary', array('size' => 30)); ?></div>
+							<?php echo $form->error($c,'email_secondary'); ?>
 						</div>
 					</div>
 					<div class="line field">
@@ -117,6 +125,7 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 					</div>
 				</div>
 			</div>
+			<?php Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit($event); ?>
 			<div class="line field">
 				<div class="unit size1of6"><?= $form->labelEx($c,'comment') ?></div>
 				<div class="lastUnit inputContainer">
