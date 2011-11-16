@@ -2,7 +2,7 @@
 <div class="page-header">
 	<h2>All Contacts</h2>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Create a Contact', '#', array('class'=>'btn primary', 'onclick' => $model->createContactDialog())); ?>
+		<?php echo NHtml::link('Add a Contact', '#', array('class'=>'btn primary', 'onclick' => $model->createContactDialog())); ?>
 <!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
 	</div>
 </div>
