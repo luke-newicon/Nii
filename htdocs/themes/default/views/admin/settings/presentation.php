@@ -30,11 +30,23 @@ $form = $this->beginWidget('NActiveForm', array(
 		<label>Show application name in menu bar.</label>
 		<?php echo $form->error($model, 'menuAppname'); ?>
 	</div>
-	<div class="field">
+	<div class="field line">
 		<?php echo $form->labelEx($model, 'topbarColor'); ?>
-		<div class="inputContainer">
-			<div class="input large">
-				<?php echo $form->textField($model, 'topbarColor'); ?>
+		<div>
+			<div>
+				<?php
+				$form->widget('nii.widgets.forms.JColorPicker', array(
+                    'name'=>get_class($model).'[topbarColor]',
+                    'mode'=>'selector',
+					'selector'=>'topbarColorSelector',
+                    'fade' => true,
+                    'slide' => false,
+                    'curtain' => false,
+					'value' => $model->topbarColor,
+					'model' => $model,
+                   )
+				); ?>
+				<?php // echo $form->textField($model, 'topbarColor'); ?>
 			</div>
 			<?php echo $form->error($model, 'topbarColor'); ?>
 		</div>
