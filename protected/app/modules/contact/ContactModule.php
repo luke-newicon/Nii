@@ -9,6 +9,8 @@ class ContactModule extends NWebModule {
 	
 	public $contactModel = 'Contact';
 	
+	public $adminActions = array();
+	
 	public $views = array();
 
 	public function init() {
@@ -18,8 +20,8 @@ class ContactModule extends NWebModule {
 	public function setup() {
 		Yii::app()->menus->addItem('main', $this->menu_label, array('/contact/admin/index'));
 		Yii::app()->menus->addItem('main', 'All ' . $this->menu_label, array('/contact/admin/index'), $this->menu_label);
-		Yii::app()->menus->addItem('main', 'Add a Person', array('/contact/admin/create/type/Person'), $this->menu_label);
-		Yii::app()->menus->addItem('main', 'Add an Organisation', array('/contact/admin/create/type/Organisation'), $this->menu_label);
+		//Yii::app()->menus->addItem('main', 'Add a Person', array('/contact/admin/create/type/Person'), $this->menu_label);
+		//Yii::app()->menus->addItem('main', 'Add an Organisation', array('/contact/admin/create/type/Organisation'), $this->menu_label);
 	}
 
 	public function settings() {

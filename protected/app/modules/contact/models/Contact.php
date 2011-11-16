@@ -41,7 +41,7 @@ class Contact extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'contact';
+		return '{{contact}}';
 	}
 
 	/**
@@ -230,7 +230,7 @@ class Contact extends NActiveRecord
 			),
 			array(
 				'name'=>'title',
-				'filter'=> NHtml::enumItem($this, 'title'),
+				'filter'=> NHtml::enumItem(Contact::model(), 'title'),
 				'htmlOptions'=>array('width'=>'50px'),
 			),
 			array(

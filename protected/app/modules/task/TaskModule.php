@@ -24,13 +24,25 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Tasks', '#', null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
+		Yii::app()->menus->addItem('main', 'Projects', array('/task/admin/projects'), 'Tasks', array(
+			'visible' => Yii::app()->user->checkAccess('task/admin/projects'),
+		));
 		Yii::app()->menus->addItem('main', 'Tasks', array('/task/admin/tasks'), 'Tasks', array(
-			'notice' => TaskTask::model()->count(),
+//			'notice' => TaskTask::model()->count(),
 			'visible' => Yii::app()->user->checkAccess('task/admin/tasks'),
 		));
-//		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
-//			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
-//		));
+		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
+			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
+		));
+		Yii::app()->menus->addItem('main', 'Customers', array('/contact/admin/customers'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/admin/suppliers'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Staff', array('/contact/admin/staff'), Yii::app()->getModule('contact')->menu_label);
+		
+		Yii::app()->getModule('contact')->adminActions = array(
+			'customers' => 'task.components.actions.customers',
+			'suppliers' => 'task.components.actions.suppliers',
+			'staff' => 'task.components.actions.staff',
+		);
 	}
 	
 	public function install(){
@@ -46,6 +58,11 @@ class TaskModule extends NWebModule
 			$task->owner = 'Steve O\'Brien';
 			$task->save();
 		}
+		TaskProject::install();
+		TaskAction::install();
+		ContactCustomer::install();
+		ContactSupplier::install();
+		ContactStaff::install();
 		$this->installPermissions();
 	}
 	

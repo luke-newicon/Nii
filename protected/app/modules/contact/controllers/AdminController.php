@@ -1,6 +1,10 @@
 <?php
 
 class AdminController extends AController {
+	
+	public function actions(){
+		return Yii::app()->getModule('contact')->adminActions;
+	}
 
 	/**
 	 * This is the default 'index' action that is invoked
@@ -10,10 +14,7 @@ class AdminController extends AController {
 		
 		//$this->actionsMenu = $this->contactGridActions();
 		
-		$this->pageTitle = Yii::app()->name . ' - All Contacts';
-		
 		$contactModel = Yii::app()->getModule('contact')->contactModel;
-	
 		$model = new $contactModel('search');
 		
 		$model->unsetAttributes();
@@ -21,7 +22,7 @@ class AdminController extends AController {
 		if(isset($_GET[$contactModel]))
 			$model->attributes = $_GET[$contactModel];
 
-		$this->render('grids/allcontacts',array(
+		$this->render('grids/allcontacts', array(
 			'dataProvider'=>$model->search(),
 			'model'=>$model,
 		));
