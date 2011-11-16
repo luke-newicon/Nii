@@ -548,32 +548,32 @@ class Contact extends NActiveRecord
 			'keys' => array());
 	}
 	
-	function behaviors() {
-		return array(
-			'eavAttr' => array(
-				'class' => 'nii.components.behaviors.EEavBehavior',
-				// Table that stores attributes (required)
-				'tableName' => 'contact_eav',
-				// model id column
-				// Default is 'entity'
-				'entityField' => 'entity',
-				// attribute name column
-				// Default is 'attribute'
-				'attributeField' => 'attribute',
-				// attribute value column
-				// Default is 'value'
-				'valueField' => 'value',
-				// Model FK name
-				// By default taken from primaryKey
-				'modelTableFk' => 'primaryKey',
-				// Array of allowed attributes
-				// All attributes are allowed if not specified
-				// Empty by default
-				'safeAttributes' => array(),
-				// Attribute prefix. Useful when storing attributes for multiple models in a single table
-				// Empty by default
-				'attributesPrefix' => '',
-			)
-		);
-	}
+//	function behaviors() {
+//		return array(
+//			'eavAttr' => array(
+//				'class' => 'nii.components.behaviors.EEavBehavior',
+//				// Table that stores attributes (required)
+//				'tableName' => 'contact_eav',
+//				// model id column
+//				// Default is 'entity'
+//				'entityField' => 'entity',
+//				// attribute name column
+//				// Default is 'attribute'
+//				'attributeField' => 'attribute',
+//				// attribute value column
+//				// Default is 'value'
+//				'valueField' => 'value',
+//				// Model FK name
+//				// By default taken from primaryKey
+//				'modelTableFk' => 'primaryKey',
+//				// Array of allowed attributes
+//				// All attributes are allowed if not specified
+//				// Empty by default
+//				'safeAttributes' => array(),
+//				// Attribute prefix. Useful when storing attributes for multiple models in a single table
+//				// Empty by default
+//				'attributesPrefix' => '',
+//			)
+//		);
+//	}
 }
