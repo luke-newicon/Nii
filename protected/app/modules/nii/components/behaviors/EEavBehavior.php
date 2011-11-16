@@ -207,8 +207,6 @@ class EEavBehavior extends CActiveRecordBehavior {
      */
     public function attach($owner) {
 		
-		echo 'attach';
-		FB::log('attach behaviour');
         // Check required property tableName.
         if (!is_string($this->tableName) || empty($this->tableName)) {
             throw new CException(self::t('yii', 'Property "{class}.{property}" is not defined.',
@@ -238,7 +236,7 @@ class EEavBehavior extends CActiveRecordBehavior {
      * @return void
      */
     public function afterSave($event) {
-        // TODO afterSave –Ω–µ —Å—Ä–∞–±–∞—Ç—ã–≤–∞–µ—Ç –µ—Å–ª–∏ –º–æ–¥–µ–ª—å –Ω–µ –±—ã–ª–∞ –∏–∑–º–µ–Ω–µ–Ω–∞
+        // TODO afterSave
 
         // Save changed attributes.
         if ($this->changedAttributes->count > 0) {
