@@ -38,7 +38,7 @@ class AdminController extends AController {
 		
 		$contactModel = Yii::app()->getModule('contact')->contactModel;
 				
-		$model = $contactModel::model()->findByPk($id);
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 		
 		$this->checkModelExists($model, "<strong>No contact exists for ID: ".$id."</strong>");
 		
@@ -138,7 +138,8 @@ class AdminController extends AController {
 		
 		$contactModel = Yii::app()->getModule('contact')->contactModel;
 		
-		$model = $contactModel::model()->findByPk($id);			
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
+		
 		$model->scenario = $model->contact_type;
 		
 		$this->performAjaxValidation($model);
