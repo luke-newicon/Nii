@@ -570,7 +570,7 @@ class Contact extends NActiveRecord
 				'dob' => "date",
 				'gender' => "enum('M','F')",
 				'email' => "varchar(75)",
-				'email_secondary' => "warchar(75)",
+				'email_secondary' => "varchar(75)",
 				'addr1' => "varchar(100)",
 				'addr2' => "varchar(100)",
 				'addr3' => "varchar(100)",
