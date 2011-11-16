@@ -255,6 +255,7 @@ class NGridView extends CGridView
 		}
 		ksort($ordered);
 		
+		
 		return $ordered;
 	}	
 	
