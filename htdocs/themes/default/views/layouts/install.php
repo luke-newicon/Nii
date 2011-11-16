@@ -6,6 +6,7 @@
 		<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
+		<?php Yii::app()->bootstrap->registerBootstrap(); ?>
 	</head>
 	<body class="install">
 		<div class="page">

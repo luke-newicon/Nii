@@ -133,7 +133,6 @@ class Nii extends CWebApplication
 		
 		$this->initialiseModules();
 		
-		FB::log($this->getModules(), 'modules');
 		// setup each module core 
 		foreach($this->getModules() as $name => $config){
 			if(!$this->isNiiModule($name)) continue;
@@ -339,12 +338,10 @@ class Nii extends CWebApplication
 	public function installAll(){
 		NAppRecord::$db = null;
 		$this->install();
-		FB::log('finished main install');
 		// need to loop through sub databases if on a multi site install
 		if($this->domain){
 			$doms = AppDomain::model()->findAll();
 			foreach($doms as $d){
-				FB::log('install '.$this->domainDbPrefix.$d->domain);
 				// get the specific database for this domain
 				$db = $this->domainDbPrefix.$d->domain;
 				NAppRecord::$db = $this->_getDb($db);

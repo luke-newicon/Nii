@@ -55,6 +55,11 @@ class NGridView extends CGridView
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);
 		parent::init();
+		
+		// override default javascript
+//		if($this->baseScriptUrl===null)
+//			$this->baseScriptUrl=Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('nii.widgets.assets')).'/gridview';
+//		
 	}
 	
 	
@@ -228,7 +233,7 @@ class NGridView extends CGridView
 	 */
 	
 	/**
-	 *	Almighty function to return the columns to the grid view, including their visible status, as defined in NData
+	 * Almighty function to return the columns to the grid view, including their visible status, as defined in NData
 	 * @param model $model
 	 * @return type 
 	 */
@@ -236,10 +241,21 @@ class NGridView extends CGridView
 		$model = $this->filter;
 		$visibleColumns = NData::visibleColumns($this->filter, $this->id);
 		$columns = $model->columns();
+		
 		foreach($columns as $key=>$col) {
 			$columns[$key]['visible'] = (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null);
 		}
-		return $columns;
+		
+		// reorder the columns to follow the same order returned by visible columns
+		$columnOrder = array_flip(array_keys($visibleColumns));
+		$ordered = array();
+		foreach($columns as $key=>$col){
+			$orderPos = $columnOrder[$col['name']];
+			$ordered[$orderPos] = $col;
+		}
+		ksort($ordered);
+		
+		return $ordered;
 	}	
 	
 	/**
@@ -253,7 +269,9 @@ class NGridView extends CGridView
 		$url = CHtml::normalizeUrl(array('/nii/grid/gridSettingsDialog/','model'=>$params['model'], 'gridId'=>$params['gridId']));
 		return '$("#'.$dialog_id.'").dialog({
 			open: function(event, ui){
-				$("#'.$dialog_id.'").load("'.$url.'");
+				$("#'.$dialog_id.'").load("'.$url.'", function(){
+					$("#gridSettingsForm").sortable({axis:"y"});
+				});
 			},
 			minHeight: 100, position: ["center", 100],
 			width: 400,
@@ -275,7 +293,7 @@ class NGridView extends CGridView
 								if (response.success) {
 									$("#gridSettingsDialog").dialog("close");
 									$.fn.yiiGridView.update("'.$params['gridId'].'");
-									showMessage(response.success);
+									nii.showMessage(response.success);
 								}
 							},
 							error: function() {

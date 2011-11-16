@@ -36,6 +36,8 @@ class GridController extends AController {
 	public function actionUpdateGridSettings($key) {
 		
 		$values = $_POST;
+		FB::log($values, '$values');
+		
 		Yii::app()->user->settings->set('grid_columns_'.$key,$values);
 		
 		echo CJSON::encode(array('success'=>'Columns updated successfully'));

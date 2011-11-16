@@ -130,7 +130,8 @@ class NData
 	}
 	
 	/**
-	 *	Defines visible columns for grid views
+	 * Defines visible columns for grid views
+	 * TODO: maybe move into a grid related component?
 	 * @param model $model
 	 * @param string $gridId
 	 * @return array 
@@ -151,7 +152,8 @@ class NData
 		$model = new $model;
 		$allcolumns = $model->columns(array());
 		$columns = array();
-		
+				
+	
 		foreach ($allcolumns as $col) {
 			if ($col['name']) {
 				if (array_key_exists($col['name'], $cols)) {
@@ -161,13 +163,21 @@ class NData
 				}
 			}
 		}
-
-		return $columns;
 		
+		// reorder the columns
+		$ordered = array();
+		foreach($cols as $key => $v){
+			$ordered[$key] = $columns[$key];
+		}
+		
+		
+		return array_merge($ordered, $columns);
 	}
 	
+	
 	/**
-	 *	Defines columns to be used for exporting grid data
+	 * Defines columns to be used for exporting grid data
+	 * TODO: maybe move into a grid related component?
 	 * @param model $model
 	 * @param string $gridId
 	 * @return array 
@@ -203,7 +213,8 @@ class NData
 	}
 	
 	/**
-	 *	Not sure if this is still being used... May be able to delete, but check for usage first!
+	 * Not sure if this is still being used... May be able to delete, but check for usage first!
+	 * TODO: maybe move into a grid related component?
 	 */
 	public static function exportColumnsSql($model, $controller=null, $action=null) {
 		$allCols = self::exportColumns($model, $controller, $action);

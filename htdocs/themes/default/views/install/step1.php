@@ -1,121 +1,103 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Installation Step 1'; ?>
 <?php $form = $this->beginWidget('NActiveForm', array(
 		'id' => 'installForm',
+		'htmlOptions'=>array('class'=>'float')
 	));
 if ($model->installDb == true) {
 ?>
 	<p class="alert-message info block-message">Please fill in the details below to install this application</p>
-	<h3>Site Details</h3>
+	<fieldset>
+		<legend>Site Details</legend>
 	<div class="field">
-		<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'sitename'); ?></div>
-		<div class="lastUnit">
-			<div class="input">
-				<?php echo $form->textField($model, 'sitename'); ?>
-			</div>
-			<?php echo $form->error($model, 'sitename'); ?>
+		<?php echo $form->labelEx($model, 'sitename'); ?>
+		<div class="input">
+			<?php echo $form->textField($model, 'sitename'); ?>
 		</div>
+		<?php echo $form->error($model, 'sitename'); ?>
 	</div>
 	<div class="field">
-		<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'timezone'); ?></div>
-		<div class="lastUnit">
-			<div class="input">
-				<?php if (!$model->timezone) $model->timezone = 'Europe/London';
-				echo $form->dropDownList($model, 'timezone', Controller::getTimeZones()); ?>
-			</div>
-			<?php echo $form->error($model, 'timezone'); ?>
+		<?php echo $form->labelEx($model, 'timezone'); ?>
+		<div class="input">
+			<?php if (!$model->timezone) $model->timezone = 'Europe/London';
+			echo $form->dropDownList($model, 'timezone', Controller::getTimeZones()); ?>
 		</div>
+		<?php echo $form->error($model, 'timezone'); ?>
 	</div>
-	<h3>Database Details</h3>
-	<div class="field">
+	<fieldset>
+		<legend>Database Details</legend>
 		<?php echo $form->error($model, 'db', array('class'=>'errorMessage alert-message block-message error')); // shows general database errors if in debug mode ?>
-	</div>
 	<div class="field <?php echo ($model->hasErrors('db_host'))?'error':''; ?>">
-		<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'db_host'); ?></div>
-		<div class="lastUnit">
-			<div class="input w300">
-				<?php echo $form->textField($model, 'db_host'); ?>
-			</div>
-			<small>e.g. localhost <em>-or-</em> mydomain.com</small>
-			<?php echo $form->error($model, 'db_host'); ?>
+		<?php echo $form->labelEx($model, 'db_host'); ?>
+		<div class="input w300">
+			<?php echo $form->textField($model, 'db_host'); ?>
 		</div>
+		<small>e.g. localhost <em>-or-</em> mydomain.com</small>
+		<?php echo $form->error($model, 'db_host'); ?>
 	</div>
 	<div class="field <?php echo ($model->hasErrors('db_name'))?'error':''; ?>">
-		<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'db_name'); ?></div>
-		<div class="lastUnit">
-			<div class="input w300">
-				<?php echo $form->textField($model, 'db_name'); ?>
-			</div>
-			<?php echo $form->error($model, 'db_name'); ?>
+		<?php echo $form->labelEx($model, 'db_name'); ?>
+		<div class="input w300">
+			<?php echo $form->textField($model, 'db_name'); ?>
 		</div>
+		<?php echo $form->error($model, 'db_name'); ?>
 	</div>
 	<div class="field <?php echo ($model->hasErrors('db_password'))?'error':''; ?> <?php echo ($model->hasErrors('db_username'))?'error':''; ?>">
-		<div class="line field ">
-			<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'db_username'); ?></div>
-			<div class="lastUnit">
-				<div class="input w300">
-					<?php echo $form->textField($model, 'db_username'); ?>
-				</div>
-				<?php echo $form->error($model, 'db_username'); ?>
-			</div>
+		<?php echo $form->labelEx($model, 'db_username'); ?>
+		<div class="input w300">
+			<?php echo $form->textField($model, 'db_username'); ?>
 		</div>
-		<div class="line field ">
-			<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'db_password'); ?></div>
-			<div class="lastUnit">
-				<div class="input w300">
-					<?php echo $form->passwordField($model, 'db_password'); ?>
-				</div>
-				<?php echo $form->error($model, 'db_password'); ?>
-				<small>Leave blank if using root with no password (not recommended)</small>
-			</div>
+		<?php echo $form->error($model, 'db_username'); ?>
+	</div>
+	<div class="field ">
+		<?php echo $form->labelEx($model, 'db_password'); ?>
+		<div class="input w300">
+			<?php echo $form->passwordField($model, 'db_password'); ?>
 		</div>
+		<?php echo $form->error($model, 'db_password'); ?>
+		<span class="hint">Leave blank if using root with no password (not recommended)</span>
 	</div>
 	<div class="line field">
-		<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'db_tablePrefix'); ?></div>
-		<div class="lastUnit">
-			<div class="input w300">
-				<?php echo $form->textField($model, 'db_tablePrefix'); ?>
-			</div>
-			<?php echo $form->error($model, 'db_tablePrefix'); ?>
-			<small>Leave blank for no prefix</small>
+		<?php echo $form->labelEx($model, 'db_tablePrefix'); ?>
+		<div class="input w300">
+			<?php echo $form->textField($model, 'db_tablePrefix'); ?>
 		</div>
+		<?php echo $form->error($model, 'db_tablePrefix'); ?>
+		<span class="hint">Leave blank for no prefix</span>
 	</div>
 <?php } else { ?>
 	<p class="notice-msg">The database details have already been installed for this application.<br />To add a new admin user, enter the details below:</p>
 <?php } ?>
-<h3>Admin User Details</h3>
-<div class="line field <?php echo ($model->hasErrors('username'))?'error':''; ?>">
-	<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'username'); ?></div>
-	<div class="lastUnit">
+	</fieldset>
+	<fieldset>
+		<legend>Admin User Details</legend>
+	<div class="field <?php echo ($model->hasErrors('username'))?'error':''; ?>">
+		<?php echo $form->labelEx($model, 'username'); ?>
 		<div class="input w300">
 			<?php echo $form->textField($model, 'username'); ?>
 		</div>
 		<?php echo $form->error($model, 'username'); ?>
 	</div>
-</div>
-<div class="line field <?php echo ($model->hasErrors('password'))?'error':''; ?>">
-	<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'password'); ?></div>
-	<div class="lastUnit">
+	<div class="field <?php echo ($model->hasErrors('password'))?'error':''; ?>">
+		<?php echo $form->labelEx($model, 'password'); ?>
 		<div class="input w300">
 			<?php echo $form->passwordField($model, 'password'); ?>
 		</div>
 		<?php echo $form->error($model, 'password'); ?>
 	</div>
-</div>
-<div class="line field <?php echo ($model->hasErrors('email'))?'error':''; ?>">
-	<div class="unit size1of5 inputLabel"><?php echo $form->labelEx($model, 'email'); ?></div>
-	<div class="lastUnit">
+	<div class="field <?php echo ($model->hasErrors('email'))?'error':''; ?>">
+		<?php echo $form->labelEx($model, 'email'); ?>
 		<div class="input w300">
 			<?php echo $form->textField($model, 'email'); ?>
 		</div>
 		<?php echo $form->error($model, 'email'); ?>
 	</div>
-</div>
-<div class="line ptm">
-	<div class="unit size1of5">&nbsp;</div>
-	<div class="lastUnit">
-		<?php echo NHtml::btn('Install','icon fam-database-go','installSubmit primary'); ?>
+	<div class="line ptm">
+		<div class="unit size1of5">&nbsp;</div>
+		<div class="lastUnit">
+			<?php echo NHtml::btn('Install','icon fam-database-go','installSubmit primary'); ?>
+		</div>
 	</div>
-</div>
+	</fieldset>
 <?php 
 echo $form->hiddenField($model,'installDb');
 $this->endWidget(); ?>

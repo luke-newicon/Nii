@@ -55,6 +55,7 @@ class InstallController extends Controller {
                     
 					if (is_writable(dirname($filename))) {
 						file_put_contents($filename, $data);
+						$this->redirect(array('install/step2'));
 					} else {
 						// we can not create the configuration file so lets show the 
 						// user a nice message with instruction to create her own.
@@ -65,14 +66,6 @@ class InstallController extends Controller {
 			}
 		}
 				
-		if (Yii::app()->request->getPost('InstallForm')) {
-			$localConfig = Yii::getPathOfAlias('app.config.local') . '.php';
-			if (file_exists($localConfig)) {
-				$local = require $localConfig;
-				$model->getLocalConfig($local);
-			}
-		}
-
 		$this->render('step1', array(
 			'model' => $model,
 		));
