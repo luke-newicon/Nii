@@ -21,10 +21,10 @@ class HftModule extends NWebModule
 		Yii::app()->getModule('contact')->contactModel = 'HftContact';
 		
 		Yii::app()->getModule('contact')->onRenderContactAfterHeader = array($this, 'handleOnRenderAfterHeader');
-		Yii::app()->getModule('contact')->onRenderContactAfterComment = array($this, 'handleOnRenderAfterComment');
+		Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails= array($this, 'handleOnRenderAfterTypeDetails');
 		
 		Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit = array($this, 'handleOnRenderBeforeTypeDetailsEdit');
-		Yii::app()->getModule('contact')->onRenderContactAfterCommentEdit = array($this, 'handleOnRenderAfterCommentEdit');
+		Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit = array($this, 'handleOnRenderContactAfterAddressEdit');
 		/**
 		 *	Change configuration of contacts module
 		 * Add fields/columns to contacts module dynamically 
@@ -36,16 +36,16 @@ class HftModule extends NWebModule
 		$event->sender->renderPartial('hft.views.contact.view.top', $event->params);
 	}
 	
-	public function handleOnRenderAfterComment($event){
-		$event->sender->renderPartial('hft.views.contact.view.after_comment', $event->params);
+	public function handleOnRenderAfterTypeDetails($event){
+		$event->sender->renderPartial('hft.views.contact.view.after_type_details', $event->params);
 	}
 	
 	public function handleOnRenderBeforeTypeDetailsEdit($event){
 		$event->sender->renderPartial('hft.views.contact.edit.before_type_details', $event->params);
 	}
 	
-	public function handleOnRenderAfterCommentEdit($event){
-		$event->sender->renderPartial('hft.views.contact.edit.after_comment', $event->params);
+	public function handleOnRenderContactAfterAddressEdit($event){
+		$event->sender->renderPartial('hft.views.contact.edit.after_address', $event->params);
 	}	
 	
 //	public function settings() {

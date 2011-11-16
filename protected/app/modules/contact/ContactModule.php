@@ -117,6 +117,10 @@ class ContactModule extends NWebModule {
 		$this->raiseEvent('onRenderContactAfterTypeDetailsEdit', $event);
 	}
 	
+	public function onRenderContactAfterAddressEdit($event){
+		$this->raiseEvent('onRenderContactAfterAddressEdit', $event);
+	}
+	
 	public function onRenderContactAfterCommentEdit($event){
 		$this->raiseEvent('onRenderContactAfterCommentEdit', $event);
 	}

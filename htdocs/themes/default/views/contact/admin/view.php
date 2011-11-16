@@ -42,15 +42,15 @@
 			<div class="lastUnit"><?php echo $model->getEmailLink('work'); ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel"><?=$this->t('Tel Home')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Tel - Home')?></div>
 			<div class="lastUnit"><?php echo $model->tel_primary; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel"><?=$this->t('Tel Work')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Tel - Work')?></div>
 			<div class="lastUnit"><?php echo $model->tel_secondary; ?></div>
 		</div>
 		<div class="detailRow">
-			<div class="unit size1of3 detailLabel"><?=$this->t('Mobile')?></div>
+			<div class="unit size1of3 detailLabel"><?=$this->t('Tel - Mobile')?></div>
 			<div class="lastUnit"><?php echo $model->mobile; ?></div>
 		</div>
 		<div class="detailRow">
@@ -63,7 +63,7 @@
 	<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails($event); ?>
 	<div class="detailRow">
 		<div class="unit size1of6 detailLabel"><?=$this->t('Comment')?></div>
-		<div class="lastUnit"><?php echo $model->comment; ?></div>
+		<div class="lastUnit"><?php echo nl2br($model->comment); ?></div>
 	</div>
 	<?php Yii::app()->getModule('contact')->onRenderContactAfterComment($event); ?>
 </div>

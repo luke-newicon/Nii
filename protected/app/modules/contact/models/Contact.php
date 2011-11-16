@@ -56,14 +56,14 @@ class Contact extends NActiveRecord
 			array('name, givennames, lastname', 'length', 'max'=>255),
 			array('title', 'length', 'max'=>9),
 			array('gender', 'length', 'max'=>1),
-			array('email', 'length', 'max'=>75),
+			array('email, email_secondary', 'length', 'max'=>75),
 			array('addr1, addr2, addr3', 'length', 'max'=>100),
 			array('city, county, country, tel_primary, tel_secondary, mobile, fax', 'length', 'max'=>50),
 			array('postcode', 'length', 'max'=>20),
-			array('dob, title, company_name, contact_name, photoID, comment, city', 'safe'),
+			array('dob, title, suffix, company_name, contact_name, photoID, comment, city', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, title, givennames, lastname, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, tel_primary, tel_secondary, mobile, fax, type, comment', 'safe', 'on'=>'search'),
+			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment', 'safe', 'on'=>'search'),
 			array('givennames, lastname','required','on'=>'Person'),
 			array('company_name, contact_name','required','on'=>'Organisation'),
 		);
@@ -102,9 +102,11 @@ class Contact extends NActiveRecord
 			'givennames' => 'Firstname',
 			'lastname' => 'Surname',
 			'salutation' => 'Salutation/Nickname',
+			'suffix' => 'Suffix',
 			'dob' => 'DOB',
 			'gender' => 'Sex',
-			'email' => 'Email',
+			'email' => 'Email - Main',
+			'email_secondary' => 'Email - Other',
 			'addr1' => 'Address',
 			'addr2' => 'Address Line 2',
 			'addr3' => 'Address Line 3',
@@ -112,9 +114,9 @@ class Contact extends NActiveRecord
 			'county' => 'County',
 			'country' => 'Country',
 			'postcode' => 'Postcode',
-			'tel_primary' => 'Tel - Primary',
-			'tel_secondary' => 'Tel - Secondary',
-			'mobile' => 'Mobile',
+			'tel_primary' => 'Tel - Home',
+			'tel_secondary' => 'Tel - Work',
+			'mobile' => 'Tel - Mobile',
 			'fax' => 'Fax',
 			'website' => 'Website URL',
 			'company_name' => 'Company Name',
@@ -143,10 +145,11 @@ class Contact extends NActiveRecord
 		$criteria->compare('title',$this->title,true);
 		$criteria->compare('givennames',$this->givennames,true);
 		$criteria->compare('lastname',$this->lastname,true);
-		$criteria->compare('salutation',$this->salutation,true);
+		$criteria->compare('suffix',$this->suffix,true);
 		$criteria->compare('dob',$this->dob,true);
 		$criteria->compare('gender',$this->gender,true);
-		$criteria->compare('email',$this->email,true);
+		$criteria->compare('CONCAT(email," ",email_secondary)',$this->email,true);
+		$criteria->compare('email_secondary',$this->email_secondary,true);
 		$criteria->compare('addr1',$this->addr1,true);
 		$criteria->compare('addr2',$this->addr2,true);
 		$criteria->compare('addr3',$this->addr3,true);
@@ -154,6 +157,7 @@ class Contact extends NActiveRecord
 		$criteria->compare('county',$this->county,true);
 		$criteria->compare('country',$this->country,true);
 		$criteria->compare('postcode',$this->postcode,true);
+		$criteria->compare('CONCAT(tel_primary, " " ,tel_secondary)',$this->telephone_numbers,true);
 		$criteria->compare('tel_primary',$this->tel_primary,true);
 		$criteria->compare('tel_secondary',$this->tel_secondary,true);
 		$criteria->compare('mobile',$this->mobile,true);
@@ -237,13 +241,14 @@ class Contact extends NActiveRecord
 			),
 			array(
 				'name'=>'addr1',
+				'htmlOptions'=>array('width'=>'150px'),
 			),
-//			array(
-//				'name'=>'addr2',
-//			),
-//			array(
-//				'name'=>'addr3',
-//			),
+			array(
+				'name'=>'addr2',
+			),
+			array(
+				'name'=>'addr3',
+			),
 			array(
 				'name'=>'city',
 				'htmlOptions'=>array('width'=>'120px'),
@@ -256,35 +261,45 @@ class Contact extends NActiveRecord
 				'type'=>'raw',
 				'value' => '$data->countryName',
 				'filter' => Contact::model()->countriesArray,
+				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
 				'name'=>'postcode',
-				'htmlOptions'=>array('width'=>'70px'),
+				'htmlOptions'=>array('width'=>'80px'),
 			),
 			array(
 				'name'=>'email',
+				'header' => 'Email(s)',
 				'type'=>'raw',
-				'value'=>'$data->getEmailLink()',
+				'value'=>'$data->getEmailLinks()',
 				'htmlOptions'=>array('width'=>'150px'),
 			),
 			array(
-				'name' => 'tel_primary',
-				'htmlOptions'=>array('width'=>'100px','style'=>'text-align:center'),
+				'name' => 'telephone_numbers',
+				'type'=>'raw',
+				'value'=>'$data->getTelephone_numbers()',
+				'htmlOptions'=>array('width'=>'120px'),
 			),
-//			array(
-//				'name' => 'tel_secondary',
-//				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
-//			),
-//			array(
-//				'name' => 'mobile',
-//				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
-//			),
+			array(
+				'name' => 'tel_primary',
+				'htmlOptions'=>array('width'=>'120px'),
+			),
+			array(
+				'name' => 'tel_secondary',
+				'htmlOptions'=>array('width'=>'120px'),
+			),
+			array(
+				'name' => 'mobile',
+				'htmlOptions'=>array('width'=>'120px'),
+			),
 			array(
 				'name' => 'fax',
-				'htmlOptions'=>array('width'=>'80px','style'=>'text-align:center'),
+				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
 				'name' => 'website',
+				'type' => 'raw',
+				'value' => '$data->getWebsiteLink()',
 				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
 			),
 		);
@@ -393,8 +408,24 @@ class Contact extends NActiveRecord
 
 	}
 		
-	public function getEmailLink() {
-		return NHtml::emailLink($this->email);
+	public function getEmailLink($type='home') {
+		
+		if ($type=='work')
+			return NHtml::emailLink($this->email_secondary);
+		elseif ($type=='home')
+			return NHtml::emailLink($this->email);
+	}
+	
+	/**
+	 *	Plural version of getEmailLink, returns all email addresses against a contact, comma separated 
+	 */
+	public function getEmailLinks() {
+		return NHtml::emailLink($this->email) . ($this->email_secondary ? ', ' . NHtml::emailLink($this->email_secondary) : '');
+	}
+	
+	public function getWebsiteLink() {
+		$url = $this->website;
+		return NHtml::link(str_replace('http://', '', $this->website), 'http://'.str_replace('http://', '', $this->website), array('target'=>'externalLink'));
 	}
 	
 	public function getFullAddress() {
@@ -450,6 +481,18 @@ class Contact extends NActiveRecord
 		return $countries;
 	}	
 	
+	public function getTelephone_numbers() {
+		return 
+			($this->tel_primary ? '(h) '.$this->tel_primary : '') . 
+			($this->tel_primary && $this->tel_secondary ? '<br />' : '') . 
+			($this->tel_secondary ? '(w) '.$this->tel_secondary : '');
+	}
+	
+	public function setTelephone_numbers($value) {
+		if ($value)
+			$this->telephone_numbers = $value;
+	}
+	
 	public function createContactDialog() {
 		$dialog_id = 'createContactDialog';
 		$url = CHtml::normalizeUrl(array('admin/create/','dialog'=>true));
@@ -485,7 +528,7 @@ class Contact extends NActiveRecord
 	public function getDisplayName() {
 		
 		if ($this->contact_type == 'Person')
-			return $this->title . ' ' . ($this->givennames ? $this->givennames . '  ':'') . $this->lastname; 
+			return $this->title . ' ' . ($this->givennames ? $this->givennames . '  ':'') . $this->lastname . ($this->suffix ? ' '.$this->suffix : ''); 
 		else 
 			return $this->name;
 		
@@ -514,7 +557,7 @@ class Contact extends NActiveRecord
 	public $photoID;
 	
 	public $selectedTab;
-
+	
 	public function schema() {
 		return array(
 			'columns' => array(
@@ -523,9 +566,11 @@ class Contact extends NActiveRecord
 				'lastname' => "varchar(255)",
 				'salutation' => "varchar(255)",
 				'givennames' => "varchar(255)",
+				'suffix' => "varchar(100)",
 				'dob' => "date",
 				'gender' => "enum('M','F')",
 				'email' => "varchar(75)",
+				'email_secondary' => "warchar(75)",
 				'addr1' => "varchar(100)",
 				'addr2' => "varchar(100)",
 				'addr3' => "varchar(100)",
