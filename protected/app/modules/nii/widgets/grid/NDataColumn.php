@@ -59,9 +59,11 @@ class NDataColumn extends CDataColumn {
 		} else {
 			// THIS BREAKS THE PERMISSION GRID, NEEDS MORE WORK FOR HIGHLIGHTING SEARCH RESULTS
 			// SO: should be fixed now.
-			if($this->type == 'text')
-				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $this->grid->filter->{$this->name});
-			else			
+			if($this->type == 'text' && $this->grid->filter != null ) {
+				// get search result
+				$search = $this->grid->filter->{$this->name};
+				echo NHtml::hilightText($this->grid->getFormatter()->format($value,$this->type), $search);
+			} else			
 				echo $this->grid->getFormatter()->format($value,$this->type);
 			// TODO: implement hilighting for other column data types. e.g. raw
 		}

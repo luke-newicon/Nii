@@ -98,7 +98,11 @@ class NActiveRecord extends CActiveRecord
 	 * @param string $className 
 	 */
 	public static function install($className){
+		FB::log('install ');
 		$t = new $className(null);
+		
+		$t->attachBehaviors($t->behaviors());
+		
 		FB::log($className);
 		$db = $t->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
@@ -154,7 +158,7 @@ class NActiveRecord extends CActiveRecord
 				// if the key is not already in on the table add it.
 				if ($exists && !array_key_exists($f[1], $exists->foreignKeys))
 					$db->createCommand()->addForeignKey($f[0], $realTable, $f[1], $f[2], $f[3], $delete, $update);
-			}	
+			}
 		}
 		$t->onAfterInstall(new CEvent($t));
 	}
