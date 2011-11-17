@@ -31,26 +31,28 @@ class HftEvent extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-				'name' => 'Event Name',
-				'start_date' => 'Start Date',
-				'end_date' => 'End Date',
-				'organiser_type_id' => 'Organiser Type',
-				'organiser_name' => 'Organiser\'s Name',
-				'description' => 'Description of the Event',
+			'name' => 'Event Name',
+			'start_date' => 'Start Date',
+			'end_date' => 'End Date',
+			'organiser_type_id' => 'Organiser Type',
+			'organiser_name' => 'Organiser\'s Name',
+			'description' => 'Description of the Event',
+			'editLink' => 'Edit',
 		);
 	}
 	
 	public function relations() {
 		return array(
 //			'attendees'=>array(self::HAS_MANY, 'HftAttendees', 'event_id'),
+			'org_type'=>array(self::BELONGS_TO, 'HftEventOrganiserType', 'organiser_type_id'),
 		);
 	}
 	
 	public function rules() {
 		return array(
 			array('name, start_date', 'required'),
-			array('end_date, organiser_type, organiser_name, description', 'safe'),
-			array('name, start_date, end_date, organiser_type, organiser_name, description', 'safe','on'=>'search'),
+			array('end_date, organiser_type_id, organiser_name, description', 'safe'),
+			array('name, start_date, end_date, organiser_type_id, organiser_name, description', 'safe','on'=>'search'),
 		);
 	}
 	
@@ -84,6 +86,8 @@ class HftEvent extends NActiveRecord
 		return array(
 			array(
 				'name' => 'name',
+				'type' => 'raw',
+				'value' => '$data->nameLink',
 			),
 			array(
 				'name' => 'start_date',
@@ -108,7 +112,12 @@ class HftEvent extends NActiveRecord
 				'name' => 'organiser_name',
 			),
 			array(
-				'name' => 'statement_number',
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
 			),
 		);
 	}
@@ -128,9 +137,21 @@ class HftEvent extends NActiveRecord
 			'keys' => array());
 	}	
 	
+	public function getNameLink() {
+		return NHtml::link($this->name, array('view', 'id'=>$this->id));
+	}
+	
+	public function getEditLink() {
+		return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+	}
 		
 	public function getDisplayEvent() {
 		// @todo Link to HftEvent model
 		return null;
+	}
+	
+	public function getDisplayOrganiserType() {
+		if ($this->org_type)
+			return ($this->org_type->name);
 	}
 }

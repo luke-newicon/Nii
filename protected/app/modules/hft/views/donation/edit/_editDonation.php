@@ -69,9 +69,9 @@ $modelName = get_class($model);
 		<div class="lastUnit">
 			<div class="input w200">
 				<?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-					'name'=>'displayEvent',
-					'value'=>$model->displayEvent,
-					'source'=>$this->createUrl('/donation/autocomplete/eventList/type/Person/'),
+					'name'=>'eventName',
+					'value'=>$model->eventName,
+					'source'=>$this->createUrl('/hft/autocomplete/eventList/type/Person/'),
 					// additional javascript options for the autocomplete plugin
 					'options'=>array(
 							'showAnim'=>'fold',
@@ -110,19 +110,17 @@ $modelName = get_class($model);
 			<?php echo $form->error($model,'statement_date'); ?>
 		</div>
 	</div>
+	
+	<div class="actions">
+		<?php
+		$cancelUrl = ($model->id) ? array('donation/view','id'=>$model->id) : array('donation/index');
+		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
+		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
+		if ($model->id)
+			echo NHtml::trashButton($model, 'donation', 'donation/index', 'Successfully deleted donation');
+
+		?>		
+	</div>
 </div>
-
-<div class="actions">
-	<?php
-	$cancelUrl = ($model->id) ? array('donation/view','id'=>$model->id) : array('donation/index');
-	echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
-	echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-	if ($model->id)
-		echo NHtml::trashButton($model, 'donation', 'donation/index', 'Successfully deleted donation');
-
-	?>		
-</div>
-
-
 
 <?php $this->endWidget();

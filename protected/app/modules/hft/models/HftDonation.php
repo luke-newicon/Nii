@@ -48,6 +48,7 @@ class HftDonation extends NActiveRecord
 		return array(
 			'contact'=>array(self::BELONGS_TO, 'HftContact', 'contact_id'),
 			'type'=>array(self::BELONGS_TO, 'HftDonationType', 'type_id'),
+			'event'=>array(self::BELONGS_TO, 'HftEvent', 'event_id'),
 		);
 	}
 	
@@ -138,7 +139,7 @@ class HftDonation extends NActiveRecord
 			array(
 				'name' => 'event_id',
 				'type' => 'raw',
-				'value' => '$data->displayEvent',
+				'value' => '$data->eventLink',
 			),
 			array(
 				'name' => 'statement_number',
@@ -190,10 +191,10 @@ class HftDonation extends NActiveRecord
 			return '<span class="noData">No contact assigned</span>';
 	}
 	
-	public function getContactName() {
+	public function getContactName($echoNoData=false) {
 		if ($this->contact)
 			return $this->contact->displayName;
-		else
+		elseif ($echoNoData!=false)
 			return '<span class="noData">No contact assigned</span>';
 	}
 	
@@ -228,10 +229,23 @@ class HftDonation extends NActiveRecord
 		return null;
 	}
 	
-	public function getEventName() {
+	public function getEventName($echoNoData=false) {
 //		if ($this->event)
 //			return $this->event->name;
 //		else
+		if ($echoNoData!=false)
+			return '<span class="noData">No event assigned</span>';
+	}
+	
+	
+	public function getEventLink($tab=null) {
+		if ($this->event) {
+			$label = $this->event->name;
+			if ($tab)
+				return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id, 'selectedTab'=>$tab));
+			else
+				return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id));
+		} else
 			return '<span class="noData">No event assigned</span>';
 	}
 	

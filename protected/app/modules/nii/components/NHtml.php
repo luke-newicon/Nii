@@ -440,7 +440,7 @@ class NHtml extends CHtml {
 		if ($successMsg)
 			$params['successMsg'] = $successMsg;
 		
-		$url = NHtml::url(array_merge(array('/admin/trash'),$params));
+		$url = NHtml::url(array_merge(array('/nii/index/trash'),$params));
 		
 		return NHtml::btnLink($label,'#', null,
 			array(

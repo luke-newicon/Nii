@@ -36,7 +36,7 @@
 			</div>
 			<div class="lastUnit">
 				<div class="unit size1of3 detailLabel"><?=$this->t('Event')?></div>
-				<div class="lastUnit"><?php echo $model->eventName; ?></div>
+				<div class="lastUnit"><?php echo $model->eventLink; ?></div>
 			</div>
 		</div>
 		
@@ -56,22 +56,22 @@
 			<div class="lastUnit"><?php echo $model->comment; ?></div>
 		</div>
 	</div>
-</div>
-<?php 
-$this->widget('nii.widgets.NTabs', 
-	array(
-		'tabs' => array(
-//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-			'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
-			'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
-		),
-		'options' => array(
-			'cache' => true,
-		),
-		'htmlOptions' => array(
-			'id' => 'tabs',
-			'class' => 'vertical',
+	<?php 
+	$this->widget('nii.widgets.NTabs', 
+		array(
+			'tabs' => array(
+	//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
+				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
+				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
+			),
+			'options' => array(
+				'cache' => true,
+			),
+			'htmlOptions' => array(
+				'id' => 'tabs',
+				'class' => 'vertical',
+			)
 		)
-	)
-); 
-?>
+	); 
+	?>
+</div>
