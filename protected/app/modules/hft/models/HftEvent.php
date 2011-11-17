@@ -105,7 +105,7 @@ class HftEvent extends NActiveRecord
 				'name' => 'organiser_type_id',
 				'type' => 'raw',
 				'value' => '$data->displayOrganiserType',
-				'htmlOptions'=>array('width'=>'100px'),
+				'htmlOptions'=>array('width'=>'150px'),
 				'filter'=> HftEventOrganiserType::getTypesArray(),
 			),
 			array(
