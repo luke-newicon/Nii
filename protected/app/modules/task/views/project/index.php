@@ -13,10 +13,58 @@
 <div class="page-header">
 	<h2><?php echo $project->name; ?></h2>
 	<div class="action-buttons">
-	
+		<a href="#" class="btn active" >Team View</a>
+		<a href="#" class="btn" >Client View</a>
 	</div>
 </div>
 
+<div class="row">
+	<div class="span2">
+		<p class="hint">Manager:</p>
+		<!-- widgetise into contact card thingyum -->
+		<ul class="media-grid">
+			<li><a href="#" title="Luke Spencer" data-content="Contact details?" rel="popover" id="spencagay" style="padding:3px;"><?php $this->widget('nii.widgets.Gravatar',array('email'=>'luke.spencer@newicon.net', 'size'=>25)); ?></a></li>
+		</ul>
+		<!-- fin -->
+	</div>
+	<div class="span3">
+		<p class="hint">members:</p>
+		<ul class="media-grid">
+			<li><a id="dandecock" href="#" title="Dan De Luca" data-content="Contact details?" rel="popover" style="padding:3px;" ><?php $this->widget('nii.widgets.Gravatar',array('email'=>'dan.deluca@newicon.net', 'size'=>25)); ?></a></li>
+			<li><a id="robinwill" href="#" title="Robin Williams" data-content="Contact details?" rel="popover" style="padding:3px;"><?php $this->widget('nii.widgets.Gravatar',array('email'=>'robin.williams@newicon.net', 'size'=>25)); ?></a></li>
+		</ul>
+	</div>
+	<div class="span3">
+		<p class="hint">shared:</p>
+		<ul class="media-grid">
+			<li><a id="steveo" href="#" title="Steve O'Brien" data-content="Contact details?" rel="popover" style="padding:3px;" ><?php $this->widget('nii.widgets.Gravatar',array('email'=>'steve@newicon.net', 'size'=>25)); ?></a></li>
+		</ul>
+	</div>
+</div>
+<script>
+	$(function(){
+		$('#spencagay').popover();
+		$('#dandecock').popover();
+		$('#robinwill').popover();
+		$('#steveo').popover();
+	});
+</script>
+<?php
+$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
+	'id' => 'TaskTabs',
+	'items' => array(
+		array('label'=>'Dashboard', 'url'=>'#mytasks', 'active' => true),
+		array('label'=>'Messages', 'url'=>'#mytasks'),
+		array('label'=>'Meetings', 'url'=>'#mytasks'),
+		array('label'=>'To-Dos', 'url'=>'#grouptasks'),
+		array('label'=>'Calendar', 'url'=>'#grouptasks'),
+		array('label'=>'white borard', 'url'=>'#grouptasks'),
+		array('label'=>'Files', 'url'=>'#grouptasks'),
+	),
+//	'htmlOptions' => array('class' => 'tabs vertical'),
+//	'heading' => 'Developer Tools',
+));
+?>
 
 <div class="alert-message block-message info">
 	<a href="#" class="close">×</a>
@@ -36,3 +84,10 @@
 	</div>
 </div>
 
+<!-- script to move into footer or generic startup script -->
+<script>
+
+$(function(){
+	$(".alert-message").alert();
+})
+</script>
