@@ -24,6 +24,10 @@ Class AdminController extends AController {
 			'model' => $model,
 		));
 	}
+	
+	public function actionProjects(){
+		$this->render('projects');
+	}
 
 	public function actionAddTask() {
 
