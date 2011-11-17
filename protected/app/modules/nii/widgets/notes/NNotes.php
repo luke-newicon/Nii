@@ -166,8 +166,8 @@ class NNotes extends NAttributeWidget
 		$dataProvider=new CActiveDataProvider("NNote",array(
 		'criteria'=>array(
 			'order'=>'id DESC',
-			'condition'=>'model_id = :itemId',
-			'params'=>array(':itemId'=>$modelId)
+			'condition'=>'model_id = :itemId AND model = :itemmodel',
+			'params'=>array(':itemId'=>$modelId, ':itemmodel'=>$model)
 		)));
 		
 		$this->render('overall',array(
