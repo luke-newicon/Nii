@@ -31,15 +31,16 @@ class HftDonation extends NActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-				'donation_amount' => 'Amount',
-				'date_received' => "Date Rec'd",
-				'contact_id' => 'Donor',
-				'giftaid' => "Gift Aid?",
-				'type_id' => 'Donation Type',
-				'event_id' => 'Linked Event',
-				'comment' => 'Comments',
-				'statement_number' => 'Bank Statement #',
-				'statement_date' => 'Bank Statement Date',
+			'donation_amount' => 'Amount',
+			'date_received' => "Date Received",
+			'contact_id' => 'Donor',
+			'giftaid' => "Gift Aid?",
+			'type_id' => 'Donation Type',
+			'event_id' => 'Linked Event',
+			'comment' => 'Comments',
+			'statement_number' => 'Bank Statement #',
+			'statement_date' => 'Bank Statement Date',
+			'editLink' => 'Edit',
 		);
 	}
 	
@@ -82,8 +83,12 @@ class HftDonation extends NActiveRecord
 		$criteria->with = array('contact', 'type');
 		$criteria->together = true;
 		
+		$sort = new CSort;
+		$sort->defaultOrder = 'date_received DESC';		
+		
 		return new NActiveDataProvider($this, array(
 			'criteria'=>$criteria,	
+			'sort' => $sort,
 			'pagination'=>array(
 				'pageSize'=>30,
             ),
@@ -94,9 +99,16 @@ class HftDonation extends NActiveRecord
 		
 		return array(
 			array(
+				'name' => 'id',
+				'htmlOptions'=>array('width'=>'30px'),
+				'type' => 'raw',
+				'value' => '$data->donationIdLink',
+			),
+			array(
 				'name' => 'date_received',
 				'type' => 'raw',
-				'value' => 'NHtml::formatDate($data->date_received, "d-m-Y")',
+				'value' => '$data->donationDateLink',
+				'header' => 'Date Rec\'d',
 				'htmlOptions'=>array('width'=>'80px'),
 			),
 			array(
@@ -107,7 +119,7 @@ class HftDonation extends NActiveRecord
 			array(
 				'name' => 'donation_amount',
 				'type' => 'raw',
-				'value' => '$data->displayAmount',
+				'value' => '$data->donationAmountLink',
 			),
 			array(
 				'name' => 'giftaid',
@@ -135,6 +147,14 @@ class HftDonation extends NActiveRecord
 				'name' => 'statement_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
 			),
 		);
 	}
@@ -170,8 +190,32 @@ class HftDonation extends NActiveRecord
 			return '<span class="noData">No contact assigned</span>';
 	}
 	
+	public function getContactName() {
+		if ($this->contact)
+			return $this->contact->displayName;
+		else
+			return '<span class="noData">No contact assigned</span>';
+	}
+	
 	public function getDisplayAmount() {
 		return NHtml::formatPrice($this->donation_amount);
+	}
+	
+	public function getDonationIdLink() {
+		return NHtml::link($this->id, array('view', 'id'=>$this->id));
+	}
+	
+	public function getDonationAmountLink() {
+		return NHtml::link($this->displayAmount, array('view', 'id'=>$this->id));
+	}
+	
+	public function getDonationDateLink() {
+		return NHtml::link(NHtml::formatDate($this->date_received, "d-m-Y"), array('view', 'id'=>$this->id));
+	}
+	
+	public function getEditLink() {
+		if ($this->id)
+			return NHtml::link('Edit', array('edit', 'id'=>$this->id));
 	}
 	
 	public function getDisplayType() {
@@ -183,4 +227,12 @@ class HftDonation extends NActiveRecord
 		// @todo Link to HftEvent model
 		return null;
 	}
+	
+	public function getEventName() {
+//		if ($this->event)
+//			return $this->event->name;
+//		else
+			return '<span class="noData">No event assigned</span>';
+	}
+	
 }

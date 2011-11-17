@@ -215,7 +215,8 @@ class AdminController extends AController {
 	
 	public function actionGeneralInfo($id) {
 
-		$model = Contact::model()->findByPk($id);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 		
 		$this->render('view/tabs/general',array(
 			'model'=>$model,
@@ -228,7 +229,8 @@ class AdminController extends AController {
 	 */
 	public function actionNotes($id) {
 
-		$model = Contact::model()->findByPk($id);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 		if ($model) {
 			$this->render('view/tabs/notes',array(
 				'model'=>$model,
@@ -242,7 +244,8 @@ class AdminController extends AController {
 	 */
 	public function actionAttachments($id) {
 
-		$model = Contact::model()->findByPk($id);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 		if ($model) {
 			$this->render('view/tabs/attachments',array(
 				'model'=>$model,
@@ -253,7 +256,8 @@ class AdminController extends AController {
 	
 	public function actionAddRelationship($id) {
 		
-		$model = Contact::model()->findByPk($id);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 
 		if ($model) {
 			$this->render('dialog/addRelationship',array(
@@ -287,7 +291,8 @@ class AdminController extends AController {
 	}
 	
 	public function actionRemove($id) {
-		$model = Contact::model()->findByPk($id);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
 		if ($model->remove())
 			echo 'Success';
 	}
