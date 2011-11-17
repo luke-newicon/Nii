@@ -1,6 +1,8 @@
 <?php
 
 return array(
+	'GB'=>'United Kingdom',
+	'-'=>'----------',
 	'AF'=>'Afghanistan',
 	'AL'=>'Albania',
 	'DZ'=>'Algeria',
@@ -222,7 +224,6 @@ return array(
 	'UG'=>'Uganda',
 	'UA'=>'Ukraine',
 	'AE'=>'United Arab Emirates',
-	'GB'=>'United Kingdom',
 	'US'=>'United States',
 	'UM'=>'United States Minor Outlying Islands',
 	'UY'=>'Uruguay',
