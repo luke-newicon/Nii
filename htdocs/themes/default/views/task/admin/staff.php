@@ -2,7 +2,7 @@
 <div class="page-header">
 	<h2>Staff</h2>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Add a Staff Member', '#', array('class'=>'btn primary')); ?>
+		<?php echo NHtml::link('Add a Member of Staff', '#', array('class'=>'btn primary')); ?>
 	</div>
 </div>
 <?php

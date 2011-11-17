@@ -8,6 +8,16 @@ $form = $this->beginWidget('NActiveForm', array(
 
 $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 ?>
+<?php if($c->hasErrors()) : ?>
+	<div class="alert-message block-message error">
+		<?php echo $form->errorSummary($c); ?>
+	</div>
+<?php else : ?>
+	<div class="alert-message block-message">
+		<p>This is where you can create a new contact.  Fill in all the required fields marked with a <span class="required">*</span>.</p>
+		<p>Additional information can be added at any other time.</p>
+	</div>
+<?php endif; ?>
 <div id="contact-general">
 	<div class="line">
 		<div class="unit size1of6" id="contactPhoto">

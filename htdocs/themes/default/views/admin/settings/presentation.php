@@ -30,6 +30,11 @@ $form = $this->beginWidget('NActiveForm', array(
 		<label>Show application name in menu bar.</label>
 		<?php echo $form->error($model, 'menuAppname'); ?>
 	</div>
+	<div class="field">
+		<?php echo $form->checkBox($model, 'menuSearch'); ?>
+		<label>Show search box in menu bar.</label>
+		<?php echo $form->error($model, 'menuSearch'); ?>
+	</div>
 	<div class="field line">
 		<?php echo $form->labelEx($model, 'topbarColor'); ?>
 		<div>

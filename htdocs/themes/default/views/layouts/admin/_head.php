@@ -75,13 +75,15 @@
 						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
 					));
 					?>
-<!--					<ul class="nav secondary-nav">
-						<li>
-							<form action="">
-								<input type="text" placeholder="Search">
-							</form>
-						</li>
-					</ul>-->
+					<?php if(Yii::app()->getModule('admin')->menuSearch) : ?>
+						<ul class="nav secondary-nav">
+							<li>
+								<form action="">
+									<input type="text" placeholder="Search">
+								</form>
+							</li>
+						</ul>
+					<?php endif; ?>
 					<?php
 					Yii::app()->menus->addDivider('user', 'User');
 					Yii::app()->menus->addItem('user', 'Logout', array('/user/account/logout'), 'User');

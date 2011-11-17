@@ -5,11 +5,13 @@ class AdminPresentationSetting extends CFormModel {
 	public $logo;
 	public $menuAppname;
 	public $topbarColor;
+	public $menuSearch;
 	
 	public function init(){
 		$this->logo = Yii::app()->getModule('admin')->logo;
 		$this->menuAppname = Yii::app()->getModule('admin')->menuAppname;
 		$this->topbarColor = Yii::app()->getModule('admin')->topbarColor;
+		$this->menuSearch = Yii::app()->getModule('admin')->menuSearch;
 	}
 
 	/**
@@ -17,7 +19,7 @@ class AdminPresentationSetting extends CFormModel {
 	 */
 	public function rules() {
 		return array(
-			array('logo, menuAppname, topbarColor', 'safe'),
+			array('logo, menuAppname, topbarColor, menuSearch', 'safe'),
 		);
 	}
 
@@ -29,6 +31,7 @@ class AdminPresentationSetting extends CFormModel {
 			'logo' => 'Logo',
 			'menuAppname' => 'Application Name',
 			'topbarColor' => 'Menu Colour',
+			'menuSearch' => 'Show the search box in the menu bar?',
 		);
 	}
 

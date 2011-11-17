@@ -7,6 +7,16 @@ $form=$this->beginWidget('NActiveForm', array(
 		'validateOnSubmit'=>true
 	),
 )); ?>
+<?php if($c->hasErrors()) : ?>
+	<div class="alert-message block-message error">
+		<?php echo $form->errorSummary($c); ?>
+	</div>
+<?php else : ?>
+	<div class="alert-message block-message">
+		<p>This is where you can create a new contact.  Fill in all the required fields marked with a <span class="required">*</span>.</p>
+		<p>Additional information can be added at any other time.</p>
+	</div>
+<?php endif; ?>
 <div class="line">
 		<div class="inputRow field">
 			<span class="inputLabel"><?=$this->t('Select a contact type:')?></span>
