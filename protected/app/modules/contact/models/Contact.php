@@ -169,10 +169,14 @@ class Contact extends NActiveRecord
 		$criteria->compare('comment',$this->comment,true);
 
 		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
-		//$criteria->together = true;
+		//$criteria->together = true;\
+		
+		$sort = new CSort;
+		$sort->defaultOrder = 'id DESC';		
 		
 		return new NActiveDataProvider($this, array(
 			'criteria'=>$criteria,	
+			'sort' => $sort,
 			'pagination'=>array(
 				'pageSize'=>20,
             ),

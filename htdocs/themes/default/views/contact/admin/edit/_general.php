@@ -80,7 +80,15 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 					<div class="line field">
 						<div class="unit size1of3"><?= $form->labelEx($c,'country') ?></div>
 						<div class="lastUnit inputContainer">
-							<div class="input w180"><?php echo $form->dropDownList($c, 'country', Contact::getCountriesArray()); ?></div>
+							<div class="input w180">
+								<?php 
+								echo $form->dropDownList($c, 'country', Contact::getCountriesArray(), array(
+									'prompt'=>'select...', 
+									'options'=>array(
+										'-'=>array('disabled'=>true),
+									),
+								)); ?>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -140,7 +148,8 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 		$cancelUrl = ($c->id) ? array('admin/view','id'=>$c->id) : array('admin/index');
 		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
 		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-		echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
+		if ($c->id)
+			echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
 
 		?>		
 	</div>
