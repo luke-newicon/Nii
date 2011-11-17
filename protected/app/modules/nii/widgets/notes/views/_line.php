@@ -12,8 +12,7 @@
 		</div>
 		
 		<p class="hint">
-			<?php FB::log($user);
-			echo $data->name . ', ' . NTime::timeAgoInWordsShort($data->added);?>
+			<?php echo $data->name . ', ' . NTime::timeAgoInWordsShort($data->added);?>
 		</p>
 		<div style="height:10px;">
 		<div class="nnote-controls" style="display:none;">
