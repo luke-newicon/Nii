@@ -40,6 +40,9 @@
 		  background-color: <?php echo $topbarColor ?>;
 		  border-color: <?php echo NHtml::hexLighter($topbarColorLighter,20) ?>;
 		}
+		.topbar div > ul .active > a, .nav .active > a {
+			background-color: <?php echo NHtml::hexDarker($topbarColor,30) ?>;
+		}
 	</style>
 <?php endif; ?>
 <div id="message"></div>

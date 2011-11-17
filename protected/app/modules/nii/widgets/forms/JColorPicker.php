@@ -269,7 +269,7 @@ class JColorPicker extends CInputWidget
       $options['onBeforeShow'] = $this->onBeforeShow;
       $options['onHide'] = $this->onHide;
       $options['onSubmit'] = $this->onSubmit;      
-
+	  $options['onChange'] = $this->onChange;
       switch ($this->mode) {
          case 'textfield':
             $options['flat'] = 'false';
@@ -398,6 +398,10 @@ $('#{$selector}').ColorPicker({
 	onChange: function (hsb, hex, rgb) {
 		$('#{$selector}').css('backgroundColor', '#' + hex);
 		$('#{$id}').val('#' + hex);
+		// to be moved out of plugin only applicable to nii menu bar
+		$('.topbar-inner').css('backgroundColor', '#' + hex);
+		$('.topbar-inner').css('background', '-moz-linear-gradient(center top , #' + hex + ', #' + hex + ')');
+		
 	}
 });
 EOP;

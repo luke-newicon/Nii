@@ -112,6 +112,7 @@ class NHtml extends CHtml {
 		return $txt;
 	}
 
+	// CAN DELETE THIS I THINK.
 	public static function popupForm($id, $title, $open, $width='400px', $onSave='', $dialogOptions=array()) {
 		$v = Yii::app()->controller;
 		$options = CMap::mergeArray(array(
@@ -208,7 +209,7 @@ class NHtml extends CHtml {
 			}
 		}
 	}
-
+	// DOCUMENTATION PLEASE! ??
 	public static function nImageSizeAttr($type) {
 		return ' width="' . NHtml::nImageWidth($type) . '" height="' . NHtml::nImageHeight($type) . '" ';
 	}
@@ -238,11 +239,11 @@ class NHtml extends CHtml {
 	public static function generateAttributeLabel($name) {
 		return ucwords(trim(strtolower(str_replace(array('-', '_', '.'), ' ', preg_replace('/(?<![A-Z])[A-Z]/', ' \0', $name)))));
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function generateAttributeId($label) {
 		return strtolower(str_replace(array(' '), '_', $label));
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function enumItem($model, $attribute) {
 		$attr = $attribute;
 		self::resolveName($model, $attr);
@@ -254,7 +255,7 @@ class NHtml extends CHtml {
 			$values[$keys[$i]] = Yii::t('enumItem', $keys[$i]);
 		return $values;
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function btnLink($label, $url, $iconClass=null, $attributes=array()) {
 		if ($iconClass !== null)
 			$label = "<span class=\"icon $iconClass\"></span>$label";
@@ -381,7 +382,7 @@ class NHtml extends CHtml {
 
 		return 'icon ' . $icon;
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function formatDate($date, $format=null, $noDateText=null) {
 		if ($format == '' || !$format)
 			$format = 'jS F Y';
@@ -393,13 +394,13 @@ class NHtml extends CHtml {
 		else
 			return (isset($noDateText)) ? $noDateText : '<span class="noDate">No date set</span>';
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function formatGridDate($date, $format=null, $noDateText=null) {
 		if ($format == '' || !$format)
 			$format = 'd/m/Y';
 		return self::formatDate($date, $format, $noDateText);
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function formatBool($value, $true=1, $false=0, $blank=false) {
 		if ($value == $true)
 			return 'Yes';
@@ -408,15 +409,23 @@ class NHtml extends CHtml {
 		else
 			return;
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function formatPrice($value, $currency='&pound;', $decimals=2) {
 		return $currency . ' ' . number_format($value, $decimals);
 	}
-
+	// DOCUMENTATION PLEASE!
 	public static function emailLink($email) {
 		return '<a href="mailto:' . $email . '" class="emailLink" title="Send an email to ' . $email . '">' . $email . '</a>';
 	}
 
+	/**
+	 * Overrides the default CHtml::activeLabel and adds an additional class .lbl if no htmlOptions are specified.
+	 * @see CHtml::activeLabel
+	 * @param CActiveRecord $model
+	 * @param string $attribute
+	 * @param array $htmlOptions
+	 * @return string html 
+	 */
 	public static function activeLabel($model, $attribute, $htmlOptions=array()) {
 		if (empty($htmlOptions)) {
 			$htmlOptions = array('class' => 'lbl');
@@ -424,6 +433,7 @@ class NHtml extends CHtml {
 		return parent::activeLabel($model, $attribute, $htmlOptions);
 	}
 	
+	// DOCUMENTATION PLEASE!
 	public static function trashButton ($model, $modelName, $returnUrl=null, $successMsg=null) {
 
 		$label = AController::t('Delete this '.$modelName);
@@ -454,6 +464,8 @@ class NHtml extends CHtml {
 		);
 	}
 	
+	
+	// DOCUMENTATION PLEASE!
 	public static function hexLighter($hex, $factor = 8) {
 		$new_hex = '';
 
@@ -468,6 +480,33 @@ class NHtml extends CHtml {
 			$amount = 255 - $v;
 			$amount = $amount / 100;
 			$amount = round($amount * $factor);
+			$new_decimal = $v + $amount;
+
+			$new_hex_component = dechex($new_decimal);
+			if (strlen($new_hex_component) < 2) {
+				$new_hex_component = "0" . $new_hex_component;
+			}
+			$new_hex .= $new_hex_component;
+		}
+
+		return '#'.$new_hex;
+	}
+	
+	// DOCUMENTATION PLEASE!
+	public static function hexDarker($hex, $factor = 8) {
+		$new_hex = '';
+
+		if ($hex[0] == '#')
+			$hex = substr($hex, 1);
+
+		$base['R'] = hexdec($hex{0} . $hex{1});
+		$base['G'] = hexdec($hex{2} . $hex{3});
+		$base['B'] = hexdec($hex{4} . $hex{5});
+
+		foreach ($base as $k => $v) {
+			$amount = 255 - $v;
+			$amount = $amount / 100;
+			$amount = round($amount / $factor);
 			$new_decimal = $v + $amount;
 
 			$new_hex_component = dechex($new_decimal);
