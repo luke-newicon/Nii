@@ -46,8 +46,8 @@ class DateInput extends CInputWidget {
 				'dateFormat' => 'yy-mm-dd',
 				'onSelect' => 'js:function(dateText) {
 					var fullDate = $("#'.$id.'").datepicker("getDate");
-					var day1 = leadingZeros(fullDate.getDate(),2);
-					var month1 = leadingZeros(fullDate.getMonth() + 1,2);
+					var day1 = nii.leadingZeros(fullDate.getDate(),2);
+					var month1 = nii.leadingZeros(fullDate.getMonth() + 1,2);
 					var year1 = fullDate.getFullYear();
 					$("#'.$id.'_day").val(day1);
 					$("#'.$id.'_month").val(month1);
