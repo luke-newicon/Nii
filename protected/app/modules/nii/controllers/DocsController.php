@@ -16,12 +16,43 @@
  */
 class DocsController extends AController 
 {
-	public function acitonIndex(){
-		
+	
+	
+	public function actionIndex(){
 		$this->render('index');
 	}
 	
-	public function actionFilelocation(){
-		echo NFileManager::get()->location;
+	public function actionTag(){
+		
+		$t = TaskTask::model()->findByPk(1);
+		
+		$t->attachBehavior('tag', array(
+			'class' => 'nii.components.behaviors.NTaggable',
+		));
+		
+				
+		$rows = $t->tag->searchAllRows(array('bum'));
+		
+		//$rows = $t->tag->searchRows(array('bum'), $t);
+		
+		
+		
+		foreach($rows as $r){
+			dp($r->getAttributes());
+		}
+		
+		// get this model rows tags
+		dp($t->getTags());
+		
+		
+		// get all tags for model type
+		dp('get al tags');
+		dp($t->getAllTags());
+		
+		
+		$this->render('tag');
 	}
+	
+	
+	
 }

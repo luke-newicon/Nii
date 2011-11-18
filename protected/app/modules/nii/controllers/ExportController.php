@@ -69,7 +69,6 @@ class ExportController extends Controller {
 			else
 				$dataProvider = $model->search();				
 			
-//			print_r($dataProvider); exit;
 			
 			$filename = $controller.ucfirst($action).'_export_'.date('YmdHis');
 			
@@ -104,7 +103,6 @@ class ExportController extends Controller {
 							'fileType'=>$fileType,
 					))->renderItems($fileType);
 
-//					print_r($data); exit;
 					Yii::import('nii.extensions.phpexcel.JPhpExcel');
 					$xls = new JPhpExcel('UTF-8', false, 'My Test Sheet');
 					$xls->addArray($data);
@@ -139,8 +137,6 @@ class ExportController extends Controller {
 			}		
 			
 			Log::insertLog('Exported grid as '.$fileType.' file', $model);
-			
-			
 		}
 		
 		exit;
