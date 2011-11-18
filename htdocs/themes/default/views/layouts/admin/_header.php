@@ -13,3 +13,14 @@
 		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
 	</head>
+	
+<?php
+Yii::app()->clientScript->registerScript('data-confirm',
+	'$(\'[data-confirm]\').click(function(){
+		var $link = $(this);
+		if(confirm($link.attr(\'data-confirm\'))){
+			return true;
+		}
+		return false;
+	});'
+);
