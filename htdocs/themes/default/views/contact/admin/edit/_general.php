@@ -141,6 +141,13 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 							<div class="input w120"><?php echo $form->textField($c, 'fax', array('size' => 20)); ?></div>
 						</div>
 					</div>
+					<div class="line field">
+						<div class="unit size1of3"><?= $form->labelEx($c,'website') ?></div>
+						<div class="lastUnit inputContainer">
+							<div class="input"><?php echo $form->textField($c, 'website', array('size' => 20)); ?></div>
+							<?php echo $form->error($c,'website'); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 			<?php Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit($event); ?>
@@ -166,7 +173,7 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 </div>
 
 <?php echo $form->hiddenField($c, 'changedFields') ?>
-<?php if ($action[0] == '/contact/create')
+<?php if ($action[0] == 'admin/create')
 	$c->contact_type = $type;
 echo $form->hiddenField($c, 'contact_type') ?>
 <?php $this->endWidget(); ?>

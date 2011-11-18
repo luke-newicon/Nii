@@ -105,7 +105,7 @@ class AdminController extends AController {
 				}
 				
 				FB::log(CJSON::encode(array('save'=>'Contact saved successfully.')));
-				$this->redirect(array("contact/view","id"=>$model->id));		
+				$this->redirect(array("view","id"=>$model->id));		
 			}	
 		}
 		
@@ -182,7 +182,7 @@ class AdminController extends AController {
 				}
 				Log::insertLog('Updated contact details for '.$model->name.' (id: '.$model->id.')', $model);
 //				echo CJSON::encode(array('save'=>'Contact saved successfully.'));
-				$this->redirect(array("admin/view","id"=>$model->id));		
+				$this->redirect(array("view","id"=>$model->id));		
 			} 		
 		}
 		
