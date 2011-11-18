@@ -57,6 +57,10 @@
 			<div class="unit size1of3 detailLabel"><?=$this->t('Fax')?></div>
 			<div class="lastUnit"><?php echo $model->fax; ?></div>
 		</div>
+		<div class="detailRow">
+			<div class="unit size1of3 detailLabel"><?=$this->t('Website URL')?></div>
+			<div class="lastUnit"><?php echo $model->websiteLink; ?></div>
+		</div>
 	</div>
 	<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetails($event); ?>
 	<?php $this->renderPartial('view/_' . strtolower($model->contact_type), array('model' => $model)); ?>

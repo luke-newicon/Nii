@@ -50,9 +50,10 @@ class AdminController extends AController {
 	public function actionPermissions() {
 		$tabs = array();
 		FB::log(Yii::app()->modules);
-		foreach (Yii::app()->modules as $name=>$config) {
+		foreach (Yii::app()->modules as $name => $config) {
 			$module = Yii::app()->getModule($name);
-			if(!$module instanceof NWebModule) continue;
+			if (!$module instanceof NWebModule)
+				continue;
 			foreach ($module->permissions() as $name => $permission) {
 				$task = Yii::app()->authManager->getAuthItem('task-' . $name);
 				if ($task) {
@@ -61,7 +62,6 @@ class AdminController extends AController {
 //					$permissions['items'][] = array('label' => $label, 'url' => '#' . $task->name);
 //					$permissions['pages'][] = array('label' => $label, 'htmlOptions' => array('id' => $task->name, 'data-ajax-url' => $url));
 					$tabs[$label] = array('ajax' => array('/user/admin/permission', 'id' => $task->name), 'id' => $task->name);
-					
 				}
 			}
 		}
@@ -86,7 +86,7 @@ class AdminController extends AController {
 		foreach (Yii::app()->authManager->roles as $role) {
 			$columns[] = array(
 				'type' => 'raw',
-				'header' => '<a href="#" data-role-name="'.$role->name.'">'.$role->description.'</a>',
+				'header' => '<a href="#" data-role-name="' . $role->name . '">' . $role->description . '</a>',
 				'value' => '$data->displayRoleCheckbox(\'' . $role->name . '\')',
 				'htmlOptions' => array('width' => '30px'),
 			);
@@ -107,7 +107,7 @@ class AdminController extends AController {
 				foreach ($_POST['Permission'] as $taskName => $role) {
 					foreach ($role as $roleName => $child) {
 						if ($child && !Yii::app()->authManager->hasItemChild($roleName, $taskName)) {
-						Yii::app()->authManager->addItemChild($roleName, $taskName);
+							Yii::app()->authManager->addItemChild($roleName, $taskName);
 							echo CJSON::encode(array('success' => 'Permission successfully added'));
 						} else {
 							if (Yii::app()->authManager->removeItemChild($roleName, $taskName))
@@ -369,7 +369,7 @@ class AdminController extends AController {
 			'model' => $form,
 		));
 	}
-	
+
 	public function actionSettings() {
 		$this->render('settings');
 	}
@@ -419,6 +419,16 @@ class AdminController extends AController {
 			Yii::app()->user->setFlash('warning', "You are impersonating user: " . Yii::app()->user->name);
 			$this->redirect(Yii::app()->homeUrl);
 		}
+	}
+
+	public function actionFlushPermissions($return='permissions') {
+		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemChildTable);
+		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemTable);
+		Yii::app()->cache->flush();
+		Yii::app()->installAll();
+		Yii::app()->cache->flush();
+		Yii::app()->user->setFlash('success', 'Permissions succesfully flushed');
+		$this->redirect(array($return));
 	}
 
 }

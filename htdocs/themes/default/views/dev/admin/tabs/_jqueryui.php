@@ -1,4 +1,9 @@
-<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushAssets','return'=>'index#jqueryui')) ?>">Flush Assets Folder</a>
+<div class="page-header">
+	<h1>jQuery UI Elements</h1>
+	<div class="action-buttons">
+		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/dev/admin/flushAssets','return'=>'index#jqueryui')) ?>">Flush Assets Folder</a>
+	</div>
+</div>
 <div class="line">
 <div class="unit size1of2">
 	<!-- Accordion -->

@@ -36,7 +36,7 @@ class HftContactSource extends NActiveRecord {
 	
 	public static function getSourcesArray() {
 		$model = new HftContactSource;
-		$source = $model->findAll();
+		$source = $model->findAll(array('order'=>'name'));
 		$sources = array();
 		
 		foreach ($source as $s) {
