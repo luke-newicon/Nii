@@ -2,6 +2,7 @@
 <div class="page-header">
 	<h2>Permissions</h2>
 	<div class="action-buttons">
+		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/user/admin/flushPermissions')) ?>" data-confirm="Are you sure you want to reset all permissions?  This will also remove any user created roles.">Reset All Permissions</a>
 		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="true">Add a Role</a>
 	</div>
 </div>
@@ -17,36 +18,6 @@
 		)
 	)
 ); ?>
-<?php
-//	$this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
-//		'id' => 'permissions-tabs',
-//		'items' => $permissions['items'],
-////		'heading' => 'Application Settings',
-//		'htmlOptions' => array('class' => 'tabs vertical'),
-//	));
-?>
-<!--<div class="tab-content vertical">
-	<?php //foreach($permissions['pages'] as $page) : ?>
-	<div<?php //echo CHtml::renderAttributes($page['htmlOptions']) ?>>
-		Loading...
-	</div>
-	<?php //endforeach ?>
-</div>-->
-<script>
-//	jQuery(function($){
-//		var loadPage = function($page){
-//			$page.load($page.attr('data-ajax-url'));
-//		}
-//		
-//		$('#permissions-tabs a').click(function(){
-//			loadPage($($(this).attr('href')));
-//		});
-//		
-//		$('#permissions-tabs').tabs();
-//		
-//		loadPage($('.tab-content .active'));
-//	});
-</script>
 <div class="modal hide fade" id="modal-add-role">
 	<div class="modal-header">
 		<a class="close" href="#">×</a>

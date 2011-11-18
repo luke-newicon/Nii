@@ -47,14 +47,4 @@ class AdminController extends AController {
 		$this->redirect(array($return));
 	}
 	
-	public function actionFlushPermissions($return='index'){
-		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemChildTable);
-		Yii::app()->authManager->db->createCommand()->delete(Yii::app()->authManager->itemTable);
-		Yii::app()->cache->flush();
-		Yii::app()->installAll();
-		Yii::app()->cache->flush();
-		Yii::app()->user->setFlash('success','Permissions succesfully flushed');
-		$this->redirect(array($return));
-	}
-	
 }
