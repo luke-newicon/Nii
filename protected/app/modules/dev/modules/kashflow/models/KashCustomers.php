@@ -5,56 +5,61 @@ class KashCustomers extends KashTable
 	public $rowClass = 'KashCustomer';
 	public $resultWrapper = 'Customer';
 	
-	public function getCustomer($code){
+	public function GetCustomer($code){
 
 	}
 	
-	public function getCustomerById($id){
+	public function GetCustomerById($id){
 
 	}
 	
-	public function getCustomerByEmail($email){
+	public function GetCustomerByEmail($email){
 		
 	}
 	
-	public function getCustomers(){
+	public function GetCustomers(){
 		return $this->api('GetCustomers');
 	}
 	
-	public function getCustomersModifiedSince($date){
+	public function GetCustomersModifiedSince($date){
 
 	}
 	
-	public function insertCustomer($customer){
+	public function InsertCustomer($customer){
 
 	}
 	
-	public function updateCustomer($customer){
+	public function UpdateCustomer($customer){
 
 	}
 	
-	public function deleteCustomer($code){
+	public function DeleteCustomer($code){
 
 	}
 	
-	public function getCustomerSources(){
+	public function GetCustomerSources(){
 
 	}
 	
-	public function getCustomerVATNumber($code){
+	public function GetCustomerVATNumber($code){
 
 	}
 	
-	public function setCustomerVATNumber($code,$vat){
+	public function SetCustomerVATNumber($code,$vat){
 
 	}
 	
-	public function getCustomerCurrency($code){
+	public function SetCustomerCurrency($code){
 
 	}
 	
-	public function setCustomerCurrency($code,$currency){
+	public function SetCustomerCurrency($code,$currency){
 
 	}
+	
+	public function GetCustomerAdvancePayments($code,$currency){
+
+	}
+    
 	
 }

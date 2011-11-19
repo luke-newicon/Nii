@@ -14,7 +14,6 @@ class TaskModule extends NWebModule
 	public $name = 'Tasks';
 	public $description = 'Task management module';
 	public $version = '0.0.1';
-	public $settingsPage = array('tasks/settings');
 	
 	public function init(){
 		Yii::import('task.models.*');
