@@ -102,9 +102,9 @@ return array(
 			),
 
 			'errorHandler' => array(
-				// use 'site/error' action to display errors
 				'class' => 'NErrorHandler',
-				'errorAction' => 'site/error',
+				// Default error action
+				'errorAction' => 'error',
 			),
 			'image' => array(
 				'class' => 'nii.components.NImage',

@@ -1,3 +1,13 @@
-<p class="h2">Oops, there is no service running at this address.</p>
-<p>The web address is not recognised, please check the address before trying again.</p>
-
+<div class="modal" id="modal-login-user">
+	<div class="modal-header">
+		<h3>Error <?php echo $code; ?></h3>
+	</div>
+	<div class="modal-body">
+		<div class="alert-message block-message error">
+			<?php echo CHtml::encode($message); ?>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<a id="error-back" class="btn primary" href="<?php echo Yii::app()->baseUrl ?>" onclick="window.history.back();return false;">Go Back</a>
+	</div>
+</div>
