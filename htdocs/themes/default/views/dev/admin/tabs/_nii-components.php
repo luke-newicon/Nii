@@ -123,26 +123,5 @@
 			dp($found->email);
 	?>
 	
-	
-	
-	<?php
-		
-		$rows = $u->tag->searchAllRows(array('cool dude'));
-		
-		//$rows = $t->tag->searchRows(array('bum'), $t);
-		
-		foreach($rows as $r){
-			dp($r->getAttributes());
-		}
-		
-		
-		// get all tags for model type
-		dp('get al tags');
-		dp($u->getAllTags());
-		
-		
-		?>
-		
-		
 	</div>
 </div>

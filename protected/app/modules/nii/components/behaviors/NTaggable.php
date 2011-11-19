@@ -171,7 +171,7 @@ class NTaggable extends CActiveRecordBehavior
 	 * @return array of NTagLink records | null if nothing found you can call the NTagLink::getRecord() 
 	 * function to get the model the tag belongs to. 
 	 */
-	public function searchAllRows($tags)
+	public function searchAll($tags)
 	{
 		if (count($tags)==0)
 			return null;
