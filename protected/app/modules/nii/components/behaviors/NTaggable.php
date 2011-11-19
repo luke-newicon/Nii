@@ -17,111 +17,61 @@
 class NTaggable extends CActiveRecordBehavior
 {
 	
-
-	
-	
-	
-	
 	
 
-	public function preTableInit($sender, $event){
-		//check search tag function has been implemented
-		$rowclass = $this->getTable()->getRowClass();
-		if(!method_exists($rowclass,'tagSearchData'))
-			throw new CException('You must implement a tagSearchData() function on the row object "'.$rowclass.'" <br />');
-	}
-
-	public function postInsert(Newicon_Db_Row $sender, $event) {
-		$this->setTags($sender);
-	}
-
-	public function postUpdate(Newicon_Db_Row $sender, $event) {
-		$this->setTags($sender);
-	}
-
-	protected function setTags(Newicon_Db_Row $row) {
-		if (!$tags = $row->getPluginData('tags'))
-			$tags = array();
-		$tagTbl = new Nworx_Utilities_Model_Tags();
-		$tagTbl->setRowTags($tags, $row);
-	}
-
-	public function getColumn($columnName, $row) {
-		$tagTbl = new Nworx_Utilities_Model_Tags();
-		return $tagTbl->getRowTags($row);
-	}
-	
-	
-	
-	
-	
-	
 	/**
-	 * adds or updates tags in the tags and tags association table.
-	 * @param array $itemarray
-	 * @param varchar $tablename
-	 * @param int $recordid
+	 * Set the tags for a row, removes all existing tags and sets the tags to those specified
+	 * in the $tags array, this is useful for input widgets that always post all tags
+	 * @param array $tags  the full set of tags to be set
+	 * @param Newicon_Db_Row $row  the row the tags are to be set on
+	 * @return null
 	 */
-	function updateTags($itemarray,$tablename,$recordid)
+	public function setTags(array $tags)
 	{
-		$tags = new Nworx_Utilities_Model_Tags();
+		Yii::import('nii.components.db.*');
+		if(is_string($tags))
+			$tags = array($tags);
+		if(empty($tags))
+			return;
+		
+		// delete all existing tags for this row in the associations table
+		$this->deleteTags();
+			
+		if (count($tags)==0)
+			return;
 
-		//Deletes all associations from the tag association table to prepare for the update and ensure that there are npt duplicate entries.
-		//checks to make sure number is int
+		// ok, so sort out the new set of tags
+		foreach ($tags as $i=>$t)
+			$tags[$i] = trim($t);
 
-		if (is_int($recordid)===true) {
-			$tagassocclear = new Nworx_Utilities_Model_TagAssociations();
-			//
-			// This is wrong - it deletes any entry for that table, not just the one for the row.
-			//
-			$tagassocclear->deleteQuery()->where('tablename =?',$tablename)->go();
-		}
+		// make sure that all of these tags exist in the tags table
+		$q = new NQuery(NTag::model());
+		$q->multiInsert(array('tag'), true);
+		foreach ($tags as $t)
+			$q->multiInsertValues(array($t));
+		$q->execute();
+		
 
-		// take the array and loop through it checking against the database
-		foreach($itemarray as $row) {
-			//If row not in database then adds item to items table.
-			//if exists then just makes a note of the id of the row.
-			$noindatabase = $tags->select()->where('name=?',$row)->go();
+		// now find all of the ids for the names provided
+		$tagRows = NTag::model()->findAllByAttributes(array('tag'=>$tags));
 
-			if (count($noindatabase) ==0) {
-				$tag = new Nworx_Utilities_Model_Tag();
-				$tag->name = $row;
-				$tag->save();
-				$tagid = $tag->id();
-			} else {
-				$tagid = $noindatabase[0]->id;
-				echo $tagid;
-			}
-
-			//Adds tag to the tag association table.
-			$tagassoc = new Nworx_Utilities_Model_TagAssociation();
-			$tagassoc->row_id = $recordid;
-			$tagassoc->tag_id = $tagid;
-			$tagassoc->tablename = $tablename;
-			$tagassoc->save();
-		}
+		// and insert the new tags into the associations table
+		$q = new NQuery(NTagLink::model());
+		$q->multiInsert(array('model', 'model_id', 'tag_id'));
+		$model = get_class($this->getOwner()); 
+		foreach ($tagRows as $tag)
+			$q->multiInsertValues(array($model, $this->getOwner()->id, $tag->id));
+		$q->execute();
 	}
-	
-	
-	
-	
-	
-	public function configure() {
-		$this->hasColumnPrimary('id');
-		$this->hasColumnVarChar('name', 100);
-
-		$this->hasUniqueIndex('name');
-	}
-	
 	
 	/**
 	 * Gets all tags across all models
 	 * 
 	 * @return array array of tag_id => tag name e.g. array(1 => 'tag name', 3=> 'other tag')
 	 */
-	public function getAllModelsTags(){
+	public function getAllTags(){
 		$res = NTag::model()->findAll(array('order'=>'tag ASC'));
-		$tags = array(); foreach ($res as $r) $tags[$r->id] = $r->name;
+		$tags = array(); foreach ($res as $r) $tags[$r->id] = $r->tag;
 		return $tags;
 	}
 
@@ -131,7 +81,7 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array of tag id=>tag
 	 */
-	public function getAllTags() {
+	public function getModelTags() {
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
@@ -151,6 +101,13 @@ class NTaggable extends CActiveRecordBehavior
 	 */
 	public function getTags()
 	{
+		// lets check if the owner is a true model
+		if($this->getOwner()->getScenario()==''){
+			// trying to get tags on a static instance so you must want
+			// all tags applied to all of these model types
+			return $this->getModelTags();
+		}
+		
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model_id'=>$this->getOwner()->id, 
 			'model'=>get_class($this->getOwner())), array('order'=>'tag ASC')
@@ -173,48 +130,7 @@ class NTaggable extends CActiveRecordBehavior
 			'model'=>get_class($this->getOwner()))
 		);
 	}
-
-	/**
-	 * Set the tags for a row
-	 * @param array $tags  the full set of tags to be set
-	 * @param Newicon_Db_Row $row  the row the tags are to be set on
-	 * @return null
-	 */
-	public function setRowTags(array $tags)
-	{
-		
-		$model = $this->getOwner();
-		
-		// delete all existing tags for this row in the associations table
-		$this->deleteTags();
-			
-		if (count($tags)==0)
-			return;
-
-		// ok, so sort out the new set of tags
-		foreach ($tags as $i=>$t)
-			$tags[$i] = trim($t);
-
-		// make sure that all of these tags exist in the tags table
-		$tagsInsert = $this->multiInsert('name', true);
-		foreach ($tags as $t)
-			$tagsInsert->values($t);
-		$tagsInsert->go();
-		
-		
-
-		// now find all of the ids for the names provided
-		$tids = $this->select()->where("`name` IN ('".implode("','",$tags)."')")->go();
-		$tagIds = array();
-		foreach ($tids as $tid)
-			$tagIds[] = $tid->id();
-
-		// and insert the new tags into the associations table
-		$tagAssTbl->setRowTags($tagIds, $row);
-	}
 	
-	
-
 	/**
 	 * Find the models that have a set of tags associated with them
 	 * for a given model type
@@ -246,13 +162,8 @@ class NTaggable extends CActiveRecordBehavior
 		if (count($rowIds) == 0)
 			return null;
 		
-		//if model context supplied return rows only for that table
 		return $model->findAllByAttributes(array('id'=>$rowIds));
 	}
-	
-	
-	
-	
 	
 	/**
 	 * Finds all models that have a set of tags associated with them
@@ -287,7 +198,6 @@ class NTaggable extends CActiveRecordBehavior
 			
 		return $rows;
 	}
-	
 	
 	/**
 	 * Install necessary tables for behavior

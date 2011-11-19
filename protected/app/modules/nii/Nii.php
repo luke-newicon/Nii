@@ -88,6 +88,12 @@ class Nii extends CWebApplication
 	private $_subDomain;
 	
 	/**
+	 * stores the core module configuration
+	 * @var array 
+	 */
+	private $_coreModules;
+	
+	/**
 	 * run the application
 	 */
 	public function run(){
@@ -133,7 +139,7 @@ class Nii extends CWebApplication
 		
 		$this->initialiseModules();
 		
-		// setup each module core 
+		// setup each module 
 		foreach($this->getModules() as $name => $config){
 			if(!$this->isNiiModule($name)) continue;
 			Yii::app()->getModule($name)->setup();
@@ -154,13 +160,14 @@ class Nii extends CWebApplication
 	
 	/**
 	 * Get all nii modules that are active
+	 * @return array [moduleId] => moduble object
 	 */
 	public function getNiiModules(){
 		$ret = array();
 		foreach($this->getModules()  as $name => $config){
 			if(!$this->isNiiModule($name)) continue;
 			if ($config['enabled'] != true) continue;
-			$ret[] = Yii::app()->getModule($name);
+			$ret[$name] = Yii::app()->getModule($name);
 		}
 		return $ret;
 	}
@@ -168,10 +175,26 @@ class Nii extends CWebApplication
 	/**
 	 * Merges all modules into the Yii modules configuration array.
 	 * This must be called before any subsequent calls to Yii::app()->getModules();
+	 * 
 	 * @see Nii::setupModules
 	 * @return void
 	 */
 	public function configureModules(){
+		// The core modules are defined in the application config
+		// before merging with the database modules
+		$this->_coreModules = $this->getModules();
+		// exclude modules (like gii) from the core modules
+		foreach($this->getExcludeModules() as $k=>$module)
+			unset($this->_coreModules[$module]);
+		
+		// enable all core modules, by default enabled is false so we must
+		// explicitly set enabled to true for all core modules
+		foreach($this->_coreModules as $name=>$config){
+			$this->_coreModules[$name]['enabled'] = true;
+			$this->configure(array('modules'=>array($name=>$this->_coreModules[$name])));
+		}
+		
+		// merge module configuration with database modules
 		$activeMods = $this->_getModulesDbConfig();
 		if(!empty($activeMods))
 			// add the active modules to the end of configuration
@@ -191,7 +214,7 @@ class Nii extends CWebApplication
 		// and will therefore get initialised first
 		try {
 			foreach($this->getModules() as $name => $config) {
-				if (!in_array($name, $this->getExcludeModules()) && Yii::app()->getModule($name) instanceof NWebModule)
+				if ($this->isNiiModule($name))
 					Yii::app()->getModule($name);
 			}
 		} catch (Exception $e){
@@ -209,15 +232,17 @@ class Nii extends CWebApplication
 	}
 	
 	/**
-	 * retuns an array of core module keys
-	 * @return array list of module id strings
+	 * retuns the core module configuration
+	 * 
+	 * @return array [moduleId]=>array modules config
 	 */
 	public function getCoreModules(){
-		return array('nii', 'user', 'admin');
+		return $this->_coreModules;
 	}
 	
 	/**
 	 * returns an array of modules to exclude from initialisation and setup
+	 * 
 	 * @return array list of module id strings
 	 */
 	public function getExcludeModules(){

@@ -78,6 +78,7 @@ class NActiveRecord extends CActiveRecord
 	 *		'keys'=>array(
 	 *			array('index_company_id', 'company_id'),
 	 *			array('user_id')
+	 *			array('username_key', 'username', true) // create a unique index
 	 *		)
 	 *		'foreignKeys'=>array(
 	 *			array('user_to_contact','user_id','tbl_user','id','CASCADE','CASCADE')
@@ -209,5 +210,7 @@ class NActiveRecord extends CActiveRecord
 	public function columns() {
 		return array();
 	}
+	
+
 	
 }

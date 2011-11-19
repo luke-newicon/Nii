@@ -3,7 +3,20 @@
 class AdminController extends AController {
 
 	public function actionIndex() {
-		$this->render('index');
+		$modules = array();
+		foreach(Yii::app()->getNiiModules() as $m){
+			
+			$dir = Yii::getPathOfAlias("{$m->id}.views.dev");
+			
+			if(file_exists($dir)){
+				$views = CFileHelper::findFiles($dir, array('fileTypes'=>array('php')));
+				if(!empty($views)){
+					$modules[$m->id] = $views;
+				}
+			}
+		}
+		
+		$this->render('index', array('modules'=>$modules));
 	}
 
 	public function actionBootstrap() {

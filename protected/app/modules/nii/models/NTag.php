@@ -40,6 +40,9 @@ class NTag extends NActiveRecord
 			'columns'=>array(
 				'id'=>'pk',
 				'tag'=>'string'
+			),
+			'keys'=>array(
+				array('tag_key', 'tag', true)
 			)
 		);
 	}

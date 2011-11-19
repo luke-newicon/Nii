@@ -36,8 +36,9 @@ class CrmModule extends NWebModule
 			'crm.models.*',
 			'crm.components.*',
 		));
-		if(!Yii::app()->user->isGuest)
-			$this->addMenuItem(CHtml::image(Yii::app()->baseUrl.'/images/user_gray.png', 'CRM'), array('/crm/index/index'));
+		
+		Yii::app()->menus->addItem('main', 'CRM', array('/crm/index/index'));
+		
 	}
 
 

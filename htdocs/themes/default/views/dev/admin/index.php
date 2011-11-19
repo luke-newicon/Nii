@@ -1,4 +1,5 @@
-<?php $this->widget('nii.widgets.NTabs', 
+<?php 
+$this->widget('nii.widgets.NTabs', 
 	array(
 		'id' => 'DeveloperTabs',
 		'tabs' => array(
@@ -17,3 +18,24 @@
 //		'title' => 'Developer Tools',
 	)
 ); ?>
+<?php 
+//$tabs = array();
+//foreach($modules as $m=>$views){
+//	$tabs[$m]=array('id'=>$m, 'content'=>$this->renderPartial("$m.views.dev.index",null,true));
+//}
+?>
+<?php 
+//$this->widget('nii.widgets.NTabs', 
+//	array(
+//		'id' => 'DeveloperTabsAuto',
+//		'tabs' =>$tabs,
+//		'options' => array(
+//			'cache' => true,
+//		),
+//		'htmlOptions' => array(
+//			//'class' => 'vertical',
+//		),
+////		'title' => 'Developer Tools',
+//	)
+//); 
+?>

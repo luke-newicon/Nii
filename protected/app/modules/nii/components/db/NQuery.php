@@ -8,6 +8,18 @@ Class NQuery extends CComponent
 	
 	private $_multiInsert = null;
 	private $_params;
+	private $_tableName;
+	
+	/**
+	 * the database connection
+	 * @var CDbConnection
+	 */
+	private $_db;
+	
+	public function __construct($model){
+		$this->_tableName = $model->tableName();
+		$this->_db = $model->getDbConnection();
+	}
 	
 	/**
 	 * insert multiple rows in to the database at once. Add values using 
@@ -17,8 +29,8 @@ Class NQuery extends CComponent
 	 * @param boolean $ignore set to true if you want to do an INSERT IGNORE rather than just INSERT
 	 * @return NQuery
 	 */
-	public function multiInsert($tblName, $fields, $ignore=false){
-		$this->_multiInsert['table'] = $tblName;
+	public function multiInsert($fields, $ignore=false){
+		$this->_multiInsert['table'] = $this->_tableName;
 		$this->_multiInsert['fields'] = $fields;
 		$this->_multiInsert['ignore'] = $ignore;
 		return $this;			
@@ -91,8 +103,7 @@ Class NQuery extends CComponent
 	}
 	
 	public function execute(){
-		Yii::app()->getMyDb()
-			->createCommand($this->getSql())
+		$this->_db->createCommand($this->getSql())
 			->bindValues($this->_params)
 			->execute();
 	}
