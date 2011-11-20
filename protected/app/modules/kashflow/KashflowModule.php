@@ -14,8 +14,10 @@ class KashflowModule extends NWebModule
 	public $description = 'Interface with a Kashflow account';
 	public $version = '0.0.1';
 	
+	public $url = 'https://securedwebapp.com/api/service.asmx?WSDL';
 	public $username;
 	public $password;
+	public $show_menu = true;
 	
 	public function init(){
 		Yii::import('kashflow.components.*');
@@ -23,24 +25,26 @@ class KashflowModule extends NWebModule
 	}
 	
 	public function setup(){
-		Yii::app()->menus->addItem('main', 'Kashflow', '#', null, array(
-			'visible' => Yii::app()->user->checkAccess('menu-kashflow'),
-		));
-		Yii::app()->menus->addItem('main', 'Customers', array('/kashflow/admin/customers'), 'Kashflow', array(
-			'visible' => Yii::app()->user->checkAccess('kashflow/admin/customers'),
-		));
-		Yii::app()->menus->addItem('main', 'Quotes', array('/kashflow/admin/quotes'), 'Kashflow', array(
-			'visible' => Yii::app()->user->checkAccess('kashflow/admin/quotes'),
-		));
-		Yii::app()->menus->addItem('main', 'Invoices', array('/kashflow/admin/invoices'), 'Kashflow', array(
-			'visible' => Yii::app()->user->checkAccess('kashflow/admin/invoices'),
-		));
-		Yii::app()->menus->addItem('main', 'Suppliers', array('/kashflow/admin/suppliers'), 'Kashflow', array(
-			'visible' => Yii::app()->user->checkAccess('kashflow/admin/suppliers'),
-		));
-		Yii::app()->menus->addItem('main', 'Receipts', array('/kashflow/admin/receipts'), 'Kashflow', array(
-			'visible' => Yii::app()->user->checkAccess('kashflow/admin/receipts'),
-		));
+		if($this->show_menu){
+			Yii::app()->menus->addItem('main', 'Kashflow', '#', null, array(
+				'visible' => Yii::app()->user->checkAccess('menu-kashflow'),
+			));
+			Yii::app()->menus->addItem('main', 'Customers', array('/kashflow/admin/customers'), 'Kashflow', array(
+				'visible' => Yii::app()->user->checkAccess('kashflow/admin/customers'),
+			));
+			Yii::app()->menus->addItem('main', 'Quotes', array('/kashflow/admin/quotes'), 'Kashflow', array(
+				'visible' => Yii::app()->user->checkAccess('kashflow/admin/quotes'),
+			));
+			Yii::app()->menus->addItem('main', 'Invoices', array('/kashflow/admin/invoices'), 'Kashflow', array(
+				'visible' => Yii::app()->user->checkAccess('kashflow/admin/invoices'),
+			));
+			Yii::app()->menus->addItem('main', 'Suppliers', array('/kashflow/admin/suppliers'), 'Kashflow', array(
+				'visible' => Yii::app()->user->checkAccess('kashflow/admin/suppliers'),
+			));
+			Yii::app()->menus->addItem('main', 'Receipts', array('/kashflow/admin/receipts'), 'Kashflow', array(
+				'visible' => Yii::app()->user->checkAccess('kashflow/admin/receipts'),
+			));
+		}
 	}
 	
 	public function install(){
@@ -59,26 +63,45 @@ class KashflowModule extends NWebModule
 	
 	public function permissions() {
 		return array(
-//			'task' => array('description' => 'Tasks',
-//				'tasks' => array(
-//					'view' => array('description' => 'View Tasks',
-//						'roles' => array('administrator','editor','viewer'),
-//						'operations' => array(
-//							'task/admin/tasks',
-//							'task/admin/viewTask',
-//							'menu-tasks',
-//						),
-//					),
-//					'manage' => array('description' => 'Add/Edit/Delete Tasks',
-//						'roles' => array('administrator','editor'),
-//						'operations' => array(
-//							'task/admin/addTask',
-//							'task/admin/editTask',
-//							'task/admin/deleteTask',
-//						),
-//					),
-//				),
-//			),
+			'kashflow' => array('description' => 'Kashflow',
+				'tasks' => array(
+					'customers' => array('description' => 'View Customers',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'kashflow/admin/customers',
+							'menu-kashflow',
+						),
+					),
+					'quotes' => array('description' => 'View Quotes',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'kashflow/admin/quotes',
+							'menu-kashflow',
+						),
+					),
+					'invoices' => array('description' => 'View Invoices',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'kashflow/admin/invoices',
+							'menu-kashflow',
+						),
+					),
+					'suppliers' => array('description' => 'View Suppliers',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'kashflow/admin/suppliers',
+							'menu-kashflow',
+						),
+					),
+					'receipts' => array('description' => 'View Receipts',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'kashflow/admin/receipts',
+							'menu-kashflow',
+						),
+					),
+				),
+			),
 		);
 	}
 }

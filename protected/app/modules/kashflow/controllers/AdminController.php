@@ -3,7 +3,12 @@
 class AdminController extends AController {
 
 	public function actionIndex() {
-		$this->redirect(array('customers'));
+		$model = new KashflowCustomer;
+		$model->CustomerID = 4889944;
+		$model->Name = 'Luke Spencer';
+		print_r($model->UpdateCustomer());
+		
+//		$this->redirect(array('customers'));
 	}
 
 	public function actionCustomers() {
