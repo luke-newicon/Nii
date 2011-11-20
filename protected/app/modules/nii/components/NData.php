@@ -152,8 +152,7 @@ class NData
 		$model = new $model;
 		$allcolumns = $model->columns(array());
 		$columns = array();
-				
-	
+
 		foreach ($allcolumns as $col) {
 			if ($col['name']) {
 				if (array_key_exists($col['name'], $cols)) {
@@ -167,7 +166,8 @@ class NData
 		// reorder the columns
 		$ordered = array();
 		foreach($cols as $key => $v){
-			$ordered[$key] = $columns[$key];
+			if(isset($columns[$key]))
+				$ordered[$key] = $columns[$key];
 		}
 		
 		

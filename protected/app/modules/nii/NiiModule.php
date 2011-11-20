@@ -173,6 +173,9 @@ class NiiModule extends NWebModule
 		NSettings::install();
 		NTaggable::install();
 		
+		// Temporary as the grid is incorrectly still using the settings table.
+		Setting::install('Setting');
+		
 	}
 	
 	/**
