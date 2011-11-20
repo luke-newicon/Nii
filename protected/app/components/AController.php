@@ -14,7 +14,7 @@ class AController extends NController {
 	public $layout = '//layouts/admin1column';
 
 	public function init() {
-		Yii::app()->errorHandler->errorAction = '/admin/index/error';
+		Yii::app()->errorHandler->errorAction = '/admin/error';
 		
 		$this->menu = array(
 			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>($this->parentActive('admin/index')||$this->parentActive('admin/settings')||$this->parentActive('admin/modules')),
@@ -36,18 +36,6 @@ class AController extends NController {
 			return true;
 	}
 
-	/**
-	 * This rule prevents all actions on controllers
-	 * from unauthenticated users unless explicitly set
-	 * @return array
-	 */
-//	public function accessRules() {
-//		return array(
-//			array('deny',
-//				'users' => array('?'),
-//			),
-//		);
-//	}
 	public function accessRules() {
 		return array(
 			array('allow',

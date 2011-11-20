@@ -31,6 +31,11 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'password'); ?>
 		</div>
 	</div>
+	<div class="field">
+		<?php echo $form->checkBox($model, 'show_menu'); ?>
+		<label>Show Kashflow in main menu.</label>
+		<?php echo $form->error($model, 'show_menu'); ?>
+	</div>
 	<div class="actions">
 		<input id="settings-general-save" type="submit" class="btn primary" value="Save" />
 	</div>

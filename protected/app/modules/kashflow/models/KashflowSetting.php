@@ -4,6 +4,7 @@ class KashflowSetting extends CFormModel {
 
 	public $username;
 	public $password;
+	public $show_menu;
 	
 	public function init(){
 		foreach($this->attributes as $key => $attribute)
@@ -15,7 +16,7 @@ class KashflowSetting extends CFormModel {
 	 */
 	public function rules() {
 		return array(
-			array('username, password', 'safe'),
+			array('username, password, show_menu', 'safe'),
 		);
 	}
 
@@ -26,6 +27,7 @@ class KashflowSetting extends CFormModel {
 		return array(
 			'username' => 'Username',
 			'password' => 'Password',
+			'show_menu' => 'Show Menu',
 		);
 	}
 	
