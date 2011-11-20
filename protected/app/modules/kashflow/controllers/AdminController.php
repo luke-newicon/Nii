@@ -4,18 +4,13 @@ class AdminController extends AController {
 
 	public function actionIndex() {
 		$model = new KashflowCustomer;
-		$model->CustomerID = 4889944;
 		$model->Name = 'Luke Spencer';
-		print_r($model->UpdateCustomer());
-		
+		print_r($model->GetCustomerAdvancePayments(4891765));
 //		$this->redirect(array('customers'));
 	}
 
 	public function actionCustomers() {
-
-		$model = new KashflowCustomer;
-
-		$customers = $model->GetCustomers();
+		$customers = Yii::app()->kashflow->GetCustomers();
 
 		$this->render('customers', array(
 			'customers' => $customers
@@ -23,10 +18,7 @@ class AdminController extends AController {
 	}
 	
 	public function actionQuotes() {
-
-		$model = new KashflowQuote;
-
-		$quotes = $model->GetQuotes();
+		$quotes = Yii::app()->kashflow->GetQuotes();
 
 		$this->render('quotes', array(
 			'quotes' => $quotes
@@ -34,10 +26,7 @@ class AdminController extends AController {
 	}
 	
 	public function actionInvoices() {
-
-		$model = new KashflowInvoice;
-
-		$invoices = $model->GetInvoices();
+		$invoices = Yii::app()->kashflow->GetInvoicesByDateRange('2011-11-01');
 
 		$this->render('invoices', array(
 			'invoices' => $invoices
@@ -45,10 +34,7 @@ class AdminController extends AController {
 	}
 	
 	public function actionSuppliers() {
-
-		$model = new KashflowSupplier;
-
-		$suppliers = $model->GetSuppliers();
+		$suppliers = Yii::app()->kashflow->GetSuppliers();
 
 		$this->render('suppliers', array(
 			'suppliers' => $suppliers
@@ -56,10 +42,7 @@ class AdminController extends AController {
 	}
 	
 	public function actionReceipts() {
-
-		$model = new KashflowReceipt;
-
-		$receipts = $model->GetReceipts();
+		$receipts = Yii::app()->kashflow->GetReceipts();
 
 		$this->render('receipts', array(
 			'receipts' => $receipts

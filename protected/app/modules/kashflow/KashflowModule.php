@@ -14,7 +14,6 @@ class KashflowModule extends NWebModule
 	public $description = 'Interface with a Kashflow account';
 	public $version = '0.0.1';
 	
-	public $url = 'https://securedwebapp.com/api/service.asmx?WSDL';
 	public $username;
 	public $password;
 	public $show_menu = true;
@@ -22,6 +21,11 @@ class KashflowModule extends NWebModule
 	public function init(){
 		Yii::import('kashflow.components.*');
 		Yii::import('kashflow.models.*');
+		Yii::import('kashflow.extensions.kashflowapi.components.KashflowApi');
+		$KashflowApi = new KashflowApi;
+		$KashflowApi->username = $this->username;
+		$KashflowApi->password = $this->password;
+		Yii::app()->setComponent('kashflow', $KashflowApi);
 	}
 	
 	public function setup(){

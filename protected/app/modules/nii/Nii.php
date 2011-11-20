@@ -191,14 +191,17 @@ class Nii extends CWebApplication
 		// explicitly set enabled to true for all core modules
 		foreach($this->_coreModules as $name=>$config){
 			$this->_coreModules[$name]['enabled'] = true;
-			$this->configure(array('modules'=>array($name=>$this->_coreModules[$name])));
+			
+			// Steve, whats this doing?  seems to be configuring the modules twice as this has already been done by the application.
+			// $this->configure(array('modules'=>array($name=>$this->_coreModules[$name])));
+			
 		}
 		
 		// merge module configuration with database modules
-		$activeMods = $this->_getModulesDbConfig();
-		if(!empty($activeMods))
+		$activeModules = $this->_getModulesDbConfig();
+		if(!empty($activeModules))
 			// add the active modules to the end of configuration
-			$this->configure(array('modules'=>$activeMods));
+			$this->configure(array('modules'=>$activeModules));
 	}
 
 	/**
