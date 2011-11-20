@@ -60,7 +60,7 @@ class NTaggable extends CActiveRecordBehavior
 		$q->multiInsert(array('model', 'model_id', 'tag_id'));
 		$model = get_class($this->getOwner()); 
 		foreach ($tagRows as $tag)
-			$q->multiInsertValues(array($model, $this->getOwner()->id, $tag->id));
+			$q->multiInsertValues(array($model, $this->getOwner()->id(), $tag->id));
 		$q->execute();
 	}
 	
@@ -107,9 +107,8 @@ class NTaggable extends CActiveRecordBehavior
 			// all tags applied to all of these model types
 			return $this->getModelTags();
 		}
-		
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
-			'model_id'=>$this->getOwner()->id, 
+			'model_id'=>$this->getOwner()->id(), 
 			'model'=>get_class($this->getOwner())), array('order'=>'tag ASC')
 		);
 		$tags = array();
@@ -154,6 +153,7 @@ class NTaggable extends CActiveRecordBehavior
 		$res = NTagLink::model()->with('tag')->findAllByAttributes(
 				array('model'=>get_class($model), 'tag_id'=>$tagIds),
 				array('order'=>'model ASC'));
+		
 			
 		$rowIds = array();$rows = array();
 		foreach ($res as $t)
@@ -198,6 +198,29 @@ class NTaggable extends CActiveRecordBehavior
 			
 		return $rows;
 	}
+	
+	
+	/**
+	 * return true if the tag exists on the record. 
+	 * @param string $tag the tag
+	 * @return boolean
+	 */
+	public function hasTag($tag){
+		return $this->hasTags(array($tag));
+	}
+	
+	/**
+	 * retuns true if all tags are on this record
+	 * @param array $tags
+	 * @return boolean 
+	 */
+	public function hasTags($tags){
+		foreach($tags as $tag){
+			if(!in_array($tag, $this->tags)) return false;
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Install necessary tables for behavior
