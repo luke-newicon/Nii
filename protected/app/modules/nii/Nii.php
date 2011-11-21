@@ -182,11 +182,12 @@ class Nii extends CWebApplication
 		// If you are interested check out line 260 of CModule.php and then the getNiiModules function
 		// 
 		// So either this code which I have modded a bit but still does the same thing. Or ensure we always define the 'enabled' property in the core config.php files
-
-		// merge module configuration with database modules
-		$activeModules = $this->_getModulesDbConfig();
+		$this->setModules($this->_coreModules);
 		
-		$this->setModules(array_merge($activeModules, $this->_coreModules));
+		// Set database modules
+		$activeModules = $this->_getModulesDbConfig();
+		if(!empty($activeModules))
+			$this->setModules($activeModules);
 	}
 
 	/**
@@ -205,10 +206,6 @@ class Nii extends CWebApplication
 				
 				if ($this->isNiiModule($name))
 					Yii::app()->getModule($name);
-				// enforce core modules have their enabled property set to true. (Yii assumes this if defined in config.php but does not set the property)
-				// Nii relies on this property to determine which modules are active.
-//				if($this->isCoreModule())
-//					Yii::app()->getModule($name)->enabled = true;
 				
 			}
 		} catch (Exception $e){
