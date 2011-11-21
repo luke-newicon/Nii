@@ -64,7 +64,9 @@
 			// Delete note button
 			this.delegate(".nnote-delete", "click", function(){
 				var noteId = $(this).parent().parent().parent().parent().data('noteid');
-				$('#'+id).NNotes("deleteNote",noteId);
+				var model = $(this).parent().parent().parent().parent().data('model');
+				var modelId = $(this).parent().parent().parent().parent().data('modelid');
+				$('#'+id).NNotes("deleteNote",noteId,model,modelId);
 				return false;
 			});
 			
@@ -170,14 +172,16 @@
 		
 		
 		// DELETE A NOTE -------------------------------------------------------
-		deleteNote: function(noteId){
+		deleteNote: function(noteId,model,modelId){
 			var id = this.attr('id');
 			if(confirm("Are you sure you want to delete the note?")){
 				$.ajax({
 					url: this.data('ajaxLocation'),
 					type: "POST",
-					data: ({noteId:noteId,action:'deleteNote'}),
-					success: function(){
+				dataType: "json",
+					data: ({noteId:noteId,action:'deleteNote',note_model:model,model_id:modelId}),
+					success: function(response){
+						$('.notes_count').html(response.count);
 						$('#'+id).NNotes("refreshNote");
 					}
 				});
@@ -218,13 +222,16 @@
 			$.ajax({
 				url: settings.ajaxLocation,
 				type: "POST",
+				dataType: "json",
 				data: ({
 					model_id:$(this).data('model-id'),
 					model:dModel,
 					note:dNote,
 					action:'addNote'}),
-				success: function(newNoteId){
+				success: function(response){
+					newNoteId = response.id;
 					$('#'+id+' .noteInput').val('');
+					$('.notes_count').html(response.count);
 					$('#'+id).data('addedItem',newNoteId);
 					$('#'+id).NNotes("refreshNote");
 					$('#'+id).NNotes("closeEditView");

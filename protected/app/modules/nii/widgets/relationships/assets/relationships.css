@@ -15,6 +15,7 @@ div.relationship_item {
 	display: block;
 	margin-bottom: 3px;
 	background-color: #fafafa;
+	line-height: 24px;
 }
 
 a.relationship_delete_button {

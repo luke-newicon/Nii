@@ -10,7 +10,7 @@
 			
 			<div class="unit">
 				<div class="unit size1of6 detailLabel"><?=$this->t('Event Name')?></div>
-				<div class="lastUnit"><?php echo $model->name; ?></div>
+				<div class="lastUnit item-title"><?php echo $model->name; ?></div>
 			</div>
 		</div>
 		
@@ -50,9 +50,9 @@
 		array(
 			'tabs' => array(
 	//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-				'Attendees'=>array('ajax'=>array('attendees','id'=>$model->id), 'id'=>'attendees'),
-				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
-				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
+				'Attendees'=>array('ajax'=>array('attendees','id'=>$model->id), 'id'=>'attendees', 'count'=>$model->totalAttendees, 'count_class'=>'notice'),
+				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes', 'count'=>$model->countNotes()),
+				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments', 'count'=>$model->countAttachments()),
 			),
 			'options' => array(
 				'cache' => true,

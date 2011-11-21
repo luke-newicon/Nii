@@ -54,7 +54,7 @@ class NNotesAction extends CAction
 			$n->note = $note;
 
 			if($n->save())
-				echo $n->id;
+				echo CJSON::encode(array('id'=>$n->id,'count'=>NNote::model()->countByAttributes(array('model'=>$model, 'model_id'=>$modelId))));
 			else
 				return false;
 		}
@@ -70,8 +70,11 @@ class NNotesAction extends CAction
 		else
 			return false;
 		
+		$model = $_REQUEST['note_model'];
+		$modelId = $_REQUEST['model_id'];
+		
 		if(NNote::model()->deleteByPk($noteId))
-			return true;
+			echo CJSON::encode(array('count'=>NNote::model()->countByAttributes(array('model'=>$model, 'model_id'=>$modelId))));
 		else
 			return false;
 	}

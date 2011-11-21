@@ -162,7 +162,7 @@ class HftEvent extends NActiveRecord
 	}
 	
 	public function getTotalAttendees() {
-		$attendees = HftEventAttendee::model()->findByAttributes(array('event_id'=>$this->id));
+		$attendees = HftEventAttendee::model()->findAllByAttributes(array('event_id'=>$this->id));
 		$count = 0;
 		if ($attendees) {
 			foreach ($attendees as $a)
@@ -172,7 +172,18 @@ class HftEvent extends NActiveRecord
 			return $count;
 	}
 	
-	public function addAttendee() {
-		
+	public function countNotes() {
+		$model = get_class($this);
+		$model_id = $this->id;
+		Yii::import('nii.widgets.notes.models.NNote');
+		return NNote::countNotes($model, $model_id);
 	}
+	
+	public function countAttachments() {
+		$model = get_class($this);
+		$model_id = $this->id;
+		Yii::import('nii.widgets.attachments.models.NAttachment');
+		return NAttachment::countAttachments($model, $model_id);
+	}
+	
 }

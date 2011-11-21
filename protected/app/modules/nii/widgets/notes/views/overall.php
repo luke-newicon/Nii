@@ -24,6 +24,8 @@
 					'canEdit'=>$canEdit,
 					'canDelete'=>$canDelete,
 					'displayUserPic'=>$displayUserPic,
+					'model'=>$model,
+					'model_id'=>$modelId,
 				)
 			));
 		?>

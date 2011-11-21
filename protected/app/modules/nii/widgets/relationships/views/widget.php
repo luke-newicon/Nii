@@ -43,7 +43,8 @@
 					data: ({id:relid,action:'delete'}),
 					success: function(){
 						$.fn.yiiListView.update(model_id+'_relationshiplist');
-						showMessage('Relationship deleted');
+						nii.showMessage('Relationship deleted');
+						return false;
 					}
 				});
 			} else {

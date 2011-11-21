@@ -73,5 +73,12 @@ class HftEventAttendee extends NActiveRecord
 		else
 			return $this->attendee_name;
 	}
+	
+	public function getContactProfileImage($type='grid-thumbnail') {
+		if ($this->contact)
+			return $this->contact->getPhoto($type.'-'.strtolower($this->contact->contact_type));
+		else
+			return '<img src="'.Yii::app()->image->url(0,$type).'" />';
+	}
 		
 }

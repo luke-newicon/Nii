@@ -99,4 +99,11 @@ class NNote extends NAppRecord
 	public function getName() {
 		return $this->user->name;
 	}
+	
+	public static function countNotes($model, $model_id, $user_id=null) {
+		$attributes = array('model'=>$model,'model_id'=>$model_id);
+		if ($user_id)
+			$attributes['user_id'] = $user_id;
+		return NNote::model()->countByAttributes($attributes);
+	}
 }

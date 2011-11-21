@@ -376,6 +376,35 @@ h2.contact-title {
     position: absolute;
 }
 
+.attendee_list-guests {
+	color: #aaa;
+}
+
+.attendee_list-item {
+	background-color: #FAFAFA;
+    margin-bottom: 3px;
+    padding: 4px 3px;
+	line-height: 24px;
+}
+
+a.attendee_list_delete_button {
+	display: none;
+}
+div.attendee_list-item:hover a.attendee_list_delete_button {
+	display: block;
+}
+
+.item-title {
+	color: #252355;
+    font-size: 1.6em;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.tab_count_label {
+	line-height: 1.3em; margin: 7px 0; min-width: 10px; text-align: center;
+}
+
 /**
 * Extra form element sizing constratints, by pixel width
 */
