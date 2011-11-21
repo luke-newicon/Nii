@@ -123,6 +123,27 @@ class EventController extends AController
 	/**
 	 * @param type $id
 	 */
+	public function actionAttendees($id) {
+
+		$model = HftEvent::model()->findByPk($id);
+		
+		if ($model) {
+			$fields = array(
+				'model'=>$model,
+				'id'=>$model->id,
+				'attendees'=>null,
+			);
+			$attendees = HftEventAttendee::model()->findAllByAttributes(array('event_id'=>$id));
+			if ($attendees)
+				$fields['attendees'] = $attendees;
+		
+			$this->render('view/tabs/attendees',$fields);
+		}
+	}
+	
+	/**
+	 * @param type $id
+	 */
 	public function actionNotes($id) {
 
 		$model = HftEvent::model()->findByPk($id);
