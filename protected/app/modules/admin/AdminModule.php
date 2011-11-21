@@ -9,6 +9,8 @@ class AdminModule extends NWebModule {
 	public $logo;
 	public $menuAppname = true;
 	public $topbarColor;
+	public $h2Color = '#404040';
+	public $h3Color = '#404040';
 	public $menuSearch = false;
 
 	public function init() {
