@@ -62,6 +62,7 @@ class HftModule extends NWebModule
 		HftDonationType::install('HftDonationType');
 		HftEvent::install('HftEvent');
 		HftEventOrganiserType::install('HftEventOrganiserType');
+		HftEventAttendee::install('HftEventAttendee');
 		$this->installPermissions();
 	}
 	

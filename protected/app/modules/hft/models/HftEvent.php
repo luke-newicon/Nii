@@ -38,12 +38,13 @@ class HftEvent extends NActiveRecord
 			'organiser_name' => 'Organiser\'s Name',
 			'description' => 'Description of the Event',
 			'editLink' => 'Edit',
+			'totalAttendees' => 'Attendees'
 		);
 	}
 	
 	public function relations() {
 		return array(
-//			'attendees'=>array(self::HAS_MANY, 'HftAttendees', 'event_id'),
+			'attendees'=>array(self::HAS_MANY, 'HftEventAttendee', 'event_id'),
 			'org_type'=>array(self::BELONGS_TO, 'HftEventOrganiserType', 'organiser_type_id'),
 		);
 	}
@@ -112,6 +113,11 @@ class HftEvent extends NActiveRecord
 				'name' => 'organiser_name',
 			),
 			array(
+				'name' => 'totalAttendees',
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
+			),
+			array(
 				'name' => 'editLink',
 				'type' => 'raw',
 				'value' => '$data->editLink',
@@ -153,5 +159,20 @@ class HftEvent extends NActiveRecord
 	public function getDisplayOrganiserType() {
 		if ($this->org_type)
 			return ($this->org_type->name);
+	}
+	
+	public function getTotalAttendees() {
+		$attendees = HftEventAttendee::model()->findByAttributes(array('event_id'=>$this->id));
+		$count = 0;
+		if ($attendees) {
+			foreach ($attendees as $a)
+				$count = $count + 1 + $a->additional_attendees;
+		}
+		if ($this->id)
+			return $count;
+	}
+	
+	public function addAttendee() {
+		
 	}
 }

@@ -50,6 +50,7 @@
 		array(
 			'tabs' => array(
 	//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
+				'Attendees'=>array('ajax'=>array('attendees','id'=>$model->id), 'id'=>'attendees'),
 				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
 				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
 			),
