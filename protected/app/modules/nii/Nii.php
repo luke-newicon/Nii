@@ -151,6 +151,81 @@ class Nii extends CWebApplication
 	}
 	
 	/**
+	 * Merges all modules into the Yii modules configuration array.
+	 * This must be called before any subsequent calls to Yii::app()->getModules();
+	 * 
+	 * @see Nii::setupModules
+	 * @return void
+	 */
+	public function configureModules(){
+		
+		// The core modules are defined in the application config
+		// before merging with the database modules
+		$this->_coreModules = $this->getModules();
+		// exclude modules (like gii) from the core modules
+		foreach($this->getExcludeModules() as $k=>$module)
+			unset($this->_coreModules[$module]);
+		
+		// enable all core modules, by default enabled is false so we must
+		// explicitly set enabled to true for all core modules
+		// update the core configuration to include the enabled property.
+		foreach($this->_coreModules as $name=>$config){
+			$enabled = array_key_exists('enabled', $this->_coreModules[$name]) ? $this->_coreModules[$name]['enabled'] : true;
+			$this->_coreModules[$name]['enabled'] = $enabled;
+		}
+		
+		// Steve, whats this doing?  seems to be configuring the modules twice as this has already been done by the application.
+		// Lines 161 to 177 are building up to this pinicle moment. It adds the additional enabled=>true property to the core modules. Nii relies on this to return modules that are enabled.
+		// Yii itself assumes core modules (defined in config) are enabled but does not update the modules configuration...
+		// This ensures the enabled property is set. Alternatively, each module in the config file could just have it hard coded.
+		// I could loop through and do getModule($name)->enabled = true, but this would initilaise the module and I don't want to do that as it is the reponsibility of the initialisation function
+		// If you are interested check out line 260 of CModule.php and then the getNiiModules function
+		// 
+		// So either this code which I have modded a bit but still does the same thing. Or ensure we always define the 'enabled' property in the core config.php files
+
+		// merge module configuration with database modules
+		$activeModules = $this->_getModulesDbConfig();
+		
+		$this->setModules(array_merge($activeModules, $this->_coreModules));
+	}
+
+	/**
+	 * gets all NWebModules in the app and returns them in an array,
+	 * This initialises each module, it calls the getModule on each module thus instantiating each if they
+	 * are not already, thus running each modules initialisation (init) method
+	 * 
+	 * @see Nii::setupModules
+	 * @return void
+	 */
+	public function initialiseModules(){
+		// load the modules. Loops through all modules core modules are first in the configuration array
+		// and will therefore get initialised first
+		try {
+			foreach($this->getModules() as $name => $config) {
+				
+				if ($this->isNiiModule($name))
+					Yii::app()->getModule($name);
+				// enforce core modules have their enabled property set to true. (Yii assumes this if defined in config.php but does not set the property)
+				// Nii relies on this property to determine which modules are active.
+//				if($this->isCoreModule())
+//					Yii::app()->getModule($name)->enabled = true;
+				
+			}
+		} catch (Exception $e){
+			Yii::app()->updateModule($name, 0);
+			Yii::app()->user->setFlash('error',"Unable to load the '$name' module. ");
+			if (YII_DEBUG){
+				ob_start();
+				Yii::app()->displayException($e);
+				$errorHtml = ob_get_clean();
+				$msg = '<strong>'.$e->getMessage().'</strong>';
+				$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
+				Yii::app()->user->setFlash('error-block-message', $msg);
+			}
+		}
+	}
+	
+	/**
 	 * return boolean true|false whether the module is a nii module
 	 * @param string $name the module name key
 	 */
@@ -171,67 +246,14 @@ class Nii extends CWebApplication
 		}
 		return $ret;
 	}
-		
+	
 	/**
-	 * Merges all modules into the Yii modules configuration array.
-	 * This must be called before any subsequent calls to Yii::app()->getModules();
-	 * 
-	 * @see Nii::setupModules
-	 * @return void
+	 * Determin if the module is a core module
+	 * @name string $name module string id
+	 * @return boolean
 	 */
-	public function configureModules(){
-		// The core modules are defined in the application config
-		// before merging with the database modules
-		$this->_coreModules = $this->getModules();
-		// exclude modules (like gii) from the core modules
-		foreach($this->getExcludeModules() as $k=>$module)
-			unset($this->_coreModules[$module]);
-		
-		// enable all core modules, by default enabled is false so we must
-		// explicitly set enabled to true for all core modules
-		foreach($this->_coreModules as $name=>$config){
-			$this->_coreModules[$name]['enabled'] = true;
-			
-			// Steve, whats this doing?  seems to be configuring the modules twice as this has already been done by the application.
-			// $this->configure(array('modules'=>array($name=>$this->_coreModules[$name])));
-			
-		}
-		
-		// merge module configuration with database modules
-		$activeModules = $this->_getModulesDbConfig();
-		if(!empty($activeModules))
-			// add the active modules to the end of configuration
-			$this->configure(array('modules'=>$activeModules));
-	}
-
-	/**
-	 * gets all NWebModules in the app and returns them in an array,
-	 * This initialises each module, it calls the getModule on each module thus instantiating each if they
-	 * are not already, thus running each modules initialisation (init) method
-	 * 
-	 * @see Nii::setupModules
-	 * @return void
-	 */
-	public function initialiseModules(){
-		// load the modules. Loops through all modules core modules are first in the configuration array
-		// and will therefore get initialised first
-		try {
-			foreach($this->getModules() as $name => $config) {
-				if ($this->isNiiModule($name))
-					Yii::app()->getModule($name);
-			}
-		} catch (Exception $e){
-			Yii::app()->updateModule($name, 0);
-			Yii::app()->user->setFlash('error',"Unable to load the '$name' module. ");
-			if (YII_DEBUG){
-				ob_start();
-				Yii::app()->displayException($e);
-				$errorHtml = ob_get_clean();
-				$msg = '<strong>'.$e->getMessage().'</strong>';
-				$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
-				Yii::app()->user->setFlash('error-block-message', $msg);
-			}
-		}
+	public function isCoreModule($name){
+		return array_key_exists($key, $this->getCoreModules());
 	}
 	
 	/**
