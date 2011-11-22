@@ -33,6 +33,24 @@
 	</div>
 	<div class="line">
 		<div class="field unit size1of2">
+			<?php echo NHtml::activeLabel($model, 'project_id'); ?>
+			<div class="inputContainer">
+				<div class="input">
+					<?php echo CHtml::activeDropDownList($model, 'project_id', $model->projectList(), array('disabled'=>'disabled')); ?>
+				</div>
+			</div>
+		</div>
+		<div class="field lastUnit">
+			<?php echo NHtml::activeLabel($model, 'customer_id'); ?>
+			<div class="inputContainer">
+				<div class="input">
+					<?php echo CHtml::activeDropDownList($model, 'customer_id', $model->customerList(), array('disabled'=>'disabled')); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="line">
+		<div class="field unit size1of2">
 			<?php echo NHtml::activeLabel($model, 'priority') ?>
 			<div class="inputContainer">
 				<div class="input">
@@ -69,11 +87,5 @@
 	</div>
 	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	</div>
-		<div class="actions">
-			<a href="<?php echo CHtml::normalizeUrl(array('tasks')) ?>" class="btn">Back to All Tasks</a>
-			<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
-				<a href="<?php echo CHtml::normalizeUrl(array('editTask','id'=>$model->id())) ?>" class="btn primary">Edit</a>
-			<?php endif; ?>
-		</div>
 	<?php endif; ?>
 </fieldset>

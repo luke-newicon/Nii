@@ -11,9 +11,10 @@
 ?>
 
 <div class="page-header">
-	<h2><?php echo $project->name; ?></h2>
+	<h2>Project: <?php echo $project->name; ?></h2>
 	<div class="action-buttons">
-		<a href="#" class="btn active" >Team View</a>
+		<a href="<?php echo CHtml::normalizeUrl(array('/task/admin/projects')) ?>" class="btn">Back to All Projects</a>
+		<a href="#" class="btn" >Team View</a>
 		<a href="#" class="btn" >Client View</a>
 	</div>
 </div>
@@ -28,14 +29,14 @@
 		<!-- fin -->
 	</div>
 	<div class="span3">
-		<p class="hint">members:</p>
+		<p class="hint">Members:</p>
 		<ul class="media-grid">
 			<li><a id="dandecock" href="#" title="Dan De Luca" data-content="Contact details?" rel="popover" style="padding:3px;" ><?php $this->widget('nii.widgets.Gravatar',array('email'=>'dan.deluca@newicon.net', 'size'=>25)); ?></a></li>
 			<li><a id="robinwill" href="#" title="Robin Williams" data-content="Contact details?" rel="popover" style="padding:3px;"><?php $this->widget('nii.widgets.Gravatar',array('email'=>'robin.williams@newicon.net', 'size'=>25)); ?></a></li>
 		</ul>
 	</div>
 	<div class="span3">
-		<p class="hint">shared:</p>
+		<p class="hint">Shared:</p>
 		<ul class="media-grid">
 			<li><a id="steveo" href="#" title="Steve O'Brien" data-content="Contact details?" rel="popover" style="padding:3px;" ><?php $this->widget('nii.widgets.Gravatar',array('email'=>'steve@newicon.net', 'size'=>25)); ?></a></li>
 		</ul>

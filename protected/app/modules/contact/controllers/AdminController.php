@@ -1,10 +1,6 @@
 <?php
 
 class AdminController extends AController {
-	
-	public function actions(){
-		return Yii::app()->getModule('contact')->adminActions;
-	}
 
 	/**
 	 * This is the default 'index' action that is invoked

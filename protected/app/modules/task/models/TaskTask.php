@@ -16,7 +16,7 @@ class TaskTask extends NActiveRecord {
 
 	public function rules() {
 		return array(
-			array('name', 'required'),
+			array('name, project_id, customer_id', 'required'),
 			array('description, priority, importance, finish_date, owner', 'safe'),
 			array('id, name, description, priority, importance, finish_date, owner', 'safe', 'on' => 'search'),
 		);
@@ -34,6 +34,10 @@ class TaskTask extends NActiveRecord {
 			'importance' => 'Importance',
 			'finish_date' => 'Finish Date',
 			'owner' => 'Owner',
+			'project_name' => 'Project',
+			'customer_name' => 'Customer',
+			'project_id' => 'Project',
+			'customer_id' => 'Customer',
 		);
 	}
 
@@ -41,7 +45,10 @@ class TaskTask extends NActiveRecord {
 	 * @return array relational rules.
 	 */
 	public function relations() {
-		return array();
+		return array(
+			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
+			'project' => array(self::BELONGS_TO, 'TaskProject', 'project_id'),
+		);
 	}
 
 	/**
@@ -67,12 +74,26 @@ class TaskTask extends NActiveRecord {
 		));
 	}
 	
-	public function editLink($text){
+	public function editLink($text=null){
+		if(!$text)
+			$text = $this->name;
 		return CHtml::link($text, array('/task/admin/editTask','id'=>$this->id()));
 	}
 	
-	public function viewLink($text){
+	public function viewLink($text=null){
+		if(!$text)
+			$text = $this->name;
 		return CHtml::link($text, array('/task/admin/viewTask','id'=>$this->id()));
+	}
+	
+	public function viewProject(){
+		if($this->project)
+			return $this->project->viewLink();
+	}
+	
+	public function viewCustomer(){
+		if($this->customer)
+			return $this->customer->viewLink();
 	}
 
 	public static function install($className=__CLASS__) {
@@ -89,8 +110,27 @@ class TaskTask extends NActiveRecord {
 				'importance' => 'int',
 				'finish_date' => 'date',
 				'owner' => 'string',
+				'customer_id' => 'int',
+				'project_id' => 'int',
 			),
 		);
 	}
+	
+	public function getCustomer_name(){
+		if($this->customer)
+			return $this->customer->name;
+	}
+	
+	public function getProject_name(){
+		if($this->project)
+			return $this->project->name;
+	}
 
+	public function projectList(){
+		return CHtml::listData(TaskProject::model()->findAll(), 'id', 'name');
+	}
+	
+	public function customerList(){
+		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
+	}
 }

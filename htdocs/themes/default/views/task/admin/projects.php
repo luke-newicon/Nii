@@ -14,14 +14,41 @@
 	<h2>Projects</h2>
 	<div class="action-buttons">
 		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
-			<a id="addproject" class="btn primary">Add a Project</a>
+			<a id="add-project" class="btn primary">Add a Project</a>
 		<?php endif; ?>
 	</div>
 </div>
-
-
-Hello... a boring ass grid of projects I guess? Or maybe borrow the cards stack idea from hotspot? With a grid view option?
-
+<?php if(TaskProject::model()->count()) : ?>
+<?php
+	$model = new TaskProject('search');
+	$dataProvider = $model->search();
+	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
+		'dataProvider' => $dataProvider,
+		'filter' => $model,
+		'id' => 'project-grid',
+		'enableButtons' => false,
+		'enableCustomScopes' => false,
+		'scopes' => array('enableCustomScopes' => false),
+		'columns' => array(
+			'name' => array(
+				'name' => 'name',
+				'type' => 'raw',
+				'value' => '$data->viewLink($data->name)',
+			),
+		),
+	));
+?>
+<?php else : ?>
+	<div class="alert-message block-message">
+		<h3>Welcome to your Projects</h3>
+		<p>You currently have no projects.  To get started, create a new project.</p>
+		<div class="alert-actions">
+		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
+			<a id="add-project-2" class="btn small primary">Create a new Project</a>
+		<?php endif; ?>
+		</div>
+	</div>
+<?php endif; ?>
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
 	<form>
 		<div class="field stacked	">
@@ -36,18 +63,10 @@ Hello... a boring ass grid of projects I guess? Or maybe borrow the cards stack 
 		</div>
 	</form>
 </div>
-
-<ul>
-<?php foreach(TaskProject::model()->findAll() as $p): ?>
-	<li><a href="<?php echo NHtml::url(array('/task/project/index','projectId'=>$p->id)); ?>" ><?php echo $p->name; ?></a></li>
-<?php endforeach; ?>
-</ul>
-
 <script>
-	
-	$(function(){
+	jQuery(function($){
 		$.fn.nii.form();
-		$('#addproject').click(function(){
+		$('#add-project,#add-project-2').click(function(){
 			$('#addprojectDialog').dialog({
 				modal:true,
 				width:'400',
@@ -70,5 +89,4 @@ Hello... a boring ass grid of projects I guess? Or maybe borrow the cards stack 
 			});
 		});
 	});
-	
 </script>

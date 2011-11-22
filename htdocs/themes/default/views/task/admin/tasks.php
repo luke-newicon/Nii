@@ -3,7 +3,7 @@
 	<h2>Tasks</h2>
 	<div class="action-buttons">
 		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
-			<a class="btn primary" data-controls-modal="modal-add-task" data-backdrop="static">Add a Task</a>
+		<a class="btn primary" href="<?php echo CHtml::normalizeUrl(array('/task/admin/addTask')) ?>">Add a Task</a>
 		<?php endif; ?>
 	</div>
 </div>
@@ -38,14 +38,24 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 					'type' => 'raw',
 					'value' => '$data->viewLink($data->name)',
 				),
-				'priority' => array(
-					'name' => 'priority',
-					'htmlOptions' => array('width' => '100px'),
+				'project' => array(
+					'name' => 'project_name',
+					'type' => 'raw',
+					'value' => '$data->viewProject()',
 				),
-				'importance' => array(
-					'name' => 'importance',
-					'htmlOptions' => array('width' => '100px'),
+				'customer' => array(
+					'name' => 'customer_name',
+					'type' => 'raw',
+					'value' => '$data->viewCustomer()',
 				),
+//				'priority' => array(
+//					'name' => 'priority',
+//					'htmlOptions' => array('width' => '100px'),
+//				),
+//				'importance' => array(
+//					'name' => 'importance',
+//					'htmlOptions' => array('width' => '100px'),
+//				),
 				'finish_date' => array(
 					'name' => 'finish_date',
 					'htmlOptions' => array('width' => '100px'),

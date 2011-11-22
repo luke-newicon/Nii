@@ -29,7 +29,7 @@ class TaskProject extends NActiveRecord {
 		return array(
 			'id' => 'ID',
 			'code' => 'Code',
-			'name' => 'Project',
+			'name' => 'Name',
 			'description' => 'Description',
 			'customer_id' => 'Customer',
 		);
@@ -59,6 +59,12 @@ class TaskProject extends NActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+	
+	public function viewLink($text=null){
+		if(!$text)
+			$text = $this->name;
+		return CHtml::link($text, array('/task/project/index', 'id'=>$this->id()));
+	}
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
@@ -74,6 +80,10 @@ class TaskProject extends NActiveRecord {
 				'customer_id' => 'int',
 			),
 		);
+	}
+	
+	public static function projectList(){
+		return CHtml::listData(self::model()->findAll(), 'id', 'name');
 	}
 
 }

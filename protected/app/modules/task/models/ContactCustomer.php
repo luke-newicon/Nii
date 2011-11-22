@@ -1,7 +1,7 @@
 <?php
 
 class ContactCustomer extends Contact {
-	
+
 	public $gridView = '//task/admin/customers';
 
 	/**
@@ -55,12 +55,12 @@ class ContactCustomer extends Contact {
 		$criteria->compare('id', $this->id);
 
 		return new NActiveDataProvider($this,
-			array(
-				'criteria' => $criteria,
-			)
+						array(
+							'criteria' => $criteria,
+						)
 		);
 	}
-	
+
 	public function columns() {
 		return array(
 			array(
@@ -70,6 +70,14 @@ class ContactCustomer extends Contact {
 				'name' => 'contact.name',
 			),
 		);
+	}
+
+	public function viewLink($text=null) {
+		if ($this->contact) {
+			if (!$text)
+				$text = $this->contact->name;
+			return CHtml::link($text, array('/contact/admin/customer', 'id' => $this->id()));
+		}
 	}
 
 	public static function install($className=__CLASS__) {
@@ -83,6 +91,15 @@ class ContactCustomer extends Contact {
 			),
 			'keys' => array()
 		);
+	}
+	
+	public function getName(){
+		if($this->contact)
+			return $this->contact->name; 
+	}
+	
+	public static function customerList(){
+		return CHtml::listData(self::model()->findAll(), 'id', 'name');
 	}
 
 }

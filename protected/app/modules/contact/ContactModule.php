@@ -9,7 +9,7 @@ class ContactModule extends NWebModule {
 	
 	public $contactModel = 'Contact';
 	
-	public $adminActions = array();
+	public $actions = array();
 	
 	public $views = array();
 

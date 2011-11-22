@@ -119,6 +119,7 @@ class NActiveRecord extends CActiveRecord
 				$s['columns'],
 				$options
 			);
+			$exists = $db->getSchema()->getTable($t->tableName());
 		}else{
 			// adds columns that dont exist in the database
 			// a column can also be a sql statement and so the key is not a column

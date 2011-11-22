@@ -37,14 +37,20 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/admin/suppliers'), Yii::app()->getModule('contact')->menu_label);
 		Yii::app()->menus->addItem('main', 'Staff', array('/contact/admin/staff'), Yii::app()->getModule('contact')->menu_label);
 		
-		Yii::app()->getModule('contact')->adminActions = array(
-			'customers' => 'task.components.actions.customers',
-			'suppliers' => 'task.components.actions.suppliers',
-			'staff' => 'task.components.actions.staff',
+		Yii::app()->getModule('contact')->actions = array(
+			'admin' => array(
+				'customers' => 'task.components.actions.customers',
+				'addcustomer' => 'task.components.actions.addcustomer',
+				'suppliers' => 'task.components.actions.suppliers',
+				'staff' => 'task.components.actions.staff',
+			),
 		);
 	}
 	
 	public function install(){
+//		TaskItem::install();
+//		TaskItemChild::install();
+//		TaskAssignment::install();
 		TaskTask::install();
 		$tasks = TaskTask::model()->findAll();
 		if(empty($tasks)){

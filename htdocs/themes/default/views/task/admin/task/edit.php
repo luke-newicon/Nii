@@ -14,8 +14,6 @@ $form = $this->beginWidget('NActiveForm', array(
 		<h2>Editing: <?php echo $model->name ?></h2>
 		<div class="action-buttons">
 			<a href="<?php echo CHtml::normalizeUrl(array('deleteTask','id'=>$model->id())) ?>" class="btn danger" data-confirm="Are you sure you want to delete this task?">Delete this Task</a>
-			<a href="<?php echo CHtml::normalizeUrl(array('viewTask','id'=>$model->id())) ?>" class="btn">Cancel</a>
-			<input type="submit" class="btn primary" value="Save" />
 		</div>
 	</div>
 <?php endif; ?>
@@ -39,6 +37,26 @@ $form = $this->beginWidget('NActiveForm', array(
 				<?php echo $form->textarea($model, 'description'); ?>
 			</div>
 			<?php echo $form->error($model, 'description'); ?>
+		</div>
+	</div>
+	<div class="line">
+		<div class="field unit size1of2">
+			<?php echo $form->labelEx($model, 'project_id'); ?>
+			<div class="inputContainer">
+				<div class="input">
+					<?php echo $form->dropDownList($model, 'project_id', $model->projectList(), array('prompt' => 'Select a project')); ?>
+				</div>
+				<?php echo $form->error($model, 'project_id'); ?>
+			</div>
+		</div>
+		<div class="field lastUnit">
+			<?php echo $form->labelEx($model, 'customer_id'); ?>
+			<div class="inputContainer">
+				<div class="input">
+					<?php echo $form->dropDownList($model, 'customer_id', $model->customerList(), array('prompt' => 'Select a customer')); ?>
+				</div>
+				<?php echo $form->error($model, 'customer_id'); ?>
+			</div>
 		</div>
 	</div>
 	<div class="line">
@@ -83,10 +101,10 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	</div>
-		<div class="actions">
-			<a href="<?php echo CHtml::normalizeUrl(array('viewTask','id'=>$model->id())) ?>" class="btn">Cancel</a>
-			<input type="submit" class="btn primary" value="Save" />
-		</div>
+	<div class="actions">
+		<a href="<?php echo CHtml::normalizeUrl(array('viewTask','id'=>$model->id())) ?>" class="btn">Cancel</a>
+		<input type="submit" class="btn primary" value="Save" />
+	</div>
 	<?php endif; ?>
 </fieldset>
 <?php $this->endWidget(); ?>

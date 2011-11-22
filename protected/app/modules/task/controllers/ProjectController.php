@@ -14,22 +14,22 @@
  *
  * @author steve
  */
-class ProjectController extends AController
-{
-	
-	public function actionCreate($project){
+class ProjectController extends AController {
+
+	public function actionCreate($project) {
 		// todo validate project name is unique
 		$p = new TaskProject();
 		$p->name = $project;
 		$p->save();
-		$this->redirect(array('/task/project/index', 'projectId'=>$p->id));
+		$this->redirect(array('/task/project/index', 'id' => $p->id()));
 	}
-	
-	public function actionIndex($projectId){
-		$p = TaskProject::model()->findByPk($projectId);
-		if($p === null)
-			throw new CHttpException ('Oops no project exists here');
-		
-		$this->render('index', array('project'=>$p));
+
+	public function actionIndex($id) {
+		$project = TaskProject::model()->findByPk($id);
+		if ($project === null)
+			throw new CHttpException('Oops no project exists here');
+
+		$this->render('index', array('project' => $project));
 	}
+
 }

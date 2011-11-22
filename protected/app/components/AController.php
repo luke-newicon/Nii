@@ -15,9 +15,9 @@ class AController extends NController {
 
 	public function init() {
 		Yii::app()->errorHandler->errorAction = '/admin/error';
-		
+
 		$this->menu = array(
-			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active'=>($this->parentActive('admin/index')||$this->parentActive('admin/settings')||$this->parentActive('admin/modules')),
+			'admin' => array('label' => 'Admin', 'url' => array('/admin'), 'active' => ($this->parentActive('admin/index') || $this->parentActive('admin/settings') || $this->parentActive('admin/modules')),
 				'items' => array(
 					'modules' => array('label' => 'Modules', 'url' => array('/admin/modules/index')),
 					'settings' => array('label' => 'Settings', 'url' => array('/admin/settings/index')),
@@ -25,14 +25,22 @@ class AController extends NController {
 			),
 		);
 	}
-	
-	
-	public function active(){
+
+	/**
+	 * Provides a default interface for adding actions to controllers
+	 * @return array Set of controller actions supplied by the current module
+	 */
+	public function actions() {
+		if (property_exists($this->module, 'actions'))
+			return isset($this->module->actions[$this->id]) ? $this->module->actions[$this->id] : array();
+	}
+
+	public function active() {
 		
 	}
-	
+
 	public function parentActive($controller) {
-		if ($controller == Yii::app()->controller->uniqueid) 
+		if ($controller == Yii::app()->controller->uniqueid)
 			return true;
 	}
 
@@ -46,20 +54,20 @@ class AController extends NController {
 			),
 		);
 	}
-	
+
 	public function updateGridColumns($controller, $action, $model, $buttonOnly=false) {
 		if ($buttonOnly) {
 			$label = '<span class="icon fam-cog"></span>';
 			$options = 'htmlOptions';
 		} else {
-			$label = '<span class="icon fam-cog"></span>'.$this->t('Update Visible Columns');
+			$label = '<span class="icon fam-cog"></span>' . $this->t('Update Visible Columns');
 			$options = 'linkOptions';
 		}
 		return array(
 			'label' => $label, 'url' => '#',
-			$options=>array(
-				'onclick'=> Setting::gridSettingsDialog(array('controller'=>$controller,'action'=>$action,'model'=>$model)),
-				'title'=>$this->t('Update Visible Columns'),
+			$options => array(
+				'onclick' => Setting::gridSettingsDialog(array('controller' => $controller, 'action' => $action, 'model' => $model)),
+				'title' => $this->t('Update Visible Columns'),
 			),
 		);
 	}
@@ -69,32 +77,31 @@ class AController extends NController {
 			$label = '<span class="icon fam-table-go"></span>';
 			$options = 'htmlOptions';
 		} else {
-			$label = '<span class="icon fam-table-go"></span>'.$this->t('Export to CSV, Excel or ODS');
+			$label = '<span class="icon fam-table-go"></span>' . $this->t('Export to CSV, Excel or ODS');
 			$options = 'linkOptions';
 		}
 		return array(
 			'label' => $label, 'url' => '#',
-			$options=>array(
-				'onclick'=> Setting::exportGridDialog(array('controller'=>$controller,'action'=>$action,'model'=>$model, 'model_id'=>$model_id, 'scope'=>Yii::app()->request->getQuery('scope'))),
-				'title'=>$this->t('Export to CSV, Excel or ODS'),
+			$options => array(
+				'onclick' => Setting::exportGridDialog(array('controller' => $controller, 'action' => $action, 'model' => $model, 'model_id' => $model_id, 'scope' => Yii::app()->request->getQuery('scope'))),
+				'title' => $this->t('Export to CSV, Excel or ODS'),
 			),
 		);
 	}
-	
-	
+
 	public static function checkExportCols($model, $col) {
 		$replacementCols = array(
-			'Student'=>array(
+			'Student' => array(
 				'student.international' => "(CASE WHEN student.international <> 0 THEN 'Y' ELSE 'N' END) as international",
 				'dob' => "DATE_FORMAT(dob, '%d %m %Y')",
 			),
-			'Contact'=>array(
+			'Contact' => array(
 				'type' => "TRIM( TRAILING ', ' FROM CONCAT( (CASE WHEN student.id > 0 THEN 'Student, ' ELSE '' END), (CASE WHEN academic.id > 0 THEN 'Academic, ' ELSE '' END) , (CASE WHEN staff.id > 0 THEN 'Staff, ' ELSE '' END), (CASE WHEN cleric.id > 0 THEN 'Cleric, ' ELSE '' END) ) ) as type",
 			),
-			'Diocese'=>array(
+			'Diocese' => array(
 				'contact_name' => 'b.name as contact_name'
 			),
-			'Study'=>array(
+			'Study' => array(
 				'programmeName' => 'programme.name as programmeName',
 				'programmeYear' => "CONCAT (study.acyr, ' / ', study.acyr+1) as programmeYear",
 				'statusName' => 'status.name as statusName',
@@ -106,28 +113,28 @@ class AController extends NController {
 		}
 		return $col;
 	}
-		
+
 	public function checkModelExists($model=null, $message=null, $htmlMessage=true) {
 		if ($model->id)
 			return true;
 		else {
-			if ($message==null)
+			if ($message == null)
 				$message = 'Could not find a record for specified id';
-			$this->render('//site/error',array(
-				'message'=>$message,
-				'htmlMessage'=>$htmlMessage,
+			$this->render('//site/error', array(
+				'message' => $message,
+				'htmlMessage' => $htmlMessage,
 			));
 		}
 		Yii::app()->end();
 	}
-	
+
 	/**
 	 * @param $str
 	 * @param $params
 	 * @param $dic
 	 * @return string
 	 */
-	public static function t($str='',$params=array()) {
+	public static function t($str='', $params=array()) {
 		return Yii::t(__CLASS__, $str, $params);
 	}
 
