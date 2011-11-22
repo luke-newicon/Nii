@@ -56,6 +56,46 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'topbarColor'); ?>
 		</div>
 	</div>
+	<div class="field line">
+		<?php echo $form->labelEx($model, 'h2Color'); ?>
+		<div>
+			<div>
+				<?php
+				$form->widget('nii.widgets.forms.JColorPicker', array(
+                    'name'=>get_class($model).'[h2Color]',
+                    'mode'=>'selector',
+					'selector'=>'h2ColorSelector',
+                    'fade' => true,
+                    'slide' => false,
+                    'curtain' => false,
+					'value' => $model->h2Color,
+					'model' => $model,
+                   )
+				); ?>
+			</div>
+			<?php echo $form->error($model, 'h2Color'); ?>
+		</div>
+	</div>
+		<div class="field line">
+		<?php echo $form->labelEx($model, 'h3Color'); ?>
+		<div>
+			<div>
+				<?php
+				$form->widget('nii.widgets.forms.JColorPicker', array(
+                    'name'=>get_class($model).'[h3Color]',
+                    'mode'=>'selector',
+					'selector'=>'h3ColorSelector',
+                    'fade' => true,
+                    'slide' => false,
+                    'curtain' => false,
+					'value' => $model->h3Color,
+					'model' => $model,
+                   )
+				); ?>
+			</div>
+			<?php echo $form->error($model, 'h3Color'); ?>
+		</div>
+	</div>
 	<div class="actions">
 		<input id="settings-presentation-save-2" type="submit" class="btn primary" value="Save" />
 	</div>

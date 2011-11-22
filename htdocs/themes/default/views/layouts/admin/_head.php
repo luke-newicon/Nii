@@ -1,4 +1,8 @@
-<?php $topbarColor = Yii::app()->getModule('admin')->topbarColor ?>
+<?php 
+$topbarColor = Yii::app()->getModule('admin')->topbarColor;
+$h2Color = Yii::app()->getModule('admin')->h2Color;
+$h3Color = Yii::app()->getModule('admin')->h3Color;
+?>
 <?php if ($topbarColor) : ?>
 <?php $topbarColorLighter = NHtml::hexLighter(Yii::app()->getModule('admin')->topbarColor, 8) ?>
 	<style>
@@ -42,6 +46,14 @@
 		}
 		.topbar div > ul .active > a, .nav .active > a {
 			background-color: <?php echo NHtml::hexDarker($topbarColor,30) ?>;
+		}
+		
+		h2 {
+			color: <?php echo $h2Color ?>;
+		}
+		
+		h3 {
+			color: <?php echo $h3Color ?>;
 		}
 	</style>
 <?php endif; ?>

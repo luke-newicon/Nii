@@ -12,7 +12,7 @@ $form = $this->beginWidget('NActiveForm', array(
 				<?php
 					$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 						'name' => 'relatedName',
-						'source' => $this->createUrl('/autocomplete/contactList'),
+						'source' => $this->createUrl('/contact/autocomplete/contactList'),
 						// additional javascript options for the autocomplete plugin
 						'options' => array(
 							'showAnim' => 'fold',

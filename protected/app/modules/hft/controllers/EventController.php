@@ -128,16 +128,61 @@ class EventController extends AController
 		$model = HftEvent::model()->findByPk($id);
 		
 		if ($model) {
+			
+			$dataProvider=new NActiveDataProvider("HftEventAttendee",array(
+				'criteria'=>array(
+					'order'=>'id DESC',
+					'condition'=>'event_id = :modelid',
+					'params'=>array(':modelid'=>$model->id)
+			)));
+						
 			$fields = array(
 				'model'=>$model,
 				'id'=>$model->id,
+				'dataProvider'=>$dataProvider,
 				'attendees'=>null,
 			);
+			
 			$attendees = HftEventAttendee::model()->findAllByAttributes(array('event_id'=>$id));
 			if ($attendees)
 				$fields['attendees'] = $attendees;
 		
 			$this->render('view/tabs/attendees',$fields);
+		}
+	}
+	
+	public function actionAddAttendee($id) {
+		
+		$className = 'HftEventAttendee';
+		$model = new $className;
+
+		if (isset($_POST[$className])) {
+			
+			$model->attributes = $_POST[$className];
+			
+			if ($model->save()) {
+				$event = HftEvent::model()->findByPk($id);
+				echo CJSON::encode(array('success'=>'Attendee(s) added','id'=>$model->id,'count'=>$event->totalAttendees));
+			} else
+				$model->validate();
+		
+		} else {
+
+			$this->render('view/tabs/attendees/_add_attendee',array(
+				'id'=>$id,
+				'model'=>$model,
+			));
+		}
+	}
+	
+	public function actionDeleteAttendee() {
+		if ($_POST) {
+			HftEventAttendee::model()->deleteByPk($_POST['id']);
+			$model = HftEvent::model()->findByPk($_POST['modelid']);
+			$count = $model->totalAttendees;
+			echo CJSON::encode(array('count'=>$count));
+		} else {
+			return false;
 		}
 	}
 	

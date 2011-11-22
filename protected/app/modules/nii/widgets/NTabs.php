@@ -37,7 +37,7 @@ class NTabs extends CJuiTabs {
 	 * The token "{title}" in the template will be replaced with the panel title and
 	 * the token "{url}" will be replaced with "#TabID" or with the url of the ajax request.
 	 */
-	public $headerTemplate='<li data-id="{id}"><a href="{url}" title="{title}">{title}</a></li>';
+	public $headerTemplate='<li data-id="{id}"><a href="{url}" title="{title}">{title}{count}</a></li>';
 	/**
 	 * @var string the template that is used to generated every tab content.
 	 * The token "{content}" in the template will be replaced with the panel content
@@ -48,7 +48,6 @@ class NTabs extends CJuiTabs {
 	public $title;
 	public $titleTemplate='<li class="heading"><h2>{title}</h2></li>';
 	
-
 	/**
 	 * Run this widget.
 	 * This method registers necessary javascript and renders the needed HTML code.
@@ -73,6 +72,10 @@ class NTabs extends CJuiTabs {
 		foreach($this->tabs as $title=>$content)
 		{
 			$tabId = (is_array($content) && isset($content['id']))?$content['id']:$id.'_tab_'.$tabCount++;
+			
+			if (isset($content['count']) && isset($content['id']))
+				$count = '<span class="'.$content['id'].'_count pull-right label tab_count_label'.(isset($content['count_class'])?' '.$content['count_class']:'').'">'.$content['count'].'</span>';
+			else $count = '';
 
 			if (!is_array($content))
 			{
@@ -81,11 +84,11 @@ class NTabs extends CJuiTabs {
 			}
 			elseif (isset($content['ajax']))
 			{
-				$tabsOut .= strtr($this->headerTemplate, array('{title}'=>$title, '{url}'=>CHtml::normalizeUrl($content['ajax']), '{id}'=>$tabId))."\n";
+				$tabsOut .= strtr($this->headerTemplate, array('{title}'=>$title, '{url}'=>CHtml::normalizeUrl($content['ajax']), '{id}'=>$tabId, '{count}'=>$count))."\n";
 			}
 			else
 			{
-				$tabsOut .= strtr($this->headerTemplate, array('{title}'=>$title, '{url}'=>'#'.$tabId, '{id}'=>$tabId))."\n";
+				$tabsOut .= strtr($this->headerTemplate, array('{title}'=>$title, '{url}'=>'#'.$tabId, '{id}'=>$tabId, '{count}'=>$count))."\n";
 				if(isset($content['content']))
 					$contentOut .= strtr($this->contentTemplate, array('{content}'=>$content['content'],'{id}'=>$tabId))."\n";
 			}

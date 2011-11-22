@@ -179,6 +179,7 @@ class NNotes extends NAttributeWidget
 			'canEdit'=>$this->canEdit,
 			'canDelete'=>$this->canDelete,
 			'id'=>$id,
+			'model'=>$model,
 			'modelId'=>$modelId,
 			'newNoteText'=>$this->newNoteText
 		));
