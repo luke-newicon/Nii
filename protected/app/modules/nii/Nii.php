@@ -185,7 +185,7 @@ class Nii extends CWebApplication
 		$this->setModules($this->_coreModules);
 		
 		// Set database modules
-		$activeModules = $this->_getModulesDbConfig();
+		$activeModules = $this->getModulesDbConfig();
 		if(!empty($activeModules))
 			$this->setModules($activeModules);
 	}
@@ -275,7 +275,7 @@ class Nii extends CWebApplication
 	 * returns a list of all modules configuration including modules available for activation
 	 * @return array
 	 */
-	protected function _getModulesDbConfig(){
+	public function getModulesDbConfig(){
 		return Yii::app()->settings->get($this->moduleSettingsKey, $this->moduleSettingsCategory, array());
 	}
 	

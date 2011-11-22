@@ -57,7 +57,7 @@ return array(
 			'user' => array(
 				'registrationCaptcha' => false,
 				'termsRequired' => false,
-				'returnUrl' => array('/admin'),
+//				'returnUrl' => array("/admin"),
 				'sendActivationMail' => true,
 				'activeAfterRegister' => true,
 				'usernameRequired' => false,

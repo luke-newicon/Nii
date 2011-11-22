@@ -71,7 +71,7 @@ class UserModule extends NWebModule
 	 * where to go on successful login
 	 * @var mixed route 
 	 */
-	public $returnUrl = array("/user/dashboard");
+	public $returnUrl = array("/admin");
 	/**
 	 * the page to go to after logout
 	 * @var mixed route 

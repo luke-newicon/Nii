@@ -2,8 +2,16 @@
 .NNotes .profilePic{padding-left:0px;}
 .NNotes .userInformation{ padding-top:0px;}
 .NNotes .newNoteBox .fakebox{border:1px solid #CCCCCC;color:#CCCCCC;padding:5px;}
-.NNotes .line.note{padding: 6px 6px 12px;margin:0px;margin-bottom:10px;background-color:#fafafa;}
+.NNotes .line.note{padding: 6px 6px; margin: 0px; margin-bottom: 10px; background-color: #fafafa; position: relative; }
 .NNotes .note p {margin:0px;}
 .NNotes .noItems{color:#CCCCCC;font-size:14px;padding:0;text-align:center;}
 .add-note-button{margin: 10px 0px 5px;}
 .NNotes a.nnote-delete { color: #900; }
+.nnote-controls {
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+}
+.nnote-button {
+	margin-left: 6px;
+}
