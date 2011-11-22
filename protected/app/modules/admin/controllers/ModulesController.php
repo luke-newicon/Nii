@@ -28,7 +28,7 @@ Class ModulesController extends AController
 		$data = array();
 		foreach($allModules as $id => $module){
 			// skip if the module is a core module
-			if(in_array($id, Yii::app()->coreModules))
+			if(Yii::app()->isCoreModule($id))
 				continue;
 			$data[] = array(
 				'id' => $id,
