@@ -249,7 +249,7 @@ class Nii extends CWebApplication
 	 * @name string $name module string id
 	 * @return boolean
 	 */
-	public function isCoreModule($name){
+	public function isCoreModule($key){
 		return array_key_exists($key, $this->getCoreModules());
 	}
 	
