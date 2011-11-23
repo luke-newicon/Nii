@@ -25,6 +25,8 @@ class CrmModule extends NWebModule
 	
 	
 	public $defaultNewGroupName = 'Group Name';
+	
+	public $name = "CRM - Steve's Test Version";
 
 	public function init()
 	{
