@@ -55,8 +55,8 @@ class HftDonation extends NActiveRecord
 	public function rules() {
 		return array(
 			array('donation_amount, giftaid, date_received', 'required'),
-			array('type_id, event_id, comment, statement_number, statement_date', 'safe'),
-			array('donation_amount, giftaid, date_received, type_id, event_id, comment, statement_number, statement_date', 'safe','on'=>'search'),
+			array('type_id, event_id, comment, statement_number, statement_date, contact_id', 'safe'),
+			array('donation_amount, giftaid, date_received, type_id, event_id, comment, statement_number, statement_date, contact_id', 'safe','on'=>'search'),
 		);
 	}
 	
