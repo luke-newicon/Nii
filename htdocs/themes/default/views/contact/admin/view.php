@@ -1,6 +1,7 @@
 <div class="page-header">
-	<h2>View Contact</h2>
+	<h2><?php echo $this->t('View Contact') ?></h2>
 	<div class="action-buttons">
+		<?php echo NHtml::link($this->t('Add a Relation'), array("edit","id"=>$model->id), array('id'=>'contact-add-relation-button', 'class'=>'btn')); ?>
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'contact-edit-button', 'class'=>'btn primary'));?>
 	</div>
 </div>
@@ -73,19 +74,19 @@
 </div>
 </div>
 <?php 
-$tabs = array();
-$tabs = array_merge(
-	$model->arrayTabsTop,
-	array(
-		'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-		'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
-		'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
-	),
-	$model->arrayTabsBottom
-);
+//$tabs = array();
+//$tabs = array_merge(
+//	$model->arrayTabsTop,
+//	array(
+//		'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
+//		'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
+//		'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
+//	),
+//	$model->arrayTabsBottom
+//);
 $this->widget('nii.widgets.NTabs', 
 	array(
-		'tabs' => $tabs,
+		'tabs' => $model->tabs,
 		'options' => array(
 			'cache' => true,
 		),

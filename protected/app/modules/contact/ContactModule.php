@@ -12,6 +12,8 @@ class ContactModule extends NWebModule {
 	public $actions = array();
 	
 	public $views = array();
+	
+	public $relations = array();
 
 	public function init() {
 		Yii::import('contact.models.*');

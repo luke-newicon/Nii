@@ -33,18 +33,38 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
 			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
 		));
-		Yii::app()->menus->addItem('main', 'Customers', array('/contact/admin/customers'), Yii::app()->getModule('contact')->menu_label);
-		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/admin/suppliers'), Yii::app()->getModule('contact')->menu_label);
-		Yii::app()->menus->addItem('main', 'Staff', array('/contact/admin/staff'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label);
 		
-		Yii::app()->getModule('contact')->actions = array(
-			'admin' => array(
-				'customers' => 'task.components.actions.customers',
-				'addcustomer' => 'task.components.actions.addcustomer',
-				'suppliers' => 'task.components.actions.suppliers',
-				'staff' => 'task.components.actions.staff',
+//		Yii::app()->getModule('contact')->actions = CMap::mergeArray(Yii::app()->getModule('contact')->actions, array(
+//			'admin' => array(
+//				'customers' => 'task.components.actions.customers',
+//				'addcustomer' => 'task.components.actions.addcustomer',
+//				'suppliers' => 'task.components.actions.suppliers',
+//				'staff' => 'task.components.actions.staff',
+//			),
+//		));
+		
+		Yii::app()->getModule('contact')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
+			'customer' => 'task.controllers.CustomerController',
+			'supplier' => 'task.controllers.SupplierController',
+			'staff' => 'task.controllers.StaffController',
+		));
+		
+		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
+			'Contact' => array(
+				'customer' => array(
+					'url' => '/contact/customer/view',
+				),
+				'supplier' => array(
+					'url' => '/contact/supplier/view',
+				),
+				'staff' => array(
+					'url' => '/contact/staff/view',
+				),
 			),
-		);
+		));
 	}
 	
 	public function install(){

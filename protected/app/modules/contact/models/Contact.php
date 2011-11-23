@@ -25,75 +25,70 @@
  * @property string $mobile
  * @property string $fax
  */
-class Contact extends NActiveRecord
-{
+class Contact extends NActiveRecord {
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Contact the static model class
 	 */
-	public static function model($className=__CLASS__)
-	{
+	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
 
 	/**
 	 * @return string the associated database table name
 	 */
-	public function tableName()
-	{
+	public function tableName() {
 		return '{{contact}}';
 	}
 
 	/**
 	 * @return array validation rules for model attributes.
 	 */
-	public function rules()
-	{
+	public function rules() {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
 			array('contact_type', 'required'),
-			array('name, givennames, lastname', 'length', 'max'=>255),
-			array('title', 'length', 'max'=>9),
-			array('gender', 'length', 'max'=>1),
-			array('email, email_secondary', 'length', 'max'=>75),
-			array('addr1, addr2, addr3', 'length', 'max'=>100),
-			array('city, county, country, tel_primary, tel_secondary, mobile, fax', 'length', 'max'=>50),
-			array('postcode', 'length', 'max'=>20),
+			array('name, givennames, lastname', 'length', 'max' => 255),
+			array('title', 'length', 'max' => 9),
+			array('gender', 'length', 'max' => 1),
+			array('email, email_secondary', 'length', 'max' => 75),
+			array('addr1, addr2, addr3', 'length', 'max' => 100),
+			array('city, county, country, tel_primary, tel_secondary, mobile, fax', 'length', 'max' => 50),
+			array('postcode', 'length', 'max' => 20),
 			array('dob, title, suffix, company_name, contact_name, photoID, comment, city, website', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment, website', 'safe', 'on'=>'search'),
-			array('givennames, lastname','required','on'=>'Person'),
-			array('company_name, contact_name','required','on'=>'Organisation'),
+			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment, website', 'safe', 'on' => 'search'),
+			array('givennames, lastname', 'required', 'on' => 'Person'),
+			array('company_name, contact_name', 'required', 'on' => 'Organisation'),
 		);
 	}
 
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
-	{
+	public function relations() {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'photo'=>array(self::HAS_ONE, 'NAttachment', 'model_id',
-				'condition' => 'photo.model="'.__CLASS__.'" AND photo.type="contact-thumbnail" '),		
-			'student'=>array(self::HAS_ONE, 'Student', 'contact_id'),		
-			'staff'=>array(self::HAS_ONE, 'Staff', 'contact_id'),		
-			'academic'=>array(self::HAS_ONE, 'Academic', 'contact_id'),	
-			'cleric'=>array(self::HAS_ONE, 'Cleric', 'contact_id'),	
-			'diocese'=>array(self::HAS_ONE, 'Diocese', 'contact_id'),	
-			'church'=>array(self::HAS_ONE, 'Church', 'contact_id'),
-			'trainingfacility'=>array(self::HAS_ONE, 'Trainingfacility', 'contact_id'),
+			'photo' => array(self::HAS_ONE, 'NAttachment', 'model_id',
+				'condition' => 'photo.model="' . __CLASS__ . '" AND photo.type="contact-thumbnail" '),
+			'student' => array(self::HAS_ONE, 'Student', 'contact_id'),
+			'staff' => array(self::HAS_ONE, 'Staff', 'contact_id'),
+			'academic' => array(self::HAS_ONE, 'Academic', 'contact_id'),
+			'cleric' => array(self::HAS_ONE, 'Cleric', 'contact_id'),
+			'diocese' => array(self::HAS_ONE, 'Diocese', 'contact_id'),
+			'church' => array(self::HAS_ONE, 'Church', 'contact_id'),
+			'trainingfacility' => array(self::HAS_ONE, 'Trainingfacility', 'contact_id'),
 		);
 	}
 
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
-	public function attributeLabels()
-	{
+	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
@@ -126,96 +121,94 @@ class Contact extends NActiveRecord
 		);
 	}
 
-	
 	public $type;
-	
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
-	{
+	public function search() {
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=$this->getDbCriteria();
-		
+		$criteria = $this->getDbCriteria();
+
 		$this->getSearchCriteria($criteria);
 
 		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
 		//$criteria->together = true;\
-		
+
 		$sort = new CSort;
-		$sort->defaultOrder = 'id DESC';		
-		
+		$sort->defaultOrder = 'id DESC';
+
 		return new NActiveDataProvider($this, array(
-			'criteria'=>$criteria,	
-			'sort' => $sort,
-			'pagination'=>array(
-				'pageSize'=>20,
-            ),
-		));
+					'criteria' => $criteria,
+					'sort' => $sort,
+					'pagination' => array(
+						'pageSize' => 20,
+					),
+				));
 	}
-	
+
 	public function getSearchCriteria(&$criteria) {
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('givennames',$this->givennames,true);
-		$criteria->compare('lastname',$this->lastname,true);
-		$criteria->compare('suffix',$this->suffix,true);
-		$criteria->compare('dob',$this->dob,true);
-		$criteria->compare('gender',$this->gender,true);
-		$criteria->compare('CONCAT(email," ",email_secondary)',$this->email,true);
-		$criteria->compare('email_secondary',$this->email_secondary,true);
-		$criteria->compare('addr1',$this->addr1,true);
-		$criteria->compare('addr2',$this->addr2,true);
-		$criteria->compare('addr3',$this->addr3,true);
-		$criteria->compare('city',$this->city,true);
-		$criteria->compare('county',$this->county,true);
-		$criteria->compare('country',$this->country,true);
-		$criteria->compare('postcode',$this->postcode,true);
-		$criteria->compare('CONCAT(tel_primary, " " ,tel_secondary)',$this->telephone_numbers,true);
-		$criteria->compare('tel_primary',$this->tel_primary,true);
-		$criteria->compare('tel_secondary',$this->tel_secondary,true);
-		$criteria->compare('mobile',$this->mobile,true);
-		$criteria->compare('fax',$this->fax,true);
-		$criteria->compare('website',$this->fax,true);
-		$criteria->compare('company_name',$this->company_name,true);
-		$criteria->compare('contact_name',$this->contact_name,true);
-		$criteria->compare('contact_type',$this->contact_type,true);
-		$criteria->compare('comment',$this->comment,true);
+		$criteria->compare('id', $this->id);
+		$criteria->compare('name', $this->name, true);
+		$criteria->compare('title', $this->title, true);
+		$criteria->compare('givennames', $this->givennames, true);
+		$criteria->compare('lastname', $this->lastname, true);
+		$criteria->compare('suffix', $this->suffix, true);
+		$criteria->compare('dob', $this->dob, true);
+		$criteria->compare('gender', $this->gender, true);
+		$criteria->compare('CONCAT(email," ",email_secondary)', $this->email, true);
+		$criteria->compare('email_secondary', $this->email_secondary, true);
+		$criteria->compare('addr1', $this->addr1, true);
+		$criteria->compare('addr2', $this->addr2, true);
+		$criteria->compare('addr3', $this->addr3, true);
+		$criteria->compare('city', $this->city, true);
+		$criteria->compare('county', $this->county, true);
+		$criteria->compare('country', $this->country, true);
+		$criteria->compare('postcode', $this->postcode, true);
+		$criteria->compare('CONCAT(tel_primary, " " ,tel_secondary)', $this->telephone_numbers, true);
+		$criteria->compare('tel_primary', $this->tel_primary, true);
+		$criteria->compare('tel_secondary', $this->tel_secondary, true);
+		$criteria->compare('mobile', $this->mobile, true);
+		$criteria->compare('fax', $this->fax, true);
+		$criteria->compare('website', $this->fax, true);
+		$criteria->compare('company_name', $this->company_name, true);
+		$criteria->compare('contact_name', $this->contact_name, true);
+		$criteria->compare('contact_type', $this->contact_type, true);
+		$criteria->compare('comment', $this->comment, true);
 		return true;
 	}
-	
+
 	public function scopes() {
 		return array(
-			'students'=>array(
-				'condition'=>'student.id > 0',
-				'with'=>array('student'),
+			'students' => array(
+				'condition' => 'student.id > 0',
+				'with' => array('student'),
 			),
-			'academics'=>array(
-				'condition'=>'academic.id > 0',
-				'with'=>array('academic'),
+			'academics' => array(
+				'condition' => 'academic.id > 0',
+				'with' => array('academic'),
 			),
 		);
 	}
-	
+
 	public function translateCustomScopes($field=null, $value=null, $sm=null, $op=null, &$criteria) {
-		
+
 		switch ($field) {
 			case 'type' :
-				if ($sm=='<>')
-					$criteria->addCondition($value.'.id IS NULL', $op);
+				if ($sm == '<>')
+					$criteria->addCondition($value . '.id IS NULL', $op);
 				else
-					$criteria->addCondition($value.'.id > 0', $op);
+					$criteria->addCondition($value . '.id > 0', $op);
 				break;
-				
+
 			default :
 				return false;
 		}
 	}
-	
+
 	public function columns() {
 		return array(
 //			array(
@@ -233,250 +226,241 @@ class Contact extends NActiveRecord
 //			),
 			array(
 				'name' => 'name',
-				'type'=>'raw',
+				'type' => 'raw',
 				'value' => '$data->getContactLink(null,false)',
-				'htmlOptions'=>array('width'=>'200px'),
+				'htmlOptions' => array('width' => '200px'),
 			),
 			array(
-				'name'=>'title',
-				'filter'=> NHtml::enumItem(Contact::model(), 'title'),
-				'htmlOptions'=>array('width'=>'50px'),
+				'name' => 'title',
+				'filter' => NHtml::enumItem(Contact::model(), 'title'),
+				'htmlOptions' => array('width' => '50px'),
 			),
 			array(
-				'name'=>'givennames',
+				'name' => 'givennames',
 			),
 			array(
-				'name'=>'lastname',
+				'name' => 'lastname',
 			),
 			array(
-				'name'=>'addr1',
-				'htmlOptions'=>array('width'=>'150px'),
+				'name' => 'addr1',
+				'htmlOptions' => array('width' => '150px'),
 			),
 			array(
-				'name'=>'addr2',
+				'name' => 'addr2',
 			),
 			array(
-				'name'=>'addr3',
+				'name' => 'addr3',
 			),
 			array(
-				'name'=>'city',
-				'htmlOptions'=>array('width'=>'120px'),
+				'name' => 'city',
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
-				'name'=>'county',
+				'name' => 'county',
 			),
 			array(
-				'name'=>'country',
-				'type'=>'raw',
+				'name' => 'country',
+				'type' => 'raw',
 				'value' => '$data->countryName',
 				'filter' => Contact::model()->countriesArray,
-				'htmlOptions'=>array('width'=>'120px'),
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
-				'name'=>'postcode',
-				'htmlOptions'=>array('width'=>'80px'),
+				'name' => 'postcode',
+				'htmlOptions' => array('width' => '80px'),
 			),
 			array(
-				'name'=>'email',
+				'name' => 'email',
 				'header' => 'Email(s)',
-				'type'=>'raw',
-				'value'=>'$data->getEmailLinks()',
-				'htmlOptions'=>array('width'=>'150px'),
+				'type' => 'raw',
+				'value' => '$data->getEmailLinks()',
+				'htmlOptions' => array('width' => '150px'),
 			),
 			array(
 				'name' => 'telephone_numbers',
-				'type'=>'raw',
-				'value'=>'$data->getTelephone_numbers()',
-				'htmlOptions'=>array('width'=>'120px'),
+				'type' => 'raw',
+				'value' => '$data->getTelephone_numbers()',
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
 				'name' => 'tel_primary',
-				'htmlOptions'=>array('width'=>'120px'),
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
 				'name' => 'tel_secondary',
-				'htmlOptions'=>array('width'=>'120px'),
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
 				'name' => 'mobile',
-				'htmlOptions'=>array('width'=>'120px'),
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
 				'name' => 'fax',
-				'htmlOptions'=>array('width'=>'120px'),
+				'htmlOptions' => array('width' => '120px'),
 			),
 			array(
 				'name' => 'website',
 				'type' => 'raw',
 				'value' => '$data->getWebsiteLink()',
-				'htmlOptions'=>array('width'=>'120px','style'=>'text-align:center'),
+				'htmlOptions' => array('width' => '120px', 'style' => 'text-align:center'),
 			),
 		);
-		
+
 //		Yii::app()->getModule('contact')->getColumns();
-		
-		
-		
 	}
-	
-	public function getPhoto($type=null, $failOnNoLogo=false){
-		if($this->photo && $this->photo->file)
-			$src = Yii::app()->image->url($this->photo->file->id,$type);
+
+	public function getPhoto($type=null, $failOnNoLogo=false) {
+		if ($this->photo && $this->photo->file)
+			$src = Yii::app()->image->url($this->photo->file->id, $type);
 		else {
 			if ($failOnNoLogo)
 				return null;
-			$src = Yii::app()->image->url(0,$type);
+			$src = Yii::app()->image->url(0, $type);
 		}
-		return '<img src="'.$src.'" />';
+		return '<img src="' . $src . '" />';
 	}
-	
-	public function getContactTypes($contactType='all',$returnNotFound=false) {
-		
+
+	public function getContactTypes($contactType='all', $returnNotFound=false) {
+
 		$relationships = self::getRelationships($contactType);
-		
+
 		$r = array();
 		foreach ($relationships as $key => $value) :
-			
+
 			if ($this->$key && $returnNotFound == false) {
-				$r[] = array('value'=>$value, 'key'=>$key, 'id'=>$id);
+				$r[] = array('value' => $value, 'key' => $key, 'id' => $id);
 			} else if (!$this->$key && $returnNotFound == true) {
-				$r[] = array('value'=>$value, 'key'=>$key);
+				$r[] = array('value' => $value, 'key' => $key);
 			}
 
 		endforeach;
-		
+
 		return $r;
 	}
-	
-	public function getContactTypeList($contactType='all',$returnNotFound=false) {
-				
+
+	public function getContactTypeList($contactType='all', $returnNotFound=false) {
+
 		if ($rels = $this->getContactTypes($contactType, $returnNotFound)) {
 			foreach ($rels as $rel) {
-				$r[] = CHtml::link(CHtml::encode($rel['value']), array("contact/view/","id"=>$this->id,"selectedTab"=>$rel['key']));
-			}	
-			return implode(', ',$r);
+				$r[] = CHtml::link(CHtml::encode($rel['value']), array("contact/view/", "id" => $this->id, "selectedTab" => $rel['key']));
+			}
+			return implode(', ', $r);
 		}
-			
 	}
-	
-	public function getContactTypeListCsv($contactType='all',$returnNotFound=false) {
-				
+
+	public function getContactTypeListCsv($contactType='all', $returnNotFound=false) {
+
 		$relationships = self::getRelationships($contactType);
-		
+
 		$r = array();
 		foreach ($relationships as $key => $value) {
 			if ($this->$key) {
 				$r[] = $value;
 			}
 		}
-		
-		return implode(', ',$r);
-			
+
+		return implode(', ', $r);
 	}
-	
-	public function getContactTypePairs($contactType='all',$returnNotFound=false) {
-				
+
+	public function getContactTypePairs($contactType='all', $returnNotFound=false) {
+
 		if ($rels = $this->getContactTypes($contactType, $returnNotFound)) {
 			foreach ($rels as $rel) {
 				$r[$rel['key']] = $rel['value'];
-			}	
+			}
 			return $r;
 		}
-			
 	}
-	
-	public function getContactLink($tab=null, $showIcon=true) {
-		
-		$type = "grid-thumbnail-".strtolower($this->contact_type);
-		$label = $showIcon ? $this->getPhoto($type) . '<span>'.$this->displayName.'</span>' : $this->displayName;
-		if ($tab)
-			return CHtml::link($label, array("view","id"=>$this->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));
-		else
-			return CHtml::link($label, array("view","id"=>$this->id),array('class'=>'grid-thumb-label'));
 
+	public function getContactLink($tab=null, $showIcon=true) {
+
+		$type = "grid-thumbnail-" . strtolower($this->contact_type);
+		$label = $showIcon ? $this->getPhoto($type) . '<span>' . $this->displayName . '</span>' : $this->displayName;
+		if ($tab)
+			return CHtml::link($label, array("view", "id" => $this->id, 'selectedTab' => $tab), array('class' => 'grid-thumb-label'));
+		else
+			return CHtml::link($label, array("view", "id" => $this->id), array('class' => 'grid-thumb-label'));
 	}
-	
+
 	public function getContactPhoto($link=true, $tab=null) {
-		$type = "grid-thumbnail-".strtolower($this->contact_type);
+		$type = "grid-thumbnail-" . strtolower($this->contact_type);
 		$label = $this->getPhoto($type);
 		if ($link) {
 			if ($tab)
-				return CHtml::link($label, array("view","id"=>$this->id, 'selectedTab'=>$tab));
+				return CHtml::link($label, array("view", "id" => $this->id, 'selectedTab' => $tab));
 			else
-				return CHtml::link($label, array("view","id"=>$this->id));
+				return CHtml::link($label, array("view", "id" => $this->id));
 		}
 		else
 			return $label;
 	}
-	
-	
+
 	public function getContactLinkById($id, $tab=null) {
-		
+
 		$model = Contact::model()->findByPk($id);
 		return $model->getContactLink($tab);
-
 	}
-		
+
 	public function getEmailLink($type='home') {
-		
-		if ($type=='work')
+
+		if ($type == 'work')
 			return NHtml::emailLink($this->email_secondary);
-		elseif ($type=='home')
+		elseif ($type == 'home')
 			return NHtml::emailLink($this->email);
 	}
-	
+
 	/**
-	 *	Plural version of getEmailLink, returns all email addresses against a contact, comma separated 
+	 * 	Plural version of getEmailLink, returns all email addresses against a contact, comma separated 
 	 */
 	public function getEmailLinks() {
 		return NHtml::emailLink($this->email) . ($this->email_secondary ? ', ' . NHtml::emailLink($this->email_secondary) : '');
 	}
-	
+
 	public function getWebsiteLink() {
 		$url = $this->website;
-		return NHtml::link(str_replace('http://', '', $this->website), 'http://'.str_replace('http://', '', $this->website), array('target'=>'externalLink'));
+		return NHtml::link(str_replace('http://', '', $this->website), 'http://' . str_replace('http://', '', $this->website), array('target' => 'externalLink'));
 	}
-	
+
 	public function getFullAddress() {
-		
+
 		$addressLines = array(
-			'addr1'=>$this->addr1,
-			'addr2'=>$this->addr2,
-			'addr3'=>$this->addr3,
-			'city'=>$this->city,
-			'county'=>$this->county,
-			'postcode'=>$this->postcode,
-			'country'=>$this->country,
+			'addr1' => $this->addr1,
+			'addr2' => $this->addr2,
+			'addr3' => $this->addr3,
+			'city' => $this->city,
+			'county' => $this->county,
+			'postcode' => $this->postcode,
+			'country' => $this->country,
 		);
-		
+
 		$address = array();
-		
+
 		foreach ($addressLines as $addressLine) :
-			if ($addressLine) $address[] = $addressLine;
+			if ($addressLine)
+				$address[] = $addressLine;
 		endforeach;
-		
+
 		return implode('<br />', $address);
-		
 	}
-	
+
 	public function getAddressFields() {
-		
+
 		$addressLines = array(
-			'addr1'=>$this->addr1,
-			'addr2'=>$this->addr2,
-			'addr3'=>$this->addr3,
+			'addr1' => $this->addr1,
+			'addr2' => $this->addr2,
+			'addr3' => $this->addr3,
 		);
-		
+
 		$address = array();
-		
+
 		foreach ($addressLines as $addressLine) :
-			if ($addressLine) $address[] = $addressLine;
+			if ($addressLine)
+				$address[] = $addressLine;
 		endforeach;
-		
+
 		return implode('<br />', $address);
-		
 	}
-	
+
 	public function getCountryName() {
 		$countries = NData::countries();
 		if (isset($countries[$this->country]))
@@ -484,30 +468,30 @@ class Contact extends NActiveRecord
 		else
 			return $this->country;
 	}
-	
+
 	public static function getCountriesArray() {
 		$countries = NData::countries();
 		return $countries;
-	}	
-	
-	public function getTelephone_numbers() {
-		return 
-			($this->tel_primary ? '(h) '.$this->tel_primary : '') . 
-			($this->tel_primary && $this->tel_secondary ? '<br />' : '') . 
-			($this->tel_secondary ? '(w) '.$this->tel_secondary : '');
 	}
-	
+
+	public function getTelephone_numbers() {
+		return
+				($this->tel_primary ? '(h) ' . $this->tel_primary : '') .
+				($this->tel_primary && $this->tel_secondary ? '<br />' : '') .
+				($this->tel_secondary ? '(w) ' . $this->tel_secondary : '');
+	}
+
 	public function setTelephone_numbers($value) {
 		if ($value)
 			$this->telephone_numbers = $value;
 	}
-	
+
 	public function createContactDialog() {
 		$dialog_id = 'createContactDialog';
-		$url = CHtml::normalizeUrl(array('admin/create/','dialog'=>true));
-		return '$("#'.$dialog_id.'").dialog({
+		$url = CHtml::normalizeUrl(array('admin/create/', 'dialog' => true));
+		return '$("#' . $dialog_id . '").dialog({
 			open: function(event, ui){
-				$("#'.$dialog_id.'").load("'.$url.'");
+				$("#' . $dialog_id . '").load("' . $url . '");
 			},
 			minHeight: 100, position: ["center", 100],
 			width: 400,
@@ -519,7 +503,7 @@ class Contact extends NActiveRecord
 					text: "Continue",
 					class: "btn primary",
 					click : function () {
-						var url = "'.Yii::app()->baseUrl.'/contact/admin/create/type/"+$("#Contact_contact_type").val();
+						var url = "' . Yii::app()->baseUrl . '/contact/admin/create/type/"+$("#Contact_contact_type").val();
 						window.location = url;
 						return;
 					}
@@ -533,55 +517,68 @@ class Contact extends NActiveRecord
 		});
 		return false;';
 	}
-	
+
 	public function getDisplayName() {
-		
+
 		if ($this->contact_type == 'Person')
-			return $this->title . ' ' . ($this->givennames ? $this->givennames . '  ':'') . $this->lastname . ($this->suffix ? ' '.$this->suffix : ''); 
-		else 
+			return $this->title . ' ' . ($this->givennames ? $this->givennames . '  ' : '') . $this->lastname . ($this->suffix ? ' ' . $this->suffix : '');
+		else
 			return $this->name;
-		
 	}
-	
+
 	public function getComputerUserId() {
-		$names = explode(' ',$this->salutation . ' ' . $this->lastname);
+		$names = explode(' ', $this->salutation . ' ' . $this->lastname);
 		foreach ($names as $name) {
-			if (substr($name, 0,1) != '')
-				$initials[] = substr($name, 0,1);
+			if (substr($name, 0, 1) != '')
+				$initials[] = substr($name, 0, 1);
 		}
 		return implode('', $initials) . $this->student->id;
 	}
-	
+
 	public function getDobFormatted() {
-		return date('d M Y',strtotime($this->dob));
+		return date('d M Y', strtotime($this->dob));
 	}
-	
-	/**
-	 *	Tabs top - return array of items to include at the top of the contact view 'tabs' section
-	 * @return array 
-	 */
-	public function getArrayTabsTop() {
-		return array();
+
+//	/**
+//	 *	Tabs top - return array of items to include at the top of the contact view 'tabs' section
+//	 * @return array 
+//	 */
+//	public function getArrayTabsTop() {
+//		return array();
+//	}
+//	
+//	/**
+//	 *	Tabs top - return array of items to include at the bottom of the contact view 'tabs' section
+//	 * @return array 
+//	 */	
+//	public function getArrayTabsBottom() {
+//		return array();
+//	}
+
+	public function getTabs() {
+		/* Get the relations information from the module and convert into tabs */
+		if(isset(Yii::app()->getModule('contact')->relations['Contact'])){
+			foreach (Yii::app()->getModule('contact')->relations['Contact'] as $key => $relation) {
+				$label = isset($relation['label']) ? $relation['label'] : ucwords($key);
+				$tabs[$label] = array('ajax' => array($relation['url'], 'id' => $this->id()), 'id' => $key);
+			}
+		}
+		
+		/* Default tabs */
+		$tabs['Relationships'] = array('ajax' => array('generalInfo', 'id' => $this->id()), 'id' => 'relationships');
+		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes');
+		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments');
+		
+		return $tabs;
 	}
-	
-	/**
-	 *	Tabs top - return array of items to include at the bottom of the contact view 'tabs' section
-	 * @return array 
-	 */	
-	public function getArrayTabsBottom() {
-		return array();
-	}
-	
+
 	public $dob_day;
 	public $dob_month;
 	public $dob_year;
-	
 	public $changedFields;
-	
 	public $photoID;
-	
 	public $selectedTab;
-	
+
 	public function schema() {
 		return array(
 			'columns' => array(
@@ -613,10 +610,10 @@ class Contact extends NActiveRecord
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'trashed' => "int(1) unsigned NOT NULL",
-			), 
+			),
 			'keys' => array());
 	}
-	
+
 //	function behaviors() {
 //		return array(
 //			'eavAttr' => array(

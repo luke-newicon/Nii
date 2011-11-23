@@ -1,4 +1,14 @@
-<h2><?php echo $this->t('Editing '.$c->contact_type.'\'s Contact Details'); ?></h2>
+<div class="page-header">
+	<h2><?php echo $this->t('Edit Contact'); ?></h2>
+	<div class="action-buttons">
+		<?php
+			if ($c->id)
+				echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
+		?>
+	</div>
+</div>
+
+
 <?php
 
 $this->renderPartial(

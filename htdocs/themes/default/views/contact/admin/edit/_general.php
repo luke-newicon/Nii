@@ -165,9 +165,6 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 		$cancelUrl = ($c->id) ? array('admin/view','id'=>$c->id) : array('admin/index');
 		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
 		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-		if ($c->id)
-			echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
-
 		?>		
 	</div>
 </div>
