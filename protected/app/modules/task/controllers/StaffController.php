@@ -17,7 +17,11 @@ Class StaffController extends AController {
 	}
 	
 	public function actionView($id) {
-		echo 'Here';
+		$this->render('//task/staff/view');
+	}
+	
+	public function actionAdd() {
+		$this->render('//task/staff/add');
 	}
 
 }

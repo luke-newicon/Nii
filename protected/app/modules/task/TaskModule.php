@@ -54,15 +54,9 @@ class TaskModule extends NWebModule
 		
 		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
 			'Contact' => array(
-				'customer' => array(
-					'url' => '/contact/customer/view',
-				),
-				'supplier' => array(
-					'url' => '/contact/supplier/view',
-				),
-				'staff' => array(
-					'url' => '/contact/staff/view',
-				),
+				'customer' => 'ContactCustomer',
+				'supplier' => 'ContactSupplier',
+				'staff' => 'ContactStaff',
 			),
 		));
 	}

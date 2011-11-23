@@ -1,8 +1,10 @@
 <?php
 
-class ContactSupplier extends Contact {
+class ContactSupplier extends ContactRelation {
 
-	public $gridView = '//task/admin/customers';
+//	public $gridView = '//task/admin/customers';
+	
+	public $label = 'Supplier';
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -71,6 +73,18 @@ class ContactSupplier extends Contact {
 			),
 		);
 	}
+	
+	public function getAddUrl(){
+		return array('/contact/supplier/add', 'id' => $this->id());
+	}
+	
+	public function getViewUrl(){
+		return array('/contact/supplier/view', 'id' => $this->id());
+	}
+	
+	public function getEditUrl(){
+		return array('/contact/supplier/edit', 'id' => $this->id());
+	}
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
@@ -80,6 +94,7 @@ class ContactSupplier extends Contact {
 		return array(
 			'columns' => array(
 				'id' => "pk",
+				'contact_id' => 'int',
 			),
 			'keys' => array()
 		);

@@ -17,7 +17,11 @@ Class CustomerController extends AController {
 	}
 	
 	public function actionView($id) {
-		echo 'Here';
+		$this->render('//task/customer/view');
+	}
+	
+	public function actionAdd() {
+		$this->render('//task/customer/add');
 	}
 
 }

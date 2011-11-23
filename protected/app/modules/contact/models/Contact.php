@@ -42,6 +42,10 @@ class Contact extends NActiveRecord {
 		return '{{contact}}';
 	}
 
+	public function getModule() {
+		return Yii::app()->getModule('contact');
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -72,17 +76,32 @@ class Contact extends NActiveRecord {
 	public function relations() {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
-		return array(
+		$relations = array(
 			'photo' => array(self::HAS_ONE, 'NAttachment', 'model_id',
 				'condition' => 'photo.model="' . __CLASS__ . '" AND photo.type="contact-thumbnail" '),
-			'student' => array(self::HAS_ONE, 'Student', 'contact_id'),
-			'staff' => array(self::HAS_ONE, 'Staff', 'contact_id'),
-			'academic' => array(self::HAS_ONE, 'Academic', 'contact_id'),
-			'cleric' => array(self::HAS_ONE, 'Cleric', 'contact_id'),
-			'diocese' => array(self::HAS_ONE, 'Diocese', 'contact_id'),
-			'church' => array(self::HAS_ONE, 'Church', 'contact_id'),
-			'trainingfacility' => array(self::HAS_ONE, 'Trainingfacility', 'contact_id'),
+//			'student' => array(self::HAS_ONE, 'Student', 'contact_id'),
+//			'staff' => array(self::HAS_ONE, 'Staff', 'contact_id'),
+//			'academic' => array(self::HAS_ONE, 'Academic', 'contact_id'),
+//			'cleric' => array(self::HAS_ONE, 'Cleric', 'contact_id'),
+//			'diocese' => array(self::HAS_ONE, 'Diocese', 'contact_id'),
+//			'church' => array(self::HAS_ONE, 'Church', 'contact_id'),
+//			'trainingfacility' => array(self::HAS_ONE, 'Trainingfacility', 'contact_id'),
 		);
+
+		foreach ($this->relations as $name => $relation) {
+			$relations[$name] = array(self::HAS_ONE, get_class($relation), 'contact_id');
+		}
+		return $relations;
+	}
+
+	public function getRelations($relations=array()) {
+		if (isset($this->module->relations['Contact'])) {
+			foreach ($this->module->relations['Contact'] as $name => $class) {
+				$relation = new $class;
+				$relations[$name] = $relation;
+			}
+		}
+		return $relations;
 	}
 
 	/**
@@ -377,9 +396,9 @@ class Contact extends NActiveRecord {
 		$type = "grid-thumbnail-" . strtolower($this->contact_type);
 		$label = $showIcon ? $this->getPhoto($type) . '<span>' . $this->displayName . '</span>' : $this->displayName;
 		if ($tab)
-			return CHtml::link($label, array("view", "id" => $this->id, 'selectedTab' => $tab), array('class' => 'grid-thumb-label'));
+			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id, '#'.$tab), array('class' => 'grid-thumb-label'));
 		else
-			return CHtml::link($label, array("view", "id" => $this->id), array('class' => 'grid-thumb-label'));
+			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id), array('class' => 'grid-thumb-label'));
 	}
 
 	public function getContactPhoto($link=true, $tab=null) {
@@ -557,19 +576,32 @@ class Contact extends NActiveRecord {
 
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */
-		if(isset(Yii::app()->getModule('contact')->relations['Contact'])){
-			foreach (Yii::app()->getModule('contact')->relations['Contact'] as $key => $relation) {
-				$label = isset($relation['label']) ? $relation['label'] : ucwords($key);
-				$tabs[$label] = array('ajax' => array($relation['url'], 'id' => $this->id()), 'id' => $key);
-			}
+		foreach ($this->relations as $name => $class) {
+			if ($this->$name)
+				$tabs[$this->$name->label] = array('ajax' => $this->$name->viewUrl, 'id' => $name);
 		}
-		
+
 		/* Default tabs */
 		$tabs['Relationships'] = array('ajax' => array('generalInfo', 'id' => $this->id()), 'id' => 'relationships');
 		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes');
 		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments');
-		
+
 		return $tabs;
+	}
+
+	public function relationDropDownList() {
+		if(count($this->relations)){
+			foreach ($this->relations as $name => $relation) {
+				if(!$this->$name){
+					$data[$name] = $relation->label;
+					$options[$name] = array('data-relation-url' => CHtml::normalizeUrl($relation->addUrl));
+				}
+			}
+			return CHtml::dropDownList('contact-relation', null, $data, array(
+				'options' => $options,
+				'prompt' => 'Select a contact relation',
+			));
+		}
 	}
 
 	public $dob_day;

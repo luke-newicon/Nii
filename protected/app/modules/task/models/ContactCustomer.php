@@ -1,8 +1,10 @@
 <?php
 
-class ContactCustomer extends Contact {
+class ContactCustomer extends ContactRelation {
 
-	public $gridView = '//task/admin/customers';
+//	public $gridView = '//task/admin/customers';
+	
+	public $label = 'Customer';
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -32,7 +34,7 @@ class ContactCustomer extends Contact {
 	 */
 	public function relations() {
 		return array(
-			'contact' => array(self::BELONGS_TO, 'Contact', 'id'),
+			'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
 		);
 	}
 
@@ -67,16 +69,30 @@ class ContactCustomer extends Contact {
 				'name' => 'id',
 			),
 			array(
-				'name' => 'contact.name',
+				'name' => 'contact_name',
+				'type' => 'raw',
+				'value' => '$data->getContactLink(\'Customer\')',
 			),
 		);
+	}
+	
+	public function getAddUrl(){
+		return array('/contact/customer/add', 'id' => $this->id());
+	}
+	
+	public function getViewUrl(){
+		return array('/contact/customer/view', 'id' => $this->id());
+	}
+	
+	public function getEditUrl(){
+		return array('/contact/customer/edit', 'id' => $this->id());
 	}
 
 	public function viewLink($text=null) {
 		if ($this->contact) {
 			if (!$text)
 				$text = $this->contact->name;
-			return CHtml::link($text, array('/contact/admin/customer', 'id' => $this->id()));
+			return CHtml::link($text, $this->viewUrl);
 		}
 	}
 
@@ -88,6 +104,7 @@ class ContactCustomer extends Contact {
 		return array(
 			'columns' => array(
 				'id' => "pk",
+				'contact_id' => 'int',
 			),
 			'keys' => array()
 		);
