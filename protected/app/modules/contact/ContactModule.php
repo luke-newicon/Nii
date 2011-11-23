@@ -103,18 +103,10 @@ class ContactModule extends NWebModule {
 	 *	Edit Functions
 	 */
 	
-	/**
-	 *	
-	 * @param CEvent $event - params = array(contact model, form widget)
-	 */
 	public function onRenderContactBeforeTypeDetailsEdit($event){
 		$this->raiseEvent('onRenderContactBeforeTypeDetailsEdit', $event);
 	}
 	
-	/**
-	 *	
-	 * @param CEvent $event - params = array(contact model, form widget)
-	 */
 	public function onRenderContactAfterTypeDetailsEdit($event){
 		$this->raiseEvent('onRenderContactAfterTypeDetailsEdit', $event);
 	}

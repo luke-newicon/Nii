@@ -23,7 +23,7 @@ class HftModule extends NWebModule
 		
 		Yii::app()->getModule('contact')->onRenderContactAfterHeader = array($this, 'handleOnRenderAfterHeader');
 		Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails= array($this, 'handleOnRenderAfterTypeDetails');
-		
+
 		Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit = array($this, 'handleOnRenderBeforeTypeDetailsEdit');
 		Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit = array($this, 'handleOnRenderContactAfterAddressEdit');
 		/**
@@ -40,7 +40,7 @@ class HftModule extends NWebModule
 	public function handleOnRenderAfterTypeDetails($event){
 		$event->sender->renderPartial('hft.views.contact.view.after_type_details', $event->params);
 	}
-	
+		
 	public function handleOnRenderBeforeTypeDetailsEdit($event){
 		$event->sender->renderPartial('hft.views.contact.edit.before_type_details', $event->params);
 	}

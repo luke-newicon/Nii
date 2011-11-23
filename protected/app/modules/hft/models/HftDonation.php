@@ -230,11 +230,12 @@ class HftDonation extends NActiveRecord
 	}
 	
 	public function getEventName($echoNoData=false) {
-//		if ($this->event)
-//			return $this->event->name;
-//		else
-		if ($echoNoData!=false)
-			return '<span class="noData">No event assigned</span>';
+		if ($this->event)
+			return $this->event->name;
+		else {
+			if ($echoNoData!=false)
+				return '<span class="noData">No event assigned</span>';
+		}
 	}
 	
 	

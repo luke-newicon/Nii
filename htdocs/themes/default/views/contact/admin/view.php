@@ -72,13 +72,20 @@
 	<?php Yii::app()->getModule('contact')->onRenderContactAfterComment($event); ?>
 </div>
 </div>
-<?php $this->widget('nii.widgets.NTabs', 
+<?php 
+$tabs = array();
+$tabs = array_merge(
+	$model->arrayTabsTop,
 	array(
-		'tabs' => array(
-			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-			'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
-			'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
-		),
+		'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
+		'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
+		'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
+	),
+	$model->arrayTabsBottom
+);
+$this->widget('nii.widgets.NTabs', 
+	array(
+		'tabs' => $tabs,
 		'options' => array(
 			'cache' => true,
 		),

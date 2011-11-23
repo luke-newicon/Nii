@@ -49,8 +49,38 @@ class HftContact extends Contact
 	public function rules() {
 		$rules = Contact::model()->rules();
 		return array_merge($rules, array(
-			array('account_number, source_id', 'safe'),
-			array('account_number, source_id', 'safe','on'=>'search'),
+			array('account_number, source_id, newsletter', 'safe'),
+			array('account_number, source_id, newsletter', 'safe','on'=>'search'),
+		));
+	}
+	
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+
+		$criteria=$this->getDbCriteria();
+		
+		$this->getSearchCriteria($criteria);
+		
+		$criteria->compare('newsletter', $this->newsletter);
+
+		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
+		//$criteria->together = true;\
+		
+		$sort = new CSort;
+		$sort->defaultOrder = 'id DESC';		
+		
+		return new NActiveDataProvider($this, array(
+			'criteria'=>$criteria,	
+			'sort' => $sort,
+			'pagination'=>array(
+				'pageSize'=>20,
+            ),
 		));
 	}
 	
@@ -62,16 +92,28 @@ class HftContact extends Contact
 				array(
 					'name' => 'account_number',
 					'header' => 'Acc. #',
-				'htmlOptions'=>array('width'=>'60px'),
+					'htmlOptions'=>array('width'=>'60px'),
 				),
 			),
 			$columns, 
 			array(
 				array(
+					'name' => 'countDonations',
+					'header'=>'Donations',
+					'type'=>'raw',
+					'htmlOptions'=>array('width'=>'60px','style'=>'text-align:center'),
+				),
+				array(
 					'name' => 'source_id',
 					'type' => 'raw',
 					'value' => '$data->sourceName',
 					'filter'=> HftContactSource::getSourcesArray(),
+				),
+				array(
+					'name' => 'newsletter',
+					'type' => 'raw',
+					'value' => 'NHtml::formatBool($data->newsletter)',
+					'filter'=> array('1'=>'Yes','0'=>'No'),
 				),
 			)
 		);
@@ -106,6 +148,7 @@ class HftContact extends Contact
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'source_id' => 'int(11)',
+				'newsletter' => 'int(1) unsigned NOT NULL DEFAULT 0',
 				'account_number' => 'varchar(30)',
 				'trashed' => "int(1) unsigned NOT NULL",
 			), 
@@ -115,6 +158,45 @@ class HftContact extends Contact
 	public function getSourceName() {
 		if ($this->source)
 			return $this->source->name;
+	}
+	
+	public function getDonations() {
+		$donations = HftDonation::model()->findAllByAttributes(array('contact_id'=>$this->id));
+		if($donations)
+			return $donations;
+		else
+			return false;
+	}
+	
+	public function getCountDonations() {
+		if ($this->id) {
+			$donations = HftDonation::model()->countByAttributes(array('contact_id'=>$this->id));
+			if($donations)
+				return $donations;
+			else
+				return '<span class="noData">---</span>';
+		}
+	}
+	
+	/**
+	 *	Tabs top - return array of items to include at the top of the contact view 'tabs' section
+	 * @return array 
+	 */
+	public function getArrayTabsTop() {
+		$return = array();
+		if ($this->donations !=false)
+			$return = array(
+				'Donations'=>array('ajax'=>array('/hft/donation/contactDonations','id'=>$this->id), 'id'=>'donations', 'count'=>$this->countDonations)
+			);
+		return $return;
+	}
+	
+	/**
+	 *	Tabs top - return array of items to include at the bottom of the contact view 'tabs' section
+	 * @return array 
+	 */	
+	public function getArrayTabsBottom() {
+		return array();
 	}
 	
 }

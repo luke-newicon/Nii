@@ -140,6 +140,24 @@ class Contact extends NActiveRecord
 
 		$criteria=$this->getDbCriteria();
 		
+		$this->getSearchCriteria($criteria);
+
+		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
+		//$criteria->together = true;\
+		
+		$sort = new CSort;
+		$sort->defaultOrder = 'id DESC';		
+		
+		return new NActiveDataProvider($this, array(
+			'criteria'=>$criteria,	
+			'sort' => $sort,
+			'pagination'=>array(
+				'pageSize'=>20,
+            ),
+		));
+	}
+	
+	public function getSearchCriteria(&$criteria) {
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('title',$this->title,true);
@@ -167,20 +185,7 @@ class Contact extends NActiveRecord
 		$criteria->compare('contact_name',$this->contact_name,true);
 		$criteria->compare('contact_type',$this->contact_type,true);
 		$criteria->compare('comment',$this->comment,true);
-
-		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
-		//$criteria->together = true;\
-		
-		$sort = new CSort;
-		$sort->defaultOrder = 'id DESC';		
-		
-		return new NActiveDataProvider($this, array(
-			'criteria'=>$criteria,	
-			'sort' => $sort,
-			'pagination'=>array(
-				'pageSize'=>20,
-            ),
-		));
+		return true;
 	}
 	
 	public function scopes() {
@@ -550,7 +555,22 @@ class Contact extends NActiveRecord
 	public function getDobFormatted() {
 		return date('d M Y',strtotime($this->dob));
 	}
-
+	
+	/**
+	 *	Tabs top - return array of items to include at the top of the contact view 'tabs' section
+	 * @return array 
+	 */
+	public function getArrayTabsTop() {
+		return array();
+	}
+	
+	/**
+	 *	Tabs top - return array of items to include at the bottom of the contact view 'tabs' section
+	 * @return array 
+	 */	
+	public function getArrayTabsBottom() {
+		return array();
+	}
 	
 	public $dob_day;
 	public $dob_month;

@@ -148,6 +148,24 @@ class DonationController extends AController
 		}
 	}
 	
+	
+	public function actionContactDonations($id) {
+		
+		$donationModel = 'HftDonationContact';
+	
+		$model = new $donationModel('search');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$donationModel]))
+			$model->attributes = $_GET[$donationModel];
+
+		$this->render('view/tabs/contactdonations',array(
+			'dataProvider'=>$model->search($id),
+			'model'=>$model,
+		));
+
+	}
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
