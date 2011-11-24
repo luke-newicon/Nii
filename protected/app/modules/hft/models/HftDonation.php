@@ -178,6 +178,15 @@ class HftDonation extends NActiveRecord
 			'keys' => array());
 	}	
 	
+	function behaviors() {
+		return array(
+			'trash'=>array(
+				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+			)
+		);
+	}
+	
 	
 	public function getContactLink($tab=null, $showIcon=false) {
 		if ($this->contact) {

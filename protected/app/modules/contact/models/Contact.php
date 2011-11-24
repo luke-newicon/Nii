@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This is the model class for table "trinity.contact".
+ * This is the model class for table "contact".
  *
  * The followings are the available columns in table 'trinity.contact':
  * @property integer $id
@@ -79,13 +79,6 @@ class Contact extends NActiveRecord {
 		$relations = array(
 			'photo' => array(self::HAS_ONE, 'NAttachment', 'model_id',
 				'condition' => 'photo.model="' . __CLASS__ . '" AND photo.type="contact-thumbnail" '),
-//			'student' => array(self::HAS_ONE, 'Student', 'contact_id'),
-//			'staff' => array(self::HAS_ONE, 'Staff', 'contact_id'),
-//			'academic' => array(self::HAS_ONE, 'Academic', 'contact_id'),
-//			'cleric' => array(self::HAS_ONE, 'Cleric', 'contact_id'),
-//			'diocese' => array(self::HAS_ONE, 'Diocese', 'contact_id'),
-//			'church' => array(self::HAS_ONE, 'Church', 'contact_id'),
-//			'trainingfacility' => array(self::HAS_ONE, 'Trainingfacility', 'contact_id'),
 		);
 
 		foreach ($this->relations as $name => $relation) {
@@ -558,22 +551,6 @@ class Contact extends NActiveRecord {
 		return date('d M Y', strtotime($this->dob));
 	}
 
-//	/**
-//	 *	Tabs top - return array of items to include at the top of the contact view 'tabs' section
-//	 * @return array 
-//	 */
-//	public function getArrayTabsTop() {
-//		return array();
-//	}
-//	
-//	/**
-//	 *	Tabs top - return array of items to include at the bottom of the contact view 'tabs' section
-//	 * @return array 
-//	 */	
-//	public function getArrayTabsBottom() {
-//		return array();
-//	}
-
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */
 		foreach ($this->relations as $name => $class) {
@@ -645,33 +622,14 @@ class Contact extends NActiveRecord {
 			),
 			'keys' => array());
 	}
+	
+	function behaviors() {
+		return array(
+			'trash'=>array(
+				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+			)
+		);
+	}
 
-//	function behaviors() {
-//		return array(
-//			'eavAttr' => array(
-//				'class' => 'nii.components.behaviors.EEavBehavior',
-//				// Table that stores attributes (required)
-//				'tableName' => 'contact_eav',
-//				// model id column
-//				// Default is 'entity'
-//				'entityField' => 'entity',
-//				// attribute name column
-//				// Default is 'attribute'
-//				'attributeField' => 'attribute',
-//				// attribute value column
-//				// Default is 'value'
-//				'valueField' => 'value',
-//				// Model FK name
-//				// By default taken from primaryKey
-//				'modelTableFk' => 'primaryKey',
-//				// Array of allowed attributes
-//				// All attributes are allowed if not specified
-//				// Empty by default
-//				'safeAttributes' => array(),
-//				// Attribute prefix. Useful when storing attributes for multiple models in a single table
-//				// Empty by default
-//				'attributesPrefix' => '',
-//			)
-//		);
-//	}
 }

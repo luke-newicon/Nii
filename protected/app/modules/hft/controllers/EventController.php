@@ -89,6 +89,8 @@ class EventController extends AController
 		$eventModel = 'HftEvent';
 		
 		$model = HftEvent::model()->findByPk($id);
+
+		$this->checkModelExists($model, "<strong>No contact exists for ID: ".$id."</strong>");
 		
 		$this->performAjaxValidation($model);
 		

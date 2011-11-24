@@ -89,6 +89,8 @@ class DonationController extends AController
 		$donationModel = 'HftDonation';
 		
 		$model = HftDonation::model()->findByPk($id);
+
+		$this->checkModelExists($model, "<strong>No contact exists for ID: ".$id."</strong>");
 		
 		$this->performAjaxValidation($model);
 		

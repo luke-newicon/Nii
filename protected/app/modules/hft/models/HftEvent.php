@@ -143,6 +143,15 @@ class HftEvent extends NActiveRecord
 			'keys' => array());
 	}	
 	
+	function behaviors() {
+		return array(
+			'trash'=>array(
+				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+			)
+		);
+	}
+	
 	public function getNameLink() {
 		return NHtml::link($this->name, array('view', 'id'=>$this->id));
 	}
