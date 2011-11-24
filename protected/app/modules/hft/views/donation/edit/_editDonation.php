@@ -9,7 +9,7 @@ $form = $this->beginWidget('NActiveForm', array(
 
 $modelName = get_class($model);
 ?>
-<div class="container pull-left">
+<div class="pull-left">
 	<div class="line field">
 		<div class="unit size1of6"><?= $form->labelEx($model,'donation_amount') ?></div>
 		<div class="lastUnit">
@@ -116,8 +116,8 @@ $modelName = get_class($model);
 		$cancelUrl = ($model->id) ? array('donation/view','id'=>$model->id) : array('donation/index');
 		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
 		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-		if ($model->id)
-			echo NHtml::trashButton($model, 'donation', 'donation/index', 'Successfully deleted donation');
+//		if ($model->id)
+//			echo NHtml::trashButton($model, 'donation', 'donation/index', 'Successfully deleted donation');
 
 		?>		
 	</div>
