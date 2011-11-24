@@ -46,6 +46,19 @@ class IndexController extends AController
 	}
 	
 	
+	public function actionTrash($model, $model_id, $name, $returnUrl, $successMsg=null) {
+		$trash = new $model;
+		$trash = $trash->findByPk($model_id);
+		if ($trash) {
+			$trash->trashed = '1';
+			if ($trash->save(false)) {
+				Yii::app()->user->setFlash('success', ($successMsg ? $successMsg : $this->t('Successfully deleted '.$name.' details')));
+				$this->redirect(str_replace('.','/',$returnUrl));
+			} else {
+				echo 'Error';
+			}
+		}
+	}	
 	
 	
 	

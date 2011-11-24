@@ -3,7 +3,7 @@
 	<div class="action-buttons">
 		<?php
 			if ($c->id)
-				echo NHtml::trashButton($c, 'contact', 'contact/index', 'Successfully deleted '.$c->name);
+				echo NHtml::trashButton($c, 'contact', '/contact/admin/', 'Successfully deleted '.$c->name);
 		?>
 	</div>
 </div>

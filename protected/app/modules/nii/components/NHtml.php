@@ -433,19 +433,24 @@ class NHtml extends CHtml {
 		return parent::activeLabel($model, $attribute, $htmlOptions);
 	}
 	
-	// DOCUMENTATION PLEASE!
-	public static function trashButton ($model, $modelName, $returnUrl=null, $successMsg=null) {
+	/**
+	 *
+	 * @param string $model
+	 * @param string $modelName
+	 * @param mixed $returnUrl the return route string/array.
+	 * @param string $successMsg
+	 * @return button 
+	 */
+	public static function trashButton ($model, $modelName, $returnUrl, $successMsg=null) {
 
 		$label = AController::t('Delete this '.$modelName);
 		$className = get_class($model);
-		if (!$returnUrl)
-			$returnUrl = Yii::app()->controller->uniqueId . '/' . Yii::app()->controller->action->id;
 		
 		$params = array(
 			'model'=>$className,
 			'model_id'=>$model->id,
 			'name'=>$modelName,
-			'returnUrl'=>$returnUrl,
+			'returnUrl'=> str_replace('/', '.', NHtml::url($returnUrl)),
 		);
 		if ($successMsg)
 			$params['successMsg'] = $successMsg;

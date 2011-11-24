@@ -10,7 +10,7 @@
  */
 
 /**
- * Description of NiiActiveRecord
+ * Description of NActiveRecord
  *
  * @author steve
  */
@@ -211,7 +211,5 @@ class NActiveRecord extends CActiveRecord
 	public function columns() {
 		return array();
 	}
-	
-
 	
 }

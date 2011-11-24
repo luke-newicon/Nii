@@ -115,7 +115,7 @@ class AController extends NController {
 	}
 
 	public function checkModelExists($model=null, $message=null, $htmlMessage=true) {
-		if ($model->id)
+		if (isset($model->id))
 			return true;
 		else {
 			if ($message == null)
@@ -123,6 +123,7 @@ class AController extends NController {
 			$this->render('//site/error', array(
 				'message' => $message,
 				'htmlMessage' => $htmlMessage,
+				'code'=>'404',
 			));
 		}
 		Yii::app()->end();
