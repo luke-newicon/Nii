@@ -11,7 +11,7 @@
 ?>
 
 <div class="page-header">
-	<h2>Project: <?php echo $project->name; ?></h2>
+	<h2><span style="color:#ccc;">Project:</span> <?php echo $project->name; ?></h2>
 	<div class="action-buttons">
 		<a href="<?php echo CHtml::normalizeUrl(array('/task/admin/projects')) ?>" class="btn">Back to All Projects</a>
 		<a href="#" class="btn" >Team View</a>
