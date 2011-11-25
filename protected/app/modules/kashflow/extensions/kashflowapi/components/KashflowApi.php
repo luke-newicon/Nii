@@ -26,35 +26,35 @@ class KashflowApi extends CApplicationComponent {
 	 * @var array The map of Soap objects
 	 */
 	public $classmap = array(
-//		'AccountOverview' => 'KashflowAccountOverview',
-//		'AgedDebtorsCreditors' => 'KashflowAgedDebtorsCreditors',
-//		'BalanceSheet' => 'KashflowBalanceSheet',
-//		'BankAccount' => 'KashflowBankAccount',
-//		'BankOverview' => 'KashflowBankOverview',
-//		'BankTransaction' => 'KashflowBankTransaction',
-//		'BankTXType' => 'KashflowBankTXType',
+		'AccountOverview' => 'KashflowAccountOverview',
+		'AgedDebtorsCreditors' => 'KashflowAgedDebtorsCreditors',
+		'BalanceSheet' => 'KashflowBalanceSheet',
+		'BankAccount' => 'KashflowBankAccount',
+		'BankOverview' => 'KashflowBankOverview',
+		'BankTransaction' => 'KashflowBankTransaction',
+		'BankTXType' => 'KashflowBankTXType',
 		'BasicDataset' => 'KashflowBasicDataset',
-//		'Currencies' => 'KashflowCurrencies',
+		'Currencies' => 'KashflowCurrencies',
 		'Customer' => 'KashflowCustomer',
-//		'CustomerBalance' => 'KashflowCustomerBalance',
+		'CustomerBalance' => 'KashflowCustomerBalance',
 		'Invoice' => 'KashflowInvoice',
-//		'InvoiceLine' => 'KashflowInvoiceLine',
-//		'InvoiceNote' => 'KashflowInvoiceNote',
-//		'JournalEntry' => 'KashflowJournalEntry',
-//		'JournalLine' => 'KashflowJournalLine',
-//		'MonthlyPL' => 'KashflowMonthlyPL',
-//		'NominalCode' => 'KashflowNominalCode',
-//		'NominalCodeExtended' => 'KashflowNominalCodeExtended',
-//		'Payment' => 'KashflowPayment',
-//		'PaymentMethod' => 'KashflowPaymentMethod',
-//		'Product' => 'KashflowProduct',
-//		'ProfitAndLoss' => 'KashflowProfitAndLoss',
-//		'Project' => 'KashflowProject',
-//		'ReceiptAttachment' => 'KashflowReceiptAttachment',
-//		'SubProduct' => 'KashflowSubProduct',
+		'InvoiceLine' => 'KashflowInvoiceLine',
+		'InvoiceNote' => 'KashflowInvoiceNote',
+		'JournalEntry' => 'KashflowJournalEntry',
+		'JournalLine' => 'KashflowJournalLine',
+		'MonthlyPL' => 'KashflowMonthlyPL',
+		'NominalCode' => 'KashflowNominalCode',
+		'NominalCodeExtended' => 'KashflowNominalCodeExtended',
+		'Payment' => 'KashflowPayment',
+		'PaymentMethod' => 'KashflowPaymentMethod',
+		'Product' => 'KashflowProduct',
+		'ProfitAndLoss' => 'KashflowProfitAndLoss',
+		'Project' => 'KashflowProject',
+		'ReceiptAttachment' => 'KashflowReceiptAttachment',
+		'SubProduct' => 'KashflowSubProduct',
 		'Supplier' => 'KashflowSupplier',
-//		'TransactionInformation' => 'KashflowTransactionInformation',
-//		'VATReport' => 'KashflowVATReport',
+		'TransactionInformation' => 'KashflowTransactionInformation',
+		'VATReport' => 'KashflowVATReport',
 	);
 	private $_client;
 
@@ -817,36 +817,90 @@ class KashflowApi extends CApplicationComponent {
 			return array();
 	}
 
-	public function GetSupplierById() {
-		
+	/**
+	 * This method returns an object of type Supplier containing details of the supplier specified by the Supplier ID.
+	 * This is an alternative to the GetSupplier method which returns a supplier based on their code.
+	 * @param int $SupplierID The unique Supplier id
+	 * @return KashflowSupplier An object of type Supplier
+	 */
+	public function GetSupplierById($SupplierID) {
+		return $this->request('GetSupplierById', array(
+					'SupplierID' => $SupplierID,
+				))->GetSupplierByIdResult->Supplier;
 	}
 
-	public function InsertSupplier() {
-		
+	/**
+	 * This method lets you create a new Supplier.
+	 * If the operation is successful then you are returned an integer containing the newly generated ID number for the supplier.
+	 * @param KashflowSuppleir $Supplier An object of type Supplier
+	 */
+	public function InsertSupplier($Supplier) {
+		$this->request('InsertSupplier', array('Supplier' => $Supplier));
 	}
 
-	public function UpdateSupplier() {
-		
+	/**
+	 * This method lets you update an existing Supplier.
+	 * @param KashflowSuppleir $Supplier An object of type Supplier
+	 */
+	public function UpdateSupplier($Supplier) {
+		$this->request('UpdateSupplier', array('Supplier' => $Supplier));
 	}
 
-	public function GetSupplierVATNumber() {
-		
+	/**
+	 * This method returns a VAT number for the specified supplier.
+	 * @param string $SupplierCode The unique supplier code.
+	 * @return string SupVATNumber A VAT number
+	 */
+	public function GetSupplierVATNumber($SupplierCode) {
+		return $this->request('GetSupplierVATNumber', array(
+					'SupplierCode' => $SupplierCode,
+				))->GetSupplierVATNumberResult;
 	}
 
-	public function SetSupplierVATNumber() {
-		
+	/**
+	 * This method takes a supplier code and a VAT number and updates the VAT number for the specified supplier.
+	 * @param string $SupVATNumber A VAT number
+	 * @param string $SupplierCode The unique supplier code.
+	 */
+	public function SetSupplierVATNumber($SupVATNumber, $SupplierCode) {
+		$this->request('SetSupplierVATNumber', array(
+			'SupVATNumber' => $SupVATNumber,
+			'SupplierCode' => $SupplierCode,
+		));
 	}
 
-	public function GetSupplierCurrency() {
-		
+	/**
+	 * This method returns the currency code for the specified supplier.
+	 * @param string $SupplierCode The unique supplier code.
+	 * @return string SuppCurrencyCode A currency code e.g. GBP, USD , ZAR
+	 */
+	public function GetSupplierCurrency($SupplierCode) {
+		return $this->request('GetSupplierCurrency', array(
+					'SupplierCode' => $SupplierCode,
+				))->GetSupplierCurrencyResult;
 	}
 
-	public function SetSupplierCurrency() {
-		
+	/**
+	 * This method takes a currency code and a supplier code and updates the default currency for the supplier specified. The currency code should have already been setup in your account.
+	 * @param string $CurrencyCode The ISO code of a currency. E.g. USD, GBP
+	 * @param string $SupplierCode The unique supplier code.
+	 */
+	public function SetSupplierCurrency($CurrencyCode, $SupplierCode) {
+		$this->request('SetSupplierVATNumber', array(
+			'CurrencyCode' => $CurrencyCode,
+			'SupplierCode' => $SupplierCode,
+		));
 	}
 
-	public function GetReceipt() {
-		
+	/**
+	 * This method returns an object of type Receipt containing details of the Receipt number requested.
+	 * @param int $ReceiptNumber The unique receipt number
+	 * @return KashflowInvoice An object of type Invoice
+	 */
+	public function GetReceipt($ReceiptNumber) {
+		return $this->request('GetReceipt', array(
+					'ReceiptNumber' => $ReceiptNumber,
+				))->GetReceiptsResult->Invoice;
 	}
 
 	/**
@@ -863,11 +917,28 @@ class KashflowApi extends CApplicationComponent {
 		} else
 			return array();
 	}
-
-	public function GetReceipts_Recent() {
-		
+	/**
+	 * The method returns an array of type Invoice containing details of the most recent NumberOfReceipts receipts (based on receipt date)
+	 * @param int $NumberOfReceipts The number of receipts you'd like returned
+	 * @return array An array of type Invoice
+	 */
+	public function GetReceipts_Recent($NumberOfReceipts) {
+		$response = $this->request('GetReceipts_Recent', array(
+			'NumberOfReceipts' => $NumberOfReceipts,
+		))->GetReceipts_RecentResult;
+		if (property_exists($response, 'Invoice')) {
+			if (is_array($response->Invoice))
+				return $response->Invoice;
+			else
+				return array($response->Invoice);
+		} else
+			return array();
 	}
-
+	/**
+	 * The method returns an array of type Invoice containing details of all Receipts for the specified supplier.
+	 * @param int $SupplierID The unique supplier id
+	 * @return array An array of type Invoice
+	 */
 	public function GetReceiptsForSupplier() {
 		
 	}
