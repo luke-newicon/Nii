@@ -56,9 +56,12 @@ class HftDonation extends NActiveRecord
 		return array(
 			array('donation_amount, giftaid, date_received', 'required'),
 			array('type_id, event_id, comment, statement_number, statement_date, contact_id', 'safe'),
-			array('donation_amount, giftaid, date_received, type_id, event_id, comment, statement_number, statement_date, contact_id', 'safe','on'=>'search'),
+			array('donation_amount, giftaid, date_received, type_id, event_id, comment, statement_number, statement_date, contact_id,
+				date_received_from, date_received_to, statement_date_from, statement_date_to', 'safe','on'=>'search'),
 		);
 	}
+	
+	public $date_received_from, $date_received_to, $statement_date_from, $statement_date_to;
 	
 /**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -80,6 +83,13 @@ class HftDonation extends NActiveRecord
 //		$criteria->compare('event.name',$this->type_id,true);
 		$criteria->compare('statement_number',$this->statement_number,true);
 		$criteria->compare('statement_date',$this->statement_date,true);
+		
+		// Add date filters
+		if((isset($this->date_received_from) && trim($this->date_received_from) != "") && (isset($this->date_received_to) && trim($this->date_received_to) != ""))
+			$criteria->addBetweenCondition('date_received', ''.$this->date_received_from.'', ''.$this->date_received_to.'');
+
+		if((isset($this->statement_date_from) && trim($this->statement_date_from) != "") && (isset($this->statement_date_to) && trim($this->statement_date_to) != ""))
+			$criteria->addBetweenCondition('statement_date', ''.$this->statement_date_from.'', ''.$this->statement_date_to.'');
 
 		$criteria->with = array('contact', 'type');
 		$criteria->together = true;
@@ -110,6 +120,7 @@ class HftDonation extends NActiveRecord
 				'type' => 'raw',
 				'value' => '$data->donationDateLink',
 				'header' => 'Date Rec\'d',
+				'filter' => NGridView::filterDateRange($this, 'date_received'),
 				'htmlOptions'=>array('width'=>'80px'),
 			),
 			array(
@@ -148,6 +159,8 @@ class HftDonation extends NActiveRecord
 				'name' => 'statement_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
+				'filter' => NGridView::filterDateRange($this, 'statement_date'),
+				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
 				'name' => 'editLink',

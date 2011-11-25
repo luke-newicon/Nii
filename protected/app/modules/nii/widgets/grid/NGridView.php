@@ -515,7 +515,7 @@ class NGridView extends CGridView
 					'constrainInput' => 'false',
 				),
 				'htmlOptions'=>array(
-					'placeholder'=>'From Date',
+					'placeholder'=>'From',
 					'style'=>'height:20px;width:70px;',
 				),
 			),true) . 
@@ -535,7 +535,7 @@ class NGridView extends CGridView
 					'constrainInput' => 'false',
 				),
 				'htmlOptions'=>array(
-					'placeholder'=>'To Date',
+					'placeholder'=>'To',
 					'style'=>'height:20px;width:70px',
 				),
 			),true)
