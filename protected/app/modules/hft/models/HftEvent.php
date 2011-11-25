@@ -53,9 +53,11 @@ class HftEvent extends NActiveRecord
 		return array(
 			array('name, start_date', 'required'),
 			array('end_date, organiser_type_id, organiser_name, description', 'safe'),
-			array('name, start_date, end_date, organiser_type_id, organiser_name, description', 'safe','on'=>'search'),
+			array('name, start_date, end_date, organiser_type_id, organiser_name, description, start_date_from, start_date_to, end_date_from, end_date_to', 'safe','on'=>'search'),
 		);
 	}
+	
+	public $start_date_from, $start_date_to, $end_date_from, $end_date_to;
 	
 /**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -69,10 +71,17 @@ class HftEvent extends NActiveRecord
 		
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name, true);
-		$criteria->compare('start_date',$this->start_date,true);
-		$criteria->compare('end_date',$this->end_date,true);
+//		$criteria->compare('start_date',$this->start_date,true);
+//		$criteria->compare('end_date',$this->end_date,true);
 		$criteria->compare('organiser_type_id',$this->organiser_type_id);
 		$criteria->compare('organiser_name',$this->organiser_name,true);
+		
+		// Add date filters
+		if((isset($this->start_date_from) && trim($this->start_date_from) != "") && (isset($this->start_date_to) && trim($this->start_date_to) != ""))
+			$criteria->addBetweenCondition('start_date', ''.$this->start_date_from.'', ''.$this->start_date_to.'');
+
+		if((isset($this->end_date_from) && trim($this->end_date_from) != "") && (isset($this->end_date_to) && trim($this->end_date_to) != ""))
+			$criteria->addBetweenCondition('end_date', ''.$this->end_date_from.'', ''.$this->end_date_to.'');
 
 		return new NActiveDataProvider($this, array(
 			'criteria'=>$criteria,	
@@ -95,12 +104,14 @@ class HftEvent extends NActiveRecord
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->start_date, "d-m-Y")',
 				'htmlOptions'=>array('width'=>'80px'),
+				'filter' => NGridView::filterDateRange($this, 'start_date'),
 			),
 			array(
 				'name' => 'end_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->end_date, "d-m-Y")',
 				'htmlOptions'=>array('width'=>'80px'),
+				'filter' => NGridView::filterDateRange($this, 'end_date'),
 			),
 			array(
 				'name' => 'organiser_type_id',

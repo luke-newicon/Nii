@@ -464,5 +464,83 @@ class NGridView extends CGridView
 			$column->renderDataCell($row);
 		echo "</tr>\n";
 	}
+	
+	
+	/**
+	 *	Date Range Filtering for Grid View
+	 * @param model $model
+	 * @param string $field
+	 * @return string 
+	 * 
+	 * Is this the best place for this function? If not, please refactor to the most suitable model...
+	 * 
+	 * Implementation notes:
+	 * ============================
+	 * In the examples below, the column in the grid will be named 'date'.
+	 * 
+	 * To use this filter, you must declare the '_from' and '_to' properties in the calling model (the one supplied in $model)
+	 * e.g. public $date_from, $date_to
+	 * 
+	 * You must also add them to the rules for safe on search for the same morel
+	 * e.g. array('date_from, date_to', 'safe','on'=>'search')
+	 * 
+	 * Finally, you need to add them to the search criteria for the calling model
+	 * e.g. 
+	 * if((isset($this->date_from) && trim($this->date_from) != "") && (isset($this->date_to) && trim($this->date_to) != ""))
+	 *		$criteria->addBetweenCondition('date', ''.$this->date_from.'', ''.$this->date_to.'');
+	 * 
+	 * You can then add the following to your 'date' column:
+	 * 'filter' => NGridView::filterDateRange($this, 'date')
+	 * ============================
+	 */
+	public function filterDateRange($model, $field) {
+		
+		$from = $field.'_from';
+		$to = $field.'_to';
+		$class = get_class($model);
+		$controller = Yii::app()->controller;
+		
+		return 
+			'<div class="line field mbs"><div class="input inputInline">' .
+			// From date
+			$controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'name' => $class.'['.$from.']',
+				'value' => $model->$from,
+				// additional javascript options for the date picker plugin
+				'options'=>array(
+					'showAnim'=>'fold',
+					'dateFormat'=>'yy-mm-dd',
+					'changeMonth' => 'true',
+					'changeYear'=>'true',
+					'constrainInput' => 'false',
+				),
+				'htmlOptions'=>array(
+					'placeholder'=>'From Date',
+					'style'=>'height:20px;width:70px;',
+				),
+			),true) . 
+			
+			'</div></div><div class="line field mbn"><div class="input inputInline">' . 
+			
+			// To date
+			$controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'name' => $class.'['.$to.']',
+				'value' => $model->$to,
+				// additional javascript options for the date picker plugin
+				'options'=>array(
+					'showAnim'=>'fold',
+					'dateFormat'=>'yy-mm-dd',
+					'changeMonth' => 'true',
+					'changeYear'=>'true',
+					'constrainInput' => 'false',
+				),
+				'htmlOptions'=>array(
+					'placeholder'=>'To Date',
+					'style'=>'height:20px;width:70px',
+				),
+			),true)
+			. '</div></div>';
+
+	}
 
 }
