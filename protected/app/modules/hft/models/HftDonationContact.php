@@ -8,6 +8,8 @@
 class HftDonationContact extends HftDonation 
 {
 	
+	public $label = 'Donations';
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Contact the static model class
@@ -113,6 +115,24 @@ class HftDonationContact extends HftDonation
 //				'htmlOptions'=>array('width'=>'30px'),
 //			),
 		);
+	}
+	
+	public function getViewUrl(){
+		return array('/contact/customer/view', 'id' => $this->id());
+	}
+	
+	public function getTabCounter() {
+		return $this->countDonations;
+	}
+
+	public function getCountDonations() {
+		if ($this->id) {
+			$donations = HftDonation::model()->countByAttributes(array('contact_id'=>$this->id));
+			if($donations)
+				return $donations;
+			else
+				return '<span class="noData">---</span>';
+		}
 	}
 	
 }

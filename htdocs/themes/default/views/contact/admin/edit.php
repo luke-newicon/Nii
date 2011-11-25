@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $this->t('Edit Contact'); ?></h2>
+	<h2><?php echo $this->t('Edit Contact'); ?><?php echo ($c->id) ? ' - '.$c->displayName : ''; ?></h2>
 	<div class="action-buttons">
 		<?php
 			if ($c->id)
