@@ -488,6 +488,8 @@ class NGridView extends CGridView
 	 * e.g. 
 	 * if((isset($this->date_from) && trim($this->date_from) != "") && (isset($this->date_to) && trim($this->date_to) != ""))
 	 *		$criteria->addBetweenCondition('date', ''.$this->date_from.'', ''.$this->date_to.'');
+	 * -->>>	There is now also a function for this in NActiveRecord, which can be used as follows:
+	 * -->>> $this->dateRangeCriteria($criteria,'date');
 	 * 
 	 * You can then add the following to your 'date' column:
 	 * 'filter' => NGridView::filterDateRange($this, 'date')

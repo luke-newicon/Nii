@@ -77,11 +77,8 @@ class HftEvent extends NActiveRecord
 		$criteria->compare('organiser_name',$this->organiser_name,true);
 		
 		// Add date filters
-		if((isset($this->start_date_from) && trim($this->start_date_from) != "") && (isset($this->start_date_to) && trim($this->start_date_to) != ""))
-			$criteria->addBetweenCondition('start_date', ''.$this->start_date_from.'', ''.$this->start_date_to.'');
-
-		if((isset($this->end_date_from) && trim($this->end_date_from) != "") && (isset($this->end_date_to) && trim($this->end_date_to) != ""))
-			$criteria->addBetweenCondition('end_date', ''.$this->end_date_from.'', ''.$this->end_date_to.'');
+		$this->dateRangeCriteria($criteria,'start_date');
+		$this->dateRangeCriteria($criteria,'end_date');
 
 		return new NActiveDataProvider($this, array(
 			'criteria'=>$criteria,	

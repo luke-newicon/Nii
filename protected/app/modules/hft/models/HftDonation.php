@@ -76,20 +76,15 @@ class HftDonation extends NActiveRecord
 		
 		$criteria->compare('id',$this->id);
 		$criteria->compare('contact.name',$this->contact_id, true);
-		$criteria->compare('date_received',$this->date_received,true);
 		$criteria->compare('donation_amount',$this->donation_amount,true);
 		$criteria->compare('giftaid',$this->giftaid);
 		$criteria->compare('type_id',$this->type_id,true);
 //		$criteria->compare('event.name',$this->type_id,true);
 		$criteria->compare('statement_number',$this->statement_number,true);
-		$criteria->compare('statement_date',$this->statement_date,true);
 		
 		// Add date filters
-		if((isset($this->date_received_from) && trim($this->date_received_from) != "") && (isset($this->date_received_to) && trim($this->date_received_to) != ""))
-			$criteria->addBetweenCondition('date_received', ''.$this->date_received_from.'', ''.$this->date_received_to.'');
-
-		if((isset($this->statement_date_from) && trim($this->statement_date_from) != "") && (isset($this->statement_date_to) && trim($this->statement_date_to) != ""))
-			$criteria->addBetweenCondition('statement_date', ''.$this->statement_date_from.'', ''.$this->statement_date_to.'');
+		$this->dateRangeCriteria($criteria,'date_received');
+		$this->dateRangeCriteria($criteria,'statement_date');
 
 		$criteria->with = array('contact', 'type');
 		$criteria->together = true;

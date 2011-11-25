@@ -212,4 +212,12 @@ class NActiveRecord extends CActiveRecord
 		return array();
 	}
 	
+	public function dateRangeCriteria(&$criteria, $field) {
+		$from = $field.'_from';
+		$to = $field.'_to';
+		
+		if((isset($this->$from) && trim($this->$from) != "") && (isset($this->$to) && trim($this->$to) != ""))
+			$criteria->addBetweenCondition($field, ''.$this->$from.'', ''.$this->$to.'');
+	}
+	
 }
