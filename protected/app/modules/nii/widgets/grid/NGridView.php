@@ -512,8 +512,6 @@ class NGridView extends CGridView
 				'options'=>array(
 					'showAnim'=>'fold',
 					'dateFormat'=>'yy-mm-dd',
-					'changeMonth' => 'true',
-					'changeYear'=>'true',
 					'constrainInput' => 'false',
 				),
 				'htmlOptions'=>array(
@@ -532,8 +530,6 @@ class NGridView extends CGridView
 				'options'=>array(
 					'showAnim'=>'fold',
 					'dateFormat'=>'yy-mm-dd',
-					'changeMonth' => 'true',
-					'changeYear'=>'true',
 					'constrainInput' => 'false',
 				),
 				'htmlOptions'=>array(
