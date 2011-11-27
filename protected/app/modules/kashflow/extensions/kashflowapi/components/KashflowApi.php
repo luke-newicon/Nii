@@ -917,6 +917,7 @@ class KashflowApi extends CApplicationComponent {
 		} else
 			return array();
 	}
+
 	/**
 	 * The method returns an array of type Invoice containing details of the most recent NumberOfReceipts receipts (based on receipt date)
 	 * @param int $NumberOfReceipts The number of receipts you'd like returned
@@ -924,8 +925,8 @@ class KashflowApi extends CApplicationComponent {
 	 */
 	public function GetReceipts_Recent($NumberOfReceipts) {
 		$response = $this->request('GetReceipts_Recent', array(
-			'NumberOfReceipts' => $NumberOfReceipts,
-		))->GetReceipts_RecentResult;
+					'NumberOfReceipts' => $NumberOfReceipts,
+				))->GetReceipts_RecentResult;
 		if (property_exists($response, 'Invoice')) {
 			if (is_array($response->Invoice))
 				return $response->Invoice;
@@ -934,277 +935,823 @@ class KashflowApi extends CApplicationComponent {
 		} else
 			return array();
 	}
+
 	/**
 	 * The method returns an array of type Invoice containing details of all Receipts for the specified supplier.
 	 * @param int $SupplierID The unique supplier id
-	 * @return array An array of type Invoice
+	 * @return KashflowInvoice An array of type Invoice
 	 */
-	public function GetReceiptsForSupplier() {
-		
+	public function GetReceiptsForSupplier($SupplierID) {
+		return $this->request('GetReceiptsForSupplier', array(
+					'SupplierID' => $SupplierID,
+				))->GetReceiptsForSupplierResult->Invoice;
 	}
 
-	public function InsertReceipt() {
-		
+	/**
+	 * This method will create an receipt (purchase invoice) and return the new receipt number.
+	 * The new receipt number is automatically created by incrementing the users current highest receipt number by one.
+	 * @param KashflowInvoice $Invoice An object of type Invoice
+	 * @return int $ReceiptNumber An Integer representing the new, unique receipt number
+	 */
+	public function InsertReceipt($Invoice) {
+		return $this->request('InsertReceipt', array(
+					'Invoice' => $Invoice,
+				))->InsertReceiptResult;
 	}
 
-	public function UpdateReceipt() {
-		
+	/**
+	 * This method allows you to modify the details of an existing receipt.
+	 * The receipt to be updated is identified by  its receipt number.
+	 * @param KashflowInvoice $Receipt An object of type Invoice
+	 */
+	public function UpdateReceipt($Receipt) {
+		$this->request('UpdateReceipt', array(
+			'Receipt' => $Receipt,
+		));
 	}
 
-	public function UpdateReceiptHeader() {
-		
+	/**
+	 * This method allows you to modify the header details of an existing receipt.
+	 * The receipt to be updated is identified by its receipt id.
+	 * @param KashflowInvoice $Invoice An object of type Invoice
+	 */
+	public function UpdateReceiptHeader($Invoice) {
+		$this->request('UpdateReceiptHeader', array(
+			'Invoice' => $Invoice,
+		));
 	}
 
-	public function DeleteReceipt() {
-		
+	/**
+	 * This method allows you to delete a recepit (purchase invoice)
+	 * @param int $ReceiptNumber An integer representing the receipt number you want to delete
+	 */
+	public function DeleteReceipt($ReceiptNumber) {
+		$this->request('DeleteReceipt', array(
+			'ReceiptNumber' => $ReceiptNumber,
+		));
 	}
 
-	public function DeleteReceiptByID() {
-		
+	/**
+	 * This method allows you to delete a recepit (purchase invoice)
+	 * @param int $ReceiptID An integer representing the receipt id you want to delete
+	 */
+	public function DeleteReceiptByID($ReceiptID) {
+		$this->request('DeleteReceiptByID', array(
+			'ReceiptID' => $ReceiptID,
+		));
 	}
 
-	public function InsertReceiptLine() {
-		
+	/**
+	 * This method will create an new receipt line.
+	 * @param int $ReceiptID The receipt id for the receipt you're adding line(s) to
+	 * @param KashflowInvoiceLine $RceiptLine An object of type InvoiceLine
+	 */
+	public function InsertReceiptLine($ReceiptID, $RceiptLine) {
+		$this->request('InsertReceiptLine', array(
+			'ReceiptID' => $ReceiptID,
+			'RceiptLine' => $RceiptLine,
+		));
 	}
 
-	public function InsertReceiptLineFromNumber() {
-		
+	/**
+	 * This method will create an new receipt line.
+	 * @param int $ReceiptNumber The receipt number for the receipt you're adding line(s) to
+	 * @param KashflowInvoiceLine $RceiptLine An object of type InvoiceLine
+	 */
+	public function InsertReceiptLineFromNumber($ReceiptNumber, $RceiptLine) {
+		$this->request('InsertReceiptLineFromNumber', array(
+			'ReceiptNumber' => $ReceiptNumber,
+			'RceiptLine' => $RceiptLine,
+		));
 	}
 
-	public function DeleteReceiptLine() {
-		
+	/**
+	 * This method allows you to delete an receipt line
+	 * @param int $LineID An integer representing the receipt line id you want to delete
+	 * @param int $ReceiptNumber An integer representing the receipt number you want to delete
+	 */
+	public function DeleteReceiptLine($LineID, $ReceiptNumber) {
+		$this->request('DeleteReceiptLine', array(
+			'LineID' => $LineID,
+			'ReceiptNumber' => $ReceiptNumber,
+		));
 	}
 
-	public function DeleteReceiptLineWithReceiptID() {
-		
+	/**
+	 * This method allows you to delete an receipt line
+	 * @param int $LineID An integer representing the receipt line id you want to delete
+	 * @param int $ReceiptID An integer representing the receipt id you want to delete
+	 */
+	public function DeleteReceiptLineWithReceiptID($LineID, $ReceiptID) {
+		$this->request('DeleteReceiptLineWithReceiptID', array(
+			'LineID' => $LineID,
+			'ReceiptID' => $ReceiptID,
+		));
 	}
 
-	public function AttachFileToReceipt() {
-		
+	/**
+	 * This method will attach a file to an existing receipt (purchase invoice) for the specified receipt number .
+	 * @param int $ReceiptNo An integer value representing the receipt no.
+	 * @param string $Base64String A base64 encoded string of the file to be attached.
+	 * @param string $ContentType The content type of the file to be attached.e.g. "plain/text"
+	 * @param string $Filename The name and extension of the file to be attached.
+	 * @param string $FileExtension The extension of the file to be attached.e.g. "txt" or "pdf"
+	 * @param string $FileSize The size of the file.e.g. "510"
+	 */
+	public function AttachFileToReceipt($ReceiptNo, $Base64String, $ContentType, $Filename, $FileExtension, $FileSize) {
+		$this->request('AttachFileToReceipt', array(
+			'ReceiptNo' => $ReceiptNo,
+			'Base64String' => $Base64String,
+			'ContentType' => $ContentType,
+			'Filename' => $Filename,
+			'FileExtension' => $FileExtension,
+			'FileSize' => $FileSize,
+		));
 	}
 
-	public function GetReceiptAttachments() {
-		
+	/**
+	 * This method returns  an array of tpye ReceiptAttachments containing a list of attachments for the receipt id specified.
+	 * @param int $ReceiptID An integer value representing the receipt id.
+	 * @return KashflowReceiptAttachment An array of objects of type ReceiptAttachment
+	 */
+	public function GetReceiptAttachments($ReceiptID) {
+		return $this->request('GetReceiptAttachments', array(
+					'ReceiptID' => $ReceiptID,
+				))->GetReceiptAttachmentsResult->ReceiptAttachment;
 	}
 
-	public function DeleteReceiptAttachment() {
-		
+	/**
+	 * This method deletes a receipt attachment for the receipt id and attachment id specified.
+	 * @param int $ReceiptID An integer value representing the receipt id.
+	 * @param int $AttachmentID An integer value representing the attachment id.
+	 */
+	public function DeleteReceiptAttachment($ReceiptID, $AttachmentID) {
+		$this->request('DeleteReceiptAttachment', array(
+			'ReceiptID' => $ReceiptID,
+			'AttachmentID' => $AttachmentID,
+		));
 	}
 
-	public function GetReceiptPayment() {
-		
+	/**
+	 * This method returns an array of all payments made to the receipt number you specify
+	 * @param int $ReceiptNumber The unique receipt number for which you wish to retrieve payments
+	 * @return KashflowPayment An array of objects of type Payment 
+	 */
+	public function GetReceiptPayment($ReceiptNumber) {
+		return $this->request('GetReceiptPayment', array(
+					'ReceiptNumber' => $ReceiptNumber,
+				))->GetReceiptPaymentResult->Payment;
 	}
 
+	/**
+	 * This method returns all of the users Payment Methods.
+	 * @return ReceiptPaymentMethod An array of objects of type PaymentMethod
+	 */
 	public function GetRecPayMethods() {
-		
+		return $this->request('GetRecPayMethods')->GetRecPayMethodsResult;
 	}
 
-	public function InsertReceiptPayment() {
-		
+	/**
+	 * This method allows  you to add a payment to a receipt
+	 * @param KashflowPayment $Payment An object of type Payment 
+	 * @return int An integer representing the new payment number 
+	 */
+	public function InsertReceiptPayment($Payment) {
+		return $this->request('InsertReceiptPayment', array(
+					'Payment' => $Payment,
+				))->InsertReceiptPaymentResult;
 	}
 
-	public function DeleteReceiptPayment() {
-		
+	/**
+	 * This method allows  you to delete a payment from a receipt
+	 * @param int $PaymentNumber An integer representing the  payment number you want to delete
+	 */
+	public function DeleteReceiptPayment($PaymentNumber) {
+		$this->request('DeleteReceiptPayment', array(
+			'PaymentNumber' => $PaymentNumber,
+		));
 	}
 
-	public function AllocateAdvancePaymentToReceipt() {
-		
+	/**
+	 * This method allows you to allocate and advance payment to a receipt
+	 * @param int $ReceiptNumber The receipt number to apply the advance payment to.
+	 * @param int $BankTxId The bank transaction id of the advance payment.
+	 */
+	public function AllocateAdvancePaymentToReceipt($ReceiptNumber, $BankTxId) {
+		$this->request('AllocateAdvancePaymentToReceipt', array(
+			'ReceiptNumber' => $ReceiptNumber,
+			'BankTxId' => $BankTxId,
+		));
 	}
 
-	public function CreateBankAccount() {
-		
+	/**
+	 * This method will create a new bank account.
+	 * @param string $AccountName 
+	 * @param int $NominalCode 
+	 */
+	public function CreateBankAccount($AccountName, $NominalCode) {
+		$this->request('CreateBankAccount', array(
+			'AccountName' => $AccountName,
+			'NominalCode' => $NominalCode,
+		));
 	}
 
+	/**
+	 * This method returns  all bank accounts that the user has set up.
+	 * @return KashflowBankAccount An array of objects of type BankAccount
+	 */
 	public function GetBankAccounts() {
-		
+		return $this->request('GetBankAccounts')->GetBankAccountsResult->BankAccount;
 	}
 
-	public function GetBankTXTypes() {
-		
+	/**
+	 * This method returns all of the users Bank Transaction Types.
+	 * @return KashflowBankTXType $BankTXTypes[] An array of objects of type BankTXType
+	 */
+	public function GetBankTxTypes() {
+		return $this->request('GetBankTxTypes')->GetBankTxTypesResult->BankTXType;
 	}
 
-	public function GetBankBalance() {
-		
+	/**
+	 * The method allows you to get the bank balanace for the specified date.
+	 * @param int $AccountID An integer representing the unique bank account id
+	 * @param DateTime $BalanceDate  
+	 */
+	public function GetBankBalance($AccountID, $BalanceDate) {
+		$this->request('GetBankBalance', array(
+			'AccountID' => $AccountID,
+			'BalanceDate' => $BalanceDate,
+		));
 	}
 
-	public function GetBankTransactions() {
-		
+	/**
+	 * The method returns an array of type BankTransaction containing details of all transactions for the specfied bank account.
+	 * @param int $AccountID The unique bank account id
+	 * @return KashflowBankTransaction An array of type BankTransaction
+	 */
+	public function GetBankTransactions($AccountID) {
+		return $this->request('GetBankTransactions', array(
+					'AccountID' => $AccountID,
+				))->GetBankTransactionsResult->BankTransaction;
 	}
 
-	public function InsertBankTransaction() {
-		
+	/**
+	 * This method will create a new bank transaction and return the ID number of the new transaction
+	 * @param KashflowInvoice $BankTransaction An object of type BankTransaction
+	 * @return int An Integer representing the new, system-wide unique tx number
+	 */
+	public function InsertBankTransaction($BankTransaction) {
+		return $this->request('InsertBankTransaction', array(
+					'BankTransaction' => $BankTransaction,
+				))->InsertBankTransactionResult;
 	}
 
-	public function UpdateBankTransaction() {
-		
+	/**
+	 * This method allows you to modify the details of an bank transaction
+	 * @param KashflowBankTransaction $BankTransaction An object of type BankTransaction
+	 */
+	public function UpdateBankTransaction($BankTransaction) {
+		$this->request('UpdateBankTransaction', array(
+			'BankTransaction' => $BankTransaction,
+		));
 	}
 
-	public function DeleteBankTransaction() {
-		
+	/**
+	 * The method allows you to delete a bank transaction.
+	 * @param int $TransactionID An integer representing the unique transaction id
+	 */
+	public function DeleteBankTransaction($TransactionID) {
+		$this->request('DeleteBankTransaction', array(
+			'TransactionID' => $TransactionID,
+		));
 	}
 
-	public function InsertJournal() {
-		
+	/**
+	 * This method will create a journal entry and return the new journal entry number.
+	 * The new journal entry number is automatically created by incrementing the users current highest journal entry number by one.
+	 * A copy of a valid request can be found here.
+	 * @param KashflowJournalEntry $JournalEntry An object of type JournalEntry
+	 * @return int $JournalEntryNumber An Integer representing the new, unique journal entry number
+	 */
+	public function InsertJournal($JournalEntry) {
+		return $this->request('InsertJournal', array(
+					'JournalEntry' => $JournalEntry,
+				))->InsertJournalResult;
 	}
 
-	public function GetJournal() {
-		
+	/**
+	 * The method returns an object of type JournalEntry containing details of the specified journal entry.
+	 * @param int $JournalNumber An integer representing the journal number
+	 * @return KashflowJournalEntry An object of type JournalEntry
+	 */
+	public function GetJournal($JournalNumber) {
+		return $this->request('GetJournal', array(
+					'JournalNumber' => $JournalNumber,
+				))->GetJournalResult->JournalEntry;
 	}
 
+	/**
+	 * The method returns an array of type JournalEntry containing details of all Journal Entries.
+	 * @return KashflowJournalEntry An array of type JournalEntry
+	 */
 	public function GetJournals() {
-		
+		return $this->request('GetJournals')->GetJournalsResult->JournalEntry;
 	}
 
-	public function DeleteJournal() {
-		
+	/**
+	 * The method allows you to delete a journal entry.
+	 * @param int $JournalNumber An integer representing the journal number
+	 */
+	public function DeleteJournal($JournalNumber) {
+		$this->request('DeleteJournal', array(
+			'JournalNumber' => $JournalNumber,
+		));
 	}
 
-	public function DeleteJournalByID() {
-		
+	/**
+	 * The method allows you to delete a journal entry.
+	 * @param int $JournalID An integer representing the journal id
+	 */
+	public function DeleteJournalByID($JournalID) {
+		$this->request('DeleteJournalByID', array(
+			'JournalID' => $JournalID,
+		));
 	}
 
-	public function UpdateJournal() {
-		
+	/**
+	 * This method allows you to modify the details of an existing journal.
+	 * The journal to be updated is identified by the journal id.
+	 * NB: The existing journal lines are deleted and replace by the journal lines passed with the Journal object
+	 * @param KashflowJournalEntry $JournalEntry An object of type JournalEntry
+	 */
+	public function UpdateJournal($JournalEntry) {
+		$this->request('UpdateJournal', array(
+			'JournalEntry' => $JournalEntry,
+		));
 	}
 
-	public function UpdateJournalHeader() {
-		
+	/**
+	 * This method allows you to modify the header details of an existing journal.
+	 * The journal to be updated is identified by the journal id.
+	 * @param KashflowJournalEntry $JournalEntry An object of type JournalEntry
+	 */
+	public function UpdateJournalHeader($JournalEntry) {
+		$this->request('UpdateJournalHeader', array(
+			'JournalEntry' => $JournalEntry,
+		));
 	}
 
-	public function GetAgedDebtors() {
-		
+	/**
+	 * This method will return an array item of AgedDebtorsCreditors containing aged debtors.
+	 * @param DateTime $AgedDebtorsDate The date you'd like to use for the AgedDebtors report
+	 */
+	public function GetAgedDebtors($AgedDebtorsDate) {
+		$this->request('GetAgedDebtors', array(
+			'AgedDebtorsDate' => $AgedDebtorsDate,
+		));
 	}
 
-	public function GetAgedCreditors() {
-		
+	/**
+	 * This method will return an array item of AgedDebtorsCreditors containing aged creditors.
+	 * @param DateTime $AgedCreditorsDate The date you'd like to use for the AgedCreditors report
+	 */
+	public function GetAgedCreditors($AgedCreditorsDate) {
+		$this->request('GetAgedCreditors', array(
+			'AgedCreditorsDate' => $AgedCreditorsDate,
+		));
 	}
 
-	public function GetBalanceSheet() {
-		
+	/**
+	 * This method returns  a Balance Sheet for the specified date.
+	 * @param DateTime $Date The start date for the report
+	 * @return KashflowBalanceSheet An object of type BalanceSheet
+	 */
+	public function GetBalanceSheet($Date) {
+		return $this->request('GetBalanceSheet', array(
+					'Date' => $Date,
+				))->GetBalanceSheetResult->BalanceSheet;
 	}
 
-	public function GetDigitaCSVFile() {
-		
+	/**
+	 * This method returns a string containg the contents of a CSV file that can be imported in to the Digita range of products. The file will contain all transactions within the specified date range
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @return string An string containing the data for the CSV file.
+	 */
+	public function GetDigitaCSVFile($StartDate, $EndDate) {
+		return $this->request('GetDigitaCSVFile', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+				))->GetDigitaCSVFileResult;
 	}
 
-	public function GetIncomeByCustomer() {
-		
+	/**
+	 * This method returns  an array of of type BasicDataset containing the id number and name of all sources of customers. The integer matches the integer contained in the Source element of the Customer class
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @param Boolean $BasedOnInvoiceDate If set to True then the report will be based on invoice dates, as opposed to payment dates
+	 * @return KashflowBasicDataset An array of objects of type BasicDataset.
+	 * The ID field contains the customer id. Name is the customer name, Description is the customer code, Value is the income from this customer in the period specified
+	 */
+	public function GetIncomeByCustomer($StartDate, $EndDate, $BasedOnInvoiceDate) {
+		return $this->request('GetIncomeByCustomer', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+					'BasedOnInvoiceDate' => $BasedOnInvoiceDate,
+				))->GetIncomeByCustomerResult->BasicDataset;
 	}
 
-	public function GetKPIs() {
-		
+	/**
+	 * This method returns  an array of of type BasicDataset containing a number of KPIs (Key Performance Indicators)
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @param int $ExcludeVAT If set to 1 then VAT will not be included in financial values
+	 * @param int $ExcludeSameDayPays If set to 1 then invoices and receipts paid on the day of issue will not be included in calculations of how long it takes for invoices and receipts to be paid.
+	 * @return KashflowBasicDataset An array of objects of type BasicDataset.
+	 * The ID field contains the customer id. Name is the customer name, Description is the customer code, Value is the income from this customer in the period specified
+	 */
+	public function GetKPIs($StartDate, $EndDate, $ExcludeVAT, $ExcludeSameDayPays) {
+		return $this->request('GetKPIs', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+					'ExcludeVAT' => $ExcludeVAT,
+					'ExcludeSameDayPays' => $ExcludeSameDayPays,
+				))->GetKPIsResult->BasicDataset;
 	}
 
-	public function GetMonthlyProfitAndLoss() {
-		
+	/**
+	 * This method returns a monthly Profit and Loss report array for the specified period.
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @return MonthlyProfitAndLoss An array of type ProfitAndLoss
+	 */
+	public function GetMonthlyProfitAndLoss($StartDate, $EndDate) {
+		return $this->request('GetMonthlyProfitAndLoss', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+				))->GetMonthlyProfitAndLossResult;
 	}
 
-	public function GetNominalLedger() {
-		
+	/**
+	 * This method returns a Nominal Ledger report array for the specified period and nominal.
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @param int $NominalID The nominal id for the report
+	 * @return KashflowTransactionInformation An array of type TransactionInformation
+	 */
+	public function GetNominalLedger($StartDate, $EndDate, $NominalID) {
+		return $this->request('GetNominalLedger', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+					'NominalID' => $NominalID,
+				))->GetNominalLedgerResult->TransactionInformation;
 	}
 
-	public function GetProfitAndLoss() {
-		
+	/**
+	 * This method returns  a Profit and Loss report for the specified period.
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @return KashflowProfitAndLoss An object of type ProfitAndLoss
+	 */
+	public function GetProfitAndLoss($StartDate, $EndDate) {
+		return $this->request('GetProfitAndLoss', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+				))->GetProfitAndLossResult->ProfitAndLoss;
 	}
 
-	public function GetTrialBalance() {
-		
+	/**
+	 * This method returns  a Trial Balance report for the specified period.
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @return KashflowNominalCode An array of type NominalCode
+	 */
+	public function GetTrialBalance($StartDate, $EndDate) {
+		return $this->request('GetTrialBalance', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+				))->GetTrialBalanceResult->NominalCode;
 	}
 
-	public function GetVATReport() {
-		
+	/**
+	 * This method returns  the figures for a VAT return  for the specified period.
+	 * @param DateTime $StartDate The start date for the report
+	 * @param DateTime $EndDate The end date for the report
+	 * @return KashflowVATReport An object of type VATReport
+	 */
+	public function GetVATReport($StartDate, $EndDate) {
+		return $this->request('GetVATReport', array(
+					'StartDate' => $StartDate,
+					'EndDate' => $EndDate,
+				))->GetVATReportResult->VATReport;
 	}
 
+	/**
+	 * This method returns  a basic data set of all of the users  projects.
+	 * For a more powerful and flexible method, see GetProjects_Full.
+	 * @return BasicDataSet An array of objects of type BasicDataSet.
+	 * The 'ID' member contains the project ID, the 'Name' member contains the project name and the 'Description' member contains the project number.
+	 */
 	public function GetProjects() {
-		
+		return $this->request('GetProjects')->GetProjectsResult;
 	}
 
-	public function GetProjects_Full() {
-		
+	/**
+	 * The method returns an array of type Project containing all projects of the selected status.
+	 * For a lighter-weight alternative, see GetProjects.
+	 * @param int $ProjStatus The method will only return Projects witha matching status
+	 * -1   - All Projects
+	 * 0 - Complete
+	 * 1 - Active
+	 * 2 - Archived
+	 * @return KashflowProject An array of type Project
+	 */
+	public function GetProjects_Full($ProjStatus) {
+		return $this->request('GetProjects_Full', array(
+					'ProjStatus' => $ProjStatus,
+				))->GetProjects_FullResult->Project;
 	}
 
-	public function InsertOrUpdateProject() {
-		
+	/**
+	 * This method allows you to create or update a project.
+	 * To create a project leave the ID property of the Project class blank (or 0). To edit a project, set it to the ID of the project you want to edit.
+	 * If the number property of the Project class is left blank (or 0) then the next number in sequence will be used.
+	 * @param KashflowProject $Project An object of type Project
+	 * @return int An Integer representing the new project ID, or the ID of the edited project
+	 */
+	public function InsertOrUpdateProject($Project) {
+		return $this->request('InsertOrUpdateProject', array(
+					'Project' => $Project,
+				))->InsertOrUpdateProjectResult;
 	}
 
-	public function GetProjectById() {
-		
+	/**
+	 * This method returns an object of type Project containing details of the Project id requested.
+	 * @param int $ProjId The unique project id
+	 * @return KashflowProject An object of type Project
+	 */
+	public function GetProjectById($ProjId) {
+		return $this->request('GetProjectById', array(
+					'ProjId' => $ProjId,
+				))->GetProjectByIdResult->Project;
 	}
 
-	public function GetProjectByName() {
-		
+	/**
+	 * This method returns an object of type Project containing details of the Project name requested.
+	 * @param string $ProjName The project name
+	 * @return KashflowProject An object of type Project
+	 */
+	public function GetProjectByName($ProjName) {
+		return $this->request('GetProjectByName', array(
+					'ProjName' => $ProjName,
+				))->GetProjectByNameResult->Project;
 	}
 
-	public function GetProjectByRef() {
-		
+	/**
+	 * This method returns an object of type Project containing details of the Project reference requested.
+	 * @param string $ProjRef The project reference
+	 * @return KashflowProject An object of type Project
+	 */
+	public function GetProjectByRef($ProjRef) {
+		return $this->request('GetProjectByRef', array(
+					'ProjRef' => $ProjRef,
+				))->GetProjectByRefResult->Project;
 	}
 
-	public function AddOrUpdateSubProduct() {
-		
+	/**
+	 * This method allows you to create a new SubProduct.
+	 * A SubProduct in the application is either a "product" as a child of a Sales Type, or a "Sub-Outgoing Type" as a child of an Outgoing Type.
+	 * @param KashflowSubProduct $sp A SubProduct populated with the relevant fields.
+	 * If the id is set to 0, a new SubProduct will be created. If it is non-zero then the selected SubProduct will be updated.
+	 * @return int An integer giving the  unique ID number of the updated or newly created  SubProduct
+	 */
+	public function AddOrUpdateSubProduct($sp) {
+		return $this->request('AddOrUpdateSubProduct', array(
+					'sp' => $sp,
+				))->AddOrUpdateSubProductResult;
 	}
 
-	public function AutoAuthIP() {
-		
+	/**
+	 * A user can restrict access to the API to a specified list of IP addresses.
+	 * Sometimes you may want to access the API via a device that has an IP address that changes regularly (typically a mobile device) and this makes the IP restrictions impractical.
+	 * Rather than suggesting users set the API settings to allow access from any IP address you should use this method to automatically add your IP address to the access list.
+	 * The user needs to enable "AutoAuth" by going to Settings -> API Settings and clicking the link to edit the IP address list.
+	 * They'll be given an AutoAuthKey which you will need to pass to us in the this method in order to add your IP to the authorised list.
+	 * You don't need to pass us your IP address. The API will automatically detect the IP address of the host that called this method.
+	 * @param string $appName The name of your application. This is used in the comment for the IP listing so the user knows which application added the IP address
+	 * @param string $AutoAuthKey This is the AutoAuthKey mentioned above. It should be provided to you by the user. The AutoAuthKey is a hex string in the format: 1234ABCD-1234
+	 */
+	public function AutoAuthIP($appName, $AutoAuthKey) {
+		$this->request('AutoAuthIP', array(
+			'appName' => $appName,
+			'AutoAuthKey' => $AutoAuthKey,
+		));
 	}
 
-	public function createAccount() {
-		
+	/**
+	 * Unlike other API methods, this method doesn't require that you authenticate yourself by passing in a username and password.
+	 * However, this method is intended to be used mainly by our integration partners. So you do need to provide an AccountCreationKey. If you'd like a key to use to create accounts, please contact us.
+	 * If the account was successfully created then you'll receive an ID number. This is our reference for the user account.
+	 * If it was unsuccessful for any reason then you'll get a Status of NO and the StatusDetail will explain why (ie, username already in use)
+	 * @param string $AccountCreationKey See above
+	 * @param string $Username The desired username
+	 * @param string $password The password for the new account. Must be at least 5 characters
+	 * @param string $memorableword The memorable word for the new account. Must be at least 5 characters
+	 * @param string $EmailAddress  The users email address
+	 * @param string $CompanyName The users company name
+	 * @param string $Addr1 An address for the user
+	 * @param string $Addr2  
+	 * @param string $Addr3  
+	 * @param string $Addr4  
+	 * @param string $Postcode The users postcode
+	 * @param string $ContactName A contact name for the user. usually their full name.
+	 * @param string $Telephone The users telephone number
+	 * @param int $VATRegistered Set this to 1 is the user is VAT registered
+	 * @param string $VATNumber The users VAT number
+	 * @param int $USSettings Set this to 1 if you want the user to have the date in US format and default to $ for the currency
+	 * @param string $promocode If you've joined our affiliate scheme, you can provide your promotional code here
+	 * @return int If the account was successfully created you'll receive a user id number
+	 */
+	public function createAccount($AccountCreationKey, $Username, $password, $memorableword, $EmailAddress, $CompanyName, $Addr1, $Addr2, $Addr3, $Addr4, $Postcode, $ContactName, $Telephone, $VATRegistered, $VATNumber, $USSettings, $promocode) {
+		return $this->request('createAccount', array(
+					'AccountCreationKey' => $AccountCreationKey,
+					'Username' => $Username,
+					'password' => $password,
+					'memorableword' => $memorableword,
+					'EmailAddress ' => $EmailAddress,
+					'CompanyName' => $CompanyName,
+					'Addr1' => $Addr1,
+					'Addr2' => $Addr2,
+					'Addr3' => $Addr3,
+					'Addr4' => $Addr4,
+					'Postcode' => $Postcode,
+					'ContactName' => $ContactName,
+					'Telephone' => $Telephone,
+					'VATRegistered' => $VATRegistered,
+					'VATNumber' => $VATNumber,
+					'USSettings' => $USSettings,
+					'promocode' => $promocode,
+				))->createAccountResult;
 	}
 
+	/**
+	 * This method returns a summary of your accounts.
+	 * @return KashflowAccountOverview An object of type AccountOverview
+	 */
 	public function GetAccountOverview() {
-		
+		return $this->request('GetAccountOverview')->GetAccountOverviewResult->AccountOverview;
 	}
 
+	/**
+	 * This method returns an array of bank accounts and their balances.
+	 * @return KashflowBankOverview An array of objects of type BankOverview
+	 */
 	public function GetBankOverview() {
-		
+		return $this->request('GetBankOverview')->GetBankOverviewResult->BankOverview;
 	}
 
+	/**
+	 * This method returns all currencies that have been setup in the users account.
+	 * @return KashflowCurrencies An array of objects of type Currencies
+	 */
 	public function GetCurrencies() {
-		
+		return $this->request('GetCurrencies')->GetCurrenciesResult->Currencies;
 	}
 
+	/**
+	 * Using this method, you can seamlessly log a user in to KashFlow from your own application.
+	 * Just provide us with the username and password and we'll give you a link to direct them to.
+	 * The link will only work once, and will expire after 120 seconds.
+	 * So if you need to log them in again, you'll need to call the function again to get a new URL.
+	 * You can append an additional URL to the query string in the returned URL if you want to redirect them to specific page after logging them in
+	 * So adding ?r=bank.asp to the URL will take them to the bank page after logging them in.
+	 * Note: for this method to work, the user must enable "Remote Login"
+	  in Settings -> APi Settings. If this isn't enabled we'll still provide you with a link, but when you redirect them to it they'll be asked to manually log in.
+	 * View Client Soap Examples
+	 */
 	public function GetRemoteLoginURL() {
-		
+		$this->request('GetRemoteLoginURL');
 	}
 
+	/**
+	 * This method returns  all of the users products.
+	 * These "Products" are just the subset of NominalCodes that are set up to be accessed within the "Sales" section of the application.
+	 * Do not confuse these with SubProducts which you can retrieve with the GetSubProducts method
+	 * @return KashflowProduct An array of objects of type Product
+	 */
 	public function GetProducts() {
-		
+		return $this->request('GetProducts')->GetProductsResult->Product;
 	}
 
+	/**
+	 * This method returns  a list of all nominal codes that the user has on their account.
+	 * If you require more detail on each code, you may want to consider the GetNominalsExtended method
+	 * @return NominalCodes An array of objects of type NominalCode
+	 */
 	public function GetNominalCodes() {
-		
+		return $this->request('GetNominalCodes')->GetNominalCodesResult;
 	}
 
+	/**
+	 * This method returns  a list of all nominal codes that the user has on their account.
+	 * @return KashflowNominalCodeExtended An array of objects of type NominalCodeExtended
+	 */
 	public function GetNominalCodesExtended() {
-		
+		return $this->request('GetNominalCodesExtended')->GetNominalCodesExtendedResult->NominalCodeExtended;
 	}
 
-	public function GetSubProducts() {
-		
+	/**
+	 * This method returns an array of  SubProducts.
+	 * A SubProduct in the application is either a "product" as a child of a Sales Type, or a "Sub-Outgoing Type" as a child of an Outgoing Type.
+	 * @param int $NominalID The ID of the NominalCode for which you want to retrieve SubProducts.
+	 * @return SubProducts An array of type  SubProducts
+	 */
+	public function GetSubProducts($NominalID) {
+		return $this->request('GetSubProducts', array(
+					'NominalID' => $NominalID,
+				))->GetSubProductsResult;
 	}
 
+	/**
+	 * This method returns  an array of of type BasicDataset containing a list of all the VAT rates that the user account has set up
+	 * @return KashflowBasicDataset An array of objects of type BasicDataset.
+	 * The ID field contains the  id of the Rate. this is unlikley to be of any use to you.
+	 * Name and Description contain the Rate as it should be presented to a user, ie "17.5%"
+	 * Value contains the actual rate as a decimal. ie: 17.5
+	 */
 	public function GetVATRates() {
-		
+		return $this->request('GetVATRates')->GetVATRatesResult->BasicDataset;
 	}
 
-	public function InsertNominalCode() {
-		
+	/**
+	 * This method allows you to create a new nominal code
+	 * @param string $name The name for the new nominal code 
+	 * @param int $code The code number for the new nominal code. This must be unique for the user account
+	 * @param int $classification Define what type of code this is. Valid properties are:
+	 * 1 - Turnover
+	 * 2 - Cost of Sale
+	 * 3 - Expense
+	 * 4 - Fixed Asset
+	 * 5 - Current Asset/Liability
+	 * 6 - Capital and Reserves
+	 * @param int $nomtype Choose where in the system this code should be listed. Valid properties are:
+	 * 1 - Sales Type
+	 * 2 - Outgoing Type
+	 * 3 - Bank Transaction Type
+	 */
+	public function InsertNominalCode($name, $code, $classification, $nomtype) {
+		$this->request('InsertNominalCode', array(
+			'name' => $name,
+			'code' => $code,
+			'classification' => $classification,
+			'nomtype' => $nomtype,
+		));
 	}
 
+	/**
+	 * This method takes just the standard arguments and returns a boolean True or False to indicate whether or not VAT is enabled on the account in question.
+	 * @return boolean TRUE - VAT Registered, FALSE - Not VAT Registered
+	 */
 	public function isUserVATRegistered() {
-		
+		return $this->request('isUserVATRegistered')->isUserVATRegisteredResult;
 	}
 
-	public function VCFToCustomerObjects() {
-		
+	/**
+	 * This method returns  an array of of type Customer containing details of all customers contained in the submitted VCF file.
+	 * This method doesn't import the customers into the account. It will just return an array of the Customer object which you can present to the user for editing/confirmation.
+	 * You can then  send back the individual Customer objects to either InsertCustomer or InsertSupplier.
+	 * The VCF file can contain one or many contacts.
+	 * @param base64Binary $inStream A Base 64 binary array representing the .vcf file. 
+	 * @return KashflowCustomer An array of objects of type Customer
+	 */
+	public function VCFToCustomerObjects($inStream) {
+		return $this->request('VCFToCustomerObjects', array(
+					'inStream' => $inStream,
+				))->VCFToCustomerObjectsResult->Customer;
 	}
 
-	public function GetSubProductByID() {
-		
+	/**
+	 * This method returns a SubProducts.
+	 * A SubProduct in the application is either a "product" as a child of a Sales Type, or a "Sub-Outgoing Type" as a child of an Outgoing Type.
+	 * @param int $ProductID The ID of the sub-product for which you want to retrieve.
+	 * @return SubProducts A class of type  SubProducts
+	 */
+	public function GetSubProductByID($ProductID) {
+		return $this->request('GetSubProductByID', array(
+					'ProductID' => $ProductID,
+				))->GetSubProductByIDResult;
 	}
 
-	public function GetSubProductByCode() {
-		
+	/**
+	 * This method returns a  SubProducts.
+	 * A SubProduct in the application is either a "product" as a child of a Sales Type, or a "Sub-Outgoing Type" as a child of an Outgoing Type.
+	 * @param string $ProductCode The code of the sub-product for which you want to retrieve.
+	 * @return SubProducts A class of type  SubProducts
+	 */
+	public function GetSubProductByCode($ProductCode) {
+		return $this->request('GetSubProductByCode', array(
+					'ProductCode' => $ProductCode,
+				))->GetSubProductByCodeResult;
 	}
 
 }

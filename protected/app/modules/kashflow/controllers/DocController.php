@@ -7,6 +7,7 @@ class DocController extends AController {
 	public function dataType($type){
 		$types = array(
 			'Integer' => 'int',
+			'String' => 'string',
 		);
 		$classes = $this->classMap();
 		$type = isset($classes[$type]) ? $classes[$type] : $type;
@@ -24,7 +25,7 @@ class DocController extends AController {
 		phpQuery::newDocumentFile($page);
 		
 		$fn = trim(end(explode('-',pq('.m1H')->html())));
-		$description = pq('.m1B_lj p:first')->html();
+		$description = explode('<br>', pq('.m1B_lj p:first')->html());
 		$params = array();
 		$returns = array();
 		
@@ -34,15 +35,17 @@ class DocController extends AController {
 				$param_name = pq($row)->find('.mnl_varName')->html();
 				$param_type = pq($row)->find('.mnl_varType')->html();
 				$param_description = pq($row)->find('td:last')->html();
-				$params[$param_name] = array(
+				$params[] = array(
+					'name' => $param_name,
 					'datatype' => $this->dataType($param_type),
-					'description' => trim($param_description),
+					'description' => trim(str_replace(array('<br>','<br/>'), '', $param_description)),
 				);
 			} elseif($type == 'RETURNS'){
 				$return_name = pq($row)->find('.mnl_varName')->html();
 				$return_type = pq($row)->find('.mnl_varType')->html();
 				$return_description = pq($row)->find('td:last')->html();
-				$returns[$return_name] = array(
+				$returns[] = array(
+					'name' => $return_name,
 					'datatype' => $return_type,
 					'description' => trim($return_description),
 				);
@@ -51,15 +54,19 @@ class DocController extends AController {
 		
 		echo '<pre>';
 		echo "/**\n";
-		echo " * ".trim($description)."\n";
-		foreach($params as $name => $param)
-			echo " * @param ".$param['datatype']." $".$name." ".$param['description']."\n";
-		foreach($returns as $name => $return)
-			echo " * @return ".$this->dataType($return['datatype']).($name?" $".$name:'')." ".$return['description']."\n";
+		foreach($description as $line){
+			if(trim($line))
+				echo " * ".trim($line)."\n";
+		}
+		foreach($params as $param)
+			echo " * @param ".$param['datatype']." $".$param['name']." ".$param['description']."\n";
+		foreach($returns as $return)
+			echo " * @return ".$this->dataType($return['datatype']).($return['name']?" $".$return['name']:'')." ".$return['description']."\n";
 		echo " */\n";
 		echo 'public function '.$fn.'(';
-		foreach($params as $name => $param){
-			echo '$'.$name.(next($params)?', ':'');
+		$tp = $params;
+		foreach($params as $param){
+			echo '$'.$param['name'].(next($tp)?', ':'');
 		}
 		echo "){\n    ";
 		if(!empty($return))
@@ -67,8 +74,8 @@ class DocController extends AController {
 		echo '$this->request(\''.$fn.'\'';
 		if(!empty($params)){
 			echo ", array(\n";
-			foreach($params as $name => $param)
-				echo "        '$name' => $$name,\n";
+			foreach($params as $param)
+				echo "        '".$param['name']."' => $".$param['name'].",\n";
 			echo "    )";
 		}
 		echo ')';
@@ -85,13 +92,13 @@ class DocController extends AController {
 		$links = pq('#mr_manual_inner a');
 		$loop = 0;
 		foreach($links as $link){
-			$href = pq($link)->attr('href');
-			if($href != '/manual_intro.asp' && $href != 'manual_methods_overview.asp'){
-				$this->createFunction('http://accountingapi.com/'.$href);
-				$loop++;
+			if($loop > 122 && $loop <= 143){
+				$href = pq($link)->attr('href');
+				if($href != '/manual_intro.asp' && $href != 'manual_methods_overview.asp'){
+					$this->createFunction('http://accountingapi.com/'.$href);
+				}
 			}
-			if($loop>20)
-				break;
+			$loop++;
 		}
 	}
 
