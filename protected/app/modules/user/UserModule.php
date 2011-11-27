@@ -10,6 +10,9 @@
 
 class UserModule extends NWebModule
 {
+	
+	public $enableGoogleAuth = false;
+	
 
 	public $name = 'Users';
 	/**
@@ -150,6 +153,8 @@ class UserModule extends NWebModule
 		$this->setImport(array(
 			'user.models.*',
 			'user.components.*',
+			'user.components.oauth.*',
+			'user.components.oauth.lib.*',
 		));
 		
 		// add to the main config

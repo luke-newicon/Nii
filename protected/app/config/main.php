@@ -61,7 +61,8 @@ return array(
 				'sendActivationMail' => true,
 				'activeAfterRegister' => true,
 				'usernameRequired' => false,
-				'showUsernameField' => false
+				'showUsernameField' => false,
+				'enableGoogleAuth'=>false
 			),
 			'admin'
 		),

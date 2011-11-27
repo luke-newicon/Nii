@@ -86,12 +86,22 @@ class HotspotModule extends NWebModule
 		if(Yii::app()->getModule('hotspot') === null)
 			throw new CException('Hotspot requires the "Hotspot Account" module. To be active before installation');
 		HotspotProject::install();
-		ProjectScreen::install();
+		HotspotScreen::install();
 		HotspotHotspot::install();
-		ProjectTemplate::install();
-		ProjectScreenTemplate::install();
+		HotspotTemplate::install();
+		HotspotScreenTemplate::install();
 		HotspotComment::install();
-		ProjectLink::install();
+		HotspotLink::install();
+	}
+	
+	public function uninstall(){
+		NActiveRecord::uninstall('HotspotProject');
+		NActiveRecord::uninstall('HotspotScreen');
+		NActiveRecord::uninstall('HotspotHotspot');
+		NActiveRecord::uninstall('HotspotTemplate');
+		NActiveRecord::uninstall('HotspotScreenTemplate');
+		NActiveRecord::uninstall('HotspotComment');
+		NActiveRecord::uninstall('HotspotLink');
 	}
 	
 	/**

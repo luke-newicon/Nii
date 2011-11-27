@@ -54,7 +54,6 @@ class NiiModule extends NWebModule
 		
 		Yii::app()->getClientScript()->registerCoreScript('yiiactiveform');
 		
-		
 		// use packages to manage javascript, could be placed into a packages.php file
 		// possible implementation:
 		 $cs->packages =  array(
@@ -67,8 +66,9 @@ class NiiModule extends NWebModule
 //					'js/tipsy/javascripts/jquery.tipsy.js',
 					'js/nii.js', 
 					'js/functions.js',
+//					'js/jquery.jscrollpane.min.js',
 //					'js/jquery.hotkeys.js',
-//					'js/backbone/underscore-1.1.7.min.js',
+					'js/backbone/underscore-1.1.7.min.js',
 //					'js/backbone/backbone-0.5.3.min.js',
 //					'js/gritter/js/jquery.gritter.min.js',
 				),
@@ -78,7 +78,16 @@ class NiiModule extends NWebModule
 //					'js/gritter/css/jquery.gritter.css',
 				),
 				'depends'=>array('jquery.ui')
+			),
+			'backbone'=>array(
+				'basePath'=>'nii.assets',
+				'baseUrl'=>$this->getAssetsUrl(),
+				'js'=>array(
+					'js/backbone/underscore-1.1.7.min.js',
+					'js/backbone/backbone-0.5.3.min.js'
+				)
 			)
+			 
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		

@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectScreen extends NAppRecord
+class HotspotScreen extends NAppRecord
 {
 	
 	/**
@@ -49,7 +49,7 @@ class ProjectScreen extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_screen}}';
+		return '{{hotspot_screen}}';
 	}
 	
 	public function rules(){

@@ -52,7 +52,7 @@ class HotspotComment extends NAppRecord
 			'keys'=>array(
 				array('screen_id')
 			),
-			array('project_comment','screen_id','project_screen','id','CASCADE','CASCADE'),
+//			array('project_comment','screen_id','project_screen','id','CASCADE','CASCADE'),
 		);
 	}
 	

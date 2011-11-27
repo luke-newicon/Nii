@@ -32,6 +32,35 @@ class AccountController extends NController {
 			),
 		);
 	}
+	
+	
+	
+	public function actionLoginGoogle() {
+ 
+        Yii::import('user.components.oauth.*');
+		Yii::import('user.components.oauth.lib.*');
+ 
+        $ui = new EOAuthUserIdentity(
+                array(
+                    //Set the "scope" to the service you want to use
+                        'scope'=>'https://sandbox.google.com/apis/ads/publisher/',
+                        'provider'=>array(
+                                'request'=>'https://www.google.com/accounts/OAuthGetRequestToken',
+                                'authorize'=>'https://www.google.com/accounts/OAuthAuthorizeToken',
+                                'access'=>'https://www.google.com/accounts/OAuthGetAccessToken',
+                        )
+                )
+        );
+ 
+        if ($ui->authenticate()) {
+            $user=Yii::app()->user;
+            $user->login($ui);
+            $this->redirect($user->returnUrl);
+        }
+        else throw new CHttpException(401, $ui->error);
+ 
+    }
+	
 
 	/**
 	 * Displays the login page

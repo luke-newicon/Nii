@@ -54,6 +54,9 @@
 	</div>
 	<div class="modal-footer">
 		<a id="user-login" class="btn primary" href="#">Login</a>
+		<?php if(Yii::app()->getModule('user')->enableGoogleAuth): ?>
+			<a class="btn" href="<?php echo NHtml::url('/user/account/loginGoogle'); ?>" >Google</a>
+		<?php endif; ?>
 		<a id="password-recovery" class="btn pull-left" href="<?php echo CHtml::normalizeUrl(Yii::app()->getModule('user')->recoveryUrl) ?>">Password Recovery</a>
 	</div>
 </div>

@@ -34,7 +34,7 @@ class HotspotHotspot extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_hotspot}}';
+		return '{{hotspot_hotspot}}';
 	}
 	
 	

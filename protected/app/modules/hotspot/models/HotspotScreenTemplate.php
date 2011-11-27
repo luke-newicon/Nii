@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectScreenTemplate extends NAppRecord
+class HotspotScreenTemplate extends NAppRecord
 {
 	
 	/**
@@ -35,7 +35,7 @@ class ProjectScreenTemplate extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_screen_template}}';
+		return '{{hotspot_screen_template}}';
 	}
 	
 	
@@ -51,9 +51,9 @@ class ProjectScreenTemplate extends NAppRecord
 				'screen_id'=>'int',
 				0=>'PRIMARY KEY (`template_id`, `screen_id`)'
 			),
-			'foreignKeys'=>array(
-				array('project_screen_template','template_id','project_template','id','CASCADE','CASCADE'),
-			)
+//			'foreignKeys'=>array(
+//				array('project_screen_template','template_id','project_template','id','CASCADE','CASCADE'),
+//			)
 		);
 	}
 	

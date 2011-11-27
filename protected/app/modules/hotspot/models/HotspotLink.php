@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectLink extends NAppRecord
+class HotspotLink extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -28,7 +28,7 @@ class ProjectLink extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_link}}';
+		return '{{hotspot_link}}';
 	}
 	
 	public function rules(){

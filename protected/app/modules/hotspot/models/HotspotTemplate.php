@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class ProjectTemplate extends NAppRecord
+class HotspotTemplate extends NAppRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -34,7 +34,7 @@ class ProjectTemplate extends NAppRecord
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{project_template}}';
+		return '{{hotspot_template}}';
 	}
 	
 	
@@ -52,9 +52,9 @@ class ProjectTemplate extends NAppRecord
 			'keys'=>array(
 				array('project_id')
 			),
-			'foreignKeys'=>array(
-				array('project_template','project_id','project_project','id','CASCADE','CASCADE'),
-			)
+//			'foreignKeys'=>array(
+//				array('project_template','project_id','project_project','id','CASCADE','CASCADE'),
+//			)
 		);
 	}
 	
