@@ -103,6 +103,16 @@ class Contact extends NActiveRecord {
 			return array();
 		}
 	}
+	
+	public function getAddableTabs() {
+		if ($this->relations) {
+			foreach ($this->relations as $name => $relation) {
+				if ($relation['isAddable']==true) 
+					return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * @return array customized attribute labels (name=>label)

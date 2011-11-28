@@ -1,7 +1,7 @@
 <div class="page-header">
 	<h2><?php echo $this->t('View Contact') ?></h2>
 	<div class="action-buttons">
-		<?php if(count($model->relations)) : ?>
+		<?php if($model->addableTabs) : ?>
 			<a href="#" class="btn" data-controls-modal="modal-add-relation" data-backdrop="true"><?php echo $this->t('Add a Relation') ?></a>
 		<?php endif; ?>
 		<?php echo NHtml::link($this->t('Edit'), array("edit", "id" => $model->id), array('id' => 'contact-edit-button', 'class' => 'btn primary')); ?>
@@ -89,6 +89,7 @@
 	);
 	?>
 </div>
+<?php if ($model->addableTabs) : ?>
 <div class="modal hide fade" id="modal-add-relation">
 	<div class="modal-header">
 		<a class="close" href="#">×</a>
@@ -116,3 +117,4 @@
 		});
 	});
 </script>
+<?php endif;
