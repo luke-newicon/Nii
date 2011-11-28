@@ -30,6 +30,19 @@ class HftModule extends NWebModule
 		 *	Change configuration of contacts module
 		 * Add fields/columns to contacts module dynamically 
 		 */
+		
+		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
+			'Contact' => array(
+				'donations' => array(
+					'relation'=>array(HftContact::HAS_MANY,'HftDonation','contact_id'),
+					'class'=>'HftDonation',
+					'label'=>'Donations',
+					'viewRoute'=>'/hft/donation/contactDonations',
+					'isAddable'=>false,
+					'notification'=>true,
+				),
+			),
+		));
 	}
 	
 	
@@ -47,13 +60,7 @@ class HftModule extends NWebModule
 	
 	public function handleOnRenderContactAfterAddressEdit($event){
 		$event->sender->renderPartial('hft.views.contact.edit.after_address', $event->params);
-	}	
-	
-//	public function settings() {
-//		return array(
-//			'hft' => '/hft/settings/index',
-//		);
-//	}
+	}
 	
 	public function install() {
 		HftContact::install('HftContact');

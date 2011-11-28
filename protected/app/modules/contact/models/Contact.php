@@ -82,19 +82,26 @@ class Contact extends NActiveRecord {
 		);
 
 		foreach ($this->relations as $name => $relation) {
-			$relations[$name] = array(self::HAS_ONE, get_class($relation), 'contact_id');
+			if (isset($relation['relation']))
+				$relations[$name] = $relation['relation']; 
 		}
 		return $relations;
 	}
 
 	public function getRelations($relations=array()) {
 		if (isset($this->module->relations['Contact'])) {
-			foreach ($this->module->relations['Contact'] as $name => $class) {
-				$relation = new $class;
-				$relations[$name] = $relation;
-			}
+//			foreach ($this->module->relations['Contact'] as $name => $class) {
+//				if (is_array($class)) {
+//					$relations[$name] = $class['relation'];
+//				} else {
+//					$relation = new $class;
+//					$relations[$name] = $relation;
+//				}
+//			}
+			return $this->module->relations['Contact'];
+		} else {
+			return array();
 		}
-		return $relations;
 	}
 
 	/**
@@ -553,9 +560,15 @@ class Contact extends NActiveRecord {
 
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */
-		foreach ($this->relations as $name => $class) {
+		foreach ($this->relations as $name => $relation) {
 			if ($this->$name)
-				$tabs[$this->$name->label] = array('ajax' => $this->$name->viewUrl, 'id' => $name);
+				$tabs[$relation['label']] = array('ajax' => array($relation['viewRoute'],'id'=>$this->id()), 'id' => $name);
+				if ($relation['notification']) {
+					if ($relation['notification'] == true)
+						$tabs[$relation['label']]['count'] = count($this->$name);
+					else
+						$tabs[$relation['label']]['count'] = exec($relation['notification']);
+				}
 		}
 
 		/* Default tabs */
@@ -568,10 +581,11 @@ class Contact extends NActiveRecord {
 
 	public function relationDropDownList() {
 		if(count($this->relations)){
+			$data = $options = array();
 			foreach ($this->relations as $name => $relation) {
-				if(!$this->$name){
-					$data[$name] = $relation->label;
-					$options[$name] = array('data-relation-url' => CHtml::normalizeUrl($relation->addUrl));
+				if(!$this->$name && $relation['isAddable']){
+					$data[$name] = $relation['label'];
+					$options[$name] = array('data-relation-url' => CHtml::normalizeUrl($relation['addRoute']));
 				}
 			}
 			return CHtml::dropDownList('contact-relation', null, $data, array(
