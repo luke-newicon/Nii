@@ -1,89 +1,29 @@
 <?php
 
+/**
+ * KashflowInvoice
+ * 
+ * Note that properties relating to payments and totals are read-only.
+ * The Net Amount and Vat Amount are calculated based on the Lines.
+ * The 'Paid' status is set by adding an invoice payments.
+ * 
+ * @property int $InvoiceDBID System-wide unique number for this invoice (used internally only)
+ * @property int $InvoiceNumber Unique  invoice Reference Number
+ * @property string $InvoiceDate Invoice  Date
+ * @property string $DueDate Payment  Due Date
+ * @property int $SuppressTotal 1 to suppress the quote/estimate total
+ * @property int $ProjectID The project ID for this invoice. See GetProjects
+ * @property string $CurrencyCode The currency code to be used for the invoice e.g. USD, GBP, ZAR
+ * @property float $ExchangeRate The exchange rate for the currency used.
+ * @property int $Paid, 1 for Paid, 0 for Unpaid (Please set default to 0 when calling insert functions)
+ * @property int $CustomerID CustomerID  of Customer
+ * @property string $CustomerReference Customer  Reference
+ * @property string $EstimateCategory The name of the estimate category
+ * @property float $NetAmount The  total net amount of the invoice (Please set default to 0 when calling insert functions)
+ * @property float $VatAmount The  total VAT amount of the invoice (Please set default to 0 when calling insert functions)
+ * @property float $AmountPaid The  sum of all payments made to this invoice (Please set default to 0 when calling insert functions)
+ * @property KashflowInvoiceLine $Lines Collection
+ */
 class KashflowInvoice extends KashflowModel {
-
-	/**
-	 * @var int System-wide unique number for this invoice (used internally only)
-	 */
-	public $InvoiceDBID = 0;
-
-	/**
-	 * @var int Unique invoice Reference Number
-	 */
-	public $InvoiceNumber = 0;
-
-	/**
-	 * @var string Invoice Date
-	 */
-	public $InvoiceDate = "";
-
-	/**
-	 * @var string Payment Due Date
-	 */
-	public $DueDate = "";
-
-	/**
-	 * @var int 1 to suppress the quote/estimate total
-	 */
-	public $SuppressTotal = 0;
-
-	/**
-	 * @var int The project ID for this invoice. See GetProjects
-	 */
-	public $ProjectID = 0;
-
-	/**
-	 * @var string The currency code to be used for the invoice e.g. USD, GBP, ZAR
-	 */
-	public $CurrencyCode = "";
-
-	/**
-	 * @var float The exchange rate for the currency used.
-	 */
-	public $ExchangeRate = 0;
-
-	/**
-	 * @var int 1 for Paid, 0 for Unpaid (Please set default to 0 when calling insert functions)
-	 */
-	public $Paid = 0;
-
-	/**
-	 * @var int CustomerID of Customer
-	 */
-	public $CustomerID = 0;
-
-	/**
-	 * @var string Customer Reference
-	 */
-	public $CustomerReference = "";
-
-	/**
-	 * @var string The name of the estimate category
-	 */
-	public $EstimateCategory = "";
-
-	/**
-	 * @var float The total net amount of the invoice (Please set default to 0 when calling insert functions)
-	 */
-	public $NetAmount = 0;
-
-	/**
-	 * @var float The total VAT amount of the invoice (Please set default to 0 when calling insert functions)
-	 */
-	public $VATAmount = 0;
-
-	/**
-	 * @var float The sum of all payments made to this invoice (Please set default to 0 when calling insert functions)
-	 */
-	public $AmountPaid = 0;
-
-	/**
-	 * @var array Array of KashflowInvoiceLines
-	 */
-	public $Lines = array();
 	
-	public $Customer;
-	public $ReadableString;
-	public $CustomerName;
-
 }
