@@ -1,9 +1,9 @@
 <?php
 
 class ContactStaff extends ContactRelation {
-	
+
 //	public $gridView = '//task/admin/customers';
-	
+
 	public $label = 'Staff';
 
 	/**
@@ -34,7 +34,7 @@ class ContactStaff extends ContactRelation {
 	 */
 	public function relations() {
 		return array(
-			'contact' => array(self::BELONGS_TO, 'Contact', 'id'),
+			'contact' => array(self::BELONGS_TO, 'Contact', 'contact_id'),
 		);
 	}
 
@@ -62,7 +62,7 @@ class ContactStaff extends ContactRelation {
 			)
 		);
 	}
-	
+
 	public function columns() {
 		return array(
 			array(
@@ -70,22 +70,24 @@ class ContactStaff extends ContactRelation {
 			),
 			array(
 				'name' => 'contact.name',
+				'type' => 'raw',
+				'value' => '$data->getContactLink(\'Staff\')',
 			),
 		);
 	}
-	
-	public function getAddUrl(){
+
+	public function getAddUrl() {
 		return array('/contact/staff/add', 'id' => $this->id());
 	}
-	
-	public function getViewUrl(){
+
+	public function getViewUrl() {
 		return array('/contact/staff/view', 'id' => $this->id());
 	}
-	
-	public function getEditUrl(){
+
+	public function getEditUrl() {
 		return array('/contact/staff/edit', 'id' => $this->id());
 	}
-	
+
 	public static function install($className=__CLASS__) {
 		parent::install($className);
 	}
@@ -98,6 +100,11 @@ class ContactStaff extends ContactRelation {
 			),
 			'keys' => array()
 		);
+	}
+
+	public function getName() {
+		if ($this->contact)
+			return $this->contact->name;
 	}
 
 }

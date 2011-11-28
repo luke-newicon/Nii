@@ -57,9 +57,9 @@ class ContactCustomer extends ContactRelation {
 		$criteria->compare('id', $this->id);
 
 		return new NActiveDataProvider($this,
-						array(
-							'criteria' => $criteria,
-						)
+			array(
+				'criteria' => $criteria,
+			)
 		);
 	}
 

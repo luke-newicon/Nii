@@ -406,7 +406,7 @@ class Contact extends NActiveRecord {
 		$type = "grid-thumbnail-" . strtolower($this->contact_type);
 		$label = $showIcon ? $this->getPhoto($type) . '<span>' . $this->displayName . '</span>' : $this->displayName;
 		if ($tab)
-			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id, '#'.$tab), array('class' => 'grid-thumb-label'));
+			return CHtml::link($label, CHtml::normalizeUrl(array('/contact/admin/view', 'id' => $this->id)).'#'.$tab, array('class' => 'grid-thumb-label'));
 		else
 			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id), array('class' => 'grid-thumb-label'));
 	}
