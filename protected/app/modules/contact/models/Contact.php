@@ -561,7 +561,7 @@ class Contact extends NActiveRecord {
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */
 		foreach ($this->relations as $name => $relation) {
-			if ($this->$name)
+			if ($this->$name) {
 				$tabs[$relation['label']] = array('ajax' => array($relation['viewRoute'],'id'=>$this->id()), 'id' => $name);
 				if ($relation['notification']) {
 					if ($relation['notification'] == true)
@@ -569,6 +569,7 @@ class Contact extends NActiveRecord {
 					else
 						$tabs[$relation['label']]['count'] = exec($relation['notification']);
 				}
+			}
 		}
 
 		/* Default tabs */
