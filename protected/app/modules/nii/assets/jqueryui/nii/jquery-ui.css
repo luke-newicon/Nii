@@ -61,7 +61,7 @@
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-size: 1em; }
 .ui-widget-content { color: #222222; }
-.ui-widget-content a { color: #222222; }
+.ui-widget-content a { color: #0069D6; }
 .ui-widget-header {text-shadow:0 1px 0 #EEEEEE; border-bottom: 1px solid #aaaaaa; color: #666; font-weight: bold; }
 .ui-widget-header a { color: #222222; }
 

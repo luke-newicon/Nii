@@ -167,6 +167,9 @@ class NiiModule extends NWebModule
 			'jquery.gritter.css'=>false,
 			'jquery.yiiactiveform.js'=>false,
 			'bootstrap-twipsy.js'=>false, 
+			'bootstrap-min.css'=>false,
+			// Prevent gridview styles from loading on ajax
+			'styles.css'=>false,
 		);
 	}
 	
