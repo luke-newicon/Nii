@@ -107,6 +107,9 @@ class UserIdentity extends CUserIdentity
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.
 			Yii::app()->session['impersonate_restore'] = Yii::app()->user->id;
+			Yii::app()->session['impersonate_restore_validation'] = 'xyz'; 
+			// create some key from the password and infomation of this superuser to validate when performing a restore
+			// this would ensure the correct user is being restored (so the session can not just be hacked adding in this id)
 			$ui = new UserIdentity($user->email, "");
 			$ui->_logInUser($user);
 			
@@ -116,6 +119,7 @@ class UserIdentity extends CUserIdentity
 	
 	public static function impersonateRestore($userId){
 		$ui = null;
+		// check the validation session
 		$user = UserModule::userModel()->findByPk($userId);
 		if($user)
 		{   
