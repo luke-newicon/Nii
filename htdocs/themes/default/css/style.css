@@ -441,3 +441,6 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 .w550{width:550px;}
 .w600{width:600px;}
 .w700{width:700px;}
+
+
+.over .input{border-color:rgba(82,168,236,0.8);}

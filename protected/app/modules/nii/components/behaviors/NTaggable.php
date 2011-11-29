@@ -22,15 +22,17 @@ class NTaggable extends CActiveRecordBehavior
 	/**
 	 * Set the tags for a row, removes all existing tags and sets the tags to those specified
 	 * in the $tags array, this is useful for input widgets that always post all tags
-	 * @param array $tags  the full set of tags to be set
-	 * @param Newicon_Db_Row $row  the row the tags are to be set on
+	 * @param mixed $tags  the full set of tags to be set can be an array of 
+	 * tag names or a string of tag names seperated by $delimiter
+	 * @param string the string delimiter to seperate tags only applicable if $tags paramter is a string
 	 * @return null
 	 */
-	public function setTags(array $tags)
+	public function setTags($tags, $delimiter=',')
 	{
 		Yii::import('nii.components.db.*');
 		if(is_string($tags))
-			$tags = array($tags);
+			$tags = explode($delimiter, $tags);
+		
 		if(empty($tags))
 			return;
 		
@@ -81,7 +83,7 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array of tag id=>tag
 	 */
-	public function getModelTags() {
+	public function getModelTags($assoc=false) {
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
@@ -89,8 +91,9 @@ class NTaggable extends CActiveRecordBehavior
 		);
 		
 		$tags = array();
-		foreach ($tagRows as $t)
+		foreach ($tagRows as $t){
 			$tags[$t->tag->id]=$t->tag->tag;
+		}
 		
 		return $tags;
 	}
@@ -117,7 +120,6 @@ class NTaggable extends CActiveRecordBehavior
 		
 		return $tags;
 	}
-	
 	
 	/**
 	 * Deletes all tags associated with this model
@@ -220,7 +222,6 @@ class NTaggable extends CActiveRecordBehavior
 		}
 		return false;
 	}
-	
 	
 	/**
 	 * Install necessary tables for behavior

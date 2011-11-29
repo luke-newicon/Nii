@@ -36,8 +36,29 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 		form:function(){
 			// focus 
 			$('.niiform').unbind();
+			$('body').delegate(':input','mouseover.niiform',function(){$(this).closest(".field").addClass("over");});
+			$('body').delegate(':input','mouseout.niiform',function(){$(this).closest(".field").removeClass("over");});
 			$('body').delegate(':input','focusin.niiform',function(){$(this).closest(".field").addClass("focus");});
 			$('body').delegate(':input','focusout.niiform',function(){$(this).closest(".field").removeClass("focus");});
+			$('body').delegate('.input','click.niiform',function(){$(this).find(":input").focus();});
+			$('body').delegate('label[for]','mouseover.niiform',function(){
+				// find associated form element
+				var $el = $('#'+$(this).attr('for'))
+				if ($el.length){
+					var $in = $el.closest('.field');
+					if($in.length)
+						$in.addClass('over');
+				}
+			});
+			$('body').delegate('label[for]','mouseout.niiform',function(){
+				// find associated form element
+				var $el = $('#'+$(this).attr('for'))
+				if ($el.length){
+					var $in = $el.closest('.field');
+					if($in.length)
+						$in.removeClass('over');
+				}
+			});
 			$('.inFieldLabel').inFieldLabels({fadeDuration:0});
 		}
 		

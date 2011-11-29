@@ -36,7 +36,7 @@ $this->widget('ext.bootstrap.widgets.menu.BootTabs',array(
 				'name' => array(
 					'name' => 'name',
 					'type' => 'raw',
-					'value' => '$data->viewLink($data->name)',
+					'value' => '$data->viewLink(NHtml::hilightText($data->name, $this->grid->filter->name))',
 				),
 				'project' => array(
 					'name' => 'project_name',

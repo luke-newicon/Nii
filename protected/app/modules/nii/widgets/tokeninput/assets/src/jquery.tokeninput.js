@@ -380,13 +380,17 @@ $.TokenList = function (input, url_or_data, settings) {
     // Add a token to the token list based on user input
     function add_token (item) {
 		li_data = undefined;
-		console.log(item.get(0))
 		if(item.get(0) !== undefined)
 			var li_data = $.data(item.get(0), "tokeninput");
+		
+		// adding a new tag make the id surrounded by a double curly brace to indicate it is NOT an id, and is a new tag!
 		if(li_data === undefined){
 			li_data = {'id':input_val, 'name':input_val};
 		}
-		console.log(li_data);
+		// if its empty we dont wana add a tag
+		if(li_data.id=='')
+			return false;
+		
 
         var callback = settings.onAdd;
 
@@ -529,14 +533,14 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function show_dropdown() {
-        dropdown
-            .css({
-                position: "absolute",
-                top: $(token_list).offset().top + $(token_list).outerHeight(),
-                left: $(token_list).offset().left,
-                zindex: 999
-            })
-            .show();
+		var padding = 6;
+        dropdown.css({
+			position: "absolute",
+			top: $(token_list).offset().top + $(token_list).outerHeight(),
+			left: $(token_list).offset().left-padding,
+			zindex: 999,
+			width:input_box.closest('.input').width()+'px'
+		}).show();
     }
 
     function show_dropdown_searching () {

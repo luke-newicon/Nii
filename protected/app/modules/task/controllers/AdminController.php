@@ -106,5 +106,11 @@ Class AdminController extends AController {
 	public function actionActions() {
 		$this->render('actions');
 	}
+	
+	
+	
+	public function actionTasker(){
+		$this->render('tasker');
+	}
 
 }

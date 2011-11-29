@@ -122,6 +122,35 @@
 		foreach($users as $found)
 			dp($found->email);
 	?>
+			
+			<form method="post">
+			<div class="line">
+				<div class="unit size1of2">
+					
+					<div class="field">
+						<label class="lbl" >Tags:</label>
+						<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
+							'model'=>$u,
+							'attribute'=>'tags',
+							'data'=>$u->getModelTags(),
+							'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
+						)); ?>
+					</div>
+				</div>
+				<div class="lastUnit">
+					<div class="field ">
+						<label class="lbl" >Some other field:</label>
+						<div class="input ">
+							<input type="text" />
+						</div>
+					</div>
+				</div>
+			</div>
+				<input type="submit" value="submit" />
+	</form>
+<!--	</div>-->
 	
-	</div>
+	
+	
+	
 </div>

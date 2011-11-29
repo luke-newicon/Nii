@@ -21,8 +21,6 @@ class HotspotModule extends NWebModule
 
 	public function init(){
 	
-		
-		
 		$this->setImport(array(
 			'hotspot.models.*',
 			'hotspot.components.*',

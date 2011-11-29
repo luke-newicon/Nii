@@ -7,7 +7,12 @@
 Class NTokenInput extends CInputWidget
 {
 
-	public $assetUrl;
+	/**
+	 * The class to apply to the surrounding widgets div. 
+	 * Typically <div class="input pan"><!-- widget --></div>
+	 * @var string 
+	 */
+	public $inputClass = 'input pan';
 
 	/**
 	 * hintText: 
@@ -97,9 +102,12 @@ Class NTokenInput extends CInputWidget
 		}
 		
 
-		echo CHtml::textField($name,'',$this->htmlOptions);
+		echo '<div class="'.$this->inputClass.'">'.CHtml::textField($name,'',$this->htmlOptions).'</div>';
 		if($value!==null){
-			$this->options['prePopulate'] = $value;
+			$prepopulate = array();
+			foreach($value as $k=>$v)
+				$prepopulate[] = array('id'=>$v, 'name'=>$v);
+			$this->options['prePopulate'] = $prepopulate;
 		}
 		if($this->url === null && $this->data === null)
 			throw new CException('you must specify the data for the tokens by specifing the data property as an array
@@ -109,7 +117,7 @@ Class NTokenInput extends CInputWidget
 			$data = CJavaScript::encode(NHtml::url($this->url));
 		else
 			$data =  CJavaScript::encode($this->data);
-
+		
 		
 		// sort options array out
 		if(!isset($this->options['theme']))
@@ -118,24 +126,20 @@ Class NTokenInput extends CInputWidget
 		$options=CJavaScript::encode($this->options);
 
 		$js = "jQuery('#{$id}').tokenInput($data,$options);";
-		
-		$cs = Yii::app()->clientScript;
-		
-		echo '<script>jQuery(function($){'.$js.'});</script>';
-		//$cs = new CClientScript();
-		$cs->registerScript(__CLASS__.'#'.$id, $js, CClientScript::POS_READY);
+		Yii::app()->clientScript->registerScript(__CLASS__.'#'.$id, $js, CClientScript::POS_READY);
 	}
 
 	public function publishAssets(){
 		$localPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';
-		$this->assetUrl = Yii::app()->getAssetManager()->publish($localPath);
+		$assetUrl = Yii::app()->getAssetManager()->publish($localPath);
 
-		Yii::app()->clientScript->registerScriptFile($this->assetUrl . '/src/jquery.tokeninput.js');
-		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input.css');
-//		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-facebook.css');
-//		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/styles/token-input-mac.css');
+		Yii::app()->clientScript->registerScriptFile($assetUrl . '/src/jquery.tokeninput.js');
+		Yii::app()->clientScript->registerCssFile($assetUrl . '/styles/token-input.css');
+		// other themes:
+		// Yii::app()->clientScript->registerCssFile($assetUrl . '/styles/token-input-facebook.css');
+		// Yii::app()->clientScript->registerCssFile($assetUrl . '/styles/token-input-mac.css');
 		$theme = $this->theme;
-		Yii::app()->clientScript->registerCssFile($this->assetUrl . "/styles/token-input-$theme.css");
+		Yii::app()->clientScript->registerCssFile($assetUrl . "/styles/token-input-$theme.css");
 	}
 
 }
