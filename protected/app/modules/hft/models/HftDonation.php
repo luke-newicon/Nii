@@ -114,14 +114,17 @@ class HftDonation extends NActiveRecord
 				'name' => 'date_received',
 				'type' => 'raw',
 				'value' => '$data->donationDateLink',
+				'exportValue' => 'NHtml::formatDate($data->date_received, "d-m-Y",false)',
 				'header' => 'Date Rec\'d',
-				'filter' => NGridView::filterDateRange($this, 'date_received'),
+//				'filter' => NGridView::filterDateRange($this, 'date_received'),
+				'class'=>'NDateColumn',
 				'htmlOptions'=>array('width'=>'80px'),
 			),
 			array(
 				'name' => 'contact_id',
 				'type' => 'raw',
 				'value' => '$data->getContactLink(null, false)',
+				'exportValue' => '$data->contactName',
 			),
 			array(
 				'name' => 'donation_amount',
@@ -146,6 +149,7 @@ class HftDonation extends NActiveRecord
 				'name' => 'event_id',
 				'type' => 'raw',
 				'value' => '$data->eventLink',
+				'exportValue' => '$data->eventName',
 			),
 			array(
 				'name' => 'statement_number',
@@ -154,7 +158,9 @@ class HftDonation extends NActiveRecord
 				'name' => 'statement_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
-				'filter' => NGridView::filterDateRange($this, 'statement_date'),
+				'exportValue' => 'NHtml::formatDate($data->statement_date, "d-m-Y","-")',
+//				'filter' => NGridView::filterDateRange($this, 'statement_date'),
+				'class'=>'NDateColumn',
 				'htmlOptions'=>array('width'=>'120px'),
 			),
 			array(
@@ -164,6 +170,7 @@ class HftDonation extends NActiveRecord
 				'filter' => false,
 				'sortable' => false,
 				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
 			),
 		);
 	}
@@ -200,17 +207,25 @@ class HftDonation extends NActiveRecord
 		if ($this->contact) {
 			$type = "grid-thumbnail-".strtolower($this->contact->contact_type);
 			$label = $showIcon ? $this->getPhoto($type) . '<span>'.$this->contact->displayName.'</span>' : $this->contact->displayName;
-			if ($tab)
-				return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));
-			else
-				return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id),array('class'=>'grid-thumb-label'));
+			if ($this->contact->trashed==0) {
+				if ($tab)
+					return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));
+				else
+					return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id),array('class'=>'grid-thumb-label'));
+			} else {
+				return '<span class="trashedData" title="Removed">'.$label.'</span>';
+			}
 		} else
 			return '<span class="noData">No contact assigned</span>';
 	}
 	
 	public function getContactName($echoNoData=false) {
-		if ($this->contact)
-			return $this->contact->displayName;
+		if ($this->contact) {
+			if ($this->contact->trashed==0)
+				return $this->contact->displayName;
+			else
+				return '<span class="trashedData" title="Removed">'.$this->contact->displayName.'</span>';
+		}
 		elseif ($echoNoData!=false)
 			return '<span class="noData">No contact assigned</span>';
 	}
@@ -248,7 +263,7 @@ class HftDonation extends NActiveRecord
 	
 	public function getEventName($echoNoData=false) {
 		if ($this->event)
-			return $this->event->name;
+			return $this->event->name . ($this->event->trashed==1 ? ' (removed)' : '');
 		else {
 			if ($echoNoData!=false)
 				return '<span class="noData">No event assigned</span>';
@@ -259,10 +274,14 @@ class HftDonation extends NActiveRecord
 	public function getEventLink($tab=null) {
 		if ($this->event) {
 			$label = $this->event->name;
-			if ($tab)
-				return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id, 'selectedTab'=>$tab));
-			else
-				return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id));
+			if ($this->event->trashed==0) {
+				if ($tab)
+					return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id, 'selectedTab'=>$tab));
+				else
+					return CHtml::link($label, array("/hft/event/view","id"=>$this->event->id));
+			} else {
+				return '<span class="trashedData" title="Removed">'.$label.'</span>';
+			}
 		} else
 			return '<span class="noData">No event assigned</span>';
 	}

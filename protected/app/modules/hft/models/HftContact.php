@@ -101,6 +101,7 @@ class HftContact extends Contact
 					'name' => 'countDonations',
 					'header'=>'Donations',
 					'type'=>'raw',
+					'exportValue'=>'$data->getCountDonations(false)',
 					'htmlOptions'=>array('width'=>'60px','style'=>'text-align:center'),
 				),
 				array(
@@ -168,12 +169,12 @@ class HftContact extends Contact
 			return false;
 	}
 	
-	public function getCountDonations() {
+	public function getCountDonations($displayEmpty=true) {
 		if ($this->id) {
 			$donations = HftDonation::model()->countByAttributes(array('contact_id'=>$this->id));
 			if($donations)
 				return $donations;
-			else
+			else if ($displayEmpty)
 				return '<span class="noData">---</span>';
 		}
 	}

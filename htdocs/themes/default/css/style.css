@@ -326,6 +326,10 @@ h2.contact-title {
 	color: #ccc;
 }
 
+.trashedData {
+	color: #c26f6f;
+}
+
 #message {
 	width: 500px;
 	position: absolute;

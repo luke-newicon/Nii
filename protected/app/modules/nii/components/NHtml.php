@@ -243,7 +243,13 @@ class NHtml extends CHtml {
 	public static function generateAttributeId($label) {
 		return strtolower(str_replace(array(' '), '_', $label));
 	}
-	// DOCUMENTATION PLEASE!
+
+	/**
+	 *	Returns an array of enum values from an enum column on the given model
+	 * @param model $model
+	 * @param string $attribute - column/field name containing the enum info
+	 * @return array 
+	 */
 	public static function enumItem($model, $attribute) {
 		$attr = $attribute;
 		self::resolveName($model, $attr);
@@ -382,7 +388,13 @@ class NHtml extends CHtml {
 
 		return 'icon ' . $icon;
 	}
-	// DOCUMENTATION PLEASE!
+	/**
+	 *	Returns a properly formatted date, using PHP date format
+	 * @param string $date - original value from model
+	 * @param string $format - PHP date format
+	 * @param type $noDateText - alternative text for if there is no date set; can also be set to false to hide
+	 * @return string formatted date 
+	 */
 	public static function formatDate($date, $format=null, $noDateText=null) {
 		if ($format == '' || !$format)
 			$format = 'jS F Y';
@@ -392,15 +404,31 @@ class NHtml extends CHtml {
 			else
 				return date($format, $date);
 		else
-			return (isset($noDateText)) ? $noDateText : '<span class="noDate">No date set</span>';
+			if ($noDateText !== false)
+				return (isset($noDateText)) ? $noDateText : '<span class="noDate">No date set</span>';
 	}
-	// DOCUMENTATION PLEASE!
+	
+	/**
+	 *	Returns a properly formatted date for use in a grid
+	 * @param string $date - original value from model
+	 * @param string $format - PHP date format
+	 * @param type $noDateText - alternative text for if there is no date set; can also be set to false to hide
+	 * @return function formatDate
+	 */
 	public static function formatGridDate($date, $format=null, $noDateText=null) {
 		if ($format == '' || !$format)
 			$format = 'd/m/Y';
 		return self::formatDate($date, $format, $noDateText);
 	}
-	// DOCUMENTATION PLEASE!
+	
+	/**
+	 *	Returns human readable text from a boolean value
+	 * @param string $value - original boolean
+	 * @param string $true - true value
+	 * @param string $false - false value
+	 * @param bool $blank - whether to return blank on false
+	 * @return string 
+	 */
 	public static function formatBool($value, $true=1, $false=0, $blank=false) {
 		if ($value == $true)
 			return 'Yes';
@@ -409,11 +437,23 @@ class NHtml extends CHtml {
 		else
 			return;
 	}
-	// DOCUMENTATION PLEASE!
+	
+	/**
+	 *	Returns a properly formatted price based on an integer or float
+	 * @param int/float $value
+	 * @param string $currency - the character, html-encoded, to place before the price
+	 * @param int $decimals - number of decimals to display
+	 * @return string
+	 */
 	public static function formatPrice($value, $currency='&pound;', $decimals=2) {
 		return $currency . ' ' . number_format($value, $decimals);
 	}
-	// DOCUMENTATION PLEASE!
+	
+	/**
+	 *	Returns a properly formatted mailto link from an email address
+	 * @param string $email - email address
+	 * @return string 
+	 */
 	public static function emailLink($email) {
 		return '<a href="mailto:' . $email . '" class="emailLink" title="Send an email to ' . $email . '">' . $email . '</a>';
 	}
@@ -434,7 +474,7 @@ class NHtml extends CHtml {
 	}
 	
 	/**
-	 *
+	 *	Trash button for generic trashing of model objects. To be used in views...
 	 * @param string $model
 	 * @param string $modelName
 	 * @param mixed $returnUrl the return route string/array.

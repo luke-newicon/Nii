@@ -100,15 +100,19 @@ class HftEvent extends NActiveRecord
 				'name' => 'start_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->start_date, "d-m-Y")',
+				'exportValue' => 'NHtml::formatDate($data->start_date, "d-m-Y",false)',
 				'htmlOptions'=>array('width'=>'80px'),
-				'filter' => NGridView::filterDateRange($this, 'start_date'),
+//				'filter' => NGridView::filterDateRange($this, 'start_date'),
+				'class'=>'NDateColumn',
 			),
 			array(
 				'name' => 'end_date',
 				'type' => 'raw',
 				'value' => 'NHtml::formatDate($data->end_date, "d-m-Y")',
+				'exportValue' => 'NHtml::formatDate($data->end_date, "d-m-Y",false)',
 				'htmlOptions'=>array('width'=>'80px'),
-				'filter' => NGridView::filterDateRange($this, 'end_date'),
+//				'filter' => NGridView::filterDateRange($this, 'end_date'),
+				'class'=>'NDateColumn',
 			),
 			array(
 				'name' => 'organiser_type_id',
@@ -132,6 +136,7 @@ class HftEvent extends NActiveRecord
 				'filter' => false,
 				'sortable' => false,
 				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
 			),
 		);
 	}

@@ -20,20 +20,17 @@ class NDateColumn extends NDataColumn {
 		
 		$model = $this->grid->filter;
 		$class = get_class($model);
-		$dr = $this->name.'_range';
 		
-		if (!isset($dateReceived['from'])) $dateReceived['from'] = '';
-		if (!isset($dateReceived['to'])) $dateReceived['to'] = '';
+		$from = $this->name.'_from';
+		$to = $this->name.'_to';
 		
 		$controller = Yii::app()->controller;
-		
-		$dateReceived = $model->$dr;
 		
 		echo '<div class="line field mbs"><div class="input inputInline">';
 			// From date
 		$controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-				'name' => $class.'['.$dateReceived["from"].']',
-				'value' => $dateReceived['from'],
+				'name' => $class.'['.$from.']',
+				'value' => $model->$from,
 				// additional javascript options for the date picker plugin
 				'options'=>array(
 					'showAnim'=>'fold',
@@ -50,8 +47,8 @@ class NDateColumn extends NDataColumn {
 			
 			// To date
 		$controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-				'name' => $class.'['.$dateReceived["to"].']',
-				'value' => $dateReceived['to'],
+				'name' => $class.'['.$to.']',
+				'value' => $model->$to,
 				// additional javascript options for the date picker plugin
 				'options'=>array(
 					'showAnim'=>'fold',
