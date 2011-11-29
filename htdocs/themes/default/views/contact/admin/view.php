@@ -12,57 +12,57 @@
 		<span class="contact-photo"><?php echo $model->getPhoto('profile-main-' . strtolower($model->contact_type)); ?></span>
 		<h2 class="contact-title"><?php echo $model->displayName; ?></h2>
 		<div id="contact-general-info" class="line">
-			<?php Yii::app()->getModule('contact')->onRenderContactAfterHeader($event); ?>
-			<div class="unit size1of2">
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Address') ?></div>
-					<div class="lastUnit"><?php echo $model->addressFields; ?></div>
+			<div class="line">
+				<?php Yii::app()->getModule('contact')->onRenderContactAfterHeader($event); ?>
+				<div class="unit size1of2">
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Address') ?></div>
+						<div class="lastUnit"><?php echo $model->fullAddress; ?></div>
+					</div>
 				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('City') ?></div>
-					<div class="lastUnit"><?php echo $model->city; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('County') ?></div>
-					<div class="lastUnit"><?php echo $model->county; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Post Code') ?></div>
-					<div class="lastUnit"><?php echo $model->postcode; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Country') ?></div>
-					<div class="lastUnit"><?php echo $model->countryName; ?></div>
-				</div>
-			</div>
-			<div class="lastUnit pll">
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Email - Home') ?></div>
-					<div class="lastUnit"><?php echo $model->getEmailLink(); ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Email - Work') ?></div>
-					<div class="lastUnit"><?php echo $model->getEmailLink('work'); ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Home') ?></div>
-					<div class="lastUnit"><?php echo $model->tel_primary; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Work') ?></div>
-					<div class="lastUnit"><?php echo $model->tel_secondary; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Mobile') ?></div>
-					<div class="lastUnit"><?php echo $model->mobile; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Fax') ?></div>
-					<div class="lastUnit"><?php echo $model->fax; ?></div>
-				</div>
-				<div class="detailRow">
-					<div class="unit size1of3 detailLabel"><?= $this->t('Website URL') ?></div>
-					<div class="lastUnit"><?php echo $model->websiteLink; ?></div>
+				<div class="lastUnit pll">
+					<?php if ($model->email) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Email - Home') ?></div>
+						<div class="lastUnit"><?php echo $model->getEmailLink(); ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->email_secondary) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Email - Work') ?></div>
+						<div class="lastUnit"><?php echo $model->getEmailLink('work'); ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->tel_primary) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Home') ?></div>
+						<div class="lastUnit"><?php echo $model->tel_primary; ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->tel_secondary) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Work') ?></div>
+						<div class="lastUnit"><?php echo $model->tel_secondary; ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->mobile) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Mobile') ?></div>
+						<div class="lastUnit"><?php echo $model->mobile; ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->fax) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Fax') ?></div>
+						<div class="lastUnit"><?php echo $model->fax; ?></div>
+					</div>
+					<?php } ?>
+					<?php if ($model->website) { ?>
+					<div class="detailRow">
+						<div class="unit size1of3 detailLabel"><?= $this->t('Website URL') ?></div>
+						<div class="lastUnit"><?php echo $model->websiteLink; ?></div>
+					</div>
+					<?php } ?>
 				</div>
 			</div>
 			<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetails($event); ?>

@@ -1,4 +1,4 @@
-<div class="detailRow ptm">
+<div class="line detailRow">
 	<div class="unit size1of2">
 		<div class="unit size1of3 detailLabel"><?=$this->t('DOB')?></div>
 		<div class="lastUnit"><?php echo NHtml::formatDate($model->dob); ?></div>

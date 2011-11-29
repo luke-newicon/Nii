@@ -36,6 +36,11 @@ class NDateColumn extends NDataColumn {
 					'showAnim'=>'fold',
 					'dateFormat'=>'yy-mm-dd',
 					'constrainInput' => 'false',
+					'onClose' => 'js:function(selectedDate) {
+						var instance = jQuery(this).data("datepicker");
+						var date = jQuery.datepicker.parseDate(instance.settings.dateFormat || jQuery.datepicker._defaults.dateFormat, selectedDate, instance.settings );
+						jQuery("#'.$class.'_'.$to.'").datepicker( "option", "minDate", date );
+					}',
 				),
 				'htmlOptions'=>array(
 					'placeholder'=>'From',
@@ -54,6 +59,11 @@ class NDateColumn extends NDataColumn {
 					'showAnim'=>'fold',
 					'dateFormat'=>'yy-mm-dd',
 					'constrainInput' => 'false',
+					'onClose' => 'js:function(selectedDate) {
+						var instance = jQuery(this).data("datepicker");
+						var date = jQuery.datepicker.parseDate(instance.settings.dateFormat || jQuery.datepicker._defaults.dateFormat, selectedDate, instance.settings );
+						jQuery("#'.$class.'_'.$from.'").datepicker( "option", "maxDate", date );
+					}',
 				),
 				'htmlOptions'=>array(
 					'placeholder'=>'To',

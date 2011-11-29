@@ -1,5 +1,5 @@
 <?php $this->renderPartial('//layouts/admin/_header'); ?>
-<body>
+<body class="<?php echo Yii::app()->getModule('admin')->logo ? ' show-logo':''?><?php echo Yii::app()->getModule('admin')->fixedHeader==true ? ' fixed':''?>">
 	<div class="page liquid">
 		<?php $this->renderPartial('//layouts/admin/_head'); ?>
 		<div class="body">

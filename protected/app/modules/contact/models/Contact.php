@@ -459,7 +459,7 @@ class Contact extends NActiveRecord {
 			'city' => $this->city,
 			'county' => $this->county,
 			'postcode' => $this->postcode,
-			'country' => $this->country,
+			'country' => $this->countryName,
 		);
 
 		$address = array();
@@ -653,7 +653,10 @@ class Contact extends NActiveRecord {
 			'trash'=>array(
 				'class'=>'nii.components.behaviors.ETrashBinBehavior',
 				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
-			)
+			),
+			'tag'=>array(
+               'class'=>'nii.components.behaviors.NTaggable'
+           )
 		);
 	}
 

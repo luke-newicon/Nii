@@ -3,6 +3,7 @@
 class AdminPresentationSetting extends CFormModel {
 
 	public $logo;
+	public $fixedHeader;
 	public $menuAppname;
 	public $topbarColor;
 	public $h2Color;
@@ -11,6 +12,7 @@ class AdminPresentationSetting extends CFormModel {
 	
 	public function init(){
 		$this->logo = Yii::app()->getModule('admin')->logo;
+		$this->fixedHeader = Yii::app()->getModule('admin')->fixedHeader;
 		$this->menuAppname = Yii::app()->getModule('admin')->menuAppname;
 		$this->topbarColor = Yii::app()->getModule('admin')->topbarColor;
 		$this->h2Color = Yii::app()->getModule('admin')->h2Color;
@@ -23,7 +25,7 @@ class AdminPresentationSetting extends CFormModel {
 	 */
 	public function rules() {
 		return array(
-			array('logo, menuAppname, topbarColor, menuSearch, h2Color, h3Color', 'safe'),
+			array('logo, fixedHeader, menuAppname, topbarColor, menuSearch, h2Color, h3Color', 'safe'),
 		);
 	}
 
@@ -33,6 +35,7 @@ class AdminPresentationSetting extends CFormModel {
 	public function attributeLabels() {
 		return array(
 			'logo' => 'Logo',
+			'fixedHeader' => 'Fixed Header',
 			'menuAppname' => 'Application Name',
 			'topbarColor' => 'Menu Colour',
 			'h2Color' => 'Page Title Text Colour',

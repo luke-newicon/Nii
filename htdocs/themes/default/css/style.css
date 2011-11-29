@@ -31,8 +31,10 @@ html,body{height:100%}
  * head and menu style
  */
 .head{position:relative;background:#FFFFFF}
+body.fixed .head {position:fixed;width: 100%;z-index:1000;}
 #sitelogo{padding:10px}
 .body{padding:15px;}
+body.fixed .body {position:absolute;}
 /**
  * Override the default yii grid styles.
  */
@@ -261,8 +263,8 @@ div.vertical .ui-tabs .ui-tabs-panel {
 }
 
 h2.contact-title {
-	margin-top: 5px;
-	margin-bottom: 20px;
+	margin-top: 0px;
+	margin-bottom: 10px;
     line-height: 1em;
 	margin-left: 210px;
 }
@@ -327,7 +329,8 @@ h2.contact-title {
 }
 
 .trashedData {
-	color: #c26f6f;
+	color: #ad7c7c;
+	text-decoration: line-through;
 }
 
 #message {

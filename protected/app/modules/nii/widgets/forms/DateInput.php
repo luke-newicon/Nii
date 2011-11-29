@@ -56,7 +56,7 @@ class DateInput extends CInputWidget {
 					}',
 			),
 			'htmlOptions' => array(
-				'style' => 'visibility:hidden;height:0px;',
+				'style' => 'visibility:hidden;height:0px;margin-top:-15px;',
 				'class'=>$id,
 			),
 			'value' => $inputDate
