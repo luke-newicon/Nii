@@ -12,7 +12,7 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 	<div class="alert-message block-message error">
 		<?php echo $form->errorSummary($c); ?>
 	</div>
-<?php else : ?>
+<?php elseif (!$c->id) : ?>
 	<div class="alert-message block-message">
 		<p>This is where you can create a new contact.  Fill in all the required fields marked with a <span class="required">*</span>.</p>
 		<p>Additional information can be added at any other time.</p>

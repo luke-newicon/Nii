@@ -212,13 +212,11 @@ class Contact extends NActiveRecord {
 
 	public function scopes() {
 		return array(
-			'students' => array(
-				'condition' => 'student.id > 0',
-				'with' => array('student'),
+			'emails' => array(
+				'condition' => '(email <> "" OR email_secondary <> "") AND t.trashed <> 1',
 			),
-			'academics' => array(
-				'condition' => 'academic.id > 0',
-				'with' => array('academic'),
+			'newsletter' => array(
+				'condition' => 'newsletter = 1 AND t.trashed <> 1',
 			),
 		);
 	}

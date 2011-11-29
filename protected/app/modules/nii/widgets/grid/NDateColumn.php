@@ -1,6 +1,6 @@
 <?php
 
-Yii::import('zii.widgets.grid.NDataColumn');
+Yii::import('nii.widgets.grid.NDataColumn');
 /**
  * Description of NDataColumn
  *
@@ -41,6 +41,7 @@ class NDateColumn extends NDataColumn {
 						var date = jQuery.datepicker.parseDate(instance.settings.dateFormat || jQuery.datepicker._defaults.dateFormat, selectedDate, instance.settings );
 						jQuery("#'.$class.'_'.$to.'").datepicker( "option", "minDate", date );
 					}',
+					'beforeShow'=>'js:function(){$(this).datepicker("widget").css("z-index", 3000);}',
 				),
 				'htmlOptions'=>array(
 					'placeholder'=>'From',
@@ -64,6 +65,8 @@ class NDateColumn extends NDataColumn {
 						var date = jQuery.datepicker.parseDate(instance.settings.dateFormat || jQuery.datepicker._defaults.dateFormat, selectedDate, instance.settings );
 						jQuery("#'.$class.'_'.$from.'").datepicker( "option", "maxDate", date );
 					}',
+					'beforeShow'=>'js:function(){$(this).datepicker("widget").css("z-index", 3000);}',
+
 				),
 				'htmlOptions'=>array(
 					'placeholder'=>'To',

@@ -201,7 +201,9 @@ class NScopeList extends CWidget {
 
 	public function addCustomScopeDialog($params=array()) {
 		$dialog_id = 'customScopeDialog';
-		$url = CHtml::normalizeUrl(array('/users/customScopeDialog/', 'controller' => $params['controller'], 'action' => $params['action'], 'model' => $params['model']));
+		$controller = str_replace('/','.',$params['controller']);
+		$action = str_replace('/','.',$params['action']);
+		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'controller' => $controller, 'action' => $action, 'model' => $params['model']));
 		return '$("#' . $dialog_id . '").dialog({
 			open: function(event, ui){
 				$("#' . $dialog_id . '").load("' . $url . '");
@@ -217,7 +219,9 @@ class NScopeList extends CWidget {
 	
 	public function editCustomScopeDialog ($params=array()) {
 		$dialog_id = 'customScopeDialog';
-		$url = CHtml::normalizeUrl(array('/users/customScopeDialog/', 'id'=>$params['id'], 'controller' => $params['controller'], 'action' => $params['action'], 'model' => $params['model']));
+		$controller = str_replace('/','.',$params['controller']);
+		$action = str_replace('/','.',$params['action']);
+		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'id'=>$params['id'], 'controller' => $controller, 'action' => $action, 'model' => $params['model']));
 		return '$("#' . $dialog_id . '").dialog({
 			open: function(event, ui){
 				$("#' . $dialog_id . '").load("' . $url . '");
@@ -232,7 +236,7 @@ class NScopeList extends CWidget {
 	}
 	
 	public function deleteCustomScope ($id, $gridId) {
-		$url = CHtml::normalizeUrl(array('/users/deleteCustomScope/', 'id'=>$id));
+		$url = CHtml::normalizeUrl(array('/nii/grid/deleteCustomScope/', 'id'=>$id));
 		return '$(function(){
 			if (confirm("Are you sure you wish to delete this scope?")) {
 				$.ajax({

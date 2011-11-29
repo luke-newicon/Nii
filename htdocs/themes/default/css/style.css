@@ -139,7 +139,7 @@ div.scopes {
 ul.scopes {
 	overflow: hidden;
 	clear: both;
-	margin-bottom: 5px;
+	margin: 0 0 5px 0;
 }
 
 ul.scopes li {
@@ -159,6 +159,10 @@ ul.scopes li a {
 	float: left;
 	padding: 2px 8px;
     margin-left: 5px;
+}
+
+ul.scopes li a:hover {
+	text-decoration: none;
 }
 
 ul.scopes li.first a {
@@ -410,6 +414,10 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 
 .tab_count_label {
 	line-height: 1.3em; margin: 7px 0; min-width: 10px; text-align: center;
+}
+
+#ui-datepicker-div {
+	z-index: 3000!important;
 }
 
 /**

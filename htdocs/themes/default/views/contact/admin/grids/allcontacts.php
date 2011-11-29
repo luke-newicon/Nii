@@ -13,18 +13,23 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
 	'id' => 'ContactAllGrid',
-//	'scopes' => array(
-//		'items' => array(
-//			'default' => array(
-//				'label'=>'All',
-//			),
-//		),
-//	),
-	
-	//'ajaxUpdate' => '#ContactAllGrid_c3',
+	'scopes' => array(
+		'items' => array(
+			'default' => array(
+				'label'=>'All',
+			),
+			'emails' => array(
+				'label'=>'Emails',
+			),
+			'newsletter' => array(
+				'label'=>'Newsletter',
+			),
+			'donors' => array(
+				'label'=>'Donors',
+			),
+		),
+	),
 	'enableButtons'=>true,
-	'enableCustomScopes'=>false,
-	'scopes'=>array('enableCustomScopes'=>false),
-//	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
+	'enableCustomScopes'=>true,
 )); ?>
 <div id="createContactDialog"></div>

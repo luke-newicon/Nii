@@ -43,6 +43,7 @@ class HftContact extends Contact
 		$relations = Contact::model()->relations();
 		return array_merge($relations, array(
 			'source'=>array(self::BELONGS_TO, 'HftContactSource', 'source_id'),
+			'donation'=>array(self::HAS_MANY, 'HftDonation', 'contact_id'),
 		));
 	}
 	
@@ -69,11 +70,11 @@ class HftContact extends Contact
 		
 		$criteria->compare('newsletter', $this->newsletter);
 
-		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
-		//$criteria->together = true;\
+		$criteria->with = array('donation');
+		$criteria->together = true;
 		
 		$sort = new CSort;
-		$sort->defaultOrder = 'id DESC';		
+		$sort->defaultOrder = 't.id DESC';		
 		
 		return new NActiveDataProvider($this, array(
 			'criteria'=>$criteria,	
@@ -198,6 +199,15 @@ class HftContact extends Contact
 	 */	
 	public function getArrayTabsBottom() {
 		return array();
+	}
+	
+	public function scopes() {
+		return array_merge(parent::scopes(), array(
+			'donors' => array(
+				'condition' => 'donation.id > 0 AND t.trashed <> 1',
+				'with' =>'donation',
+			),
+		));
 	}
 	
 }
