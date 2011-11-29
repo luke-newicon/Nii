@@ -52,44 +52,4 @@ class AutocompleteController extends Controller {
 		}
 	}
 	
-	public function actionDioceseList($term=null, $wildcard='both') {
-		if ($term) {
-			
-			switch ($wildcard) {
-				case "both" :
-					$term = " LIKE '%".$term."%'";
-				break;
-				case "left" :
-					$term = " LIKE '%".$term."'";
-				break;
-				case "right" :
-					$term = " LIKE '".$term."%'";
-				break;
-				case "exact" :
-					$term = " = '".$term."'";
-				break;
-			}
-			
-			$dioceses = Diocese::model()->findAll(
-				array(
-					'condition'=>"diocese_index ".$term.$type,
-					'limit'=>30,
-				)
-			);
-			$return = array();
-			if ($dioceses) {
-				foreach ($dioceses as $diocese) {
-					$result['id'] = $diocese['id'];
-					$result['label'] = $diocese['diocese_index'];
-					$result['value'] = $diocese['diocese_index'];
-					$result['name'] = $diocese['diocese_index'];
-					array_push($return, $result);
-				}
-				
-				echo CJSON::encode($return);
-				Yii::app()->end();
-			}
-		}
-	}
-	
 }

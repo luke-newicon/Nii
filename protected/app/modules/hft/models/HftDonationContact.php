@@ -73,6 +73,7 @@ class HftDonationContact extends HftDonation
 				'value' => '$data->donationDateLink',
 				'header' => 'Date Rec\'d',
 				'htmlOptions'=>array('width'=>'80px'),
+				'class'=>'NDateColumn',
 			),
 			array(
 				'name' => 'donation_amount',

@@ -54,6 +54,7 @@ class NGridView extends CGridView
 		// Configuring grid columns...
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);
+		Yii::import('nii.widgets.grid.NDateColumn');
 		parent::init();
 		
 		// override default javascript

@@ -1,1 +1,3 @@
-<h3>Supplier View Page</h3>
+<div class="page-header"> 
+	<h3>Supplier Details</h3>
+</div>

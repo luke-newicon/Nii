@@ -37,15 +37,6 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label);
 		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label);
 		
-//		Yii::app()->getModule('contact')->actions = CMap::mergeArray(Yii::app()->getModule('contact')->actions, array(
-//			'admin' => array(
-//				'customers' => 'task.components.actions.customers',
-//				'addcustomer' => 'task.components.actions.addcustomer',
-//				'suppliers' => 'task.components.actions.suppliers',
-//				'staff' => 'task.components.actions.staff',
-//			),
-//		));
-		
 		Yii::app()->getModule('contact')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
 			'customer' => 'task.controllers.CustomerController',
 			'supplier' => 'task.controllers.SupplierController',
@@ -54,9 +45,33 @@ class TaskModule extends NWebModule
 		
 		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
 			'Contact' => array(
-				'customer' => 'ContactCustomer',
-				'supplier' => 'ContactSupplier',
-				'staff' => 'ContactStaff',
+				'customer' => array(
+					'label' => 'Customer',
+					'class' => 'ContactCustomer',
+					'relation' => array(Contact::HAS_ONE, 'ContactCustomer', 'contact_id'),
+					'notification' => false,
+					'viewRoute' => '/contact/customer/view',
+					'addRoute' => '/contact/customer/add',
+					'isAddable' => true,
+				),
+				'supplier' => array(
+					'label' => 'Supplier',
+					'class' => 'ContactSupplier',
+					'relation' => array(Contact::HAS_ONE, 'ContactSupplier', 'contact_id'),
+					'notification' => false,
+					'viewRoute' => '/contact/supplier/view',
+					'addRoute' => '/contact/customer/add',
+					'isAddable' => true,
+				),
+				'staff' => array(
+					'label' => 'Staff',
+					'class' => 'ContactStaff',
+					'relation' => array(Contact::HAS_ONE, 'ContactStaff', 'contact_id'),
+					'notification' => false,
+					'viewRoute' => '/contact/staff/view',
+					'addRoute' => '/contact/customer/add',
+					'isAddable' => true,
+				),
 			),
 		));
 	}

@@ -8,6 +8,9 @@ class DocController extends AController {
 		$types = array(
 			'Integer' => 'int',
 			'String' => 'string',
+			'Decimal' => 'float',
+			'Boolean' => 'boolean',
+			'DateTime' => 'string',
 		);
 		$classes = $this->classMap();
 		$type = isset($classes[$type]) ? $classes[$type] : $type;
@@ -100,6 +103,76 @@ class DocController extends AController {
 			}
 			$loop++;
 		}
+	}
+	
+	public function actionClasses(){
+		phpQuery::newDocumentFile('http://accountingapi.com/manual.asp');
+		$links = pq('#mr_manual_inner a');
+		$loop = 0;
+		foreach($links as $link){
+			if($loop > 143 && $loop <= 172){
+				$href = pq($link)->attr('href');
+				if($href != '/manual_intro.asp' && $href != 'manual_methods_overview.asp'){
+					ob_start();
+					$this->createClass('http://accountingapi.com/'.$href);
+					$text = ob_get_clean();
+					
+				}
+			}
+			$loop++;
+		}
+	}
+	
+	public function createClass($page) {
+		phpQuery::newDocumentFile($page);
+		
+		$class = trim(end(explode('-',pq('.m1H')->html())));
+		$description = explode('<br>', pq('.m1B_lj p:first')->html());
+		$params = array();
+		
+		$file = Yii::getPathOfAlias('app.runtime').'/Kashflow'.$class.".php";
+		$fh = fopen($file, 'w');
+		ob_start();
+		
+		$first = true;
+		foreach(pq('.mnl_tbl2 tr') as $row){
+			if($first){
+				$first = false;
+				continue;
+			}
+			$param_name = pq($row)->find('td:first strong')->html();
+			$param_type = pq($row)->find('.mnl_varType')->html();
+			$param_description = explode('<br>',pq($row)->find('td:last')->html());
+			$params[] = array(
+				'name' => $param_name,
+				'datatype' => $this->dataType($param_type),
+				'description' => $param_description,
+			);
+		}
+		
+		echo "/**\n * Kashflow".$class."\n * \n";
+		foreach($description as $line){
+			if(trim($line))
+				echo " * ".trim($line)."\n";
+		}
+		echo " * \n";
+		foreach($params as $param){
+			echo " * @property ".$param['datatype']." $".$param['name'];
+			$first = true;
+			foreach($param['description'] as $desc_line){
+				if(!$first)
+					echo ' *';
+				echo ' '.trim($desc_line)."\n";
+				$first = false;
+			}
+		}
+		echo " */\n";
+		echo 'class Kashflow'.$class.' extends KashflowModel {';
+		echo "\n\n}";
+		
+		$text = ob_get_clean();
+		fwrite($fh, $text);
+		fclose($fh);
 	}
 
 }

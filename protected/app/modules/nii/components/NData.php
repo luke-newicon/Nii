@@ -191,16 +191,16 @@ class NData
 		if ($cols==null)
 			$cols = Yii::app()->settings->get('export_columns_'.$gridId);
 		
-		// If neither exists, make array
+// If neither exists, make array
 		if ($cols==null)
 			$cols = array();
 
 		$model = new $model;
 		$allcolumns = $model->columns(array());
 		$columns = array();
-		
+
 		foreach ($allcolumns as $col) {
-			if ($col['name']) {
+			if ($col['name'] && (!isset($col['export']) || @$col['export']!=false)) {
 				if (array_key_exists($col['name'], $cols)) {
 					$columns[$col['name']] = $cols[$col['name']];
 				} else {
@@ -208,8 +208,16 @@ class NData
 				}
 			}
 		}
-
-		return $columns;
+		
+		// reorder the columns
+		$ordered = array();
+		foreach($cols as $key => $v){
+			if(isset($columns[$key]))
+				$ordered[$key] = $columns[$key];
+		}
+		
+		
+		return array_merge($ordered, $columns);
 	}
 	
 	/**

@@ -7,6 +7,7 @@ class AdminModule extends NWebModule {
 	public $version = '1.0';
 	
 	public $logo;
+	public $fixedHeader = false;
 	public $menuAppname = true;
 	public $topbarColor;
 	public $h2Color = '#404040';

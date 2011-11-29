@@ -82,19 +82,36 @@ class Contact extends NActiveRecord {
 		);
 
 		foreach ($this->relations as $name => $relation) {
-			$relations[$name] = array(self::HAS_ONE, get_class($relation), 'contact_id');
+			if (isset($relation['relation']))
+				$relations[$name] = $relation['relation']; 
 		}
 		return $relations;
 	}
 
 	public function getRelations($relations=array()) {
 		if (isset($this->module->relations['Contact'])) {
-			foreach ($this->module->relations['Contact'] as $name => $class) {
-				$relation = new $class;
-				$relations[$name] = $relation;
+//			foreach ($this->module->relations['Contact'] as $name => $class) {
+//				if (is_array($class)) {
+//					$relations[$name] = $class['relation'];
+//				} else {
+//					$relation = new $class;
+//					$relations[$name] = $relation;
+//				}
+//			}
+			return $this->module->relations['Contact'];
+		} else {
+			return array();
+		}
+	}
+	
+	public function getAddableTabs() {
+		if ($this->relations) {
+			foreach ($this->relations as $name => $relation) {
+				if ($relation['isAddable']==true) 
+					return true;
 			}
 		}
-		return $relations;
+		return false;
 	}
 
 	/**
@@ -195,13 +212,11 @@ class Contact extends NActiveRecord {
 
 	public function scopes() {
 		return array(
-			'students' => array(
-				'condition' => 'student.id > 0',
-				'with' => array('student'),
+			'emails' => array(
+				'condition' => '(email <> "" OR email_secondary <> "") AND t.trashed <> 1',
 			),
-			'academics' => array(
-				'condition' => 'academic.id > 0',
-				'with' => array('academic'),
+			'newsletter' => array(
+				'condition' => 'newsletter = 1 AND t.trashed <> 1',
 			),
 		);
 	}
@@ -389,7 +404,7 @@ class Contact extends NActiveRecord {
 		$type = "grid-thumbnail-" . strtolower($this->contact_type);
 		$label = $showIcon ? $this->getPhoto($type) . '<span>' . $this->displayName . '</span>' : $this->displayName;
 		if ($tab)
-			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id, '#'.$tab), array('class' => 'grid-thumb-label'));
+			return CHtml::link($label, CHtml::normalizeUrl(array('/contact/admin/view', 'id' => $this->id)).'#'.$tab, array('class' => 'grid-thumb-label'));
 		else
 			return CHtml::link($label, array('/contact/admin/view', 'id' => $this->id), array('class' => 'grid-thumb-label'));
 	}
@@ -442,7 +457,7 @@ class Contact extends NActiveRecord {
 			'city' => $this->city,
 			'county' => $this->county,
 			'postcode' => $this->postcode,
-			'country' => $this->country,
+			'country' => $this->countryName,
 		);
 
 		$address = array();
@@ -553,9 +568,16 @@ class Contact extends NActiveRecord {
 
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */
-		foreach ($this->relations as $name => $class) {
-			if ($this->$name)
-				$tabs[$this->$name->label] = array('ajax' => $this->$name->viewUrl, 'id' => $name);
+		foreach ($this->relations as $name => $relation) {
+			if ($this->$name) {
+				$tabs[$relation['label']] = array('ajax' => array($relation['viewRoute'],'id'=>$this->id()), 'id' => $name);
+				if ($relation['notification']) {
+					if ($relation['notification'] == true)
+						$tabs[$relation['label']]['count'] = count($this->$name);
+					else
+						$tabs[$relation['label']]['count'] = exec($relation['notification']);
+				}
+			}
 		}
 
 		/* Default tabs */
@@ -568,10 +590,11 @@ class Contact extends NActiveRecord {
 
 	public function relationDropDownList() {
 		if(count($this->relations)){
+			$data = $options = array();
 			foreach ($this->relations as $name => $relation) {
-				if(!$this->$name){
-					$data[$name] = $relation->label;
-					$options[$name] = array('data-relation-url' => CHtml::normalizeUrl($relation->addUrl));
+				if(!$this->$name && $relation['isAddable']){
+					$data[$name] = $relation['label'];
+					$options[$name] = array('data-relation-url' => CHtml::normalizeUrl($relation['addRoute']));
 				}
 			}
 			return CHtml::dropDownList('contact-relation', null, $data, array(
@@ -628,7 +651,10 @@ class Contact extends NActiveRecord {
 			'trash'=>array(
 				'class'=>'nii.components.behaviors.ETrashBinBehavior',
 				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
-			)
+			),
+			'tag'=>array(
+               'class'=>'nii.components.behaviors.NTaggable'
+           )
 		);
 	}
 

@@ -1,1 +1,3 @@
-<h3>Staff View Page</h3>
+<div class="page-header"> 
+	<h3>Staff Details</h3>
+</div>

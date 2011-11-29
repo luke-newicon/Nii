@@ -68,8 +68,12 @@ class HftEventAttendee extends NActiveRecord
 	}	
 	
 	public function getAttendeeNameLink() {
-		if ($this->contact)
-			return NHtml::link($this->contact->name, array('/contact/admin/view', 'id'=>$this->id));
+		if ($this->contact) {
+			if ($this->contact->trashed!=1) 
+				return NHtml::link($this->contact->name, array('/contact/admin/view', 'id'=>$this->contact->id));
+			else
+				return '<span class="trashedData" title="Removed">'.$this->contact->displayName.'</span>';
+		}
 		else
 			return $this->attendee_name;
 	}

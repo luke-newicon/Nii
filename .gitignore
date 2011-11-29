@@ -43,3 +43,4 @@ config.php
 # Nii files #
 #############
 protected/app/config/local.php
+/.idea/

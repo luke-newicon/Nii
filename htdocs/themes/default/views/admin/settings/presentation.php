@@ -22,6 +22,11 @@ $form = $this->beginWidget('NActiveForm', array(
 			<?php echo $form->error($model, 'logo'); ?>
 		</div>
 	</div>
+	<div class="field">
+		<?php echo $form->checkBox($model, 'fixedHeader'); ?>
+		<label>Fixed header</label>
+		<?php echo $form->error($model, 'fixedHeader'); ?>
+	</div>
 </fieldset>
 <fieldset>
 	<legend>Menu Settings</legend>

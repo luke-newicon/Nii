@@ -12,6 +12,7 @@ Yii::setPathOfAlias('nii-widgets', dirname(__FILE__));
 Yii::import('zii.widgets.CBaseListView');
 Yii::import('nii.widgets.grid.NDataColumn');
 
+
 class NExportView extends CBaseListView
 {
 	private $_formatter;
@@ -103,7 +104,7 @@ class NExportView extends CBaseListView
 		$id=$this->getId();
 		foreach($this->columns as $i=>$column)
 		{
-			if ($column['name']) {
+			if ($column['name'] && (!isset($column['export']) || @$column['export']!=false)) {
 				if(is_string($column))
 					$column=$this->createDataColumn($column);
 				else
@@ -164,7 +165,10 @@ class NExportView extends CBaseListView
 				
 				if (!$this->hideHeader && $this->columns) {
 				foreach($this->columns as $column) {
-						$d[] = $this->dataProvider->model->getAttributeLabel($column->name);
+						if ($column->header)
+							$d[] = $column->header;
+						else
+							$d[] = $this->dataProvider->model->getAttributeLabel($column->name);
 					}
 					$rowData[1]=$d;
 				}
@@ -195,7 +199,10 @@ class NExportView extends CBaseListView
 				$c = 0;
 				if (!$this->hideHeader && $this->columns) {
 					foreach($this->columns as $column) {
-						$object->addCell(0,0,$c,$this->dataProvider->model->getAttributeLabel($column->name),'string');
+						if ($column->header)
+							$object->addCell(0,0,$c,$this->dataProvider->model->getAttributeLabel($column->name),'string');
+						else
+							$object->addCell(0,0,$c,$this->header,'string');
 						$c++;
 					}
 				}
@@ -224,7 +231,10 @@ class NExportView extends CBaseListView
 
 				if (!$this->hideHeader && $this->columns) {
 					foreach($this->columns as $column) {
-						$d[] = $this->dataProvider->model->getAttributeLabel($column->name);
+						if ($column->header)
+							$d[] = $column->header;
+						else
+							$d[] = $this->dataProvider->model->getAttributeLabel($column->name);
 					}
 					fputcsv($fp, $d, $this->delimiter, $this->enclosure);
 				}

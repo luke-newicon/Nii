@@ -1,6 +1,7 @@
 <?php
 
 Yii::import('zii.widgets.grid.CDataColumn');
+Yii::import('nii.widgets.grid.NDateColumn');
 /**
  * Description of NDataColumn
  *
