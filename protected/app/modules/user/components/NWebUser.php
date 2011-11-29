@@ -101,9 +101,10 @@ class NWebUser extends CWebUser
 	public function getName(){
 		$name = parent::getName();
 		// if the name is an email address return the first part
-		if($this->record !== null && $this->record->first_name != ''){
-			return $this->record->first_name . ' ' . $this->record->last_name;
+		if($this->record !== null){
+			return $this->record->name;
 		}
+		// if the name is an email address return the first part before the @
 		if (($pos = strpos($name,"@"))) {
 			$name = strtok($name,'@');
 		}

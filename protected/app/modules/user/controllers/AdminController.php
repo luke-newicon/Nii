@@ -8,7 +8,7 @@ class AdminController extends AController {
 				'expression' => '$user->checkAccessToRoute()',
 			),
 			array('allow',
-				'actions' => array('account', 'password', 'settings'),
+				'actions' => array('account', 'password', 'settings', 'restore'),
 				'users' => array('@'),
 			),
 			array('deny', // deny all users
@@ -419,6 +419,16 @@ class AdminController extends AController {
 			Yii::app()->user->setFlash('warning', "You are impersonating user: " . Yii::app()->user->name);
 			$this->redirect(Yii::app()->homeUrl);
 		}
+	}
+	
+	public function actionRestore(){
+		// could validate username and password if stores in the session
+		// for now to get it working just rely on id
+		$id = Yii::app()->session['impersonate_restore'];
+		$ui = UserIdentity::impersonateRestore($id);
+		if ($ui)
+			Yii::app()->user->login($ui, 0);
+		$this->redirect(Yii::app()->homeUrl);
 	}
 
 	public function actionFlushPermissions($return='permissions') {

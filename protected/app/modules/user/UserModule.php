@@ -71,11 +71,6 @@ class UserModule extends NWebModule
 	public $logoutUrl = array("/user/account/logout");
 	
 	/**
-	 * where to go on successful login
-	 * @var mixed route 
-	 */
-	public $returnUrl = array("/admin");
-	/**
 	 * the page to go to after logout
 	 * @var mixed route 
 	 */
@@ -168,6 +163,14 @@ class UserModule extends NWebModule
 				'defaultRoles'=>array('authenticated', 'guest'),
 			)
 		);
+	}
+	
+	public function setup(){
+		if(isset(Yii::app()->session['impersonate_restore']) && Yii::app()->session['impersonate_restore']){
+			$restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
+			echo 'Currently impersonating ' . Yii::app()->user->name . ' <a href="'.NHtml::url('/user/admin/restore').'"> Restore permissions to ' . $restoreUser->name . '</a>';
+		}
+		
 	}
 	
 	public function permissions() {

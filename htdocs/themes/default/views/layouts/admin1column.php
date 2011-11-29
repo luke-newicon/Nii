@@ -8,7 +8,6 @@
 			// probably move this into a widget in the admin module.
 			// Needs some javascript to go with it so that flash messages can also be added via javascript function
 			// for ajax events,
-
 			// Responds to success, error, info, and warning flash message categories
 			$flashes = array('success', 'error', 'info', 'warning');
 			?>

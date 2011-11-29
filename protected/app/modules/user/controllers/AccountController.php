@@ -74,7 +74,7 @@ class AccountController extends NController {
 				$userLogin->attributes = $_POST['UserLogin'];
 				// validate that the username and password are valid
 				if ($userLogin->login()) {
-					$this->redirect(Yii::app()->getModule('user')->returnUrl);
+					$this->redirect(Yii::app()->user->returnUrl);
 				}else{
 					// check domain
 					if($userLogin->isValidButWrongDomain()){
@@ -85,7 +85,7 @@ class AccountController extends NController {
 			// display the login form
 			$this->render('login', array('model' => $userLogin));
 		} else {
-			$this->redirect(Yii::app()->getModule('user')->returnUrl);
+			$this->redirect(Yii::app()->user->returnUrl);
 		}
 	}
 	

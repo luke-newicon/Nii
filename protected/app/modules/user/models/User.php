@@ -261,12 +261,15 @@ class User extends NActiveRecord {
 		);
 	}
 
-	private $_name;
-
+	/**
+	 * display a user name, if first names and last name do not exist resorts to displaying either the username or email address.
+	 * @return type 
+	 */
 	public function getName() {
-		if (empty($this->_name))
-			$this->_name = $this->first_name . ($this->last_name ? ' ' . $this->last_name : '');
-		return $this->_name;
+		if ($this->first_name != '')
+			return $this->first_name . ($this->last_name ? ' ' . $this->last_name : '');
+		else
+			return $this->username ? $this->username : $this->email;
 	}
 
 	public function setName($name) {

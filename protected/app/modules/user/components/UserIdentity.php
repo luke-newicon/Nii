@@ -106,8 +106,23 @@ class UserIdentity extends CUserIdentity
 		if($user)
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.
+			Yii::app()->session['impersonate_restore'] = Yii::app()->user->id;
 			$ui = new UserIdentity($user->email, "");
 			$ui->_logInUser($user);
+			
+		}
+		return $ui;
+	}
+	
+	public static function impersonateRestore($userId){
+		$ui = null;
+		$user = UserModule::userModel()->findByPk($userId);
+		if($user)
+		{   
+			$ui = new UserIdentity($user->email, "");
+			$ui->_logInUser($user);
+			// remove restore session
+			unset(Yii::app()->session['impersonate_restore']);
 		}
 		return $ui;
 	}
