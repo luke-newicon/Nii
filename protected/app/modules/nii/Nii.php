@@ -139,8 +139,6 @@ class Nii extends CWebApplication
 		
 		$this->initialiseModules();
 		
-		Yii::app()->user;
-		FB::log(Yii::app()->user, 'user');
 		
 		// setup each module 
 		foreach($this->getModules() as $name => $config){

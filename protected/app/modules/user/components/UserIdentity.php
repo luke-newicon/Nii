@@ -107,40 +107,37 @@ class UserIdentity extends CUserIdentity
 	 */
 	public static function impersonate($userId)
 	{
-		$ui = null;
+		$superUser = UserModule::userModel()->notsafe()->findByPk(Yii::app()->user->id);
 		$user = UserModule::userModel()->notsafe()->findByPk($userId);
 		if($user)
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.
 			Yii::app()->session['impersonate_restore'] = Yii::app()->user->id;
-			Yii::app()->session['impersonate_restore_validation'] = md5($user->password.$user->activekey); 
+			Yii::app()->session['impersonate_restore_validation'] = md5($superUser->password); 
 			// create some key from the password and infomation of this superuser to validate when performing a restore
 			// this would ensure the correct user is being restored (so the session can not just be hacked adding in this id)
 			$ui = new UserIdentity($user->email, "");
 			$ui->_logInUser($user);
-			
+			Yii::app()->user->login($ui);
 		}
-		return $ui;
 	}
 	
-	public static function impersonateRestore($userId){
-		$ui = null;
-		
-		$user = UserModule::userModel()->notsafe()->findByPk($userId);
+	public static function impersonateRestore(){
+		$user = UserModule::userModel()->notsafe()->findByPk(Yii::app()->session['impersonate_restore']);
 		if($user)
-		{   
+		{
 			// check the validation session to ensure the validation key matches this user.
 			// Protects against cases where the session could be hacked.  
 			// You must know the users details (password, activekey and the id) to restore the user.
-			if(md5($user->password.$user->activekey) == Yii::app()->session['impersonate_restore_validation']){
+			if(md5($user->password) == Yii::app()->session['impersonate_restore_validation']){
 				$ui = new UserIdentity($user->email, "");
 				$ui->_logInUser($user);
+				Yii::app()->user->login($ui);
 				// remove restore session
 				unset(Yii::app()->session['impersonate_restore']);
 				unset(Yii::app()->session['impersonate_restore_validation']);
 			}
 		}
-		return $ui;
 	}
 
    /**

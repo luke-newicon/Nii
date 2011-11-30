@@ -235,5 +235,6 @@ class NData
 		}
 		return $cols;
 	}
+
 	
 }

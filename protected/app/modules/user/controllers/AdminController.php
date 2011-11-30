@@ -413,10 +413,7 @@ class AdminController extends AController {
 	public function actionImpersonate($id) {
 		// lets double check the current user is a superuser
 		if (Yii::app()->user->record->superuser) {
-			$ui = UserIdentity::impersonate($id);
-			if ($ui)
-				Yii::app()->user->login($ui, 0);
-			Yii::app()->user->setFlash('warning', "You are impersonating user: " . Yii::app()->user->name);
+			UserIdentity::impersonate($id);
 			$this->redirect(Yii::app()->homeUrl);
 		}
 	}
@@ -424,10 +421,7 @@ class AdminController extends AController {
 	public function actionRestore(){
 		// could validate username and password if stores in the session
 		// for now to get it working just rely on id
-		$id = Yii::app()->session['impersonate_restore'];
-		$ui = UserIdentity::impersonateRestore($id);
-		if ($ui)
-			Yii::app()->user->login($ui, 0);
+		UserIdentity::impersonateRestore();
 		$this->redirect(Yii::app()->homeUrl);
 	}
 
