@@ -6,7 +6,7 @@
 		<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 		<?php Yii::app()->bootstrap->registerBootstrap(); ?>
 		<?php //Yii::app()->bootstrap->registerScriptFile('bootstrap-tabs.js'); ?>
-		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-dropdown.js'); ?>
+		<?php //Yii::app()->bootstrap->registerScriptFile('bootstrap-dropdown.js'); ?>
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-modal.js'); ?>
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-alerts.js'); ?>
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-popover.js'); ?>

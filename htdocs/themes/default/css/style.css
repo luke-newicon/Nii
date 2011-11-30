@@ -459,3 +459,7 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 
 
 .over .input{border-color:rgba(82,168,236,0.8);}
+
+div.topbar div > ul > li.menu:hover ul {
+	display: block;
+}
