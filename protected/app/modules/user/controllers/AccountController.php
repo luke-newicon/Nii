@@ -34,7 +34,12 @@ class AccountController extends NController {
 	}
 	
 	
-	
+	/**
+	 * Development
+	 * TODO: create a record to represent the new user.
+	 * Access email and other basic user information from google and match that to our user record.  
+	 * Also need to store the google token in the user record.
+	 */
 	public function actionLoginGoogle() {
  
         Yii::import('user.components.oauth.*');

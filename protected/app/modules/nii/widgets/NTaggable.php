@@ -14,6 +14,8 @@
  *
  * @author steve
  */
-class NTaggable {
-	//put your code here
+class NTaggable extends NTokenInput {
+	
+	
+	
 }

@@ -130,12 +130,20 @@ class User extends NActiveRecord {
 		);
 	}
 
-//	public function defaultScope()
-//    {
-//        return array(
-//            'select' => 'id, first_name, last_name, company, username, email, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins',
-//        );
-//    }
+	/**
+	 * THIS IS VERY IMPORTANT!
+	 * Prevent the password field from ever returning under normal circumstances.
+	 * You must explicitly access this information using the notsafe scope.
+	 * This is annoying but very important we do not want the password field to be returned by the object.
+	 * even thought the password field is encryted it is still a security risk to return it!
+	 * @return type 
+	 */
+	public function defaultScope()
+    {
+        return array(
+            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins',
+        );
+    }
 
 	public static function itemAlias($type, $code=NULL) {
 		$_items = array(
@@ -321,13 +329,17 @@ class User extends NActiveRecord {
 	 * @param type $size 
 	 */
 	public function getProfileImage($id=null, $type='note-thumbnail'){
-//		if($id!=null){
-//			$user = User::model()->findByPk($id);
-//			if ($user->contact)
-//				return $user->contact->getPhoto($type);
-//		}
-			// Display guest photo
-			Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
+		// To hook into this function we could use a an event:
+		// $event = new CEvent();
+		// $this->onGetProfileImage($event)
+		// // then if the event has been handled 
+		// if($event->handled)
+		//     // we know another function has handled the event and found us an image url for this user
+		//     // it could store this in the event object
+		//     return $event->params->imageUrl   
+		
+		// Display guest photo
+		Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
 	}
 
 }

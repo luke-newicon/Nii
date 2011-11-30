@@ -87,10 +87,16 @@ class UserIdentity extends CUserIdentity
 	protected function _loginUser($user)
 	{
 		if($user){
+			// successful login has occured so we store some additional data
 			$this->_user = $user;
 			$this->_id = $this->_user->id;
 			$this->username = ($user->username==null)?$user->email:$user->username;
             $this->errorCode = self::ERROR_NONE;
+			// we also want to generate a random auth key which we store in the session state.
+			// this will then also get stored in the cookie.
+			// Then when restoring from a cookie we can compare this key with the one in the database 
+			// this will implement the additional security as recomended by yii
+			// here: http://www.yiiframework.com/doc/guide/1.1/en/topics.auth section 3. Cookie-based Login 
 		}
 	}
 	
@@ -102,12 +108,12 @@ class UserIdentity extends CUserIdentity
 	public static function impersonate($userId)
 	{
 		$ui = null;
-		$user = UserModule::userModel()->findByPk($userId);
+		$user = UserModule::userModel()->notsafe()->findByPk($userId);
 		if($user)
 		{   
 			//TODO: add another check here to ensure currently logged in user has permission to do this.
 			Yii::app()->session['impersonate_restore'] = Yii::app()->user->id;
-			Yii::app()->session['impersonate_restore_validation'] = 'xyz'; 
+			Yii::app()->session['impersonate_restore_validation'] = md5($user->password.$user->activekey); 
 			// create some key from the password and infomation of this superuser to validate when performing a restore
 			// this would ensure the correct user is being restored (so the session can not just be hacked adding in this id)
 			$ui = new UserIdentity($user->email, "");
@@ -119,14 +125,20 @@ class UserIdentity extends CUserIdentity
 	
 	public static function impersonateRestore($userId){
 		$ui = null;
-		// check the validation session
-		$user = UserModule::userModel()->findByPk($userId);
+		
+		$user = UserModule::userModel()->notsafe()->findByPk($userId);
 		if($user)
 		{   
-			$ui = new UserIdentity($user->email, "");
-			$ui->_logInUser($user);
-			// remove restore session
-			unset(Yii::app()->session['impersonate_restore']);
+			// check the validation session to ensure the validation key matches this user.
+			// Protects against cases where the session could be hacked.  
+			// You must know the users details (password, activekey and the id) to restore the user.
+			if(md5($user->password.$user->activekey) == Yii::app()->session['impersonate_restore_validation']){
+				$ui = new UserIdentity($user->email, "");
+				$ui->_logInUser($user);
+				// remove restore session
+				unset(Yii::app()->session['impersonate_restore']);
+				unset(Yii::app()->session['impersonate_restore_validation']);
+			}
 		}
 		return $ui;
 	}

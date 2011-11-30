@@ -128,6 +128,8 @@ Class NTokenInput extends CInputWidget
 		$js = "jQuery('#{$id}').tokenInput($data,$options);";
 		Yii::app()->clientScript->registerScript(__CLASS__.'#'.$id, $js, CClientScript::POS_READY);
 	}
+	
+	
 
 	public function publishAssets(){
 		$localPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';

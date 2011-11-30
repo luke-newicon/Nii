@@ -139,6 +139,9 @@ class Nii extends CWebApplication
 		
 		$this->initialiseModules();
 		
+		Yii::app()->user;
+		FB::log(Yii::app()->user, 'user');
+		
 		// setup each module 
 		foreach($this->getModules() as $name => $config){
 			if(!$this->isNiiModule($name)) continue;
@@ -175,7 +178,7 @@ class Nii extends CWebApplication
 		}
 		
 		// Steve, whats this doing?  seems to be configuring the modules twice as this has already been done by the application.
-		// Lines 161 to 177 are building up to this pinicle moment. It adds the additional enabled=>true property to the core modules. Nii relies on this to return modules that are enabled.
+		// Steve: Lines 161 to 177 are building up to this pinicle moment. It adds the additional enabled=>true property to the core modules. Nii relies on this to return modules that are enabled.
 		// Yii itself assumes core modules (defined in config) are enabled but does not update the modules configuration...
 		// This ensures the enabled property is set. Alternatively, each module in the config file could just have it hard coded.
 		// I could loop through and do getModule($name)->enabled = true, but this would initilaise the module and I don't want to do that as it is the reponsibility of the initialisation function
@@ -560,4 +563,14 @@ class Nii extends CWebApplication
 		$this->raiseEvent('onAfterModulesSetup', $event);
 	}
 	
+	/**
+	 * Function ensures the user module is loaded correctly before calling afterLogin events
+	 * @return NWebUser 
+	 */
+	public function getUser(){
+		$user = parent::getUser();
+		if($user->callAfterLogin)
+			$user->callAfterLogin();
+		return $user;
+	}
 }

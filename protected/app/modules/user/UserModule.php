@@ -163,6 +163,9 @@ class UserModule extends NWebModule
 				'defaultRoles'=>array('authenticated', 'guest'),
 			)
 		);
+		
+		// attach event to handle the event after someone logs in.
+		$this->onAfterLogin = array($this, 'afterLoginHandler');
 	}
 	
 	public function setup(){
@@ -170,7 +173,6 @@ class UserModule extends NWebModule
 			$restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
 			echo 'Currently impersonating ' . Yii::app()->user->name . ' <a href="'.NHtml::url('/user/admin/restore').'"> Restore permissions to ' . $restoreUser->name . '</a>';
 		}
-		
 	}
 	
 	public function permissions() {
@@ -372,6 +374,22 @@ class UserModule extends NWebModule
 	 */
 	public function onActivation($event){
 		$this->raiseEvent('onActivation', $event);
+	}
+	
+	public function onAfterLogin($event){
+		$this->raiseEvent('onAfterLogin', $event);
+	}
+	
+	/**
+	 * Handles after login event and records the last visit time and increments the login number
+	 * TODO: update audit log to record login time, user and ip address.
+	 */
+	public function afterLoginHandler(){
+		$u = Yii::app()->user->getRecord();
+		$u->lastvisit = time();
+		// record the number of times the user has logged in;
+		$u->logins += 1;
+		$u->save();
 	}
 	
 	

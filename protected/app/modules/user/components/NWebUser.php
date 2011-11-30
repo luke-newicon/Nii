@@ -18,10 +18,16 @@ class NWebUser extends CWebUser
 {
 
 	/**
-	 * Store the NActiveRecor User model object
+	 * Store the NActiveRecord User model object
 	 * @var NActiveRecord
 	 */
 	private $_user;
+	
+	/**
+	 * whether Nii should call the callAfterLogin() function after the user component has loaded in.
+	 * @var boolean 
+	 */
+	public $callAfterLogin = false;
 	
 	/**
 	 * stores information after a user logs in. 
@@ -31,20 +37,21 @@ class NWebUser extends CWebUser
 	 * @return void 
 	 */
 	protected function afterLogin($fromCookie){
-		// the user is not a guest and so should have a user record
-		if($this->record === null){
-			// something went badly wrong as we cant find the logged in users record
-			throw new CException('Unable to retrieve the logged in users\'s db record');
-		}
-		
-		$this->record->lastvisit = time();
-		// record the number of times the user has logged in;
-		$this->record->logins = $this->record->logins + 1;
-		
-		$this->record->save();
+		$this->callAfterLogin = true;
 		// set message so the system can determin when a user has just logged in
 		$this->setJustLoggedIn();
 	}
+	
+	/**
+	 * This function is called by Nii after the Yii::app()->user variable has been set.
+	 * This ensures you can use default objects as normal in attached events
+	 */
+	public function callAfterLogin(){
+		FB::log(Yii::app()->user, 'after login user');
+		Yii::app()->getModule('user')->onAfterLogin(new CEvent);
+		$this->callAfterLogin = false;
+	}
+
 	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
@@ -138,7 +145,7 @@ class NWebUser extends CWebUser
 	 * This is useful for displaying logged in welcome messages or help boxes
 	 */
 	public function hasJustLoggedIn(){
-		return Yii::app()->user->hasFlash('justloggedin');
+		return $this->hasFlash('justloggedin');
 	}
 	
 	/**
@@ -146,8 +153,7 @@ class NWebUser extends CWebUser
 	 * @see self::hasJustLoggedIn
 	 */
 	public function setJustLoggedIn(){
-		if(Yii::app()->user)
-			Yii::app()->user->setFlash('justloggedin','');
+		$this->setFlash('justloggedin','');
 	}
 	
 	/**

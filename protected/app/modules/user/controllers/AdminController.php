@@ -440,5 +440,5 @@ class AdminController extends AController {
 		Yii::app()->user->setFlash('success', 'Permissions succesfully flushed');
 		$this->redirect(array($return));
 	}
-
+	
 }
