@@ -34,7 +34,8 @@ html,body{height:100%}
 body.fixed .head {position:fixed;width: 100%;z-index:1000;}
 #sitelogo{padding:10px}
 .body{padding:15px;}
-body.fixed .body {position:absolute;}
+body.fixed .body {position:absolute; top:40px;}
+body.fixed.show-logo .body {top:95px;}
 /**
  * Override the default yii grid styles.
  */
