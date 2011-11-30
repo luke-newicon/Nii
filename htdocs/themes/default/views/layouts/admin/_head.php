@@ -122,10 +122,9 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 	</div>
 	<script>
 		jQuery(function($){
-			$('.topbar').dropdown();
-			var logoHeight = $('#sitelogo').outerHeight();
-			$('.topbar').css('top',logoHeight+'px');
-			$('.body').css('top',logoHeight+40+'px');
+			//$('.topbar').dropdown();
+			var headerHeight = $('.head').outerHeight();
+			$('.body').css('top',headerHeight+'px');
 		});
 	</script>
 </div>
