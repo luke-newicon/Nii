@@ -73,6 +73,10 @@
 				<div class="lastUnit"><?php echo nl2br($model->comment); ?></div>
 			</div>
 			<?php Yii::app()->getModule('contact')->onRenderContactAfterComment($event); ?>
+			<div class="detailRow">
+				<div class="unit size1of6 detailLabel"><?= $this->t('Categories') ?></div>
+				<div class="lastUnit pbs"><?php echo $model->printTags(); ?></div>
+			</div>
 		</div>
 	</div>
 	<?php

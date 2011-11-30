@@ -237,4 +237,19 @@ class NData
 	}
 
 	
+	/**
+	 *	Returns an associative array from an array of key value pairs
+	 * @param array $array
+	 * @param string $keyField
+	 * @param string $valueField
+	 * @return array 
+	 */
+	public static function keyValueToArray($array=array(),$keyField='id',$valueField='name') {
+		$return=array();
+		foreach ($array as $key=>$value) {
+			$return[] = array($keyField => $key, $valueField => $value);
+		}
+		return $return;
+	}
+	
 }

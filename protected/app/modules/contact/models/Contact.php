@@ -61,7 +61,7 @@ class Contact extends NActiveRecord {
 			array('addr1, addr2, addr3', 'length', 'max' => 100),
 			array('city, county, country, tel_primary, tel_secondary, mobile, fax', 'length', 'max' => 50),
 			array('postcode', 'length', 'max' => 20),
-			array('dob, title, suffix, company_name, contact_name, photoID, comment, city, website', 'safe'),
+			array('dob, title, suffix, company_name, contact_name, photoID, comment, city, website, tags', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment, website', 'safe', 'on' => 'search'),
@@ -147,6 +147,7 @@ class Contact extends NActiveRecord {
 			'contact_name' => 'Contact Name',
 			'contact_type' => 'Contact Type',
 			'type' => 'Relationship',
+			'tags' => 'Categories'
 		);
 	}
 

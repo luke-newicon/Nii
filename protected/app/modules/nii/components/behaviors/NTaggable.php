@@ -121,6 +121,13 @@ class NTaggable extends CActiveRecordBehavior
 		return $tags;
 	}
 	
+	public function printTags() {
+		$tags = $this->getTags();
+		foreach ($tags as $tag) {
+			echo '<span class="tag-item"><span class="icon fam-tag-blue"></span>'.$tag.'</span>';
+		}
+	}
+	
 	/**
 	 * Deletes all tags associated with this model
 	 * @return void

@@ -48,10 +48,11 @@ class NScopeList extends CWidget {
 			));
 		}
 		
-		$render .= '<ul class="scopes">';
+		$render .= '<ul class="scopes btngroup">';
 		if ($scopes) {
 			$class = ' first';
 			foreach ($scopes as $scope => $label) {
+				$class .= ' btn';
 				$description = '';
 				if (is_array($label)) {
 					if (array_key_exists('description', $label))
@@ -61,17 +62,18 @@ class NScopeList extends CWidget {
 					else
 						$label = ucfirst($scope);
 				}
+				if ($this->dataProvider->getCurrentScope() == $scope) {
+					$class.=' active';	
+					$currentDescription = $description;
+				}
 				$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countScope($scope) . ')' : '';
 				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !$customScopes) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
-				if ($this->dataProvider->getCurrentScope() == $scope) {
-					$htmlOptions['class'] = 'current';
-					$currentDescription = $description;					
-				}
+				
 				$render .= CHtml::openTag('a', $htmlOptions) . $label . $count . '</span></a>';
-				if ($this->separator && (next($this->scopes['items']) || $customScopes))
-					$render .= $this->separator;
+//				if ($this->separator && (next($this->scopes['items']) || $customScopes))
+//					$render .= $this->separator;
 				$render .= '</li>';
 			}
 		}
@@ -88,6 +90,7 @@ class NScopeList extends CWidget {
 				));
 				$c = 1;
 				foreach ($customScopes as $customScope) {
+					$class .= ' btn';
 					$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countCustomScope($customScope) . ')' : '';
 					$f = CJSON::decode($customScope->setting_value);
 					$render .= '<li class="custom-scope ' . $class . '" id="scope-'.$customScope->id.'">';
@@ -100,8 +103,8 @@ class NScopeList extends CWidget {
 						$fields = $f;
 					}
 					$render .= CHtml::openTag('a', $htmlOptions) . $f['scopeName'] . $count . '</a>';
-					if ($this->separator && ($c < $customScopesCount)) 
-						$render .= $this->separator;	
+//					if ($this->separator && ($c < $customScopesCount)) 
+//						$render .= $this->separator;	
 					
 					
 //					$render .= '<span class="scopeEditButtons">';
@@ -122,7 +125,8 @@ class NScopeList extends CWidget {
 				}
 			}
 
-			$render .= '<li class="addCustomScope last">';
+			$render .= '</ul>';
+			$render .= '<span class="addCustomScope">';
 			$render .= NHtml::btnLink('', '#', 'icon fam-add', array(
 						'onclick' => $this->addCustomScopeDialog(array(
 							'model' => get_class($this->dataProvider->model),
@@ -131,11 +135,12 @@ class NScopeList extends CWidget {
 						)),
 						'title' => 'Add a Custom Scope',
 					));
-			$render .= '</li>';
+			$render .= '</span>';
 			
 //			$render .= $this->scopeLinkHover();
+		} else {
+			$render .= '</ul>';
 		}
-		$render .= '</ul>';
 		
 		if ($this->displayCurrentScopeDescription) {
 			

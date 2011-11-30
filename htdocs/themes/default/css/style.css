@@ -34,7 +34,8 @@ html,body{height:100%}
 body.fixed .head {position:fixed;width: 100%;z-index:1000;}
 #sitelogo{padding:10px}
 .body{padding:15px;}
-body.fixed .body {position:absolute;}
+body.fixed .body {position:absolute; top:40px;}
+body.fixed.show-logo .body {top:95px;}
 /**
  * Override the default yii grid styles.
  */
@@ -82,7 +83,7 @@ form .lastUnit,fieldset .lastUnit{padding-left:5px}
 	height: 16px;
 }
 
-.pagination ul {
+ .pagination ul {
 	float: right;
 }
 
@@ -133,15 +134,16 @@ ul.yiiPager .hidden a {
 }
 
 div.scopes {
-	margin-bottom: 10px;
+	margin-bottom: 12px;
+	clear: both;
 }
 
 ul.scopes {
 	overflow: hidden;
-	clear: both;
 	margin: 0 0 5px 0;
+	display: inline;
 }
-
+/*
 ul.scopes li {
 	display: block;
 	float: left;
@@ -161,9 +163,6 @@ ul.scopes li a {
     margin-left: 5px;
 }
 
-ul.scopes li a:hover {
-	text-decoration: none;
-}
 
 ul.scopes li.first a {
 	padding-left: 0;
@@ -179,6 +178,11 @@ ul.scopes li a.current {
     border: 1px solid #CCCCCC;
     font-weight: bold;
     padding: 1px 6px;
+}*/
+
+
+ul.scopes li a:hover {
+	text-decoration: none;
 }
 
 ul.scopes li a span.count {
@@ -186,6 +190,10 @@ ul.scopes li a span.count {
 	font-weight: normal;
 	font-size: .9em;
 	margin-left: 2px;
+}
+
+ul.scopes li.active a span.count {
+	color: #ddd;
 }
 
 /*ul.scopes li.filter-li {
@@ -199,15 +207,17 @@ ul.scopes li.custom-scope a {
 	color: #297acb;
 }
 
-ul.scopes li.addCustomScope a {
-	padding-left: 2px;
-	height: auto;
-	line-height: normal;
-	margin-top: -1px;
+.addCustomScope { display: inline-block; padding: 7px; }
+.addCustomScope a {
+	padding: 4px 2px;
 }
 
-ul.scopes li.addCustomScope a span {
-	display: block;
+.addCustomScope a span {
+	display: inline-block;
+}
+
+.addCustomScope a:hover {
+	text-decoration: none;
 }
 
 .scopeEditButtons {
@@ -462,4 +472,50 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 
 div.topbar div > ul > li.menu:hover ul {
 	display: block;
+}
+
+.tag-item {
+    float: left;
+    margin: 3px 5px 0 0;
+    overflow: hidden;
+    padding: 0 3px;
+    white-space: nowrap;
+}
+
+.btngroup {
+  display: inline-block;
+  vertical-align: bottom;
+}
+.btngroup .btn {
+  float: left;
+  border-radius: 0;
+}
+.btngroup .btn:nth-child(n+2) {
+  border-left: none;
+}
+.btngroup .btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.btngroup .btn:last-child {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.btngroup .btn.active {
+	background-color: #0064cd;
+	background-repeat: repeat-x;
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+	background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+	background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+	background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+	background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+	background-image: linear-gradient(top, #049cdb, #0064cd);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	border-color: #0064cd #0064cd #003f81;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+
+.btngroup .btn.active a {
+	color: #fff;
 }

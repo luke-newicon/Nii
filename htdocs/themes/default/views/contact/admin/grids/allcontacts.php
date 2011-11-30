@@ -20,6 +20,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			),
 			'emails' => array(
 				'label'=>'Emails',
+				'description'=>'All contacts with a valid email address',
 			),
 			'newsletter' => array(
 				'label'=>'Newsletter',
