@@ -142,7 +142,7 @@ ul.scopes {
 	clear: both;
 	margin: 0 0 5px 0;
 }
-
+/*
 ul.scopes li {
 	display: block;
 	float: left;
@@ -180,13 +180,18 @@ ul.scopes li a.current {
     border: 1px solid #CCCCCC;
     font-weight: bold;
     padding: 1px 6px;
-}
+}*/
 
 ul.scopes li a span.count {
 	color: #666;
 	font-weight: normal;
 	font-size: .9em;
 	margin-left: 2px;
+}
+
+ul.scopes li.active a span.count,
+ul.scopes li a:hover span.count{
+	color: #ddd;
 }
 
 /*ul.scopes li.filter-li {
@@ -201,10 +206,11 @@ ul.scopes li.custom-scope a {
 }
 
 ul.scopes li.addCustomScope a {
-	padding-left: 2px;
-	height: auto;
-	line-height: normal;
-	margin-top: -1px;
+	padding: 8px 2px;
+}
+
+ul.scopes li.addCustomScope a:hover {
+	background: none;
 }
 
 ul.scopes li.addCustomScope a span {
@@ -463,4 +469,12 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 
 div.topbar div > ul > li.menu:hover ul {
 	display: block;
+}
+
+.tag-item {
+    float: left;
+    margin: 3px 5px 0 0;
+    overflow: hidden;
+    padding: 0 3px;
+    white-space: nowrap;
 }

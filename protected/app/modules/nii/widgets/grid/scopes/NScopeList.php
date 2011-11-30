@@ -48,7 +48,7 @@ class NScopeList extends CWidget {
 			));
 		}
 		
-		$render .= '<ul class="scopes">';
+		$render .= '<ul class="scopes pills">';
 		if ($scopes) {
 			$class = ' first';
 			foreach ($scopes as $scope => $label) {
@@ -61,17 +61,17 @@ class NScopeList extends CWidget {
 					else
 						$label = ucfirst($scope);
 				}
+				if ($this->dataProvider->getCurrentScope() == $scope) {
+					$class.=' active';					
+				}
 				$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countScope($scope) . ')' : '';
 				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !$customScopes) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
-				if ($this->dataProvider->getCurrentScope() == $scope) {
-					$htmlOptions['class'] = 'current';
-					$currentDescription = $description;					
-				}
+				
 				$render .= CHtml::openTag('a', $htmlOptions) . $label . $count . '</span></a>';
-				if ($this->separator && (next($this->scopes['items']) || $customScopes))
-					$render .= $this->separator;
+//				if ($this->separator && (next($this->scopes['items']) || $customScopes))
+//					$render .= $this->separator;
 				$render .= '</li>';
 			}
 		}
