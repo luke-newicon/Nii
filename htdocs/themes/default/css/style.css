@@ -503,7 +503,8 @@ div.topbar div > ul > li.menu:hover ul {
   border-radius: 0px 4px 4px 0px;
 }
 
-.btngroup .btn.active {
+.btngroup .btn.active,
+.scopes .btn.active {
 	background-color: #0064cd;
 	background-repeat: repeat-x;
 	background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
@@ -519,6 +520,7 @@ div.topbar div > ul > li.menu:hover ul {
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-.btngroup .btn.active a {
+.btngroup .btn.active a,
+.scopes .btn.active a {
 	color: #fff;
 }

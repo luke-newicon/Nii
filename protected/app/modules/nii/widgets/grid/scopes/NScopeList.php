@@ -37,13 +37,16 @@ class NScopeList extends CWidget {
 	public function createScopeItems() {
 		$render = '';
 		$scopes = isset($this->scopes['items']) ? $this->scopes['items'] : null;
+		$scopeCount = count($scopes);
 		
 		if ($this->enableCustomScopes==true) {
 			$key = 'custom_scope_'.$this->gridId;
 			$customScopes = Yii::app()->user->settings->get($key,array());
+			$scopeCount = $scopeCount + count($customScopes);
 		}
 		
-		$render .= '<ul class="scopes btngroup">';
+		$btnGroup = ($scopeCount>1) ? ' btngroup' : '';
+		$render .= '<ul class="scopes'.$btnGroup.'">';
 		if ($scopes) {
 			$class = ' first';
 			foreach ($scopes as $scope => $label) {
@@ -62,7 +65,7 @@ class NScopeList extends CWidget {
 					$currentDescription = $description;
 				}
 				$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countScope($scope) . ')' : '';
-				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !$customScopes) ? ' last' : '') . '">';
+				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !isset($customScopes)) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
 				
@@ -77,7 +80,7 @@ class NScopeList extends CWidget {
 
 			if (!$scopes)
 				$class = ' first';
-			if ($customScopes) {
+			if (isset($customScopes)) {
 				$customScopesCount = count($customScopes);
 				$c = 1;
 				foreach ($customScopes as $id=>$customScope) {
