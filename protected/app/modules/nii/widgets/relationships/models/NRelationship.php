@@ -8,7 +8,7 @@
  * @property string $relationship
  * @property integer $relationship_id
  */
-class NRelationship extends CActiveRecord
+class NRelationship extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -24,7 +24,7 @@ class NRelationship extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'relationship';
+		return '{{nii_relationship}}';
 	}
 
 	/**

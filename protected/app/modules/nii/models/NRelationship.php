@@ -24,7 +24,7 @@ class NRelationship extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'relationship';
+		return '{{nii_relationship}}';
 	}
 
 	/**

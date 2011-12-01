@@ -37,18 +37,16 @@ class NScopeList extends CWidget {
 	public function createScopeItems() {
 		$render = '';
 		$scopes = isset($this->scopes['items']) ? $this->scopes['items'] : null;
-		
-		$customScopes = '';
+		$scopeCount = count($scopes);
 		
 		if ($this->enableCustomScopes==true) {
-			$customScopes = Setting::model()->findAllByAttributes(array(
-				'type' => 'custom_scope',
-				'setting_name' => $this->gridId,
-				'user_id' => Yii::app()->user->record->id,
-			));
+			$key = 'custom_scope_'.$this->gridId;
+			$customScopes = Yii::app()->user->settings->get($key,array());
+			$scopeCount = $scopeCount + count($customScopes);
 		}
 		
-		$render .= '<ul class="scopes btngroup">';
+		$btnGroup = ($scopeCount>1) ? ' btngroup' : '';
+		$render .= '<ul class="scopes'.$btnGroup.'">';
 		if ($scopes) {
 			$class = ' first';
 			foreach ($scopes as $scope => $label) {
@@ -67,7 +65,7 @@ class NScopeList extends CWidget {
 					$currentDescription = $description;
 				}
 				$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countScope($scope) . ')' : '';
-				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !$customScopes) ? ' last' : '') . '">';
+				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !isset($customScopes)) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
 				
@@ -82,44 +80,25 @@ class NScopeList extends CWidget {
 
 			if (!$scopes)
 				$class = ' first';
-			if ($customScopes) {
-				$customScopesCount = Setting::model()->countByAttributes(array(
-					'type' => 'custom_scope',
-					'setting_name' => $this->gridId,
-					'user_id' => Yii::app()->user->record->id,
-				));
+			if (isset($customScopes)) {
+				$customScopesCount = count($customScopes);
 				$c = 1;
-				foreach ($customScopes as $customScope) {
+				foreach ($customScopes as $id=>$customScope) {
 					$class .= ' btn';
 					$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countCustomScope($customScope) . ')' : '';
-					$f = CJSON::decode($customScope->setting_value);
-					$render .= '<li class="custom-scope ' . $class . '" id="scope-'.$customScope->id.'">';
-					$class = '';
-					$htmlOptions = array('href' => $this->makeScopeUrl($customScope->id));
-					if ($this->dataProvider->getCurrentScope() == $customScope->id) {
-						$htmlOptions['class'] = 'current';
+					$f = $customScope;
+					if ($this->dataProvider->getCurrentScope() == $id) {
+						$class .= ' active';
 						$currentScopeType = 'custom';
 						$currentScope = $customScope;
+						$customScopeDescription = $customScope['scopeDescription'];
+						$currentScopeId = $id;
 						$fields = $f;
 					}
+					$render .= '<li class="custom-scope ' . $class . '" id="scope-'.$id.'">';
+					$class = '';
+					$htmlOptions = array('href' => $this->makeScopeUrl($id));
 					$render .= CHtml::openTag('a', $htmlOptions) . $f['scopeName'] . $count . '</a>';
-//					if ($this->separator && ($c < $customScopesCount)) 
-//						$render .= $this->separator;	
-					
-					
-//					$render .= '<span class="scopeEditButtons">';
-//					$render .= NHtml::btnLink('', '#', 'icon fam-pencil block-icon', array(
-//						'onclick'=>$this->editCustomScopeDialog(array(
-//							'model' => get_class($this->dataProvider->model),
-//							'controller' => Yii::app()->controller->uniqueid,
-//							'action' => Yii::app()->controller->action->id,
-//							'id'=>$customScope->id,
-//						))
-//					));
-//					$render .= NHtml::btnLink('', '#', 'icon fam-delete block-icon', array(
-//						'onclick'=>$this->deleteCustomScope($customScope->id, $this->gridId),
-//					));
-//					$render .= '</span>';
 					$render .= '</li>';
 					$c++;
 				}
@@ -151,7 +130,7 @@ class NScopeList extends CWidget {
 				if ($fields['scopeDescription'] && $fields['scopeDescription']!='') 
 					$customScopeDescription = $fields['scopeDescription'];
 				else {
-					$cs = new CustomScope;
+					$cs = new NCustomScope;
 					$model = new $fields['formModel'];
 					foreach ($fields['rule'] as $rule) {
 						$method = '';
@@ -165,7 +144,7 @@ class NScopeList extends CWidget {
 				
 //				$currentDescription .= '<span style="color: #666; float: left; display: block; margin-right: 5px;">Custom Scope</span>';
 				
-				$currentDescription .= '<span style="float: left; display: block; margin-right: 15px;">';
+				$currentDescription = '<span style="float: left; display: block; margin-right: 15px;">';
 				if (isset($customScopeDescription)) {
 					$currentDescription .= $customScopeDescription;
 				} else {
@@ -180,11 +159,11 @@ class NScopeList extends CWidget {
 						'model' => get_class($this->dataProvider->model),
 						'controller' => Yii::app()->controller->uniqueid,
 						'action' => Yii::app()->controller->action->id,
-						'id'=>$currentScope->id,
+						'id'=>$currentScopeId,
 					))
 				));
 				$currentDescription .= NHtml::btnLink('', '#', 'icon fam-delete block-icon', array(
-					'onclick'=>$this->deleteCustomScope($currentScope->id, $this->gridId),
+					'onclick'=>$this->deleteCustomScope($currentScopeId, $this->gridId),
 				));
 				$currentDescription .= '</span>';
 				
@@ -206,9 +185,9 @@ class NScopeList extends CWidget {
 
 	public function addCustomScopeDialog($params=array()) {
 		$dialog_id = 'customScopeDialog';
-		$controller = str_replace('/','.',$params['controller']);
-		$action = str_replace('/','.',$params['action']);
-		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'controller' => $controller, 'action' => $action, 'model' => $params['model']));
+		$gridId = $this->gridId;
+		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'gridId'=>$gridId, 'model'=>$params['model']));
+		$postUrl = CHtml::normalizeUrl(array('/nii/grid/updateCustomScope/', 'gridId'=>$gridId));
 		return '$("#' . $dialog_id . '").dialog({
 			open: function(event, ui){
 				$("#' . $dialog_id . '").load("' . $url . '");
@@ -218,15 +197,40 @@ class NScopeList extends CWidget {
 			autoOpen: true,
 			title: "Custom Scope",
 			modal: true,
+			buttons: [
+				{
+					text: "Save",
+					class: "btn primary",
+					click: function(){
+						$.ajax({
+							url: "'.$postUrl.'",
+							data: jQuery("#customScopeForm").serialize(),
+							dataType: "json",
+							type: "post",
+							success: function(response){ 
+								if (response.success) {
+									$("#customScopeDialog").dialog("close");
+									$.fn.yiiGridView.update("'.$gridId.'");
+									showMessage(response.success);
+								}
+							},
+							error: function() {
+								alert ("JSON failed to return a valid response");
+							}
+						}); 
+						return false;
+					}
+				}
+			],
 		});
 		return false;';
 	}
 	
 	public function editCustomScopeDialog ($params=array()) {
 		$dialog_id = 'customScopeDialog';
-		$controller = str_replace('/','.',$params['controller']);
-		$action = str_replace('/','.',$params['action']);
-		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'id'=>$params['id'], 'controller' => $controller, 'action' => $action, 'model' => $params['model']));
+		$gridId = $this->gridId;
+		$url = CHtml::normalizeUrl(array('/nii/grid/customScopeDialog/', 'gridId'=>$gridId, 'id'=>$params['id'], 'model' => $params['model']));
+		$postUrl = CHtml::normalizeUrl(array('/nii/grid/updateCustomScope/', 'gridId'=>$gridId, 'scopeId'=>$params['id']));
 		return '$("#' . $dialog_id . '").dialog({
 			open: function(event, ui){
 				$("#' . $dialog_id . '").load("' . $url . '");
@@ -236,12 +240,37 @@ class NScopeList extends CWidget {
 			autoOpen: true,
 			title: "Custom Scope",
 			modal: true,
+			buttons: [
+				{
+					text: "Save",
+					class: "btn primary",
+					click: function(){
+						$.ajax({
+							url: "'.$postUrl.'",
+							data: jQuery("#customScopeForm").serialize(),
+							dataType: "json",
+							type: "post",
+							success: function(response){ 
+								if (response.success) {
+									$("#customScopeDialog").dialog("close");
+									$.fn.yiiGridView.update("'.$gridId.'");
+									showMessage(response.success);
+								}
+							},
+							error: function() {
+								alert ("JSON failed to return a valid response");
+							}
+						}); 
+						return false;
+					}
+				}
+			],
 		});
 		return false;';
 	}
 	
 	public function deleteCustomScope ($id, $gridId) {
-		$url = CHtml::normalizeUrl(array('/nii/grid/deleteCustomScope/', 'id'=>$id));
+		$url = CHtml::normalizeUrl(array('/nii/grid/deleteCustomScope/', 'id'=>$id, 'gridId'=>$gridId));
 		return '$(function(){
 			if (confirm("Are you sure you wish to delete this scope?")) {
 				$.ajax({

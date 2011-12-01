@@ -3,10 +3,12 @@ $count = 1;
 
 foreach ($scope['rule'] as $rule) { 
 	
-	$filter = '';
+	$filter='';
+	$filterField = '';
 	foreach($model->columns(array()) as $column) {
-		if ($column['name']==$rule['field'] && is_array($column['filter']))
-			$filter = $column['filter'];
+		$filterField = (isset($column['filter'])?$column['filter']:'');
+		if ($column['name']==$rule['field'] && is_array($filterField))
+			$filter = $filterField;
 	}
 	?>
 
@@ -14,7 +16,7 @@ foreach ($scope['rule'] as $rule) {
 		<div class="unit pls mtm mrs filterCount w20"><?php echo $count; ?></div>
 		<div class="unit prm">
 			<div class="field">
-				<div class="inputBox w150"><?php echo CHtml::dropDownList('rule['.$count.'][field]', $rule['field'], $fields, array('id'=>'filterField-'.$count, 'class'=>'filterField', 'data-id'=>$count)); ?>
+				<div class="input w150"><?php echo CHtml::dropDownList('rule['.$count.'][field]', $rule['field'], $fields, array('id'=>'filterField-'.$count, 'class'=>'filterField', 'data-id'=>$count)); ?>
 				</div>
 			</div>
 		</div>
@@ -22,7 +24,7 @@ foreach ($scope['rule'] as $rule) {
 		<div id="filterFields-<?php echo $count; ?>">
 			<div class="unit prm">
 				<div class="field">
-					<div class="inputBox w70">
+					<div class="input w70">
 						<?php 
 						foreach ($cs->searchMethods as $method) {
 							if (!is_array($filter) || (is_array($filter) && $method['useForDropdown']))					
@@ -33,7 +35,7 @@ foreach ($scope['rule'] as $rule) {
 			</div>
 			<div class="unit prm">
 				<div class="field">
-					<div class="inputBox w200 filterValue" id="filterValue-<?php echo $count; ?>">
+					<div class="input w200 filterValue" id="filterValue-<?php echo $count; ?>">
 						<?php 
 
 						if (is_array($filter))

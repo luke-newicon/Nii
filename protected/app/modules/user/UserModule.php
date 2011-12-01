@@ -185,6 +185,7 @@ class UserModule extends NWebModule
 							'user/admin/index',
 							'user/admin/users',
 							'menu-admin',
+							'/user/audit/index/',
 						),
 					),
 					'manage' => array('description' => 'Add/Edit/Delete Users',
@@ -390,6 +391,8 @@ class UserModule extends NWebModule
 		// record the number of times the user has logged in;
 		$u->logins += 1;
 		$u->save();
+		$userName = Yii::app()->user->name;
+		NLog::insertLog('User '.$userName.' logged in from IP: '.Yii::app()->request->getUserHostAddress());
 	}
 	
 	

@@ -47,5 +47,9 @@ class NTag extends NActiveRecord
 		);
 	}
 	
+	public function __toString() {
+		return $this->tag;
+	}
+	
 	
 }

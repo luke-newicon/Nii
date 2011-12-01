@@ -83,7 +83,7 @@ class AdminController extends AController {
 			
 			if ($model->save()) {
 				
-				Log::insertLog('Inserted new contact details: '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Inserted new contact details: '.$model->name.' (id: '.$model->id.')', $model);
 				
 				if ($model->photoID) {
 					$a = new Attachment;
@@ -93,7 +93,7 @@ class AdminController extends AController {
 					$a->model_id = $model->id;
 					$a->type = 'contact-thumbnail';
 					if ($a->save()) {		
-						Log::insertLog('Added a contact thumnail for '.$model->name.' (id: '.$model->id.')', $a);
+						NLog::insertLog('Added a contact thumnail for '.$model->name.' (id: '.$model->id.')', $a);
 					} else {
 						FB::log(CJSON::encode(array('error'=>'Couldn\'t save attachment.')));
 						Yii::app()->end();	
@@ -171,14 +171,14 @@ class AdminController extends AController {
 						$a->model_id = $model->id;
 						$a->type = 'contact-thumbnail';
 						if ($a->save()) {
-							Log::insertLog('Added a contact thumnail for '.$model->name.' (id: '.$model->id.')', $a);
+							NLog::insertLog('Added a contact thumnail for '.$model->name.' (id: '.$model->id.')', $a);
 						} else {
 							echo CJSON::encode(array('error'=>'Couldn\'t save attachment.'));
 							Yii::app()->end();		
 						}
 					}
 				}
-				Log::insertLog('Updated contact details for '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Updated contact details for '.$model->name.' (id: '.$model->id.')', $model);
 //				echo CJSON::encode(array('save'=>'Contact saved successfully.'));
 				$this->redirect(array("view","id"=>$model->id));		
 			} 		

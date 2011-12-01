@@ -136,7 +136,7 @@ class ExportController extends Controller {
 				break;
 			}		
 			
-			Log::insertLog('Exported grid as '.$fileType.' file', $model);
+			NLog::insertLog('Exported grid as '.$fileType.' file', $model);
 		}
 		
 		exit;

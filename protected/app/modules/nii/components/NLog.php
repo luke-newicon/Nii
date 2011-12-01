@@ -1,6 +1,6 @@
 <?php
 
-class Log extends NActiveRecord
+class NLog extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -16,7 +16,7 @@ class Log extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'log';
+		return '{{nii_log}}';
 	}
 
 	/**
@@ -89,30 +89,26 @@ class Log extends NActiveRecord
 		));
 	}
 	
-	public function columns($visibleColumns) {
+	public function columns() {
 		return array(
 			array(
 				'name' => 'description',
-				'visible'=>$visibleColumns['description'],
 				'htmlOptions'=>array('width'=>'500px'),
 			),
 			array(
 				'name'=>'username',
 				'type'=>'raw',
 				'value'=>'$data->displayUsername',
-				'visible'=>$visibleColumns['username'],
 				'htmlOptions'=>array('width'=>'60px'),
 			),
 			array(
 				'name'=>'path',
 				'type'=>'raw',
 				'value'=>'$data->displayPath',
-				'visible'=>$visibleColumns['path'],
 				'htmlOptions'=>array('width'=>'140px'),
 			),
 			array(
 				'name'=>'datetime',
-				'visible'=>$visibleColumns['datetime'],
 				'htmlOptions'=>array('width'=>'80px'),
 			),
 		);
@@ -125,7 +121,7 @@ class Log extends NActiveRecord
 	 */
 	public static function insertLog($description, $model=null) {
 		
-		$log = new Log;
+		$log = new NLog;
 		
 		if ($model) {
 			$log->model = get_class($model);

@@ -68,7 +68,7 @@ class DonationController extends AController
 			
 			if($model->save()) {
 				
-				Log::insertLog('Inserted new donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
+				NLog::insertLog('Inserted new donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
 				$this->redirect(array("donation/view","id"=>$model->id));		
 			}
 		}
@@ -99,7 +99,7 @@ class DonationController extends AController
 			
 			if($model->save()) {
 				
-				Log::insertLog('Updated donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
+				NLog::insertLog('Updated donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
 				$this->redirect(array("donation/view","id"=>$model->id));		
 				
 			}

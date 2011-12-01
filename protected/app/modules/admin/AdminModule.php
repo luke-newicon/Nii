@@ -56,6 +56,11 @@ class AdminModule extends NWebModule {
 		Yii::app()->menus->addItem('secondary','Permissions',array('/user/admin/permissions'),'Admin',array(
 			'visible' => Yii::app()->user->checkAccess('user/admin/permissions'),
 		));
+		
+		Yii::app()->menus->addDivider('secondary','Admin');
+		Yii::app()->menus->addItem('secondary','Audit Trail',array('/user/audit/index'),'Admin',array(
+			'visible' => Yii::app()->user->checkAccess('user/audit/index'),
+		));
 	}
 	
 	public function install(){

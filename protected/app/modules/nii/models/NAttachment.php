@@ -27,7 +27,7 @@ class NAttachment extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'attachment';
+		return '{{nii_attachment}}';
 	}
 
 	/**

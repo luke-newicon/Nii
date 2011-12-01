@@ -16,6 +16,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 	private $_filterAdded = false;
 	
 	public $defaultScope = 'default';
+	public $gridId;
 
 	/**
 	 * Fetches the data from the persistent data storage.
@@ -30,7 +31,8 @@ class NActiveDataProvider extends CActiveDataProvider {
 
 	private function addScopes() {
 		if ($this->_scopesAdded === false) {	
-			$customScopes = Setting::model()->findByPk($this->getCurrentScope());
+			$scopes = Yii::app()->user->settings->get('custom_scope_'.$this->gridId, array());
+			$customScopes = array_key_exists($this->getCurrentScope(), $scopes) ? $scopes[$this->getCurrentScope()] : null;
 			if ($customScopes) {
 				$this->addCustomScope($customScopes); 
 			} else {
@@ -63,9 +65,9 @@ class NActiveDataProvider extends CActiveDataProvider {
 	
 	public function addCustomScope($customScopes) {
 		$criteria = $this->model->getDbCriteria();
-		$value = CJSON::decode($customScopes->setting_value);
+		$value = $customScopes;
 		foreach ($value['rule'] as $rule) {
-			$customScope = new CustomScope($rule, $value['match']);
+			$customScope = new NCustomScope($rule, $value['match']);
 			$customScope->getCondition($criteria, $value['formModel']);
 		}
 	}
@@ -78,7 +80,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 	}
 	
 	public function countCustomScope($customScopes) {
-		$value = CJSON::decode($customScopes->setting_value);
+		$value = $customScopes;
 		
 		$this->model->setDbCriteria(null);
 		
@@ -90,7 +92,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 
 		
 		foreach ($value['rule'] as $rule) {
-			$customScope = new CustomScope($rule, $value['match']);
+			$customScope = new NCustomScope($rule, $value['match']);
 			$customScope->getCondition($criteria, $value['formModel']);
 		}
 //				print_r($criteria);

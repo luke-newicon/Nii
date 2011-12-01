@@ -92,7 +92,7 @@ class NTaggable extends CActiveRecordBehavior
 		
 		$tags = array();
 		foreach ($tagRows as $t){
-			$tags[$t->tag->id]=$t->tag->tag;
+			$tags[$t->id]=$t->tag;
 		}
 		
 		return $tags;
@@ -116,7 +116,7 @@ class NTaggable extends CActiveRecordBehavior
 		);
 		$tags = array();
 		foreach ($tagRows as $t)
-			$tags[$t->tag->id]=$t->tag->tag;
+			$tags[$t->id]=$t->tag;
 		
 		return $tags;
 	}

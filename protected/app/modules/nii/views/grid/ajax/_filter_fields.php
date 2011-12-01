@@ -1,5 +1,5 @@
 <?php
-$scope = new CustomScope;
+$scope = new NCustomScope;
 $filter = '';
 if (!is_object($model))
 	$model = new $model;
@@ -10,7 +10,7 @@ foreach($model->columns(array()) as $column) {
 ?>
 <div class="unit prm">
 	<div class="field">
-		<div class="inputBox w70">
+		<div class="input w70">
 			<?php 
 			foreach ($scope->searchMethods as $method) {
 				if (!is_array($filter) || (is_array($filter) && $method['useForDropdown']))					
@@ -22,7 +22,7 @@ foreach($model->columns(array()) as $column) {
 </div>
 <div class="unit prm">
 	<div class="field">
-		<div class="inputBox w200 filterValue" id="filterValue-<?php echo $id; ?>">
+		<div class="input w200 filterValue" id="filterValue-<?php echo $id; ?>">
 			<?php 
 			if (is_array($filter))
 				echo CHtml::dropDownList('rule['.$id.'][value]', '', $filter);
