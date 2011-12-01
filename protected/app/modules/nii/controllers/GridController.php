@@ -53,7 +53,7 @@ class GridController extends AController {
 	 * @param string $action
 	 * @param int $id 
 	 */
-	public function actionCustomScopeDialog($model=null,$controller=null,$action=null, $id=null) {
+	public function actionCustomScopeDialog($gridId, $model, $id=null) {
 		
 		$className = $model;
 		$model = new $model;
@@ -69,17 +69,17 @@ class GridController extends AController {
 		
 		$renderArray = array(
 			'cs'=>$filterModel,
-			'controller'=>$controller,
-			'action'=>$action,
 			'fields'=>$fields,
 			'className'=>$className,
 			'model'=>$model,
+			'gridId'=>$gridId,
 		);
 		
 		if ($id) {
-			$scope = Setting::model()->findByPk($id);
-			$renderArray['scope'] = CJSON::decode($scope->setting_value);
-			$renderArray['scopeId'] = $scope->id;
+			$scopes = Yii::app()->user->settings->get('custom_scope_'.$gridId);
+			$scope = $scopes[$id];
+			$renderArray['scope'] = $scope;
+			$renderArray['scopeId'] = $id;
 			$renderArray['formAction'] = 'edit';
 		} else {
 			$renderArray['scope'] = '';
@@ -97,34 +97,34 @@ class GridController extends AController {
 	 * @param int $scopeId 
 	 */
 	public function actionUpdateCustomScope($gridId, $scopeId=null) {
-		
-		
-		if ($scopeId) {
-			$model = Setting::model()->findByPk($scopeId);
-		} else {
-			$model = new Setting;
-			$model->user_id = Yii::app()->user->record->id;
-			$model->type = 'custom_scope';
-			$model->setting_name = $gridId;
+				
+		$key = 'custom_scope_'.$gridId;
+		$scopes = Yii::app()->user->settings->get($key, array());
+				
+		if (!$scopeId) {
+			$scopeId = count($scopes)+1;
 		}
 		
-		$model->setting_value = CJSON::encode($_POST);
+		$scopes[$scopeId] = $_POST;
 		
-		if ($model->save()) {
-			echo CJSON::encode(array('success'=>'Custom scope added'));
-		} else {
-			echo CJSON::encode(array('failed'=>$model->attributes));
-		}
-		exit;
+		if (Yii::app()->user->settings->set($key, $scopes))
+			echo CJSON::encode(array('success'=>'Custom scope '.($scopeId?'updated':'added')));
+		else
+			echo CJSON::encode(array('failed'=>'Failed to save'));
+		Yii::app()->end();
 	}	
 	
 	/**
 	 *	Delete a custom scope
 	 * @param int $id 
 	 */	
-	public function actionDeleteCustomScope($id) {
-		$success = Setting::model()->deleteByPk($id);
-		if ($success >=1) {
+	public function actionDeleteCustomScope($id, $gridId) {
+		
+		$key = 'custom_scope_'.$gridId;
+		$scopes = Yii::app()->user->settings->get($key, array());
+		unset($scopes[$id]);
+		$success = Yii::app()->user->settings->set($key, $scopes);
+		if ($success) {
 			echo CJSON::encode(array('success'=>'Custom scope deleted'));
 		}
 	}
@@ -132,11 +132,9 @@ class GridController extends AController {
 	/**
 	 *	Action to create a new custom scope via ajax
 	 * @param model $model
-	 * @param string $controller
-	 * @param string $action
 	 * @param int $count 
 	 */
-	public function actionAjaxNewCustomScope($model, $controller, $action, $count) {
+	public function actionAjaxNewCustomScope($model, $count) {
 	
 		$model = new $model;
 
@@ -151,8 +149,6 @@ class GridController extends AController {
 		
 		$this->render('ajax/_new_custom_scope',array(
 			'model'=>$model,
-			'controller'=>$controller,
-			'action'=>$action,
 			'fields'=>$fields,
 			'count'=>$count,
 		));	
@@ -160,20 +156,7 @@ class GridController extends AController {
 	}
 	
 	public function actionAjaxUpdateCustomScopeValueBlock($model=null, $field=null, $id=null) {
-
-		
 		$this->renderPartial('ajax/_filter_fields', array('model'=>$model, 'field'=>$field, 'id'=>$id));
-//		$model = new $model;
-//		$filter = '';
-//		
-//		foreach($model->columns(array()) as $column) {
-//			if ($column['name']==$field && is_array($column['filter']))
-//				$filter = $column['filter'];
-//		}
-//		if (is_array($filter))
-//			echo CHtml::dropDownList('rule['.$id.'][value]', '', $filter);
-//		else
-//			echo CHtml::textField('rule['.$id.'][value]');
 	}
 	
 	/**

@@ -5,7 +5,7 @@ $field = current($fields);
 	<div class="unit pls mtm mrs filterCount w20"><?php echo $count; ?></div>
 	<div class="unit prm">
 		<div class="field">
-			<div class="inputBox w150"><?php echo CHtml::dropDownList('rule['.$count.'][field]', '', $fields, array('id'=>'filterField-'.$count, 'class'=>'filterField', 'data-id'=>$count)); ?>
+			<div class="input w150"><?php echo CHtml::dropDownList('rule['.$count.'][field]', '', $fields, array('id'=>'filterField-'.$count, 'class'=>'filterField', 'data-id'=>$count)); ?>
 			</div>
 		</div>
 	</div>

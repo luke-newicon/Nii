@@ -25,8 +25,8 @@ class CustomScope extends CFormModel
 	public $defaultSearchMethod = 'eq';
 	
 	public function getCondition(&$criteria, $model=null) {
-		
-		$sm = $this->searchMethods[$this->rule['searchMethod']]['value'];
+		$searchMethod = $this->rule['searchMethod'] ? $this->rule['searchMethod'] : 'contains';
+		$sm = $this->searchMethods[$searchMethod]['value'];
 		if ($model) {
 			$model = new $model;
 			try {

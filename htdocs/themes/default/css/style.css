@@ -202,7 +202,10 @@ ul.scopes li.active a span.count {
 	padding: 0 0 0 8px
 }*/
 
-
+ul.scopes li.custom-scope {
+	background-color: #DDEEFF;
+	background-image: -moz-linear-gradient(center top , #FFFFFF, #FFFFFF 25%, #DDEEFF);
+}
 ul.scopes li.custom-scope a {
 	color: #297acb;
 }

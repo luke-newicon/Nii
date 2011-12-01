@@ -47,7 +47,6 @@ class NWebUser extends CWebUser
 	 * This ensures you can use default objects as normal in attached events
 	 */
 	public function callAfterLogin(){
-		FB::log(Yii::app()->user, 'after login user');
 		Yii::app()->getModule('user')->onAfterLogin(new CEvent);
 		$this->callAfterLogin = false;
 	}
