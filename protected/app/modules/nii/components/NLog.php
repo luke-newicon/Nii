@@ -89,30 +89,26 @@ class NLog extends NActiveRecord
 		));
 	}
 	
-	public function columns($visibleColumns) {
+	public function columns() {
 		return array(
 			array(
 				'name' => 'description',
-				'visible'=>$visibleColumns['description'],
 				'htmlOptions'=>array('width'=>'500px'),
 			),
 			array(
 				'name'=>'username',
 				'type'=>'raw',
 				'value'=>'$data->displayUsername',
-				'visible'=>$visibleColumns['username'],
 				'htmlOptions'=>array('width'=>'60px'),
 			),
 			array(
 				'name'=>'path',
 				'type'=>'raw',
 				'value'=>'$data->displayPath',
-				'visible'=>$visibleColumns['path'],
 				'htmlOptions'=>array('width'=>'140px'),
 			),
 			array(
 				'name'=>'datetime',
-				'visible'=>$visibleColumns['datetime'],
 				'htmlOptions'=>array('width'=>'80px'),
 			),
 		);
