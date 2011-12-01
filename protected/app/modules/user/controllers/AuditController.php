@@ -13,7 +13,7 @@ class AuditController extends AController {
 		if(isset($_GET[$class]))
 			$model->attributes = $_GET[$class];
 
-		$this->render('audittrail',array(
+		$this->render('index',array(
 			'dataProvider'=>$model->search(),
 			'model'=>$model
 		));

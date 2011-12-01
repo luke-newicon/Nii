@@ -1,4 +1,6 @@
-<h2>Audit Trail</h2>
+<div class="page-header">
+	<h2>Audit Trail</h2>
+</div>
 <?php 
 $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider'=>$dataProvider,

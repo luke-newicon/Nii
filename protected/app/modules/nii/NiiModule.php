@@ -178,16 +178,13 @@ class NiiModule extends NWebModule
 		Yii::import('nii.widgets.notes.models.NNote');
 		Yii::import('nii.models.*');
 		Yii::import('nii.components.behaviors.*');
+		NLog::install('NLog');
 		NNote::install();
 		NFile::install();
 		NAttachment::install();
 		NRelationship::install();
 		NSettings::install();
 		NTaggable::install();
-		
-		// Temporary as the grid is incorrectly still using the settings table.
-		Setting::install('Setting');
-		
 	}
 	
 	/**

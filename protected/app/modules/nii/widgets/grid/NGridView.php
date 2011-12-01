@@ -49,9 +49,10 @@ class NGridView extends CGridView
 	
 	public function init() {
 
-		if (isset($this->scopes['default']))
+		if (isset($this->scopes['default'])){
 			$this->dataProvider->defaultScope = $this->scopes['default'];
 			$this->dataProvider->gridId = $this->id;
+		}
 		// Configuring grid columns...
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);

@@ -128,8 +128,6 @@ class InstallForm extends CFormModel
 	
 	public function installDatabase(){
 		// install tables and nii modules
-		NActiveRecord::install('Setting');
-		NActiveRecord::install('NLog');
 		Yii::app()->install();
 	}
 	
