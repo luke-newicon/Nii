@@ -67,7 +67,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 		$criteria = $this->model->getDbCriteria();
 		$value = $customScopes;
 		foreach ($value['rule'] as $rule) {
-			$customScope = new CustomScope($rule, $value['match']);
+			$customScope = new NCustomScope($rule, $value['match']);
 			$customScope->getCondition($criteria, $value['formModel']);
 		}
 	}
@@ -92,7 +92,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 
 		
 		foreach ($value['rule'] as $rule) {
-			$customScope = new CustomScope($rule, $value['match']);
+			$customScope = new NCustomScope($rule, $value['match']);
 			$customScope->getCondition($criteria, $value['formModel']);
 		}
 //				print_r($criteria);

@@ -16,14 +16,6 @@ class HftContact extends Contact
 	{
 		return parent::model($className);
 	}
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'contact';
-	}
 	
 	/**
 	 * @return array customized attribute labels (name=>label)

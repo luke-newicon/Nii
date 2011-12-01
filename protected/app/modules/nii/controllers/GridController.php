@@ -65,7 +65,7 @@ class GridController extends AController {
 				$fields[$column['name']] = $model->getAttributeLabel($column['name']);
 		}
 		
-		$filterModel = new CustomScope;
+		$filterModel = new NCustomScope;
 		
 		$renderArray = array(
 			'cs'=>$filterModel,
@@ -145,7 +145,7 @@ class GridController extends AController {
 				$fields[$column['name']] = $model->getAttributeLabel($column['name']);
 		}
 		
-		$filterModel = new CustomScope;
+		$filterModel = new NCustomScope;
 		
 		$this->render('ajax/_new_custom_scope',array(
 			'model'=>$model,
@@ -297,7 +297,7 @@ class GridController extends AController {
 				break;
 			}		
 			
-			Log::insertLog('Exported grid as '.$fileType.' file', $model);
+			NLog::insertLog('Exported grid as '.$fileType.' file', $model);
 			
 			
 		}

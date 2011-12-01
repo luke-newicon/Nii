@@ -130,7 +130,7 @@ class NScopeList extends CWidget {
 				if ($fields['scopeDescription'] && $fields['scopeDescription']!='') 
 					$customScopeDescription = $fields['scopeDescription'];
 				else {
-					$cs = new CustomScope;
+					$cs = new NCustomScope;
 					$model = new $fields['formModel'];
 					foreach ($fields['rule'] as $rule) {
 						$method = '';

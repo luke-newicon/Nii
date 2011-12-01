@@ -1,6 +1,6 @@
 <?php
 
-class CustomScope extends CFormModel
+class NCustomScope extends CFormModel
 {
 	public $rule;
 	public $operator;

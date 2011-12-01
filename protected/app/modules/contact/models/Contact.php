@@ -39,7 +39,7 @@ class Contact extends NActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{contact}}';
+		return '{{contact_contact}}';
 	}
 
 	public function getModule() {

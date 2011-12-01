@@ -1,6 +1,6 @@
 <?php
 
-class Log extends NActiveRecord
+class NLog extends NActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -16,7 +16,7 @@ class Log extends NActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'log';
+		return '{{nii_log}}';
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Log extends NActiveRecord
 	 */
 	public static function insertLog($description, $model=null) {
 		
-		$log = new Log;
+		$log = new NLog;
 		
 		if ($model) {
 			$log->model = get_class($model);

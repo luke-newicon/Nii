@@ -1,5 +1,5 @@
 <?php
-$scope = new CustomScope;
+$scope = new NCustomScope;
 $filter = '';
 if (!is_object($model))
 	$model = new $model;

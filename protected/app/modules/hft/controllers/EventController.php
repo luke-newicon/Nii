@@ -68,7 +68,7 @@ class EventController extends AController
 			
 			if($model->save()) {
 				
-				Log::insertLog('Inserted new event details: '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Inserted new event details: '.$model->name.' (id: '.$model->id.')', $model);
 				$this->redirect(array("event/view","id"=>$model->id));		
 			}
 		}
@@ -99,7 +99,7 @@ class EventController extends AController
 			
 			if($model->save()) {
 				
-				Log::insertLog('Updated event details: '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Updated event details: '.$model->name.' (id: '.$model->id.')', $model);
 				$this->redirect(array("event/view","id"=>$model->id));		
 				
 			}
