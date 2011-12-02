@@ -189,6 +189,11 @@ class NiiModule extends NWebModule
 		NTaggable::install();
 	}
 	
+	public function uninstall() {
+		Yii::import('nii.components.behaviors.*');
+		NTaggable::uninstall();
+	}
+	
 	/**
 	 * shortcut method to return the Nii module
 	 * @return NiiModule 

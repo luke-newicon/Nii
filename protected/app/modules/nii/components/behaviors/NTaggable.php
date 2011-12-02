@@ -16,8 +16,6 @@
  */
 class NTaggable extends CActiveRecordBehavior
 {
-	
-	
 
 	/**
 	 * Set the tags for a row, removes all existing tags and sets the tags to those specified
@@ -48,14 +46,14 @@ class NTaggable extends CActiveRecordBehavior
 
 		// make sure that all of these tags exist in the tags table
 		$q = new NQuery(NTag::model());
-		$q->multiInsert(array('tag'), true);
+		$q->multiInsert(array('name'), true);
 		foreach ($tags as $t)
 			$q->multiInsertValues(array($t));
 		$q->execute();
 		
 
 		// now find all of the ids for the names provided
-		$tagRows = NTag::model()->findAllByAttributes(array('tag'=>$tags));
+		$tagRows = NTag::model()->findAllByAttributes(array('name'=>$tags));
 
 		// and insert the new tags into the associations table
 		$q = new NQuery(NTagLink::model());
@@ -72,8 +70,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * @return array array of tag_id => tag name e.g. array(1 => 'tag name', 3=> 'other tag')
 	 */
 	public function getAllTags(){
-		$res = NTag::model()->findAll(array('order'=>'tag ASC'));
-		$tags = array(); foreach ($res as $r) $tags[$r->id] = $r->tag;
+		$res = NTag::model()->findAll(array('order'=>'name ASC'));
+		$tags = array(); foreach ($res as $r) $tags[$r->id] = $r->tag->name;
 		return $tags;
 	}
 
@@ -83,18 +81,24 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array of tag id=>tag
 	 */
-	public function getModelTags($assoc=false) {
+	public function getModelTags() {
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
-			array('order'=>'tag')
+			array('order'=>'name')
 		);
 		
-		$tags = array();
-		foreach ($tagRows as $t){
-			$tags[$t->id]=$t->tag;
-		}
+		$tags = array(); foreach ($tagRows as $t) $tags[$t->id] = $t->tag->name;
 		
+		return $tags;
+	}
+	
+	
+	
+	public function widgetGetModelTags(){
+		$mt = $this->getModelTags();
+		// we want the id to be the name for our tag widget
+		$tags = array(); foreach($mt as $id=>$name) $tags[]=array('id'=>$name,'name'=>$name);
 		return $tags;
 	}
 
@@ -112,11 +116,13 @@ class NTaggable extends CActiveRecordBehavior
 		}
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model_id'=>$this->getOwner()->id(), 
-			'model'=>get_class($this->getOwner())), array('order'=>'tag ASC')
+			'model'=>get_class($this->getOwner())), 
+			array('order'=>'name ASC')
 		);
+		
 		$tags = array();
 		foreach ($tagRows as $t)
-			$tags[$t->id]=$t->tag;
+			$tags[$t->id]=$t->tag->name;
 		
 		return $tags;
 	}
@@ -153,7 +159,7 @@ class NTaggable extends CActiveRecordBehavior
 		if (count($tags)==0)
 			return null;
 		// find all of the ids for the tags provided
-		$tids = NTag::model()->findAllByAttributes(array('tag'=>$tags));
+		$tids = NTag::model()->findAllByAttributes(array('name'=>$tags));
 		if (count($tids)==0)
 			return null;
 		
@@ -163,7 +169,7 @@ class NTaggable extends CActiveRecordBehavior
 				array('model'=>get_class($model), 'tag_id'=>$tagIds),
 				array('order'=>'model ASC'));
 		
-			
+		
 		$rowIds = array();$rows = array();
 		foreach ($res as $t)
 			$rowIds[] = $t->model_id; $rows[]=$t;
@@ -186,7 +192,7 @@ class NTaggable extends CActiveRecordBehavior
 			return null;
 		
 		// find all of the ids for the tags provided
-		$tids = NTag::model()->findAllByAttributes(array('tag'=>$tags));
+		$tids = NTag::model()->findAllByAttributes(array('name'=>$tags));
 		
 		if (count($tids)==0)
 			return null;
@@ -234,8 +240,16 @@ class NTaggable extends CActiveRecordBehavior
 	 * Install necessary tables for behavior
 	 */
 	public static function install(){
-		NAppRecord::install('NTag');
-		NAppRecord::install('NTagLink');
+		NActiveRecord::install('NTag');
+		NActiveRecord::install('NTagLink');
+	}
+	
+	/**
+	 * Install necessary tables for behavior
+	 */
+	public static function uninstall(){
+		NActiveRecord::uninstall('NTag');
+		NActiveRecord::uninstall('NTagLink');
 	}
 	
 	

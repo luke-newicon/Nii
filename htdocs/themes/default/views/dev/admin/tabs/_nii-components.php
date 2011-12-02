@@ -132,10 +132,11 @@
 						<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 							'model'=>$u,
 							'attribute'=>'tags',
-							'data'=>$u->getModelTags(),
+							'data'=>$u->widgetGetModelTags(),
 							'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 						)); ?>
 					</div>
+					<?php dp($u->widgetGetModelTags()); ?>
 				</div>
 				<div class="lastUnit">
 					<div class="field ">

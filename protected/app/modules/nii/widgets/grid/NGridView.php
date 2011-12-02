@@ -122,12 +122,14 @@ class NGridView extends CGridView
 	 * Renders the scopes.
 	 */
 	public function renderScopes() {
-		$this->widget($this->defaultScopeListClass, array(
-			'dataProvider' => $this->dataProvider,
-			'scopes' => $this->scopes,
-			'gridId' => $this->id,
-			'enableCustomScopes' => $this->enableCustomScopes,
-		));
+		if ($this->scopes){
+			$this->widget($this->defaultScopeListClass, array(
+				'dataProvider' => $this->dataProvider,
+				'scopes' => $this->scopes,
+				'gridId' => $this->id,
+				'enableCustomScopes' => $this->enableCustomScopes,
+			));
+		}
 	}
 
 	public function renderBulk() {
