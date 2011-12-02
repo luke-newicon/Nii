@@ -63,6 +63,11 @@ $this->endWidget(); ?>
 						$.fn.yiiListView.update('attendee_list-'+model_id);
 						$('#attendee_input-'+model_id).html('');
 						$('.attendees_count').html(response.count);
+						if (response.count > 0) {
+							$('.attendees_count').addClass('notice');
+						} else {
+							$('.attendees_count').removeClass('notice');
+						}
 						setTimeout(function(response) {
 							$('.line.attendee_'+reponseID).effect("highlight");
 						}, 500 );

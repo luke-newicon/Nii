@@ -62,18 +62,24 @@ $this->endWidget(); ?>
 				success: function(response){ 
 					if (response.success) {
 						reponseID = response.id
-						$.fn.yiiListView.update(model_id+'_relationshiplist');
+						$.fn.yiiListView.update('relationshiplist_'+model_id);
+						$('.relationships_count').html(response.count);
+						if (response.count > 0) {
+							$('.relationships_count').addClass('notice');
+						} else {
+							$('.relationships_count').removeClass('notice');
+						}
 						$('#relationships-input-'+model_id).html('');
 						setTimeout(function(response) {
 							$('.line.relationship_'+reponseID).effect("highlight");
 						}, 500 );
-						return false;
 					}
 				},
 				error: function(response) {
 					alert ("JSON failed to return a valid response...");
 				}
 			}); 
+			return false;
 		}); 
 		
 		$('#newRelationshipForm-<?php echo $id?>').delegate('#relationshipCancel-<?php echo $id?>','click',function(){

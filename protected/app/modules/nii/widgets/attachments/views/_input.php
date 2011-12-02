@@ -69,6 +69,12 @@ $this->endWidget(); ?>
 						reponseID = response.id
 						$.fn.yiiListView.update(model_id+'_attachmentlist');
 						$('#attachments-input-'+model_id).html('');
+						$('.attachments_count').html(response.count);
+						if (response.count > 0) {
+							$('.attachments_count').addClass('notice');
+						} else {
+							$('.attachments_count').removeClass('notice');
+						}
 						setTimeout(function(response) {
 							$('.line.attachment_'+reponseID).effect("highlight");
 						}, 500 );

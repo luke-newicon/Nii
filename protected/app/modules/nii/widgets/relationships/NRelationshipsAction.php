@@ -56,7 +56,7 @@ class NRelationshipsAction extends CAction
 			$r->attributes = $_REQUEST['NRelationship'];
 
 			if($r->save())
-				echo CJSON::encode (array('success'=> 'Relationship successfully added','id'=>$r->id));
+				echo CJSON::encode (array('success'=> 'Relationship successfully added','id'=>$r->id, 'count'=>$r->totalRelationships));
 			else
 				print_r($r->attributes);
 //				return false;
@@ -74,7 +74,7 @@ class NRelationshipsAction extends CAction
 			return false;
 		
 		if(NRelationship::model()->deleteByPk($id))
-			return true;
+			echo NRelationship::countRelationships($_REQUEST['rel_model'], $_REQUEST['rel_model_id']);
 		else
 			return false;
 	}

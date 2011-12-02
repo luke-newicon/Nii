@@ -10,7 +10,7 @@
 			$this->widget('zii.widgets.CListView', array(
 				'dataProvider'=>$dataProvider,
 				'itemView'=>'_item',
-				'id'=>$id.'_relationshiplist',
+				'id'=>'relationshiplist_'.$id,
 				'emptyText'=>$emptyText,
 				'htmlOptions'=>array('class'=>'list-view relationships-list'),
 				'summaryText'=>'',
@@ -40,16 +40,20 @@
 				$.ajax({
 					url: inputUrl,
 					type: "POST",
-					data: ({id:relid,action:'delete'}),
-					success: function(){
-						$.fn.yiiListView.update(model_id+'_relationshiplist');
+					data: ({id:relid,action:'delete',rel_model:model,rel_model_id:model_id}),
+					success: function(response){
+						$.fn.yiiListView.update('relationshiplist_'+model_id);
+						$('.relationships_count').html(response);
+						if (response > 0) {
+							$('.relationships_count').addClass('notice');
+						} else {
+							$('.relationships_count').removeClass('notice');
+						}
 						nii.showMessage('Relationship deleted');
-						return false;
 					}
 				});
-			} else {
-				return false;
-			}
+			} 
+			return false;
 		});
 	});
 </script>

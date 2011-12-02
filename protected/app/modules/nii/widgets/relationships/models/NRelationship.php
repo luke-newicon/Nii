@@ -91,6 +91,13 @@ class NRelationship extends NActiveRecord
 	}
 	
 	public static function countRelationships($model, $model_id) {
-		return self::model()->countByAttributes(array('model'=>$model, 'model_id'=>$model_id));
+		if ($rtn = self::model()->countByAttributes(array('model'=>$model, 'model_id'=>$model_id)))
+			return $rtn;
+		else
+			return 0;
+	}
+	
+	public function getTotalRelationships() {
+		return $this->countByAttributes(array('model'=>$this->model, 'model_id'=>$this->model_id));
 	}
 }

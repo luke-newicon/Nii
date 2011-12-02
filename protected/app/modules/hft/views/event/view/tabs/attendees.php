@@ -42,12 +42,16 @@
 							success: function(response){
 								$.fn.yiiListView.update('attendee_list-'+model_id);
 								$('.attendees_count').html(response.count);
+								if (response.count > 0) {
+									$('.attendees_count').addClass('notice');
+								} else {
+									$('.attendees_count').removeClass('notice');
+								}
 								nii.showMessage('Attendee deleted');
 							}
 						});
-					} else {
-						return false;
-					}
+					} 
+					return false;
 				});
 			});
 		</script>

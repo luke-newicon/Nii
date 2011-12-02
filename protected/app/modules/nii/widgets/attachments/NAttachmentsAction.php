@@ -62,7 +62,7 @@ class NAttachmentsAction extends CAction
 			$a->attributes = $_REQUEST['Attachment'];
 
 			if($a->save())
-				echo CJSON::encode (array('success'=> 'Attachment successfully added','id'=>$a->id));
+				echo CJSON::encode (array('success'=> 'Attachment successfully added','id'=>$a->id,'count'=>$a->totalAttachments));
 			else
 				print_r($a->attributes);
 //				return false;
@@ -80,7 +80,7 @@ class NAttachmentsAction extends CAction
 			return false;
 		
 		if(NAttachment::model()->deleteByPk($id))
-			return true;
+			echo NAttachment::countAttachments($_REQUEST['a_model'], $_REQUEST['a_model_id']);
 		else
 			return false;
 	}

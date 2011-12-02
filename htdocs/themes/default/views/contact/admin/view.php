@@ -83,7 +83,7 @@
 	$this->widget('nii.widgets.NTabs', array(
 		'tabs' => $model->tabs,
 		'options' => array(
-			'cache' => true,
+//			'cache' => true,
 		),
 		'htmlOptions' => array(
 			'id' => 'tabs',

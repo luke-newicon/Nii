@@ -42,9 +42,15 @@
 				$.ajax({
 					url: inputUrl,
 					type: "POST",
-					data: ({id:attid,action:'deleteAttachment'}),
-					success: function(){
+					data: ({id:attid,action:'deleteAttachment',a_model:model,a_model_id:model_id}),
+					success: function(response){
 						$.fn.yiiListView.update(model_id+'_attachmentlist');
+						$('.attachments_count').html(response);
+						if (response > 0) {
+							$('.attachments_count').addClass('notice');
+						} else {
+							$('.attachments_count').removeClass('notice');
+						}
 						showMessage('Attachment deleted');
 					}
 				});
