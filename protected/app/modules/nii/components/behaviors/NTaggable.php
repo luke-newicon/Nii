@@ -23,7 +23,7 @@ class NTaggable extends CActiveRecordBehavior
 	 * @param mixed $tags  the full set of tags to be set can be an array of 
 	 * tag names or a string of tag names seperated by $delimiter
 	 * @param string the string delimiter to seperate tags only applicable if $tags paramter is a string
-	 * @return null
+	 * @return void
 	 */
 	public function setTags($tags, $delimiter=',')
 	{
