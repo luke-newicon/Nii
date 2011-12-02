@@ -65,7 +65,7 @@
 				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments', 'count'=>NAttachment::countAttachments(get_class($model), $model->id)),
 			),
 			'options' => array(
-				'cache' => true,
+//				'cache' => true,
 			),
 			'htmlOptions' => array(
 				'id' => 'tabs',

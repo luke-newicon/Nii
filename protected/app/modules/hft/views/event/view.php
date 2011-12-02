@@ -55,7 +55,7 @@
 				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments', 'count'=>$model->countAttachments()),
 			),
 			'options' => array(
-				'cache' => true,
+//				'cache' => true,
 			),
 			'htmlOptions' => array(
 				'id' => 'tabs',

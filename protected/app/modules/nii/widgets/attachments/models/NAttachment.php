@@ -29,4 +29,8 @@ class NAttachment extends NAppRecord {
 		return self::model()->countByAttributes($attributes);
 	}
 	
+	public function getTotalAttachments() {
+		return $this->countByAttributes(array('model'=>$this->model,'model_id'=>$this->model_id));
+	}
+	
 }
