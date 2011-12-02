@@ -50,7 +50,7 @@
 		array(
 			'tabs' => array(
 	//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-				'Attendees'=>array('ajax'=>array('attendees','id'=>$model->id), 'id'=>'attendees', 'count'=>$model->totalAttendees, 'count_class'=>'notice'),
+				'Attendees'=>array('ajax'=>array('attendees','id'=>$model->id), 'id'=>'attendees', 'count'=>$model->totalAttendees),
 				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes', 'count'=>$model->countNotes()),
 				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments', 'count'=>$model->countAttachments()),
 			),
