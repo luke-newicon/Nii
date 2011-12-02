@@ -202,4 +202,14 @@ class HftContact extends Contact
 		));
 	}
 	
+	public function getGridScopes() {
+		return array_merge_recursive(parent::getGridScopes(), array(
+			'items'=>array(
+				'donors' => array(
+					'label'=>'Donors',
+				),	
+			)
+		));
+	}
+	
 }

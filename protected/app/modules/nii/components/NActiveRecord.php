@@ -220,4 +220,24 @@ class NActiveRecord extends CActiveRecord
 			$criteria->addBetweenCondition($field, ''.$this->$from.'', ''.$this->$to.'');
 	}
 	
+	/**
+	 *	Returns an array of available scopes to list as buttons above the grid view
+	 *	Currently only items is in use, but this could easily be extended to set the default etc.
+	 *	@return array - uses formatting like 'scopes' in NScopeList and NGridView
+	 * 
+	 *	Example array to be returned:
+	 *	array(
+	 *		'items' => array(
+	 *			'scope' => array(
+	 *				'label' => 'Scope Name',
+	 *				'description' => 'Description of the scope',
+	 *			),
+	 *		)
+	 *	)
+	 * 
+	 */
+	public function getGridScopes() {
+		return array();
+	}
+	
 }

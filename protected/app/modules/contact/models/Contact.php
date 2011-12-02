@@ -566,6 +566,23 @@ class Contact extends NActiveRecord {
 	public function getDobFormatted() {
 		return date('d M Y', strtotime($this->dob));
 	}
+	
+	public function getGridScopes() {
+		return array(
+			'items' => array(
+				'default' => array(
+					'label'=>'All',
+				),
+				'emails' => array(
+					'label'=>'Emails',
+					'description'=>'All contacts with a valid email address',
+				),
+				'newsletter' => array(
+					'label'=>'Newsletter',
+				),
+			),
+		);
+	}
 
 	public function getTabs() {
 		/* Get the relations information from the module and convert into tabs */

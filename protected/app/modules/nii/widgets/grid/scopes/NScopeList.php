@@ -35,8 +35,9 @@ class NScopeList extends CWidget {
 	}
 
 	public function createScopeItems() {
+		$model = new $this->dataProvider->model;
 		$render = '';
-		$scopes = isset($this->scopes['items']) ? $this->scopes['items'] : null;
+		$scopes = isset($model->gridScopes['items']) ? $model->gridScopes['items'] : (isset($this->scopes['items']) ? $this->scopes['items'] : null);
 		$scopeCount = count($scopes);
 		
 		if ($this->enableCustomScopes==true) {

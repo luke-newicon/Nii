@@ -13,23 +13,6 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
 	'id' => 'ContactAllGrid',
-	'scopes' => array(
-		'items' => array(
-			'default' => array(
-				'label'=>'All',
-			),
-			'emails' => array(
-				'label'=>'Emails',
-				'description'=>'All contacts with a valid email address',
-			),
-			'newsletter' => array(
-				'label'=>'Newsletter',
-			),
-			'donors' => array(
-				'label'=>'Donors',
-			),
-		),
-	),
 	'enableButtons'=>true,
 	'enableCustomScopes'=>true,
 )); ?>
