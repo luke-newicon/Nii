@@ -21,12 +21,12 @@ class NAttachment extends NAppRecord {
      */
     public function tableName()
     {
-        return '{{attachment}}';
+        return '{{nii_attachment}}';
     }
 		
 	public static function countAttachments($model, $model_id) {
 		$attributes = array('model'=>$model,'model_id'=>$model_id);
-		return NAttachment::model()->countByAttributes($attributes);
+		return self::model()->countByAttributes($attributes);
 	}
 	
 }

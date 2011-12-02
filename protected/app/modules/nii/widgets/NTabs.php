@@ -48,6 +48,8 @@ class NTabs extends CJuiTabs {
 	public $title;
 	public $titleTemplate='<li class="heading"><h2>{title}</h2></li>';
 	
+	public $countOkClass = 'notice';
+	
 	/**
 	 * Run this widget.
 	 * This method registers necessary javascript and renders the needed HTML code.
@@ -73,8 +75,9 @@ class NTabs extends CJuiTabs {
 		{
 			$tabId = (is_array($content) && isset($content['id']))?$content['id']:$id.'_tab_'.$tabCount++;
 			
+			// Add the count span, if defined
 			if (isset($content['count']) && isset($content['id']))
-				$count = '<span class="'.$content['id'].'_count pull-right label tab_count_label'.(isset($content['count_class'])?' '.$content['count_class']:'').'">'.$content['count'].'</span>';
+				$count = '<span class="'.$content['id'].'_count pull-right label tab_count_label'.(isset($content['count_class'])?' '.$content['count_class']:($content['count']>0?' '.$this->countOkClass:'')).'">'.$content['count'].'</span>';
 			else $count = '';
 
 			if (!is_array($content))

@@ -567,6 +567,16 @@ class Contact extends NActiveRecord {
 		return date('d M Y', strtotime($this->dob));
 	}
 	
+	public function getCountRelationships() {
+		return NRelationship::countRelationships(get_class($this), $this->id);
+	}	
+	public function getCountNotes() {
+		return NNote::model()->countByAttributes(array('model'=>get_class($this), 'model_id'=>$this->id));
+	}	
+	public function getCountAttachments() {
+		return NAttachment::model()->countByAttributes(array('model'=>get_class($this), 'model_id'=>$this->id));
+	}
+	
 	public function getGridScopes() {
 		return array(
 			'items' => array(
@@ -599,9 +609,9 @@ class Contact extends NActiveRecord {
 		}
 
 		/* Default tabs */
-		$tabs['Relationships'] = array('ajax' => array('generalInfo', 'id' => $this->id()), 'id' => 'relationships');
-		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes');
-		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments');
+		$tabs['Relationships'] = array('ajax' => array('generalInfo', 'id' => $this->id()), 'id' => 'relationships', 'count' => $this->countRelationships);
+		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes', 'count' => $this->countNotes);
+		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments', 'count' => $this->countAttachments);
 
 		return $tabs;
 	}

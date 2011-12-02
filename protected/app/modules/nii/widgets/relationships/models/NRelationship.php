@@ -89,4 +89,8 @@ class NRelationship extends NActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	
+	public static function countRelationships($model, $model_id) {
+		return self::model()->countByAttributes(array('model'=>$model, 'model_id'=>$model_id));
+	}
 }

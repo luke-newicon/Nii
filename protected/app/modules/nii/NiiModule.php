@@ -40,6 +40,8 @@ class NiiModule extends NWebModule
 		}
 		// register nii js goodness
 		$this->registerScripts();
+		
+		Yii::import('nii.widgets.notes.models.NNote');
 		Yii::app()->onAfterModulesSetup = array($this, 'afterSetup');
 	}
 	

@@ -135,5 +135,10 @@ class NAttachment extends NActiveRecord
 			)
 		);
 	}
+		
+	public static function countAttachments($model, $model_id) {
+		$attributes = array('model'=>$model,'model_id'=>$model_id);
+		return self::model()->countByAttributes($attributes);
+	}
 
 }

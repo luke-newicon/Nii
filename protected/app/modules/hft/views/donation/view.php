@@ -61,8 +61,8 @@
 		array(
 			'tabs' => array(
 	//			'Relationships'=>array('ajax'=>array('generalInfo','id'=>$model->id), 'id'=>'relationships'),
-				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes'),
-				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments'),
+				'Notes'=>array('ajax'=>array('notes','id'=>$model->id), 'id'=>'notes', 'count'=>NNote::countNotes(get_class($model), $model->id)),
+				'Attachments'=>array('ajax'=>array('attachments','id'=>$model->id), 'id'=>'attachments', 'count'=>NAttachment::countAttachments(get_class($model), $model->id)),
 			),
 			'options' => array(
 				'cache' => true,
