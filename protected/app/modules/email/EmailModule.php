@@ -24,6 +24,6 @@ class EmailModule extends NWebModule
 	}
 	
 	public function install(){
-		EmailEmail::install();
+		EmailTemplate::install();
 	}
 }
