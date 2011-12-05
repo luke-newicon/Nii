@@ -10,8 +10,18 @@
  */
 
 /**
- * Description of NTaggable
+ * Adds the ability to store tags against any CActiveRecord / NActiveRecord
  *
+ * <code>
+ * public function behaviors(){
+ *     return array(
+ *         'tag'=>array(
+ *             'class'=>'nii.components.behaviors.NTaggable'
+ *         ) 
+ *      )
+ * }
+ * </code>
+ * 
  * @author steve
  */
 class NTaggable extends CActiveRecordBehavior
@@ -94,11 +104,14 @@ class NTaggable extends CActiveRecordBehavior
 	}
 	
 	
-	
-	public function widgetGetModelTags(){
-		$mt = $this->getModelTags();
+	/**
+	 * formats the array passed appropriately for use with the NTokenInput widget
+	 * @param $array the array to format
+	 * @return array formt: 'id'=>'tag name', 'name'=>'tag name'
+	 */
+	public function tagWidgetFormat($array){
 		// we want the id to be the name for our tag widget
-		$tags = array(); foreach($mt as $id=>$name) $tags[]=array('id'=>$name,'name'=>$name);
+		$tags = array(); foreach($array as $id=>$name) $tags[]=array('id'=>$name,'name'=>$name);
 		return $tags;
 	}
 

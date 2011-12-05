@@ -129,14 +129,24 @@
 					
 					<div class="field">
 						<label class="lbl" >Tags:</label>
-						<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
+						<?php 
+//						$this->widget('nii.widgets.tokeninput.NTokenInput', array(
+//							'model'=>$u,
+//	
+//							'attribute'=>'tags',
+//							'data'=>$u->tagWidgetFormat($u->getModelTags()),
+//							'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false, 'prePopulate'=>$u->tagWidgetFormat($u->tags))
+//						)); 
+						?>
+						
+						<?php 
+						$this->widget('nii.widgets.NTagInput', array(
 							'model'=>$u,
-							'attribute'=>'tags',
-							'data'=>$u->widgetGetModelTags(),
-							'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
-						)); ?>
+							'attribute'=>'tags'
+						)); 
+						?>
 					</div>
-					<?php dp($u->widgetGetModelTags()); ?>
+					<?php dp($u->tagWidgetFormat($u->getModelTags())); ?>
 				</div>
 				<div class="lastUnit">
 					<div class="field ">

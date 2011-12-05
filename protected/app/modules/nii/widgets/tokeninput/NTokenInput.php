@@ -3,7 +3,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+/**
+ * @property $inputClass the class to place on the wrapping div defaults to 'input pan'
+ * @property $options the js options to send to the tokenInput widget see the $options comments for a complete list
+ * 
+ */
 Class NTokenInput extends CInputWidget
 {
 
@@ -94,21 +98,19 @@ Class NTokenInput extends CInputWidget
 		else
 			$this->htmlOptions['name']=$name;
 
-		//$value = null;
-		if($this->hasModel()){
-			$value = CHtml::resolveValue($this->model, $this->attribute);
-		}else{
-			$value = $value = $this->value;
+		if(!isset($this->options['prePopulate'])){
+			if($this->hasModel()){
+				$value = CHtml::resolveValue($this->model, $this->attribute);
+			}else{
+				$value = $value = $this->value;
+			}
+
+			if($value!==null)
+				$this->options['prePopulate'] = $value;
 		}
 		
-
 		echo '<div class="'.$this->inputClass.'">'.CHtml::textField($name,'',$this->htmlOptions).'</div>';
-		if($value!==null){
-			$prepopulate = array();
-			foreach($value as $k=>$v)
-				$prepopulate[] = array('id'=>$v, 'name'=>$v);
-			$this->options['prePopulate'] = $prepopulate;
-		}
+		
 		if($this->url === null && $this->data === null)
 			throw new CException('you must specify the data for the tokens by specifing the data property as an array
 				of tokens or the url to ajax the data in.');
