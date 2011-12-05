@@ -406,7 +406,7 @@
 					<div class="field">
 						<label class="lbl" for="date">Date range</label>
 						<div class="line">
-							<div class="field unit">
+							<div class="field unit prn">
 								<div class="input joinedRight small">
 									<input id="date" type="text" value="May 1, 2011" />
 								</div>
@@ -417,7 +417,7 @@
 								</div>
 							</div>
 							<div class="unit pts">&nbsp;to&nbsp;</div>
-							<div class="field unit">
+							<div class="field unit prn">
 								<div class="input joinedRight small">
 									<input type="text" value="May 8, 2011" />
 								</div>
@@ -506,14 +506,71 @@
 
 				</fieldset>
 
-
-				<fieldset>
-					<legend>Groovy boxes</legend>
-					<p>Advanced form fields</p>
-					<div class="field">
-					</div>
-				</fieldset>
 			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span4">
+			<h2>Form Widgets</h2>
+			<p>Advanced form widgets to spunk up your forms</p>
+		</div>
+		<div class="span12">
+			<h2>Custom Form Components</h2>
+			<p>Crazy wysiwyg's and tag inputs... typically members of the <code>CInputWidget</code> or variety.</p>
+				
+			<div class="field">
+				<div class="input">
+				<?php
+					$this->widget('nii.widgets.editor.CKkceditor',array(
+						"name"=>'something',                # Data-Model
+					   # Attribute in the Data-Model,
+						"width"=>'100%',
+						'height'=>'200px',
+						'config'=>array(
+							'toolbar'=> array(
+								array('Bold', 'Italic', 'Underline', '-', 'Font', 'FontSize',
+									'-', 'JustifyLeft','JustifyCenter','JustifyRight', '-', 'BulletedList','NumberedList'),
+								array( 'Image', 'Link', 'Unlink', 'Anchor' )
+							),
+							//'toolbar'=>'Full',
+							'skin'=>'nii',
+							'toolbarCanCollapse'=>false,
+							'resize_enabled'=>false,
+							'bodyId'=>'composeMail'
+						),
+						"filespath"=>Yii::app()->getRuntimePath(),
+						"filesurl"=>'/runtime',
+					));
+						//"filespath"=>(!$model->isNewRecord)?Yii::app()->basePath."/../media/paquetes/".$model->idpaquete."/":"",
+						//"filesurl"=>(!$model->isNewRecord)?Yii::app()->baseUrl."/media/paquetes/".$model->idpaquete."/":"",
+
+				?>
+				</div>
+			</div>
+					
+<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
+$this->widget('nii.widgets.editor.CKkceditor',array(
+	'model'=>$model,
+	'attribute'=>'html_input',
+	'width'=>'100%',
+	'height'=>'200px',
+	'config'=>array(
+		'toolbar'=> array(
+			array('Bold', 'Italic', 'Underline', '-', 'Font', 'FontSize',
+				'-', 'JustifyLeft','JustifyCenter','JustifyRight', '-', 'BulletedList','NumberedList'),
+			array( 'Image', 'Link', 'Unlink', 'Anchor' )
+		),
+		//'toolbar'=>'Full',
+		'skin'=>'nii',
+		'toolbarCanCollapse'=>false,
+		'resize_enabled'=>false,
+		'bodyId'=>'composeMail'
+	),
+	'filespath'=>Yii::app()->getRuntimePath(),
+	'filesurl'=>'/runtime',
+));
+<?php $this->endWidget(); ?>
+			</fieldset>
 		</div>
 	</div>
 </section>
