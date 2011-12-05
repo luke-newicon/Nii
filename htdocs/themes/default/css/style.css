@@ -53,9 +53,7 @@ form .lastUnit,fieldset .lastUnit{padding-left:5px}
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
 
-.grid-view table {
-	margin-bottom: 0px;
-}
+.grid-view table {margin-bottom: 0px;clear:right;}
 
 .grid-view .grid-top-summary {
 	margin-bottom: 10px;

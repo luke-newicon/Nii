@@ -8,7 +8,7 @@
 class HftModule extends NWebModule 
 {
 	public $name = 'Hope for Tomorrow';
-	public $description = 'Module to manage contacts and donations';
+	public $description = 'Module to manage donations, events and extra stuff in contacts';
 	public $version = '0.0.1';
 	
 	public function init() {
