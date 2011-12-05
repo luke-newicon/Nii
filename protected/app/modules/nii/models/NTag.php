@@ -39,7 +39,7 @@ class NTag extends NActiveRecord
 		return array(
 			'columns'=>array(
 				'id'=>'pk',
-				'name'=>'string'
+				'name'=>'string NOT NULL'
 			),
 			'keys'=>array(
 				array('tag_key', 'name', true)

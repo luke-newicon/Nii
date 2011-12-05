@@ -37,17 +37,20 @@ class NTaggable extends CActiveRecordBehavior
 	 */
 	public function setTags($tags, $delimiter=',')
 	{
-		Yii::import('nii.components.db.*');
-		if(is_string($tags))
-			$tags = explode($delimiter, $tags);
 		
-		if(empty($tags))
-			return;
+		
+		Yii::import('nii.components.db.*');
 		
 		// delete all existing tags for this row in the associations table
 		$this->deleteTags();
-			
-		if (count($tags)==0)
+		
+		if($tags==''||$tags===null)
+			return;
+		
+		if(is_string($tags) && $tags!='')
+			$tags = explode($delimiter, $tags);
+		
+		if(empty($tags))
 			return;
 
 		// ok, so sort out the new set of tags
