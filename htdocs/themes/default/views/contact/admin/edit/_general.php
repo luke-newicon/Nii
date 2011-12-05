@@ -162,11 +162,9 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 				<div class="unit size1of6"><?= $form->labelEx($c,'tags') ?></div>
 				<div class="lastUnit">
 					<?php 
-						$this->widget('nii.widgets.tokeninput.NTokenInput', array(
+						$this->widget('nii.widgets.NTagInput', array(
 							'model'=>$c,
 							'attribute'=>'tags',
-							'data'=>NData::keyValueToArray($c->getModelTags(),'name','name'),
-							'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
 						)); ?>
 				</div>
 			</div>
