@@ -122,8 +122,8 @@
 		foreach($users as $found)
 			dp($found->email);
 	?>
-			<h2>Tag Form Input, NTagInput Widget</h2>
-		<form method="post">
+			
+			<form method="post">
 			<div class="line">
 				<div class="unit size1of2">
 					
@@ -146,6 +146,7 @@
 						)); 
 						?>
 					</div>
+					<?php dp($u->tagWidgetFormat($u->getModelTags())); ?>
 				</div>
 				<div class="lastUnit">
 					<div class="field ">
@@ -156,15 +157,10 @@
 					</div>
 				</div>
 			</div>
-			<input type="submit" value="submit" />
-		</form>
-			
-<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
-	$this->widget('nii.widgets.NTagInput', array(
-		'model'=>$u,
-		'attribute'=>'tags'
-	)); 
-<?php $this->endWidget(); ?>
+				<input type="submit" value="submit" />
+	</form>
+<!--	</div>-->
+	
 	
 	
 	

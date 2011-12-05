@@ -37,6 +37,8 @@ class NTaggable extends CActiveRecordBehavior
 	 */
 	public function setTags($tags, $delimiter=',')
 	{
+		
+		
 		Yii::import('nii.components.db.*');
 		
 		// delete all existing tags for this row in the associations table
@@ -141,9 +143,6 @@ class NTaggable extends CActiveRecordBehavior
 		return $tags;
 	}
 	
-	/**
-	 * Output tags
-	 */
 	public function printTags() {
 		$tags = $this->getTags();
 		foreach ($tags as $tag) {
