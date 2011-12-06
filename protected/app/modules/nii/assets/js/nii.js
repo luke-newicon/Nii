@@ -133,7 +133,6 @@ Array.prototype.remove = function(from, to) {
 			
 			var $form = $(form);
 			var settings = $form.data('settings');
-			console.log(settings);
 			var messages = {};
 			var needAjaxValidation = false;
 			$.each(settings.attributes, function(){
