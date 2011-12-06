@@ -560,6 +560,27 @@ $this->widget('nii.widgets.editor.CKkceditor',array(
 				'-', 'JustifyLeft','JustifyCenter','JustifyRight', '-', 'BulletedList','NumberedList'),
 			array( 'Image', 'Link', 'Unlink', 'Anchor' )
 		),
+//    Additional toolbar items:
+//	  ['Source','-','Save','NewPage','Preview','-','Templates'],
+//    ['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print', 'SpellChecker', 'Scayt'],
+//    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+//    '/',
+//    ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+//    ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
+//    ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+//    ['BidiLtr', 'BidiRtl'],
+//    ['Link','Unlink','Anchor'],
+//    ['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak','Iframe'],
+//    '/',
+//    ['Styles','Format','Font','FontSize'],
+//    ['TextColor','BGColor'],
+//    ['Maximize', 'ShowBlocks','-','About']
+//    ];
+//		'config'=>array('toolbar'=> array(
+//				array( 'Source', '-', 'Bold', 'Italic', 'Underline', 'Strike' ),
+//				array( 'Image', 'Link', 'Unlink', 'Anchor' )
+//			),
+//			'ui'=>'',
 		//'toolbar'=>'Full',
 		'skin'=>'nii',
 		'toolbarCanCollapse'=>false,
