@@ -1,11 +1,15 @@
 <?php
 
-class IndexController extends NController
+class IndexController extends AController
 {
 	
 	public function actionIndex()
 	{
-		echo 'Ok';
+		$model = new EmailCampaign;
+		$this->render('index', array(
+			'dataProvider'=>$model->search(),
+			'model'=>$model,
+		));
 	}
 	
 }

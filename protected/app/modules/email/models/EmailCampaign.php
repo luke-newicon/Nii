@@ -4,7 +4,7 @@
  * This is the model class for table "email_template".
  *
 */
-class EmailTemplate extends NActiveRecord {
+class EmailCampaign extends NActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -18,7 +18,7 @@ class EmailTemplate extends NActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{email_template}}';
+		return '{{email_campaign}}';
 	}
 
 	public function getModule() {
@@ -32,8 +32,8 @@ class EmailTemplate extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, name', 'required'),
-			array('content, subject, default_group', 'safe'),
+			array('id', 'required'),
+			array('template_id, content, subject', 'safe'),
 		);
 	}
 
@@ -44,7 +44,7 @@ class EmailTemplate extends NActiveRecord {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		$relations = array(
-			
+			'template' => array(self::BELONGS_TO, 'EmailTemplate', 'template_id'),
 		);
 
 //		foreach ($this->relations as $name => $relation) {
@@ -60,11 +60,8 @@ class EmailTemplate extends NActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'description' => 'Description',
-			'subject' => 'Email Subject',
-			'content' => 'Template',
-			'default_group' => 'Default Group',
+			'template_id' => 'Select a Template',
+			'recipients' => 'Recipients',
 		);
 	}
 
@@ -77,28 +74,24 @@ class EmailTemplate extends NActiveRecord {
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
-		$criteria->compare('name', $this->name, true);
-		$criteria->compare('description', $this->description, true);
-		$criteria->compare('subject', $this->subject, true);
+		$criteria->compare('template.name', $this->template_id, true);
 
 		$sort = new CSort;
 		$sort->defaultOrder = 'id DESC';
 
 		return new NActiveDataProvider($this, array(
-			'criteria' => $criteria,
-			'sort' => $sort,
-			'pagination' => array(
-				'pageSize' => 20,
-			),
-		));
+					'criteria' => $criteria,
+					'sort' => $sort,
+					'pagination' => array(
+						'pageSize' => 20,
+					),
+				));
 	}
 
 	public function columns() {
 		return array(
-			'name',
-			'description',
-			'subject',
-			'default_group',
+			'id',
+			'template_id',
 		);
 	}
 
@@ -107,26 +100,26 @@ class EmailTemplate extends NActiveRecord {
 		return array(
 			'columns' => array(
 				'id' => "pk",
-				'name' => "varchar(255)",
-				'description' => "text",
-				'subject' => "text",
-				'content' => "text",
-				'default_group' => "varchar(255)",
+				'template_id' => "int(11)",
+				'recipients' => "text",
 			),
 			'keys' => array());
 	}
 	
+//	function behaviors() {
+//		return array(
+//			'trash'=>array(
+//				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+//				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+//			),
+//			'tag'=>array(
+//               'class'=>'nii.components.behaviors.NTaggable'
+//           )
+//		);
+//	}
 	
 	public static function install($className=__CLASS__){
 		parent::install($className);
-	}
-	
-	public static function getTemplatesArray() {
-		$templates = self::model()->findAll();
-		$t = array();
-		foreach ($templates as $template)
-			$t[$template->id] = $template->name;
-		return $t;
 	}
 	
 }

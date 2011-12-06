@@ -61,6 +61,8 @@ class ContactModule extends NWebModule {
 	public function install() {
 		FB::log('INSTALL MODULE '.$this->getId());
 		Contact::install('Contact');
+		ContactGroup::install('ContactGroup');
+		ContactGroupContact::install('ContactGroupContact');
 		$this->installPermissions();
 	}
 	
