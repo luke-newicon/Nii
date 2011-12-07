@@ -60,7 +60,7 @@ class EmailCampaign extends NActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'template_id' => 'Select a Template',
+			'template_id' => 'Select a Campaign',
 			'recipients' => 'Recipients',
 		);
 	}
@@ -102,6 +102,8 @@ class EmailCampaign extends NActiveRecord {
 				'id' => "pk",
 				'template_id' => "int(11)",
 				'recipients' => "text",
+				'subject' => "text",
+				'content' => "text",
 			),
 			'keys' => array());
 	}
@@ -128,16 +130,27 @@ class EmailCampaign extends NActiveRecord {
 					type: "get",
 					dataType: "json",
 					success: function(response){ 
+						$(".email-campaign-details").show();
 						CKEDITOR.instances.content.setData(response.content);
-						if (response.recipients)
+						$("#EmailCampaign_subject").val(response.subject);
+						if (response.recipients) {
+							jQuery("#EmailCampaign_recipients").tokenInput("clear");
 							jQuery("#EmailCampaign_recipients").tokenInput("add",response.recipients);
+						}
 					},
 					error: function() {
 						alert ("JSON failed to return a valid response");
 					}
 				}); 
 			} else {
+				if (template_id=="0") {
+					$(".email-campaign-details").show();
+				} else {
+					$(".email-campaign-details").hide();
+				}
 				CKEDITOR.instances.content.setData("");
+				$("#EmailCampaign_subject").val("");
+				jQuery("#EmailCampaign_recipients").tokenInput("clear");
 			}
 			return false;
 		})';

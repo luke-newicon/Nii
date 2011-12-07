@@ -20,7 +20,7 @@ class EmailModule extends NWebModule
 	public function setup() {
 		Yii::app()->menus->addItem('main', 'Emails', array('/email/index'));
 		Yii::app()->menus->addItem('main', 'All Emails', array('/email/index'), 'Emails');
-		Yii::app()->menus->addItem('main', 'New Email Campaign', array('/email/template/create'), 'Emails');
+		Yii::app()->menus->addItem('main', 'Send an Email', array('/email/index/create'), 'Emails');
 
 	}
 	

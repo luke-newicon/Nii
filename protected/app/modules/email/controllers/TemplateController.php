@@ -7,33 +7,9 @@ class TemplateController extends AController
 		return;
 	}
 	
-	public function actionCreate() {
-		
-		$this->pageTitle = Yii::app()->name . ' - New Email Campaign';
-		$modelName = 'EmailCampaign';
-		
-		$model = new $modelName;
-		
-		$this->performAjaxValidation($model);
-		
-		if (isset($_POST[$modelName])) {
-			$model->attributes = $_POST[$modelName];
-			
-			if($model->save()) {
-				
-				NLog::insertLog('Inserted new template details (id: '.$model->id.')', $model);
-				$this->redirect(array("template/send","id"=>$model->id));		
-			}
-		}
-		
-		$this->render('create', array(
-			'model'=>$model,
-		));
-	}
-	
 	public function actionGetContents($id) {
 		$template = EmailTemplate::model()->findByPk($id);
-		$response = array('content'=>$template->content);
+		$response = array('content'=>$template->content, 'subject'=>$template->subject);
 		if ($template->default_group) {
 			$group = ContactGroup::model()->findByAttributes(array('name'=>$template->default_group));
 			$recipients['id'] = (int)$group->id;

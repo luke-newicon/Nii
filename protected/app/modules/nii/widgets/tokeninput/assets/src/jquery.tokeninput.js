@@ -45,14 +45,14 @@ var DEFAULT_SETTINGS = {
     idPrefix: "token-input-",
 
 	// Formatters
-    resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
+    resultsFormatter: function(item){ return "<li class='"+item['type']+"'>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
 
 	// Callbacks
     onResult: null,
     onAdd: null,
     onDelete: null,
-    onReady: null,
+    onReady: null
 };
 
 // Default classes to use when theming
@@ -186,7 +186,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var timeout;
     var input_val;
 
-    // Create a new text input an attach keyup events
+    // Create a new text input and attach keyup events
     var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
         .css({
             outline: "none"
@@ -449,6 +449,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(item) {
+		if (item.type!=undefined)
+			return false;
+		
         var this_token = settings.tokenFormatter(item);
         this_token = $(this_token)
           .addClass(settings.classes.token)
@@ -696,7 +699,8 @@ $.TokenList = function (input, url_or_data, settings) {
             $.each(results, function(index, value) {
                 var this_li = settings.resultsFormatter(value);
                 
-                this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);            
+				if (value['type']==undefined)
+					this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
                 
                 this_li = $(this_li).appendTo(dropdown_ul);
                 
@@ -706,7 +710,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass(settings.classes.dropdownItem2);
                 }
 
-                if(index === 0) {
+                if(index === 0 || (index===1 && value['type']!='header')) {
                     select_dropdown_item(this_li);
                 }
 
@@ -731,12 +735,14 @@ $.TokenList = function (input, url_or_data, settings) {
     // Highlight an item in the results dropdown
     function select_dropdown_item (item) {
         if(item) {
-            if(selected_dropdown_item) {
-                deselect_dropdown_item($(selected_dropdown_item));
-            }
+			if (item.type==undefined) {
+				if(selected_dropdown_item) {
+						deselect_dropdown_item($(selected_dropdown_item));
+				}
 
-            item.addClass(settings.classes.selectedDropdownItem);
-            selected_dropdown_item = item.get(0);
+				item.addClass(settings.classes.selectedDropdownItem);
+				selected_dropdown_item = item.get(0);
+			}
         }
     }
 

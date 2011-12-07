@@ -124,6 +124,7 @@ class EmailTemplate extends NActiveRecord {
 	public static function getTemplatesArray() {
 		$templates = self::model()->findAll();
 		$t = array();
+		$t[0] = '--> Create New';
 		foreach ($templates as $template)
 			$t[$template->id] = $template->name;
 		return $t;
