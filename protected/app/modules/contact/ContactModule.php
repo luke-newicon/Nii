@@ -14,6 +14,27 @@ class ContactModule extends NWebModule {
 	public $views = array();
 	
 	public $relations = array();
+	
+	/**
+	 * Display contact name: First, Last
+	 * @var boolean
+	 */
+	public $displayOrderFirstLast = false;
+	/**
+	 * Dislay contact name: Last, First
+	 * @var boolean
+	 */
+	public $displayOrderLastFirst = true;
+	/**
+	 * Sort contact by name: First, Last
+	 * @var boolean
+	 */
+	public $sortOrderFirstLast = false;
+	/**
+	 * Sort contact by name: Last, First
+	 * @var bollean
+	 */
+	public $sortOrderLastFirst = true;
 
 	public function init() {
 		Yii::import('contact.models.*');

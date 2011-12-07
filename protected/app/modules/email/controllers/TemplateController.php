@@ -31,6 +31,20 @@ class TemplateController extends AController
 		));
 	}
 	
+	public function actionGetContents($id) {
+		$template = EmailTemplate::model()->findByPk($id);
+		$response = array('content'=>$template->content);
+		if ($template->default_group) {
+			$group = ContactGroup::model()->findByAttributes(array('name'=>$template->default_group));
+			$recipients['id'] = (int)$group->id;
+			$recipients['name'] = $group->label;
+		}
+		if (isset($recipients))
+			$response['recipients'] = $recipients;
+		echo CJSON::encode($response) ;
+		Yii::app()->end();
+	}
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated

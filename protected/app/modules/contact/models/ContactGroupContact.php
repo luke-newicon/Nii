@@ -1,7 +1,15 @@
 <?php
 
-class ContactGroupContact extends NActiveRecord {
-		
+class ContactGroupContact extends NActiveRecord 
+{
+	
+	/**
+	 * Returns the static model of the specified AR class.
+	 * @return Contact the static model class
+	 */
+	public static function model($className=__CLASS__) {
+		return parent::model($className);
+	}		
 	
 	/**
 	 * @return string the associated database table name

@@ -10,8 +10,25 @@ $form = $this->beginWidget('NActiveForm', array(
 	<div class="line field">
 		<div class="unit size1of6"><?= $form->labelEx($model,'template_id') ?></div>
 		<div class="lastUnit">
-			<div class="input w250"><?php echo $form->dropDownList($model,'template_id',EmailTemplate::getTemplatesArray(), array('prompt'=>'...')); ?></div>
+			<div class="input w250">
+				<?php echo $form->dropDownList($model,'template_id',EmailTemplate::getTemplatesArray(), array(
+					'prompt'=>'...',
+					'onchange'=>$model->selectTemplateFromDropdown(),
+				)); ?>
+			</div>
 			<?php echo $form->error($model,'template_id'); ?>
+		</div>
+	</div>
+	<div class="line field">
+		<div class="unit size1of6"><?= $form->labelEx($model,'recipients') ?></div>
+		<div class="lastUnit">
+				<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
+					'model'=>$model,
+					'attribute'=>'recipients',
+					'url'=>'/email/index/contacts',
+					'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
+				)); ?>
+			<?php echo $form->error($model,'recipients'); ?>
 		</div>
 	</div>
 	<div class="line field">

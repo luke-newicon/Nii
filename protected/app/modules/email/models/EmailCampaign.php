@@ -118,6 +118,31 @@ class EmailCampaign extends NActiveRecord {
 //		);
 //	}
 	
+	public function selectTemplateFromDropdown() {
+		return 'jQuery(function($){
+			var template_id = $("#EmailCampaign_template_id").val();
+			if (template_id>0 && template_id !="") {
+				var contentUrl = "' . Yii::app()->baseUrl . '/email/template/getContents/id/"+template_id;
+				$.ajax({
+					url: contentUrl,
+					type: "get",
+					dataType: "json",
+					success: function(response){ 
+						CKEDITOR.instances.content.setData(response.content);
+						if (response.recipients)
+							jQuery("#EmailCampaign_recipients").tokenInput("add",response.recipients);
+					},
+					error: function() {
+						alert ("JSON failed to return a valid response");
+					}
+				}); 
+			} else {
+				CKEDITOR.instances.content.setData("");
+			}
+			return false;
+		})';
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}

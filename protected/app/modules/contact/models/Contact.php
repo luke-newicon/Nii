@@ -553,6 +553,32 @@ class Contact extends NActiveRecord {
 		else
 			return $this->name;
 	}
+	
+	public function nameLikeQuery($term){
+		if(Yii::app()->getModule('contact')->displayOrderFirstLast){
+			$col1='first_name';	$col2='last_name';
+		}else{
+			$col1='last_name'; $col2='first_name';
+		}
+		$p = array(':t0'=>"%$term%");
+		if(strpos($term, ' ') === false) {
+			$q = "($col1 like :t0 or $col2 like :t0)";
+		} else {
+			// as soon as there is a space assume firstname *space* lastname
+			$name = explode(' ', $term);
+			$t1 = trim($name[0]);
+			$t2 = array_key_exists(1, $name) ? trim($name[1]) : '';
+			$p[':t1'] = "%$t1%";
+			$p[':t2'] = "%$t2%";
+			
+			$q = "($col1 like :t1 AND $col2 like :t2) or ($col1 like :t2 AND $col2 like :t1)";
+		}
+		$q .= " or company like :t0";
+		return array(
+			'condition'=>$q,
+			'params'=>$p,
+		);
+	}
 
 	public function getComputerUserId() {
 		$names = explode(' ', $this->salutation . ' ' . $this->lastname);
