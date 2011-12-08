@@ -101,7 +101,6 @@ class NImage extends CImageComponent
 	public function show($id, $type=null) {
 		
 		$imageCacheId = $this->getCacheId($id,$type);
-		FB::log($imageCacheId); 
 		// if cache is enabled WHICH IT SHOULD BE! lets check for chache
 		if (Yii::app()->cache !== NULL){
 			if(($cachedImage = Yii::app()->cache->get($imageCacheId))){

@@ -120,6 +120,19 @@ class NData
 		return require(Yii::getPathOfAlias('nii.data.countries').'.php');
 	}
 	
+	/**
+	 * Look up country name based on the two character country code.
+	 *  
+	 * @param string $countryCode country code e.g. 'GB'
+	 * @return string country name 
+	 */
+	public static function getCountry($countryCode){
+		$countries = NData::countries();
+		if(!array_key_exists($countryCode, $countries))
+				return 'unknown';
+		return $countries[$countryCode];
+	}
+	
 	
 	/**
 	 * Take an integer in pence and convert to pounds

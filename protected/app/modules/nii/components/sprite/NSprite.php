@@ -158,7 +158,6 @@ Class NSprite extends CApplicationComponent
 	 * @return void
 	 */
 	private function _generateImage(){
-		FB::log($this->_imageFolderPath, 'generate image sprite');
 		$total = $this->_totalSize();
 		if($total['width'] > 0 && $total['height'] > 0){
 			$sprite = imagecreatetruecolor($total['width'], $total['height']); 
