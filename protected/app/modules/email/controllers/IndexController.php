@@ -41,18 +41,21 @@ class IndexController extends AController
 		// escape % and _ characters
 		$q = strtr($q, array('%'=>'\%', '_'=>'\_'));
 		$data = array();
+		
+		// Search in database-based groups
 		$groups = ContactGroup::model()->findAll(
 			array(
 				'condition'=>"name LIKE '".$q."%' OR label LIKE '".$q."%'",
 				'limit'=>30,
 			)
 		);
+		
 		if ($groups) {
 			$data[] = array('id'=>'', 'name'=>'Groups','type'=>'header');
-			foreach($groups as $g){
+			foreach($groups as $g)
 				$data[] = array('id'=>$g->id, 'name'=>$g->label);
-			}
 		}
+		
 		$contacts = Contact::model()->findAll(
 			array(
 				'condition'=>"lastname LIKE '".$q."%' OR givennames LIKE '".$q."%'",

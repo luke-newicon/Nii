@@ -43,6 +43,22 @@ class HftModule extends NWebModule
 				),
 			),
 		));
+		
+		Yii::app()->getModule('contact')->groups = CMap::mergeArray(Yii::app()->getModule('contact')->groups, array(
+			'recent_donors' => array(
+				'name' => 'Recent Donors',
+				'description' => 'People that have donated in the last 2 weeks',
+				'count' => HftDonation::countRecentDonors(),
+				'contactIds' => ''
+			),
+			'major_donors' => array(
+				'name' => 'Major Donors',
+				'description' => 'People that have donated a large sum (over &pound;2,000)',
+				'count' => HftDonation::countMajorDonors(),
+				'contactIds' => ''
+			)
+		));
+		
 	}
 	
 	

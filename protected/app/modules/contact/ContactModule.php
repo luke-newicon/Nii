@@ -15,6 +15,8 @@ class ContactModule extends NWebModule {
 	
 	public $relations = array();
 	
+	public $groups = array();
+	
 	/**
 	 * Display contact name: First, Last
 	 * @var boolean
@@ -103,6 +105,28 @@ class ContactModule extends NWebModule {
 		foreach ($this->views[$key] as $k => $view) {
 			Yii::app()->controller->renderPartial($view, array('data'=>$data));
 		}
+	}
+	
+	/**
+	 *	Add an item to groups array
+	 * @param array $group 
+	 */
+	public function addGroup($group=array()) {
+		Yii::app()->getModule('contact')->groups = CMap::mergeArray(Yii::app()->getModule('contact')->groups, $group);
+	}
+	
+	public function getGroups() {
+		return $this->groups;
+	}
+	
+	public function searchGroups($term) {
+		$groups = array();
+		foreach ($this->groups as $key => $group) {
+			if (strstr($key, $term) || strstr($group['name'], $term))
+				$groups[$key]['id'] = $key;
+				$groups[$key]['label'] = $group['name'] .' ('.$group['count'].')';
+		}
+		return $groups;
 	}
 	
 	/**

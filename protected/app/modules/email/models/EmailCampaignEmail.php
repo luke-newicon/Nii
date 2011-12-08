@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This is the model class for table "email_template".
+ * This is the model class for table "email_campaign_email".
  *
 */
-class EmailCampaign extends NActiveRecord {
+class EmailCampaignEmail extends NActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -18,7 +18,7 @@ class EmailCampaign extends NActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{email_campaign}}';
+		return '{{email_campaign_email}}';
 	}
 
 	public function getModule() {
@@ -32,8 +32,8 @@ class EmailCampaign extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
-			array('template_id, content, subject', 'safe'),
+			array('campaign_id', 'required'),
+			array('contact_id, email_address, sent_date, opened_date', 'safe'),
 		);
 	}
 
@@ -44,13 +44,8 @@ class EmailCampaign extends NActiveRecord {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		$relations = array(
-			'template' => array(self::BELONGS_TO, 'EmailCampaignTemplate', 'template_id'),
 		);
 
-//		foreach ($this->relations as $name => $relation) {
-//			if (isset($relation['relation']))
-//				$relations[$name] = $relation['relation']; 
-//		}
 		return $relations;
 	}	
 

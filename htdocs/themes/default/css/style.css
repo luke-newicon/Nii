@@ -522,3 +522,7 @@ div.topbar div > ul > li.menu:hover ul {
 .scopes .btn.active a {
 	color: #fff;
 }
+
+.topbar div > ul a, .nav a {
+	white-space: nowrap;
+}

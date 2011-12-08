@@ -21,11 +21,13 @@ class EmailModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Emails', array('/email/index'));
 		Yii::app()->menus->addItem('main', 'All Emails', array('/email/index'), 'Emails');
 		Yii::app()->menus->addItem('main', 'Send an Email', array('/email/index/create'), 'Emails');
+		Yii::app()->menus->addItem('main', 'Manage Saved Campaigns', array('/email/manage/index'), 'Emails');
 
 	}
 	
 	public function install(){
-		EmailTemplate::install();
+		EmailCampaignTemplate::install();
 		EmailCampaign::install();
+		EmailTemplate::install();
 	}
 }

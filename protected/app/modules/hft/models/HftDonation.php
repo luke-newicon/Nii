@@ -286,4 +286,12 @@ class HftDonation extends NActiveRecord
 			return '<span class="noData">No event assigned</span>';
 	}
 	
+	public static function countRecentDonors() {
+		return self::model()->count('date_received >= :date GROUP BY contact_id',array(':date' => date('Y-m-d',strtotime('- 2 weeks'))));
+	}
+	
+	public static function countMajorDonors() {
+		return self::model()->count('donation_amount >= :amount GROUP BY contact_id',array(':amount' => 2000));
+	}
+	
 }

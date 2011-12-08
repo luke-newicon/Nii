@@ -9,9 +9,9 @@ $form = $this->beginWidget('NActiveForm', array(
 <div class="container pull-left">
 	<div class="line field">
 		<div class="unit w140"><?= $form->labelEx($model,'template_id') ?></div>
-		<div class="lastUnit">
-			<div class="input w500">
-				<?php echo $form->dropDownList($model,'template_id',EmailTemplate::getTemplatesArray(), array(
+		<div class="lastUnit w500">
+			<div class="input">
+				<?php echo $form->dropDownList($model,'template_id',EmailCampaignTemplate::getTemplatesArray(), array(
 					'prompt'=>'...',
 					'onchange'=>$model->selectTemplateFromDropdown(),
 				)); ?>
@@ -36,8 +36,8 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 		<div class="line field">
 			<div class="unit w140"><?= $form->labelEx($model,'subject') ?></div>
-			<div class="lastUnit">
-				<div class="input w500">
+			<div class="lastUnit w500">
+				<div class="input">
 					<?php echo $form->textField($model,'subject'); ?>
 				</div>
 				<?php echo $form->error($model,'subject'); ?>
@@ -45,7 +45,7 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 	</div>
 	<div class="line field">
-		<div class="lbl">Email Content</div>
+		<div class="lbl"><?= $form->labelEx($model,'content') ?></div>
 		<div class="unit size2of3">
 			<div class="input">
 			<?php

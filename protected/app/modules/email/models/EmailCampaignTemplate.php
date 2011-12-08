@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This is the model class for table "email_template".
+ * This is the model class for table "email_campaign_template".
  *
 */
-class EmailTemplate extends NActiveRecord {
+class EmailCampaignTemplate extends NActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -18,7 +18,7 @@ class EmailTemplate extends NActiveRecord {
 	 * @return string the associated database table name
 	 */
 	public function tableName() {
-		return '{{email_template}}';
+		return '{{email_campaign_template}}';
 	}
 
 	public function getModule() {
@@ -33,7 +33,7 @@ class EmailTemplate extends NActiveRecord {
 		// will receive user inputs.
 		return array(
 			array('id, name', 'required'),
-			array('content', 'safe'),
+			array('content, subject, default_group', 'safe'),
 		);
 	}
 
@@ -47,6 +47,10 @@ class EmailTemplate extends NActiveRecord {
 			
 		);
 
+//		foreach ($this->relations as $name => $relation) {
+//			if (isset($relation['relation']))
+//				$relations[$name] = $relation['relation']; 
+//		}
 		return $relations;
 	}	
 
@@ -58,7 +62,9 @@ class EmailTemplate extends NActiveRecord {
 			'id' => 'ID',
 			'name' => 'Name',
 			'description' => 'Description',
-			'content' => 'Template Content',
+			'subject' => 'Email Subject',
+			'content' => 'Email Content',
+			'default_group' => 'Default Group',
 		);
 	}
 
@@ -73,6 +79,7 @@ class EmailTemplate extends NActiveRecord {
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
+		$criteria->compare('subject', $this->subject, true);
 
 		$sort = new CSort;
 		$sort->defaultOrder = 'id DESC';
@@ -90,6 +97,8 @@ class EmailTemplate extends NActiveRecord {
 		return array(
 			'name',
 			'description',
+			'subject',
+			'default_group',
 		);
 	}
 
@@ -100,7 +109,10 @@ class EmailTemplate extends NActiveRecord {
 				'id' => "pk",
 				'name' => "varchar(255)",
 				'description' => "text",
+				'subject' => "text",
 				'content' => "text",
+				'design_template_id' => "int(11)",
+				'default_group' => "varchar(255)",
 			),
 			'keys' => array());
 	}
@@ -108,6 +120,15 @@ class EmailTemplate extends NActiveRecord {
 	
 	public static function install($className=__CLASS__){
 		parent::install($className);
+	}
+	
+	public static function getTemplatesArray() {
+		$templates = self::model()->findAll();
+		$t = array();
+		$t[0] = '--> Create New';
+		foreach ($templates as $template)
+			$t[$template->id] = $template->name;
+		return $t;
 	}
 	
 }
