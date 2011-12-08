@@ -33,7 +33,7 @@ class EmailTemplate extends NActiveRecord {
 		// will receive user inputs.
 		return array(
 			array('id, name', 'required'),
-			array('content, subject', 'safe'),
+			array('content, subject, default_group', 'safe'),
 		);
 	}
 
@@ -44,14 +44,13 @@ class EmailTemplate extends NActiveRecord {
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		$relations = array(
-			'photo' => array(self::HAS_ONE, 'NAttachment', 'model_id',
-				'condition' => 'photo.model="' . __CLASS__ . '" AND photo.type="contact-thumbnail" '),
+			
 		);
 
-		foreach ($this->relations as $name => $relation) {
-			if (isset($relation['relation']))
-				$relations[$name] = $relation['relation']; 
-		}
+//		foreach ($this->relations as $name => $relation) {
+//			if (isset($relation['relation']))
+//				$relations[$name] = $relation['relation']; 
+//		}
 		return $relations;
 	}	
 
@@ -65,6 +64,7 @@ class EmailTemplate extends NActiveRecord {
 			'description' => 'Description',
 			'subject' => 'Email Subject',
 			'content' => 'Template',
+			'default_group' => 'Default Group',
 		);
 	}
 
@@ -85,12 +85,12 @@ class EmailTemplate extends NActiveRecord {
 		$sort->defaultOrder = 'id DESC';
 
 		return new NActiveDataProvider($this, array(
-					'criteria' => $criteria,
-					'sort' => $sort,
-					'pagination' => array(
-						'pageSize' => 20,
-					),
-				));
+			'criteria' => $criteria,
+			'sort' => $sort,
+			'pagination' => array(
+				'pageSize' => 20,
+			),
+		));
 	}
 
 	public function columns() {
@@ -98,6 +98,7 @@ class EmailTemplate extends NActiveRecord {
 			'name',
 			'description',
 			'subject',
+			'default_group',
 		);
 	}
 
@@ -109,20 +110,24 @@ class EmailTemplate extends NActiveRecord {
 				'name' => "varchar(255)",
 				'description' => "text",
 				'subject' => "text",
+				'content' => "text",
+				'default_group' => "varchar(255)",
 			),
 			'keys' => array());
 	}
 	
-	function behaviors() {
-		return array(
-			'trash'=>array(
-				'class'=>'nii.components.behaviors.ETrashBinBehavior',
-				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
-			),
-			'tag'=>array(
-               'class'=>'nii.components.behaviors.NTaggable'
-           )
-		);
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
 	}
-
+	
+	public static function getTemplatesArray() {
+		$templates = self::model()->findAll();
+		$t = array();
+		$t[0] = '--> Create New';
+		foreach ($templates as $template)
+			$t[$template->id] = $template->name;
+		return $t;
+	}
+	
 }
