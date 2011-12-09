@@ -19,8 +19,6 @@ $form = $this->beginWidget('NActiveForm', array(
 				<a href="<?php echo CHtml::normalizeUrl(array('impersonate','id'=>$model->id())) ?>" class="btn info">Impersonate</a>
 			<?php endif; ?>
 			<a href="<?php echo CHtml::normalizeUrl(array('deleteUser','id'=>$model->id())) ?>" class="btn danger" data-confirm="Are you sure you want to delete <?php echo $model->name; ?>?">Delete <?php echo $model->name; ?></a>
-			<a href="<?php echo CHtml::normalizeUrl(array('users')) ?>" class="btn">Cancel</a>
-			<input type="submit" class="btn primary" value="Save" />
 		</div>
 	</div>
 
@@ -71,26 +69,6 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 	<div class="line">
 		<div class="field unit size1of2">
-			<?php echo $form->labelEx($model, 'password'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->passwordField($model, 'password'); ?>
-				</div>
-				<?php echo $form->error($model, 'password'); ?>
-			</div>
-		</div>
-		<div class="field lastUnit">
-			<?php echo $form->labelEx($model, 'verifyPassword'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->passwordField($model, 'verifyPassword'); ?>
-				</div>
-				<?php echo $form->error($model, 'verifyPassword'); ?>
-			</div>
-		</div>
-	</div>
-	<div class="line">
-		<div class="field unit size1of2">
 			<?php echo $form->labelEx($model, 'superuser'); ?>
 			<div class="inputContainer">
 				<div class="input">
@@ -120,6 +98,15 @@ $form = $this->beginWidget('NActiveForm', array(
 			</div>
 		</div>
 	</div>
+	<div class="line">
+		<div class="field">
+			<a href="#" class="btn" data-controls-modal="modal-user-edit-password" data-backdrop="static">Change Password</a>
+			<label>
+				<?php echo $form->checkBox($model, 'update_password'); ?>
+				<?php echo $form->label($model, 'update_password'); ?>
+			</label>
+		</div>
+	</div>
 	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	</div>
 		<div class="actions">
@@ -129,3 +116,20 @@ $form = $this->beginWidget('NActiveForm', array(
 	<?php endif; ?>
 </fieldset>
 <?php $this->endWidget(); ?>
+<div class="modal hide fade" id="modal-user-edit-password">
+	<div class="modal-header">
+		<a class="close" href="#">×</a>
+		<h3>Change Password</h3>
+	</div>
+	<div class="modal-body"></div>
+	<div class="modal-footer">
+		<a id="user-edit-password-save" class="btn primary" href="#">Update Password</a>
+	</div>
+</div>
+<script>
+	jQuery(function($){		
+		$('#modal-user-edit-password').bind('show', function() {
+			$('#modal-user-edit-password .modal-body').load('<?php echo CHtml::normalizeUrl(array('/user/admin/updatepassword','id'=>$model->id())) ?>');
+		});
+	});
+</script>

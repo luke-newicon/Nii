@@ -52,7 +52,7 @@ class User extends NActiveRecord {
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username, domain, name, email, roleName', 'safe', 'on' => 'search'),
-			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins', 'safe'),
+			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password', 'safe'),
 		);
 
 
@@ -97,6 +97,7 @@ class User extends NActiveRecord {
 			'username' => UserModule::t("Username"),
 			'password' => UserModule::t("Password"),
 			'verifyPassword' => UserModule::t("Verify Password"),
+			'update_password' => UserModule::t("Force password update on next login"),
 			'email' => UserModule::t("E-mail Address"),
 			'email_verified' => UserModule::t("Email Verified"),
 			'verifyCode' => UserModule::t("Verification Code"),
@@ -141,7 +142,7 @@ class User extends NActiveRecord {
 	public function defaultScope()
     {
         return array(
-            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins',
+            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins, update_password',
         );
     }
 
@@ -246,6 +247,7 @@ class User extends NActiveRecord {
 				'company' => 'string',
 				'username' => 'string',
 				'password' => 'string NOT NULL',
+				'update_password' => 'boolean NOT NULL DEFAULT 0',
 				'email' => 'string NOT NULL',
 				'email_verified' => 'boolean NOT NULL DEFAULT 0',
 				'activekey' => 'string NOT NULL',
@@ -257,7 +259,7 @@ class User extends NActiveRecord {
 				'plan' => 'string',
 				'trial_ends_at' => 'datetime',
 				'trial' => 'boolean NOT NULL DEFAULT 1',
-				'logins' => 'int'
+				'logins' => 'int',
 			),
 			'keys' => array(
 				array('username', 'username', true),

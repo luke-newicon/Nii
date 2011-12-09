@@ -239,16 +239,8 @@ class AdminController extends AController {
 		$this->performAjaxValidation($model, 'edit-user-form');
 
 		if (isset($_POST['UserEditForm'])) {
-			$oldPassword = $model->password;
 			$model->attributes = $_POST['UserEditForm'];
 			if ($model->validate()) {
-				if ($model->password) {
-					$model->password = $model->cryptPassword($model->password);
-					$model->verifyPassword = $model->password;
-				} else {
-					$model->password = $oldPassword;
-					$model->verifyPassword = $oldPassword;
-				}
 				if ($model->save()) {
 					$model->saveRole();
 					if (Yii::app()->request->isAjaxRequest) {
@@ -281,6 +273,29 @@ class AdminController extends AController {
 
 		$this->render('user/edit', array(
 			'model' => $model,
+		));
+	}
+	
+	public function actionUpdatePassword($id) {
+		$model = $this->loadModel();
+		$form = new UserPasswordForm;
+		if (isset($_POST['UserPasswordForm'])) {
+			$form->attributes = $_POST['UserPasswordForm'];
+			if ($form->validate()) {
+				$model->password = $model->cryptPassword($form->password);
+				$model->activekey = $model->cryptPassword(microtime() . $form->password);
+				if ($model->save()) {
+					Yii::app()->user->setFlash('success', '<strong>Password updated.</strong>');
+					echo CJSON::encode(array('success' => 'Password updated.'));
+					Yii::app()->end();
+				}
+			}
+			Yii::app()->user->setFlash('error', '<strong>Password update failure.</strong>');
+			echo CJSON::encode(array('error' => 'Password update failure.'));
+			Yii::app()->end();
+		}
+		$this->render('password', array(
+			'model' => $form,
 		));
 	}
 
