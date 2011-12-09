@@ -43,17 +43,12 @@ class IndexController extends AController
 		$data = array();
 		
 		// Search in database-based groups
-		$groups = ContactGroup::model()->findAll(
-			array(
-				'condition'=>"name LIKE '".$q."%' OR label LIKE '".$q."%'",
-				'limit'=>30,
-			)
-		);
+		$groups = ContactGroup::searchGroups($q);
 		
 		if ($groups) {
 			$data[] = array('id'=>'', 'name'=>'Groups','type'=>'header');
 			foreach($groups as $g)
-				$data[] = array('id'=>$g->id, 'name'=>$g->label);
+				$data[] = array('id'=>$g->id, 'name'=>$g->name);
 		}
 		
 		$contacts = Contact::model()->findAll(

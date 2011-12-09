@@ -25,7 +25,6 @@ class ContactGroup extends NActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Key',
-			'label' => 'Name',
 			'description' => 'Description',
 			'rules' => 'Rules',
 		);
@@ -70,11 +69,40 @@ class ContactGroup extends NActiveRecord
 			'columns' => array(
 				'id' => "pk",
 				'name' => "varchar(255)",
-				'label' => "varchar(255)",
 				'description' => "text",
 				'rules' => "text",
 			),
 			'keys' => array());
+	}
+	
+	public function getGroups() {
+		// @todo: Create getGroups function
+	}
+	
+	/**
+	 *	Search groups based on a term and return a ContactGroup model, if there are results
+	 * @param string $term
+	 * @return model ContactGroup 
+	 */
+	public static function searchGroups($term) {
+		return ContactGroup::model()->findAll(
+			array(
+				'condition'=>"name LIKE '%".$term."%'",
+				'limit'=>30,
+			)
+		);
+	}
+	
+	public function getGroup($id) {
+		// @todo: Create getGroup function
+	}
+	
+	public function getGroupContacts() {
+		// @todo: Create getGroupContacts function
+	}
+	
+	public function countGroupContacts() {
+		// @todo: Create countGroupContacts function
 	}
 	
 }
