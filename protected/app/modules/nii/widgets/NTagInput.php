@@ -8,7 +8,7 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-Yii::import('nii.widgets.tokenInput.NTokenInput');
+Yii::import('nii.widgets.tokeninput.NTokenInput');
 /**
  * This widget is an extension of NTokenInput that is designed to work with 
  * a model that has the NTaggable behavior
