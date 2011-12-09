@@ -33,9 +33,15 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
 			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
 		));
-		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label);
-		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label);
-		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label);
+		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
+			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
+		));
+		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label, array(
+			'visible' => Yii::app()->user->checkAccess('contact/supplier/index'),
+		));
+		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label, array(
+			'visible' => Yii::app()->user->checkAccess('contact/staff/index'),
+		));
 		
 		Yii::app()->getModule('contact')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
 			'customer' => 'task.controllers.CustomerController',
@@ -144,6 +150,63 @@ class TaskModule extends NWebModule
 							'task/admin/addTask',
 							'task/admin/editTask',
 							'task/admin/deleteTask',
+						),
+					),
+				),
+			),
+			'customer' => array('description' => 'Customers',
+				'tasks' => array(
+					'view' => array('description' => 'View Customers',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'contact/customer/index',
+							'contact/customer/view',
+						),
+					),
+					'manage' => array('description' => 'Add/Edit/Delete Customers',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'contact/customer/add',
+							'contact/customer/edit',
+							'contact/customer/delete',
+						),
+					),
+				),
+			),
+			'supplier' => array('description' => 'Suppliers',
+				'tasks' => array(
+					'view' => array('description' => 'View Suppliers',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'contact/supplier/index',
+							'contact/supplier/view',
+						),
+					),
+					'manage' => array('description' => 'Add/Edit/Delete Suppliers',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'contact/supplier/add',
+							'contact/supplier/edit',
+							'contact/supplier/delete',
+						),
+					),
+				),
+			),
+			'staff' => array('description' => 'Staff',
+				'tasks' => array(
+					'view' => array('description' => 'View Staff',
+						'roles' => array('administrator','editor','viewer'),
+						'operations' => array(
+							'contact/staff/index',
+							'contact/staff/view',
+						),
+					),
+					'manage' => array('description' => 'Add/Edit/Delete Staff',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'contact/staff/add',
+							'contact/staff/edit',
+							'contact/staff/delete',
 						),
 					),
 				),
