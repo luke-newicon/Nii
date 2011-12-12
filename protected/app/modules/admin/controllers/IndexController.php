@@ -7,8 +7,6 @@ class IndexController extends AController {
 	}
 
 	public function actionDashboard() {
-//		$modules = Yii::app()->getModules();
-//		echo '<pre>'.print_r($modules,true).'</pre>';
 		$this->render('dashboard');
 	}
 

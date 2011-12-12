@@ -13,6 +13,11 @@
 		<?php Yii::app()->bootstrap->registerScriptFile('bootstrap-popover.js'); ?>
 		<link rel="stylesheet" media="print" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/style.css" />
+<!--		<script>
+			var updateAlertMessages = function(message,type){
+				$('.alert-messages').append('<div data-alert class="alert-message fade in '+type+'"><a class="close" href="#">×</a><p>'+message+'</p></div>');
+			}
+		</script>-->
 	</head>
 	
 <?php
