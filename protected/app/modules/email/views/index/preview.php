@@ -9,7 +9,7 @@
 		<div class="line field">
 			<div class="unit w140">Recipients</div>
 			<div class="lastUnit w500">
-					list of recipients... 
+				<?php echo $model->listRecipients(); ?>
 			</div>
 		</div>
 		<div class="line field">

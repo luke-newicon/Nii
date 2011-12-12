@@ -183,6 +183,30 @@ class EmailCampaign extends NActiveRecord {
 		endif;
 	}
 	
+	public function listRecipients() {
+		if ($this->recipients) :
+			$recipients = explode(',',$this->recipients);
+			foreach($recipients as $r) :
+				// Email addresses
+				if (strstr($r,'@')) :
+					$recipientArray[] = NHtml::link($r,'mailto:'.$r);
+				else :
+					switch(substr($r,0,2)) :
+						case "g_" :
+							$g = ContactGroup::model()->findByPk(substr($r,2));
+							$recipientArray[] = NHtml::link($g->name,array('/email/group/view','id'=>$g->id));
+							break;
+						case "c_" :
+							$c = Contact::model()->findByPk(substr($r,2));
+							$recipientArray[] = NHtml::link($c->name, array('/contact/admin/view','id'=>$c->id));
+							break;
+					endswitch;
+				endif;
+			endforeach;
+			return implode('; ',$recipientArray);				
+		endif;
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
