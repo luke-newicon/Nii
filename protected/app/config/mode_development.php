@@ -58,9 +58,6 @@ return array(
 			),
 			// development mode we want to profile the database and have debug options
 			'db'=>array(
-				'emulatePrepare' => true,
-				'charset' => 'utf8',
-				'tablePrefix' =>'',
 				'enableProfiling'=>true,
 				'enableParamLogging'=>true,
 			),

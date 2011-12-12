@@ -188,6 +188,12 @@ class EventController extends AController
 		}
 	}
 	
+	public function actionEmailAttendees($id) {
+		$attendees = new HftEventAttendee;
+		$recipients = $attendees->getRecipients($id);
+		$this->redirect(array('/email/index/create','recipients'=>$recipients));
+	}
+	
 	/**
 	 * @param type $id
 	 */

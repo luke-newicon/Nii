@@ -79,6 +79,12 @@ Class NTokenInput extends CInputWidget
 	public $data;
 
 	public $theme = 'nii';
+	
+	/**
+	 *	Assoc. array of tokens to prepoluate token field
+	 * @var array
+	 */
+	public $prePopulate;
 
 
 	public function init() {
@@ -105,8 +111,12 @@ Class NTokenInput extends CInputWidget
 				$value = $value = $this->value;
 			}
 
-			if($value!==null)
-				$this->options['prePopulate'] = $value;
+			if ($this->prePopulate==null) {
+				if($value!==null)
+					$this->options['prePopulate'] = $value;
+			} else {
+				$this->options['prePopulate'] = $this->prePopulate;
+			}
 		}
 		
 		echo '<div class="'.$this->inputClass.'">'.CHtml::textField($name,'',$this->htmlOptions).'</div>';

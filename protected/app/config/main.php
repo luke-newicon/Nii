@@ -68,6 +68,10 @@ return array(
 		),
 		// application components
 		'components' => array(
+			'db'=>array(
+				'emulatePrepare' => true,
+				'charset' => 'utf8',
+			),
 			'menus' => array(
 				'class' => 'NMenuManager',
 			),

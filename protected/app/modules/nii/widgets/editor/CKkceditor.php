@@ -48,6 +48,7 @@ class CKkceditor extends CInputWidget {
 	private $_baseurl;
 	public $value;
 	public $name;
+	public $model;
 
 	public function init() {
 		$dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';

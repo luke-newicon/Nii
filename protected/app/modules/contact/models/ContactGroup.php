@@ -24,9 +24,10 @@ class ContactGroup extends NActiveRecord
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'name' => 'Key',
+			'name' => 'Name',
 			'description' => 'Description',
 			'rules' => 'Rules',
+			'editLink' => 'Edit',
 		);
 	}
 
@@ -57,9 +58,25 @@ class ContactGroup extends NActiveRecord
 
 	public function columns() {
 		return array(
-			'name',
-			'description',
-			'rules',
+			array(
+				'name'=>'name',
+			),
+			array(
+				'name'=>'description',
+				'type' => 'html',
+			),
+			array(
+				'name'=>'rules',
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
+			),
 		);
 	}
 
@@ -93,8 +110,14 @@ class ContactGroup extends NActiveRecord
 		);
 	}
 	
-	public function getGroup($id) {
-		// @todo: Create getGroup function
+	public static function getGroup($id) {
+		$group = self::model()->findByPk($id);
+		if ($group) {
+			return array(
+				'id'=>'g_'.$id,
+				'name'=>$group->name,
+			);
+		}
 	}
 	
 	public function getGroupContacts() {
@@ -105,4 +128,9 @@ class ContactGroup extends NActiveRecord
 		// @todo: Create countGroupContacts function
 	}
 	
+	
+	public function getEditLink() {
+		if ($this->id)
+			return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+	}
 }

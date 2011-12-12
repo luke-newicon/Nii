@@ -22,6 +22,12 @@ class StringTags extends CComponent
 	 * @var array
 	 */
     private $_tagNames = array();
+	
+	/**
+	 * an array of tag names
+	 * @var array
+	 */
+    private $_tagDescriptions = array();
 
 	/**
 	 * an array of tag properties to call on the object
@@ -49,8 +55,9 @@ class StringTags extends CComponent
 	
 	
     public function __construct(){
-        $this->addTag('first_name', 'first_name');
-        $this->addTag('last_name' , 'last_name');
+        $this->addTag('first_name', 'givennames');
+        $this->addTag('last_name' , 'lastname');
+        $this->addTag('full_name' , 'displayName', 'Full Name of the Contact');
     }
 
     /**
@@ -60,9 +67,10 @@ class StringTags extends CComponent
      * @param string $tagProperty
      * @return void
      */
-    public function addTag($tagName, $tagFun=null, $tagClass='Contact', $htmlEncode=true){
+    public function addTag($tagName, $tagFun=null, $description=null, $tagClass='Contact', $htmlEncode=true){
         $tag = str_replace('tag', $tagName, $this->tagTemplate);
         $this->_tagNames[]     = $tag;
+        $this->_tagDescriptions[]     = $description;
 		$tagFun = ($tagFun===null) ? $tagName : $tagFun;
         $this->_tagFunctions[] = array('function'=>$tagFun, 'class'=>$tagClass, 'tag' => $tag, 'encode'=>$htmlEncode);
     }
@@ -113,6 +121,13 @@ class StringTags extends CComponent
     public function getTagValues() {
         return $this->_tagValues;
     }
+		
+	public function getTagsArray() {
+		$t=array();
+		foreach ($this->getTagNames() as $key => $tag)
+			$t[] = array('name'=>$tag, 'description'=>$this->_tagDescriptions[$key]);
+		return $t;
+	}
 
 
     /**

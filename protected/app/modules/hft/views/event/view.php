@@ -1,6 +1,7 @@
 <div class="page-header">
 	<h2><?php echo $this->t('View Event Details') ?></h2>
 	<div class="action-buttons">
+		<?php echo NHtml::link($this->t('Email Attendees'), array("emailAttendees","id"=>$model->id),array('class'=>'btn'));?>
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'event-edit-button', 'class'=>'btn primary'));?>
 	</div>
 </div>

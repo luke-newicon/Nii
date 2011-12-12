@@ -32,8 +32,7 @@ class EmailCampaign extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
-			array('template_id, content, subject', 'safe'),
+			array('template_id, content, subject, recipients', 'safe'),
 		);
 	}
 
@@ -105,6 +104,8 @@ class EmailCampaign extends NActiveRecord {
 				'recipients' => "text",
 				'subject' => "text",
 				'content' => "text",
+				'created_date' => "datetime",
+				'updated_date' => "datetime",
 			),
 			'keys' => array());
 	}
@@ -132,10 +133,11 @@ class EmailCampaign extends NActiveRecord {
 					dataType: "json",
 					success: function(response){ 
 						$(".email-campaign-details").show();
-						CKEDITOR.instances.content.setData(response.content);
+						CKEDITOR.instances.EmailCampaign_content.setData(response.content);
 						$("#EmailCampaign_subject").val(response.subject);
 						if (response.recipients) {
-							jQuery("#EmailCampaign_recipients").tokenInput("clear");
+							//jQuery("#EmailCampaign_recipients").tokenInput("clear");
+							jQuery("#EmailCampaign_recipients").tokenInput("remove",response.recipients);
 							jQuery("#EmailCampaign_recipients").tokenInput("add",response.recipients);
 						}
 					},
@@ -149,12 +151,36 @@ class EmailCampaign extends NActiveRecord {
 				} else {
 					$(".email-campaign-details").hide();
 				}
-				CKEDITOR.instances.content.setData("");
+				CKEDITOR.instances.EmailCampaign_content.setData("");
 				$("#EmailCampaign_subject").val("");
-				jQuery("#EmailCampaign_recipients").tokenInput("clear");
+				//jQuery("#EmailCampaign_recipients").tokenInput("clear");
 			}
 			return false;
 		})';
+	}
+	
+	public function explodeRecipients() {
+		if ($this->recipients) :
+			$recipients = explode(',',$this->recipients);
+			foreach($recipients as $r) :
+				// Email addresses
+				if (strstr($r,'@')) :
+					$recipientArray[] = array('id'=>$r, 'name'=>$r);
+				else :
+					switch(substr($r,0,2)) :
+						case "g_" :
+							$g = ContactGroup::getGroup(substr($r,2));
+							$recipientArray[] = $g;
+							break;
+						case "c_" :
+							$c = Contact::model()->findByPk(substr($r,2));
+							$recipientArray[] = array('id'=>'c_'.$c->id, 'name'=>$c->name);
+							break;
+					endswitch;
+				endif;
+			endforeach;
+			return $recipientArray;				
+		endif;
 	}
 	
 	public static function install($className=__CLASS__){
