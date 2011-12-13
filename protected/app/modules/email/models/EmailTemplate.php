@@ -59,6 +59,7 @@ class EmailTemplate extends NActiveRecord {
 			'name' => 'Name',
 			'description' => 'Description',
 			'content' => 'Template Content',
+			'editLink' => 'Edit',
 		);
 	}
 
@@ -88,8 +89,22 @@ class EmailTemplate extends NActiveRecord {
 
 	public function columns() {
 		return array(
-			'name',
-			'description',
+			array(
+				'name' => 'name',
+				'type' => 'raw',
+				'value' => '$data->viewLink',
+				'exportValue' => '$data->name',
+			),
+			array(
+				'name' => 'description'
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'export' => false,
+				'filter' => false,
+			),
 		);
 	}
 
@@ -103,6 +118,15 @@ class EmailTemplate extends NActiveRecord {
 				'content' => "text",
 			),
 			'keys' => array());
+	}
+	
+	
+	public function getEditLink() {
+		return NHtml::link('Edit', array('/email/template/edit', 'id'=>$this->id));
+	}
+	
+	public function getViewLink() {
+		return NHtml::link($this->name, array('/email/template/view', 'id'=>$this->id));
 	}
 	
 	

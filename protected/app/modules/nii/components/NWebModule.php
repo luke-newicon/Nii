@@ -84,6 +84,11 @@ class NWebModule extends CWebModule
         }
 	}
 	
+	
+	public function addBehaviorFor($componentName, $behavior){
+		$this->componentBehaviors[$componentName] = $behavior;
+	}
+	
 
 	/**
 	 * 

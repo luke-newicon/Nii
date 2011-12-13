@@ -26,7 +26,7 @@ class ContactGroup extends NActiveRecord
 			'id' => 'ID',
 			'name' => 'Name',
 			'description' => 'Description',
-			'rules' => 'Rules',
+			'filterScopes' => 'Rules',
 			'editLink' => 'Edit',
 		);
 	}
@@ -42,7 +42,7 @@ class ContactGroup extends NActiveRecord
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
-		$criteria->compare('rules', $this->rules, true);
+		$criteria->compare('filterScopes', $this->filterScopes, true);
 
 		$sort = new CSort;
 		$sort->defaultOrder = 'id DESC';
@@ -60,13 +60,16 @@ class ContactGroup extends NActiveRecord
 		return array(
 			array(
 				'name'=>'name',
+				'type' => 'raw',
+				'value' => '$data->viewLink',
+				'exportValue' => '$data->name',
 			),
 			array(
 				'name'=>'description',
 				'type' => 'html',
 			),
 			array(
-				'name'=>'rules',
+				'name'=>'filterScopes',
 			),
 			array(
 				'name' => 'editLink',
@@ -87,13 +90,14 @@ class ContactGroup extends NActiveRecord
 				'id' => "pk",
 				'name' => "varchar(255)",
 				'description' => "text",
-				'rules' => "text",
+				'filterScopes' => "text",
 			),
 			'keys' => array());
 	}
 	
 	public function getGroups() {
 		// @todo: Create getGroups function
+		
 	}
 	
 	/**
@@ -120,17 +124,83 @@ class ContactGroup extends NActiveRecord
 		}
 	}
 	
+	/**
+	 *	Get contacts for a specific group. Returns contact IDs
+	 * @return array - contact IDs 
+	 */
 	public function getGroupContacts() {
-		// @todo: Create getGroupContacts function
+		// @todo: Finish getGroupContacts function
+		
+		$contacts = array();
+		// First: get contacts from ContactGroupContact
+		$cgcs = NActiveRecord::model('ContactGroupContact')->findAllByAttributes(array('group_id'=>$this->id));
+		foreach ($cgcs as $cgc)
+			$contacts[$cgc->contact_id] = $cgc->contact->name;
+		
+		// Next: get contacts from dynamic scopes on the model - trickier...
+		if ($this->filterScopes) {
+			$fs = CJSON::decode($this->filterScopes);
+			if (isset($fs)){
+				
+			} else {
+				$contactModel  = Yii::app()->getModule('contact')->contactModel;
+				$criteria = NActiveRecord::model($contactModel)->{$this->filterScopes}();
+				$c = NActiveRecord::model($contactModel)->findAll($criteria);
+				foreach ($c as $value)
+					$contacts[$value->id] = $value->name;
+			}
+		}
+		// Last: return contacts
+		return $contacts;
 	}
 	
+	/**
+	 *	Gets contacts for the group and returns them as a comma-separated list
+	 * @return string
+	 */
+	public function getGroupContactsList() {
+		$contacts = $this->groupContacts;
+		if ($contacts)
+			return implode(',',$contacts);
+	}
+	
+	/**
+	 *	Gets contacts, makes them into links and returns them as a list
+	 * @return string 
+	 */
+	
+	public function getGroupContactsLinks() {
+		$contacts = $this->groupContacts;
+		if ($contacts) {
+			foreach ($contacts as $k =>$contact)
+				$c[] = NHtml::link($contact, array('/contact/admin/view', 'id'=>$k));
+			return implode('; ',$c);
+		}
+	}
+	
+	/**
+	 *	Return a count of the contacts in a group
+	 * @return int 
+	 */
 	public function countGroupContacts() {
-		// @todo: Create countGroupContacts function
+		return count($this->groupContacts);
 	}
 	
-	
+	/**
+	 *	Return the edit link for a group
+	 * @return string 
+	 */
 	public function getEditLink() {
 		if ($this->id)
 			return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+	}
+	
+	/**
+	 *	Return the edit link for a group
+	 * @return string 
+	 */
+	public function getViewLink() {
+		if ($this->id)
+			return NHtml::link($this->name, array('view', 'id'=>$this->id));
 	}
 }

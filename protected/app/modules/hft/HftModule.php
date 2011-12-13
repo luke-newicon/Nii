@@ -13,6 +13,8 @@ class HftModule extends NWebModule
 	
 	public function init() {
 		Yii::import('hft.models.*');
+		Yii::import('hft.components.*');
+		Yii::import('hft.components.*');
 	}
 	
 	public function setup() {
@@ -58,6 +60,9 @@ class HftModule extends NWebModule
 				'contactIds' => ''
 			)
 		));
+		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		Yii::app()->getModule('contact')->addBehaviorFor($contactModel, array('donations'=>array('class'=>'hft.components.behaviors.ContactGroupDonation')));
 		
 	}
 	

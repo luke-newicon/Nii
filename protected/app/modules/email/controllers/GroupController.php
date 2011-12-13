@@ -11,13 +11,13 @@ class GroupController extends AController
 	public function actionManage()
 	{
 		$this->pageTitle = Yii::app()->name . ' - Email Groups';
-		$eventModel = 'ContactGroup';
+		$groupModel = 'ContactGroup';
 	
-		$model = new $eventModel('search');
+		$model = new $groupModel('search');
 		$model->unsetAttributes();
 		
-		if(isset($_GET[$eventModel]))
-			$model->attributes = $_GET[$eventModel];
+		if(isset($_GET[$groupModel]))
+			$model->attributes = $_GET[$groupModel];
 
 		$this->render('index',array(
 			'dataProvider'=>$model->search(),
@@ -25,8 +25,14 @@ class GroupController extends AController
 		));
 	}
 	
-	public function actionEdit() {
-
+	public function actionView($id) {
+		
+		$this->pageTitle = Yii::app()->name . ' - View Group';
+		
+		$model = NActiveRecord::model('ContactGroup')->findByPk($id);
+		$this->render('view',array(
+			'model'=>$model,
+		));
 	}
 	
 	/**

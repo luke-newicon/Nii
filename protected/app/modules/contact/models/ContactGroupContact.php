@@ -18,6 +18,12 @@ class ContactGroupContact extends NActiveRecord
 		return '{{contact_group_contact}}';
 	}
 	
+	public function relations() {
+		return array(
+			'contact'=>array(self::BELONGS_TO, 'HftContact', 'contact_id'),
+		);
+	}
+	
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

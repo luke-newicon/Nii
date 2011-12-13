@@ -701,7 +701,7 @@ class Contact extends NActiveRecord {
 	}
 	
 	function behaviors() {
-		return array(
+		$behaviors = array(
 			'trash'=>array(
 				'class'=>'nii.components.behaviors.ETrashBinBehavior',
 				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
@@ -710,6 +710,8 @@ class Contact extends NActiveRecord {
                'class'=>'nii.components.behaviors.NTaggable'
            )
 		);
+		
+		return CMap::mergeArray($behaviors, Yii::app()->getModule('contact')->getBehaviorsFor(Yii::app()->getModule('contact')->contactModel));
 	}
 
 }

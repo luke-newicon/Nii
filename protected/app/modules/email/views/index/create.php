@@ -1,9 +1,3 @@
-<div class="page-header">
-	<h2>Send an Email</h2>
-	<div class="action-buttons email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
-		<?php echo NHtml::submitButton('Continue', array('class'=>'btn primary')) . '&nbsp;'; ?>		
-	</div>
-</div>
 <?php 
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'emailCampaignForm',
@@ -11,6 +5,12 @@ $form = $this->beginWidget('NActiveForm', array(
 	'enableClientValidation'=>true,
 ));
 ?>
+<div class="page-header">
+	<h2>Send an Email</h2>
+	<div class="action-buttons email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
+		<?php echo NHtml::submitButton('Continue', array('class'=>'btn primary')) . '&nbsp;'; ?>		
+	</div>
+</div>
 <div class="container pull-left">
 	<div class="line field">
 		<div class="unit w140"><?= $form->labelEx($model,'template_id') ?></div>
@@ -80,20 +80,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			</div>
 		</div>
 		<div class="lastUnit well pts">
-			<h4 class="ptn mts">Smart Tags</h4>
-			<div class="line lbl">
-				<div class="unit size1of3">Tag</div>
-				<div class="lastUnit">Description</div>
-			</div>
-			
-			<?php $t = new StringTags;
-			$tags = $t->getTagsArray();
-			foreach($tags as $tag) : ?>
-				<div class="line">
-					<div class="unit size1of3"><?php echo $tag['name'] ?></div>
-					<div class="lastUnit"><?php echo $tag['description'] ?></div>
-				</div>
-			<?php endforeach; ?>
+			<?php $this->renderPartial('tags'); ?>
 		</div>
 	</div>
 	<div class="actions">

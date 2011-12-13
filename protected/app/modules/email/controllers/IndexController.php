@@ -12,18 +12,25 @@ class IndexController extends AController
 		));
 	}
 	
-	public function actionCreate($recipients=null) {
+	public function actionCreate($id=null, $recipients=null) {
 		
 		$this->pageTitle = Yii::app()->name . ' - New Email Campaign';
 		$modelName = 'EmailCampaign';
 		
-		$model = new $modelName;
+		if ($id) {
+			$model = EmailCampaign::model()->findByPk ($id);
+			$model->updated_date = date('Y-m-d H:i:s');
+		}
+		if (!isset($model)) {
+			$model = new $modelName;
+			$model->created_date = date('Y-m-d H:i:s');
+			$model->status = 'Created';
+		}
 		
 		$this->performAjaxValidation($model);
 		
 		if (isset($_POST[$modelName])) {
 			$model->attributes = $_POST[$modelName];
-			$model->created_date = date('Y-m-d H:i:s');
 			
 			if ($model->save())
 				$this->redirect(array('preview','id'=>$model->id));
@@ -37,7 +44,7 @@ class IndexController extends AController
 		));
 	}
 	
-	public function actionPreview($id, $contact_id=null) {
+	public function actionPreview($id) {
 		
 		$this->pageTitle = Yii::app()->name . ' - Preview Email Campaign';
 		
@@ -46,6 +53,22 @@ class IndexController extends AController
 		$this->render('preview', array(
 			'model'=>$model,
 		));
+	}
+	
+	public function actionPreviewContent($id, $contact_id=null) {
+				
+		$model = EmailCampaign::model()->findByPk($id);
+		
+		$fields = array('model'=>$model);
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		
+		if ($contact_id)
+			$contact = NActiveRecord::model($contactModel)->findByPk($contact_id);
+		
+		if (isset($contact))
+			$fields['contact'] = $contact;
+		
+		$this->renderPartial('preview/content', $fields);
 	}
 	
 	public function actionRecipients($q){

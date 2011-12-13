@@ -58,6 +58,7 @@ class StringTags extends CComponent
         $this->addTag('first_name', 'givennames');
         $this->addTag('last_name' , 'lastname');
         $this->addTag('full_name' , 'displayName', 'Full Name of the Contact');
+        $this->addTag('full_address' , 'fullAddress', 'Address block for the Contact', 'Contact', false);
     }
 
     /**

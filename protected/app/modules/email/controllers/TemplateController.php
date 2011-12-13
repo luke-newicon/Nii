@@ -7,6 +7,23 @@ class TemplateController extends AController
 		return;
 	}
 	
+	public function actionManage() {
+		
+		$this->pageTitle = Yii::app()->name . ' - Manage Design Tempaltes';
+		$templateModel = 'EmailTemplate';
+	
+		$model = new $templateModel('search');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$templateModel]))
+			$model->attributes = $_GET[$templateModel];
+
+		$this->render('index',array(
+			'dataProvider'=>$model->search(),
+			'model'=>$model,
+		));
+	}
+	
 	public function actionGetContents($id) {
 		$template = EmailCampaignTemplate::model()->findByPk($id);
 		$response = array('content'=>$template->content, 'subject'=>$template->subject);
