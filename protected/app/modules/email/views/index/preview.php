@@ -23,12 +23,17 @@
 			</div>
 		</div>
 	</div>
-	<div class="line field">
-		<div class="lbl">Email Content</div>
-		<div class="line">
+	<div class="line pbs">
+		<div class="unit size3of4">Email Content</div>
+		<div class="lastUnit">
 			<div class="input">
-				<iframe src="<?php echo NHtml::url(array('/email/index/previewContent', 'id'=>$model->id)) ?>" frameborder="0" width="100%"></iframe>
+				<?php echo NHtml::dropDownList('recipientPreviewSelect', '', $model->recipientContactsArray, array('prompt'=>'select to preview...', 'onchange'=>$model->selectPreviewDropdown())) ?>
 			</div>
+		</div>
+	</div>
+	<div class="line field">
+		<div class="input">
+			<iframe src="<?php echo NHtml::url(array('/email/index/previewContent', 'id'=>$model->id)) ?>" frameborder="0" width="100%" id="previewIframe"></iframe>
 		</div>
 	</div>
 	<div class="actions">

@@ -266,6 +266,37 @@ class EmailCampaign extends NActiveRecord {
 		endif;
 	}
 	
+	public function getRecipientContactsArray($limit=100) {
+		if ($this->recipients) :
+			$count=0;
+			$recipients = explode(',',$this->recipients);
+			foreach($recipients as $r) :
+				if ($count>=$limit)
+					continue;
+				if (strstr($r,'@')) :
+					$recipientArray[$r] = $r;
+				else :
+					switch(substr($r,0,2)) :
+						case "g_" :
+							$g = NActiveRecord::model('ContactGroup')->findByPk(substr($r,2));
+							$contacts = $g->groupContacts;
+							if (isset($contacts)) {
+								foreach ($contacts as $k => $v)
+									$recipientArray[$k] = $v;
+							}
+							break;
+						case "c_" :
+							$c = Contact::model()->findByPk(substr($r,2));
+							$recipientArray[$c->id] = $c->name;
+							break;
+					endswitch;
+				endif;
+				$count++;
+			endforeach;		
+		endif;
+		return $recipientArray;		
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
 	}
@@ -307,6 +338,16 @@ class EmailCampaign extends NActiveRecord {
 		endif;
 		
 		return $count;		
+	}
+	
+	public function selectPreviewDropdown() {
+		return 
+		'jQuery(function($){
+			var contact_id = $("#recipientPreviewSelect").val();
+			var preview_url = "' . Yii::app()->baseUrl . '/email/index/previewContent/id/'.$this->id.'/contact_id/"+contact_id;
+			$("#previewIframe").attr("src", preview_url);
+		});
+		return false;';
 	}
 	
 }
