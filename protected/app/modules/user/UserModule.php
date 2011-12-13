@@ -217,14 +217,6 @@ class UserModule extends NWebModule
 			),
 		);
 	}
-	
-	public function getBehaviorsFor($componentName){
-        if (isset($this->componentBehaviors[$componentName])) {
-            return $this->componentBehaviors[$componentName];
-        } else {
-            return array();
-        }
-	}
 
 	
 	/**

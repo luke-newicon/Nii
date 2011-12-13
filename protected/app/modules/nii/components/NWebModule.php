@@ -42,6 +42,14 @@ class NWebModule extends CWebModule
 	 */
 	public $enabled;
 	
+	
+	/**
+	 * Atore an array of component=>array of behaviors
+	 * 
+	 * @var type 
+	 */
+	public $componentBehaviors;
+	
 
 	/**
 	 * During module activation we want to access module info but not call the modules init function
@@ -58,6 +66,22 @@ class NWebModule extends CWebModule
 		$this->id = $id;
 		if($activate)
 			parent::__construct($id, $parent, $config);
+	}
+	
+	
+	/**
+	 * Stores behavior arrays for components.
+	 * Call this function within a components behavior function to get add additional registered componentns.
+	 * 
+	 * @param string $componentName
+	 * @return array 
+	 */
+	public function getBehaviorsFor($componentName){
+        if (isset($this->componentBehaviors[$componentName])) {
+            return $this->componentBehaviors[$componentName];
+        } else {
+            return array();
+        }
 	}
 	
 
