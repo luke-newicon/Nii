@@ -285,14 +285,20 @@ class AdminController extends AController {
 				$model->password = $model->cryptPassword($form->password);
 				$model->activekey = $model->cryptPassword(microtime() . $form->password);
 				if ($model->save()) {
-					Yii::app()->user->setFlash('success', '<strong>Password updated.</strong>');
-					echo CJSON::encode(array('success' => 'Password updated.'));
-					Yii::app()->end();
+					if (Yii::app()->request->isAjaxRequest) {
+						echo CJSON::encode(array('success' => 'Password updated.'));
+						Yii::app()->end();
+					} else {
+						Yii::app()->user->setFlash('success', '<strong>Password updated.</strong>');
+					}
 				}
 			}
-			Yii::app()->user->setFlash('error', '<strong>Password update failure.</strong>');
-			echo CJSON::encode(array('error' => 'Password update failure.'));
-			Yii::app()->end();
+			if (Yii::app()->request->isAjaxRequest) {
+				echo CJSON::encode(array('error' => 'Password update failure.'));
+				Yii::app()->end();
+			} else {
+				Yii::app()->user->setFlash('error', '<strong>Password update failure.</strong>');
+			}
 		}
 		$this->render('password', array(
 			'model' => $form,

@@ -38,6 +38,7 @@ class HftEvent extends NActiveRecord
 			'organiser_name' => 'Organiser\'s Name',
 			'description' => 'Description of the Event',
 			'editLink' => 'Edit',
+			'emailLink' => 'Email',
 			'totalAttendees' => 'Attendees'
 		);
 	}
@@ -130,6 +131,15 @@ class HftEvent extends NActiveRecord
 				'htmlOptions'=>array('width'=>'30px'),
 			),
 			array(
+				'name' => 'emailLink',
+				'type' => 'raw',
+				'value' => '$data->emailLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
+			),
+			array(
 				'name' => 'editLink',
 				'type' => 'raw',
 				'value' => '$data->editLink',
@@ -171,6 +181,10 @@ class HftEvent extends NActiveRecord
 	
 	public function getEditLink() {
 		return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+	}
+	
+	public function getEmailLink() {
+		return NHtml::link('Email', array('emailAttendees', 'id'=>$this->id));
 	}
 		
 	public function getDisplayEvent() {

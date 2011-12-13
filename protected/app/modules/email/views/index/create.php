@@ -1,4 +1,9 @@
-<div class="page-header"><h2>Send an Email</h2></div>
+<div class="page-header">
+	<h2>Send an Email</h2>
+	<div class="action-buttons email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
+		<?php echo NHtml::submitButton('Continue', array('class'=>'btn primary')) . '&nbsp;'; ?>		
+	</div>
+</div>
 <?php 
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'emailCampaignForm',
@@ -20,7 +25,7 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 	</div>
 </div>
-<div class="email-campaign-details" style="display:none;">
+<div class="email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
 	<div class="container pull-left">
 		<div class="line field">
 			<div class="unit w140"><?= $form->labelEx($model,'recipients') ?></div>
@@ -29,7 +34,8 @@ $form = $this->beginWidget('NActiveForm', array(
 						'model'=>$model,
 						'attribute'=>'recipients',
 						'url'=>'/email/index/recipients',
-						'options'=>array('hintText'=>'','addNewTokens'=>true,'animateDropdown'=>false)
+						'prePopulate'=>$model->explodeRecipients(),
+						'options'=>array('hintText'=>'', 'addNewTokens'=>true, 'animateDropdown'=>false)
 					)); ?>
 				<?php echo $form->error($model,'recipients'); ?>
 			</div>
@@ -50,7 +56,8 @@ $form = $this->beginWidget('NActiveForm', array(
 			<div class="input">
 			<?php
 			$this->widget('nii.widgets.editor.CKkceditor',array(
-				"name"=>'content',
+				"attribute"=>'content',
+				'model'=>$model,
 				'width'=>'100%',
 				'height'=>'500px',
 				'config'=>array(
@@ -74,8 +81,23 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 		<div class="lastUnit well pts">
 			<h4 class="ptn mts">Smart Tags</h4>
+			<div class="line lbl">
+				<div class="unit size1of3">Tag</div>
+				<div class="lastUnit">Description</div>
+			</div>
+			
+			<?php $t = new StringTags;
+			$tags = $t->getTagsArray();
+			foreach($tags as $tag) : ?>
+				<div class="line">
+					<div class="unit size1of3"><?php echo $tag['name'] ?></div>
+					<div class="lastUnit"><?php echo $tag['description'] ?></div>
+				</div>
+			<?php endforeach; ?>
 		</div>
 	</div>
+	<div class="actions">
+		<?php echo NHtml::submitButton('Continue', array('class'=>'btn primary')) . '&nbsp;'; ?>		
+	</div>
 </div>
-
 <?php $this->endWidget();

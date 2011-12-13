@@ -24,6 +24,9 @@
 					<div class="alert-message block-message error"><?php echo Yii::app()->user->getFlash('error-block-message'); ?></div>
 				<?php endif; ?>
 			</div>
+			<div class="leftCol">
+				<?php echo $leftCol; ?>
+			</div>
 			<div class="main">
 				<?php echo $content; ?>
 			</div>

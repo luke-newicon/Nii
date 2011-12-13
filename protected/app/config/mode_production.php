@@ -20,16 +20,7 @@ return array(
 		// application components
 		'components'=>array(
 			'db'=>array(
-				'connectionString' => 'mysql:host=localhost;dbname=hotspot',
-				'emulatePrepare' => true,
-				// the next person who changes this section will get shot in the face!
-				// you can make specific config changes by putting a config.php file above the root 
-				// so it IS NOT GITTED!
-				'username' => 'newicon',
-				'password' => 'bonsan',
-				'charset' => 'utf8',
-				'tablePrefix' =>'',
-				'schemaCachingDuration' => 3600,
+				'schemaCachingDuration' => 86400,
 				'enableProfiling'=>false,
 				'enableParamLogging'=>false,
 			),

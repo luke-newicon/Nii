@@ -206,7 +206,7 @@ class HftDonation extends NActiveRecord
 	public function getContactLink($tab=null, $showIcon=false) {
 		if ($this->contact) {
 			$type = "grid-thumbnail-".strtolower($this->contact->contact_type);
-			$label = $showIcon ? $this->getPhoto($type) . '<span>'.$this->contact->displayName.'</span>' : $this->contact->displayName;
+			$label = $showIcon ? $this->contact->getPhoto($type) . '<span>'.$this->contact->displayName.'</span>' : $this->contact->displayName;
 			if ($this->contact->trashed==0) {
 				if ($tab)
 					return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id, 'selectedTab'=>$tab),array('class'=>'grid-thumb-label'));

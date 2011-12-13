@@ -12,7 +12,7 @@ class IndexController extends AController
 		));
 	}
 	
-	public function actionCreate() {
+	public function actionCreate($recipients=null) {
 		
 		$this->pageTitle = Yii::app()->name . ' - New Email Campaign';
 		$modelName = 'EmailCampaign';
@@ -23,15 +23,27 @@ class IndexController extends AController
 		
 		if (isset($_POST[$modelName])) {
 			$model->attributes = $_POST[$modelName];
+			$model->created_date = date('Y-m-d H:i:s');
 			
-			if($model->save()) {
-				
-				NLog::insertLog('Inserted new template details (id: '.$model->id.')', $model);
-				$this->redirect(array("template/send","id"=>$model->id));		
-			}
+			if ($model->save())
+				$this->redirect(array('preview','id'=>$model->id));
+		} elseif (isset($recipients)) {
+			$model->recipients = $recipients;
+			$model->template_id = 0;
 		}
 		
 		$this->render('create', array(
+			'model'=>$model,
+		));
+	}
+	
+	public function actionPreview($id, $contact_id=null) {
+		
+		$this->pageTitle = Yii::app()->name . ' - Preview Email Campaign';
+		
+		$model = EmailCampaign::model()->findByPk($id);
+		
+		$this->render('preview', array(
 			'model'=>$model,
 		));
 	}
@@ -48,7 +60,7 @@ class IndexController extends AController
 		if ($groups) {
 			$data[] = array('id'=>'', 'name'=>'Groups','type'=>'header');
 			foreach($groups as $g)
-				$data[] = array('id'=>$g->id, 'name'=>$g->name);
+				$data[] = array('id'=>'g_'.$g->id, 'name'=>$g->name);
 		}
 		
 		$contacts = Contact::model()->findAll(
@@ -60,7 +72,7 @@ class IndexController extends AController
 		if ($contacts) {
 			$data[] = array('id'=>'', 'name'=>'Contacts','type'=>'header');
 			foreach($contacts as $c){
-				$data[] = array('id'=>$c->id, 'name'=>$c->name);
+				$data[] = array('id'=>'c_'.$c->id, 'name'=>$c->name);
 			}		
 		}
 		echo CJSON::encode($data);

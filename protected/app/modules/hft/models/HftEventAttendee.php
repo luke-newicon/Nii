@@ -84,5 +84,15 @@ class HftEventAttendee extends NActiveRecord
 		else
 			return '<img src="'.Yii::app()->image->url(0,$type).'" />';
 	}
+	
+	public function getRecipients($id) {
+		$recipients = $this->findAllByAttributes(array('event_id'=>$id));
+		if ($recipients) {
+			foreach ($recipients as $recipient)
+				$r[] = 'c_'.$recipient->contact_id;
+			
+			return implode(',',$r);
+		}
+	}
 		
 }

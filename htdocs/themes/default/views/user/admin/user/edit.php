@@ -1,13 +1,6 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'edit-user-form',
-//	'enableAjaxValidation' => true,
-//	'enableClientValidation' => false,
-	'clientOptions' => array(
-		'validateOnSubmit' => true,
-		'validateOnChange' => true,
-	),
-	'focus' => array($model, 'first_name'),
 ));
 ?>
 <?php if(!Yii::app()->request->isAjaxRequest) : ?>
@@ -30,12 +23,10 @@ $form = $this->beginWidget('NActiveForm', array(
 	<div class="line">
 		<div class="field unit size1of2">
 			<?php echo $form->labelEx($model, 'first_name'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'first_name'); ?>
-				</div>
-				<?php echo $form->error($model, 'first_name'); ?>
+			<div class="input">
+				<?php echo $form->textField($model, 'first_name'); ?>
 			</div>
+			<?php echo $form->error($model, 'first_name'); ?>
 		</div>
 		<div class="field lastUnit">
 			<?php echo $form->labelEx($model, 'last_name'); ?>
@@ -130,6 +121,32 @@ $form = $this->beginWidget('NActiveForm', array(
 	jQuery(function($){		
 		$('#modal-user-edit-password').bind('show', function() {
 			$('#modal-user-edit-password .modal-body').load('<?php echo CHtml::normalizeUrl(array('/user/admin/updatepassword','id'=>$model->id())) ?>');
+		});
+		
+		$('#user-edit-password-save').click(function(){
+			$('#user-password-form').submit();
+			return false;
+		});
+		
+		$('#modal-user-edit-password').delegate('#user-password-form','submit',function(){
+			$.ajax({
+				url: "<?php echo CHtml::normalizeUrl(array('/user/admin/updatepassword','id'=>$model->id())) ?>",
+				data: jQuery('#user-password-form').serialize(),
+				dataType: "json",
+				type: "post",
+				success: function(response){ 
+					if (response.success) {
+						$('#modal-user-edit-password').modal('hide');
+						nii.showMessage(response.success);
+					} else {
+						nii.showMessage(response.error,{'className':'error'});
+					}
+				},
+				error: function() {
+					alert("JSON failed to return a valid response");
+				}
+			});
+			return false;
 		});
 	});
 </script>
