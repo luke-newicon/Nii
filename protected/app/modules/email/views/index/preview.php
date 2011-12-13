@@ -27,7 +27,7 @@
 		<div class="unit size3of4">Email Content</div>
 		<div class="lastUnit">
 			<div class="input">
-				<?php echo NHtml::dropDownList('recipientPreviewSelect', '', $model->recipientContactsArray, array('prompt'=>'select to preview...', 'onchange'=>$model->selectPreviewDropdown())) ?>
+				<?php echo NHtml::dropDownList('recipientPreviewSelect', '', $model->recipientContactsArray, array('prompt'=>'select contact to preview...', 'onchange'=>$model->selectPreviewDropdown())) ?>
 			</div>
 		</div>
 	</div>
