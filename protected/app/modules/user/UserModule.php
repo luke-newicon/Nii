@@ -169,10 +169,12 @@ class UserModule extends NWebModule
 	}
 	
 	public function setup(){
-		if(isset(Yii::app()->session['impersonate_restore']) && Yii::app()->session['impersonate_restore']){
-			$restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
-			echo 'Currently impersonating ' . Yii::app()->user->name . ' <a href="'.NHtml::url('/user/admin/restore').'"> Restore permissions to ' . $restoreUser->name . '</a>';
-		}
+	}
+	
+	public function getImpersonatingUser(){
+		if(isset(Yii::app()->session['impersonate_restore']) && Yii::app()->session['impersonate_restore'])
+			return $restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
+		return false;
 	}
 	
 	public function permissions() {
