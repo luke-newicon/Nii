@@ -15,13 +15,13 @@
 <!--	<div class="span9">
 		<?php // $this->widget('hft.widgets.GoogleBugsPortlet'); ?>
 	</div>-->
-	<div class="span7">
+	<div class="span8">
 		<?php $this->widget('contact.widgets.ContactLatestPortlet'); ?>
 	</div>
-	<div class="span7">
+	<div class="span8">
 		<?php $this->widget('hft.widgets.EventUpcomingPortlet'); ?>
 	</div>
-	<div class="span7">
+	<div class="span8">
 		<?php $this->widget('hft.widgets.DonationLatestPortlet'); ?>
 	</div>
 </div>
