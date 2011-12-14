@@ -1,8 +1,13 @@
 <div class="page-header">
 	<h2>Preview Your Email</h2>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Edit', array('create','id'=>$model->id), array('class'=>'btn')) . '&nbsp;'; ?>		
-		<?php echo NHtml::link('Send', array('send','id'=>$model->id), array('class'=>'btn primary')); ?>		
+		<?php 
+		if ($canEdit==1) {
+			echo NHtml::link('Edit', array('create','id'=>$model->id), array('class'=>'btn')) . '&nbsp;'; 
+			echo NHtml::link('Send', array('send','id'=>$model->id), array('class'=>'btn primary')); 
+		} else
+			echo NHtml::link('View Campaign', array('view','id'=>$model->id), array('class'=>'btn primary')); 
+			?>		
 	</div>
 </div>
 <div class="email-campaign-details">
@@ -37,8 +42,13 @@
 		</div>
 	</div>
 	<div class="actions">
-		<?php echo NHtml::link('Edit', array('create','id'=>$model->id), array('class'=>'btn')) . '&nbsp;'; ?>		
-		<?php echo NHtml::link('Send', array('send','id'=>$model->id), array('class'=>'btn primary')); ?>		
+		<?php 
+		if ($canEdit==1) {
+			echo NHtml::link('Edit', array('create','id'=>$model->id), array('class'=>'btn')) . '&nbsp;'; 
+			echo NHtml::link('Send', array('send','id'=>$model->id), array('class'=>'btn primary')); 
+		} else
+			echo NHtml::link('View Campaign', array('view','id'=>$model->id), array('class'=>'btn primary')); 
+		?>	
 	</div>
 </div>
 <script>

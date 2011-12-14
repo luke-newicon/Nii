@@ -32,7 +32,8 @@ class EmailCampaign extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('template_id, content, subject, recipients, status', 'safe'),
+			array('subject, recipients', 'required'),
+			array('template_id, content, status', 'safe'),
 			array('template_id, content, subject, recipients, status', 'safe', 'on'=>'search'),
 		);
 	}
@@ -271,7 +272,7 @@ class EmailCampaign extends NActiveRecord {
 			$count=0;
 			$recipients = explode(',',$this->recipients);
 			foreach($recipients as $r) :
-				if ($count>=$limit)
+				if ($count >= $limit && $limit != null)
 					continue;
 				if (strstr($r,'@')) :
 					$recipientArray[$r] = $r;
@@ -304,7 +305,7 @@ class EmailCampaign extends NActiveRecord {
 	public function getTemplatedContent($contact=null) {
 		if ($this->template)
 			$template = EmailTemplate::model()->findByPk($this->template->design_template_id);
-		if ($template)
+		if (isset($template))
 			$content = str_replace('[content]',$this->content,$template->content);
 		else
 			$content = $this->content;

@@ -26,28 +26,26 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
-	<div class="container pull-left">
-		<div class="line field">
-			<div class="unit w140"><?= $form->labelEx($model,'recipients') ?></div>
-			<div class="lastUnit w500">
-					<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
-						'model'=>$model,
-						'attribute'=>'recipients',
-						'url'=>'/email/index/recipients',
-						'prePopulate'=>$model->explodeRecipients(),
-						'options'=>array('hintText'=>'', 'addNewTokens'=>true, 'animateDropdown'=>false)
-					)); ?>
-				<?php echo $form->error($model,'recipients'); ?>
-			</div>
+	<div class="line field">
+		<div class="unit w140"><?= $form->labelEx($model,'recipients') ?></div>
+		<div class="lastUnit">
+				<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
+					'model'=>$model,
+					'attribute'=>'recipients',
+					'url'=>'/email/index/recipients',
+					'prePopulate'=>$model->explodeRecipients(),
+					'options'=>array('hintText'=>'', 'addNewTokens'=>true, 'animateDropdown'=>false)
+				)); ?>
+			<?php echo $form->error($model,'recipients'); ?>
 		</div>
-		<div class="line field">
-			<div class="unit w140"><?= $form->labelEx($model,'subject') ?></div>
-			<div class="lastUnit w500">
-				<div class="input">
-					<?php echo $form->textField($model,'subject'); ?>
-				</div>
-				<?php echo $form->error($model,'subject'); ?>
+	</div>
+	<div class="line field">
+		<div class="unit w140"><?= $form->labelEx($model,'subject') ?></div>
+		<div class="lastUnit w500">
+			<div class="input">
+				<?php echo $form->textField($model,'subject'); ?>
 			</div>
+			<?php echo $form->error($model,'subject'); ?>
 		</div>
 	</div>
 	<div class="line field">
