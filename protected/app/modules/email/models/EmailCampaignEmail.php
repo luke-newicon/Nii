@@ -80,12 +80,12 @@ class EmailCampaignEmail extends NActiveRecord {
 		$sort->defaultOrder = 'id DESC';
 
 		return new NActiveDataProvider($this, array(
-					'criteria' => $criteria,
-					'sort' => $sort,
-					'pagination' => array(
-						'pageSize' => 20,
-					),
-				));
+			'criteria' => $criteria,
+			'sort' => $sort,
+			'pagination' => array(
+				'pageSize' => 20,
+			),
+		));
 	}
 
 	public function columns() {

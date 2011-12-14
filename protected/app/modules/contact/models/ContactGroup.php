@@ -203,4 +203,13 @@ class ContactGroup extends NActiveRecord
 		if ($this->id)
 			return NHtml::link($this->name, array('view', 'id'=>$this->id));
 	}
+	
+	public function getTabs() {
+		/* Default tabs */
+		$tabs['Contacts'] = array('ajax' => array('viewContacts', 'id' => $this->id), 'id' => 'contacts', 'count' => $this->countGroupContacts());
+//		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes', 'count' => $this->countNotes);
+//		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments', 'count' => $this->countAttachments);
+
+		return $tabs;
+	}
 }

@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>View Email Group</h2>
+	<h2>View Contact Group</h2>
 </div>
 
 <div class="container pull-left">
@@ -17,4 +17,18 @@
 			<div class="lastUnit"><?php echo $model->groupContactsLinks; ?></div>
 		</div>
 	</div>
+
+	<?php
+	$this->widget('nii.widgets.NTabs', array(
+		'tabs' => $model->tabs,
+		'options' => array(
+//			'cache' => true,
+		),
+		'htmlOptions' => array(
+			'id' => 'tabs',
+			'class' => 'vertical',
+		)
+			)
+	);
+	?>
 </div>

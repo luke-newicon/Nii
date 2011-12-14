@@ -5,11 +5,6 @@ class GroupController extends AController
 	
 	public function actionIndex()
 	{
-		$this->redirect(array('manage'));
-	}
-	
-	public function actionManage()
-	{
 		$this->pageTitle = Yii::app()->name . ' - Email Groups';
 		$groupModel = 'ContactGroup';
 	
@@ -22,9 +17,11 @@ class GroupController extends AController
 		$this->render('index',array(
 			'dataProvider'=>$model->search(),
 			'model'=>$model,
-		));
+		));	
+		
 	}
 	
+		
 	public function actionView($id) {
 		
 		$this->pageTitle = Yii::app()->name . ' - View Group';
@@ -33,6 +30,21 @@ class GroupController extends AController
 		$this->render('view',array(
 			'model'=>$model,
 		));
+	}
+	
+	public function actionViewContacts($id) {
+		$groupModel = 'ContactGroupContact';
+	
+		$model = new $groupModel('search');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$groupModel]))
+			$model->attributes = $_GET[$groupModel];
+
+		$this->render('view/contacts',array(
+			'dataProvider'=>$model->search($id),
+			'model'=>$model,
+		));	
 	}
 	
 	/**
