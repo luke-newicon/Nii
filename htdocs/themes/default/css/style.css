@@ -94,14 +94,14 @@ a.grid-thumb-label {
 	text-decoration: none;
 }
 
-a.grid-thumb-label span {
+.grid-thumb-label span {
 	margin-left: 5px;
 	display: inline-block;
 	line-height: 24px;
 	height: 24px;
 	vertical-align: top;
 }
-a.grid-thumb-label img {
+.grid-thumb-label img {
 	display: inline-block; 
 }
 
@@ -343,7 +343,7 @@ h2.contact-title {
 	color: #ccc;
 }
 
-.trashedData {
+.trashedData, .trashedData.grid-thumb-label span {
 	color: #ad7c7c;
 	text-decoration: line-through;
 }
@@ -432,7 +432,7 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 }
 
 /**
-* Extra form element sizing constratints, by pixel width
+* Extra form element sizing constratints, by pixel width and height
 */
 
 .w20{width:20px;}
@@ -468,6 +468,40 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 .w600{width:600px;}
 .w700{width:700px;}
 
+.h20{height:20px;}
+.h30{height:30px;}
+.h40{height:40px;}
+.h50{height:50px;}
+.h60{height:60px;}
+.h70{height:70px;}
+.h80{height:80px;}
+.h90{height:90px;}
+.h100{height:100px;}
+.h110{height:110px;}
+.h120{height:120px;}
+.h130{height:130px;}
+.h140{height:140px;}
+.h150{height:150px;}
+.h160{height:160px;}
+.h170{height:170px;}
+.h180{height:180px;}
+.h190{height:190px;}
+.h200{height:200px;}
+.h220{height:220px;}
+.h240{height:240px;}
+.h250{height:250px;}
+.h260{height:260px;}
+.h280{height:280px;}
+.h300{height:300px;}
+.h350{height:350px;}
+.h400{height:400px;}
+.h450{height:450px;}
+.h500{height:500px;}
+.h550{height:550px;}
+.h600{height:600px;}
+.h700{height:700px;}
+
+.overflow-scroll{overflow:auto;}
 
 .over .input{border-color:rgba(82,168,236,0.8);}
 

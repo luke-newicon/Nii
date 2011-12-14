@@ -12,13 +12,16 @@
 	<h1>Dashboard</h1>
 </div>
 <div class="row">
-	<div class="span10">
+	<div class="span9">
 		<?php $this->widget('hft.widgets.GoogleBugsPortlet'); ?>
 	</div>
-	<div class="span6">
+	<div class="span7">
 		<?php $this->widget('contact.widgets.ContactLatestPortlet'); ?>
 	</div>
-	<div class="span6">
+	<div class="span7">
+		<?php $this->widget('hft.widgets.EventUpcomingPortlet'); ?>
+	</div>
+	<div class="span7">
 		<?php $this->widget('hft.widgets.DonationLatestPortlet'); ?>
 	</div>
 </div>

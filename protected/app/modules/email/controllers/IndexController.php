@@ -1,8 +1,15 @@
 <?php
+/**
+ *	IndexController class
+ *	Email campaign actions 
+ */
 
 class IndexController extends AController
 {
 	
+	/**
+	 *	Show list of email campaigns 
+	 */
 	public function actionIndex()
 	{
 		$model = new EmailCampaign;
@@ -12,6 +19,11 @@ class IndexController extends AController
 		));
 	}
 	
+	/**
+	 *	Create an email campaign (includes viewing previously created campaigns at the moment)
+	 * @param int $id
+	 * @param string $recipients 
+	 */
 	public function actionCreate($id=null, $recipients=null) {
 		
 		$this->pageTitle = Yii::app()->name . ' - New Email Campaign';
@@ -44,6 +56,10 @@ class IndexController extends AController
 		));
 	}
 	
+	/**
+	 *	Preview a specific email campaign
+	 * @param int $id 
+	 */
 	public function actionPreview($id) {
 		
 		$this->pageTitle = Yii::app()->name . ' - Preview Email Campaign';
@@ -55,6 +71,11 @@ class IndexController extends AController
 		));
 	}
 	
+	/**
+	 *	Render email content for preview
+	 * @param int $id
+	 * @param int $contact_id 
+	 */
 	public function actionPreviewContent($id, $contact_id=null) {
 				
 		$model = EmailCampaign::model()->findByPk($id);
@@ -71,6 +92,18 @@ class IndexController extends AController
 		$this->renderPartial('preview/content', $fields);
 	}
 	
+	/**
+	 *	Prepare email campaign for sending
+	 * @param int $id - email campaign id
+	 */
+	public function actionSend($id) {
+		
+	}
+	
+	/**
+	 *	Search for recipients to return in token input
+	 * @param string $q 
+	 */
 	public function actionRecipients($q){
 		$q = urldecode($_GET['q']);
 		// escape % and _ characters

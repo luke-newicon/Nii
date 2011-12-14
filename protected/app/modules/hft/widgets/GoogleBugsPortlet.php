@@ -3,6 +3,7 @@
 class GoogleBugsPortlet extends NPortlet {
 
 	public $title = '<h3>Welcome to Hope for Tomorrow</h3>';
+//	public $contentCssClass='portlet-body h400 overflow-scroll mbs';
 
 	protected function renderContent() {
 		echo '<div class="alert-message block-message info">';

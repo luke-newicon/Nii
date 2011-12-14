@@ -176,11 +176,11 @@ class HftEvent extends NActiveRecord
 	}
 	
 	public function getNameLink() {
-		return NHtml::link($this->name, array('view', 'id'=>$this->id));
+		return NHtml::link($this->name, array('/hft/event/view', 'id'=>$this->id));
 	}
 	
 	public function getEditLink() {
-		return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+		return NHtml::link('Edit', array('/hft/event/edit', 'id'=>$this->id));
 	}
 	
 	public function getEmailLink() {

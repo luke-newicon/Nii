@@ -213,7 +213,7 @@ class HftDonation extends NActiveRecord
 				else
 					return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id),array('class'=>'grid-thumb-label'));
 			} else {
-				return '<span class="trashedData" title="Removed">'.$label.'</span>';
+				return '<span class="trashedData grid-thumb-label" title="Removed">'.$label.'</span>';
 			}
 		} else
 			return '<span class="noData">No contact assigned</span>';
@@ -235,20 +235,20 @@ class HftDonation extends NActiveRecord
 	}
 	
 	public function getDonationIdLink() {
-		return NHtml::link($this->id, array('view', 'id'=>$this->id));
+		return NHtml::link($this->id, array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getDonationAmountLink() {
-		return NHtml::link($this->displayAmount, array('view', 'id'=>$this->id));
+		return NHtml::link($this->displayAmount, array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getDonationDateLink() {
-		return NHtml::link(NHtml::formatDate($this->date_received, "d-m-Y"), array('view', 'id'=>$this->id));
+		return NHtml::link(NHtml::formatDate($this->date_received, "d-m-Y"), array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getEditLink() {
 		if ($this->id)
-			return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+			return NHtml::link('Edit', array('/hft/donation/edit', 'id'=>$this->id));
 	}
 	
 	public function getDisplayType() {

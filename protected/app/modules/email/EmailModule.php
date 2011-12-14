@@ -33,5 +33,6 @@ class EmailModule extends NWebModule
 		EmailCampaignTemplate::install();
 		EmailCampaign::install();
 		EmailTemplate::install();
+		EmailCampaignEmail::install();
 	}
 }

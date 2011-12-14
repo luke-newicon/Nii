@@ -55,9 +55,8 @@ class EmailCampaignEmail extends NActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'template_id' => 'Select a Campaign',
-			'recipients' => 'Recipients',
-			'content' => 'Email Content',
+			'campaign_id' => 'Campaign',
+			'contact_id' => 'Recipient',
 		);
 	}
 
@@ -70,7 +69,8 @@ class EmailCampaignEmail extends NActiveRecord {
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
-		$criteria->compare('template.name', $this->template_id, true);
+		$criteria->compare('campaign.subject', $this->campaign_id, true);
+		$criteria->compare('contact.name', $this->contact_id, true);
 
 		$sort = new CSort;
 		$sort->defaultOrder = 'id DESC';
@@ -91,65 +91,17 @@ class EmailCampaignEmail extends NActiveRecord {
 		);
 	}
 
-
 	public function schema() {
 		return array(
 			'columns' => array(
 				'id' => "pk",
-				'template_id' => "int(11)",
-				'recipients' => "text",
-				'subject' => "text",
-				'content' => "text",
+				'campaign_id' => "int(11)",
+				'contact_id' => "int(11)",
+				'email_address' => "varchar(255)",
+				'sent_date' => "datetime",
+				'opened_date' => "datetime",
 			),
 			'keys' => array());
-	}
-	
-//	function behaviors() {
-//		return array(
-//			'trash'=>array(
-//				'class'=>'nii.components.behaviors.ETrashBinBehavior',
-//				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
-//			),
-//			'tag'=>array(
-//               'class'=>'nii.components.behaviors.NTaggable'
-//           )
-//		);
-//	}
-	
-	public function selectTemplateFromDropdown() {
-		return 'jQuery(function($){
-			var template_id = $("#EmailCampaign_template_id").val();
-			if (template_id>0 && template_id !="") {
-				var contentUrl = "' . Yii::app()->baseUrl . '/email/template/getContents/id/"+template_id;
-				$.ajax({
-					url: contentUrl,
-					type: "get",
-					dataType: "json",
-					success: function(response){ 
-						$(".email-campaign-details").show();
-						CKEDITOR.instances.content.setData(response.content);
-						$("#EmailCampaign_subject").val(response.subject);
-						if (response.recipients) {
-							jQuery("#EmailCampaign_recipients").tokenInput("clear");
-							jQuery("#EmailCampaign_recipients").tokenInput("add",response.recipients);
-						}
-					},
-					error: function() {
-						alert ("JSON failed to return a valid response");
-					}
-				}); 
-			} else {
-				if (template_id=="0") {
-					$(".email-campaign-details").show();
-				} else {
-					$(".email-campaign-details").hide();
-				}
-				CKEDITOR.instances.content.setData("");
-				$("#EmailCampaign_subject").val("");
-				jQuery("#EmailCampaign_recipients").tokenInput("clear");
-			}
-			return false;
-		})';
 	}
 	
 	public static function install($className=__CLASS__){

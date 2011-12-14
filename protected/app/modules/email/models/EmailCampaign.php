@@ -149,7 +149,7 @@ class EmailCampaign extends NActiveRecord {
 				'content' => "text",
 				'created_date' => "datetime",
 				'updated_date' => "datetime",
-				'status' => "ENUM('Created','Compiled','Sending','Sent') NOT NULL DEFAULT 'Created'",
+				'status' => "ENUM('Created','Compiled','Sending','Sent')",
 			),
 			'keys' => array());
 	}
