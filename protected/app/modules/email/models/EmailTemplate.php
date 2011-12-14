@@ -96,7 +96,7 @@ class EmailTemplate extends NActiveRecord {
 				'exportValue' => '$data->name',
 			),
 			array(
-				'name' => 'description'
+				'name' => 'description',
 			),
 			array(
 				'name' => 'editLink',
@@ -104,6 +104,11 @@ class EmailTemplate extends NActiveRecord {
 				'value' => '$data->editLink',
 				'export' => false,
 				'filter' => false,
+			),
+			array(
+				'name' => 'default_template',
+				'type' => 'raw',
+				'value' => 'NHtml::formatBool($data->default_template)',
 			),
 		);
 	}
@@ -116,6 +121,7 @@ class EmailTemplate extends NActiveRecord {
 				'name' => "varchar(255)",
 				'description' => "text",
 				'content' => "text",
+				'default_template' => 'tinyint(1)',
 			),
 			'keys' => array());
 	}

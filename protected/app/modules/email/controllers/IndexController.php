@@ -135,7 +135,7 @@ class IndexController extends AController
 			}
 		}
 		
-		$c->status = 'Compiled';
+		$c->status = 'Queued';
 		$c->updated_date = date('Y-m-d H:i:s');
 		$c->save();
 		

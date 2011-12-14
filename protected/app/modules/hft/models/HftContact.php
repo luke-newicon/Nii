@@ -202,6 +202,13 @@ class HftContact extends Contact
 		));
 	}
 	
+	public function newsletterRecipients() {
+		
+		return new CDbCriteria(
+			array('condition'=>'t.newsletter = "1"')
+		);
+	}
+	
 	public function getGridScopes() {
 		return array_merge_recursive(parent::getGridScopes(), array(
 			'items'=>array(

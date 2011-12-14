@@ -66,6 +66,7 @@ class EmailCampaign extends NActiveRecord {
 			'content' => 'Email Content',
 			'status' => 'Status',
 			'numberRecipients' => '# Recipients',
+			'editLink' => '',
 		);
 	}
 
@@ -158,6 +159,8 @@ class EmailCampaign extends NActiveRecord {
 	public function getEditLink() {
 		if ($this->status == 'Created')
 			return NHtml::link('Edit', array('/email/index/create', 'id'=>$this->id));
+		else
+			return NHtml::link('View', array('/email/index/view', 'id'=>$this->id));
 	}
 	
 	public function getViewLink() {
@@ -269,7 +272,7 @@ class EmailCampaign extends NActiveRecord {
 	
 	public function getRecipientContactsArray($limit=100) {
 		if ($this->recipients) :
-			$count=0;
+			$count=0; $recipientArray=array();
 			$recipients = explode(',',$this->recipients);
 			foreach($recipients as $r) :
 				if ($count >= $limit && $limit != null)
@@ -304,7 +307,10 @@ class EmailCampaign extends NActiveRecord {
 	
 	public function getTemplatedContent($contact=null) {
 		if ($this->template)
-			$template = EmailTemplate::model()->findByPk($this->template->design_template_id);
+			$template = NActiveRecord::model('EmailTemplate')->findByPk($this->template->design_template_id);
+		else
+			$template = NActiveRecord::model('EmailTemplate')->findByAttributes(array('default_template'=>'1'));			
+		
 		if (isset($template))
 			$content = str_replace('[content]',$this->content,$template->content);
 		else
