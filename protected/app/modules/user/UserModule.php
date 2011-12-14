@@ -377,14 +377,13 @@ class UserModule extends NWebModule
 	 * Handles after login event and records the last visit time and increments the login number
 	 * TODO: update audit log to record login time, user and ip address.
 	 */
-	public function afterLoginHandler(){
-		$u = Yii::app()->user->getRecord();
+	public function afterLoginHandler($event){
+		$u = Yii::app()->user->record;
 		$u->lastvisit = date('Y-m-d H:i:s');
 		// record the number of times the user has logged in;
 		$u->logins += 1;
 		$u->save();
-		$userName = Yii::app()->user->name;
-		NLog::insertLog('User '.$userName.' logged in from IP: '.Yii::app()->request->getUserHostAddress());
+		NLog::insertLog('User '.Yii::app()->user->name.' logged in from IP: '.Yii::app()->request->getUserHostAddress());
 	}
 	
 	

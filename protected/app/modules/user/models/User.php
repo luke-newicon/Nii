@@ -52,7 +52,7 @@ class User extends NActiveRecord {
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username, domain, name, email, roleName', 'safe', 'on' => 'search'),
-			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password', 'safe'),
+			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password, lastvisit, createtime', 'safe'),
 		);
 
 
