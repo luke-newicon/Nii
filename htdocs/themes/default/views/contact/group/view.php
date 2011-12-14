@@ -12,10 +12,6 @@
 			<div class="unit size1of4 detailLabel"><?= $this->t('Description') ?></div>
 			<div class="lastUnit"><?php echo $model->description; ?></div>
 		</div>
-		<div class="detailRow">
-			<div class="unit size1of4 detailLabel"><?= $this->t('Group Contacts') ?></div>
-			<div class="lastUnit"><?php echo $model->groupContactsLinks; ?></div>
-		</div>
 	</div>
 
 	<?php
