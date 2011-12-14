@@ -70,7 +70,7 @@ class User extends NActiveRecord {
 				array('status', 'in', 'range' => array(self::STATUS_NOACTIVE, self::STATUS_ACTIVE, self::STATUS_BANED)),
 				array('password', 'length', 'max' => 128, 'min' => 4, 'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
 				array('superuser', 'in', 'range' => array(0, 1)),
-				array('createtime, lastvisit, superuser, status', 'numerical', 'integerOnly' => true),
+				array('superuser, status', 'numerical', 'integerOnly' => true),
 					));
 		}
 
@@ -191,9 +191,8 @@ class User extends NActiveRecord {
 		if ($this->getScenario() == 'insert') {
 			$this->password = $this->cryptPassword($this->password);
 			$this->activekey = $this->cryptPassword(microtime() . $this->password);
-			$this->createtime = time();
+			$this->createtime = date('Y-m-d H:i:s');
 		}
-		$this->lastvisit = time();
 		return parent::beforeSave();
 	}
 
@@ -251,8 +250,8 @@ class User extends NActiveRecord {
 				'email' => 'string NOT NULL',
 				'email_verified' => 'boolean NOT NULL DEFAULT 0',
 				'activekey' => 'string NOT NULL',
-				'createtime' => 'int',
-				'lastvisit' => 'int',
+				'createtime' => 'datetime',
+				'lastvisit' => 'datetime',
 				'superuser' => 'boolean NOT NULL DEFAULT 0',
 				'status' => 'boolean NOT NULL DEFAULT 0',
 				'domain' => 'string',

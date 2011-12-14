@@ -379,7 +379,7 @@ class UserModule extends NWebModule
 	 */
 	public function afterLoginHandler(){
 		$u = Yii::app()->user->getRecord();
-		$u->lastvisit = time();
+		$u->lastvisit = date('Y-m-d H:i:s');
 		// record the number of times the user has logged in;
 		$u->logins += 1;
 		$u->save();
