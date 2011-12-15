@@ -79,7 +79,6 @@ class AccountController extends NController {
 				$userLogin->attributes = $_POST['UserLogin'];
 				// validate that the username and password are valid
 				if ($userLogin->login()) {
-					Yii::app()->getModule('user')->onAfterLogin(new CEvent);
 					$this->redirect(Yii::app()->user->returnUrl);
 				}else{
 					// check domain

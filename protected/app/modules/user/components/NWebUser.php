@@ -30,8 +30,17 @@ class NWebUser extends CWebUser {
 	 * @return void 
 	 */
 	protected function afterLogin($fromCookie) {
-		// set message so the system can determin when a user has just logged in
+		Yii::app()->onEndRequest = array($this, 'raiseAfterLogin');
+		// set message so the system can determine when a user has just logged in
 		$this->setJustLoggedIn();
+	}
+	
+	/**
+	 * the after login event is raised by the on end request event.
+	 */
+	public function raiseAfterLogin(){
+		$event = new CEvent($this);
+		Yii::app()->getModule('user')->onAfterLogin($event);
 	}
 
 	/**
