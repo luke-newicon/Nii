@@ -12,16 +12,14 @@
 	<h1>Dashboard</h1>
 </div>
 <div class="row">
-<!--	<div class="span9">
-		<?php // $this->widget('hft.widgets.GoogleBugsPortlet'); ?>
-	</div>-->
-	<div class="span8">
-		<?php $this->widget('contact.widgets.ContactLatestPortlet'); ?>
+	<div class="span10">
+		<?php foreach($portlets as $portlet) : if($portlet['position'] == 'main') : ?>
+			<?php $this->widget($portlet['widget']); ?>
+		<?php endif;endforeach; ?>
 	</div>
-	<div class="span8">
-		<?php $this->widget('hft.widgets.EventUpcomingPortlet'); ?>
-	</div>
-	<div class="span8">
-		<?php $this->widget('hft.widgets.DonationLatestPortlet'); ?>
+	<div class="span6">
+		<?php foreach($portlets as $portlet) : if($portlet['position'] == 'side') : ?>
+			<?php $this->widget($portlet['widget']); ?>
+		<?php endif;endforeach; ?>
 	</div>
 </div>

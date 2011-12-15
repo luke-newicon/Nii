@@ -48,6 +48,7 @@ class ContactModule extends NWebModule {
 		Yii::app()->menus->addItem('main', 'Contact Groups', array('/contact/group/index'), $this->menu_label);
 		//Yii::app()->menus->addItem('main', 'Add a Person', array('/contact/admin/create/type/Person'), $this->menu_label);
 		//Yii::app()->menus->addItem('main', 'Add an Organisation', array('/contact/admin/create/type/Organisation'), $this->menu_label);
+		Yii::app()->getModule('admin')->dashboard->addPortlet('contact-latest','contact.widgets.ContactLatestPortlet','side');
 	}
 
 	public function settings() {

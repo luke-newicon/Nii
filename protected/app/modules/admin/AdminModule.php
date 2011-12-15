@@ -17,6 +17,7 @@ class AdminModule extends NWebModule {
 	public function init() {
 		Yii::import('admin.components.*');
 		Yii::import('admin.models.*');
+		$this->setComponent('dashboard', new AdminDashboard);
 	}
 	
 	public function setup(){
