@@ -33,18 +33,61 @@ class GroupController extends AController
 	}
 	
 	public function actionViewContacts($id) {
-		$groupModel = 'ContactGroupContact';
+		$groupModel = 'ContactGroupContactMembers';
 	
-		$model = new $groupModel('search');
+		$model = new $groupModel('searchGroupContacts');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$groupModel]))
+			$model->attributes = $_GET[$groupModel];
+		
+		$model->groupId = $id;
+		
+		$this->render('view/contacts',array(
+			'dataProvider'=>$model->searchGroupContacts($id),
+			'model'=>$model,
+		));	
+	}
+	
+	public function actionViewRules($id) {
+		$groupModel = 'ContactGroupContact';
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+	
+		$model = new $groupModel('searchGroupContacts');
 		$model->unsetAttributes();
 		
 		if(isset($_GET[$groupModel]))
 			$model->attributes = $_GET[$groupModel];
 
-		$this->render('view/contacts',array(
-			'dataProvider'=>$model->search($id),
+		$this->render('view/rules',array(
+			'dataProvider'=>$model->searchGroupContacts($id, 'rule_based'),
 			'model'=>$model,
 		));	
+	}
+	
+	public function actionDeleteMember($id) {
+		$m = NActiveRecord::model('ContactGroupContact')->findByPk($id);
+		if (NActiveRecord::model('ContactGroupContact')->deleteByPk($id)) {
+			$group = NActiveRecord::model('ContactGroup')->findByPk($m->group_id);			
+			echo CJSON::encode(array('success'=>'Successfully deleted a member', 'count'=>$group->countGroupContacts('user_defined'), 'countTotal'=>$group->countGroupContacts()));
+		}
+	}
+	
+	public function actionAddMember($groupId) {
+		$modelName = 'ContactGroupContactMembers';
+		
+		$model = new $modelName;
+		
+		$this->performAjaxValidation($model);
+		
+		if (isset($_POST[$modelName])) {
+			$model->attributes = $_POST[$modelName];
+						
+			if ($model->save()) {
+				$group = NActiveRecord::model('ContactGroup')->findByPk($groupId);
+				echo CJSON::encode(array('success'=>'Successfully added a member', 'count'=>$group->countGroupContacts('user_defined'), 'countTotal'=>$group->countGroupContacts()));
+			}
+		}
 	}
 	
 	/**

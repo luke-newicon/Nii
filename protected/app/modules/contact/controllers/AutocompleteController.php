@@ -8,7 +8,7 @@ class AutocompleteController extends Controller {
 	 * @param string $wildcard - options are both|left|right|exact
 	 * @param string $type - any limiting factors
 	 */
-	public function actionContactList($term=null, $wildcard='both', $type=null, $condition=null) {
+	public function actionContactList($term=null, $wildcard='both', $type=null, $condition=null, $withEmail=null) {
 		if ($term) {
 			
 			if ($type) {
@@ -30,9 +30,11 @@ class AutocompleteController extends Controller {
 				break;
 			}
 			
+			$emailCheck = $withEmail ? " AND email <> '' AND email IS NOT NULL" : "";
+			
 			$contacts = Contact::model()->findAll(
 				array(
-					'condition'=>"name ".$term.$type,
+					'condition'=>"name ".$term.$type.$emailCheck,
 					'limit'=>30,
 				)
 			);

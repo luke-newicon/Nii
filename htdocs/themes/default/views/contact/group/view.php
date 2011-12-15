@@ -12,6 +12,10 @@
 			<div class="unit size1of4 detailLabel"><?= $this->t('Description') ?></div>
 			<div class="lastUnit"><?php echo $model->description; ?></div>
 		</div>
+		<div class="detailRow">
+			<div class="unit size1of4 detailLabel"><?= $this->t('Total No. of Members') ?></div>
+			<div class="lastUnit" id="totalMembersCount"><?php echo $model->countGroupContacts(); ?></div>
+		</div>
 	</div>
 
 	<?php

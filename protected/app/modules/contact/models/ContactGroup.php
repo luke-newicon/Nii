@@ -55,7 +55,7 @@ class ContactGroup extends NActiveRecord
 			),
 		));
 	}
-
+	
 	public function columns() {
 		return array(
 			array(
@@ -95,9 +95,17 @@ class ContactGroup extends NActiveRecord
 			'keys' => array());
 	}
 	
-	public function getGroups() {
-		// @todo: Create getGroups function
-		
+	/**
+	 *	Get groups as array to use in drop down lists
+	 * @return array - [id]=>name 
+	 */
+	public static function getGroups() {
+		$g=array();
+		$groups = self::model()->findAll();
+		foreach ($groups as $group) {
+			$g[$group->id] = $group->name;
+		}
+		return $g;
 	}
 	
 	/**
@@ -128,26 +136,32 @@ class ContactGroup extends NActiveRecord
 	 *	Get contacts for a specific group. Returns contact IDs
 	 * @return array - contact IDs 
 	 */
-	public function getGroupContacts() {
+	public function getGroupContacts($type=null) {
 		// @todo: Finish getGroupContacts function
 		
 		$contacts = array();
-		// First: get contacts from ContactGroupContact
-		$cgcs = NActiveRecord::model('ContactGroupContact')->findAllByAttributes(array('group_id'=>$this->id));
-		foreach ($cgcs as $cgc)
-			$contacts[$cgc->contact_id] = $cgc->contact->name;
 		
-		// Next: get contacts from dynamic scopes on the model - trickier...
-		if ($this->filterScopes) {
-			$fs = CJSON::decode($this->filterScopes);
-			if (isset($fs)){
-				
-			} else {
-				$contactModel  = Yii::app()->getModule('contact')->contactModel;
-				$criteria = NActiveRecord::model($contactModel)->{$this->filterScopes}();
-				$c = NActiveRecord::model($contactModel)->findAll($criteria);
-				foreach ($c as $value)
-					$contacts[$value->id] = $value->name;
+		if ($type=='user_defined' || $type==null) {
+			// First: get contacts from ContactGroupContact
+			$cgcs = NActiveRecord::model('ContactGroupContact')->findAllByAttributes(array('group_id'=>$this->id));
+			foreach ($cgcs as $cgc)
+				$contacts[$cgc->contact_id] = $cgc->contact->name;
+		}
+		
+		if ($type=='rule_based' || $type==null) {
+
+			// Next: get contacts from dynamic scopes on the model - trickier...
+			if ($this->filterScopes) {
+				$fs = CJSON::decode($this->filterScopes);
+				if (isset($fs)){
+
+				} else {
+					$contactModel  = Yii::app()->getModule('contact')->contactModel;
+					$criteria = NActiveRecord::model($contactModel)->{$this->filterScopes}();
+					$c = NActiveRecord::model($contactModel)->findAll($criteria);
+					foreach ($c as $value)
+						$contacts[$value->id] = $value->name;
+				}
 			}
 		}
 		// Last: return contacts
@@ -182,8 +196,8 @@ class ContactGroup extends NActiveRecord
 	 *	Return a count of the contacts in a group
 	 * @return int 
 	 */
-	public function countGroupContacts() {
-		return count($this->groupContacts);
+	public function countGroupContacts($type=null) {
+		return count($this->getGroupContacts($type));
 	}
 	
 	/**
@@ -206,8 +220,8 @@ class ContactGroup extends NActiveRecord
 	
 	public function getTabs() {
 		/* Default tabs */
-		$tabs['Contacts'] = array('ajax' => array('viewContacts', 'id' => $this->id), 'id' => 'contacts', 'count' => $this->countGroupContacts());
-//		$tabs['Notes'] = array('ajax' => array('notes', 'id' => $this->id()), 'id' => 'notes', 'count' => $this->countNotes);
+		$tabs['Members'] = array('ajax' => array('viewContacts', 'id' => $this->id), 'id' => 'members', 'count' => $this->countGroupContacts('user_defined'));
+		$tabs['Rules'] = array('ajax' => array('viewRules', 'id' => $this->id()), 'id' => 'rules', 'count' => $this->countGroupContacts('rule_based'));
 //		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments', 'count' => $this->countAttachments);
 
 		return $tabs;

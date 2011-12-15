@@ -17,7 +17,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 	
 	public $defaultScope = 'default';
 	public $gridId;
-
+	
 	/**
 	 * Fetches the data from the persistent data storage.
 	 * @return array list of data items

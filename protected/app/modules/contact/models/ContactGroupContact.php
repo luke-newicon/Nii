@@ -25,6 +25,14 @@ class ContactGroupContact extends NActiveRecord
 		);
 	}
 	
+	public function rules() {
+		return array(
+			array('contact_id, group_id', 'safe'),
+			array('name, email', 'safe', 'on'=>'search'),
+			array('name, email', 'safe', 'on'=>'searchGroupContacts'),
+		);
+	}
+	
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
@@ -51,6 +59,54 @@ class ContactGroupContact extends NActiveRecord
 			),
 		));
 	}
+
+	public function searchGroupContacts($id=null, $type='user_defined') {
+		
+		$contacts = array();
+
+		if ($type=='user_defined') {
+			// Get contacts from ContactGroupContact
+			$cgcs = NActiveRecord::model('ContactGroupContact')->findAllByAttributes(array('group_id'=>$id));
+			foreach ($cgcs as $cgc)
+				$contacts[$cgc->contact_id] = $cgc->contact_id;
+		} else {
+			$group = NActiveRecord::model('ContactGroup')->findByPk($id);
+			// Next: get contacts from dynamic scopes on the model - trickier...
+			if ($group->filterScopes) {
+				$fs = CJSON::decode($group->filterScopes);
+				if (isset($fs)){
+
+				} else {
+					$contactModel  = Yii::app()->getModule('contact')->contactModel;
+					$criteria = NActiveRecord::model($contactModel)->{$group->filterScopes}();
+					$c = NActiveRecord::model($contactModel)->findAll($criteria);
+					foreach ($c as $value)
+						$contacts[$value->id] = $value->id;
+				}
+			}
+		}
+		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$contact = new $contactModel;
+		$criteria = $contact->getDbCriteria();
+
+		$criteria->compare('name', $this->name, true);
+		$criteria->compare('email', $this->email, true);
+				
+		if (isset($contacts))
+			$criteria->addInCondition('t.id',$contacts);
+		
+		$sort = new CSort;
+		$sort->defaultOrder = 'id DESC';
+
+		return new NActiveDataProvider($contact, array(
+			'criteria' => $criteria,
+			'sort' => $sort,
+			'pagination' => array(
+				'pageSize' => 20,
+			),
+		));
+	}
 	
 	/**
 	 * @return array customized attribute labels (name=>label)
@@ -67,7 +123,7 @@ class ContactGroupContact extends NActiveRecord
 	public function columns() {
 		return array(
 			array(
-				'name'=>'contact_name',
+				'name'=>'name',
 				'type' => 'raw',
 				'value' => '$data->contactLink',
 				'exportValue' => '$data->contactName',
@@ -75,7 +131,7 @@ class ContactGroupContact extends NActiveRecord
 			array(
 				'name'=>'email',
 				'type' => 'raw',
-				'value' => '$data->contactEmailLink',
+				'value' => '$data->emailLink',
 				'exportValue' => '$data->contactEmail',
 			),
 		);
@@ -92,7 +148,25 @@ class ContactGroupContact extends NActiveRecord
 			'keys' => array());
 	}
 	
-	public $contact_name, $email;
+	public function getName() {
+		if (isset($this->contact))
+			return $this->contact->name;
+	}	
+	
+	public function setName($value) {
+		if (isset($value))
+			$this->name = $value;
+	}	
+
+	public function getEmail() {
+		if (isset($this->contact))
+			return $this->contact->email;
+	}	
+	
+	public function setEmail($value) {
+		if (isset($value))
+			$this->email = $value;
+	}
 	
 	public function getContactLink($tab=null, $showIcon=false) {
 		if ($this->contact) {

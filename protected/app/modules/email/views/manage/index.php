@@ -1,7 +1,7 @@
 <div class="page-header">
 	<h2>Manage Saved Campaigns</h2>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Create a New Campaign', array('create'), array('class'=>'btn primary')); ?>
+		<?php echo NHtml::link('New Saved Campaign', array('create'), array('class'=>'btn primary')); ?>
 <!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
 	</div>
 </div>

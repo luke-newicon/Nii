@@ -210,6 +210,35 @@ class Contact extends NActiveRecord {
 		$criteria->compare('comment', $this->comment, true);
 		return true;
 	}
+	
+//	public function searchGroupContacts($id=null) {
+//		
+//		$group = NActiveRecord::model('ContactGroup')->findByPk($id);
+//		$cgcs = $group->groupContacts;
+//		foreach ($cgcs as $key => $cgc)
+//			$contacts[$key] = $key;
+//		
+//		$contactModel = Yii::app()->getModule('contact')->contactModel;
+//		$contact = new $contactModel;
+//		$criteria = $contact->getDbCriteria();
+//
+//		$contact->getSearchCriteria($criteria);
+//		if (isset($contacts))
+//			$criteria->addInCondition('t.id',$contacts);
+//		
+//		$criteria->join = 'LEFT JOIN contact_group_contact cgc ON (cgc.contact_id = t.id AND cgc.group_id = "'.$id.'")';
+//		
+//		$sort = new CSort;
+//		$sort->defaultOrder = 'id DESC';
+//
+//		return new NActiveDataProvider($this, array(
+//			'criteria' => $criteria,
+//			'sort' => $sort,
+//			'pagination' => array(
+//				'pageSize' => 20,
+//			),
+//		));
+//	}
 
 	public function scopes() {
 		return array(
@@ -713,5 +742,6 @@ class Contact extends NActiveRecord {
 		
 		return CMap::mergeArray($behaviors, Yii::app()->getModule('contact')->getBehaviorsFor(Yii::app()->getModule('contact')->contactModel));
 	}
+
 
 }
