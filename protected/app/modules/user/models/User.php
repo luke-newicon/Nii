@@ -52,7 +52,7 @@ class User extends NActiveRecord {
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username, domain, name, email, roleName', 'safe', 'on' => 'search'),
-			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password, lastvisit, createtime', 'safe'),
+			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password, lastvisit, createtime, contact_id', 'safe'),
 		);
 
 
@@ -83,6 +83,7 @@ class User extends NActiveRecord {
 	public function relations() {
 		return array(
 			'role' => array(self::HAS_ONE, 'AuthAssignment', 'userid'),
+			'contact' => array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id'),
 		);
 	}
 
@@ -91,6 +92,7 @@ class User extends NActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
+			'contact_id' => 'Contact',
 			'first_name' => 'First Name',
 			'last_name' => 'Last Name',
 			'company' => 'Company',
@@ -241,6 +243,7 @@ class User extends NActiveRecord {
 		return array(
 			'columns' => array(
 				'id' => 'pk',
+				'contact_id' => 'int',
 				'first_name' => 'string',
 				'last_name' => 'string',
 				'company' => 'string',
@@ -283,6 +286,11 @@ class User extends NActiveRecord {
 
 	public function setName($name) {
 		$this->_name = $name;
+	}
+	
+	public function getContactName(){
+		if($this->contact)
+			return $this->contact->name;
 	}
 
 	public function getRoleDescription() {
