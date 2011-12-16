@@ -169,6 +169,9 @@ class UserModule extends NWebModule
 	}
 	
 	public function setup(){
+//		if(Yii::app()->user->record && Yii::app()->user->record->update_password){
+//			Yii::app()->catchAllRequest = array('/user/account/changepassword');
+//		}
 	}
 	
 	public function getImpersonatingUser(){

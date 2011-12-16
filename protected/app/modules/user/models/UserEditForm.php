@@ -16,7 +16,7 @@ class UserEditForm extends User {
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username', 'unique', 'message' => UserModule::t("This username address already exists.")),
-			array('roleName, status, superuser, update_password','safe'),
+			array('roleName, status, superuser, update_password, contact_id','safe'),
 		);
 	}
 

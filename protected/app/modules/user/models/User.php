@@ -144,7 +144,7 @@ class User extends NActiveRecord {
 	public function defaultScope()
     {
         return array(
-            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins, update_password',
+            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins, update_password, contact_id',
         );
     }
 

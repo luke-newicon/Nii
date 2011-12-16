@@ -362,4 +362,9 @@ class AccountController extends NController {
 			}
 		}
 	}
+	
+	public function actionChangepassword(){
+		$model = new UserPasswordForm;
+		$this->render('changepassword',array('model'=>$model));
+	}
 }
