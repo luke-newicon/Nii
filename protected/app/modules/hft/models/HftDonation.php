@@ -151,18 +151,18 @@ class HftDonation extends NActiveRecord
 				'value' => '$data->eventLink',
 				'exportValue' => '$data->eventName',
 			),
-			array(
-				'name' => 'statement_number',
-			),
-			array(
-				'name' => 'statement_date',
-				'type' => 'raw',
-				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
-				'exportValue' => 'NHtml::formatDate($data->statement_date, "d-m-Y","-")',
-//				'filter' => NGridView::filterDateRange($this, 'statement_date'),
-				'class'=>'NDateColumn',
-				'htmlOptions'=>array('width'=>'120px'),
-			),
+//			array(
+//				'name' => 'statement_number',
+//			),
+//			array(
+//				'name' => 'statement_date',
+//				'type' => 'raw',
+//				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
+//				'exportValue' => 'NHtml::formatDate($data->statement_date, "d-m-Y","-")',
+////				'filter' => NGridView::filterDateRange($this, 'statement_date'),
+//				'class'=>'NDateColumn',
+//				'htmlOptions'=>array('width'=>'120px'),
+//			),
 			array(
 				'name' => 'editLink',
 				'type' => 'raw',

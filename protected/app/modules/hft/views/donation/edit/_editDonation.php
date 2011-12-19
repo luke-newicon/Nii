@@ -96,6 +96,7 @@ $modelName = get_class($model);
 			<?php echo $form->error($model,'comment'); ?>
 		</div>
 	</div>	
+	<?php /*
 	<div class="line field">
 		<div class="unit size1of6"><?= $form->labelEx($model,'statement_number') ?></div>
 		<div class="lastUnit">
@@ -110,7 +111,7 @@ $modelName = get_class($model);
 			<?php echo $form->error($model,'statement_date'); ?>
 		</div>
 	</div>
-	
+	*/ ?>
 	<div class="actions">
 		<?php
 		$cancelUrl = ($model->id) ? array('donation/view','id'=>$model->id) : array('donation/index');

@@ -724,6 +724,8 @@ class Contact extends NActiveRecord {
 				'contact_name' => "varchar(255)",
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
+				'created_date' => 'datetime',
+				'updated_date' => 'datetime',
 				'trashed' => "int(1) unsigned NOT NULL",
 			),
 			'keys' => array());
