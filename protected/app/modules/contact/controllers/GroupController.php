@@ -58,10 +58,13 @@ class GroupController extends AController
 		
 		if(isset($_GET[$groupModel]))
 			$model->attributes = $_GET[$groupModel];
+		
+		$ruleModel = new ContactGroupRule;
 
 		$this->render('view/rules',array(
 			'dataProvider'=>$model->searchGroupContacts($id, 'rule_based'),
 			'model'=>$model,
+			'ruleModel'=>$ruleModel,
 		));	
 	}
 	
@@ -88,6 +91,41 @@ class GroupController extends AController
 				echo CJSON::encode(array('success'=>'Successfully added a member', 'count'=>$group->countGroupContacts('user_defined'), 'countTotal'=>$group->countGroupContacts()));
 			}
 		}
+	}
+	
+	
+	/**
+	 * @todo: write full comments about this function
+	 * @param string $model
+	 * @param string $grouping
+	 * @param int $id 
+	 */
+	public function actionAjaxRuleField($model=null, $grouping=null, $id=null) {
+		
+		$ruleModel = new ContactGroupRule;
+		$this->renderPartial('view/rules/_ruleField',array(
+			'model'=>$model,
+			'ruleModel'=>$ruleModel,
+			'grouping'=>$grouping,
+			'count'=>$id,
+		));	
+	}
+		
+	/**
+	 * @todo: write full comments about this function
+	 * @param string $model
+	 * @param string $grouping
+	 * @param int $id 
+	 */
+	public function actionAjaxRuleSearchBox($grouping=null, $field=null, $id=null) {
+		
+		$ruleModel = new ContactGroupRule;
+		$this->renderPartial('view/rules/_ruleSearchBox',array(
+			'ruleModel'=>$ruleModel,
+			'grouping'=>$grouping,
+			'field'=>$field,
+			'count'=>$id,
+		));	
 	}
 	
 	/**

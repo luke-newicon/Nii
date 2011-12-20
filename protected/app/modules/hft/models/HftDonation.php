@@ -294,4 +294,26 @@ class HftDonation extends NActiveRecord
 		return self::model()->count('donation_amount >= :amount GROUP BY contact_id',array(':amount' => 2000));
 	}
 	
+	
+	/**
+	 *	Array of rule fields, to be used in contact group rules
+	 * @return array - assoc. array of grouped fields. See Contacts group below as an example
+	 */
+	public static function groupRuleFields() {
+		return array(
+			'Donations' => array(
+				'model' => __CLASS__,
+				'fields' => array(
+					'received_date' => array(
+						'label' => 'Date Received',
+						'type' => 'date',
+					),
+					'donation_amount' => array(
+						'label' => 'Donation Amount',
+					),
+				),
+			)
+		);
+	}	
+
 }

@@ -17,6 +17,8 @@ class ContactModule extends NWebModule {
 	
 	public $groups = array();
 	
+	public $groupRuleFields = array();
+	
 	/**
 	 * Display contact name: First, Last
 	 * @var boolean
@@ -49,6 +51,9 @@ class ContactModule extends NWebModule {
 		//Yii::app()->menus->addItem('main', 'Add a Person', array('/contact/admin/create/type/Person'), $this->menu_label);
 		//Yii::app()->menus->addItem('main', 'Add an Organisation', array('/contact/admin/create/type/Organisation'), $this->menu_label);
 		Yii::app()->getModule('admin')->dashboard->addPortlet('contact-latest','contact.widgets.ContactLatestPortlet','side');
+		
+		// Add standard rule fields to contact group rule fields
+		Yii::app()->getModule('contact')->addGroupRuleField(ContactGroup::groupRuleFields());
 	}
 
 	public function settings() {
@@ -114,7 +119,7 @@ class ContactModule extends NWebModule {
 	 * @param array $group 
 	 */
 	public function addGroup($group=array()) {
-		Yii::app()->getModule('contact')->groups = CMap::mergeArray(Yii::app()->getModule('contact')->groups, $group);
+		$this->groups = CMap::mergeArray($this->groups, $group);
 	}
 	
 	public function getGroups() {
@@ -128,6 +133,34 @@ class ContactModule extends NWebModule {
 				$groups[$key]['id'] = $key;
 				$groups[$key]['label'] = $group['name'] .' ('.$group['count'].')';
 		}
+		return $groups;
+	}
+	
+	public function addGroupRuleField($field=array()) {
+		$this->groupRuleFields = CMap::mergeArray($this->groupRuleFields, $field);
+	}
+	
+	public function getGroupRuleFields($grouping=null) {
+		if (isset($grouping)) {
+			if (array_key_exists($grouping, $this->groupRuleFields))
+				return $this->groupRuleFields[$grouping];
+		} else
+			return $this->groupRuleFields;
+	}
+	
+	public function getGroupRuleFieldsArray($grouping) {
+		$fields = $this->getGroupRuleFields($grouping);
+		$groups=array();
+		foreach ($fields['fields'] as $name => $field)
+			$a[$name] = isset($field['label']) ? $field['label'] : $name;
+		return $a;	
+	}
+	
+	public function getRuleFieldGroupArray() {
+		$fields = $this->groupRuleFields;
+		$groups=array();
+		foreach ($fields as $key => $array)
+			$groups[$key] = $key;
 		return $groups;
 	}
 	

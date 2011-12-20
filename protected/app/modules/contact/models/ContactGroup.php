@@ -222,8 +222,31 @@ class ContactGroup extends NActiveRecord
 		/* Default tabs */
 		$tabs['Members'] = array('ajax' => array('viewContacts', 'id' => $this->id), 'id' => 'members', 'count' => $this->countGroupContacts('user_defined'));
 		$tabs['Rules'] = array('ajax' => array('viewRules', 'id' => $this->id()), 'id' => 'rules', 'count' => $this->countGroupContacts('rule_based'));
-//		$tabs['Attachments'] = array('ajax' => array('attachments', 'id' => $this->id()), 'id' => 'attachments', 'count' => $this->countAttachments);
 
 		return $tabs;
 	}
+	
+	/**
+	 *	Array of rule fields, to be used in contact group rules
+	 * @return array - assoc. array of grouped fields. See Contacts group below as an example
+	 */
+	public static function groupRuleFields() {
+		return array(
+			'Contacts' => array(
+				'model' => Yii::app()->getModule('contact')->contactModel,
+				'fields' => array(
+					'newsletter' => array(
+						'label' => 'Receives Newsletter',
+						'type' => 'bool',
+					),
+					'country' => array(
+						'label' => 'Country',
+						'type' => 'select',
+						'filter' => NData::countries(),
+					),
+				),
+			)
+		);
+	}
+	
 }

@@ -265,6 +265,23 @@ class NData
 		return $return;
 	}
 	
-	
+	/**
+	 *	Converts human-readable strings such as '+ 1 week' into proper CDbCriteria conditions for use in AR searches
+	 * @param string $date
+	 * @return string - condition to use in CDbCriteria 
+	 */
+	public function dateSearchConvert($date=null) {
+		if ($date) {
+			if(preg_match('/^(?:\s*(<>|<=|>=|<|>|=))?(.*)$/',$date,$matches))
+			{
+				$date=$matches[2];
+				$op=$matches[1];
+			}
+			else
+				$op='';
+			
+			return $op.date('Y-m-d',strtotime(str_replace('/', '-', $date)));
+		}
+	}	
 	
 }

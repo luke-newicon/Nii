@@ -6,7 +6,7 @@
 	<div class="well">
 		<div class="detailRow">
 			<div class="unit size1of4 detailLabel"><?= $this->t('Group Name') ?></div>
-			<div class="lastUnit"><?php echo $model->name; ?></div>
+			<div class="lastUnit item-title"><?php echo $model->name; ?></div>
 		</div>
 		<div class="detailRow">
 			<div class="unit size1of4 detailLabel"><?= $this->t('Description') ?></div>
