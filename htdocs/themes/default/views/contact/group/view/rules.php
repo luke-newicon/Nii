@@ -1,12 +1,28 @@
+<?php $form = $this->beginWidget('NActiveForm', array(
+		'id' => 'groupRuleForm',
+		'enableAjaxValidation' => false,
+		'action' => array('/contact/group/saveGroupRules','id'=>$group->id),
+	)); 
+?>
 <div class="page-header">
 	<h3>Rules</h3>
-	
+	<div class="action-buttons"><?php echo CHtml::submitButton('Save',array('class'=>'btn primary', 'id'=>'','name'=>'')) ?></div>
 </div>
-<?php // Display current rules ?>
-<?php //$this->renderPartial('view/rules/_currentRules', array('model'=>$model, 'ruleModel'=>$ruleModel)); ?>
-<?php $count=1;
-$this->renderPartial('view/rules/_newRule', array('model'=>$model, 'ruleModel'=>$ruleModel, 'count'=>$count)); ?>
-<div class="page-header">
+<div id="groupRules">
+	<div class="line pbs">
+		<div class="unit size2of10"><div class="lbl">Grouping</div></div>
+		<div class="unit size3of10"><div class="lbl">Field</div></div>
+			<div class="lastUnit"><div class="lbl">Search Options</div></div>
+	</div>
+	<?php 
+	if ($group->filterScopes) {
+		$rules = CJSON::decode($group->filterScopes);
+		$this->renderPartial('view/rules/_currentRules', array('groupRules'=>$rules, 'ruleModel'=>$ruleModel));
+	} else
+		$this->renderPartial('view/rules/_newRule', array('model'=>$model, 'ruleModel'=>$ruleModel, 'count'=>1)); ?>
+</div>
+<?php $this->endWidget(); ?>
+<div class="page-header ptm">
 	<h3>Rule-based Members</h3>
 </div>
 <?php
@@ -17,55 +33,61 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'enableButtons'=>true,
 	'enableCustomScopes'=>false,
 )); ?>
-<?php echo CHtml::textField('formModel', get_class($ruleModel)) ?>
 <script>
 	$(function(){
 
-		ajaxUrl = "<?php echo CHtml::normalizeUrl(array('/contact/group/addRule/','model'=>get_class($model))); ?>";
+		ajaxUrl = "<?php echo CHtml::normalizeUrl(array('/contact/group/addRule/')); ?>";
 		
-		$('#groupRulesForm').delegate('.groupRulesAdd','click',function() {
-			var filterCount = ($('.groupRules').length +1);
+		$('#groupRuleForm').delegate('.groupRuleAdd','click',function() {
+			var ruleCount = ($('.groupRule').length +1);
 			$.ajax({
 				url: ajaxUrl,
-				data: 'count='+filterCount,
+				data: 'count='+ruleCount,
 				dataType: "html",
 				type: 'get',
 				success: function(response) {
-					$('#groupRuless').append(response);
-					$('#filter-'+filterCount).effect("highlight",2000);
-					$('.groupRules:first .groupRulesDelete').removeClass('hidden');
+					$('#groupRules').append(response);
+					$('#rule-'+ruleCount).effect("highlight",2000);
+					$('.groupRule:first .groupRuleDelete').removeClass('hidden');
 				}
 			});
 			return false;
 		});
 		
 			
-		$('#groupRulesForm').delegate('.groupRulesDelete','click',function() {
+		$('#groupRuleForm').delegate('.groupRuleDelete','click',function() {
 			$(this).parent().parent().remove();
-			$.each($('.groupRules'), function(itemCount){
+			$.each($('.groupRule'), function(itemCount){
 				itemCount++;
-				$('.filterCount', this).html(itemCount);
-				$(this).attr('id', 'filter-'+itemCount);
-				$('.filterValue', this).attr('id', 'filterValue-'+itemCount);
-				$('.filterField', this).attr('id', 'filterField-'+itemCount);
-				$('.filterField', this).attr('name', 'rule['+itemCount+'][field]');
-				$('.filterValue', this).attr('name', 'rule['+itemCount+'][value]');
+				// IDs
+				$(this).attr('id', 'rule-'+itemCount);
+				$('.ruleGrouping', this).attr('data-id', itemCount);
+				$('.ruleGrouping', this).attr('id', 'ruleGrouping-'+itemCount);
+				
+				$('.ruleValue', this).attr('id', 'ruleValue-'+itemCount);
+				$('.searchMethod', this).attr('id', 'searchMethod-'+itemCount);
+				$('.ruleFieldBox', this).attr('id', 'ruleField-'+itemCount);
+				$('.ruleSearchBox', this).attr('id', 'ruleSearchBox-'+itemCount);
+				// Names
+				$('.ruleGrouping', this).attr('name', 'rule['+itemCount+'][grouping]');
+				$('.ruleField', this).attr('name', 'rule['+itemCount+'][field]');
+				$('.ruleValue', this).attr('name', 'rule['+itemCount+'][value]');
 				$('.searchMethod', this).attr('name', 'rule['+itemCount+'][searchMethod]');
+				// Buttons
 				if (itemCount==1) {
-					$('.groupRules:first .groupRulesDelete').addClass('hidden');
+					$('.groupRule:first .groupRuleDelete').addClass('hidden');
 				} else {
-					$('.groupRules:first .groupRulesDelete').removeClass('hidden');
+					$('.groupRule:first .groupRuleDelete').removeClass('hidden');
 				}
 			});
 			return false;
 		});
 		
-		$('#groupRulesForm').delegate('.ruleGrouping','change',function(){
+		$('#groupRuleForm').delegate('.ruleGrouping','change',function(){
 			
-			var model = $('#formModel').val();
 			var selectedGrouping = $(this).val();
 			var valueID = $(this).attr('data-id');
-			url = '<?php echo Yii::app()->baseUrl; ?>/contact/group/ajaxRuleField/model/'+model+'/grouping/'+selectedGrouping+'/id/'+valueID+'/';
+			url = '<?php echo Yii::app()->baseUrl; ?>/contact/group/ajaxRuleField/grouping/'+selectedGrouping+'/id/'+valueID+'/';
 			$.ajax({
 				url: url,
 				dataType: 'html',
@@ -77,7 +99,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			return false;
 		});
 		
-		$('#groupRulesForm').delegate('.ruleField','change',function(){
+		$('#groupRuleForm').delegate('.ruleField','change',function(){
 			
 			var valueID = $(this).attr('data-id');
 			var grouping = $('#ruleGrouping-'+valueID).val();

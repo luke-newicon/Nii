@@ -304,7 +304,7 @@ class HftDonation extends NActiveRecord
 			'Donations' => array(
 				'model' => __CLASS__,
 				'fields' => array(
-					'received_date' => array(
+					'date_received' => array(
 						'label' => 'Date Received',
 						'type' => 'date',
 					),

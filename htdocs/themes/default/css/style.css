@@ -610,3 +610,5 @@ div.topbar div > ul > li.menu:hover ul {
   float: right;
   margin-left: 5px;
 }
+
+.hidden { display: none; }

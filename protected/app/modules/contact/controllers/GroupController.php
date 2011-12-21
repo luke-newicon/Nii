@@ -60,10 +60,12 @@ class GroupController extends AController
 			$model->attributes = $_GET[$groupModel];
 		
 		$ruleModel = new ContactGroupRule;
+		$group = NActiveRecord::model('ContactGroup')->findByPk($id);
 
 		$this->render('view/rules',array(
 			'dataProvider'=>$model->searchGroupContacts($id, 'rule_based'),
 			'model'=>$model,
+			'group' => $group,
 			'ruleModel'=>$ruleModel,
 		));	
 	}
@@ -93,6 +95,14 @@ class GroupController extends AController
 		}
 	}
 	
+	public function actionAddRule($count) {
+		$ruleModel = new ContactGroupRule;
+		$this->renderPartial('view/rules/_newRule',array(
+			'ruleModel'=>$ruleModel,
+			'count'=>$count,
+		));	
+	}
+	
 	
 	/**
 	 * @todo: write full comments about this function
@@ -100,11 +110,10 @@ class GroupController extends AController
 	 * @param string $grouping
 	 * @param int $id 
 	 */
-	public function actionAjaxRuleField($model=null, $grouping=null, $id=null) {
+	public function actionAjaxRuleField($grouping=null, $id=null) {
 		
 		$ruleModel = new ContactGroupRule;
 		$this->renderPartial('view/rules/_ruleField',array(
-			'model'=>$model,
 			'ruleModel'=>$ruleModel,
 			'grouping'=>$grouping,
 			'count'=>$id,
@@ -126,6 +135,15 @@ class GroupController extends AController
 			'field'=>$field,
 			'count'=>$id,
 		));	
+	}
+	
+	public function actionSaveGroupRules($id) {
+		$group = NActiveRecord::model('ContactGroup')->findByPk($id);
+		$group->filterScopes = CJSON::encode($_POST);
+		FB::log($group->filterScopes);
+		$group->save();
+		Yii::app()->user->setFlash('success',$this->t("Your rules were successfully saved."));
+		$this->redirect(array('/contact/group/view/id/'.$id.'#Rules'));
 	}
 	
 	/**

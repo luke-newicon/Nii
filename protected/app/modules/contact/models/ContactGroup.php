@@ -140,6 +140,7 @@ class ContactGroup extends NActiveRecord
 		// @todo: Finish getGroupContacts function
 		
 		$contacts = array();
+		$contactModel  = Yii::app()->getModule('contact')->contactModel;
 		
 		if ($type=='user_defined' || $type==null) {
 			// First: get contacts from ContactGroupContact
@@ -154,15 +155,17 @@ class ContactGroup extends NActiveRecord
 			if ($this->filterScopes) {
 				$fs = CJSON::decode($this->filterScopes);
 				if (isset($fs)){
-
+					$criteria = NActiveRecord::model('ContactGroupContact')->groupRulesCriteria($fs);
 				} else {
-					$contactModel  = Yii::app()->getModule('contact')->contactModel;
 					$criteria = NActiveRecord::model($contactModel)->{$this->filterScopes}();
-					$c = NActiveRecord::model($contactModel)->findAll($criteria);
-					foreach ($c as $value)
-						$contacts[$value->id] = $value->name;
 				}
+				
+				$criteria->addCondition("email <> '' AND email IS NOT NULL");
+				$c = NActiveRecord::model($contactModel)->findAll($criteria);
+					foreach ($c as $value)
+						$contacts[$value->id] = $value->id;
 			}
+			
 		}
 		// Last: return contacts
 		return $contacts;
@@ -197,7 +200,35 @@ class ContactGroup extends NActiveRecord
 	 * @return int 
 	 */
 	public function countGroupContacts($type=null) {
-		return count($this->getGroupContacts($type));
+		
+		$count=0;
+		$contactModel  = Yii::app()->getModule('contact')->contactModel;
+		
+		if ($type=='user_defined' || $type==null) {
+			// First: get contacts from ContactGroupContact
+			$count += NActiveRecord::model('ContactGroupContact')->countByAttributes(array('group_id'=>$this->id));
+		}
+		
+		if ($type=='rule_based' || $type==null) {
+
+			// Next: get contacts from dynamic scopes on the model - trickier...
+			if ($this->filterScopes) {
+				$fs = CJSON::decode($this->filterScopes);
+				if ($this->filterScopes) {
+					$fs = CJSON::decode($this->filterScopes);
+					if (isset($fs)){
+						$criteria = NActiveRecord::model('ContactGroupContact')->groupRulesCriteria($fs);
+					} else {
+						$criteria = NActiveRecord::model($contactModel)->{$this->filterScopes}();
+					}
+
+					$criteria->addCondition("email <> '' AND email IS NOT NULL");
+					$count += NActiveRecord::model($contactModel)->count($criteria);
+				}
+			}
+		}
+		// Last: return contacts
+		return $count;
 	}
 	
 	/**

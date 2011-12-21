@@ -63,6 +63,7 @@ class ContactGroupContact extends NActiveRecord
 	public function searchGroupContacts($id=null, $type='user_defined') {
 		
 		$contacts = array();
+		$contactModel  = Yii::app()->getModule('contact')->contactModel;
 
 		if ($type=='user_defined') {
 			// Get contacts from ContactGroupContact
@@ -72,21 +73,22 @@ class ContactGroupContact extends NActiveRecord
 		} else {
 			$group = NActiveRecord::model('ContactGroup')->findByPk($id);
 			// Next: get contacts from dynamic scopes on the model - trickier...
+			
 			if ($group->filterScopes) {
 				$fs = CJSON::decode($group->filterScopes);
 				if (isset($fs)){
-
+					$criteria = $this->groupRulesCriteria($fs);
 				} else {
-					$contactModel  = Yii::app()->getModule('contact')->contactModel;
 					$criteria = NActiveRecord::model($contactModel)->{$group->filterScopes}();
-					$c = NActiveRecord::model($contactModel)->findAll($criteria);
+				}
+				
+				$criteria->addCondition("email <> '' AND email IS NOT NULL");
+				$c = NActiveRecord::model($contactModel)->findAll($criteria);
 					foreach ($c as $value)
 						$contacts[$value->id] = $value->id;
-				}
 			}
 		}
 		
-		$contactModel = Yii::app()->getModule('contact')->contactModel;
 		$contact = new $contactModel;
 		$criteria = $contact->getDbCriteria();
 
@@ -106,6 +108,30 @@ class ContactGroupContact extends NActiveRecord
 				'pageSize' => 20,
 			),
 		));
+	}
+	
+	
+	public function groupRulesCriteria($fs) {
+		$criteria = new CDbCriteria;
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = new $contactModel;
+		foreach ($fs['rule'] as $rule) {
+			$ruleDone=false;
+			$function = 'groupRule'.ucfirst($rule['field']);
+			try {
+				if($model->{$function}(&$criteria, $rule['value'], $rule['searchMethod']))
+					$ruleDone=true;
+			} catch (Exception $e) {
+				
+			}
+			
+			if ($ruleDone==false) {
+				$cgr = new ContactGroupRule;
+				$cgr->getCondition(&$criteria, $rule);			
+			}
+		}
+		
+		return $criteria;
 	}
 	
 	/**

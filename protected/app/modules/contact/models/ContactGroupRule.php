@@ -51,19 +51,18 @@ class ContactGroupRule extends CFormModel
 	
 	public $defaultSearchMethod = 'is';
 	
-	public function getCondition(&$criteria, $model=null) {
-		$searchMethod = $this->rule['searchMethod'] ? $this->rule['searchMethod'] : 'contains';
+	public function getCondition(&$criteria, $rule) {
+		$searchMethod = $rule['searchMethod'] ? $rule['searchMethod'] : 'contains';
 		$sm = $this->searchMethods[$searchMethod]['value'];
-		if ($model) {
-			$model = new $model;
-			try {
-				if($model->translateCustomScopes($this->rule['field'], $this->rule['value'], $sm, $this->operator, $criteria)!==false)
-					return;
-			} catch (Exception $e) {
-				
-			}
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = new $contactModel;
+		try {
+			if($model->translateCustomScopes($rule['field'], $rule['value'], $sm, $this->operator, $criteria)!==false)
+				return;
+		} catch (Exception $e) {
+
 		}
-		$criteria->compare($this->rule['field'], $sm.$this->rule['value'], true, $this->operator);
+		$criteria->compare($rule['field'], $sm.$rule['value'], true);
 	}
 	
 	public function getRuleFields($grouping=null) {
@@ -76,7 +75,8 @@ class ContactGroupRule extends CFormModel
 	
 	public function getSearchOperators($grouping, $field) {
 		$fields = $this->getRuleFields($grouping);
-		switch($fields['fields'][$field]['type']) {
+		$type = isset($fields['fields'][$field]['type']) ? $fields['fields'][$field]['type'] : '';
+		switch($type) {
 			
 			case "bool":
 			case "select" :
@@ -93,10 +93,21 @@ class ContactGroupRule extends CFormModel
 		return $methods;
 	}
 
-	public function drawSearchBox($grouping, $field) {
+	public function drawSearchBox($grouping, $field, $count, $value=null) {
+		$name='rule['.$count.'][value]';
 		$fields = $this->getRuleFields($grouping);
+		$options = array('class'=>'ruleValue');
 		switch(@$fields['fields'][$field]['type']) {
-			
+			case "bool":
+				$filter = isset($fields['fields'][$field]['filter']) ? $fields['fields'][$field]['filter'] : array(1=>'Y', 0=>'N');
+				return CHtml::dropDownList($name, $value, $filter, $options);
+				break;
+			case "select" :
+				return CHtml::dropDownList($name, $value, $fields['fields'][$field]['filter'], $options);
+				break;
+				
+			default :
+				return CHtml::textField($name, $value, $options);
 		}
 	}
 }
