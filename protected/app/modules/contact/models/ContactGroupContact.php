@@ -64,6 +64,7 @@ class ContactGroupContact extends NActiveRecord
 		
 		$contacts = array();
 		$contactModel  = Yii::app()->getModule('contact')->contactModel;
+		$contact = new $contactModel;
 
 		if ($type=='user_defined') {
 			// Get contacts from ContactGroupContact
@@ -83,13 +84,20 @@ class ContactGroupContact extends NActiveRecord
 				}
 				
 				$criteria->addCondition("email <> '' AND email IS NOT NULL");
-				$c = NActiveRecord::model($contactModel)->findAll($criteria);
-					foreach ($c as $value)
-						$contacts[$value->id] = $value->id;
+				$criteria->select = 'id';
+				
+				$results = Yii::app()->db->commandBuilder->createFindCommand($contact->tableName,$criteria)->queryAll();
+				
+				foreach ($results as $value)
+					$contacts[$value->id] = $value->id;
+				
+//				$c = NActiveRecord::model($contactModel)->findAll($criteria);
+//					foreach ($c as $value)
+//						$contacts[$value->id] = $value->id;
 			}
 		}
 		
-		$contact = new $contactModel;
+		
 		$criteria = $contact->getDbCriteria();
 
 		$criteria->compare('name', $this->name, true);
