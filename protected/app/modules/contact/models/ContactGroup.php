@@ -73,15 +73,15 @@ class ContactGroup extends NActiveRecord
 				'type'=>'raw',
 				'value'=>'$data->ruleDescriptions'
 			),
-			array(
-				'name' => 'editLink',
-				'type' => 'raw',
-				'value' => '$data->editLink',
-				'filter' => false,
-				'sortable' => false,
-				'htmlOptions'=>array('width'=>'30px'),
-				'export'=>false,
-			),
+//			array(
+//				'name' => 'editLink',
+//				'type' => 'raw',
+//				'value' => '$data->editLink',
+//				'filter' => false,
+//				'sortable' => false,
+//				'htmlOptions'=>array('width'=>'30px'),
+//				'export'=>false,
+//			),
 		);
 	}
 
