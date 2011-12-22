@@ -70,6 +70,8 @@ class ContactGroup extends NActiveRecord
 			),
 			array(
 				'name'=>'filterScopes',
+				'type'=>'raw',
+				'value'=>'$data->ruleDescriptions'
 			),
 			array(
 				'name' => 'editLink',
@@ -247,6 +249,25 @@ class ContactGroup extends NActiveRecord
 	public function getViewLink() {
 		if ($this->id)
 			return NHtml::link($this->name, array('view', 'id'=>$this->id));
+	}
+	
+	public function getRuleDescriptions() {
+		$fields = CJSON::decode($this->filterScopes);
+		if (isset($fields)) {
+			$cgr = new ContactGroupRule;
+			foreach ($fields['rule'] as $rule) {
+				$method = '';
+				foreach ($cgr->searchMethods as $sm) {
+					if ($sm['value'] == $rule['searchMethod'])
+						$method = $sm['label'];
+				}
+				$rules[] = "'".$this->getAttributeLabel($rule['field'])."'" . " " . $method . " '" . $rule['value']."'";
+				
+				return implode(' <small>AND</small> ', $rules);
+			}
+		} else {
+			return $this->filterScopes;
+		}
 	}
 	
 	public function getTabs() {
