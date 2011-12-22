@@ -163,9 +163,12 @@ class ContactGroup extends NActiveRecord
 				}
 				
 				$criteria->addCondition("email <> '' AND email IS NOT NULL");
-				$c = NActiveRecord::model($contactModel)->findAll($criteria);
-					foreach ($c as $value)
-						$contacts[$value->id] = $value->id;
+				$criteria->select = 'id';
+				
+				$c = Yii::app()->db->commandBuilder->createFindCommand($contact->tableName(),$criteria)->queryAll();
+				
+				foreach ($c as $value)
+					$contacts[$value['id']] = $value['id'];
 			}
 			
 		}
