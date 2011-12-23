@@ -151,18 +151,18 @@ class HftDonation extends NActiveRecord
 				'value' => '$data->eventLink',
 				'exportValue' => '$data->eventName',
 			),
-			array(
-				'name' => 'statement_number',
-			),
-			array(
-				'name' => 'statement_date',
-				'type' => 'raw',
-				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
-				'exportValue' => 'NHtml::formatDate($data->statement_date, "d-m-Y","-")',
-//				'filter' => NGridView::filterDateRange($this, 'statement_date'),
-				'class'=>'NDateColumn',
-				'htmlOptions'=>array('width'=>'120px'),
-			),
+//			array(
+//				'name' => 'statement_number',
+//			),
+//			array(
+//				'name' => 'statement_date',
+//				'type' => 'raw',
+//				'value' => 'NHtml::formatDate($data->statement_date, "d-m-Y")',
+//				'exportValue' => 'NHtml::formatDate($data->statement_date, "d-m-Y","-")',
+////				'filter' => NGridView::filterDateRange($this, 'statement_date'),
+//				'class'=>'NDateColumn',
+//				'htmlOptions'=>array('width'=>'120px'),
+//			),
 			array(
 				'name' => 'editLink',
 				'type' => 'raw',
@@ -213,7 +213,7 @@ class HftDonation extends NActiveRecord
 				else
 					return CHtml::link($label, array("/contact/admin/view","id"=>$this->contact->id),array('class'=>'grid-thumb-label'));
 			} else {
-				return '<span class="trashedData" title="Removed">'.$label.'</span>';
+				return '<span class="trashedData grid-thumb-label" title="Removed">'.$label.'</span>';
 			}
 		} else
 			return '<span class="noData">No contact assigned</span>';
@@ -235,20 +235,20 @@ class HftDonation extends NActiveRecord
 	}
 	
 	public function getDonationIdLink() {
-		return NHtml::link($this->id, array('view', 'id'=>$this->id));
+		return NHtml::link($this->id, array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getDonationAmountLink() {
-		return NHtml::link($this->displayAmount, array('view', 'id'=>$this->id));
+		return NHtml::link($this->displayAmount, array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getDonationDateLink() {
-		return NHtml::link(NHtml::formatDate($this->date_received, "d-m-Y"), array('view', 'id'=>$this->id));
+		return NHtml::link(NHtml::formatDate($this->date_received, "d-m-Y"), array('/hft/donation/view', 'id'=>$this->id));
 	}
 	
 	public function getEditLink() {
 		if ($this->id)
-			return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+			return NHtml::link('Edit', array('/hft/donation/edit', 'id'=>$this->id));
 	}
 	
 	public function getDisplayType() {
@@ -294,4 +294,26 @@ class HftDonation extends NActiveRecord
 		return self::model()->count('donation_amount >= :amount GROUP BY contact_id',array(':amount' => 2000));
 	}
 	
+	
+	/**
+	 *	Array of rule fields, to be used in contact group rules
+	 * @return array - assoc. array of grouped fields. See Contacts group below as an example
+	 */
+	public static function groupRuleFields() {
+		return array(
+			'Donations' => array(
+				'model' => __CLASS__,
+				'fields' => array(
+					'date_received' => array(
+						'label' => 'Date Received',
+						'type' => 'date',
+					),
+					'donation_amount' => array(
+						'label' => 'Donation Amount',
+					),
+				),
+			)
+		);
+	}	
+
 }

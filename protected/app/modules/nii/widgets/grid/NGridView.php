@@ -218,7 +218,7 @@ class NGridView extends CGridView
 	 */
 	public function updateGridColumns() {
 
-		$model = get_class($this->dataProvider->model);
+		$model = $this->filter ? get_class($this->filter) : get_class($this->dataProvider->model);
 		$gridId = $this->id;
 
 		$label = '';
@@ -244,7 +244,7 @@ class NGridView extends CGridView
 	 */
 	public function gridColumns($model) {
 		$model = $this->filter;
-		$visibleColumns = NData::visibleColumns($this->filter, $this->id);
+		$visibleColumns = NData::visibleColumns($model, $this->id);
 		$columns = $model->columns();
 		
 		foreach($columns as $key=>$col) {

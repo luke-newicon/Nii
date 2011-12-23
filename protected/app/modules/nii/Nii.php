@@ -561,14 +561,4 @@ class Nii extends CWebApplication
 		$this->raiseEvent('onAfterModulesSetup', $event);
 	}
 	
-	/**
-	 * Function ensures the user module is loaded correctly before calling afterLogin events
-	 * @return NWebUser 
-	 */
-	public function getUser(){
-		$user = parent::getUser();
-		if($user->callAfterLogin)
-			$user->callAfterLogin();
-		return $user;
-	}
 }

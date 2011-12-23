@@ -17,7 +17,7 @@ class NActiveDataProvider extends CActiveDataProvider {
 	
 	public $defaultScope = 'default';
 	public $gridId;
-
+	
 	/**
 	 * Fetches the data from the persistent data storage.
 	 * @return array list of data items
@@ -95,10 +95,6 @@ class NActiveDataProvider extends CActiveDataProvider {
 			$customScope = new NCustomScope($rule, $value['match']);
 			$customScope->getCondition($criteria, $value['formModel']);
 		}
-//				print_r($criteria);
-//				echo '<br/>';
-//		print_r($this->model->getDbCriteria());
-//		echo $this->model->count();
 		return $this->model->count();
 	}	
 }

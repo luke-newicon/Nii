@@ -39,7 +39,7 @@
 				<div class="lastUnit"><?php echo $model->eventLink; ?></div>
 			</div>
 		</div>
-		
+		<?php /*
 		<div class="line detailRow">
 			<div class="unit size1of2">
 				<div class="unit size1of3 detailLabel"><?=$this->t('Statement Number')?></div>
@@ -50,7 +50,7 @@
 				<div class="lastUnit"><?php echo NHtml::formatDate($model->statement_date, 'jS F Y'); ?></div>
 			</div>
 		</div>
-		
+		*/ ?>
 		<div class="line detailRow">
 			<div class="unit size1of6 detailLabel"><?=$this->t('Comments')?></div>
 			<div class="lastUnit"><?php echo $model->comment; ?></div>

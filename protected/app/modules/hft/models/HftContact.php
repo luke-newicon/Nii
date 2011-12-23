@@ -26,7 +26,7 @@ class HftContact extends Contact
 		return array_merge($labels, 
 			array(
 				'source_id' => 'Source',
-				'account_number' => 'Account Number',
+				'id' => 'Account Number',
 			)
 		);
 	}
@@ -83,7 +83,7 @@ class HftContact extends Contact
 		return array_merge(
 			array(
 				array(
-					'name' => 'account_number',
+					'name' => 'id',
 					'header' => 'Acc. #',
 					'htmlOptions'=>array('width'=>'60px'),
 				),
@@ -200,6 +200,13 @@ class HftContact extends Contact
 				'with' =>'donation',
 			),
 		));
+	}
+	
+	public function newsletterRecipients() {
+		
+		return new CDbCriteria(
+			array('condition'=>'t.newsletter = "1"')
+		);
 	}
 	
 	public function getGridScopes() {

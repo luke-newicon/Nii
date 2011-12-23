@@ -52,7 +52,7 @@ class User extends NActiveRecord {
 			array('email', 'email'),
 			array('email', 'unique', 'message' => UserModule::t("This email address already exists.")),
 			array('username, domain, name, email, roleName', 'safe', 'on' => 'search'),
-			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password', 'safe'),
+			array('name, first_name, last_name, company, plan, trial, trial_ends_at, logins, update_password, lastvisit, createtime, contact_id', 'safe'),
 		);
 
 
@@ -70,7 +70,7 @@ class User extends NActiveRecord {
 				array('status', 'in', 'range' => array(self::STATUS_NOACTIVE, self::STATUS_ACTIVE, self::STATUS_BANED)),
 				array('password', 'length', 'max' => 128, 'min' => 4, 'message' => UserModule::t("Incorrect password (minimal length 4 symbols).")),
 				array('superuser', 'in', 'range' => array(0, 1)),
-				array('createtime, lastvisit, superuser, status', 'numerical', 'integerOnly' => true),
+				array('superuser, status', 'numerical', 'integerOnly' => true),
 					));
 		}
 
@@ -83,6 +83,7 @@ class User extends NActiveRecord {
 	public function relations() {
 		return array(
 			'role' => array(self::HAS_ONE, 'AuthAssignment', 'userid'),
+			'contact' => array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id'),
 		);
 	}
 
@@ -91,6 +92,7 @@ class User extends NActiveRecord {
 	 */
 	public function attributeLabels() {
 		return array(
+			'contact_id' => 'Contact',
 			'first_name' => 'First Name',
 			'last_name' => 'Last Name',
 			'company' => 'Company',
@@ -142,7 +144,7 @@ class User extends NActiveRecord {
 	public function defaultScope()
     {
         return array(
-            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins, update_password',
+            'select' => 'id, first_name, last_name, company, username, email, email_verified, createtime, lastvisit, superuser, status, domain, plan, trial, trial_ends_at, logins, update_password, contact_id',
         );
     }
 
@@ -191,9 +193,8 @@ class User extends NActiveRecord {
 		if ($this->getScenario() == 'insert') {
 			$this->password = $this->cryptPassword($this->password);
 			$this->activekey = $this->cryptPassword(microtime() . $this->password);
-			$this->createtime = time();
+			$this->createtime = date('Y-m-d H:i:s');
 		}
-		$this->lastvisit = time();
 		return parent::beforeSave();
 	}
 
@@ -242,6 +243,7 @@ class User extends NActiveRecord {
 		return array(
 			'columns' => array(
 				'id' => 'pk',
+				'contact_id' => 'int',
 				'first_name' => 'string',
 				'last_name' => 'string',
 				'company' => 'string',
@@ -251,8 +253,8 @@ class User extends NActiveRecord {
 				'email' => 'string NOT NULL',
 				'email_verified' => 'boolean NOT NULL DEFAULT 0',
 				'activekey' => 'string NOT NULL',
-				'createtime' => 'int',
-				'lastvisit' => 'int',
+				'createtime' => 'datetime',
+				'lastvisit' => 'datetime',
 				'superuser' => 'boolean NOT NULL DEFAULT 0',
 				'status' => 'boolean NOT NULL DEFAULT 0',
 				'domain' => 'string',
@@ -284,6 +286,11 @@ class User extends NActiveRecord {
 
 	public function setName($name) {
 		$this->_name = $name;
+	}
+	
+	public function getContactName(){
+		if($this->contact)
+			return $this->contact->name;
 	}
 
 	public function getRoleDescription() {

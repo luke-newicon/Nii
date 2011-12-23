@@ -57,6 +57,11 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 		}
 	</style>
 <?php endif; ?>
+<?php if($impersonator = Yii::app()->getModule('user')->ImpersonatingUser) : ?>
+	<div class="alert-message info">
+		<p>Currently impersonating <?php echo Yii::app()->user->name ?> (UID:<?php echo Yii::app()->user->record->id() ?><?php echo Yii::app()->user->record->roleDescription ? ', Role:'.Yii::app()->user->record->roleDescription : '' ?>) <a class="pull-right" href="<?php echo NHtml::url('/user/admin/restore') ?>">Restore permissions to <?php echo $impersonator->name ?></a></p>
+	</div>
+<?php endif; ?>
 <div id="message"></div>
 <div class="head">
 	<?php if (Yii::app()->getModule('admin')->logo) : ?>

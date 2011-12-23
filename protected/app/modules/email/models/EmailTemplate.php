@@ -32,8 +32,8 @@ class EmailTemplate extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, name', 'required'),
-			array('content', 'safe'),
+			array('name', 'required'),
+			array('content, default_template, description', 'safe'),
 		);
 	}
 
@@ -59,6 +59,7 @@ class EmailTemplate extends NActiveRecord {
 			'name' => 'Name',
 			'description' => 'Description',
 			'content' => 'Template Content',
+			'editLink' => 'Edit',
 		);
 	}
 
@@ -88,8 +89,29 @@ class EmailTemplate extends NActiveRecord {
 
 	public function columns() {
 		return array(
-			'name',
-			'description',
+			array(
+				'name' => 'name',
+				'type' => 'raw',
+				'value' => '$data->viewLink',
+				'exportValue' => '$data->name',
+			),
+			array(
+				'name' => 'description',
+			),
+			array(
+				'name' => 'default_template',
+				'type' => 'raw',
+				'value' => 'NHtml::formatBool($data->default_template)',
+				'htmlOptions' => array('width'=>'60px'),
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'export' => false,
+				'filter' => false,
+				'htmlOptions' => array('width'=>'40px'),
+			),
 		);
 	}
 
@@ -101,13 +123,45 @@ class EmailTemplate extends NActiveRecord {
 				'name' => "varchar(255)",
 				'description' => "text",
 				'content' => "text",
+				'default_template' => 'tinyint(1)',
+				'trashed' => "tinyint(1) NOT NULL DEFAULT 0",
 			),
 			'keys' => array());
+	}
+	
+	/**
+	 *	Get groups as array to use in drop down lists
+	 * @return array - [id]=>name 
+	 */
+	public static function getTemplates() {
+		$t=array();
+		$templates = self::model()->findAll();
+		foreach ($templates as $template) {
+			$t[$template->id] = $template->name;
+		}
+		return $t;
+	}
+	
+	public function getEditLink() {
+		return NHtml::link('Edit', array('/email/template/edit', 'id'=>$this->id));
+	}
+	
+	public function getViewLink() {
+		return NHtml::link($this->name, array('/email/template/view', 'id'=>$this->id));
 	}
 	
 	
 	public static function install($className=__CLASS__){
 		parent::install($className);
+	}
+	
+	function behaviors() {
+		return array(
+			'trash'=>array(
+				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+			)
+		);
 	}
 	
 }

@@ -6,13 +6,14 @@ class DonationLatestPortlet extends NPortlet {
 	public $limit = 10;
 
 	protected function renderContent() {
-		$donations = HftDonation::model()->findAll(array('limit' => $this->limit));
+		$donations = HftDonation::model()->findAll(array('limit' => $this->limit, 'order' => 'date_received DESC'));
 		if($donations){
 			echo '<table class="condensed-table mbn">';
-			echo '<thead><tr><th>Donator</th><th>Donation</th></tr></thead><tbody>';
+			echo '<thead><tr><th>Donor</th><th>Donation</th><th>Date</th></tr></thead><tbody>';
 			foreach ($donations as $donation) {
 				echo '<tr><td>'.$donation->getContactLink(null,true).'</td>';
-				echo '<td>'.$donation->donationAmountLink.'</td></tr>';
+				echo '<td>'.$donation->donationAmountLink.'</td>';
+				echo '<td>'. NHtml::formatDate($donation->date_received, 'd-m-y').'</td></tr>';
 			}
 			echo '</tbody></table>';
 		}

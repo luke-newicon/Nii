@@ -24,8 +24,7 @@ class EmailModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Send an Email', array('/email/index/create'), 'Emails');
 		Yii::app()->menus->addDivider('main','Emails');
 		Yii::app()->menus->addItem('main', 'Manage Saved Campaigns', array('/email/manage/index'), 'Emails');
-		Yii::app()->menus->addItem('main', 'Manage Email Groups', array('/email/group/manage'), 'Emails');
-		Yii::app()->menus->addItem('main', 'Manage Design Templates', array('/email/template/manage'), 'Emails');
+		Yii::app()->menus->addItem('main', 'Manage Design Templates', array('/email/template/index'), 'Emails');
 
 	}
 	
@@ -33,5 +32,6 @@ class EmailModule extends NWebModule
 		EmailCampaignTemplate::install();
 		EmailCampaign::install();
 		EmailTemplate::install();
+		EmailCampaignEmail::install();
 	}
 }

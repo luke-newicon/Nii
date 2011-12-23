@@ -24,36 +24,33 @@
  *  
  * @author steve
  */
-class NActiveForm extends CActiveForm
-{
-	
-	public $enableAjaxValidation=true;
-	public $enableClientValidation=true;
+class NActiveForm extends CActiveForm {
 
-	
+	public $enableAjaxValidation = true;
+	public $enableClientValidation = true;
+
 	/**
 	 * options passed to javascript validation
 	 * @see CActiveForm::clientOptions this
 	 * sets the default to set error message class onto the .field html object
 	 * @var type 
 	 */
-	public $clientOptions = array('inputContainer'=>'.field');
-	
-	public function init(){
+	public $clientOptions = array('inputContainer' => '.field');
+
+	public function init() {
 		// add small script to add focus class to parent .field element
 		$cs = Yii::app()->clientScript;
 		parent::init();
 	}
-	
-	public function markdown(){
+
+	public function markdown() {
 		// todo add nii input widgets
 	}
-	
-	public function wysiwyg(){
+
+	public function wysiwyg() {
 		// todo add nii input widget
 	}
-	
-	
+
 	/**
 	 * Renders an HTML label for a model attribute.
 	 * This method is a wrapper of {@link CHtml::activeLabelEx}.
@@ -64,12 +61,25 @@ class NActiveForm extends CActiveForm
 	 * @param array $htmlOptions additional HTML attributes.
 	 * @return string the generated label tag
 	 */
-	public function labelEx($model,$attribute,$htmlOptions=array())
-	{
+	public function labelEx($model, $attribute, $htmlOptions=array()) {
 		if (empty($htmlOptions)) {
 			$htmlOptions = array('class' => 'lbl');
 		}
 		return parent::labelEx($model, $attribute, $htmlOptions);
 	}
-	
+
+	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
+		$return = '<div class="field">';
+		$return .= $this->labelEx($model, $attribute);
+		$return .= '<div class="input">';
+		if($type == 'dropDownList'){
+			$return .= $this->dropDownList($model, $attribute, $data);
+		} else
+			$return .= $this->$type($model, $attribute);
+		$return .= '</div>';
+		$return .= $this->error($model, $attribute);
+		$return .= '</div>';
+		return $return;
+	}
+
 }

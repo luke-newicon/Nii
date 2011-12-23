@@ -176,11 +176,11 @@ class HftEvent extends NActiveRecord
 	}
 	
 	public function getNameLink() {
-		return NHtml::link($this->name, array('view', 'id'=>$this->id));
+		return NHtml::link($this->name, array('/hft/event/view', 'id'=>$this->id));
 	}
 	
 	public function getEditLink() {
-		return NHtml::link('Edit', array('edit', 'id'=>$this->id));
+		return NHtml::link('Edit', array('/hft/event/edit', 'id'=>$this->id));
 	}
 	
 	public function getEmailLink() {
@@ -222,4 +222,25 @@ class HftEvent extends NActiveRecord
 		return NAttachment::countAttachments($model, $model_id);
 	}
 	
+	/**
+	 *	Array of rule fields, to be used in contact group rules
+	 * @return array - assoc. array of grouped fields. See Contacts group below as an example
+	 */
+	public static function groupRuleFields() {
+		return array(
+			'Events' => array(
+				'model' => __CLASS__,
+				'fields' => array(
+					'start_date'=>array(
+						'label' => 'Start Date',
+						'type' => 'date',
+					),
+					'end_date'=>array(
+						'label' => 'End Date',
+						'type' => 'date',
+					),
+				),
+			)
+		);
+	}		
 }

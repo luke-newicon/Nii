@@ -14,21 +14,14 @@
  *
  * @author steve
  */
-class NWebUser extends CWebUser 
-{
+class NWebUser extends CWebUser {
 
 	/**
 	 * Store the NActiveRecord User model object
 	 * @var NActiveRecord
 	 */
 	private $_user;
-	
-	/**
-	 * whether Nii should call the callAfterLogin() function after the user component has loaded in.
-	 * @var boolean 
-	 */
-	public $callAfterLogin = false;
-	
+
 	/**
 	 * stores information after a user logs in. 
 	 * increments the number of logins for the user.
@@ -36,46 +29,42 @@ class NWebUser extends CWebUser
 	 * @param boolean $fromCookie if restored from cookie
 	 * @return void 
 	 */
-	protected function afterLogin($fromCookie){
-		$this->callAfterLogin = true;
-		// set message so the system can determin when a user has just logged in
+	protected function afterLogin($fromCookie) {
+		Yii::app()->onEndRequest = array($this, 'raiseAfterLogin');
+		// set message so the system can determine when a user has just logged in
 		$this->setJustLoggedIn();
 	}
 	
 	/**
-	 * This function is called by Nii after the Yii::app()->user variable has been set.
-	 * This ensures you can use default objects as normal in attached events
+	 * the after login event is raised by the on end request event.
 	 */
-	public function callAfterLogin(){
-		Yii::app()->getModule('user')->onAfterLogin(new CEvent);
-		$this->callAfterLogin = false;
+	public function raiseAfterLogin(){
+		$event = new CEvent($this);
+		Yii::app()->getModule('user')->onAfterLogin($event);
 	}
 
-	
 	/**
 	 * gets the User class activerecord representing the currently logged in user.
 	 * If no user is logged in then this function will return null
 	 * @return User | null 
 	 */
 	public function getRecord() {
-		if($this->getId() === null)
+		if ($this->getId() === null)
 			return null;
-		if($this->_user === null){
+		if ($this->_user === null) {
 			$this->_user = UserModule::userModel()->findByPk($this->getId());
 		}
 		return $this->_user;
 	}
-	
-	
-	
+
 	/**
 	 * is the user a superuser? i.e. have the superuser database table row column superuser set to 1.
 	 * @return boolean 
 	 */
-	public function isSuper(){
-		return ($this->record ===null)?false:$this->record->superuser;
+	public function isSuper() {
+		return ($this->record === null) ? false : $this->record->superuser;
 	}
-	
+
 	/**
 	 * overrides default behaviour to always return true if user has super powers
 	 * i.e. is a superuser
@@ -84,18 +73,17 @@ class NWebUser extends CWebUser
 	 * @param type $params
 	 * @param type $allowCaching 
 	 */
-	public function checkAccess($operation, $params = array(), $allowCaching = true) 
-	{
-		if ($this->record==null)
+	public function checkAccess($operation, $params = array(), $allowCaching = true) {
+		if ($this->record == null)
 			return false;
-		if($this->record->superuser)
+		if ($this->record->superuser)
 			return true;
 		return parent::checkAccess($operation, $params, $allowCaching);
 	}
-	
-	public function checkAccessToRoute(){
+
+	public function checkAccessToRoute() {
 		$route = Yii::app()->controller->getRoute();
-		return Yii::app()->user->checkAccess($route);	
+		return Yii::app()->user->checkAccess($route);
 	}
 
 	/**
@@ -104,63 +92,60 @@ class NWebUser extends CWebUser
 	 * 
 	 * @return string 
 	 */
-	public function getName(){
+	public function getName() {
 		$name = parent::getName();
 		// if the name is an email address return the first part
-		if($this->record !== null){
+		if ($this->record !== null) {
 			return $this->record->name;
 		}
 		// if the name is an email address return the first part before the @
-		if (($pos = strpos($name,"@"))) {
-			$name = strtok($name,'@');
+		if (($pos = strpos($name, "@"))) {
+			$name = strtok($name, '@');
 		}
 		return $name;
 	}
-	
+
 	/**
 	 * get the current users email address
 	 */
-	public function getEmail(){
-		if($this->record !== null){
+	public function getEmail() {
+		if ($this->record !== null) {
 			return $this->record->email;
 		}
-			
+
 		return $this->username;
-		
 	}
-	
-	public function getImageUrl($imageSize=40){
+
+	public function getImageUrl($imageSize=40) {
 		return Yii::app()->getController()->createWidget('nii.widgets.Gravatar', array(
-			'email'=>$this->getEmail(),
-			'size'=>$imageSize
-				
-		))->getUrl();
+					'email' => $this->getEmail(),
+					'size' => $imageSize
+				))->getUrl();
 	}
-	
-	
+
 	/**
 	 * This function returns true if the user has arived at the current page
 	 * from logging in.
 	 * This is useful for displaying logged in welcome messages or help boxes
 	 */
-	public function hasJustLoggedIn(){
+	public function hasJustLoggedIn() {
 		return $this->hasFlash('justloggedin');
 	}
-	
+
 	/**
 	 * stores a variable in the session identifying that the user has just logged in
 	 * @see self::hasJustLoggedIn
 	 */
-	public function setJustLoggedIn(){
-		$this->setFlash('justloggedin','');
+	public function setJustLoggedIn() {
+		$this->setFlash('justloggedin', '');
 	}
-	
+
 	/**
 	 * 
 	 * @return UserSettings
 	 */
-	public function getSettings(){
+	public function getSettings() {
 		return UserSettings::getInstance();
 	}
-	
+
 }

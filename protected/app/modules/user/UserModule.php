@@ -169,10 +169,15 @@ class UserModule extends NWebModule
 	}
 	
 	public function setup(){
-		if(isset(Yii::app()->session['impersonate_restore']) && Yii::app()->session['impersonate_restore']){
-			$restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
-			echo 'Currently impersonating ' . Yii::app()->user->name . ' <a href="'.NHtml::url('/user/admin/restore').'"> Restore permissions to ' . $restoreUser->name . '</a>';
-		}
+//		if(Yii::app()->user->record && Yii::app()->user->record->update_password){
+//			Yii::app()->catchAllRequest = array('/user/account/changepassword');
+//		}
+	}
+	
+	public function getImpersonatingUser(){
+		if(isset(Yii::app()->session['impersonate_restore']) && Yii::app()->session['impersonate_restore'])
+			return $restoreUser = User::model()->findByPk(Yii::app()->session['impersonate_restore']);
+		return false;
 	}
 	
 	public function permissions() {
@@ -377,14 +382,13 @@ class UserModule extends NWebModule
 	 * Handles after login event and records the last visit time and increments the login number
 	 * TODO: update audit log to record login time, user and ip address.
 	 */
-	public function afterLoginHandler(){
-		$u = Yii::app()->user->getRecord();
-		$u->lastvisit = time();
+	public function afterLoginHandler($event){
+		$u = Yii::app()->user->record;
+		$u->lastvisit = date('Y-m-d H:i:s');
 		// record the number of times the user has logged in;
 		$u->logins += 1;
 		$u->save();
-		$userName = Yii::app()->user->name;
-		NLog::insertLog('User '.$userName.' logged in from IP: '.Yii::app()->request->getUserHostAddress());
+		NLog::insertLog('User '.Yii::app()->user->name.' logged in from IP: '.Yii::app()->request->getUserHostAddress());
 	}
 	
 	

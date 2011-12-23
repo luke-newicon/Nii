@@ -13,6 +13,8 @@ class HftModule extends NWebModule
 	
 	public function init() {
 		Yii::import('hft.models.*');
+		Yii::import('hft.components.*');
+		Yii::import('hft.components.*');
 	}
 	
 	public function setup() {
@@ -59,6 +61,16 @@ class HftModule extends NWebModule
 			)
 		));
 		
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		Yii::app()->getModule('contact')->addBehaviorFor($contactModel, array('donations'=>array('class'=>'hft.components.behaviors.ContactGroupDonation')));
+		
+//		Yii::app()->getModule('admin')->dashboard->addPortlet('google-bugslist','hft.widgets.GoogleBugsPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('donations-latest','hft.widgets.DonationLatestPortlet');
+		
+		// Add extra rule fields to contact group rule fields
+		Yii::app()->getModule('contact')->addGroupRuleField(HftDonation::groupRuleFields());
+		Yii::app()->getModule('contact')->addGroupRuleField(HftEvent::groupRuleFields());
 	}
 	
 	

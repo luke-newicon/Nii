@@ -67,6 +67,7 @@ class EmailCampaignTemplate extends NActiveRecord {
 			'content' => 'Email Content',
 			'default_group_id' => 'Default Group',
 			'design_template_id' => 'Design Template',
+			'editLink' => 'Edit',
 		);
 	}
 
@@ -114,12 +115,23 @@ class EmailCampaignTemplate extends NActiveRecord {
 				'type'=>'raw',
 				'value'=>'$data->defaultGroupLink',
 				'exportValue'=>'$data->defaultGroupName',
+				'filter' => ContactGroup::getGroups(),
 			),
 			array(
 				'name'=>'design_template_id',
 				'type'=>'raw',
 				'value'=>'$data->designTemplateLink',
 				'exportValue'=>'$data->designTemplateName',
+				'filter'=> EmailTemplate::getTemplates(),
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
 			),
 		);
 	}
@@ -135,6 +147,7 @@ class EmailCampaignTemplate extends NActiveRecord {
 				'content' => "text",
 				'design_template_id' => "int(11)",
 				'default_group_id' => "int(11)",
+				'trashed' => "tinyint(1) NOT NULL DEFAULT 0",
 			),
 			'keys' => array());
 	}
@@ -154,7 +167,11 @@ class EmailCampaignTemplate extends NActiveRecord {
 	}
 	
 	public function getViewLink() {
-		return NHtml::link($this->name, array('/email/manage/viewSavedCampaign', 'id'=>$this->id));
+		return NHtml::link($this->name, array('/email/manage/view', 'id'=>$this->id));
+	}
+	
+	public function getEditLink() {
+		return NHtml::link('Edit', array('/email/manage/edit', 'id'=>$this->id));
 	}
 	
 	public function getDesignTemplateName() {
@@ -179,6 +196,15 @@ class EmailCampaignTemplate extends NActiveRecord {
 			return NHtml::link($this->defaultGroupName, array('/email/group/view', 'id'=>$this->group->id));
 		else
 			return '<span class="noData">No group assigned</span>';
+	}
+	
+	function behaviors() {
+		return array(
+			'trash'=>array(
+				'class'=>'nii.components.behaviors.ETrashBinBehavior',
+				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
+			)
+		);
 	}
 	
 }

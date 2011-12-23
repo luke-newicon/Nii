@@ -1,0 +1,1 @@
+<?php echo $model->getTemplatedContent(isset($contact) ? $contact : null); ?>

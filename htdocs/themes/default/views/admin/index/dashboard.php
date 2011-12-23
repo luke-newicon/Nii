@@ -13,12 +13,13 @@
 </div>
 <div class="row">
 	<div class="span10">
-		<?php $this->widget('hft.widgets.GoogleBugsPortlet'); ?>
+		<?php foreach($portlets as $portlet) : if($portlet['position'] == 'main') : ?>
+			<?php $this->widget($portlet['widget']); ?>
+		<?php endif;endforeach; ?>
 	</div>
 	<div class="span6">
-		<?php $this->widget('contact.widgets.ContactLatestPortlet'); ?>
-	</div>
-	<div class="span6">
-		<?php $this->widget('hft.widgets.DonationLatestPortlet'); ?>
+		<?php foreach($portlets as $portlet) : if($portlet['position'] == 'side') : ?>
+			<?php $this->widget($portlet['widget']); ?>
+		<?php endif;endforeach; ?>
 	</div>
 </div>

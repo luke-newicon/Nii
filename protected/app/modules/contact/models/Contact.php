@@ -61,7 +61,7 @@ class Contact extends NActiveRecord {
 			array('addr1, addr2, addr3', 'length', 'max' => 100),
 			array('city, county, country, tel_primary, tel_secondary, mobile, fax', 'length', 'max' => 50),
 			array('postcode', 'length', 'max' => 20),
-			array('dob, title, suffix, company_name, contact_name, photoID, comment, city, website, tags', 'safe'),
+			array('dob, title, suffix, company_name, contact_name, photoID, comment, city, website, tags, email', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment, website', 'safe', 'on' => 'search'),
@@ -210,6 +210,35 @@ class Contact extends NActiveRecord {
 		$criteria->compare('comment', $this->comment, true);
 		return true;
 	}
+	
+//	public function searchGroupContacts($id=null) {
+//		
+//		$group = NActiveRecord::model('ContactGroup')->findByPk($id);
+//		$cgcs = $group->groupContacts;
+//		foreach ($cgcs as $key => $cgc)
+//			$contacts[$key] = $key;
+//		
+//		$contactModel = Yii::app()->getModule('contact')->contactModel;
+//		$contact = new $contactModel;
+//		$criteria = $contact->getDbCriteria();
+//
+//		$contact->getSearchCriteria($criteria);
+//		if (isset($contacts))
+//			$criteria->addInCondition('t.id',$contacts);
+//		
+//		$criteria->join = 'LEFT JOIN contact_group_contact cgc ON (cgc.contact_id = t.id AND cgc.group_id = "'.$id.'")';
+//		
+//		$sort = new CSort;
+//		$sort->defaultOrder = 'id DESC';
+//
+//		return new NActiveDataProvider($this, array(
+//			'criteria' => $criteria,
+//			'sort' => $sort,
+//			'pagination' => array(
+//				'pageSize' => 20,
+//			),
+//		));
+//	}
 
 	public function scopes() {
 		return array(
@@ -695,13 +724,15 @@ class Contact extends NActiveRecord {
 				'contact_name' => "varchar(255)",
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
+				'created_date' => 'datetime',
+				'updated_date' => 'datetime',
 				'trashed' => "int(1) unsigned NOT NULL",
 			),
 			'keys' => array());
 	}
 	
 	function behaviors() {
-		return array(
+		$behaviors = array(
 			'trash'=>array(
 				'class'=>'nii.components.behaviors.ETrashBinBehavior',
 				'trashFlagField'=>$this->getTableAlias(false, false).'.trashed',
@@ -710,6 +741,9 @@ class Contact extends NActiveRecord {
                'class'=>'nii.components.behaviors.NTaggable'
            )
 		);
+		
+		return CMap::mergeArray($behaviors, Yii::app()->getModule('contact')->getBehaviorsFor(Yii::app()->getModule('contact')->contactModel));
 	}
+
 
 }

@@ -1,15 +1,14 @@
 <div class="page-header">
-	<h2>Manage Email Groups</h2>
+	<h2>Manage Design Templates</h2>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Create a New Group', array('create'), array('class'=>'btn primary')); ?>
-<!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
+		<?php echo NHtml::link('Create a New Template', array('create'), array('class'=>'btn primary')); ?>
 	</div>
 </div>
 <?php
 $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
-	'id' => 'ManageEmailGroupsGrid',
+	'id' => 'ManageEmailTemplateGrid',
 //	'scopes' => array(
 //		'items' => array(
 //			'default' => array(

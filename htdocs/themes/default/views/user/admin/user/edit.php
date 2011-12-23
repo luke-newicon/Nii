@@ -21,82 +21,65 @@ $form = $this->beginWidget('NActiveForm', array(
 		<div class="container pull-left">
 	<?php endif; ?>
 	<div class="line">
-		<div class="field unit size1of2">
-			<?php echo $form->labelEx($model, 'first_name'); ?>
-			<div class="input">
-				<?php echo $form->textField($model, 'first_name'); ?>
-			</div>
-			<?php echo $form->error($model, 'first_name'); ?>
+		<div class="unit size1of2">
+			<?php echo $form->field($model, 'first_name'); ?>
 		</div>
-		<div class="field lastUnit">
-			<?php echo $form->labelEx($model, 'last_name'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'last_name'); ?>
-				</div>
-				<?php echo $form->error($model, 'last_name'); ?>
-			</div>
+		<div class="lastUnit">
+			<?php echo $form->field($model, 'last_name'); ?>
 		</div>
 	</div>
 	<div class="line">
-		<div class="field unit size1of2">
-			<?php echo $form->labelEx($model, 'email'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'email'); ?>
-				</div>
-				<?php echo $form->error($model, 'email'); ?>
-			</div>
+		<div class="unit size1of2">
+			<?php echo $form->field($model, 'email'); ?>
 		</div>
-		<div class="field lastUnit">
-			<?php echo $form->labelEx($model, 'username'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'username'); ?>
-				</div>
-				<?php echo $form->error($model, 'username'); ?>
-			</div>
+		<div class="lastUnit">
+			<?php echo $form->field($model, 'username'); ?>
 		</div>
 	</div>
 	<div class="line">
-		<div class="field unit size1of2">
-			<?php echo $form->labelEx($model, 'superuser'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->dropDownList($model, 'superuser', User::itemAlias('AdminStatus')); ?>
-				</div>
-				<?php echo $form->error($model, 'superuser'); ?>
-			</div>
+		<div class="unit size1of2">
+			<?php echo $form->field($model, 'superuser', 'dropDownList', User::itemAlias('AdminStatus')); ?>
 		</div>
-		<div class="field lastUnit">
-			<?php echo $form->labelEx($model, 'status'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->dropDownList($model, 'status', User::itemAlias('UserStatus')); ?>
-				</div>
-				<?php echo $form->error($model, 'status'); ?>
-			</div>
+		<div class="lastUnit">
+			<?php echo $form->field($model, 'status', 'dropDownList', User::itemAlias('UserStatus')); ?>
 		</div>
 	</div>
 	<div class="line">
-		<div class="field">
-			<?php echo $form->labelEx($model, 'roleName'); ?>
-			<div class="inputContainer">
+		<div class="unit size1of2">
+			<div class="field">
+				<?php echo $form->labelEx($model,'contact_id') ?>
 				<div class="input">
-					<?php echo $form->dropDownList($model, 'roleName', CHtml::listData(Yii::app()->authManager->roles,'name','description')) ?>
+					<?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
+						'name'=>'contactName',
+						'value'=>$model->contactName,
+						'source'=>$this->createUrl('/contact/autocomplete/contactList/type/Person/'),
+						// additional javascript options for the autocomplete plugin
+						'options'=>array(
+							'showAnim'=>'fold',
+							'change'=>'js:function(event, ui) {
+								if (ui.item)
+									$("#UserEditForm_contact_id").val(ui.item.id);
+								else
+									$("#UserEditForm_contact_id").val(null);
+							}'
+							),
+						));
+						echo $form->hiddenField($model, 'contact_id');
+					?>
 				</div>
-				<?php echo $form->error($model, 'roleName'); ?>
+				<?php echo $form->error($model,'contact_id'); ?>
 			</div>
+		</div>
+		<div class="lastUnit">
+			<?php echo $form->field($model, 'roleName', 'dropDownList', CHtml::listData(Yii::app()->authManager->roles,'name','description')); ?>
 		</div>
 	</div>
 	<div class="line">
-		<div class="field">
-			<a href="#" class="btn" data-controls-modal="modal-user-edit-password" data-backdrop="static">Change Password</a>
-			<label>
-				<?php echo $form->checkBox($model, 'update_password'); ?>
-				<?php echo $form->label($model, 'update_password'); ?>
-			</label>
-		</div>
+		<a href="#" class="btn" data-controls-modal="modal-user-edit-password" data-backdrop="static">Change Password</a>
+		<label>
+			<?php echo $form->checkBox($model, 'update_password'); ?>
+			<?php echo $form->label($model, 'update_password'); ?>
+		</label>
 	</div>
 	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	</div>

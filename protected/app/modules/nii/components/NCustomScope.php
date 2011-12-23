@@ -13,13 +13,41 @@ class NCustomScope extends CFormModel
 	}
 	
 	public $searchMethods = array(
-		'='=>array('label'=>'is','value'=>'=','useForDropdown'=>true),
-		'<'=>array('label'=>'<','value'=>'<','useForDropdown'=>false),
-		'>'=>array('label'=>'>','value'=>'>','useForDropdown'=>false),
-		'<='=>array('label'=>'<=','value'=>'<=','useForDropdown'=>false),
-		'>='=>array('label'=>'>=','value'=>'>=','useForDropdown'=>false),
-		'<>'=>array('label'=>'is not','value'=>'<>','useForDropdown'=>true),
-		'contains'=>array('label'=>'contains','value'=>'','useForDropdown'=>false),
+		'=' => array(
+			'label' => 'is',
+			'value' => '=', 
+			'useForDropdown' => true
+		),
+		'<' => array(
+			'label' => '<', 
+			'value' => '<', 
+			'useForDropdown' => false
+		),
+		'>' => array(
+			'label' => '>', 
+			'value' => '>', 
+			'useForDropdown' => false
+		),
+		'<=' => array(
+			'label' => '<=', 
+			'value' => '<=', 
+			'useForDropdown' => false
+		),
+		'>=' => array(
+			'label' => '>=', 
+			'value' => '>=', 
+			'useForDropdown' => false
+		),
+		'<>' => array(
+			'label' => 'is not', 
+			'value' => '<>', 
+			'useForDropdown' => true
+		),
+		'contains' => array(
+			'label' => 'contains', 
+			'value' => '', 
+			'useForDropdown' => false
+		),
 	);
 	
 	public $defaultSearchMethod = 'eq';

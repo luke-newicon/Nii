@@ -32,7 +32,9 @@ class EmailCampaign extends NActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('template_id, content, subject, recipients', 'safe'),
+			array('subject, recipients', 'required'),
+			array('template_id, content, status', 'safe'),
+			array('template_id, content, subject, recipients, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -62,6 +64,9 @@ class EmailCampaign extends NActiveRecord {
 			'template_id' => 'Select a Campaign',
 			'recipients' => 'Recipients',
 			'content' => 'Email Content',
+			'status' => 'Status',
+			'numberRecipients' => '# Recipients',
+			'editLink' => '',
 		);
 	}
 
@@ -74,6 +79,8 @@ class EmailCampaign extends NActiveRecord {
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
+		$criteria->compare('subject', $this->subject, true);
+		$criteria->compare('status', $this->status);
 		$criteria->compare('template.name', $this->template_id, true);
 
 		$sort = new CSort;
@@ -90,8 +97,46 @@ class EmailCampaign extends NActiveRecord {
 
 	public function columns() {
 		return array(
-			'id',
-			'template_id',
+			array(
+				'name' => 'subject',
+				'type' => 'raw',
+				'value' => '$data->viewLink',
+				'exportValue' => '$data->name',
+			),
+			array(
+				'name' => 'template_id',
+				'header' => 'Campaign Template',
+				'type' => 'raw',
+				'value' => '$data->viewTemplateLink',
+				'exportValue' => '$data->viewTemplateName',
+			),
+			array(
+				'name' => 'status',
+				'filter' => NHtml::enumItem($this, 'status'),
+			),
+			array(
+				'name' => 'numberRecipients',
+				'type' => 'raw',
+				'value' => '$data->countRecipients()',
+				'filter' => false,
+			),
+			array(
+				'name' => 'created_date',
+				'type' => 'raw',
+				'value' => 'NHtml::formatDate($data->created_date, "d M Y, H:i")',
+			),
+			array(
+				'name' => 'updated_date',
+				'type' => 'raw',
+				'value' => 'NHtml::formatDate($data->updated_date, "d M Y, H:i")',
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'export' => false,
+				'filter' => false,
+			),
 		);
 	}
 
@@ -106,9 +151,26 @@ class EmailCampaign extends NActiveRecord {
 				'content' => "text",
 				'created_date' => "datetime",
 				'updated_date' => "datetime",
+				'status' => "ENUM('Created','Compiled','Sending','Sent')",
 			),
 			'keys' => array());
 	}
+	
+	public function getEditLink() {
+		if ($this->status == 'Created')
+			return NHtml::link('Edit', array('/email/index/create', 'id'=>$this->id));
+		else
+			return NHtml::link('View', array('/email/index/view', 'id'=>$this->id));
+	}
+	
+	public function getViewLink() {
+		return NHtml::link($this->subject, array('/email/index/preview', 'id'=>$this->id));
+	}
+	
+	public function getViewTemplateLink() {
+		if ($this->template)
+			return NHtml::link($this->template->name, array('/email/manage/view', 'id'=>$this->template->id));
+	}	
 	
 //	function behaviors() {
 //		return array(
@@ -195,6 +257,7 @@ class EmailCampaign extends NActiveRecord {
 						case "g_" :
 							$g = ContactGroup::model()->findByPk(substr($r,2));
 							$recipientArray[] = NHtml::link($g->name,array('/email/group/view','id'=>$g->id));
+							FB::log($g->groupContacts, 'Contacts');
 							break;
 						case "c_" :
 							$c = Contact::model()->findByPk(substr($r,2));
@@ -207,8 +270,91 @@ class EmailCampaign extends NActiveRecord {
 		endif;
 	}
 	
+	public function getRecipientContactsArray($limit=100) {
+		if ($this->recipients) :
+			$count=0; $recipientArray=array();
+			$recipients = explode(',',$this->recipients);
+			foreach($recipients as $r) :
+				if ($count >= $limit && $limit != null)
+					continue;
+				if (strstr($r,'@')) :
+					$recipientArray[$r] = $r;
+				else :
+					switch(substr($r,0,2)) :
+						case "g_" :
+							$g = NActiveRecord::model('ContactGroup')->findByPk(substr($r,2));
+							$contacts = $g->groupContacts;
+							if (isset($contacts)) {
+								foreach ($contacts as $k => $v)
+									$recipientArray[$k] = $v;
+							}
+							break;
+						case "c_" :
+							$c = Contact::model()->findByPk(substr($r,2));
+							$recipientArray[$c->id] = $c->name;
+							break;
+					endswitch;
+				endif;
+				$count++;
+			endforeach;		
+		endif;
+		return $recipientArray;		
+	}
+	
 	public static function install($className=__CLASS__){
 		parent::install($className);
+	}
+	
+	public function getTemplatedContent($contact=null) {
+		if ($this->template)
+			$template = NActiveRecord::model('EmailTemplate')->findByPk($this->template->design_template_id);
+		else
+			$template = NActiveRecord::model('EmailTemplate')->findByAttributes(array('default_template'=>'1'));			
+		
+		if (isset($template))
+			$content = str_replace('[content]',$this->content,$template->content);
+		else
+			$content = $this->content;
+		if ($contact) {
+			$tags = new StringTags;
+			$content = $tags->replaceTags($content, $contact);
+		}
+		return $content;
+	}
+	
+	public function countRecipients() {
+		$count = 0;
+		
+		if ($this->recipients) :
+			$recipients = explode(',',$this->recipients);
+			foreach($recipients as $r) :
+				if (strstr($r,'@')) :
+					$count++;
+				else :
+					switch(substr($r,0,2)) :
+						case "g_" :
+							$g = NActiveRecord::model('ContactGroup')->findByPk(substr($r,2));
+							$count = $count + $g->countGroupContacts();
+							break;
+						case "c_" :
+							$count++;
+							break;
+					endswitch;
+				endif;
+			endforeach;		
+		endif;
+		
+		return $count;		
+	}
+	
+	public function selectPreviewDropdown() {
+		return 
+		'jQuery(function($){
+			var contact_id = $("#recipientPreviewSelect").val();
+			var preview_url = "' . Yii::app()->baseUrl . '/email/index/previewContent/id/'.$this->id.'/contact_id/"+contact_id;
+			$("#previewIframe").attr("src", preview_url);
+		});
+		return false;';
 	}
 	
 }

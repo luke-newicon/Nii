@@ -40,7 +40,6 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		),
 		array(
 			'name' => 'lastvisit',
-			'value' => '(($data->lastvisit)?date("d.m.Y H:i:s",$data->lastvisit):UserModule::t("Not visited"))',
 		),
 	),
 ));
