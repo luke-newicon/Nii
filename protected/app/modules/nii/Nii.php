@@ -107,7 +107,7 @@ class Nii extends CWebApplication
 		
 		
 		if($this->domain)
-			$this->setupDomainInstance();
+			$this->setupDomainMultisite();
 	
 		// Loads database settings to override config
 		$this->setupApplication();

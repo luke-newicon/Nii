@@ -91,6 +91,63 @@ class NImage extends CImageComponent
 		
 		return $ret;
 	}
+	
+	/**
+	 * processes the image
+	 * 
+	 * @return array of image data
+	 * image => the binary resized image data for the thumbnail
+	 * filepath => the fileath of the NFile as returned by the file manager
+	 * mime => the mime type of the file
+	 */
+	public function process($id, $type){
+			
+		$imageCacheId = $this->getCacheId($id, $type);
+		
+		if (($image = Yii::app()->cache->get($imageCacheId)) === false) {
+		
+			$file = $this->getFile($id);
+
+			// If the file can not be found then loads the default image
+			if ($file === null ) {
+				
+				$mimeType = null;
+				$actions = $type ? $this->getType($type) : array();
+				$fileLocation = array_key_exists('noimage', $actions) ? $actions['noimage'] : $this->notFoundImage;
+				$actions = $type ? $this->getType($type) : array();
+				$image = $this->load($fileLocation,$actions);
+				
+			} else {
+				$mimeType = $file->mime;
+				// file exists in file manager
+				$fileLocation = Yii::app()->fileManager->getFilePath($file);
+				// Make the thumb image and save
+				$actions = $type ? $this->getType($type) : array();
+				try {
+					$image = $this->load($fileLocation,$actions);
+				} catch(CException $e){
+					// if debug mode lets throw the error
+					if(YII_DEBUG)
+						throw new CException($e->getMessage());
+					// otherwise display a nice alert error image
+					$errorImg = Yii::getPathOfAlias('nii.extensions.image.alert').'.png';
+					// make image fit
+					if(array_key_exists('resize',$actions))
+						$actions['resize']['master']='max';
+					$image = $this->load($errorImg,$actions);
+				}
+			}
+			
+			$image = array(
+				'image'=>$image->generate(),
+				'filepath'=>$fileLocation,
+				'mime'=>$mimeType
+			);
+			Yii::app()->cache->set($imageCacheId, $image);
+		}
+		
+		return $image;
+	}
 
 	/**
 	 * Displays the requested images thumbnail from filemanager file
@@ -99,51 +156,18 @@ class NImage extends CImageComponent
 	 * @param string $type name of the type as defined in config @see self::types
 	 */
 	public function show($id, $type=null) {
-		
-		$imageCacheId = $this->getCacheId($id,$type);
-		// if cache is enabled WHICH IT SHOULD BE! lets check for chache
-		if (Yii::app()->cache !== NULL){
-			if(($cachedImage = Yii::app()->cache->get($imageCacheId))){
-				Yii::app()->fileManager->displayFileData($cachedImage['img'], $cachedImage['mime'], $cachedImage['original_name']);
-				return;
-			}
-		}
-		
-		// no cache so lets crunch		
-		$file = Yii::app()->fileManager->getFile($id);
-		// If the file can not be found then loads the default image
-		if ($file === null ) {
-			$actions = $type ? $this->getType($type) : array();
-			$fileLocation = array_key_exists('noimage', $actions) ? $actions['noimage'] : $this->notFoundImage;
-			$actions = $type ? $this->getType($type) : array();
-			$image = $this->load($fileLocation,$actions);
-			$image->render();
-			return;
-		}
-		
-		// file exists in file manager
-		$fileLocation = Yii::app()->fileManager->getFilePath($file);
-		
-		// Make the thumb image and save
-		$actions = $type ? $this->getType($type) : array();
-		try{
-			$image = $this->load($fileLocation,$actions);
-		}catch(CException $e){
-			$errorImg = Yii::getPathOfAlias('nii.extensions.image.alert').'.png';
-			// make image fit
-			if(array_key_exists('resize',$actions))
-				$actions['resize']['master']='max';
-			$image = $this->load($errorImg,$actions);
-		}
-		$imageContents = $image->generate();
-		// Cache contents
-		$cache = array('img'=>$imageContents,'mime'=>$file->mime, 'original_name'=>$file->original_name);
-		if (Yii::app()->cache !== NULL){
-			Yii::app()->cache->set($imageCacheId, $cache, '6500');
-		} 
-		
-
-		Yii::app()->fileManager->displayFileData($cache['img'], $file['mime'], $file['original_name']);
+		$image = $this->process($id, $type);
+		Yii::app()->fileManager->sendFile($image['filepath'], $image['mime'], $image['image']);
+	}
+	
+	/**
+	 * get the file manager file for the file id
+	 * @param int $id
+	 * @return NFile 
+	 */
+	public function getFile($id){
+		// TODO add caching here
+		return Yii::app()->fileManager->getFile($id);
 	}
 
 	/**
@@ -170,9 +194,10 @@ class NImage extends CImageComponent
 	 */
 	public function url($id,$type=null){
 		if($type)
-			return NHtml::url(array('/nii/index/show', 'id'=>$id, 'type'=>$type));
+			$url .= NHtml::url(array('/nii/index/show', 'id'=>$id, 'type'=>$type));
 		else
-			return NHtml::url(array('/nii/index/show','id'=>$id));
+			$url .=  NHtml::url(array('/nii/index/show','id'=>$id, 'type'=>''));
+		return $url;
 	}
 	
 	/**
