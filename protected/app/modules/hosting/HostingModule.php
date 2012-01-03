@@ -17,6 +17,32 @@ class HostingModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Servers', array('/hosting/server'), 'Hosting');
 	}
 	
+
+	public function permissions() {
+		return array(
+			'hosting' => array('description' => 'Hosting',
+				'tasks' => array(
+					'view' => array('description' => 'View Hosting Details',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'hosting/server/index',
+							'hosting/server/view',
+							'hosting/server/admin',
+						),
+					),
+					'edit' => array('description' => 'Edit Hosting Details',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hosting/server/edit',
+							'hosting/server/create',
+							'hosting/server/delete',
+						),
+					),
+				),
+			),
+		);
+	}
+	
 	public function install(){
 		HostingServer::install('HostingServer');
 	}
