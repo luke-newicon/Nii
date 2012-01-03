@@ -194,9 +194,9 @@ class NImage extends CImageComponent
 	 */
 	public function url($id,$type=null){
 		if($type)
-			$url .= NHtml::url(array('/nii/index/show', 'id'=>$id, 'type'=>$type));
+			$url = NHtml::url(array('/nii/index/show', 'id'=>$id, 'type'=>$type));
 		else
-			$url .=  NHtml::url(array('/nii/index/show','id'=>$id, 'type'=>''));
+			$url = NHtml::url(array('/nii/index/show','id'=>$id, 'type'=>''));
 		return $url;
 	}
 	
