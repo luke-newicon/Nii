@@ -45,5 +45,6 @@ class HostingModule extends NWebModule
 	
 	public function install(){
 		HostingServer::install('HostingServer');
+		$this->installPermissions();
 	}
 }
