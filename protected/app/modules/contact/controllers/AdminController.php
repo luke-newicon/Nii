@@ -294,5 +294,14 @@ class AdminController extends AController {
 		if ($model->remove())
 			echo 'Success';
 	}
+	
+	public function actionConvertCategories() {
+		
+		$contacts = Yii::app()->db->createCommand("SELECT id, source_id FROM contact_contact ORDER BY id DESC")->query();
+
+		foreach ($contacts as $c) {
+			Yii::app()->db->createCommand("INSERT INTO nii_tag_link (tag_id, model, model_id) VALUES ('".$c['source_id']."', 'HftContact', '".$c['id']."')")->execute();
+		}
+	}
 
 }
