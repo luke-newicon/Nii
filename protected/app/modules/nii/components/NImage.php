@@ -103,8 +103,10 @@ class NImage extends CImageComponent
 	public function process($id, $type){
 			
 		$imageCacheId = $this->getCacheId($id, $type);
+		FB::log('1');
 		
 		if (($image = Yii::app()->cache->get($imageCacheId)) === false) {
+			
 		
 			$file = $this->getFile($id);
 
@@ -145,7 +147,7 @@ class NImage extends CImageComponent
 			);
 			Yii::app()->cache->set($imageCacheId, $image);
 		}
-		
+			
 		return $image;
 	}
 
@@ -157,7 +159,7 @@ class NImage extends CImageComponent
 	 */
 	public function show($id, $type=null) {
 		$image = $this->process($id, $type);
-		Yii::app()->fileManager->sendFile($image['filepath'], $image['mime'], $image['image']);
+		Yii::app()->fileManager->sendFile($image['filepath'], $image['image'], $image['mime']);
 	}
 	
 	/**

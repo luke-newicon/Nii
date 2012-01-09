@@ -374,6 +374,16 @@ class NFileManager extends CApplicationComponent
 		return $f->delete();
 	}
 	
+	/**
+	 *	Returns a file using CHttpRequest
+	 * @param string $fileName
+	 * @param string $content
+	 * @param string $mimeType
+	 * @return CHttpRequest sendFile function 
+	 */
+	public function sendFile($fileName, $content, $mimeType=null) {
+		return Yii::app()->request->sendFile($fileName, $content, $mimeType);
+	}	
 	
 	
 	/**
