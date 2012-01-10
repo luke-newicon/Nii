@@ -9,12 +9,15 @@ class ContactLatestPortlet extends NPortlet {
 	protected function renderContent() {
 		$contacts = Contact::model()->findAll(array('limit' => $this->limit, 'order'=>'id DESC'));
 		if($contacts){
-			echo '<table class="condensed-table mbn">';
-			echo '<thead><tr><th>Contact</th></tr></thead><tbody>';
+			echo '<table class="condensed-table mbn">';			
+//			echo '<thead><tr><th>Contact</th></tr></thead><tbody>';
+			echo '<tbody>';
+			$count=0;
 			foreach ($contacts as $contact) {
-				echo '<tr>';
+				echo '<tr'.($count==0?' class="first"' : '').'>';
 				echo '<td>'.$contact->contactLink.'</td>';
 				echo '</tr>';
+				$count++;
 			}
 			echo '</tbody></table>';
 		}

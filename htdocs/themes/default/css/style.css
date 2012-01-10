@@ -600,6 +600,14 @@ div.topbar div > ul > li.menu:hover ul {
 .portlet-body {
   padding: 10px;
 }
+
+.portlet-body table.condensed-table th {
+	background: none;
+}
+
+.portlet-body table.condensed-table tr.first td {
+	border-top: none;
+}
 .portlet-footer {
   background-color: #f5f5f5;
   padding: 14px 15px 15px;
