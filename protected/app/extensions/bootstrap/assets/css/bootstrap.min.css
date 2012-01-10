@@ -27,7 +27,8 @@ body{background-color:#ffffff;margin:0;font-family:"Helvetica Neue",Helvetica,Ar
 .container-fluid:after{clear:both;}
 .container-fluid>.sidebar{position:absolute;top:0;left:20px;width:220px;}
 .container-fluid>.content{margin-left:240px;}
-a{color:#0069d6;text-decoration:none;line-height:inherit;font-weight:inherit;}a:hover{color:#00438a;text-decoration:underline;}
+/*a{color:#0069d6;text-decoration:none;line-height:inherit;font-weight:inherit;}a:hover{color:#00438a;text-decoration:underline;}*/
+a{color:#333366;text-decoration:none;line-height:inherit;font-weight:inherit;}a:hover{color:#3399FF;text-decoration:underline;}
 .pull-right{float:right;}
 .pull-left{float:left;}
 .hide{display:none;}
@@ -184,7 +185,7 @@ input[disabled],select[disabled],textarea[disabled],input[readonly],select[reado
 .form-stacked div.clearfix.error{padding-top:10px;padding-bottom:10px;padding-left:10px;margin-top:0;margin-left:-10px;}
 .form-stacked .actions{margin-left:-20px;padding-left:20px;}*/
 table{width:100%;margin-bottom:18px;padding:0;font-size:13px;border-collapse:collapse;}table th,table td{padding:10px 10px 9px;line-height:18px;text-align:left;}
-table th{padding-top:9px;font-weight:bold;vertical-align:middle;}
+table th{padding-top:9px;font-weight:bold;vertical-align:middle;background-color:#d5ebf8;}
 table td{vertical-align:top;border-top:1px solid #ddd;}
 table tbody th{border-top:1px solid #ddd;vertical-align:top;}
 .condensed-table th,.condensed-table td{padding:5px 5px 4px;}
