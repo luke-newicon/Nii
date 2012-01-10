@@ -31,6 +31,55 @@ class GroupController extends AController
 			'model'=>$model,
 		));
 	}
+		
+	public function actionCreate() {
+		
+		$this->pageTitle = Yii::app()->name . ' - Create a New Group';
+		
+		$modelName = 'ContactGroup';
+		$model = new $modelName;
+		
+		$this->performAjaxValidation($model);
+		
+		if (isset($_POST[$modelName])) {
+			$model->attributes = $_POST[$modelName];
+			
+			if ($model->save()) {
+				NLog::insertLog('Created a new contact group: '.$model->name.' (id: '.$model->id.')', $model);
+				$this->redirect(array("view","id"=>$model->id));	
+			}
+		
+		}
+		
+		$this->render('edit',array(
+			'model'=>$model,
+			'action'=>'create',
+		));
+	}
+	
+	public function actionEdit($id) {
+		
+		$this->pageTitle = Yii::app()->name . ' - Create a New Group';
+		
+		$modelName = 'ContactGroup';
+		$model = NActiveRecord::model($modelName)->findByPk($id);
+		
+		$this->performAjaxValidation($model);
+		
+		if (isset($_POST[$modelName])) {
+			$model->attributes = $_POST[$modelName];
+			
+			if ($model->save()) {
+				NLog::insertLog('Updated contact group '.$model->name.' (id: '.$model->id.')', $model);
+			}
+		
+		}
+		
+		$this->render('edit',array(
+			'model'=>$model,
+			'action'=>'edit',
+		));
+	}
 	
 	public function actionViewContacts($id) {
 		$groupModel = 'ContactGroupContactMembers';

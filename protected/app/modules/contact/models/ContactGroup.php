@@ -30,6 +30,18 @@ class ContactGroup extends NActiveRecord
 			'editLink' => 'Edit',
 		);
 	}
+	
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules() {
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('name', 'required'),
+			array('description, rules', 'safe'),
+		);
+	}
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
