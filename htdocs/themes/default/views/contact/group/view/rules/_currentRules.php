@@ -37,12 +37,12 @@ foreach ($groupRules['rule'] as $key => $rule) {
 		<div class="lastUnit pts">
 			<?php
 			if (count($groupRules['rule']) > 1)
-				$deleteOptions = array('class'=>'groupRuleDelete');
+				$deleteOptions = array('class'=>'groupRuleDelete icon fam-delete');
 			else
-				$deleteOptions = array('class'=>'groupRuleDelete hidden');
+				$deleteOptions = array('class'=>'groupRuleDelete icon fam-delete hidden');
 
-			echo NHtml::btnLink('','#', 'icon fam-add', array('class'=>'groupRuleAdd'));
-			echo NHtml::btnLink('','#', 'icon fam-delete', $deleteOptions);
+			echo NHtml::link('','#', array('class'=>'groupRuleAdd icon fam-add'));
+			echo NHtml::link('','#', $deleteOptions);
 			?>
 		</div>
 	</div>

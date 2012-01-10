@@ -155,6 +155,7 @@ class ContactGroup extends NActiveRecord
 		
 		$contacts = array();
 		$contactModel  = Yii::app()->getModule('contact')->contactModel;
+		$contact = new $contactModel;
 		
 		if ($type=='user_defined' || $type==null) {
 			// First: get contacts from ContactGroupContact
@@ -175,12 +176,12 @@ class ContactGroup extends NActiveRecord
 				}
 				
 				$criteria->addCondition("email <> '' AND email IS NOT NULL");
-				$criteria->select = 'id';
+				$criteria->select = 'id, name';
 				
 				$c = Yii::app()->db->commandBuilder->createFindCommand($contact->tableName(),$criteria)->queryAll();
 				
 				foreach ($c as $value)
-					$contacts[$value['id']] = $value['id'];
+					$contacts[$value['id']] = $value['name'];
 			}
 			
 		}
