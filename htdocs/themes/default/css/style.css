@@ -30,7 +30,7 @@ html,body{height:100%}
 /**
  * head and menu style
  */
-.head{position:relative;background:#FFFFFF url(../images/head_bg.jpg) -780px -300px repeat-x;}
+.head{position:relative;background:#FFFFFF url(../images/head_bg.jpg) -780px top repeat-x;}
 body.fixed .head {position:fixed;width: 100%;z-index:1000;}
 #sitelogo{padding:10px}
 .body{padding:15px;}
