@@ -66,7 +66,7 @@ class NScopeList extends CWidget {
 					$currentDescription = $description;
 				}
 				$count = ($this->displayScopesCount) ? ' <span class="count">(' . $this->dataProvider->countScope($scope) . ')' : '';
-				$render .= '<li class="' . $scope . $class . ((!next($scopes) && !isset($customScopes)) ? ' last' : '') . '">';
+				$render .= '<li class="' . 'scope-'.$scope . $class . ((!next($scopes) && !isset($customScopes)) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
 				

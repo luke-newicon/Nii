@@ -13,6 +13,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
 	'id' => 'ContactAllGrid',
+	'scopes' => true,
 	'enableButtons'=>true,
 	'enableCustomScopes'=>true,
 )); ?>

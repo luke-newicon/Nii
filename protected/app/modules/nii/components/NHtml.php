@@ -438,6 +438,24 @@ class NHtml extends CHtml {
 			return;
 	}
 	
+	
+	/**
+	 *	Returns human readable text from a boolean value
+	 * @param string $value - original boolean
+	 * @param string $true - true value
+	 * @param string $false - false value
+	 * @param bool $blank - whether to return blank on false
+	 * @return string 
+	 */
+	public static function boolImage($value, $true=1, $false=0, $blank=false) {
+		if ($value == $true)
+			return '<span class="icon fam-accept">&nbsp;</span>';
+		else if ($value === $false || $blank === false)
+			return '<span class="icon fam-delete">&nbsp;</span>';
+		else
+			return;
+	}
+	
 	/**
 	 *	Returns a properly formatted price based on an integer or float
 	 * @param int/float $value

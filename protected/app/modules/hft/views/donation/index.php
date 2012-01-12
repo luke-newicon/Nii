@@ -21,6 +21,6 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	
 	//'ajaxUpdate' => '#ContactAllGrid_c3',
 	'enableButtons'=>true,
-	'enableCustomScopes'=>false,
+	'enableCustomScopes'=>true,
 //	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
 ));
