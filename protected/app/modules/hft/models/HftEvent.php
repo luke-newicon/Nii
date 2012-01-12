@@ -243,4 +243,52 @@ class HftEvent extends NActiveRecord
 			)
 		);
 	}		
+
+	public function scopes() {
+		return array(
+			'future' => array(
+				'condition' => 'end_date >= CURDATE() OR (end_date="0000-00-00" AND start_date >= CURDATE())',
+			),
+			'past' => array(
+				'condition' => '(end_date < CURDATE() AND end_date > "0000-00-00") OR (end_date="0000-00-00" AND start_date < CURDATE())',
+				'order' => 'start_date DESC',
+			),
+			'all' => array(
+				'condition' => 't.trashed <> 1',
+			),
+		);
+	}
+	
+	public function getGridScopes() {
+		$scopes = array(
+			'default' => 'future',
+			'items'=>array(
+				'future' => array(
+					'label'=>'Future Events',
+				),
+				'past' => array(
+					'label'=>'Past Events',
+				),
+				'all' => array(
+					'label'=>'All',
+					'description'=>'All events in the system',
+				),
+			)
+		);
+		return $scopes;
+	}
+	
+
+	public function translateCustomScopes($field=null, $value=null, $sm=null, $op=null, &$criteria) {
+
+		switch ($field) {
+			case 'totalAttendees' :
+					$criteria->addCondition('(SELECT id FROM hft_event_attendee WHERE event_id = t.id) '.$sm.' '.$value, $op);
+				break;
+
+			default :
+				return false;
+		}
+	}
+	
 }

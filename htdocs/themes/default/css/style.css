@@ -55,7 +55,7 @@ body.fixed.show-logo .body {top:95px;}
 }
 
 .grid-view table th {
-
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
 	background-image: -khtml-gradient(linear, left top, left bottom, from(#ecf7fd), to(#cee8f7));
 	background-image: -moz-linear-gradient(top, #ecf7fd, #cee8f7);
 	background-image: -ms-linear-gradient(top, #ecf7fd, #cee8f7);
@@ -64,6 +64,7 @@ body.fixed.show-logo .body {top:95px;}
 	background-image: -o-linear-gradient(top, #ecf7fd, #cee8f7);
 	background-image: linear-gradient(top, #ecf7fd, #cee8f7);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ecf7fd', endColorstr='#cee8f7', GradientType=0);
+	padding: 6px 4px;
 }
 
 .grid-view table .headerSortUp, .grid-view table .headerSortDown {
@@ -245,7 +246,14 @@ ul.scopes li.active a span.count {
 
 ul.scopes li.custom-scope {
 	background-color: #DDEEFF;
-	background-image: -moz-linear-gradient(center top , #FFFFFF, #FFFFFF 25%, #DDEEFF);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#DDEEFF));
+	background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #DDEEFF);
+	background-image: -moz-linear-gradient(center top, #ffffff, #ffffff 25%, #DDEEFF);
+	background-image: -ms-linear-gradient(#ffffff, #ffffff 25%, #DDEEFF);
+	background-image: -o-linear-gradient(#ffffff, #ffffff 25%, #DDEEFF);
+	background-image: linear-gradient(#ffffff, #ffffff 25%, #DDEEFF);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#DDEEFF', GradientType=0);
+
 }
 ul.scopes li.custom-scope a {
 	color: #297acb;

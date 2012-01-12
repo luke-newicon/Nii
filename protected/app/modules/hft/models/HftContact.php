@@ -118,12 +118,14 @@ class HftContact extends Contact
 					'type' => 'raw',
 					'value' => 'NHtml::formatBool($data->receive_letters)',
 					'filter'=> array('1'=>'Yes','0'=>'No'),
+					'sortable' => false,
 				),
 				array(
 					'name' => 'receive_emails',
 					'type' => 'raw',
 					'value' => 'NHtml::formatBool($data->receive_emails)',
 					'filter'=> array('1'=>'Yes','0'=>'No'),
+					'sortable' => false,
 				),
 			)
 		);
@@ -245,6 +247,7 @@ class HftContact extends Contact
 				),
 				'all' => array(
 					'label'=>'All',
+					'description'=>'All contacts in the system, including those hidden by default',
 				),
 				'emails' => array(
 					'label'=>'Emails',
@@ -252,9 +255,11 @@ class HftContact extends Contact
 				),
 				'donors' => array(
 					'label'=>'Donors',
+					'description'=>'Contacts that have made a donation in the past',
 				),	
 				'newsletter' => array(
 					'label'=>'Newsletter',
+					'description'=>'Contacts who are willing to receive the newsletter',
 				),
 			)
 		));

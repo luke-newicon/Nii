@@ -44,6 +44,8 @@ class NScopeList extends CWidget {
 		$scopes = isset($model->gridScopes['items']) ? $model->gridScopes['items'] : (isset($this->scopes['items']) ? $this->scopes['items'] : null);
 		$scopeCount = count($scopes);
 		
+		$twipsy=false;
+		
 		if ($this->enableCustomScopes==true) {
 			$key = 'custom_scope_'.$this->gridId;
 			$customScopes = Yii::app()->user->settings->get($key,array());
@@ -73,6 +75,11 @@ class NScopeList extends CWidget {
 				$render .= '<li class="' . 'scope-'.$scope . $class . ((!next($scopes) && !isset($customScopes)) ? ' last' : '') . '">';
 				$class = '';
 				$htmlOptions = array('href' => $this->makeScopeUrl($scope));
+				if ($description) {
+					$twipsy=true;
+					$htmlOptions['title'] = $description;
+					$htmlOptions['class'] = 'twipsy-button';
+				}
 				
 				$render .= CHtml::openTag('a', $htmlOptions) . $label . $count . '</span></a>';
 //				if ($this->separator && (next($this->scopes['items']) || $customScopes))
@@ -103,6 +110,11 @@ class NScopeList extends CWidget {
 					$render .= '<li class="custom-scope ' . $class . '" id="scope-'.$id.'">';
 					$class = '';
 					$htmlOptions = array('href' => $this->makeScopeUrl($id));
+					if (isset($customScope['scopeDescription'])) {
+						$twipsy=true;
+						$htmlOptions['title'] = $customScope['scopeDescription'];
+						$htmlOptions['class'] = 'twipsy-button';
+					}
 					$render .= CHtml::openTag('a', $htmlOptions) . $f['scopeName'] . $count . '</a>';
 					$render .= '</li>';
 					$c++;
@@ -177,6 +189,9 @@ class NScopeList extends CWidget {
 			if (isset($currentDescription) && $currentDescription != '')
 				$render .= '<div class="scopeDescription" style="clear:both; overflow:hidden;">'.$currentDescription.'</div>';
 		}
+		
+		if ($twipsy==true)
+			$render .= "<script>jQuery(function($){ $('.twipsy-button').twipsy({'placement':'below'});	});</script>";
 
 		return $render;
 	}
