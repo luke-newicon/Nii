@@ -19,12 +19,16 @@ class NScopeList extends CWidget {
 	 * Initializes scopes by setting some default property values.
 	 */
 	public function init() {
+		$model = new $this->dataProvider->model;
 		if (!isset($this->htmlOptions['id']))
 			$this->htmlOptions['id'] = $this->getId();
-		if (isset($this->scopes['default']))
+		if (isset($model->gridScopes['default']))
+			$this->defaultScope = $model->gridScopes['default'];		
+		elseif (isset($this->scopes['default']))
 			$this->defaultScope = $this->scopes['default'];
 		if (isset($this->scopes['scopeUrl']))
 			$this->scopeUrl = $this->scopes['scopeUrl'];
+		
 	}
 
 	public function run() {
