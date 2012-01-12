@@ -43,8 +43,8 @@ body.fixed.show-logo .body {top:95px;}
 .grid-view .filters input, .grid-view .filters select{border:none;}
 .grid-view tbody tr td.success{background-color:#D1EED1;border-color:#BFE7BF}
 /*.grid-view table th,.grid-view table td{padding:6px 7px}*/
-.grid-view .filters td {border-top:1px solid #ecf7fd; background-image: url(../images/grid-search-bg.png)}
-.grid-view .filters .input{padding:3px; height: 18px; }
+.grid-view .filters td {border-top:1px solid #ecf7fd; background-image: url(../images/grid-search-bg.png); padding: 3px 2px;}
+.grid-view .filters .input{padding:1px 3px; height: 18px; }
 .filters .input input, .filters .input select {}
 .grid-view .filters .field{margin-bottom:0px;}
 
