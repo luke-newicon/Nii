@@ -20,6 +20,9 @@ class HftModule extends NWebModule
 	public function setup() {
 		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donation/index'));
 		Yii::app()->menus->addItem('main', 'Events', array('/hft/event/index'));
+		
+		Yii::app()->menus->addDivider('main','Contacts');
+		Yii::app()->menus->addItem('main', 'Categories', array('/hft/category/index'), 'Contacts');
 
 		Yii::app()->getModule('contact')->contactModel = 'HftContact';
 		
