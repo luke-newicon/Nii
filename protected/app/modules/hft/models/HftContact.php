@@ -112,6 +112,7 @@ class HftContact extends Contact
 					'type' => 'raw',
 					'value' => '$data->status',
 					'filter'=> NHtml::enumItem($this, 'status'),
+					'htmlOptions'=>array('width'=>'60px'),
 				),
 				array(
 					'name' => 'receive_letters',
