@@ -141,6 +141,17 @@ ul.scopes {
 	margin: 0 0 5px 0;
 	display: inline;
 }
+
+ul.scopes .btn {
+	padding: 0;
+}
+
+ul.scopes .btn a {
+	padding: 5px 8px 6px;
+	margin:0px;
+	display: block;
+}
+
 /*
 ul.scopes li {
 	display: block;
@@ -186,8 +197,8 @@ ul.scopes li a:hover {
 ul.scopes li a span.count {
 	color: #666;
 	font-weight: normal;
-	font-size: .9em;
-	margin-left: 2px;
+	font-size: .8em;
+	padding-left: 2px;
 }
 
 ul.scopes li.active a span.count {
@@ -579,20 +590,34 @@ div.topbar div > ul > li.menu:hover ul {
   margin-bottom:20px;
 }
 .portlet-header {
-  border-bottom: 1px solid #ddd;
+	  border-bottom: 1px solid #ddd;
   background-color: #d8edfa;
   padding: 5px 10px;
   -webkit-border-radius: 6px 6px 0 0;
   -moz-border-radius: 6px 6px 0 0;
   border-radius: 6px 6px 0 0;
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#ecf7fd), to(#d8edfa));
+}
+.portlet-header, .grid-view table th {
+
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#ecf7fd), to(#d8edfa));
 	background-image: -moz-linear-gradient(top, #ecf7fd, #d8edfa);
 	background-image: -ms-linear-gradient(top, #ecf7fd, #d8edfa);
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d2e9f7), color-stop(100%, #d8edfa));
 	background-image: -webkit-linear-gradient(top, #ecf7fd, #d8edfa);
 	background-image: -o-linear-gradient(top, #ecf7fd, #d8edfa);
 	background-image: linear-gradient(top, #ecf7fd, #d8edfa);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#363563', endColorstr='#e6f3fb', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ecf7fd', endColorstr='#d8edfa', GradientType=0);
+}
+
+.grid-view table .headerSortUp, .grid-view table .headerSortDown {
+	background-image: -khtml-gradient(linear, left top, left bottom, from(#a6d4ee), to(#ecf7fd));
+	background-image: -moz-linear-gradient(top, #a6d4ee, #ecf7fd);
+	background-image: -ms-linear-gradient(top, #a6d4ee, #ecf7fd);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a6d4ee), color-stop(100%, #ecf7fd));
+	background-image: -webkit-linear-gradient(top, #a6d4ee, #ecf7fd);
+	background-image: -o-linear-gradient(top, #a6d4ee, #ecf7fd);
+	background-image: linear-gradient(top, #a6d4ee, #ecf7fd);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6d4ee', endColorstr='#ecf7fd', GradientType=0);
 }
 .portlet-header h3 {
 	color: #005EB0;
