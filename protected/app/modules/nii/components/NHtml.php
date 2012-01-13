@@ -559,7 +559,7 @@ class NHtml extends CHtml {
 					type: 'get',
 					success: function(response){ 
 						if (response.success) {
-							".($gridId!==null ? "$.fn.yiiGridView.update('".$gridId."');" : "")."
+							".($gridId!==null ? "$.fn.yiiGridView.update('".$gridId."', {updateAll:true});" : "")."
 							nii.showMessage(response.success);
 							return false;
 						}

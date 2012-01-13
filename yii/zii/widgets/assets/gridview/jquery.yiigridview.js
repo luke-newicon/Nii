@@ -184,21 +184,27 @@
 				
 				//: nii hack code
 				 var gridId = settings.ajaxUpdate[settings.ajaxUpdate.length-1];
-				 $.each(settings.ajaxUpdate, function(i,v) {
-					v = v.replace('{grid_id}',gridId);
-					// dont replace the whole grid 
-					if(v == gridId && settings.ajaxUpdate.length > 1){
-						return
-					}
-					if(v == gridId && settings.ajaxUpdate.length == 1){
-						v = '#'+v;
-					}
-					$(v).replaceWith($(v,'<div>'+data+'</div>'));
-				});
+				 if (options.updateAll==true) {
+					 $('#'+gridId).replaceWith($('#'+gridId,'<div>'+data+'</div>'));
+				 } else {
+					$.each(settings.ajaxUpdate, function(i,v) {
+						v = v.replace('{grid_id}',gridId);
+						// dont replace the whole grid 
+						if(v == gridId && settings.ajaxUpdate.length > 1){
+							return
+						}
+						if(v == gridId && settings.ajaxUpdate.length == 1){
+							v = '#'+v;
+						}
+						$(v).replaceWith($(v,'<div>'+data+'</div>'));
+					});				 
+
+				}
 				id = gridId
+				
 				if(settings.afterAjaxUpdate !== undefined)
 					settings.afterAjaxUpdate(id, data);
-				
+
 				$('#'+id).removeClass(settings.loadingClass);
 				$.fn.yiiGridView.selectCheckedRows(id);
  				// nii hack code
