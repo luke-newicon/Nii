@@ -25,7 +25,7 @@ class NTag extends NActiveRecord
 		return parent::model($className);
 	}
 	
-	public function tableNAme(){
+	public function tableName(){
 		return '{{nii_tag}}';
 	}
 	

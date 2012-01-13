@@ -134,4 +134,26 @@ class HftCategory extends NTag
 		));
 	}
 	
+	public static function getCategoryIds($searchValue) {
+		$criteria = new CDbCriteria;
+		$criteria->addCondition("name LIKE '".$searchValue."%'");
+		$criteria->select = 'id';
+		
+		$tag = new NTag;
+
+		$c = Yii::app()->db->commandBuilder->createFindCommand($tag->tableName(),$criteria)->queryAll();
+		$ids=array();
+		foreach ($c as $v)
+			$ids[] = $v['id'];
+		return $ids;
+	}
+	
+	public static function getCategoriesArray() {
+		$category = NActiveRecord::model('NTag')->findAll();
+		$categories=array();
+		foreach ($category as $c)
+			$categories[$c->id] = $c->name;
+		return $categories;
+	}
+	
 }

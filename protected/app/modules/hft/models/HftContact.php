@@ -8,6 +8,8 @@
 class HftContact extends Contact
 {
 	
+	public $category;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Contact the static model class
@@ -29,6 +31,7 @@ class HftContact extends Contact
 				'id' => 'Account Number',
 				'receive_letters' => 'Letter',
 				'receive_emails' => 'Email',
+				'category' => 'Categories',
 			)
 		);
 	}
@@ -38,6 +41,7 @@ class HftContact extends Contact
 		return array_merge($relations, array(
 			'source'=>array(self::BELONGS_TO, 'HftContactSource', 'source_id'),
 			'donation'=>array(self::HAS_MANY, 'HftDonation', 'contact_id'),
+			'categories'=>array(self::HAS_MANY, 'NTagLink', 'model_id'),
 		));
 	}
 	
@@ -45,7 +49,7 @@ class HftContact extends Contact
 		$rules = Contact::model()->rules();
 		return array_merge($rules, array(
 			array('account_number, source_id, newsletter, receive_letters, receive_emails, status', 'safe'),
-			array('account_number, source_id, newsletter, receive_letters, receive_emails, status', 'safe','on'=>'search'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category', 'safe','on'=>'search'),
 		));
 	}
 	
@@ -65,7 +69,20 @@ class HftContact extends Contact
 		$criteria->compare('status', $this->status);
 		$criteria->compare('receive_letters', $this->receive_letters);
 		$criteria->compare('receive_emails', $this->receive_emails);
-
+//		$criteria->compare('categories.tag_id', $this->category);
+		
+//		if (isset($this->categories)) {
+//			$tags = HftCategory::getCategoryIds($this->categories);
+//			if (!isset($tags))
+//				$tags = '0';
+//		
+//			$criteria->addCondition("(SELECT COUNT(tl.id) FROM nii_tag_link tl WHERE tl.model = 'HftContact' AND tl.model_id = t.id AND tl.tag_id IN (".$tags.")) > 0");
+//		}
+		if ($this->category) {
+			$contactIds = $this->tag->searchTagIds(array($this->category));
+			$criteria->addInCondition("t.id", $contactIds);
+		}
+		
 		$criteria->with = array('donation');
 		$criteria->together = true;
 		
@@ -106,6 +123,14 @@ class HftContact extends Contact
 					'type' => 'raw',
 					'value' => '$data->sourceName',
 					'filter'=> HftContactSource::getSourcesArray(),
+				),
+				array(
+					'name' => 'category',
+					'header'=>'Categories',
+					'type'=>'raw',
+					'value'=>'$data->printTags()',
+					'filter'=> HftCategory::getCategoriesArray(),
+					'htmlOptions'=>array('width'=>'100px'),
 				),
 				array(
 					'name' => 'status',
@@ -174,6 +199,7 @@ class HftContact extends Contact
 		if ($this->source)
 			return $this->source->name;
 	}
+	
 	
 	public function getDonations() {
 		$donations = HftDonation::model()->findAllByAttributes(array('contact_id'=>$this->id));

@@ -163,9 +163,9 @@ class NTaggable extends CActiveRecordBehavior
 	
 	/**
 	 * Find the models that have a set of tags associated with them
-	 * for a given model type
+	 * limited to the owner's model type
+	 * 
 	 * @param array $tags array of tag names array('tag1', 'tag2')
-	 * @param NActiveRecord $model
 	 * @return array | null if nothing found
 	 */
 	public function search($tags)
@@ -181,23 +181,48 @@ class NTaggable extends CActiveRecordBehavior
 		
 		$tagIds = array(); foreach ($tids as $tid) $tagIds[] = $tid->id();
 
-		$res = NTagLink::model()->with('tag')->findAllByAttributes(
-				array('model'=>get_class($model), 'tag_id'=>$tagIds),
-				array('order'=>'model ASC'));
-		
-		
-		$rowIds = array();$rows = array();
-		foreach ($res as $t)
-			$rowIds[] = $t->model_id; $rows[]=$t;
+		$rowIds = $this->searchTagIds($tagIds);
 			
-		if (count($rowIds) == 0)
+		if($rowIds === null)
 			return null;
 		
 		return $model->findAllByAttributes(array('id'=>$rowIds));
 	}
 	
 	/**
+	 * Find the models that have a set of tags associated with them
+	 * limited to the owner's model type
+	 * 
+	 * @param array $tags array of tag ids array('1', '2')
+	 * @return array of model ids
+	 */
+	public function searchTagIds($tags)
+	{
+		$model = $this->getOwner();
+		
+		if (count($tags)==0)
+			return null;
+
+		$res = NTagLink::model()->with('tag')->findAllByAttributes(
+				array('model'=>get_class($model), 'tag_id'=>$tags),
+				array('order'=>'model ASC'));
+		
+		
+		$rowIds = array();
+		
+		if (count($res)==0)
+			return array();
+		
+		foreach ($res as $t)
+			$rowIds[] = $t->model_id;
+					
+		return $rowIds;
+	}
+	
+	
+	/**
 	 * Finds all models that have a set of tags associated with them
+	 * 
 	 * @param $tags array of tag names
 	 * @return array of NTagLink records | null if nothing found you can call the NTagLink::getRecord() 
 	 * function to get the model the tag belongs to. 
