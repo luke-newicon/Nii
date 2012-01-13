@@ -39,6 +39,12 @@
 				<div class="lastUnit"><?php echo $model->eventLink; ?></div>
 			</div>
 		</div>
+		<div class="line detailRow">
+			<div class="unit size1of2">
+				<div class="unit size1of3 detailLabel"><?=$this->t('Thankyou Sent')?></div>
+				<div class="lastUnit"><?php echo $model->getThankyouLink(false); ?></div>
+			</div>
+		</div>
 		<?php /*
 		<div class="line detailRow">
 			<div class="unit size1of2">

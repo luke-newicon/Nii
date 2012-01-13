@@ -111,6 +111,21 @@ class DonationController extends AController
 		
 	}
 	
+	public function actionThankyouSent ($id, $ajax=false) {
+		$model = NActiveRecord::model('HftDonation')->findByPk($id);
+		$model->thankyou_sent = 1;
+		if ($model->save()) {
+			NLog::insertLog('Donation id: '.$id.' marked as thankyou sent', $model);
+			if ($ajax==true) {
+				echo CJSON::encode(array('success'=>'Marked as thankyou sent'));
+				Yii::app()->end();
+			} else {
+				Yii::app()->user->setFlash('success', 'Marked as thankyou sent');
+				$this->redirect(array("donation/view","id"=>$id));	
+			}
+		}
+	}
+	
 	
 	public function actionGeneralInfo($id) {
 

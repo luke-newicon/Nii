@@ -32,6 +32,7 @@ class HftContact extends Contact
 				'receive_letters' => 'Letter',
 				'receive_emails' => 'Email',
 				'category' => 'Categories',
+				'editLink' => 'Edit',
 			)
 		);
 	}
@@ -41,7 +42,6 @@ class HftContact extends Contact
 		return array_merge($relations, array(
 			'source'=>array(self::BELONGS_TO, 'HftContactSource', 'source_id'),
 			'donation'=>array(self::HAS_MANY, 'HftDonation', 'contact_id'),
-			'categories'=>array(self::HAS_MANY, 'NTagLink', 'model_id'),
 		));
 	}
 	
@@ -69,15 +69,7 @@ class HftContact extends Contact
 		$criteria->compare('status', $this->status);
 		$criteria->compare('receive_letters', $this->receive_letters);
 		$criteria->compare('receive_emails', $this->receive_emails);
-//		$criteria->compare('categories.tag_id', $this->category);
-		
-//		if (isset($this->categories)) {
-//			$tags = HftCategory::getCategoryIds($this->categories);
-//			if (!isset($tags))
-//				$tags = '0';
-//		
-//			$criteria->addCondition("(SELECT COUNT(tl.id) FROM nii_tag_link tl WHERE tl.model = 'HftContact' AND tl.model_id = t.id AND tl.tag_id IN (".$tags.")) > 0");
-//		}
+
 		if ($this->category) {
 			$contactIds = $this->tag->searchTagIds(array($this->category));
 			$criteria->addInCondition("t.id", $contactIds);
@@ -153,6 +145,15 @@ class HftContact extends Contact
 					'filter'=> array('1'=>'Yes','0'=>'No'),
 					'sortable' => false,
 				),
+				array(
+					'name' => 'editLink',
+					'type' => 'raw',
+					'value' => '$data->editLink',
+					'filter' => false,
+					'sortable' => false,
+					'htmlOptions'=>array('width'=>'30px'),
+					'export'=>false,
+				),
 			)
 		);
 	}
@@ -193,6 +194,11 @@ class HftContact extends Contact
 				'trashed' => "int(1) unsigned NOT NULL",
 			), 
 			'keys' => array());
+	}
+	
+	public function getEditLink() {
+		if ($this->id)
+			return NHtml::link('Edit', array('/contact/admin/edit', 'id'=>$this->id));
 	}
 	
 	public function getSourceName() {

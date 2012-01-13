@@ -527,6 +527,48 @@ class NHtml extends CHtml {
 		);
 	}
 	
+	public static function confirmLink($label, $url, $confirmMessage=null, $htmlOptions=array()) {
+		if ($confirmMessage==null)
+			$confirmMessage = 'Are you sure?';
+		return NHtml::link($label,'#', array_merge(
+				$htmlOptions,
+				array('onclick'=> '
+					var answer = confirm("'.$confirmMessage.'");
+					if(!answer) { return; }
+					window.location = "'.NHtml::url($url).'";
+				')
+			)
+		);
+	}
+	
+	public static function confirmAjaxLink($label, $url, $confirmMessage=null, $gridId=null, $htmlOptions=array()) {
+		if ($confirmMessage==null)
+			$confirmMessage = 'Are you sure?';
+		
+		$url['ajax']=true;
+		
+		return NHtml::link($label, '#', array_merge($htmlOptions, array(
+			'onclick' => "js:$(function(){ 
+				var answer = confirm('".$confirmMessage."');
+				if (!answer) {
+					return;
+				} 
+				$.ajax({
+					url: '".  NHtml::url($url)."',
+					dataType: 'json',
+					type: 'get',
+					success: function(response){ 
+						if (response.success) {
+							".($gridId!==null ? "$.fn.yiiGridView.update('".$gridId."');" : "")."
+							nii.showMessage(response.success);
+							return false;
+						}
+					}
+				}); 
+			});")
+		));
+	}
+	
 	
 	// DOCUMENTATION PLEASE!
 	public static function hexLighter($hex, $factor = 8) {
