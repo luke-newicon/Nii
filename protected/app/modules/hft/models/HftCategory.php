@@ -149,7 +149,7 @@ class HftCategory extends NTag
 	}
 	
 	public static function getCategoriesArray() {
-		$category = NActiveRecord::model('NTag')->findAll();
+		$category = NActiveRecord::model('NTag')->findAll(array('order'=>'name ASC'));
 		$categories=array();
 		foreach ($category as $c)
 			$categories[$c->id] = $c->name;
