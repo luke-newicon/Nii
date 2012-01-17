@@ -58,7 +58,7 @@ class ActivityFeedPortlet extends NPortlet {
 						$model = $model_name = $controller = '';
 				}
 				$feed[$note->added.'_'.rand(10,10)] = array(
-					'activity' => $model.'note (<strong>'.$model_name.'</strong>): '.$note->note . ' &mdash; ' . NHtml::link('View',array('/'.$controller.'/view','id'=>$note->model_id)), 
+					'activity' => $model.'note (<strong>'.$model_name.'</strong>): '.$note->note . ' &mdash; ' . NHtml::link('View',array('/'.$controller.'/view/id/'.$note->model_id.'#Notes')), 
 					'user'=>$note->user->username,
 					'icon' => '<span class="icon fam-page-white-text">&nbsp;</span>',
 				);
