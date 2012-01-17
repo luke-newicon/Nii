@@ -68,7 +68,8 @@ class DonationController extends AController
 			
 			if($model->save()) {
 				
-				NLog::insertLog('Inserted new donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
+				$by = isset($model->contactName) ? ' by ' .$model->contactName : '';
+				NLog::insertLog('Inserted new details for Donation of '.NHtml::formatPrice($model->donation_amount).$by.' received on '.NHtml::formatDate($model->date_received, 'd M Y').' (id: '.$model->id.')', $model);
 				$this->redirect(array("donation/view","id"=>$model->id));		
 			}
 		}
@@ -99,7 +100,8 @@ class DonationController extends AController
 			
 			if($model->save()) {
 				
-				NLog::insertLog('Updated donation details: '.NHtml::formatPrice($model->donation_amount).' received on '.NHtml::formatDate($model->date_received, 'd M Y, H:i').' (id: '.$model->id.')', $model);
+				$by = isset($model->contactName) ? ' by ' .$model->contactName : '';
+				NLog::insertLog('Updated details for Donation of '.NHtml::formatPrice($model->donation_amount).$by.' received on '.NHtml::formatDate($model->date_received, 'd M Y').' (id: '.$model->id.')', $model);
 				$this->redirect(array("donation/view","id"=>$model->id));		
 				
 			}
@@ -115,7 +117,8 @@ class DonationController extends AController
 		$model = NActiveRecord::model('HftDonation')->findByPk($id);
 		$model->thankyou_sent = 1;
 		if ($model->save()) {
-			NLog::insertLog('Donation id: '.$id.' marked as thankyou sent', $model);
+			$by = isset($model->contactName) ? ' by ' .$model->contactName : '';
+			NLog::insertLog('Thankyou sent for Donation of '.NHtml::formatPrice($model->donation_amount).$by.' (id: '.$id.')', $model);
 			if ($ajax==true) {
 				echo CJSON::encode(array('success'=>'Marked as thankyou sent'));
 				Yii::app()->end();
