@@ -6,7 +6,7 @@ class EventUpcomingPortlet extends NPortlet {
 	public $limit = 10;
 	
 	public function __construct() {
-		$this->title = NHtml::link('View All',array('/hft/event'),array('class'=>'widget-rightlink')) . $this->title;
+		$this->title = NHtml::btnLink('View All',array('/hft/event'), 'fam-calendar', array('class'=>'widget-rightlink')) . $this->title;
 	}
 	
 	protected function renderContent() {

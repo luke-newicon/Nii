@@ -7,7 +7,7 @@ class ContactLatestPortlet extends NPortlet {
 //	public $contentCssClass='portlet-body h250 overflow-scroll mbs';
 	
 	public function __construct() {
-		$this->title = NHtml::link('View All',array('/contact/admin'),array('class'=>'widget-rightlink')) . $this->title;
+		$this->title = NHtml::btnLink('View All',array('/contact/admin'), 'fam-user', array('class'=>'widget-rightlink')) . $this->title;
 	}
 	
 	protected function renderContent() {

@@ -19,12 +19,12 @@ class EmailModule extends NWebModule
 	}
 	
 	public function setup() {
-		Yii::app()->menus->addItem('main', 'Emails', array('/email/index'));
-		Yii::app()->menus->addItem('main', 'All Emails', array('/email/index'), 'Emails');
-		Yii::app()->menus->addItem('main', 'Send an Email', array('/email/index/create'), 'Emails');
+		Yii::app()->menus->addItem('main', 'Mail', array('/email/index'));
+		Yii::app()->menus->addItem('main', 'All Emails', array('/email/index'), 'Mail');
+		Yii::app()->menus->addItem('main', 'Send an Email', array('/email/index/create'), 'Mail');
 		Yii::app()->menus->addDivider('main','Emails');
-		Yii::app()->menus->addItem('main', 'Manage Saved Campaigns', array('/email/manage/index'), 'Emails');
-		Yii::app()->menus->addItem('main', 'Manage Design Templates', array('/email/template/index'), 'Emails');
+		Yii::app()->menus->addItem('main', 'Manage Saved Campaigns', array('/email/manage/index'), 'Mail');
+		Yii::app()->menus->addItem('main', 'Manage Design Templates', array('/email/template/index'), 'Mail');
 
 	}
 	
