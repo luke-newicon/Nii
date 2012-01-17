@@ -20,7 +20,7 @@ class ActivityFeedPortlet extends NPortlet {
 		}
 		if ($notes) {
 			foreach ($notes as $note) {
-				$feed[$note->added.'_'.rand(10,10)] = array('activity' => $note->note. ' - <strong>'.$note->contact->name.'</strong>', 'user'=>$note->user->username);
+				$feed[$note->added.'_'.rand(10,10)] = array('activity' => 'Contact note (<strong>'.$note->contact->name.'</strong>): '.$note->note, 'user'=>$note->user->username);
 			}
 		}
 		
