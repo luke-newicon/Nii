@@ -15,12 +15,31 @@ class ActivityFeedPortlet extends NPortlet {
 		
 		if ($logs) {
 			foreach ($logs as $log) {
-				$feed[$log['datetime'].'_'.rand(10,10)] = array('activity' => $log['description'], 'user'=>$log->user->username);
+				$feed[$log['datetime'].'_'.rand(10,10)] = array('activity' => $log['description'] . ' &mdash; ' . NHtml::link('View',array('/'.$log->controller.'/view','id'=>$log->model_id)), 'user'=>$log->user->username);
 			}
 		}
 		if ($notes) {
 			foreach ($notes as $note) {
-				$feed[$note->added.'_'.rand(10,10)] = array('activity' => 'Contact note (<strong>'.$note->contact->name.'</strong>): '.$note->note, 'user'=>$note->user->username);
+				switch($note->model) {
+					case "HftContact" :
+						$model = 'Contact ';
+						$model_name = $note->contact->name;
+						$controller = 'contact/admin';
+						break;
+					case "HftDonation" :
+						$model = 'Donation ';
+						$model_name = '&pound;'.$note->donation->donation_amount;
+						$controller = 'hft/donation';
+						break;
+					case "HftEvent" :
+						$model = 'Event ';
+						$model_name = $note->event->name;
+						$controller = 'hft/event';
+						break;
+					default :
+						$model = $model_name = $controller = '';
+				}
+				$feed[$note->added.'_'.rand(10,10)] = array('activity' => $model.'note (<strong>'.$model_name.'</strong>): '.$note->note . ' &mdash; ' . NHtml::link('View',array('/'.$controller.'/view','id'=>$note->model_id)), 'user'=>$note->user->username);
 			}
 		}
 		

@@ -33,6 +33,8 @@ class HftContactNote extends NNote
 		$relations = NNote::model()->relations();
 		return array_merge($relations, array(
 			'contact'=>array(self::BELONGS_TO, 'HftContact', 'model_id'),
+			'donation'=>array(self::BELONGS_TO, 'HftDonation', 'model_id'),
+			'event'=>array(self::BELONGS_TO, 'HftEvent', 'model_id'),
 		));
 	}
 
