@@ -68,6 +68,7 @@ class HftModule extends NWebModule
 		Yii::app()->getModule('contact')->addBehaviorFor($contactModel, array('donations'=>array('class'=>'hft.components.behaviors.ContactGroupDonation')));
 		
 //		Yii::app()->getModule('admin')->dashboard->addPortlet('google-bugslist','hft.widgets.GoogleBugsPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('activity-feed','hft.widgets.ActivityFeedPortlet');
 		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet');
 		Yii::app()->getModule('admin')->dashboard->addPortlet('donations-latest','hft.widgets.DonationLatestPortlet');
 		
@@ -101,6 +102,7 @@ class HftModule extends NWebModule
 		HftEvent::install('HftEvent');
 		HftEventOrganiserType::install('HftEventOrganiserType');
 		HftEventAttendee::install('HftEventAttendee');
+		HftDashboardLog::install('HftDashboardLog');
 		$this->installPermissions();
 	}
 	
