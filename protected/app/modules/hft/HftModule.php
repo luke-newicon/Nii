@@ -69,7 +69,7 @@ class HftModule extends NWebModule
 		
 //		Yii::app()->getModule('admin')->dashboard->addPortlet('google-bugslist','hft.widgets.GoogleBugsPortlet');
 		Yii::app()->getModule('admin')->dashboard->addPortlet('activity-feed','hft.widgets.ActivityFeedPortlet');
-		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet','side');
 		Yii::app()->getModule('admin')->dashboard->addPortlet('donations-latest','hft.widgets.DonationLatestPortlet');
 		
 		// Add extra rule fields to contact group rule fields
