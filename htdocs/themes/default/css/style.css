@@ -652,6 +652,10 @@ div.topbar div > ul > li.menu:hover ul {
 .portlet-header h3 {
 	color: #005EB0;
 }
+.portlet-header .widget-rightlink {
+	float: right;
+	margin-top: 8px;
+}
 .portlet-body {
   padding: 10px;
 }
