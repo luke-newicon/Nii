@@ -98,6 +98,12 @@ class AdminModule extends NWebModule {
 							'menu-admin',
 						),
 					),
+					'settings' => array('description' => 'Trash Items',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'nii/index/trash',
+						),
+					),
 					'dashboard' => array('description' => 'Dashboard',
 						'roles' => array('administrator','editor','viewer'),
 						'operations' => array(

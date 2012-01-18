@@ -220,6 +220,29 @@ class UserModule extends NWebModule
 					),
 				),
 			),
+			'grid' => array('description' => 'Grid',
+				'tasks' => array(
+					'grid_actions' => array('description' => 'Generic Grid Actions',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'nii/grid/gridSettingsDialog',
+							'nii/grid/updateGridSettings',
+							'nii/grid/exportDialog',
+							'nii/grid/customScopeDialog',
+							'nii/grid/updateCustomScope',
+							'nii/grid/ajaxUpdateCustomScopeValueBlock',
+							'nii/grid/ajaxNewCustomScope',
+							'nii/grid/deleteCustomScope',
+							'nii/grid/exportDialog',
+							'nii/grid/exportProcess',
+							'nii/grid/exportDownload',
+							'nii/export/dialog',
+							'nii/export/process',
+							'nii/export/download',
+						),
+					),
+				),
+			),
 		);
 	}
 

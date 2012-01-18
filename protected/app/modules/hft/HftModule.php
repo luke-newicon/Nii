@@ -77,6 +77,67 @@ class HftModule extends NWebModule
 		Yii::app()->getModule('contact')->addGroupRuleField(HftEvent::groupRuleFields());
 	}
 	
+
+	public function permissions() {
+		return array(
+			'donation' => array('description' => 'Donation',
+				'tasks' => array(
+					'view' => array('description' => 'View Donations',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'hft/donation/index',
+							'hft/donation/view',
+							'hft/donation/contactDonations',
+							'hft/donation/notes',
+							'hft/donation/attachments',
+						),
+					),
+					'edit' => array('description' => 'Edit Donations',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/donation/edit',
+							'hft/donation/thankyouSent',
+						),
+					),
+				),
+			),
+			'event' => array('description' => 'Event',
+				'tasks' => array(
+					'view' => array('description' => 'View Events',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'hft/event/index',
+							'hft/event/view',
+							'hft/event/notes',
+							'hft/event/attachments',
+							'hft/event/attendees',
+						),
+					),
+					'edit' => array('description' => 'Edit Events',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/event/edit',
+							'hft/event/addAttendee',
+							'hft/event/deleteAttendee',
+							'hft/event/emailAttendees',
+						),
+					),
+				),
+			),
+			'contact_category' => array('description' => 'Contact Categories',
+				'tasks' => array(
+					'manage_categories' => array('description' => 'Manage Categories',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/category/index',
+							'hft/category/delete',
+						),
+					),
+				),
+			),
+		);
+	}
+	
 	
 	public function handleOnRenderAfterHeader($event){
 		$event->sender->renderPartial('hft.views.contact.view.top', $event->params);
@@ -102,7 +163,6 @@ class HftModule extends NWebModule
 		HftEvent::install('HftEvent');
 		HftEventOrganiserType::install('HftEventOrganiserType');
 		HftEventAttendee::install('HftEventAttendee');
-		HftDashboardLog::install('HftDashboardLog');
 		$this->installPermissions();
 	}
 	

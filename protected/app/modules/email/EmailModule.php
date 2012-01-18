@@ -28,10 +28,102 @@ class EmailModule extends NWebModule
 
 	}
 	
+	public function permissions() {
+		return array(
+			'donation' => array('description' => 'Donation',
+				'tasks' => array(
+					'view' => array('description' => 'View Donations',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'hft/donation/index',
+							'hft/donation/view',
+							'hft/donation/contactDonations',
+							'hft/donation/notes',
+							'hft/donation/attachments',
+						),
+					),
+					'edit' => array('description' => 'Edit Donations',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/donation/edit',
+							'hft/donation/thankyouSent',
+						),
+					),
+				),
+			),
+			'event' => array('description' => 'Event',
+				'tasks' => array(
+					'view' => array('description' => 'View Events',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'hft/event/index',
+							'hft/event/view',
+							'hft/event/notes',
+							'hft/event/attachments',
+							'hft/event/attendees',
+						),
+					),
+					'edit' => array('description' => 'Edit Events',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/event/edit',
+							'hft/event/addAttendee',
+							'hft/event/deleteAttendee',
+							'hft/event/emailAttendees',
+						),
+					),
+				),
+			),
+			'email' => array('description' => 'Emails',
+				'tasks' => array(
+					'view' => array('description' => 'View Emails',
+						'roles' => array('administrator', 'editor', 'viewer'),
+						'operations' => array(
+							'email/index/index',
+							'email/index/preview',
+							'email/index/view',
+							'email/index/previewContent',
+							'email/index/recipients',
+						),
+					),
+					'edit' => array('description' => 'Edit and Send Emails',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'email/index/create',
+							'email/index/edit',
+							'email/index/send',
+						),
+					),
+					'edit_template' => array('description' => 'View and Edit Email Templates',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'email/template/index',
+							'email/template/create',
+							'email/template/edit',
+							'email/template/view',
+							'email/template/getContents',
+							'email/template/templateContent',
+						),
+					),
+					'edit_campaign' => array('description' => 'View and Edit Saved Email Campaigns',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'email/manage/index',
+							'email/manage/create',
+							'email/manage/edit',
+							'email/manage/view',
+						),
+					),
+				),
+			),
+		);
+	}
+	
 	public function install(){
 		EmailCampaignTemplate::install();
 		EmailCampaign::install();
 		EmailTemplate::install();
 		EmailCampaignEmail::install();
+		$this->installPermissions();
 	}
 }

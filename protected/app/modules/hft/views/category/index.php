@@ -1,10 +1,6 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Categories'; ?>
 <div class="page-header">
 	<h2>Categories</h2>
-	<div class="action-buttons">
-		<?php echo NHtml::link('Add a Category', array('create'), array('class'=>'btn primary')); ?>
-<!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
-	</div>
 </div>
 <?php
 $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(

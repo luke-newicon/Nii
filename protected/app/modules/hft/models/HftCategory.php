@@ -77,8 +77,6 @@ class HftCategory extends NTag
 			),
 			array(
 				'name' => 'name',
-				'type' => 'raw',
-				'value' => '$data->nameLink',
 			),
 			array(
 				'name' => 'numberInCategory',

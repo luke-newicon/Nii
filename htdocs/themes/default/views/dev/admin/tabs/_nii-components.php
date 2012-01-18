@@ -168,7 +168,7 @@
 		<?php $u->deleteTagNames(array('dev: cool dude', 'dev: admin')); ?>
 		<p>So the tags on our user is now (we should not see [dev: cool dude] or [dev: admin]): </p>
 		<?php dp($u->tagWidgetFormat($u->getModelTags())); ?>
-<!--	</div>-->
+	</div>
 	
 	
 	
