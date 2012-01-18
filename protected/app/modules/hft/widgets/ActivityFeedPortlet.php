@@ -5,7 +5,7 @@ class ActivityFeedPortlet extends NPortlet {
 	public $title = '<h3>Activity Feed</h3>';
 	public $limit = 20;
 	public $logModels = "'HftContact','HftDonation','HftEvent'";
-	public $contentCssClass='portlet-body h300 overflow-scroll mbs';
+//	public $contentCssClass='portlet-body h300 overflow-scroll mbs';
 
 	protected function renderContent() {
 		

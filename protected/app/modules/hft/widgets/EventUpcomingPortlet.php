@@ -3,7 +3,7 @@
 class EventUpcomingPortlet extends NPortlet {
 
 	public $title = '<h3>Upcoming Events</h3>';
-	public $limit = 10;
+	public $limit = 5;
 	
 	public function __construct() {
 		$this->title = NHtml::btnLink('View All',array('/hft/event'), 'fam-calendar', array('class'=>'widget-rightlink')) . $this->title;

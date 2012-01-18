@@ -3,7 +3,7 @@
 class ContactLatestPortlet extends NPortlet {
 	
 	public $title = '<h3>New Contacts</h3>';
-	public $limit = 10;
+	public $limit = 5;
 //	public $contentCssClass='portlet-body h250 overflow-scroll mbs';
 	
 	public function __construct() {

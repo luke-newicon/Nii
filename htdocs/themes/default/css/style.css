@@ -698,3 +698,7 @@ div.topbar div > ul > li.menu:hover ul {
 .input select {
 	background: transparent url(../images/select-arrow.png) right center no-repeat;
 }
+
+.currency {
+	letter-spacing: 2px;
+}

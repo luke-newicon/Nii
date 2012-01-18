@@ -463,8 +463,9 @@ class NHtml extends CHtml {
 	 * @param int $decimals - number of decimals to display
 	 * @return string
 	 */
-	public static function formatPrice($value, $currency='&pound;', $decimals=2) {
-		return $currency . ' ' . number_format($value, $decimals);
+	public static function formatPrice($value, $currency='&pound;', $decimals=2, $showZeroDecimals=false) {
+		$decimals = (strstr($value,'.') && $showZeroDecimals==true) ? 2 : 0;
+		return '<span class="currency">'.$currency . '</span>'. number_format($value, $decimals);
 	}
 	
 	/**
