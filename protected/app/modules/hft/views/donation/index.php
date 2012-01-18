@@ -11,16 +11,9 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'dataProvider' => $dataProvider,
 	'filter' => $model,
 	'id' => 'DonationAllGrid',
-	'scopes' => array(
-		'items' => array(
-			'default' => array(
-				'label'=>'All',
-			),
-		),
-	),
-	
+	'scopes' => true,
 	//'ajaxUpdate' => '#ContactAllGrid_c3',
 	'enableButtons'=>true,
-	'enableCustomScopes'=>false,
+	'enableCustomScopes'=>true,
 //	'columns'=>$model->columns(Setting::visibleColumns('Contact')),
 ));

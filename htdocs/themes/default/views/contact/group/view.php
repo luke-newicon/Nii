@@ -1,5 +1,8 @@
 <div class="page-header">
 	<h2>View Contact Group</h2>
+	<div class="action-buttons">
+		<?php echo NHtml::link($this->t('Edit'), array("edit", "id" => $model->id), array('id' => 'group-edit-button', 'class' => 'btn primary')); ?>
+	</div>
 </div>
 
 <div class="container pull-left">

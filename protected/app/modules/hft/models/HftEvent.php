@@ -243,4 +243,68 @@ class HftEvent extends NActiveRecord
 			)
 		);
 	}		
+
+	public function scopes() {
+		return array(
+			'future' => array(
+				'condition' => 'end_date >= CURDATE() OR (end_date="0000-00-00" AND start_date >= CURDATE())',
+			),
+			'past' => array(
+				'condition' => '(end_date < CURDATE() AND end_date > "0000-00-00") OR (end_date="0000-00-00" AND start_date < CURDATE())',
+				'order' => 'start_date DESC',
+			),
+			'all' => array(
+				'condition' => 't.trashed <> 1',
+			),
+		);
+	}
+	
+	public function getGridScopes() {
+		$scopes = array(
+			'default' => 'future',
+			'items'=>array(
+				'future' => array(
+					'label'=>'Future Events',
+				),
+				'past' => array(
+					'label'=>'Past Events',
+				),
+				'all' => array(
+					'label'=>'All',
+					'description'=>'All events in the system',
+				),
+			)
+		);
+		return $scopes;
+	}
+	
+
+	public function translateCustomScopes($field=null, $value=null, $sm=null, $op=null, &$criteria) {
+
+		switch ($field) {
+			case 'totalAttendees' :
+					$criteria->addCondition('(SELECT id FROM hft_event_attendee WHERE event_id = t.id) '.$sm.' '.$value, $op);
+				break;
+			
+			case 'start_date' :
+			case 'end_date' :
+				
+				// If input looks like d/m/y or d-m-y convert to m/d/y before giving to strtotime()
+				$r='/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{1,4})/'; //regexp
+				if (preg_match($r, $value, $a)) 
+					$value = $a[2] . "/" . $a[1] . "/" . $a[3];  
+				
+				// Convert value to date
+				$date = date('Y-m-d',strtotime($value));
+				if ($sm=='<>')
+					$criteria->addCondition($value.'.id IS NULL', $op);
+				else
+					$criteria->addCondition($field.' '.$sm.' "'.$date.'"', $op);
+				break;
+
+			default :
+				return false;
+		}
+	}
+	
 }

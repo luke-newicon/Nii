@@ -35,7 +35,7 @@ class IndexController extends AController
 	public function actionShow($id,$type){
 		$this->layout = 'ajax';
 		NImage::get()->show($id, $type);
-		exit();
+		exit;
 	}
 	
 

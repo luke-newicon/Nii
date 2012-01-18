@@ -8,6 +8,8 @@
 class HftContact extends Contact
 {
 	
+	public $category;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Contact the static model class
@@ -27,6 +29,10 @@ class HftContact extends Contact
 			array(
 				'source_id' => 'Source',
 				'id' => 'Account Number',
+				'receive_letters' => 'Letter',
+				'receive_emails' => 'Email',
+				'category' => 'Categories',
+				'editLink' => 'Edit',
 			)
 		);
 	}
@@ -42,8 +48,8 @@ class HftContact extends Contact
 	public function rules() {
 		$rules = Contact::model()->rules();
 		return array_merge($rules, array(
-			array('account_number, source_id, newsletter', 'safe'),
-			array('account_number, source_id, newsletter', 'safe','on'=>'search'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status', 'safe'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category', 'safe','on'=>'search'),
 		));
 	}
 	
@@ -60,8 +66,15 @@ class HftContact extends Contact
 		
 		$this->getSearchCriteria($criteria);
 		
-		$criteria->compare('newsletter', $this->newsletter);
+		$criteria->compare('status', $this->status);
+		$criteria->compare('receive_letters', $this->receive_letters);
+		$criteria->compare('receive_emails', $this->receive_emails);
 
+		if ($this->category) {
+			$contactIds = $this->tag->searchTagIds(array($this->category));
+			$criteria->addInCondition("t.id", $contactIds);
+		}
+		
 		$criteria->with = array('donation');
 		$criteria->together = true;
 		
@@ -104,10 +117,42 @@ class HftContact extends Contact
 					'filter'=> HftContactSource::getSourcesArray(),
 				),
 				array(
-					'name' => 'newsletter',
+					'name' => 'category',
+					'header'=>'Categories',
+					'type'=>'raw',
+					'value'=>'$data->printTags()',
+					'filter'=> HftCategory::getCategoriesArray(),
+					'htmlOptions'=>array('width'=>'100px'),
+				),
+				array(
+					'name' => 'status',
 					'type' => 'raw',
-					'value' => 'NHtml::formatBool($data->newsletter)',
+					'value' => '$data->status',
+					'filter'=> NHtml::enumItem($this, 'status'),
+					'htmlOptions'=>array('width'=>'60px'),
+				),
+				array(
+					'name' => 'receive_letters',
+					'type' => 'raw',
+					'value' => 'NHtml::formatBool($data->receive_letters)',
 					'filter'=> array('1'=>'Yes','0'=>'No'),
+					'sortable' => false,
+				),
+				array(
+					'name' => 'receive_emails',
+					'type' => 'raw',
+					'value' => 'NHtml::formatBool($data->receive_emails)',
+					'filter'=> array('1'=>'Yes','0'=>'No'),
+					'sortable' => false,
+				),
+				array(
+					'name' => 'editLink',
+					'type' => 'raw',
+					'value' => '$data->editLink',
+					'filter' => false,
+					'sortable' => false,
+					'htmlOptions'=>array('width'=>'30px'),
+					'export'=>false,
 				),
 			)
 		);
@@ -142,17 +187,25 @@ class HftContact extends Contact
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'source_id' => 'int(11)',
-				'newsletter' => 'int(1) unsigned NOT NULL DEFAULT 0',
+				'receive_letters' => 'int(1) unsigned NOT NULL DEFAULT 1',
+				'receive_emails' => 'int(1) unsigned NOT NULL DEFAULT 1',
 				'account_number' => 'varchar(30)',
+				'status' => "enum('Active','Archived','Deceased') DEFAULT 'Active'",
 				'trashed' => "int(1) unsigned NOT NULL",
 			), 
 			'keys' => array());
+	}
+	
+	public function getEditLink() {
+		if ($this->id)
+			return NHtml::link('Edit', array('/contact/admin/edit', 'id'=>$this->id));
 	}
 	
 	public function getSourceName() {
 		if ($this->source)
 			return $this->source->name;
 	}
+	
 	
 	public function getDonations() {
 		$donations = HftDonation::model()->findAllByAttributes(array('contact_id'=>$this->id));
@@ -199,24 +252,52 @@ class HftContact extends Contact
 				'condition' => 'donation.id > 0 AND t.trashed <> 1',
 				'with' =>'donation',
 			),
+			'newsletter' => array(
+				'condition' => 'newsletter = 1 AND t.trashed <> 1',
+			),
+			'active' => array(
+				'condition' => 't.`status` = "Active" AND t.trashed <> 1',
+			),
+			'all' => array(
+				'condition' => 't.trashed <> 1',
+			)
 		));
 	}
 	
 	public function newsletterRecipients() {
 		
 		return new CDbCriteria(
-			array('condition'=>'t.newsletter = "1"')
+			array('condition'=>'t.receive_emails = "1"')
 		);
 	}
 	
 	public function getGridScopes() {
-		return array_merge_recursive(parent::getGridScopes(), array(
+		$scopes = array_merge_recursive(parent::getGridScopes(), array(
+			'default' => 'active',
 			'items'=>array(
+				'active' => array(
+					'label'=>'Active',
+				),
+				'all' => array(
+					'label'=>'All',
+					'description'=>'All contacts in the system, including those hidden by default',
+				),
+				'emails' => array(
+					'label'=>'Emails',
+					'description'=>'All contacts with a valid email address',
+				),
 				'donors' => array(
 					'label'=>'Donors',
+					'description'=>'Contacts that have made a donation in the past',
 				),	
+				'newsletter' => array(
+					'label'=>'Newsletter',
+					'description'=>'Contacts who are willing to receive the newsletter',
+				),
 			)
 		));
+		unset($scopes['items']['default']);
+		return $scopes;
 	}
 	
 }

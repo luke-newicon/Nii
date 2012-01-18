@@ -90,6 +90,13 @@ $modelName = get_class($model);
 		</div>
 	</div>
 	<div class="line field">
+		<div class="unit size1of6"><?= $form->labelEx($model,'thankyou_sent') ?></div>
+		<div class="lastUnit">
+			<div><?php echo $form->checkBox($model,'thankyou_sent'); ?></div>
+			<?php echo $form->error($model,'thankyou_sent'); ?>
+		</div>
+	</div>
+	<div class="line field">
 		<div class="unit size1of6"><?= $form->labelEx($model,'comment') ?></div>
 		<div class="lastUnit">
 			<div class="input w400"><?php echo $form->textArea($model, 'comment',array('rows'=>4)); ?></div>

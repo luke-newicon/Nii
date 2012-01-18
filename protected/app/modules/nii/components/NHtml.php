@@ -438,6 +438,24 @@ class NHtml extends CHtml {
 			return;
 	}
 	
+	
+	/**
+	 *	Returns human readable text from a boolean value
+	 * @param string $value - original boolean
+	 * @param string $true - true value
+	 * @param string $false - false value
+	 * @param bool $blank - whether to return blank on false
+	 * @return string 
+	 */
+	public static function boolImage($value, $true=1, $false=0, $blank=false) {
+		if ($value == $true)
+			return '<span class="icon fam-accept">&nbsp;</span>';
+		else if ($value === $false || $blank === false)
+			return '<span class="icon fam-delete">&nbsp;</span>';
+		else
+			return;
+	}
+	
 	/**
 	 *	Returns a properly formatted price based on an integer or float
 	 * @param int/float $value
@@ -445,8 +463,9 @@ class NHtml extends CHtml {
 	 * @param int $decimals - number of decimals to display
 	 * @return string
 	 */
-	public static function formatPrice($value, $currency='&pound;', $decimals=2) {
-		return $currency . ' ' . number_format($value, $decimals);
+	public static function formatPrice($value, $currency='&pound;', $decimals=2, $showZeroDecimals=false) {
+		$decimals = (strstr($value,'.') && $showZeroDecimals==true) ? 2 : 0;
+		return '<span class="currency">'.$currency . '</span>'. number_format($value, $decimals);
 	}
 	
 	/**
@@ -507,6 +526,48 @@ class NHtml extends CHtml {
 				'class'=>'trash-link btn danger'
 			)
 		);
+	}
+	
+	public static function confirmLink($label, $url, $confirmMessage=null, $htmlOptions=array()) {
+		if ($confirmMessage==null)
+			$confirmMessage = 'Are you sure?';
+		return NHtml::link($label,'#', array_merge(
+				$htmlOptions,
+				array('onclick'=> '
+					var answer = confirm("'.$confirmMessage.'");
+					if(!answer) { return; }
+					window.location = "'.NHtml::url($url).'";
+				')
+			)
+		);
+	}
+	
+	public static function confirmAjaxLink($label, $url, $confirmMessage=null, $gridId=null, $htmlOptions=array()) {
+		if ($confirmMessage==null)
+			$confirmMessage = 'Are you sure?';
+		
+		$url['ajax']=true;
+		
+		return NHtml::link($label, '#', array_merge($htmlOptions, array(
+			'onclick' => "js:$(function(){ 
+				var answer = confirm('".$confirmMessage."');
+				if (!answer) {
+					return;
+				} 
+				$.ajax({
+					url: '".  NHtml::url($url)."',
+					dataType: 'json',
+					type: 'get',
+					success: function(response){ 
+						if (response.success) {
+							".($gridId!==null ? "$.fn.yiiGridView.update('".$gridId."', {updateAll:true});" : "")."
+							nii.showMessage(response.success);
+							return false;
+						}
+					}
+				}); 
+			});")
+		));
 	}
 	
 	

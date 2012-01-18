@@ -41,6 +41,7 @@ class HftDonation extends NActiveRecord
 			'statement_number' => 'Bank Statement #',
 			'statement_date' => 'Bank Statement Date',
 			'editLink' => 'Edit',
+			'thankyou_sent' => 'Thankyou Sent',
 		);
 	}
 	
@@ -55,9 +56,9 @@ class HftDonation extends NActiveRecord
 	public function rules() {
 		return array(
 			array('donation_amount, giftaid, date_received', 'required'),
-			array('type_id, event_id, comment, statement_number, statement_date, contact_id', 'safe'),
+			array('type_id, event_id, comment, statement_number, statement_date, contact_id, thankyou_sent', 'safe'),
 			array('donation_amount, giftaid, date_received, type_id, event_id, comment, statement_number, statement_date, contact_id,
-				date_received_from, date_received_to, statement_date_from, statement_date_to', 'safe','on'=>'search'),
+				date_received_from, date_received_to, statement_date_from, statement_date_to, thankyou_sent', 'safe','on'=>'search'),
 		);
 	}
 	
@@ -79,7 +80,7 @@ class HftDonation extends NActiveRecord
 		$criteria->compare('donation_amount',$this->donation_amount,true);
 		$criteria->compare('giftaid',$this->giftaid);
 		$criteria->compare('type_id',$this->type_id,true);
-//		$criteria->compare('event.name',$this->type_id,true);
+		$criteria->compare('thankyou_sent',$this->thankyou_sent);
 		$criteria->compare('statement_number',$this->statement_number,true);
 		
 		// Add date filters
@@ -146,6 +147,14 @@ class HftDonation extends NActiveRecord
 				'filter'=> HftDonationType::getTypesArray(),
 			),
 			array(
+				'name' => 'thankyou_sent',
+				'header' => 'Thankyou',
+				'type' => 'raw',
+				'value' => '$data->thankyouLink',
+				'htmlOptions'=>array('width'=>'70px'),
+				'filter' => array('1'=>'Sent', '0'=>'Not sent'),
+			),
+			array(
 				'name' => 'event_id',
 				'type' => 'raw',
 				'value' => '$data->eventLink',
@@ -188,6 +197,7 @@ class HftDonation extends NActiveRecord
 				'comment' => 'text',
 				'statement_number' => 'int(11)',
 				'statement_date' => 'date',
+				'thankyou_sent' => "int(1) NOT NULL",
 				'trashed' => "int(1) unsigned NOT NULL",
 			), 
 			'keys' => array());
@@ -286,6 +296,18 @@ class HftDonation extends NActiveRecord
 			return '<span class="noData">No event assigned</span>';
 	}
 	
+	public function getThankyouLink($ajax=true) {
+		if ($this->thankyou_sent==1)
+			return '<span class="icon fam-accept">&nbsp;</span>Sent';
+		
+		$message = 'Are you sure you want to mark thankyou as sent?';
+		
+		if ($ajax)
+			return NHtml::confirmAjaxLink('Send Now', array('/hft/donation/thankyouSent','id'=>$this->id), $message, 'DonationAllGrid', array('style'=>'color: #900;'));
+		else
+			return NHtml::confirmLink('<span class="icon fam-delete">&nbsp;</span>Send Now', array('/hft/donation/thankyouSent','id'=>$this->id), $message);
+	}
+	
 	public static function countRecentDonors() {
 		return self::model()->count('date_received >= :date GROUP BY contact_id',array(':date' => date('Y-m-d',strtotime('- 2 weeks'))));
 	}
@@ -315,5 +337,36 @@ class HftDonation extends NActiveRecord
 			)
 		);
 	}	
+	
+	public function scopes() {
+		return array(
+			'thankyou_sent' => array(
+				'condition' => 'thankyou_sent = 1 AND t.trashed <> 1',
+			),
+			'thankyou_not_sent' => array(
+				'condition' => 'thankyou_sent = 0 AND t.trashed <> 1',
+			),
+		);
+	}
+	
+	public function getGridScopes() {
+		$scopes = array(
+			'items'=>array(
+				'default' => array(
+					'label'=>'All',
+				),
+				'thankyou_sent' => array(
+					'label'=>'Thanked',
+					'description'=>'Donations for which a thankyou letter or email HAS been sent',
+				),
+				'thankyou_not_sent' => array(
+					'label'=>'Not Thanked',
+					'description'=>'Donations for which a thankyou letter or email HAS NOT been sent',
+				),
+			)
+		);
+		return $scopes;
+	}
 
+	
 }

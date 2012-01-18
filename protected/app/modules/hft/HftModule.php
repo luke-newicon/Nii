@@ -20,6 +20,9 @@ class HftModule extends NWebModule
 	public function setup() {
 		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donation/index'));
 		Yii::app()->menus->addItem('main', 'Events', array('/hft/event/index'));
+		
+		Yii::app()->menus->addDivider('main','Contacts');
+		Yii::app()->menus->addItem('main', 'Categories', array('/hft/category/index'), 'Contacts');
 
 		Yii::app()->getModule('contact')->contactModel = 'HftContact';
 		
@@ -65,8 +68,9 @@ class HftModule extends NWebModule
 		Yii::app()->getModule('contact')->addBehaviorFor($contactModel, array('donations'=>array('class'=>'hft.components.behaviors.ContactGroupDonation')));
 		
 //		Yii::app()->getModule('admin')->dashboard->addPortlet('google-bugslist','hft.widgets.GoogleBugsPortlet');
-		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet');
-		Yii::app()->getModule('admin')->dashboard->addPortlet('donations-latest','hft.widgets.DonationLatestPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('activity-feed','hft.widgets.ActivityFeedPortlet');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('events-upcoming','hft.widgets.EventUpcomingPortlet','side');
+		Yii::app()->getModule('admin')->dashboard->addPortlet('donations-latest','hft.widgets.DonationLatestPortlet','side');
 		
 		// Add extra rule fields to contact group rule fields
 		Yii::app()->getModule('contact')->addGroupRuleField(HftDonation::groupRuleFields());
@@ -98,6 +102,7 @@ class HftModule extends NWebModule
 		HftEvent::install('HftEvent');
 		HftEventOrganiserType::install('HftEventOrganiserType');
 		HftEventAttendee::install('HftEventAttendee');
+		HftDashboardLog::install('HftDashboardLog');
 		$this->installPermissions();
 	}
 	

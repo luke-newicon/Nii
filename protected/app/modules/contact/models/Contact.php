@@ -245,8 +245,15 @@ class Contact extends NActiveRecord {
 			'emails' => array(
 				'condition' => '(email <> "" OR email_secondary <> "") AND t.trashed <> 1',
 			),
-			'newsletter' => array(
-				'condition' => 'newsletter = 1 AND t.trashed <> 1',
+		);
+	}
+	
+	public function getGridScopes() {
+		return array(
+			'items' => array(
+				'default' => array(
+					'label'=>'All',
+				),
 			),
 		);
 	}
@@ -630,23 +637,6 @@ class Contact extends NActiveRecord {
 	}	
 	public function getCountAttachments() {
 		return NAttachment::model()->countByAttributes(array('model'=>get_class($this), 'model_id'=>$this->id));
-	}
-	
-	public function getGridScopes() {
-		return array(
-			'items' => array(
-				'default' => array(
-					'label'=>'All',
-				),
-				'emails' => array(
-					'label'=>'Emails',
-					'description'=>'All contacts with a valid email address',
-				),
-				'newsletter' => array(
-					'label'=>'Newsletter',
-				),
-			),
-		);
 	}
 
 	public function getTabs() {

@@ -13,8 +13,8 @@
 		else
 			$deleteOptions = array('class'=>'groupRuleDelete hidden');
 		
-		echo NHtml::btnLink('','#', 'icon fam-add', array('class'=>'groupRuleAdd'));
-		echo NHtml::btnLink('','#', 'icon fam-delete', $deleteOptions);
+		echo NHtml::btnLink('','#', 'fam-add', array('class'=>'groupRuleAdd'));
+		echo NHtml::btnLink('','#', 'fam-delete', $deleteOptions);
 		?>
 	</div>
 </div>

@@ -48,8 +48,12 @@ class NGridView extends CGridView
 	}
 	
 	public function init() {
-
-		if (isset($this->scopes['default'])){
+		$model = $this->dataProvider->model;
+		
+		if (isset($model->gridScopes['default'])) {
+			$this->dataProvider->defaultScope = $model->gridScopes['default'];		
+			$this->dataProvider->gridId = $this->id;
+		} elseif (isset($this->scopes['default'])){
 			$this->dataProvider->defaultScope = $this->scopes['default'];
 			$this->dataProvider->gridId = $this->id;
 		}
