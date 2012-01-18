@@ -66,15 +66,15 @@
 	<p>To add tags simply call the setTags function with an array of tags we wish to add to the model</p>
 	
 	<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
-		$u->tags = array('cool dude', 'admin');
+		$u->tags = array('dev: cool dude', 'dev: admin');
 	<?php $this->endWidget(); ?>
-	<p>The code above has added two tags to the user record <span class="label">cool dude</span> and <span class="label">admin</span>.
+	<p>The code above has added two tags to the user record <span class="label">dev: cool dude</span> and <span class="label">dev: admin</span>.
 		<code>$u->tags = ...</code> will call the <code>NTaggable::setTags()</code> function.  We can also call this function using 
 		<code>$u->setTags()</code> or <code>$u->tag->setTags()</code> or even <code>$u->tag->tags</code> because the <code>$u->tag</code> will return the <code>NTaggable</code> object.  Got it? 
 	</p>
 
 <?php		
-	$u->tags = array('cool dude', 'admin');
+	$u->tags = array('dev: cool dude', 'dev: admin');
 ?>
 	<h2>Listing Tags</h2>
 	<h3>List All Tags For One Record</h3>
@@ -104,12 +104,12 @@
 		$u->getAllTags();
 	<?php $this->endWidget(); ?>
 	
-	<p>So now we may want to search for all users that have the tag of <span class="label">admin</span></p>
+	<p>So now we may want to search for all users that have the tag of <span class="label">dev: admin</span></p>
 	
 	<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
-		$users = User::model()->tag->search(array('admin'));
+		$users = User::model()->tag->search(array('dev: admin'));
 	<?php $this->endWidget(); ?>
-		<p><code>$users</code> will be an array of user active record objects that have the tag of <span class="label">admin</span></p>
+		<p><code>$users</code> will be an array of user active record objects that have the tag of <span class="label">dev: admin</span></p>
 		<p><span class="label notice">note</span> we call the search function directly on the tag object <code>User::model()->tag</code> because often a search function already exists on active record models, and this will be called before the search funxtion of the <code>NTaggale</code> behavior</p>
 		<p>check we have received the correct same user:</p>	
 	<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
@@ -118,7 +118,7 @@
 	<?php $this->endWidget(); ?>
 			<p>The Result:</p>
 	<?php 
-		$users = User::model()->tag->search(array('admin'));
+		$users = User::model()->tag->search(array('dev: admin'));
 		foreach($users as $found)
 			dp($found->email);
 	?>
@@ -159,6 +159,15 @@
 			</div>
 				<input type="submit" value="submit" />
 	</form>
+			
+		<h2>Cleaning up our mess</h2>
+		<p>We have added tags [dev: cool dude] and [dev: admin]. Lets remove these tags before we screw up our database.</p>
+		<?php $this->beginWidget('CTextHighlighter', array('language' => 'php')); ?>
+			$u->deleteTagNames(array('dev: cool dude', 'dev: admin'));
+		<?php $this->endWidget(); ?>
+		<?php $u->deleteTagNames(array('dev: cool dude', 'dev: admin')); ?>
+		<p>So the tags on our user is now (we should not see [dev: cool dude] or [dev: admin]): </p>
+		<?php dp($u->tagWidgetFormat($u->getModelTags())); ?>
 <!--	</div>-->
 	
 	

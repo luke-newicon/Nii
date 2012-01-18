@@ -78,6 +78,22 @@ class NTaggable extends CActiveRecordBehavior
 	}
 	
 	/**
+	 * delete tags from the database also removes the tags links,
+	 * 
+	 * @param mixed $tags a string of a singular tag name of an array of tag names to delete
+	 */
+	public function deleteTagNames($tags){
+		// now find all of the ids for the names provided
+		$tagRows = NTag::model()->findAllByAttributes(array('name'=>$tags));
+		// get array of tag ids
+		$ids = array(); foreach($tagRows as $t) $ids[] = $t->id;
+		// dlete all tags with ids
+		NTag::model()->deleteAllByAttributes(array('id'=>$ids));
+		// remove all tag links (cascade)
+		NTagLink::model()->deleteAllByAttributes(array('tag_id'=>$ids));
+	}
+	
+	/**
 	 * Gets all tags across all models
 	 * 
 	 * @return array array of tag_id => tag name e.g. array(1 => 'tag name', 3=> 'other tag')
