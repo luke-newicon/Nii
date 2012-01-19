@@ -9,8 +9,12 @@ Yii::import('nii-grid.NEavColumn');
 class NGridView extends CGridView 
 {
 
-	
-	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n<div class=\"grid-bottom-summary\">{pager}</div>";
+	/**
+	 *	A string defining the layout of the grid on the page and which blocks to render. 
+	 * Blocks in {} require a corresponding function to call e.g. {scopes} has renderScopes()
+	 * @var string 
+	 */
+	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n<div class=\"grid-bottom-summary\">{bulkactions}{pager}</div>";
 	/**
 	 * ??
 	 * @var array 
@@ -19,17 +23,43 @@ class NGridView extends CGridView
 	public $enableCustomScopes;
 	public $defaultColumnClass = 'NDataColumn';
 	public $defaultScopeListClass = 'NScopeList';
-	/**
-	 * allow by default multiple rows to be selected
-	 * @var int 
-	 */
-	public $selectableRows = 2;
+	
+	public $itemsExtraCssClass;
+
 	public $enableButtons = false;
 	public $buttons = array('export', 'print', 'update');
 	public $buttonModelId = null;
 	public $defaultExportButton = 'exportGrid';
 	public $defaultPrintButton = 'printGrid';
 	public $defaultUpdateButton = 'updateGridColumns';
+	
+	/**
+	 * Allow multiple rows to be selected by default
+	 * @var int 
+	 */
+	public $selectableRows = 2;
+	
+	/**
+	 *	Enable the displaying of the bulk actions block in template
+	 * @var boolean
+	 */
+	public $enableBulkActions = false;
+	
+	/**
+	 *	Actions to display in the bulk actions drop-down
+	 * @var array 
+	 */
+	public $bulkActions = array('delete'=>'Delete');
+	
+	/**
+	 *	Default checkbox column for grids where bulk actions are enabled
+	 * @var array 
+	 */
+	public $checkboxColumn = array(
+		'id'=>'selectedItems',
+		'value'=>'$data->id',
+		'class'=>'CCheckBoxColumn',
+	);
 	
 	/**
 	 * A string of jquery selectors to update separated by commas.
@@ -106,9 +136,6 @@ class NGridView extends CGridView
 		foreach ($this->columns as $column)
 			$column->init();
 	}
-	
-	
-	
 
 	protected function createDataColumn($text) {
 		if (!preg_match('/^([\w\.]+)(:(\w*))?(:(.*))?$/', $text, $matches))
@@ -135,12 +162,16 @@ class NGridView extends CGridView
 			));
 		}
 	}
-
-	public function renderBulk() {
+	
+	/**
+	 *	Renders the bulk actions block. 
+	 */
+	public function renderBulkactions() {
 		if ($this->bulkActions) {
-			echo '<div class="alignleft actions">';
-			echo CHtml::dropDownList('action', '-1', $this->bulkActions);
-			echo ' <input type="submit" value="Apply" class="button-secondary action" id="doaction"></div>';
+			echo '<div class="pull-left line">';
+			echo 'Bulk actions: <span class="input inlineInput">' . NHtml::dropDownList('bulkaction', '-1', $this->bulkActions, array('prompt'=>'select...')) . '</span>';
+			echo ' <input type="button" value="Apply" class="btn small" id="dobulkaction">';
+			echo '</div>';
 		}
 	}
 	
@@ -252,18 +283,22 @@ class NGridView extends CGridView
 		$columns = $model->columns();
 		
 		foreach($columns as $key=>$col) {
-			$columns[$key]['visible'] = (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null);
+			$columns[$key]['visible'] = (isset($col['name']) ? (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null) : null);
 		}
 		
 		// reorder the columns to follow the same order returned by visible columns
 		$columnOrder = array_flip(array_keys($visibleColumns));
 		$ordered = array();
+		
+		if ($this->enableBulkActions==true)
+			$ordered[0] = $this->checkboxColumn;
+		
 		foreach($columns as $key=>$col){
 			$orderPos = $columnOrder[$col['name']];
-			$ordered[$orderPos] = $col;
+			$ordered[$orderPos+1] = $col;
 		}
 		ksort($ordered);
-		
+		FB::log($ordered);
 		
 		return $ordered;
 	}	
@@ -349,7 +384,8 @@ class NGridView extends CGridView
 	{
 		if($this->dataProvider->getItemCount()>0 || $this->showTableOnEmpty)
 		{
-			echo "<table class=\"{$this->itemsCssClass}\">\n";
+			$itemsCssClass = $this->itemsCssClass . (isset($this->itemsExtraCssClass) ? ' ' . $this->itemsExtraCssClass : null);
+			echo "<table class=\"{$itemsCssClass}\">\n";
 			$this->renderTableHeader();
 			ob_start();
 			$this->renderTableBody();

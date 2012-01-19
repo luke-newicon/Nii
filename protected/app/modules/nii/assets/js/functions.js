@@ -1,9 +1,8 @@
-// added to niiJs namespace.. might need to fix refering code but now neeter.  
-// Can't have random non-namespaced js functions.
-// refer to functions like. nii.confirmCancel();
+// Nii custom functions. Call with nii.functionName
 
 var nii = {
 	
+	// Displays an alert asking the user to confirm their action and redirects to the given url on success
 	confirmCancel: function(el, urlel) {
 		if ($(el).val() == '1') {
 			var answer = confirm("You have unsaved changes.\n\nAre you sure you wish to leave this page?")
@@ -15,10 +14,19 @@ var nii = {
 		window.location(url);
 	},
 	
+	// Simple! Capitalises the first letter...
 	capitaliseFirstLetter: function(string){
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	},
 	
+	// Displays a message, which hides itself after a period of time
+	// =================================
+	// Definable params are:
+	//		msg:	The message you wish to display,
+	//		params: {
+	//			className: class to override styling of message - classes such as 'error',
+	//			timeOut: timeout in milliseconds, defaults to 4000 (4 seconds)
+	//		}
 	showMessage: function (msg,params) {
 		if (!params) params = [];
 		var className = params['className'];
@@ -34,6 +42,7 @@ var nii = {
 		});
 	},
 
+	//	Adds leading zeros to numbers to pad them to a given length
 	leadingZeros: function(num, totalChars, padWith) {
 		num = num + "";
 		padWith = (padWith) ? padWith : "0";
@@ -50,9 +59,10 @@ var nii = {
 		return num;
 	},
 	
+	// Simple password suggestion function, useful for creating secure passwords in forms
 	suggestPassword: function(fieldID) {
 		var pwchars = new Array("abcdefhjmnpqrstuvwxyz","ABCDEFGHJKLMNPQRSTUVWYXZ","23456789","|!@#$%&*\/=?;:\-_+~^}][");
-		var passwordlength = 3;    // but x4  do we want that to be dynamic?  no, keep it simple :)
+		var passwordlength = 3;    // but x3  do we want that to be dynamic?  no, keep it simple :)
 		var passwd = document.getElementById(fieldID);
 		passwd.value = '';
 

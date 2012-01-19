@@ -78,6 +78,8 @@ body.fixed.show-logo .body {top:95px;}
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6d4ee', endColorstr='#ecf7fd', GradientType=0);
 }
 
+.grid-view table tr.selected td { background-color: #e9f4fa; }
+
 .menu-notice{float:left;margin-right:5px}
 .menu-dropdown .menu-notice{float:right;margin:0px}
 

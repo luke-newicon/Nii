@@ -8,7 +8,7 @@
 class HftContact extends Contact
 {
 	
-	public $category;
+	public $category, $checkbox;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -71,8 +71,12 @@ class HftContact extends Contact
 		$criteria->compare('receive_emails', $this->receive_emails);
 
 		if ($this->category) {
-			$contactIds = $this->tag->searchTagIds(array($this->category));
-			$criteria->addInCondition("t.id", $contactIds);
+			if ($this->category=='-')
+				$criteria->addCondition ('(SELECT count(l.id) FROM nii_tag_link l WHERE l.model_id = t.id AND l.model = "HftContact")=0');
+			else {
+				$contactIds = $this->tag->searchTagIds(array($this->category));
+				$criteria->addInCondition("t.id", $contactIds);
+			}
 		}
 		
 		$criteria->with = array('donation');

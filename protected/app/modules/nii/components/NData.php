@@ -167,7 +167,7 @@ class NData
 		$columns = array();
 
 		foreach ($allcolumns as $col) {
-			if ($col['name']) {
+			if (isset($col['name'])) {
 				if (array_key_exists($col['name'], $cols)) {
 					$columns[$col['name']] = $cols[$col['name']];
 				} else {
