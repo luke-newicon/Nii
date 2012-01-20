@@ -168,7 +168,7 @@ class NGridView extends CGridView
 	 *	Renders the bulk actions block. 
 	 */
 	public function renderBulkactions() {
-		if ($this->bulkActions) {
+		if ($this->enableBulkActions==true && $this->bulkActions) {
 			echo '<div class="pull-left line">';
 			echo '<span class="input inlineInput">' . NHtml::dropDownList('selectBulkAction', '-1', $this->bulkActions, array('prompt'=>'select...')) . '</span> ';
 			echo NHtml::button('Apply', array('class'=>'btn small disabled', 'disabled'=>'disabled', 'id'=>'doBulkAction', 'onclick'=>$this->bulkActionJs()));

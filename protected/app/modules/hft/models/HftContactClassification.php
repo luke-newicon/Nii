@@ -46,4 +46,8 @@ class HftContactClassification extends NActiveRecord {
 		return $classifications;
 	}
 	
+	public static function getClassificationsForGridFilter() {
+		return CMap::mergeArray(array('0'=>'--none--'), HftContactClassification::getClassificationsArray());
+	}
+	
 }

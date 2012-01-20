@@ -69,8 +69,8 @@ class HftContact extends Contact
 		$this->getSearchCriteria($criteria);
 		
 		$criteria->compare('status', $this->status);
-		$criteria->compare('source.id', $this->source_id);
-		$criteria->compare('classification.id', $this->classification_id);
+		$criteria->compare('source_id', $this->source_id);
+		$criteria->compare('classification_id', $this->classification_id);
 		$criteria->compare('receive_letters', $this->receive_letters);
 		$criteria->compare('receive_emails', $this->receive_emails);
 
@@ -83,7 +83,7 @@ class HftContact extends Contact
 			}
 		}
 		
-		$criteria->with = array('donation', 'source', 'classification');
+		$criteria->with = array('donation');
 		$criteria->together = true;
 		
 		$sort = new CSort;
@@ -128,7 +128,7 @@ class HftContact extends Contact
 					'name' => 'classification_id',
 					'type' => 'raw',
 					'value' => '$data->classificationName',
-					'filter'=> HftContactClassification::getClassificationsArray(),
+					'filter'=> HftContactClassification::getClassificationsForGridFilter(),
 				),
 				array(
 					'name' => 'category',
@@ -224,6 +224,8 @@ class HftContact extends Contact
 	public function getClassificationName() {
 		if ($this->classification)
 			return $this->classification->name;
+		else
+			return '<span class="noData">None</span>';
 	}	
 	
 	public function getDonations() {
