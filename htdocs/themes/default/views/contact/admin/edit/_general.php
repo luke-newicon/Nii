@@ -165,6 +165,7 @@ $event = new CEvent($this, array('c'=>$c,'form'=>$form));
 						$this->widget('nii.widgets.NTagInput', array(
 							'model'=>$c,
 							'attribute'=>'tags',
+							'showSelectDropdown'=>true,
 						)); ?>
 				</div>
 			</div>

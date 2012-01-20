@@ -56,6 +56,18 @@ class NTagInput extends NTokenInput
 			$this->data = $this->model->tagWidgetFormat($this->data);
 		}
 		
+		if ($this->options['showSelectDropdown']==true) {
+			echo '<div class="input w400 mbs">';
+				// @todo Add onchange function to add token to list
+				echo NHtml::dropDownList('tag_dropdown', '', $this->model->getModelTagsDropdown(), 
+					array(
+						'onchange'=>"jQuery('#{$this->htmlOptions['id']}').tokenInput('add', {id: this.value, name: this.value}); this.value=''; return false;",
+						'prompt'=>'select or search below to add a new tag...',
+					)
+				);
+			echo '</div>';
+		}
+		
 		echo '<div class="'.$this->inputClass.'">'.CHtml::textField($this->htmlOptions['name'],'',$this->htmlOptions).'</div>';
 		
 		if ($this->url !== null)
