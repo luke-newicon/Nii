@@ -51,6 +51,11 @@ class NTagLink extends NActiveRecord
 				'tag_id'=>'int',
 				'model'=>'string',
 				'model_id'=>'int'
+			),
+			'keys'=>array(
+				array('tag_id'),
+				array('model'),
+				array('model_id'),
 			)
 		);
 	}

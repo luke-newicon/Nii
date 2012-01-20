@@ -304,4 +304,20 @@ class GridController extends AController {
 		// Run end() to allow the data to return and the settings to be updated
 		Yii::app()->end();
 	}	
+	
+	public function actionBulkAction($action, $model, $selectedRowIds) {
+		switch ($action) {
+			case "delete" :
+				$countIds = count(explode(',',$selectedRowIds));
+				
+				if (NActiveRecord::model($model)->updateAll(array('trashed'=>1), 'id IN ('.$selectedRowIds.')')) {
+//					NActiveRecord::model('NNote')->deleteAll('model_id IN ('.$selectedRowIds.') AND model = "'.$model.'"');
+					echo CJSON::encode(array('success'=>'Successfully deleted '.$countIds.' rows from the system'));
+					NLog::insertLog('Deleted '.$countIds.' from '.$model.' model. IDs: '.$selectedRowIds, $model);
+					Yii::app()->end();
+				}
+				
+				break;
+		}
+	}
 }

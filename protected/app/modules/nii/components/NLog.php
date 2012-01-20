@@ -124,8 +124,10 @@ class NLog extends NActiveRecord
 		$log = new NLog;
 		
 		if ($model) {
-			$log->model = get_class($model);
-			$log->model_id = $model->id;
+			if (is_object($model)) {
+				$log->model = get_class($model);
+				$log->model_id = $model->id;
+			}
 		}
 		$log->user_id = Yii::app()->user->record->id;
 		$log->controller = Yii::app()->controller->uniqueId;

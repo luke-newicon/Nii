@@ -57,7 +57,6 @@ class NGridView extends CGridView
 	 */
 	public $checkboxColumn = array(
 		'id'=>'selectedItems',
-		'value'=>'$data->id',
 		'class'=>'CCheckBoxColumn',
 	);
 	
@@ -87,6 +86,8 @@ class NGridView extends CGridView
 			$this->dataProvider->defaultScope = $this->scopes['default'];
 			$this->dataProvider->gridId = $this->id;
 		}
+		if ($this->enableBulkActions==true)
+			$this->selectionChanged = $this->getSelectedRowsJs();
 		// Configuring grid columns...
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);
@@ -169,8 +170,9 @@ class NGridView extends CGridView
 	public function renderBulkactions() {
 		if ($this->bulkActions) {
 			echo '<div class="pull-left line">';
-			echo 'Bulk actions: <span class="input inlineInput">' . NHtml::dropDownList('bulkaction', '-1', $this->bulkActions, array('prompt'=>'select...')) . '</span>';
-			echo ' <input type="button" value="Apply" class="btn small" id="dobulkaction">';
+			echo '<span class="input inlineInput">' . NHtml::dropDownList('selectBulkAction', '-1', $this->bulkActions, array('prompt'=>'select...')) . '</span> ';
+			echo NHtml::button('Apply', array('class'=>'btn small disabled', 'disabled'=>'disabled', 'id'=>'doBulkAction', 'onclick'=>$this->bulkActionJs()));
+			echo NHtml::hiddenField('selectedRowIds');
 			echo '</div>';
 		}
 	}
@@ -375,7 +377,40 @@ class NGridView extends CGridView
 		return false;';
 	}
 	
-	
+	public function bulkActionJs() {
+		$url = NHtml::normalizeUrl(array('/nii/grid/bulkAction'));
+		return "jQuery(function($){
+			var doaction = confirm('Are you sure you wish to carry out this bulk action?');
+			if (!doaction) {
+				return;
+			}
+			
+			var action = $('#selectBulkAction').val();
+			var selectedRowIds = $('#selectedRowIds').val();
+			var model = '".get_class($this->filter)."';
+			
+			var actionData = 'action='+action+'&selectedRowIds='+selectedRowIds+'&model='+model;
+
+			var actionUrl = '".$url."';
+			$.ajax({
+				url: actionUrl,
+				data: actionData,
+				dataType: 'json',
+				type: 'get',
+				success: function(response){ 
+					if (response.success) {
+						$.scrollTo('0%', 400);
+						$.fn.yiiGridView.update('".$this->id."');
+						nii.showMessage(response.success);
+					}
+				},
+				error: function() {
+					alert ('Oh no! There was a problem with your request...');
+				}
+			}); 
+			return false;
+		});";
+	}
 	
 	/**
 	 * Renders the data items for the grid view.
@@ -508,6 +543,24 @@ class NGridView extends CGridView
 		foreach($this->columns as $column)
 			$column->renderDataCell($row);
 		echo "</tr>\n";
+	}
+	
+	
+	/**
+	 *	Output the javascript to get the current selected rows in the grid
+	 */
+	public function getSelectedRowsJs() {
+		return "function(id){ 
+			var selectedRowIds = $.fn.yiiGridView.getSelection(id);
+			$('#selectedRowIds').val(selectedRowIds);
+			if (selectedRowIds != '') {
+				$('#doBulkAction').removeAttr('disabled');
+				$('#doBulkAction').removeClass('disabled')
+			} else {
+				$('#doBulkAction').attr('disabled','disabled');
+				$('#doBulkAction').addClass('disabled');;
+			}
+		}";
 	}
 	
 	

@@ -163,6 +163,7 @@ class HftModule extends NWebModule
 		HftEvent::install('HftEvent');
 		HftEventOrganiserType::install('HftEventOrganiserType');
 		HftEventAttendee::install('HftEventAttendee');
+		HftContactClassification::install('HftContactClassification');
 		$this->installPermissions();
 	}
 	

@@ -16,5 +16,6 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 	'scopes' => true,
 	'enableButtons'=>true,
 	'enableCustomScopes'=>true,
+	'enableBulkActions'=>true,
 )); ?>
 <div id="createContactDialog"></div>
