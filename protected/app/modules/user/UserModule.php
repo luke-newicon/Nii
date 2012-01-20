@@ -241,6 +241,12 @@ class UserModule extends NWebModule
 							'nii/export/download',
 						),
 					),
+					'grid_actions_bulk' => array('description' => 'Admin Grid Actions',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'nii/grid/bulkAction',
+						),
+					),
 				),
 			),
 		);
