@@ -12,21 +12,21 @@ class NRelationships extends NAttributeWidget {
 	 * Whether the user can add attachments
 	 * @var boolean 
 	 */
-	public $canAdd = false;
+	public $canAdd = true;
 	
 	/**
 	 * Whether the user can edit attachments
 	 * @var boolean 
 	 */
-	public $canEdit = false;
+	public $canEdit = true;
 	
-	public $canEditMine = false;
+	public $canEditMine = true;
 	
 	/*
 	 * Whether the user can delete attachments
 	 * @var boolean
 	 */
-	public $canDelete = false;
+	public $canDelete = true;
 	
 	/**
 	 * The location to ajax to
