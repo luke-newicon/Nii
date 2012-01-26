@@ -99,6 +99,8 @@ class ContactModule extends NWebModule {
 					'edit_group' => array('description' => 'Edit Contact Groups',
 						'roles' => array('administrator', 'editor'),
 						'operations' => array(
+							'contact/group/edit',
+							'contact/group/create',
 							'contact/group/addRule',
 							'contact/group/ajaxRuleField',
 							'contact/group/ajaxRuleSearchBox',
