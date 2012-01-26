@@ -1,6 +1,6 @@
 <h3><?php 
 	echo $this->t('Notes'); 
-	if (Yii::app()->user->checkAccess('editor')) {
+	if (Yii::app()->user->checkAccess('contact/admin/edit')) {
 		echo CHtml::link('','#',
 			array(
 				'class'=>'icon fam-add',
@@ -14,10 +14,10 @@
 $this->widget('nii.widgets.notes.NNotes',
 	array(
 		'model'=>$model,
-		'canAdd'=>Yii::app()->user->checkAccess('editor'),
-		'canDelete'=>Yii::app()->user->checkAccess('editor'),
-		'canEdit'=>Yii::app()->user->checkAccess('editor'),
-		'canEditMine'=>Yii::app()->user->checkAccess('editor'),
+		'canAdd'=>Yii::app()->user->checkAccess('contact/admin/edit'),
+		'canDelete'=>Yii::app()->user->checkAccess('contact/admin/edit'),
+		'canEdit'=>Yii::app()->user->checkAccess('contact/admin/edit'),
+		'canEditMine'=>Yii::app()->user->checkAccess('contact/admin/edit'),
 		'emptyText' => '<span class="noData">There are currently no associated notes for this contact</span>',
 		'addNoteButtonHtml' => '',
 	)
