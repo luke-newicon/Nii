@@ -35,6 +35,8 @@ class TaskController extends AController {
 			throw new CHttpException (404,'no model found');
 
 		$m->attributes = $this->getRESTData();
+		if ($m->estimated_time_nice)
+			$m->estimated_time = NTime::setTimeInMinutes($m->estimated_time_nice);
 
 		$m->save();
 		$this->RESTResponse($m);
@@ -49,6 +51,9 @@ class TaskController extends AController {
 		$m = $this->modelLoad($m,$id);
 		
 		$m->attributes = $this->getRESTData();
+		if ($m->estimated_time_nice)
+			$m->estimated_time = NTime::setTimeInMinutes($m->estimated_time_nice);
+		
 		$saved = $m->save();
 		$this->RESTResponse($m);
 	}
