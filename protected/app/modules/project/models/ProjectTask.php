@@ -17,7 +17,7 @@ class ProjectTask extends NActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('description, priority, created_by_id, assigned_id, estimated_time, project_id', 'safe'),
+			array('description, priority, created_by_id, assigned_id, estimated_time, estimated_time_nice, project_id', 'safe'),
 		);
 	}
 
