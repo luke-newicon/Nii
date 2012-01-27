@@ -63,11 +63,7 @@ class TimeSheetTimesheet extends NActiveRecord
     public function relations()
     {
         return array(
-            'timesheetTimerecords' => array(
-				self::HAS_MANY, 
-				'TimesheetTimerecord', 
-				'timesheet_id'
-			),
+            'records' => array(self::HAS_MANY, 'TimesheetTimerecord', 'timesheet_id'),
         );
     }
 
@@ -116,15 +112,15 @@ class TimeSheetTimesheet extends NActiveRecord
 	 * This function returns a time sheet based on the specified user
 	 * @param int $userId
 	 * @param int $date the first day 
-	 * @returns 
+	 * @returns an array objectof timesheets
 	 */
 	public function getUserTimesheet($userId,$date){
 		$attributes = array(
 			'user_id' => $userId,
 			'week_date'=> $date
 		);
-		return $this->model()->findAllByAttributes($attributes,array(
-			'with' => 'timesheetTimerecords'
+		return $this->findByAttributes($attributes,array(
+			'with' => 'records'
 		));
 	}
 } 
