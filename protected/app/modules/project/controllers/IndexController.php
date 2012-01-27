@@ -16,14 +16,6 @@
  */
 class IndexController extends AController {
 
-	public function actionCreate($project) {
-		// todo validate project name is unique
-		$p = new ProjectProject();
-		$p->name = $project;
-		$p->save();
-		$this->redirect(array('/project/index', 'id' => $p->id()));
-	}
-
 	/**
 	 *	Grid view - for now - of the open projects 
 	 */
@@ -59,6 +51,22 @@ class IndexController extends AController {
 		$this->render('view',array(
 			'model'=>$model,
 		));
+	}
+	
+	public function actionCreate() {
+		// todo validate project name is unique
+		
+		$modelName = 'ProjectProject';
+		
+		$model = new $modelName;
+		
+		if ($_POST[$modelName]) {
+			$model->attributes = $_POST[$modelName];
+			if ($model->save())
+				$this->redirect(array('/project/index', 'id' => $model->id()));
+		}
+		
+		$this->render('create', array('model'=>$model));
 	}
 	
 	public function actionTasks($id) {
