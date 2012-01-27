@@ -16,12 +16,12 @@
  */
 class TaskController extends AController {
 
-	public function actionCreate($project) {
+	public function actionCreate($task) {
 		// todo validate project name is unique
-		$p = new TaskProject();
-		$p->name = $project;
-		$p->save();
-		$this->redirect(array('/project/index', 'id' => $p->id()));
+		$t = new ProjectTask();
+		$t->name = $task;
+		$t->save();
+		$this->redirect(array('/project/task', 'id' => $t->id()));
 	}
 
 	public function actionIndex() {

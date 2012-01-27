@@ -18,15 +18,16 @@ class IndexController extends AController {
 
 	public function actionCreate($project) {
 		// todo validate project name is unique
-		$p = new TaskProject();
+		$p = new ProjectProject();
 		$p->name = $project;
 		$p->save();
 		$this->redirect(array('/project/index', 'id' => $p->id()));
 	}
 
 	public function actionIndex() {
-		
-		$this->render('index');
+		$allProjects= NActiveRecord::model('ProjectProject')->findAll();
+		$projects = CJSON::encode($allProjects);
+		$this->render('index', array('projects'=>$projects));
 	}
 
 }
