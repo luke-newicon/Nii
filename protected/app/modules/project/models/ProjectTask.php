@@ -45,7 +45,6 @@ class ProjectTask extends ProjectProject {
 	 */
 	public function relations() {
 		return array(
-			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
 			'project' => array(self::BELONGS_TO, 'ProjectProject', 'project_id'),
 		);
 	}
