@@ -98,7 +98,7 @@ $(function(){
 	})
 	
 	var CTaskList = Backbone.Collection.extend({
-		//url:<?php echo NHtml::url('/project/2/task'); ?>,
+		url:'<?php echo NHtml::url('/api/project/1/task'); ?>',
 		model:CTask
 	})
 	
@@ -128,10 +128,11 @@ $(function(){
 		createTask:function(){
 			var task = new CTask({
 				name:this.$('[name="task"]').val(),
-				estimated_time:this.$('[name="estimated_time"]').val(),
+				estimated_time_nice:this.$('[name="estimated_time"]').val(),
 				asigned_id:this.$('[name="asigned_id"]').val()
 			});
 			window.niiTask.tasks.add(task);
+			task.save();
 			// redraw the form
 			this.render();
 		},
@@ -164,6 +165,7 @@ $(function(){
 		events:{},
 		initialize:function(){
 			this.collection.bind('add',this.addOne, this);
+			this.collection.bind('reset',this.addAll, this);
 		},
 		render:function(){
 			
@@ -175,6 +177,9 @@ $(function(){
 			});
 			
 			this.el.append(taskView.render().el);
+		},
+		addAll:function(){
+			this.collection.forEach(this.addOne, this);
 		}
 	})
 	
