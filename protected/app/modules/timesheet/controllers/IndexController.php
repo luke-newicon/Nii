@@ -6,8 +6,4 @@ class IndexController extends AController {
 		$this->render('index');
 	}
 
-	public function actionGood() {
-		$this->render('good');
-	}
-
 }
