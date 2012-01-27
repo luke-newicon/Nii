@@ -40,7 +40,10 @@ function(){a.checkForEmpty()})};a.fadeOnFocus=function(){a.showing&&a.setOpacity
 			$('body').delegate(':input','mouseout.niiform',function(){$(this).closest(".field").removeClass("over");});
 			$('body').delegate(':input','focusin.niiform',function(){$(this).closest(".field").addClass("focus");});
 			$('body').delegate(':input','focusout.niiform',function(){$(this).closest(".field").removeClass("focus");});
-			$('body').delegate('.input','click.niiform',function(){$(this).find(":input").focus();});
+			$('body').delegate('.input','click.niiform',function(e){
+				var $input = $(e.target).children().eq(0);
+				if($input.is(':input')){$input.focus();}
+			});
 			$('body').delegate('label[for]','mouseover.niiform',function(){
 				// find associated form element
 				var $el = $('#'+$(this).attr('for'))
