@@ -14,9 +14,13 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 <style>
 	.task-item{background: -moz-linear-gradient(center top , #EEEEEE, #DDDDDD) repeat scroll 0 0 transparent;border: 1px solid #CCCCCC;border-radius: 3px 3px 3px 3px;margin-bottom: 3px;padding: 6px;text-shadow: 0 1px 0 #FFFFFF;}
 </style>
-<div id="task-form" class="field"></div>
 
-<div id="task-list"></div>
+<div id="tasks" style="width:600px">
+	<div id="task-form" class="field"></div>
+
+	<div id="task-list"></div>
+</div>
+
 
 
 
