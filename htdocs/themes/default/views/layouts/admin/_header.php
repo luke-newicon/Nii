@@ -22,7 +22,7 @@
 	
 <?php
 Yii::app()->clientScript->registerScript('data-confirm',
-	'$(\'[data-confirm]\').click(function(){
+	'$(\'[data-confirm]\').live(\'click\',function(){
 		var $link = $(this);
 		if(confirm($link.attr(\'data-confirm\'))){
 			return true;

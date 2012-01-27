@@ -72,7 +72,104 @@ var nii = {
 			}
 		}
 		return passwd.value;
+	},
+	
+	getTimeInMintes: function(time, length) {
+		
+		if (!length)
+			length='long';
+		
+		var granularity;
+		
+		if (time >= 450) {
+			time = time/450;
+			granularity = (length=='long') ? ' day' + ((time>1)?'s':'') : 'd';
+		} else if (time >= 60) {
+			time = time/60;
+			granularity = (length=='long') ? ' hour' + ((time>1)?'s':'') : 'h';
+		}	else {
+			granularity = (length=='long') ? ' min' + ((time>1)?'s':'') : 'm';
+		}	
+		var decimals = (time.indexOf(".") != -1) ? 1:0;
+		return nii.number_format(time, decimals) + granularity;
+	},
+	
+	convertTimeToMinutes: function(string, defaultType) {
+		if (!defaultType)
+			defaultType = 'h';
+		if (nii.isNumber(string)) {
+			number = string;
+			alpha = defaultType;
+		} else {				
+			// split string into number + alpha
+			pattern = '/(\d+)(.+)/';
+			
+			splitResults = string.match(pattern);
+			number = splitResults[1];
+			alpha = splitResults[2].replace(' ', '');
+		}
+		
+		var time;
+		
+		switch(alpha) {
+			
+			case "d":
+			case "day":
+			case "days":
+				time = number * 450;
+				break;
+			
+			case "h":
+			case "hour":
+			case "hours":
+				time = number * 60;
+				break;
+			
+			case "m":
+			case "min":
+			case "mins":
+			case "minute":
+			case "minutes":
+				time = number;
+				break;
+			
+		}
+
+		return time;		
+	},
+	
+	number_format: function (number, decimals, dec_point, thousands_sep) {
+
+			number = (number + '').replace(/[^0-9+-Ee.]/g, '');
+			var n = !isFinite(+number) ? 0 : +number,
+					prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+					sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+					dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+					s = '',
+					toFixedFix = function (n, prec) {
+							var k = Math.pow(10, prec);
+							return '' + Math.round(n * k) / k;
+					};
+			// Fix for IE parseFloat(0.55).toFixed(0) = 0;
+			s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+			if (s[0].length > 3) {
+					s[0] = s[0].replace(/B(?=(?:d{3})+(?!d))/g, sep);
+			}
+			if ((s[1] || '').length < prec) {
+					s[1] = s[1] || '';
+					s[1] += new Array(prec - s[1].length + 1).join('0');
+			}
+			return s.join(dec);
+	},
+	
+	isNumber: function(val) {
+		var parm = '0123456789';
+		for (i=0; i<parm.length; i++) {
+			if (val.indexOf(parm.charAt(i),0) == -1) return false;
+		}
+		return true;
 	}
+ 
 	
 }
 
