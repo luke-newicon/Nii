@@ -8,7 +8,7 @@
 class HftContact extends Contact
 {
 	
-	public $category;
+	public $category, $checkbox;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -28,6 +28,7 @@ class HftContact extends Contact
 		return array_merge($labels, 
 			array(
 				'source_id' => 'Source',
+				'classification_id' => 'Contact Type',
 				'id' => 'Account Number',
 				'receive_letters' => 'Letter',
 				'receive_emails' => 'Email',
@@ -41,6 +42,7 @@ class HftContact extends Contact
 		$relations = Contact::model()->relations();
 		return array_merge($relations, array(
 			'source'=>array(self::BELONGS_TO, 'HftContactSource', 'source_id'),
+			'classification'=>array(self::BELONGS_TO, 'HftContactClassification', 'classification_id'),
 			'donation'=>array(self::HAS_MANY, 'HftDonation', 'contact_id'),
 		));
 	}
@@ -48,8 +50,8 @@ class HftContact extends Contact
 	public function rules() {
 		$rules = Contact::model()->rules();
 		return array_merge($rules, array(
-			array('account_number, source_id, newsletter, receive_letters, receive_emails, status', 'safe'),
-			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category', 'safe','on'=>'search'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, classification_id', 'safe'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category, classification_id', 'safe','on'=>'search'),
 		));
 	}
 	
@@ -67,12 +69,18 @@ class HftContact extends Contact
 		$this->getSearchCriteria($criteria);
 		
 		$criteria->compare('status', $this->status);
+		$criteria->compare('source_id', $this->source_id);
+		$criteria->compare('classification_id', $this->classification_id);
 		$criteria->compare('receive_letters', $this->receive_letters);
 		$criteria->compare('receive_emails', $this->receive_emails);
 
 		if ($this->category) {
-			$contactIds = $this->tag->searchTagIds(array($this->category));
-			$criteria->addInCondition("t.id", $contactIds);
+			if ($this->category=='-')
+				$criteria->addCondition ('(SELECT count(l.id) FROM nii_tag_link l WHERE l.model_id = t.id AND l.model = "HftContact")=0');
+			else {
+				$contactIds = $this->tag->searchTagIds(array($this->category));
+				$criteria->addInCondition("t.id", $contactIds);
+			}
 		}
 		
 		$criteria->with = array('donation');
@@ -115,6 +123,12 @@ class HftContact extends Contact
 					'type' => 'raw',
 					'value' => '$data->sourceName',
 					'filter'=> HftContactSource::getSourcesArray(),
+				),
+				array(
+					'name' => 'classification_id',
+					'type' => 'raw',
+					'value' => '$data->classificationName',
+					'filter'=> HftContactClassification::getClassificationsForGridFilter(),
 				),
 				array(
 					'name' => 'category',
@@ -187,6 +201,7 @@ class HftContact extends Contact
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'source_id' => 'int(11)',
+				'classification_id' => 'int(11)',
 				'receive_letters' => 'int(1) unsigned NOT NULL DEFAULT 1',
 				'receive_emails' => 'int(1) unsigned NOT NULL DEFAULT 1',
 				'account_number' => 'varchar(30)',
@@ -206,6 +221,12 @@ class HftContact extends Contact
 			return $this->source->name;
 	}
 	
+	public function getClassificationName() {
+		if ($this->classification)
+			return $this->classification->name;
+		else
+			return '<span class="noData">None</span>';
+	}	
 	
 	public function getDonations() {
 		$donations = HftDonation::model()->findAllByAttributes(array('contact_id'=>$this->id));

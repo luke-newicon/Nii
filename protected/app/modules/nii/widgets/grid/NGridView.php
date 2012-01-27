@@ -9,8 +9,12 @@ Yii::import('nii-grid.NEavColumn');
 class NGridView extends CGridView 
 {
 
-	
-	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n<div class=\"grid-bottom-summary\">{pager}</div>";
+	/**
+	 *	A string defining the layout of the grid on the page and which blocks to render. 
+	 * Blocks in {} require a corresponding function to call e.g. {scopes} has renderScopes()
+	 * @var string 
+	 */
+	public $template = "{scopes}\n{buttons}<div class='grid-top-summary'>{summary} {pager}</div>{items}\n<div class=\"grid-bottom-summary\">{bulkactions}{pager}</div>";
 	/**
 	 * ??
 	 * @var array 
@@ -19,17 +23,42 @@ class NGridView extends CGridView
 	public $enableCustomScopes;
 	public $defaultColumnClass = 'NDataColumn';
 	public $defaultScopeListClass = 'NScopeList';
-	/**
-	 * allow by default multiple rows to be selected
-	 * @var int 
-	 */
-	public $selectableRows = 2;
+	
+	public $itemsExtraCssClass;
+
 	public $enableButtons = false;
 	public $buttons = array('export', 'print', 'update');
 	public $buttonModelId = null;
 	public $defaultExportButton = 'exportGrid';
 	public $defaultPrintButton = 'printGrid';
 	public $defaultUpdateButton = 'updateGridColumns';
+	
+	/**
+	 * Allow multiple rows to be selected by default
+	 * @var int 
+	 */
+	public $selectableRows = 2;
+	
+	/**
+	 *	Enable the displaying of the bulk actions block in template
+	 * @var boolean
+	 */
+	public $enableBulkActions = false;
+	
+	/**
+	 *	Actions to display in the bulk actions drop-down
+	 * @var array 
+	 */
+	public $bulkActions = array('delete'=>'Delete');
+	
+	/**
+	 *	Default checkbox column for grids where bulk actions are enabled
+	 * @var array 
+	 */
+	public $checkboxColumn = array(
+		'id'=>'selectedItems',
+		'class'=>'CCheckBoxColumn',
+	);
 	
 	/**
 	 * A string of jquery selectors to update separated by commas.
@@ -57,6 +86,8 @@ class NGridView extends CGridView
 			$this->dataProvider->defaultScope = $this->scopes['default'];
 			$this->dataProvider->gridId = $this->id;
 		}
+		if ($this->enableBulkActions==true)
+			$this->selectionChanged = $this->getSelectedRowsJs();
 		// Configuring grid columns...
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);
@@ -106,9 +137,6 @@ class NGridView extends CGridView
 		foreach ($this->columns as $column)
 			$column->init();
 	}
-	
-	
-	
 
 	protected function createDataColumn($text) {
 		if (!preg_match('/^([\w\.]+)(:(\w*))?(:(.*))?$/', $text, $matches))
@@ -135,12 +163,17 @@ class NGridView extends CGridView
 			));
 		}
 	}
-
-	public function renderBulk() {
-		if ($this->bulkActions) {
-			echo '<div class="alignleft actions">';
-			echo CHtml::dropDownList('action', '-1', $this->bulkActions);
-			echo ' <input type="submit" value="Apply" class="button-secondary action" id="doaction"></div>';
+	
+	/**
+	 *	Renders the bulk actions block. 
+	 */
+	public function renderBulkactions() {
+		if ($this->enableBulkActions==true && $this->bulkActions) {
+			echo '<div class="pull-left line">';
+			echo '<span class="input inlineInput">' . NHtml::dropDownList('selectBulkAction', '-1', $this->bulkActions, array('prompt'=>'select...')) . '</span> ';
+			echo NHtml::button('Apply', array('class'=>'btn small disabled', 'disabled'=>'disabled', 'id'=>'doBulkAction', 'onclick'=>$this->bulkActionJs()));
+			echo NHtml::hiddenField('selectedRowIds');
+			echo '</div>';
 		}
 	}
 	
@@ -252,18 +285,22 @@ class NGridView extends CGridView
 		$columns = $model->columns();
 		
 		foreach($columns as $key=>$col) {
-			$columns[$key]['visible'] = (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null);
+			$columns[$key]['visible'] = (isset($col['name']) ? (array_key_exists($col['name'], $visibleColumns) ? $visibleColumns[$col['name']] : null) : null);
 		}
 		
 		// reorder the columns to follow the same order returned by visible columns
 		$columnOrder = array_flip(array_keys($visibleColumns));
 		$ordered = array();
+		
+		if ($this->enableBulkActions==true)
+			$ordered[0] = $this->checkboxColumn;
+		
 		foreach($columns as $key=>$col){
 			$orderPos = $columnOrder[$col['name']];
-			$ordered[$orderPos] = $col;
+			$ordered[$orderPos+1] = $col;
 		}
 		ksort($ordered);
-		
+		FB::log($ordered);
 		
 		return $ordered;
 	}	
@@ -340,7 +377,40 @@ class NGridView extends CGridView
 		return false;';
 	}
 	
-	
+	public function bulkActionJs() {
+		$url = NHtml::normalizeUrl(array('/nii/grid/bulkAction'));
+		return "jQuery(function($){
+			var doaction = confirm('Are you sure you wish to carry out this bulk action?');
+			if (!doaction) {
+				return;
+			}
+			
+			var action = $('#selectBulkAction').val();
+			var selectedRowIds = $('#selectedRowIds').val();
+			var model = '".get_class($this->filter)."';
+			
+			var actionData = 'action='+action+'&selectedRowIds='+selectedRowIds+'&model='+model;
+
+			var actionUrl = '".$url."';
+			$.ajax({
+				url: actionUrl,
+				data: actionData,
+				dataType: 'json',
+				type: 'get',
+				success: function(response){ 
+					if (response.success) {
+						$.scrollTo('0%', 400);
+						$.fn.yiiGridView.update('".$this->id."');
+						nii.showMessage(response.success);
+					}
+				},
+				error: function() {
+					alert ('Oh no! There was a problem with your request...');
+				}
+			}); 
+			return false;
+		});";
+	}
 	
 	/**
 	 * Renders the data items for the grid view.
@@ -349,7 +419,8 @@ class NGridView extends CGridView
 	{
 		if($this->dataProvider->getItemCount()>0 || $this->showTableOnEmpty)
 		{
-			echo "<table class=\"{$this->itemsCssClass}\">\n";
+			$itemsCssClass = $this->itemsCssClass . (isset($this->itemsExtraCssClass) ? ' ' . $this->itemsExtraCssClass : null);
+			echo "<table class=\"{$itemsCssClass}\">\n";
 			$this->renderTableHeader();
 			ob_start();
 			$this->renderTableBody();
@@ -472,6 +543,24 @@ class NGridView extends CGridView
 		foreach($this->columns as $column)
 			$column->renderDataCell($row);
 		echo "</tr>\n";
+	}
+	
+	
+	/**
+	 *	Output the javascript to get the current selected rows in the grid
+	 */
+	public function getSelectedRowsJs() {
+		return "function(id){ 
+			var selectedRowIds = $.fn.yiiGridView.getSelection(id);
+			$('#selectedRowIds').val(selectedRowIds);
+			if (selectedRowIds != '') {
+				$('#doBulkAction').removeAttr('disabled');
+				$('#doBulkAction').removeClass('disabled')
+			} else {
+				$('#doBulkAction').attr('disabled','disabled');
+				$('#doBulkAction').addClass('disabled');;
+			}
+		}";
 	}
 	
 	

@@ -114,7 +114,7 @@ class NTaggable extends CActiveRecordBehavior
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
-			array('order'=>'name')
+			array('order'=>'name','group'=>'name')
 		);
 		
 		$tags = array(); foreach ($tagRows as $t) $tags[$t->id] = $t->tag->name;
@@ -122,6 +122,24 @@ class NTaggable extends CActiveRecordBehavior
 		return $tags;
 	}
 	
+
+	/**
+	 * Get all known tags in the system for a particular model type.
+	 * Returns all tags applied to every model of the current type (className)
+	 * 
+	 * @return array of tag id=>tag
+	 */
+	public function getModelTagsDropdown() {
+		$tagIds = array();
+		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
+			'model'=>get_class($this->getOwner())), 
+			array('order'=>'name','group'=>'name')
+		);
+		
+		$tags = array(); foreach ($tagRows as $t) $tags[$t->tag->name] = $t->tag->name;
+		
+		return $tags;
+	}
 	
 	/**
 	 * formats the array passed appropriately for use with the NTokenInput widget

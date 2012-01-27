@@ -17,8 +17,8 @@ Yii::import('nii.widgets.tokeninput.NTokenInput');
  */
 class NTagInput extends NTokenInput
 {
-
-
+	
+	public $showSelectDropdown=false;
 	
 	/**
 	 * run the wdget overides the parent implementation to modify the widget for use with NTaggable plugin
@@ -35,9 +35,12 @@ class NTagInput extends NTokenInput
 		$this->options['hintText'] = isset($this->options['hintText']) ? $this->options['hintText'] : '';
 		$this->options['addNewTokens'] = isset($this->options['addNewTokens']) ? $this->options['addNewTokens'] : true;
 		$this->options['animateDropdown'] = isset($this->options['animateDropdown']) ? $this->options['animateDropdown'] : false;
+		$this->options['showSelectDropdown'] = isset($this->options['showSelectDropdown']) ? $this->options['showSelectDropdown'] : $this->showSelectDropdown;
 				
 		if(!$this->hasModel())
 			throw new CHttpException ('You must supply the NTagInput widget with a valid model that has the NTaggable behavior applied');
+		
+		
 		
 		// pre populate the input (typically calls $model->tags)
 		$value = CHtml::resolveValue($this->model, $this->attribute);
@@ -51,6 +54,18 @@ class NTagInput extends NTokenInput
 			$this->data = $this->model->getModelTags();
 		if(is_array($this->data)){
 			$this->data = $this->model->tagWidgetFormat($this->data);
+		}
+		
+		if ($this->options['showSelectDropdown']==true) {
+			echo '<div class="input w400 mbs">';
+				// @todo Add onchange function to add token to list
+				echo NHtml::dropDownList('tag_dropdown', '', $this->model->getModelTagsDropdown(), 
+					array(
+						'onchange'=>"jQuery('#{$this->htmlOptions['id']}').tokenInput('add', {id: this.value, name: this.value}); this.value=''; return false;",
+						'prompt'=>'select or search below to add a new tag...',
+					)
+				);
+			echo '</div>';
 		}
 		
 		echo '<div class="'.$this->inputClass.'">'.CHtml::textField($this->htmlOptions['name'],'',$this->htmlOptions).'</div>';

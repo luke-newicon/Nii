@@ -14,7 +14,9 @@ class BootGridView extends NGridView
 	 * @property string the CSS class name for the container table.
 	 * Defaults to 'zebra-striped'.
 	 */
-	public $itemsCssClass = 'condensed-table bordered-table zebra-striped';
+	public $itemsCssClass = 'grid-items-table';
+	
+	public $itemsExtraCssClass = 'condensed-table bordered-table zebra-striped';
 
 	/**
 	 * @property string the CSS class name for the pager container.

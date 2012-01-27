@@ -88,7 +88,7 @@ class NNotes extends NAttributeWidget
 	 * Whether the user can add notes
 	 * @var boolean 
 	 */
-	public $canAdd = false;
+	public $canAdd = true;
 	
 	/**
 	 * The location to ajax to
@@ -100,15 +100,15 @@ class NNotes extends NAttributeWidget
 	 * Whether the user can edit notes
 	 * @var boolean 
 	 */
-	public $canEdit = false;
+	public $canEdit = true;
 	
-	public $canEditMine = false;
+	public $canEditMine = true;
 	
 	/*
 	 * Whether the user can delete notes
 	 * @var boolean
 	 */
-	public $canDelete = false;
+	public $canDelete = true;
 	
 	public $userNameFunction = 'getUsername()';
 	

@@ -66,7 +66,7 @@ class EmailCampaign extends NActiveRecord {
 			'content' => 'Email Content',
 			'status' => 'Status',
 			'numberRecipients' => '# Recipients',
-			'editLink' => '',
+			'editLink' => 'Actions',
 		);
 	}
 

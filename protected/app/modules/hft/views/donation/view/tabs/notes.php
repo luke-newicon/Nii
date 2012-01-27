@@ -1,6 +1,6 @@
 <h3><?php 
 	echo $this->t('Notes'); 
-	if (Yii::app()->user->checkAccess('editor')) {
+	if (Yii::app()->user->checkAccess('hft/donation/edit')) {
 		echo CHtml::link('','#',
 			array(
 				'class'=>'icon fam-add',
@@ -14,10 +14,10 @@
 $this->widget('nii.widgets.notes.NNotes',
 	array(
 		'model'=>$model,
-		'canAdd'=>Yii::app()->user->checkAccess('editor'),
-		'canDelete'=>Yii::app()->user->checkAccess('editor'),
-		'canEdit'=>Yii::app()->user->checkAccess('editor'),
-		'canEditMine'=>Yii::app()->user->checkAccess('editor'),
+		'canAdd'=>Yii::app()->user->checkAccess('hft/donation/edit'),
+		'canDelete'=>Yii::app()->user->checkAccess('hft/donation/edit'),
+		'canEdit'=>Yii::app()->user->checkAccess('hft/donation/edit'),
+		'canEditMine'=>Yii::app()->user->checkAccess('hft/donation/edit'),
 		'emptyText' => '<span class="noData">There are currently no associated notes for this donation</span>',
 		'addNoteButtonHtml' => '',
 	)
