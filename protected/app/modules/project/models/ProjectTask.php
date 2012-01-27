@@ -17,7 +17,7 @@ class ProjectTask extends NActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('description, priority, importance, created_by_id, assigned_id, estimated_time', 'safe'),
+			array('description, priority, created_by_id, assigned_id, estimated_time, project_id', 'safe'),
 		);
 	}
 
@@ -30,7 +30,6 @@ class ProjectTask extends NActiveRecord {
 			'name' => 'Task Title',
 			'description' => 'Description',
 			'priority' => 'Priority',
-			'importance' => 'Importance',
 			'estimated_time' => 'Estimated Time',
 			'assigned_id' => 'Owner',
 			'project_id' => 'Project',
@@ -44,6 +43,7 @@ class ProjectTask extends NActiveRecord {
 	public function relations() {
 		return array(
 			'project' => array(self::BELONGS_TO, 'ProjectProject', 'project_id'),
+			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
 		);
 	}
 
@@ -61,7 +61,6 @@ class ProjectTask extends NActiveRecord {
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('priority', $this->priority, true);
-		$criteria->compare('importance', $this->importance, true);
 
 		return new NActiveDataProvider('ProjectTask', array(
 			'criteria' => $criteria,
@@ -71,23 +70,18 @@ class ProjectTask extends NActiveRecord {
 	public function editLink($text=null){
 		if(!$text)
 			$text = $this->name;
-		return CHtml::link($text, array('/task/admin/editTask','id'=>$this->id()));
+		return CHtml::link($text, array('/project/task/edit','id'=>$this->id()));
 	}
 	
 	public function viewLink($text=null){
 		if(!$text)
 			$text = $this->name;
-		return CHtml::link($text, array('/task/admin/viewTask','id'=>$this->id()));
+		return CHtml::link($text, array('/project/task/view','id'=>$this->id()));
 	}
 	
 	public function viewProject(){
 		if($this->project)
 			return $this->project->viewLink();
-	}
-	
-	public function viewCustomer(){
-		if($this->customer)
-			return $this->customer->viewLink();
 	}
 
 	public static function install($className=__CLASS__) {
@@ -107,6 +101,10 @@ class ProjectTask extends NActiveRecord {
 				'customer_id' => 'int',
 				'project_id' => 'int',
 				'status' => "enum('new','current','complete')",
+				'tree_left' => 'int',
+				'tree_right' => 'int',
+				'tree_level' => 'int',
+				'tree_parent' => 'int',
 			),
 		);
 	}
@@ -122,13 +120,74 @@ class ProjectTask extends NActiveRecord {
 	}
 
 	public function projectList(){
-		return CHtml::listData(TaskProject::model()->findAll(), 'id', 'name');
+		return CHtml::listData(ProjectProject::model()->findAll(), 'id', 'name');
 	}
 	
 	public function customerList(){
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
 	}
 	
+	/**
+	 *	Returns the estimated time from the database in a readable format
+	 * @param int $time
+	 * @param string $length - 'long' or 'short'
+	 * @return string 
+	 */
+	public static function getEstimatedTime($time, $length='long') {
+		
+		if ($time >= 450) :
+			$time = $time/450;
+			$granularity = $length=='long' ? (' day' . ($time>1?'s':'')) : 'd';
+		elseif ($time >= 60) :
+			$time = $time/60;
+			$granularity = $length=='long' ? (' hour' . ($time>1?'s':'')) : 'h';
+		else :
+			$granularity = $length=='long' ? (' min' . ($time>1?'s':'')) : 'm';
+		endif;
+			
+		return number_format($time,(strstr($time, '.')?1:0)) . $granularity;
+	}
+
+	/**
+	 *	Takes a string and returns the estimated time in integer of minutes format
+	 * Also checks to see if the string is actually just numerical
+	 * @param string $string - '1d', '2 hours' etc
+	 * @return int 
+	 */
+	public static function setEstimatedTime($string, $default='h') {
+		
+		if (ctype_digit($string)) {
+			$number = $string;
+			$alpha = $default;
+		} else {				
+			// split string into number + alpha
+			$splitResults=array();
+			preg_match("/(\d+)(.+)$/",$string,$splitResults);
+			$number = $splitResults[1];
+			$alpha = str_replace(' ', '', $splitResults[2]);
+		}
+		
+		switch($alpha) {
+			
+			case "d":
+			case "day":
+			case "days":
+				$time = $number * 450;
+				break;
+			
+			case "h":
+			case "hour":
+			case "hours":
+				$time = $number * 60;
+				break;
+			
+			default :
+				$time = $number;
+			
+		}
+
+		return $time;		
+	}
 	
 	public function behaviors() {
 		return array(

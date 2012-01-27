@@ -1,7 +1,10 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+$this->widget('nii.widgets.NTabs', 
+	array(
+		'id' => 'TimesheetTabs',
+		'tabs' => $tabs,
+		'htmlOptions' => array(
+			'class' => 'vertical',
+		)
+	)
+);

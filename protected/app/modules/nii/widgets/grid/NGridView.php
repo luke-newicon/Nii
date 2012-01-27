@@ -77,7 +77,7 @@ class NGridView extends CGridView
 	}
 	
 	public function init() {
-		
+
 		if ($this->dataProvider instanceof NActiveDataProvider) {
 			$model = $this->dataProvider->model;
 
@@ -90,13 +90,13 @@ class NGridView extends CGridView
 			}
 			if ($this->enableBulkActions==true)
 				$this->selectionChanged = $this->getSelectedRowsJs();
+
 			// Configuring grid columns...
 			if ($this->columns==null)
 				$this->columns = $this->gridColumns($this->filter);
 		}
-		
+
 		Yii::import('nii.widgets.grid.NDateColumn');
-		
 		
 		parent::init();
 		
