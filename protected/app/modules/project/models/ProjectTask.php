@@ -2,6 +2,7 @@
 
 class ProjectTask extends NActiveRecord {
 
+	public $estimated_time_nice;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
@@ -17,7 +18,7 @@ class ProjectTask extends NActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('description, priority, created_by_id, assigned_id, estimated_time, project_id', 'safe'),
+			array('description, priority, created_by_id, assigned_id, estimated_time, estimated_time_nice, project_id', 'safe'),
 		);
 	}
 
@@ -136,7 +137,8 @@ class ProjectTask extends NActiveRecord {
 	}
 	
 	public function getEstimatedTimeNice() {
-		return NTime::getTimeInMinutes($this->estimated_time);
+		if ($this->estimated_time)
+			return NTime::getTimeInMinutes($this->estimated_time);
 	}
 	
 	public function getAttributes($names = true) {
