@@ -77,17 +77,20 @@ class NGridView extends CGridView
 	}
 	
 	public function init() {
-		$model = $this->dataProvider->model;
-		
-		if (isset($model->gridScopes['default'])) {
-			$this->dataProvider->defaultScope = $model->gridScopes['default'];		
-			$this->dataProvider->gridId = $this->id;
-		} elseif (isset($this->scopes['default'])){
-			$this->dataProvider->defaultScope = $this->scopes['default'];
-			$this->dataProvider->gridId = $this->id;
+		if(isset($this->dataProvider->model)) {
+			$model = $this->dataProvider->model;
+
+			if (isset($model->gridScopes['default'])) {
+				$this->dataProvider->defaultScope = $model->gridScopes['default'];		
+				$this->dataProvider->gridId = $this->id;
+			} elseif (isset($this->scopes['default'])){
+				$this->dataProvider->defaultScope = $this->scopes['default'];
+				$this->dataProvider->gridId = $this->id;
+			}
+			if ($this->enableBulkActions==true)
+				$this->selectionChanged = $this->getSelectedRowsJs();
 		}
-		if ($this->enableBulkActions==true)
-			$this->selectionChanged = $this->getSelectedRowsJs();
+		
 		// Configuring grid columns...
 		if ($this->columns==null)
 			$this->columns = $this->gridColumns($this->filter);
