@@ -81,10 +81,13 @@ class User extends NActiveRecord {
 	 * @return array relational rules.
 	 */
 	public function relations() {
-		return array(
-			'role' => array(self::HAS_ONE, 'AuthAssignment', 'userid'),
-			//'contact' => array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id'),
-		);
+		$relations['role'] = array(self::HAS_ONE, 'AuthAssignment', 'userid');
+		
+		// Only add the contact relation if the contact module is enabled!
+		if (Yii::app()->getModule('contact'))
+			$relations['contact'] = array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id');
+		
+		return $relations;
 	}
 
 	/**

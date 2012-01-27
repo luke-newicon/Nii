@@ -43,6 +43,7 @@ class ProjectModule extends NWebModule
 //			'project' => 'project.controllers.ProjectController',
 //			'task' => 'project.controllers.TaskController',
 //		));
+		Yii::app()->sprite->addImageFolderPath(Yii::getPathOfAlias('project.images'));
 		
 	}
 	

@@ -127,6 +127,34 @@ class ProjectTask extends NActiveRecord {
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
 	}
 	
+	public function getAssignedTo() {
+		
+	}
+	
+	public function getCreatedBy() {
+		
+	}
+	
+	public function getEstimatedTimeNice() {
+		return NTime::getTimeInMinutes($this->estimated_time);
+	}
+	
+	public function getAttributes($names = true) {
+		$parent = parent::getAttributes($names);
+		return array_merge($parent, array('estimated_time_nice'=>$this->estimatedTimeNice));
+	}
+	
+	public function getAdditionalUsers($displayIcon=true) {
+		$users = NActiveRecord::model('ProjectTaskUser')->findByAttributes(array('task_id'=>$this->id));
+		$u = array();
+
+		if ($users) {
+			foreach($users as $user)
+				$u[$id] = $user->getUserLink($displayIcon);
+		}
+		
+		return $u;
+	}
 	
 	public function behaviors() {
 		return array(

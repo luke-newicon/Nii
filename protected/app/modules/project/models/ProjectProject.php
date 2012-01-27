@@ -2,6 +2,8 @@
 
 class ProjectProject extends NActiveRecord {
 
+	public $countTasks;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
@@ -31,6 +33,7 @@ class ProjectProject extends NActiveRecord {
 			'name' => 'Name',
 			'description' => 'Description',
 			'customer_id' => 'Customer',
+			'countTasks' => '# Tasks',
 		);
 	}
 
@@ -60,11 +63,85 @@ class ProjectProject extends NActiveRecord {
 		));
 	}
 	
+	public function columns() {
+		
+		return array(
+			array(
+				'name' => 'id',
+				'htmlOptions'=>array('width'=>'30px'),
+			),
+			array(
+				'name' => 'name',
+				'type' => 'raw',
+				'value' => '$data->viewLink()',
+			),
+			array(
+				'name' => 'customer_id',
+				'type' => 'raw',
+				'value' => '$data->customerLink',
+				'exportValue' => '$data->customerName',
+			),
+			array(
+				'name' => 'countTasks',
+				'type' => 'raw',
+				'value' => '$data->countProjectTasks()',
+				'htmlOptions'=>array('width'=>'30px'),
+			),
+			array(
+				'name' => 'editLink',
+				'type' => 'raw',
+				'value' => '$data->editLink',
+				'filter' => false,
+				'sortable' => false,
+				'htmlOptions'=>array('width'=>'30px'),
+				'export'=>false,
+			),
+		);
+	}
+	
 	public function viewLink($text=null){
 		if(!$text)
 			$text = $this->name;
 		return CHtml::link($text, array('/project/index/view', 'id'=>$this->id()));
 	}
+	
+		
+	public function getCustomerName(){
+		if($this->customer)
+			return $this->customer->name;
+		else
+			return '<span class="noData">No customer assigned</span>';
+	}
+	
+	public function getCustomerLink(){
+		if($this->customer)
+			return NHtml::link($this->customer->name, array('/contact/admin/view', 'id'=>$this->customer->id()));
+		else
+			return '<span class="noData">No customer assigned</a>';
+	}
+	
+	public function getEditLink() {
+		if ($this->id)
+			return NHtml::link('Edit', array('/project/index/edit', 'id'=>$this->id));
+	}
+	
+	public function countProjectTasks($status=array('new','current')) {
+		if (is_array($status))
+			$condition = '`status` IN ("'.implode ('","', $status).'")';
+		else
+			$condition = '`status` = "'.$status.'"';
+		return NActiveRecord::model('ProjectTask')->countByAttributes(array('project_id'=>$this->id), $condition);
+	}
+	
+	public function getProjectTasks($status=array('new','current')) {
+		if (is_array($status))
+			$condition = '`status` IN ("'.implode ('","', $status).'")';
+		else
+			$condition = '`status` = "'.$status.'"';
+		$tasks = NActiveRecord::model('ProjectTask')->findByAttributes(array('project_id'=>$this->id), $condition);
+		return NHtml::listData($tasks, 'id', 'name');
+	}
+	
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
