@@ -19,7 +19,7 @@
  * The followings are the available model relations:
  * @property TimesheetTimesheet $timesheet
  */
-class TimeRecord extends NActiveRecord
+class TimesheetTimerecord extends NActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
@@ -35,7 +35,7 @@ class TimeRecord extends NActiveRecord
      */
     public function tableName()
     {
-        return 'timesheet_timerecord';
+        return '{{timesheet_timerecord}}';
     }
 
     /**
@@ -119,6 +119,10 @@ class TimeRecord extends NActiveRecord
 				'project_id' => 'int(11)'
 			),
 			'keys' => array());
+	}
+	
+	public static function install($className=__CLASS__){
+		parent::install($className);
 	}
 
     /**
