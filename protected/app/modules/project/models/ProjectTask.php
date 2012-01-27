@@ -31,10 +31,8 @@ class ProjectTask extends ProjectProject {
 			'description' => 'Description',
 			'priority' => 'Priority',
 			'importance' => 'Importance',
-			'finish_date' => 'Finish Date',
-			'owner' => 'Owner',
-			'project_name' => 'Project',
-			'customer_name' => 'Customer',
+			'estimated_time' => 'Estimated Time',
+			'assigned_id' => 'Owner',
 			'project_id' => 'Project',
 			'customer_id' => 'Customer',
 		);

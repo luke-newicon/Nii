@@ -17,8 +17,8 @@ class ProjectProject extends NActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('code, description, customer_id', 'safe'),
-			array('id, code, name, description, customer_id', 'safe', 'on' => 'search'),
+			array('code, description, customer_id, assigned_by_id', 'safe'),
+			array('id, name, description, customer_id', 'safe', 'on' => 'search'),
 		);
 	}
 
@@ -28,7 +28,6 @@ class ProjectProject extends NActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'id' => 'ID',
-			'code' => 'Code',
 			'name' => 'Name',
 			'description' => 'Description',
 			'customer_id' => 'Customer',
@@ -50,7 +49,6 @@ class ProjectProject extends NActiveRecord {
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
-		$criteria->compare('code', $this->code, true);
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('customer_id', $this->customer_id, true);
@@ -63,7 +61,7 @@ class ProjectProject extends NActiveRecord {
 	public function viewLink($text=null){
 		if(!$text)
 			$text = $this->name;
-		return CHtml::link($text, array('/task/project/index', 'id'=>$this->id()));
+		return CHtml::link($text, array('/project/index', 'id'=>$this->id()));
 	}
 
 	public static function install($className=__CLASS__) {
