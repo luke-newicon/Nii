@@ -526,8 +526,13 @@ class NTime {
 				$time = $number * 60;
 				break;
 			
-			default :
+			case "m":
+			case "min":
+			case "mins":
+			case "minute":
+			case "minutes":
 				$time = $number;
+				break;
 			
 		}
 
