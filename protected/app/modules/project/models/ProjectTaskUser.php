@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTask extends NActiveRecord {
+class ProjectTaskUser extends NActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -11,13 +11,13 @@ class ProjectTask extends NActiveRecord {
 	}
 
 	public function tableName() {
-		return '{{project_task}}';
+		return '{{project_task_user}}';
 	}
 
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('description, priority, created_by_id, assigned_id, estimated_time, project_id', 'safe'),
+			array('description, priority, importance, created_by_id, assigned_id, estimated_time', 'safe'),
 		);
 	}
 
@@ -30,6 +30,7 @@ class ProjectTask extends NActiveRecord {
 			'name' => 'Task Title',
 			'description' => 'Description',
 			'priority' => 'Priority',
+			'importance' => 'Importance',
 			'estimated_time' => 'Estimated Time',
 			'assigned_id' => 'Owner',
 			'project_id' => 'Project',
@@ -43,7 +44,6 @@ class ProjectTask extends NActiveRecord {
 	public function relations() {
 		return array(
 			'project' => array(self::BELONGS_TO, 'ProjectProject', 'project_id'),
-			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
 		);
 	}
 
@@ -61,6 +61,7 @@ class ProjectTask extends NActiveRecord {
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('priority', $this->priority, true);
+		$criteria->compare('importance', $this->importance, true);
 
 		return new NActiveDataProvider('ProjectTask', array(
 			'criteria' => $criteria,
@@ -70,19 +71,9 @@ class ProjectTask extends NActiveRecord {
 	public function editLink($text=null){
 		if(!$text)
 			$text = $this->name;
-		return CHtml::link($text, array('/project/task/edit','id'=>$this->id()));
+		return CHtml::link($text, array('/task/admin/editTask','id'=>$this->id()));
 	}
 	
-	public function viewLink($text=null){
-		if(!$text)
-			$text = $this->name;
-		return CHtml::link($text, array('/project/task/view','id'=>$this->id()));
-	}
-	
-	public function viewProject(){
-		if($this->project)
-			return $this->project->viewLink();
-	}
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
@@ -91,20 +82,9 @@ class ProjectTask extends NActiveRecord {
 	public function schema() {
 		return array(
 			'columns' => array(
-				'id' => 'pk',
-				'name' => 'string',
-				'description' => 'text',
-				'priority' => 'int',
-				'created_by_id' => 'int',
-				'estimated_time' => 'int',
-				'assigned_id' => 'int',
-				'customer_id' => 'int',
-				'project_id' => 'int',
-				'status' => "enum('new','current','complete')",
-				'tree_left' => 'int',
-				'tree_right' => 'int',
-				'tree_level' => 'int',
-				'tree_parent' => 'int',
+				'task_id' => 'int',
+				'user_id' => 'int',
+				'type' => "enum('staff','customer','notified')",
 			),
 		);
 	}
@@ -120,20 +100,11 @@ class ProjectTask extends NActiveRecord {
 	}
 
 	public function projectList(){
-		return CHtml::listData(ProjectProject::model()->findAll(), 'id', 'name');
+		return CHtml::listData(TaskProject::model()->findAll(), 'id', 'name');
 	}
 	
 	public function customerList(){
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
-	}
-	
-	
-	public function behaviors() {
-		return array(
-			'tree'=>array(
-               'class'=>'nii.components.behaviors.NTreeTable'
-           )
-		);
 	}
 	
 }

@@ -38,7 +38,9 @@ class ProjectProject extends NActiveRecord {
 	 * @return array relational rules.
 	 */
 	public function relations() {
-		return array();
+		return array(
+			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
+		);
 	}
 
 	/**
@@ -61,7 +63,7 @@ class ProjectProject extends NActiveRecord {
 	public function viewLink($text=null){
 		if(!$text)
 			$text = $this->name;
-		return CHtml::link($text, array('/project/index', 'id'=>$this->id()));
+		return CHtml::link($text, array('/project/index/view', 'id'=>$this->id()));
 	}
 
 	public static function install($className=__CLASS__) {
