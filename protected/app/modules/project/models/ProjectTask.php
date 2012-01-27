@@ -106,7 +106,7 @@ class ProjectTask extends NActiveRecord {
 				'assigned_id' => 'int',
 				'customer_id' => 'int',
 				'project_id' => 'int',
-				'status' => "enum('new','current','complete)",
+				'status' => "enum('new','current','complete')",
 			),
 		);
 	}
