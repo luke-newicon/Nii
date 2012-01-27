@@ -42,6 +42,10 @@ class TimesheetHoliday extends NActiveRecord
 				'length',
 				'max'=>15
 			),
+			array(
+				'date_start, date_end',
+				'required'
+			),
             array(
 				'date_start, date_end, authorised_date, comment',
 				'safe'
