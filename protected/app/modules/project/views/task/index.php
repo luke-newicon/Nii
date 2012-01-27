@@ -11,7 +11,9 @@
 Yii::app()->getClientScript()->registerPackage('backbone');
 
 ?>
-
+<style>
+	.task-item{background: -moz-linear-gradient(center top , #EEEEEE, #DDDDDD) repeat scroll 0 0 transparent;border: 1px solid #CCCCCC;border-radius: 3px 3px 3px 3px;margin-bottom: 3px;padding: 6px;text-shadow: 0 1px 0 #FFFFFF;}
+</style>
 <div id="task-form" class="field"></div>
 
 <div id="task-list"></div>
@@ -45,7 +47,7 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 </script>
 
 <script id="quick-select" type="template/text">
-	<div style="width:100px;border:1px solid #ccc;">
+	<div style="width:100px;border-bottom:1px solid #eee;">
 		<ul>
 
 		</ul>
@@ -57,7 +59,7 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 </script>
 
 <script id="task-template" type="text/template">
-	<div class="line" style="padding:5px;border-bottom:1px solid #ccc;">
+	<div class="line">
 		<div class="unit size3of4 task">
 			<%= name %>
 		</div>
@@ -165,10 +167,11 @@ $(function(){
 		events:{},
 		initialize:function(){
 			this.collection.bind('add',this.addOne, this);
-			this.collection.bind('reset',this.addAll, this);
+			this.collection.bind('reset',this.render, this);
 		},
 		render:function(){
-			
+			this.addAll();
+			this.el.sortable();
 		},
 		addOne:function(task){
 			// create a new task view and pass in the task model then append
@@ -187,6 +190,7 @@ $(function(){
 	 * view responsible for drawing the list of task views 
 	 */
 	var CTaskView = Backbone.View.extend({
+		className:'task-item',
 		template:_.template($('#task-template').html()),
 		events:{},
 		initialize:function(){
