@@ -68,9 +68,9 @@
 		)
 	); 
 	
-	echo '<h3>Testing estimated time functions...</h3><br />' . 
-		'1 day = ' . NTime::setTimeInMinutes('1d') . '<br />' . 
-		'1 hour = ' . NTime::setTimeInMinutes('1') . '<br />' . 
-		'4 hours = ' . NTime::setTimeInMinutes('4 hours') . '<br />' . 
-		'900 hours (2 days) = ' . NTime::getTimeInMinutes(900);
+//	echo '<h3>Testing estimated time functions...</h3><br />' . 
+//		'1 day = ' . NTime::setTimeInMinutes('1d') . '<br />' . 
+//		'1 hour = ' . NTime::setTimeInMinutes('1') . '<br />' . 
+//		'4 hours = ' . NTime::setTimeInMinutes('4 hours') . '<br />' . 
+//		'900 hours (2 days) = ' . NTime::getTimeInMinutes(900);
 	?>
