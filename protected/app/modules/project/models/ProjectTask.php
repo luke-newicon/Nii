@@ -2,6 +2,7 @@
 
 class ProjectTask extends NActiveRecord {
 
+	public $estimated_time_nice;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
