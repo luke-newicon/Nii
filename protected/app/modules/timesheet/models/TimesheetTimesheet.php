@@ -11,7 +11,7 @@
  * The followings are the available model relations:
  * @property TimesheetTimerecord[] $timesheetTimerecords
  */
-class TimesheetTimesheet extends NActiveRecord
+class TimeSheetTimesheet extends NActiveRecord
 {
     /**
      * Returns the static model of the specified AR class.
@@ -31,7 +31,7 @@ class TimesheetTimesheet extends NActiveRecord
      */
     public function tableName()
     {
-        return '{{timesheet_timesheet}}';
+        return 'timesheet_timesheet';
     }
 
     /**
