@@ -138,5 +138,42 @@ class AController extends NController {
 	public static function t($str='', $params=array()) {
 		return Yii::t(__CLASS__, $str, $params);
 	}
+	
+		
+	public function modelLoad($model, $id){
+		$model = NActiveRecord::model($model)->findByPk($id);
+		if($model===null)
+			throw new CHttpException (404,'no model found');
+		return $model;
+	}
+	
+	/**
+	 * gets the request data
+	 * 
+	 * @return array 
+	 */
+	public function getRESTData(){
+		// if the request is formatted as json!
+		// Yii::app()->request->getAcceptTypes() // make sure we are dealing with json
+		if(Yii::app()->request->getIsPutRequest() || Yii::app()->request->getIsPostRequest()){
+			// asumming json passed so
+			$data = file_get_contents('php://input');
+			return CJSON::decode($data);
+		}
+	}
+	
+	
+	/**
+	 *
+	 * @param type $data
+	 * @param type $status
+	 * @param type $contentType 
+	 */
+	public function RESTResponse($data, $status = 200, $contentType = 'application/json'){
+		// should use the content-type header or the url suffix to determine the output format
+		// var_export($data, TRUE);
+		// header("Content-Type: $contentType");
+		echo CJSON::encode($data);
+	}
 
 }

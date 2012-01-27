@@ -2,6 +2,7 @@
 
 class ProjectTaskUser extends NActiveRecord {
 
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
@@ -105,6 +106,12 @@ class ProjectTaskUser extends NActiveRecord {
 	
 	public function customerList(){
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
+	}
+	
+	public function getUserLink($displayIcon=true) {
+		$user = NActiveRecord::model('User')->findByPk($this->user_id);
+		$name = $user->name;
+		// @todo: finish the userLink function!
 	}
 	
 }
