@@ -14,7 +14,7 @@
  *
  * @author steve
  */
-class IndexController extends AController {
+class TaskController extends AController {
 
 	public function actionCreate($project) {
 		// todo validate project name is unique
@@ -26,7 +26,9 @@ class IndexController extends AController {
 
 	public function actionIndex() {
 		
-		$this->render('index');
+		$allTasks = NActiveRecord::model('ProjectTask')->findAll();
+		$tasks = CJSON::encode($allTasks);
+		$this->render('index', array('tasks'=>$tasks));
 	}
 
 }

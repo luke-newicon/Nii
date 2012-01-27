@@ -20,15 +20,11 @@ class ProjectModule extends NWebModule
 	}
 	
 	public function setup(){
-		Yii::app()->menus->addItem('main', 'Tasks', '#', null, array(
+		Yii::app()->menus->addItem('main', 'Projects', array('/project/index'), null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
-		Yii::app()->menus->addItem('main', 'Projects', array('/task/admin/projects'), 'Tasks', array(
-			'visible' => Yii::app()->user->checkAccess('task/admin/projects'),
-		));
-		Yii::app()->menus->addItem('main', 'Tasks', array('/task/admin/tasks'), 'Tasks', array(
-//			'notice' => ProjectTask::model()->count(),
-			'visible' => Yii::app()->user->checkAccess('task/admin/tasks'),
+		Yii::app()->menus->addItem('main', 'Tasks', array('/project/task'), null, array(
+			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
 //		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
 //			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
