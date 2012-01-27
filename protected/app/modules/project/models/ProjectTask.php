@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTask extends NActiveRecord {
+class ProjectTask extends ProjectProject {
 
 	/**
 	 * Returns the static model of the specified AR class.
