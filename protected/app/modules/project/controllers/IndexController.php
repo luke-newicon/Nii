@@ -24,10 +24,62 @@ class IndexController extends AController {
 		$this->redirect(array('/project/index', 'id' => $p->id()));
 	}
 
+	/**
+	 *	Grid view - for now - of the open projects 
+	 */
 	public function actionIndex() {
-		$allProjects= NActiveRecord::model('ProjectProject')->findAll();
-		$projects = CJSON::encode($allProjects);
-		$this->render('index', array('projects'=>$projects));
-	}
+		
+		$modelName = 'ProjectProject';
+	
+		$model = new $modelName('search');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$modelName]))
+			$model->attributes = $_GET[$modelName];
 
+		$this->render('index',array(
+			'dataProvider'=>$model->search(),
+			'model'=>$model,
+		));
+	}
+	
+	public function actionView($id) {
+				
+		$this->pageTitle = Yii::app()->name . ' - View Project Details';
+		
+		$modelName = 'ProjectProject';
+		$model = NActiveRecord::model($modelName)->findByPk($id);
+		
+		$this->checkModelExists($model, "<strong>No project exists for ID: ".$id."</strong>");
+		
+		$viewData = array(
+			'model'=>$model,
+		);
+		
+		$this->render('view',array(
+			'model'=>$model,
+		));
+	}
+	
+	public function actionTasks($id) {
+		$this->render('tabs/tasks');
+	}
+	
+	public function actionMilestones($id) {
+		$this->render('tabs/milestones');
+	}
+	
+	public function actionFiles($id) {
+		$model = NActiveRecord::model('ProjectProject')->findByPk($id);
+				
+		$viewData = array(
+			'model'=>$model,
+		);
+		
+		$this->render('tabs/files',array(
+			'model'=>$model,
+		));
+	
+	}
+	
 }
