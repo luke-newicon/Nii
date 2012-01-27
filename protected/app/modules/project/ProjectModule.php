@@ -43,6 +43,16 @@ class ProjectModule extends NWebModule
 //			'project' => 'project.controllers.ProjectController',
 //			'task' => 'project.controllers.TaskController',
 //		));
+		Yii::app()->sprite->addImageFolderPath(Yii::getPathOfAlias('project.images'));
+		
+		Yii::app()->urlManager->addRules(array(
+				array('/project/task/index',   'pattern'=>'api/project/<pid:\d+>/task',			 'verb'=>'GET',),
+				array('/project/task/create', 'pattern'=>'api/project/<pid:\d+>/task',          'verb'=>'POST'),
+				array('/project/task/view',   'pattern'=>'api/project/<pid:\d+>/task/<id:\w+>', 'verb'=>'GET'),
+				array('/project/task/update', 'pattern'=>'api/project/<pid:\d+>/task/<id:\w+>', 'verb'=>'PUT'),
+				array('/project/task/delete', 'pattern'=>'api/project/<pid:\d+>/task/<id:\w+>', 'verb'=>'DELETE'),	
+			)
+		);
 		
 	}
 	

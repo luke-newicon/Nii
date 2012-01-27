@@ -19,7 +19,7 @@ class TaskController extends AController {
 	public function actionCreate($task) {
 		// todo validate project name is unique
 		$t = new ProjectTask();
-		$t->name = $task;
+		$t->attributes = CJSON::decode($task);
 		$t->save();
 		$this->redirect(array('/project/task', 'id' => $t->id()));
 	}

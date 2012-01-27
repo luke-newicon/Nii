@@ -70,7 +70,7 @@ class NiiModule extends NWebModule
 					'js/functions.js',
 //					'js/jquery.jscrollpane.min.js',
 //					'js/jquery.hotkeys.js',
-					'js/backbone/underscore-1.1.7.min.js',
+					'js/backbone/underscore-1.3.1.min.js',
 //					'js/backbone/backbone-0.5.3.min.js',
 //					'js/gritter/js/jquery.gritter.min.js',
 				),
@@ -85,7 +85,7 @@ class NiiModule extends NWebModule
 				'basePath'=>'nii.assets',
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
-					'js/backbone/underscore-1.1.7.min.js',
+					'js/backbone/underscore-1.3.1.min.js',
 					'js/backbone/backbone-0.5.3.min.js'
 				)
 			)
@@ -164,7 +164,7 @@ class NiiModule extends NWebModule
 			'all.css'=>false,
 			'sprite.css'=>false,
 			'backbone-0.5.3.min.js'=>false,
-			'underscore-1.1.7.min.js'=>false,
+			'underscore-1.3.1.min.js'=>false,
 			'jquery.gritter.min.js'=>false,
 			'jquery.gritter.css'=>false,
 			'jquery.yiiactiveform.js'=>false,

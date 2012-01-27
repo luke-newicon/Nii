@@ -477,8 +477,10 @@ div.attendee_list-item:hover a.attendee_list_delete_button {
 }
 
 .tab_count_label {
-	line-height: 1.3em; margin: 7px 0; min-width: 10px; text-align: center;
+	line-height: 1.3em; margin: 10px -2px 7px 4px; min-width: 10px; text-align: center;
 }
+
+.vertical .tab_count_label { margin: 7px 0; }
 
 #ui-datepicker-div {
 	z-index: 3000!important;
