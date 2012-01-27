@@ -2,6 +2,16 @@
 
 class AdminController extends AController {
 
+	
+	public function accessRules() {
+		return array(
+			// deny anyone who is not a super user
+			array('deny',
+				'expression'=>'!Yii::app()->user->isSuper()'
+			),
+		);
+	}
+	
 	public function actionIndex() {
 		$modules = array();
 		foreach(Yii::app()->getNiiModules() as $m){

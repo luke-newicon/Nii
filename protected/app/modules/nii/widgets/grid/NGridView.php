@@ -77,7 +77,8 @@ class NGridView extends CGridView
 	}
 	
 	public function init() {
-		if(isset($this->dataProvider->model)) {
+
+		if ($this->dataProvider instanceof NActiveDataProvider) {
 			$model = $this->dataProvider->model;
 
 			if (isset($model->gridScopes['default'])) {
@@ -89,12 +90,14 @@ class NGridView extends CGridView
 			}
 			if ($this->enableBulkActions==true)
 				$this->selectionChanged = $this->getSelectedRowsJs();
+
+			// Configuring grid columns...
+			if ($this->columns==null)
+				$this->columns = $this->gridColumns($this->filter);
 		}
-		
-		// Configuring grid columns...
-		if ($this->columns==null)
-			$this->columns = $this->gridColumns($this->filter);
+
 		Yii::import('nii.widgets.grid.NDateColumn');
+		
 		parent::init();
 		
 		// override default javascript

@@ -15,6 +15,16 @@
  */
 class IndexController extends AController
 {
+	
+	public function accessRules() {
+		return array(
+			// deny anyone who is not a super user
+			array('deny',
+				'expression'=>'!Yii::app()->user->isSuper()'
+			),
+		);
+	}
+	
 	public function actionIndex(){
 		$this->render('index');
 	}

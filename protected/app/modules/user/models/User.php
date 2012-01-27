@@ -83,7 +83,7 @@ class User extends NActiveRecord {
 	public function relations() {
 		return array(
 			'role' => array(self::HAS_ONE, 'AuthAssignment', 'userid'),
-			'contact' => array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id'),
+			//'contact' => array(self::BELONGS_TO, Yii::app()->getModule('contact')->contactModel, 'contact_id'),
 		);
 	}
 

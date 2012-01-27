@@ -64,7 +64,16 @@ return array(
 				'showUsernameField' => false,
 				'enableGoogleAuth'=>false
 			),
-			'admin'
+			'admin',
+				'gii' => array(
+				'class' => 'system.gii.GiiModule',
+				'password' => 'bonsan',
+				// If removed, Gii defaults to localhost only. Edit carefully to taste.
+				'ipFilters' => array('127.0.0.1', '::1'),
+				'generatorPaths' => array(
+				'ext.gtc' // Gii Template Collection
+				)
+			),
 		),
 		// application components
 		'components' => array(
