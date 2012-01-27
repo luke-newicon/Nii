@@ -57,7 +57,7 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 </script>
 
 <script id="task-template" type="text/template">
-	<div class="line">
+	<div class="line" style="padding:5px;border-bottom:1px solid #ccc;">
 		<div class="unit size3of4 task">
 			<%= name %>
 		</div>
