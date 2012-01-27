@@ -12,7 +12,14 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 
 ?>
 
-<div id="task-form" class="field">
+<div id="task-form" class="field"></div>
+
+<div id="task-list"></div>
+
+
+
+
+<script id="task-form-template" type="text/template">
 	<div class="line input">
 		<div class="unit size3of4  ">
 			<label for="task" class="inFieldLabel">Add a task...</label>
@@ -35,10 +42,7 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 			</div>
 		</div>
 	</div>
-</div>
-
-
-
+</script>
 
 <script id="quick-select" type="template/text">
 	<div style="width:100px;border:1px solid #ccc;">
@@ -58,7 +62,7 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 			<%= name %>
 		</div>
 		<div class="unit">
-			<%= etsimated_time_nice %>
+			<%= estimated_time_nice %>
 		</div>
 		<div class="lastUnit">
 			
@@ -70,22 +74,6 @@ Yii::app()->getClientScript()->registerPackage('backbone');
 	
 </script>
 <script>
-/** autogrow plugin */
-(function($){$.fn.autogrow=function(options){this.filter('textarea').each(function(){var $this=$(this),minHeight=$this.height(),lineHeight=$this.css('lineHeight');var shadow=$('<div></div>').css({position:'absolute',top:-10000,left:-10000,width:$(this).width()-parseInt($this.css('paddingLeft'))-parseInt($this.css('paddingRight')),fontSize:$this.css('fontSize'),fontFamily:$this.css('fontFamily'),lineHeight:$this.css('lineHeight'),resize:'none'}).appendTo(document.body);var update=function(){var times=function(string,number){for(var i=0,r='';i<number;i++)r+=string;return r;};var val=this.value.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/\n$/,'<br/>&nbsp;').replace(/\n/g,'<br/>').replace(/ {2,}/g,function(space){return times('&nbsp;',space.length-1)+' '});shadow.html(val);$(this).css('height',Math.max(shadow.height(),minHeight));}
-$(this).change(update).keyup(update).keydown(update);update.apply(this);});return this;}})(jQuery);
-
-/*
- *
- * Copyright (c) 2010 C. F., Wong (<a href="http://cloudgen.w0ng.hk">Cloudgen Examplet Store</a>)
- * Licensed under the MIT License:
- * http://www.opensource.org/licenses/mit-license.php
- *
- */
-﻿(function(k,e,i,j){k.fn.caret=function(b,l){var a,c,f=this[0],d=k.browser.msie;if(typeof b==="object"&&typeof b.start==="number"&&typeof b.end==="number"){a=b.start;c=b.end}else if(typeof b==="number"&&typeof l==="number"){a=b;c=l}else if(typeof b==="string")if((a=f.value.indexOf(b))>-1)c=a+b[e];else a=null;else if(Object.prototype.toString.call(b)==="[object RegExp]"){b=b.exec(f.value);if(b!=null){a=b.index;c=a+b[0][e]}}if(typeof a!="undefined"){if(d){d=this[0].createTextRange();d.collapse(true);
-d.moveStart("character",a);d.moveEnd("character",c-a);d.select()}else{this[0].selectionStart=a;this[0].selectionEnd=c}this[0].focus();return this}else{if(d){c=document.selection;if(this[0].tagName.toLowerCase()!="textarea"){d=this.val();a=c[i]()[j]();a.moveEnd("character",d[e]);var g=a.text==""?d[e]:d.lastIndexOf(a.text);a=c[i]()[j]();a.moveStart("character",-d[e]);var h=a.text[e]}else{a=c[i]();c=a[j]();c.moveToElementText(this[0]);c.setEndPoint("EndToEnd",a);g=c.text[e]-a.text[e];h=g+a.text[e]}}else{g=
-f.selectionStart;h=f.selectionEnd}a=f.value.substring(g,h);return{start:g,end:h,text:a,replace:function(m){return f.value.substring(0,g)+m+f.value.substring(h,f.value[e])}}}}})(jQuery,"length","createRange","duplicate");
-
-
 
 $(function(){
 	
@@ -110,36 +98,42 @@ $(function(){
 	})
 	
 	var CTaskList = Backbone.Collection.extend({
+		//url:<?php echo NHtml::url('/project/2/task'); ?>,
 		model:CTask
 	})
 	
 	
 	var CTaskFormView = Backbone.View.extend({
 		el:$('#task-form'),
+		template:_.template($('#task-form-template').html()),
 		initialize:function(){
-			this.$('textarea').autogrow();
-			
+			this.render();
 		},
 		events:{
 			'keyup #task':'keyupTask',
 			'keyup':'keyup'
 		},
 		render:function(){
-			
+			this.el.html(this.template({}));
+			$.fn.nii.form();
+			this.$('[name="task"]').focus();
 		},
 		keyup:function(e){
 			if(e.which == 13){
-				window.niiTask.tasks.add(this.createTask());
+				this.createTask();
 				e.preventDefault();
 				return false;
 			}
 		},
 		createTask:function(){
-			return new CTask({
+			var task = new CTask({
 				name:this.$('[name="task"]').val(),
 				estimated_time:this.$('[name="estimated_time"]').val(),
 				asigned_id:this.$('[name="asigned_id"]').val()
 			});
+			window.niiTask.tasks.add(task);
+			// redraw the form
+			this.render();
 		},
 		keyupTask:function(e){
 			var searchwrds = this.$('#task').val().split(" ");
@@ -154,8 +148,7 @@ $(function(){
 					});
 					if(userMatches.length > 0){
 						searchwrds.splice(i); // remove this text from the box
-						
-						userMatches[0].get('name');
+						console.log(userMatches)
 					}
 				}
 			});	
@@ -170,12 +163,19 @@ $(function(){
 		template:_.template($('#task-list-template').html()),
 		events:{},
 		initialize:function(){
-		
+			this.collection.bind('add',this.addOne, this);
 		},
 		render:function(){
-		
+			
+		},
+		addOne:function(task){
+			// create a new task view and pass in the task model then append
+			var taskView = new CTaskView({
+				model:task
+			});
+			
+			this.el.append(taskView.render().el);
 		}
-		
 	})
 	
 	/**
@@ -188,9 +188,9 @@ $(function(){
 		
 		},
 		render:function(){
-		
+			$(this.el).html(this.template(this.model.toJSON()));
+			return this;
 		}
-		
 	})
 	
 	var CProjectTask = Backbone.Model.extend({
