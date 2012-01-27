@@ -49,6 +49,8 @@ class ProjectModule extends NWebModule
 	public function install(){
 		ProjectProject::install();
 		ProjectTask::install();
+		ProjectTaskUser::install();
+		ContactCustomer::install();
 		$this->installPermissions();
 	}
 	
