@@ -17,6 +17,12 @@
  */
 class TimesheetHoliday extends NActiveRecord
 {
+	
+	const STATUS_DRAFT = 'STATUS_DRAFT';
+	const STATUS_SUBMITED = 'STATUS_SUBMITED';
+	const STATUS_REJECTED = 'STATUS_REJECTED';
+	const STATUS_APPROVED = 'STATUS_APPROVED';
+	
     public static function model($className=__CLASS__){
 		return parent::model($className);
     }
@@ -82,6 +88,17 @@ class TimesheetHoliday extends NActiveRecord
 				'comment'=>'text'
 			),
 			'keys' => array()
+		);
+	}
+	
+	/**
+	 * Returns all the holiday statuses
+	 * 
+	 * @return array of statuses
+	 */
+	public function getStatuses(){
+		return array(
+			''
 		);
 	}
 
