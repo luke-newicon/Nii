@@ -33,53 +33,53 @@ class TaskModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
 			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
 		));
-		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
-			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
-		));
-		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label, array(
-			'visible' => Yii::app()->user->checkAccess('contact/supplier/index'),
-		));
-		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label, array(
-			'visible' => Yii::app()->user->checkAccess('contact/staff/index'),
-		));
+//		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
+//			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
+//		));
+//		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label, array(
+//			'visible' => Yii::app()->user->checkAccess('contact/supplier/index'),
+//		));
+//		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label, array(
+//			'visible' => Yii::app()->user->checkAccess('contact/staff/index'),
+//		));
 		
-		Yii::app()->getModule('contact')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
-			'customer' => 'task.controllers.CustomerController',
-			'supplier' => 'task.controllers.SupplierController',
-			'staff' => 'task.controllers.StaffController',
-		));
-		
-		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
-			'Contact' => array(
-				'customer' => array(
-					'label' => 'Customer',
-					'class' => 'ContactCustomer',
-					'relation' => array(Contact::HAS_ONE, 'ContactCustomer', 'contact_id'),
-					'notification' => false,
-					'viewRoute' => '/contact/customer/view',
-					'addRoute' => '/contact/customer/add',
-					'isAddable' => true,
-				),
-				'supplier' => array(
-					'label' => 'Supplier',
-					'class' => 'ContactSupplier',
-					'relation' => array(Contact::HAS_ONE, 'ContactSupplier', 'contact_id'),
-					'notification' => false,
-					'viewRoute' => '/contact/supplier/view',
-					'addRoute' => '/contact/customer/add',
-					'isAddable' => true,
-				),
-				'staff' => array(
-					'label' => 'Staff',
-					'class' => 'ContactStaff',
-					'relation' => array(Contact::HAS_ONE, 'ContactStaff', 'contact_id'),
-					'notification' => false,
-					'viewRoute' => '/contact/staff/view',
-					'addRoute' => '/contact/customer/add',
-					'isAddable' => true,
-				),
-			),
-		));
+//		Yii::app()->getModule('contact')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
+//			'customer' => 'task.controllers.CustomerController',
+//			'supplier' => 'task.controllers.SupplierController',
+//			'staff' => 'task.controllers.StaffController',
+//		));
+//		
+//		Yii::app()->getModule('contact')->relations = CMap::mergeArray(Yii::app()->getModule('contact')->relations, array(
+//			'Contact' => array(
+//				'customer' => array(
+//					'label' => 'Customer',
+//					'class' => 'ContactCustomer',
+//					'relation' => array(Contact::HAS_ONE, 'ContactCustomer', 'contact_id'),
+//					'notification' => false,
+//					'viewRoute' => '/contact/customer/view',
+//					'addRoute' => '/contact/customer/add',
+//					'isAddable' => true,
+//				),
+//				'supplier' => array(
+//					'label' => 'Supplier',
+//					'class' => 'ContactSupplier',
+//					'relation' => array(Contact::HAS_ONE, 'ContactSupplier', 'contact_id'),
+//					'notification' => false,
+//					'viewRoute' => '/contact/supplier/view',
+//					'addRoute' => '/contact/customer/add',
+//					'isAddable' => true,
+//				),
+//				'staff' => array(
+//					'label' => 'Staff',
+//					'class' => 'ContactStaff',
+//					'relation' => array(Contact::HAS_ONE, 'ContactStaff', 'contact_id'),
+//					'notification' => false,
+//					'viewRoute' => '/contact/staff/view',
+//					'addRoute' => '/contact/customer/add',
+//					'isAddable' => true,
+//				),
+//			),
+//		));
 	}
 	
 	public function install(){
