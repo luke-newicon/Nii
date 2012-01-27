@@ -77,21 +77,27 @@ class NGridView extends CGridView
 	}
 	
 	public function init() {
-		$model = $this->dataProvider->model;
 		
-		if (isset($model->gridScopes['default'])) {
-			$this->dataProvider->defaultScope = $model->gridScopes['default'];		
-			$this->dataProvider->gridId = $this->id;
-		} elseif (isset($this->scopes['default'])){
-			$this->dataProvider->defaultScope = $this->scopes['default'];
-			$this->dataProvider->gridId = $this->id;
+		if ($this->dataProvider instanceof NActiveDataProvider) {
+			$model = $this->dataProvider->model;
+
+			if (isset($model->gridScopes['default'])) {
+				$this->dataProvider->defaultScope = $model->gridScopes['default'];		
+				$this->dataProvider->gridId = $this->id;
+			} elseif (isset($this->scopes['default'])){
+				$this->dataProvider->defaultScope = $this->scopes['default'];
+				$this->dataProvider->gridId = $this->id;
+			}
+			if ($this->enableBulkActions==true)
+				$this->selectionChanged = $this->getSelectedRowsJs();
+			// Configuring grid columns...
+			if ($this->columns==null)
+				$this->columns = $this->gridColumns($this->filter);
 		}
-		if ($this->enableBulkActions==true)
-			$this->selectionChanged = $this->getSelectedRowsJs();
-		// Configuring grid columns...
-		if ($this->columns==null)
-			$this->columns = $this->gridColumns($this->filter);
+		
 		Yii::import('nii.widgets.grid.NDateColumn');
+		
+		
 		parent::init();
 		
 		// override default javascript
