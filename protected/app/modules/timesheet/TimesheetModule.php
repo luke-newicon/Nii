@@ -11,7 +11,7 @@ class TimesheetModule extends NWebModule {
 	}
 	
 	public function setup() {
-		Yii::app()->menus->addItem('main', 'Timesheet', array('/timesheet/index/index'));
+		Yii::app()->menus->addItem('user', 'Timesheets', array('/timesheet/index/index'),'User');
 	}
 
 	public function install() {

@@ -2,11 +2,13 @@
 
 class IndexController extends AController {
 
-	public function actionIndex($userId, $date=null) {
+	public function actionIndex() {
+		$tabs['Timesheets'] = array('id' => 'timesheets', 'ajax' => CHtml::normalizeUrl(array('/timesheet/timesheet/index')));
+		$tabs['Holidays'] = array('id' => 'holidays', 'ajax' => CHtml::normalizeUrl(array('/timesheet/holiday/index')));
 		
-		$date ='2012-01-24 00:00:00';
-		$weekLog = TimesheetTimesheet::model()->getUserTimesheet($userId, $date);
-		$this->render('index',array('weekLog'=>$weekLog));
+		$this->render('index',array(
+			'tabs' => $tabs,
+		));
 	}
 
 }

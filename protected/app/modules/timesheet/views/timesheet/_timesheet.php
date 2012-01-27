@@ -2,13 +2,13 @@
 	<thead>
 		<tr>
 			<th>Task</th>
-			<th>Mon</th>
-			<th>T</th>
-			<th>W</th>
-			<th>T</th>
-			<th>F</th>
-			<th>S</th>
-			<th>S</th>
+			<th>Monday</th>
+			<th>Tuesday</th>
+			<th>Wednesday</th>
+			<th>Thursday</th>
+			<th>Friday</th>
+			<th>Saturday</th>
+			<th>Sunday</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -16,7 +16,7 @@
 		<?php foreach($weekLog as $log):?>
 			<?php foreach($log->timesheetTimerecords as $record): ?>
 			<tr>
-				<td>Griggs Updates</td>
+				<td>Project</td>
 				<td><input type="text" value="<?php echo $record->time_monday; ?>"/></td>
 				<td><input type="text" value="<?php echo $record->time_tuesday; ?>"/></td>
 				<td><input type="text" value="<?php echo $record->time_wednesday; ?>"/></td>
