@@ -16,19 +16,53 @@
  */
 class TaskController extends AController {
 
-	public function actionCreate($task) {
-		// todo validate project name is unique
-		$t = new ProjectTask();
-		$t->attributes = CJSON::decode($task);
-		$t->save();
-		$this->redirect(array('/project/task', 'id' => $t->id()));
-	}
-
 	public function actionIndex() {
 		
 		$allTasks = NActiveRecord::model('ProjectTask')->findAll();
 		$tasks = CJSON::encode($allTasks);
 		$this->render('index', array('tasks'=>$tasks));
 	}
+	
+	
+	/**
+	 * Handle a RESTful POST request (post requests instruct the API to create new records / resources).
+	 * @param type $model 
+	 */
+	public function actionCreate(){
+		$m = 'ProjectTask';
+		$m = new $m;
+		if($m===null)
+			throw new CHttpException (404,'no model found');
+
+		$m->attributes = $this->getRESTData();
+
+		$m->save();
+		$this->RESTResponse($m);
+	}
+	/**
+	 * handle a RESTful UPDATE request
+	 * @param type $model
+	 * @param type $id 
+	 */
+	public function actionUpdate($id){
+		$m = 'ProjectTask';
+		$m = $this->modelLoad($m,$id);
+		
+		$m->attributes = $this->getRESTData();
+		$saved = $m->save();
+		$this->RESTResponse($m);
+	}
+	
+	/**
+	 * Handle RESTful DELETE request
+	 * @param type $model
+	 * @param type $id 
+	 */
+	public function actionDelete($id){
+		$m = 'ProjectTask';	
+		$m = $this->modelLoad($m,$id);
+		$m->delete();
+	}
+
 
 }
