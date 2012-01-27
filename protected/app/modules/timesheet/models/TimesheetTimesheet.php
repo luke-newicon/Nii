@@ -104,9 +104,27 @@ class TimeSheetTimesheet extends NActiveRecord
 		return array(
 			'columns' => array(
 				'id' => "pk",
+				'user_id'=>'int(11)',
 				'week_date' => "datetime",
+				
 				'status' => "ENUM('STATE_ACTIVE','STATE_SUBMITTED')",
 			),
 			'keys' => array());
+	}
+	
+	/*
+	 * This function returns a time sheet based on the specified user
+	 * @param int $userId
+	 * @param int $date the first day 
+	 * @returns 
+	 */
+	public function getUserTimesheet($userId,$date){
+		$attributes = array(
+			'user_id' => $userId,
+			'week_date'=> $date
+		);
+		return $this->model()->findAllByAttributes($attributes,array(
+			'with' => 'timesheetTimerecords'
+		));
 	}
 } 
