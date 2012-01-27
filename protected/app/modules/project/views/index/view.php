@@ -69,8 +69,8 @@
 	); 
 	
 	echo '<h3>Testing estimated time functions...</h3><br />' . 
-		'1 day = ' . ProjectTask::setEstimatedTime('1d') . '<br />' . 
-		'1 hour = ' . ProjectTask::setEstimatedTime('1') . '<br />' . 
-		'4 hours = ' . ProjectTask::setEstimatedTime('4 hours') . '<br />' . 
-		'900 hours (2 days) = ' . ProjectTask::getEstimatedTime(900);
+		'1 day = ' . NTime::setTimeInMinutes('1d') . '<br />' . 
+		'1 hour = ' . NTime::setTimeInMinutes('1') . '<br />' . 
+		'4 hours = ' . NTime::setTimeInMinutes('4 hours') . '<br />' . 
+		'900 hours (2 days) = ' . NTime::getTimeInMinutes(900);
 	?>

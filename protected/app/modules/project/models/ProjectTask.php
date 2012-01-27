@@ -127,66 +127,33 @@ class ProjectTask extends NActiveRecord {
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
 	}
 	
-	/**
-	 *	Returns the estimated time from the database in a readable format
-	 * @param int $time
-	 * @param string $length - 'long' or 'short'
-	 * @return string 
-	 */
-	public static function getEstimatedTime($time, $length='long') {
+	public function getAssignedTo() {
 		
-		if ($time >= 450) :
-			$time = $time/450;
-			$granularity = $length=='long' ? (' day' . ($time>1?'s':'')) : 'd';
-		elseif ($time >= 60) :
-			$time = $time/60;
-			$granularity = $length=='long' ? (' hour' . ($time>1?'s':'')) : 'h';
-		else :
-			$granularity = $length=='long' ? (' min' . ($time>1?'s':'')) : 'm';
-		endif;
-			
-		return number_format($time,(strstr($time, '.')?1:0)) . $granularity;
 	}
-
-	/**
-	 *	Takes a string and returns the estimated time in integer of minutes format
-	 * Also checks to see if the string is actually just numerical
-	 * @param string $string - '1d', '2 hours' etc
-	 * @return int 
-	 */
-	public static function setEstimatedTime($string, $default='h') {
+	
+	public function getCreatedBy() {
 		
-		if (ctype_digit($string)) {
-			$number = $string;
-			$alpha = $default;
-		} else {				
-			// split string into number + alpha
-			$splitResults=array();
-			preg_match("/(\d+)(.+)$/",$string,$splitResults);
-			$number = $splitResults[1];
-			$alpha = str_replace(' ', '', $splitResults[2]);
+	}
+	
+	public function getEstimatedTimeNice() {
+		return NTime::getTimeInMinutes($this->estimated_time);
+	}
+	
+	public function getAttributes($names = true) {
+		$parent = parent::getAttributes($names);
+		return array_merge($parent, array('estimated_time_nice'=>$this->estimatedTimeNice));
+	}
+	
+	public function getAdditionalUsers($displayIcon=true) {
+		$users = NActiveRecord::model('ProjectTaskUser')->findByAttributes(array('task_id'=>$this->id));
+		$u = array();
+
+		if ($users) {
+			foreach($users as $user)
+				$u[$id] = $user->getUserLink($displayIcon);
 		}
 		
-		switch($alpha) {
-			
-			case "d":
-			case "day":
-			case "days":
-				$time = $number * 450;
-				break;
-			
-			case "h":
-			case "hour":
-			case "hours":
-				$time = $number * 60;
-				break;
-			
-			default :
-				$time = $number;
-			
-		}
-
-		return $time;		
+		return $u;
 	}
 	
 	public function behaviors() {
