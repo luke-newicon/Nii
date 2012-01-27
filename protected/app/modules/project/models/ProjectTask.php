@@ -136,7 +136,8 @@ class ProjectTask extends NActiveRecord {
 	}
 	
 	public function getEstimatedTimeNice() {
-		return NTime::getTimeInMinutes($this->estimated_time);
+		if ($this->estimated_time)
+			return NTime::getTimeInMinutes($this->estimated_time);
 	}
 	
 	public function getAttributes($names = true) {
