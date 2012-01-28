@@ -20,55 +20,41 @@ class InstallController extends Controller {
 
 	public function actionStep1() {
 
+		$dbForm = new InstallDbForm();
+		$userForm = new InstallUserForm();
+		$this->performAjaxValidation(array($dbForm, $userForm), 'installForm');
 
-		$model = new InstallForm;
-
-		$this->performAjaxValidation($model, 'installForm');
-
-		// if the db component is already configured then we already have a configuration for the database.
-		// this enables the view to display the install user form, and hides the database details.
-		$comps = Yii::app()->getComponents(false);
-		$model->installDb = !array_key_exists('connectionString', $comps['db']);
-
-
-		if (Yii::app()->request->getPost('InstallForm')) {
-
-			$model->attributes = $_POST['InstallForm'];
-			
-			if ($model->validate()) {
-				
+		
+		// save db and install
+		if (Yii::app()->request->getPost('InstallDbForm')) {
+			$dbForm->attributes = $_POST['InstallDbForm'];
+			if ($dbForm->validate()) {
 				// install database tables and nii modules
-				$model->installDatabase();
-
-				// inserts the admin user
-				$model->createAdminUser();
-
-				$filename = Yii::getPathOfAlias('app.config.local') . '.php';
-				
-				// if the config file has been written then install has completed!
-				if (file_exists($filename)) {
-					$this->redirect(array('install/step2'));
-				} else {
-                    // create local file contents
-                    $config = $model->generateConfig();
-                    $data = '<?php ' . "\n" . 'return ' . var_export($config, true) . ';';
-                    
-					if (is_writable(dirname($filename))) {
-						file_put_contents($filename, $data);
-						$this->redirect(array('install/step2'));
-					} else {
-						// we can not create the configuration file so lets show the 
-						// user a nice message with instruction to create her own.
-						$this->render('create-config-file', array('config' => $data, 'configFolder' => dirname($filename)));
-						Yii::app()->end();
-					}
-				}
+				$dbForm->installDatabase();
+				// save the config details to config file
+				$dbForm->saveConfig();
 			}
 		}
-				
-		$this->render('step1', array(
-			'model' => $model,
-		));
+		
+		// save user details
+		if (Yii::app()->request->getPost('InstallUserForm')) {
+			$userForm->attributes = $_POST['InstallUserForm'];
+			if ($userForm->validate())
+				$userForm->createAdminUser();
+		}
+		
+		// if database and user installed and config file saved then everything worked!
+		if ($dbForm->isDbInstalled() && $dbForm->configSaved() && $userForm->isUserInstalled()) {
+			$this->redirect(array('install/step2'));
+		}
+		// database and user successfully installed but config file not saved
+		else if($dbForm->isDbInstalled() && $userForm->isUserInstalled() && !$dbForm->configSaved()){
+			// we can not create the configuration file so lets show the 
+			// user a nice message with instruction to create her own.
+			$this->render('create-config-file', array('config' => $dbForm->generateConfigPhp(), 'configFolder' => $dbForm->getConfigFile()));
+		} else {
+			$this->render('step1', array('dbForm' => $dbForm,'userForm' => $userForm));
+		}
 	}
 
 	public function actionStep2() {
@@ -80,12 +66,10 @@ class InstallController extends Controller {
 				Yii::app()->user->setFlash('error-msg-debug', $e->getMessage());
 			Yii::app()->user->setFlash('error', "Couldn't connect to database. Please check the details and try again!");
 
-			$this->redirect(array('install/step1'));
+			//$this->redirect(array('install/step1'));
 		}
 
-		$model = new InstallForm;
-
-		$this->render('success', array('model' => $model));
+		$this->render('success');
 	}
 
 	/**

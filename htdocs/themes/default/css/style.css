@@ -310,6 +310,7 @@ div.scopes .scopeDescription {
 	background: white;
 	margin-bottom: 16px;
 	max-width: 1200px;
+	border-radius:5px;
 }
 
 .paddedBlock {

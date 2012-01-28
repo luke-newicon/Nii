@@ -24,6 +24,7 @@ class NHtml extends CHtml {
 	 * This function allows route to be a string as well for example
 	 * NHtml::url('/crm/contact/show', array('id'=>3))
 	 * however you can also use this the same as calling Yii::app()->createUrl
+	 * If you use NHtml::url() and pass no parameters the base url of the application will be returned
 	 * 
 	 * @see CWebApplication::createUrl
 	 * @param mixed (string|array) $route if route is an array the $getArray parameter is ignored
@@ -37,7 +38,6 @@ class NHtml extends CHtml {
 			$route = $getArray;
 		}
 		return Yii::app()->createUrl($route[0], array_splice($route, 1));
-		;
 	}
 
 	public static function urlAbsolute($route, $params=array(), $schema=null) {
@@ -48,7 +48,14 @@ class NHtml extends CHtml {
 		}
 		return Yii::app()->createAbsoluteUrl($route, $params);
 	}
-
+	
+	/**
+	 * returen the theme base url
+	 */
+	public function themeUrl(){
+		echo Yii::app()->theme->baseUrl;
+	}
+	
 	public static function baseUrl() {
 		if (isset(Yii::app()->params['baseUrl'])) {
 			return Yii::app()->params['baseUrl'];

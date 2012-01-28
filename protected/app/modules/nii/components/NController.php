@@ -36,16 +36,7 @@ class NController extends CController
 			// remove scripts added every page load by nii.
 			// we don't therefore need them to load in on ajax requests!
 			Yii::app()->clientScript->scriptMap=NiiModule::get()->ajaxScriptMap();
-		} else {
-			// include my scripts!
-			$this->coreAssets = Yii::app()->getModule('nii')->getAssetsUrl();
-			
-			Yii::app()->getClientScript()->registerCssFile($this->coreAssets."/jqueryui/nii/jquery-ui.css");
-
-			Yii::app()->getClientScript()->registerScriptFile($this->coreAssets.'/js/jquery.scrollto.js');
-			Yii::app()->getClientScript()->registerCoreScript("jquery.ui");
 		}
-
 	}
 
 	

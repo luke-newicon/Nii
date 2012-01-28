@@ -58,26 +58,20 @@ class NiiModule extends NWebModule
 		
 		// use packages to manage javascript, could be placed into a packages.php file
 		// possible implementation:
-		 $cs->packages =  array(
+		$cs->packages =  array(
 			'nii' => array(
 				'basePath'=>'nii.assets',
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/jquery.metadata.js', 
 					'js/bootstrap-twipsy.js', 
-//					'js/tipsy/javascripts/jquery.tipsy.js',
 					'js/nii.js', 
 					'js/functions.js',
-//					'js/jquery.jscrollpane.min.js',
-//					'js/jquery.hotkeys.js',
 					'js/backbone/underscore-1.3.1.min.js',
-//					'js/backbone/backbone-0.5.3.min.js',
-//					'js/gritter/js/jquery.gritter.min.js',
 				),
 				'css'=>array(
 					'oocss/all.css',
-//					'js/tipsy/stylesheets/tipsy.css',
-//					'js/gritter/css/jquery.gritter.css',
+					'jqueryui/nii/jquery-ui.css'
 				),
 				'depends'=>array('jquery.ui')
 			),
@@ -87,9 +81,9 @@ class NiiModule extends NWebModule
 				'js'=>array(
 					'js/backbone/underscore-1.3.1.min.js',
 					'js/backbone/backbone-0.5.3.min.js'
-				)
+				),
+				'depends'=>array('jquery')
 			)
-			 
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		
