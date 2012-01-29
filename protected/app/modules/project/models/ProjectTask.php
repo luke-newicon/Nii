@@ -44,7 +44,6 @@ class ProjectTask extends NActiveRecord {
 	public function relations() {
 		return array(
 			'project' => array(self::BELONGS_TO, 'ProjectProject', 'project_id'),
-			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
 		);
 	}
 
@@ -67,18 +66,7 @@ class ProjectTask extends NActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-	
-	public function editLink($text=null){
-		if(!$text)
-			$text = $this->name;
-		return CHtml::link($text, array('/project/task/edit','id'=>$this->id()));
-	}
-	
-	public function viewLink($text=null){
-		if(!$text)
-			$text = $this->name;
-		return CHtml::link($text, array('/project/task/view','id'=>$this->id()));
-	}
+
 	
 	public function viewProject(){
 		if($this->project)
@@ -128,13 +116,6 @@ class ProjectTask extends NActiveRecord {
 		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
 	}
 	
-	public function getAssignedTo() {
-		
-	}
-	
-	public function getCreatedBy() {
-		
-	}
 	
 	public function getEstimatedTimeNice() {
 		if ($this->estimated_time)

@@ -17,6 +17,25 @@
 class NActiveRecord extends CActiveRecord
 {
 	
+	/**
+	 * Shorthand method to Yii::app()->db->createCommand()
+	 *
+	 * @return CDbCommand
+	 */
+	public function cmd(){
+		return Yii::app()->db->createCommand();
+	}
+	
+	/**
+	 * Shorthand method to Yii::app()->db->createCommand()->select()->from
+	 *
+	 * @return CDbCommand
+	 */
+	public function cmdSelect($select='*'){
+		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
+	}
+	
+	
 	
 	/**
 	 * proxies to getPrimaryKey method
@@ -189,6 +208,7 @@ class NActiveRecord extends CActiveRecord
 	public function onAfterInstall($event){
 		$this->raiseEvent('onAfterInstall', $event);
 	}
+	
 	
 	/**
 	 * Adds tablePrefix to tableName if necessary
