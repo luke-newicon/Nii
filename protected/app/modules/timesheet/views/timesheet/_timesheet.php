@@ -1,7 +1,7 @@
 <table id="timesheet-grid" class="condensed-table bordered-table zebra-striped">
 	<thead>
 		<tr>
-			<th>Task</th>
+			<th>Task Description</th>
 			<th>Mon</th>
 			<th>Tue</th>
 			<th>Wed</th>
@@ -13,23 +13,24 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($timesheet->records as $record): ?>
-		<tr>
-			<td>Project</td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_monday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_tuesday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_wednesday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_thursday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_friday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_saturday; ?>"/></td>
-			<td class="hour_units"><input type="text" value="<?php echo $record->time_sunday; ?>"/></td>
-			<td>
-				<a href="<?php echo NHtml::url(array('/timesheet/timesheet/delete','id'=>$record->id))?>" class="icon fam-delete" data-confirm="Are you sure you want to delete this task?"></a>
-			</td>
-		</tr>
-		<?php endforeach;?>
-		<tr>
-			<td colspan="9"><a href="#" class="icon fam-add">Add a task</a></td>
+		<?php if($timesheet->records): foreach($timesheet->records as $record): ?>
+			<?php $this->renderPartial('_row',array('record' => $record)) ?>
+		<?php endforeach;endif; ?>
+		<tr id="record-add-row">
+			<td colspan="9"><a id="record-add" href="#" class="icon fam-add">Add a record</a></td>
 		</tr>
 	</tbody>
 </table>
+<script>
+	jQuery(function($){
+		$('#record-add').click(function(){
+			$.ajax({
+				url: '<?php echo NHtml::url(array('/timesheet/timesheet/add','timesheet'=>$timesheet->id)) ?>',
+				success: function(msg){
+					$('#record-add-row').before(msg);
+				}
+			});
+			return false;
+		});
+	});
+</script>

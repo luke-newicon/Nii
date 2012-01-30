@@ -23,3 +23,5 @@ For the techies, the contents of the local.php configuration file is:
 <?php $this->beginWidget('CTextHighlighter', array('language'=>'php','showLineNumbers'=>true, 'lineNumberStyle'=>true)); ?>
 <?php echo $config; ?>
 <?php $this->endWidget(); ?>
+
+<a href="<?php echo NHtml::url(); ?>" class="btn large primary">Ok, I have done this, continue</a>

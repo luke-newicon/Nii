@@ -20,13 +20,13 @@
  *
  * Add custom form styles by adding a new object root level class on the surrounding top level element (like the form)
  * for example:
- * .myFunkFormSkin .input{//input styles} // can use inputBox style outside of a field but you will have to manually implement focus, error and success classes
+ * .myFunkFormSkin .input{//input styles} // can use input style outside of a field but you will have to manually implement focus, error and success classes
  * .myFunkFormSkin .field .input{//input styles}
  * .myFunkFormSkin .field.error .input{//input error style}
  */
  
 /* Resets the input elements styles, make expand to fit container (.input) */
-.input input,.input select,.input textarea,.inputBox input,.inputBox select,.inputBox textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
+.input input,.input select,.input textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
 
 textarea {height: auto;}
 label, input, select, textarea {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 13px;line-height: 18px;}
@@ -46,14 +46,14 @@ label{float:none;padding-top:0;color:#404040;}
 
 /* Input boxes and input states */
 /* make a nice looking input, defines padding and input box style */
-.input, .inputBox {background-image: url('skin/input-bg.png');background-position:top left;background-repeat:repeat-x;background-color:#fff;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:5px;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;box-shadow:0px 1px 0px rgba(255,255,255,0.5);-moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);}
-.focus .input, .focused .input,.focus.inputBox, .focused.inputBox {border-color:rgba(82, 168, 236, 0.8);box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6); background-image:none;}
+.input {background-image: url('skin/input-bg.png');background-position:top left;background-repeat:repeat-x;background-color:#fff;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:5px;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;box-shadow:0px 1px 0px rgba(255,255,255,0.5);-moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);}
+.focus .input, .focused .input {border-color:rgba(82, 168, 236, 0.8);box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6); background-image:none;}
 /* error input styles */
-.error .input,.error .inputBox {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
-.error.focus .input,.error.focused .input, .error.focus.inputBox,.error.focused.inputBox {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);background-image:none;}
+.error .input {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
+.error.focus .input,.error.focused .input {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);background-image:none;}
 /* success input styles */
-.success .input,.success .inputBox {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
-.success.focus .input,.success.focused .input,.success.focus.inputBox,.success.focused.inputBox {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);background-image:none;}
+.success .input {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
+.success.focus .input,.success.focused .input {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);background-image:none;}
 /* validating input styles */
 .validating .input{/*border-color:#ccc;*/}/* this class is applied when the form is validating the input, typically when sending the ajax response to check validation */
 .validating.focus .input,.validating.focused .input{}
@@ -84,10 +84,10 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 .field.error .lbl {color:#9D261D;}
 
 
-fieldset{margin-bottom:18px;padding-top:18px}
-fieldset legend{color:#404040;display:block;font-size:19.5px;line-height:1}
+fieldset legend{color:#404040;display:block;font-size:19.5px;line-height:1;}
 .float legend{padding-left:150px}
-
+form{margin-bottom:18px;}
+fieldset{margin-bottom:18px;padding-top:18px;}
 
 /* 
  * bootstrap styles 

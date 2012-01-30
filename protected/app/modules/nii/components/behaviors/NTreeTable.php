@@ -69,6 +69,16 @@ class NTreeTable extends CActiveRecordBehavior
 		$search = $this->getOwner()->find($this->left . '=0');
 		return $search;
 	}
+	
+	/**
+	 * whether the node is a root node
+	 * 
+	 * @return boolean 
+	 */
+	public function isRoot() {
+		$this->getProperties($left);
+		return ($this->getOwner()->$left==0);
+	}
 
 	/**
 	 * Gets all of the descendants of a particular node through all levels
@@ -111,7 +121,6 @@ class NTreeTable extends CActiveRecordBehavior
 			'params' => array(':lft' => $node->$left, ':rgt' => $node->$right),
 			'order' => "$left ASC"
 		));
-
 		return $ancestors;
 	}
 
@@ -121,7 +130,7 @@ class NTreeTable extends CActiveRecordBehavior
 	 * @return array of CActiveRecord's 
 	 */
 	public function getAncestors() {
-		return $this->getAncestorsOf($this->getOwner());
+            return $this->getAncestorsOf($this->getOwner());
 	}
 
 	/**
@@ -133,14 +142,14 @@ class NTreeTable extends CActiveRecordBehavior
 	public function getParentOf(CActiveRecord $node) {
 		$this->getProperties($left, $right, $level);
 		$res = $this->getOwner()->find(array(
-			'condition' => "$left < :left AND $right > :right AND $level > :level",
-			'params' => array(':left' => $node->$left, ':right' => $node->$right, ':level' => $node->$level - 1)
+			'condition' => "`$left` < :lft AND `$right` > :rgt AND `$level` = :level",
+			'params' => array(':lft' => $node->$left, ':rgt' => $node->$right, ':level' => $node->$level - 1)
 		));
 
-		if ($res->count() <= 0) {
+		if ($res === null) {
 			return false;
 		}
-		return $res->first[0];
+		return $res;
 	}
 
 	/**
@@ -212,31 +221,25 @@ class NTreeTable extends CActiveRecordBehavior
 	 * deletes node and it's descendants
 	 */
 	public function deleteNode(CActiveRecord $node, $deleteDescendants = false) {
+		$this->getProperties($left, $right, $level);
 
-		$left = $this->left;
-		$right = $this->right;
-
-		$transaction = $this->getOwner()->dbConnection->beginTransaction();
+		$connection=Yii::app()->db;
+		$t=$connection->beginTransaction();
+		
 		try {
-			$t = $this->getDb()->beginTransaction();
-			//TODO: add the setting whether or not to delete descendants or relocate children
-
 			$this->getOwner()->deleteAll(array(
-				'condition' => "$left >= :left AND <= :right",
+				'condition' => "$left >= :left AND $right<= :right",
 				'params' => array(':left'=>$node->$left, ':right' => $node->$right))
 			);
 
 			$first = $node->$left + 1;
 			$delta = $node->$right - $node->$left - 1;
-
 			$this->_shiftRLValues($first, $delta);
-
 			$t->commit();
 		} catch (Exception $e) {
 			$t->rollBack();
 			throw $e;
 		}
-
 		return true;
 	}
 
@@ -306,20 +309,7 @@ class NTreeTable extends CActiveRecordBehavior
 			$sql .= " $colParent = {$insertNode->getPrimaryKey()}";
 			$sql .= " WHERE $colLeft >= $newLeft AND $colRight<= $newRight";
 			$this->getDb()->createCommand($sql)->execute();
-			
-			//  possible implementation with NQuery
-			//  NQuery::get($this->getOwner())->update()
-			//     ->set('tree_lft', 'tree_lft + 1', true)
-			//     ->set('tree_rgt', 'tree_rgt + 1', true)
-			//     ->set('tree_level', 'tree_level + 1', true)
-			//     ->set('tree_parent', $insertNode->getPrimaryKey()())
-			//     ->where('tree_lft >= ?', $newLeft)
-			//     ->where('tree_rgt <= ?', $newRight)
-			//     ->go();
-
-
 			$this->_insertNode($insertNode, $newLeft, $newRight, $refNode->$colLevel, $refNode->$colParent);
-
 			$t->commit();
 		} catch (Exception $e) {
 			$t->rollback();
@@ -505,12 +495,12 @@ class NTreeTable extends CActiveRecordBehavior
 	 *
 	 * @param CActiveRecord $node the treeRow node to draw the path for
 	 * @param string $seperator path seperator
-	 * @param string $colName the table column name to use as the string path if null thenthe __tostring method will be used
+	 * @param string $colName the table column name to use as the string path if null then the __tostring method will be used
 	 * @param bool $includeNode whether or not to include node at end of path
 	 * @param bool $rootNode true to include the root node output at the beginning of the path
 	 * @return string string representation of path
 	 */
-	public function getPath($node, $seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false) {
+	public function getPathOf($node, $seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false) {
 		$path = array();
 		$ancestors = $node->getAncestors();
 		if ($ancestors) {
@@ -525,6 +515,10 @@ class NTreeTable extends CActiveRecordBehavior
 		}
 
 		return implode($seperator, $path);
+	}
+
+	public function getPath($seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false){
+		return $this->getPathOf($this->getOwner(), $seperator, $colName, $includeNode, $includeRoot);
 	}
 
 	/**
@@ -728,12 +722,6 @@ class NTreeTable extends CActiveRecordBehavior
 			$sql = "UPDATE `$tableName` SET $colLevel = $colLevel + $levelDiff WHERE $colLeft > $left AND $colRight < $right";
 			$this->getDb()->createCommand($sql)->execute();
 			
-			// NQuery::get($this->getOwner())->update()
-			//     ->set('tree_level', "tree_level + $levelDiff", true)
-			//     ->where('tree_lft > ?', $left)
-			//     ->where('tree_rgt < ?', $right)
-			//     ->go();
-
 			// now there's enough room next to target to move the subtree
 			$this->_shiftRlRange($left, $right, $destLeft - $left);
 
@@ -843,18 +831,23 @@ class NTreeTable extends CActiveRecordBehavior
 	 * 
 	 * @return void
 	 */
-	protected function _afterCreateTable() {
+	public function afterInstall($event) {
+		$this->getProperties($left, $right, $level, $parent);
 		// check we don't already have a root node
-		if (count($this->select()->where('tree_lft=?', 0)->limit(1)->go()))
+		if ($this->getOwner()->countByAttributes(array($left=>0)))
 			return;
-
-		// ok, so create a root node
-		$row = $this->createRow();
-		$row->tree_lft = 0;
-		$row->tree_rgt = 1;
-		$row->tree_parent = 0;
-		$row->tree_level = 0;
-		$row->save();
+		// if the table exists
+		if($this->getDb()->getSchema()->getTable($event->sender->tableName())){
+			// ok, so create a root node
+			$rowClass = get_class($this->getOwner());
+			$row = new $rowClass;
+			$row->name = 'root';
+			$row->$left = 0;
+			$row->$right = 1;
+			$row->$parent = 0;
+			$row->$level = 0;
+			$row->save();
+		}
 	}
 
 
@@ -874,33 +867,37 @@ class NTreeTable extends CActiveRecordBehavior
 	/**
 	 * Get an array in jstree format representing all nodes within the $rootNode
 	 * 
+	 * @param string $nameCol the column name to use ass the nodes name
+	 * @param string $typeCol the column name to use as the nodes type
 	 * @param CActiveRecord $rootNode the node to start from (typically the root)
 	 * @return array 
 	 */
-	public function generateJstreeArray($rootNode=null){
+	public function generateJstreeArray($rootNode=null, $nameCol='name', $typeCol=null){
 		$tree= null;
 		if($rootNode===null)
 			$rootNode = $this->getTreeRoot();
-		$this->_generateJstreeArrayRecursive($rootNode, $tree);
+		$this->_generateJstreeArrayRecursive($rootNode, $tree, $nameCol, $typeCol);
 		return $tree;
 	}
 	
 	/**
 	 * recursive function to generate jstree array
 	 * 
+	 * @param string $nameCol the column name to use ass the nodes name
+	 * @param string $typeCol the column name to use as the nodes type
 	 * @param CActiveRecord $rootNode
 	 * @param array $tree 
 	 */
-	private function _generateJstreeArrayRecursive($rootNode, &$tree=array()){
+	private function _generateJstreeArrayRecursive($rootNode, &$tree=array(), $nameCol='name', $typeCol=null){
 		// if child
-		$myArr = $this->getJstreeNodeArray($rootNode);
+		$myArr = $this->getJstreeNodeArray($rootNode, $nameCol, $typeCol);
 		$tree[] =& $myArr;
 		
 		if($rootNode->hasChildren()){
 			$items = array();
 			$myArr['children'] =& $items;
 			foreach($rootNode->getChildren() as $child) {
-				$this->_generateJstreeArrayRecursive($child, $items);
+				$this->_generateJstreeArrayRecursive($child, $items, $nameCol, $typeCol);
 			}
 		}
 	}
@@ -910,157 +907,27 @@ class NTreeTable extends CActiveRecordBehavior
 	 * This ignores the node's children to complete an entrie array including children
 	 * use generateJstreeArray function
 	 * 
+	 * @param string $nameCol the column name to use ass the nodes name
+	 * @param string $typeCol the column name to use as the nodes type
 	 * @param CActiveRecord $node
 	 * @return array 
 	 */
-	public function getJstreeNodeArray($node){
-		$ret = array('data'=>$node->name, 'attr'=>array('data-id'=>$node->getPrimaryKey()));
+	public function getJstreeNodeArray($node, $nameCol='name', $typeCol=null){
+		$ret = array(
+                    'data'=>$node->$nameCol,
+                    'attr'=>array(
+                        'data-id'=>$node->getPrimaryKey(),
+			'data-name'=>$node->name,
+                        'title'=>$node->description,
+                        'id'=>'treenode'.$node->getPrimaryKey()
+                    )
+                );
+		if($typeCol!==null)
+			$ret['attr']['rel'] = $node->$typeCol;
 		if($node->hasChildren()){
 			$ret['state'] = 'closed';
 		}
 		return $ret;
-	}
-	
-
-
-	/***
-	 * MATT WHAT THE FECK IS ALL THIS LOT??
-	 * COMMENTS PLEASE, IF NOT USED, FOR THE LOVE OF GOD, DELETE IT!
-	 * DOES IT EVEN WORK?
-	 */
-	
-	
-	public $displayArray = array();
-
-
-	private function addDisplayItem($node) {
-		$this->getProperties($left, $right, $level);
-		$this->displayArray[] = array('name' => $node->name, 'level' => $node->$level, 'type' => $node->type, 'id' => $node->getPrimaryKey());
-	}
-
-	private $displayLevel;
-
-	/**
-	 *
-	 * @param node $rootNode if not specified root assumed
-	 * @return <type>
-	 */
-	public function generateMenuArray($rootNode=null,$webAddress='logic/index',$idVar=null){
-		$tree= null;
-		if($rootNode===null)
-			$rootNode = $this->getTreeRoot();
-		$this->_generateMenuArrayRecusive($rootNode, $tree,$webAddress,$idVar);
-		return $tree;
-	}
-
-	/**
-	 *
-	 *
-	 * @param <type> $rootNode
-	 * @param <type> $array
-	 */
-	protected function _generateMenuArrayRecusive($rootNode, &$tree=array(),$webAddress=null,$idVar=null){
-
-		// if child
-		if($webAddress)
-			$myArr = array('id'=>$rootNode->getPrimaryKey(), 'name'=>$rootNode->name, 'label'=>$rootNode->name,'url'=>array($webAddress,$idVar=>$rootNode->getPrimaryKey()));
-		else{
-			$myArr = array('id'=>$rootNode->getPrimaryKey(), 'name'=>$rootNode->name, 'label'=>$rootNode->name);
-		}
-		$tree[] =& $myArr;
-		
-		if($rootNode->hasChildren()){
-			$items = array();
-			$myArr['items'] =& $items;
-			foreach($rootNode->getChildren() as $child){
-				$this->_generateMenuArrayRecusive($child, $items,$webAddress,$idVar);
-			}
-		}
-	}
-	
-	
-	
-	public function getTree($node) {
-		if (count($this->displayArray) == null)
-			$this->generateLiTree($node);
-		return $this->displayArray;
-	}
-
-	/**
-	 *
-	 * @param CActiveRecord $node The node to use as the base for the tree
-	 * @param array $options An array of options to use when creating the tree
-	 *
-	 */
-	public function displayTree($node, $nameColumn='name',  $options = array()) {
-
-		//if the display array is not set then generates it.
-		if (count($this->displayArray) == 0) {
-			$this->generateLiTree($node);
-		}
-		// Used to contain the data which will be retured to the view.
-		$return = null;
-
-		$test = ($this->getTree($node));
-		$level = 0;
-
-		foreach ($test as $t) {
-			if ($t['level'] > $level) {
-				$return .= '<ul style="padding-left:10px;margin-bottom:0px;">';
-				$level = $t['level'];
-			} else if ($t['level'] < $level) {
-				$return .= '</ul>';
-				$level = $t['level'];
-			}
-
-			$id = $t['id'];
-			$name = $t['name'];
-
-			if ($level != 0 ) {
-				$return .= print_r($options['itemLink']).'<li style="list-style-type:none;">';
-					$return .= $t['type'].'<a href="#">' . $t['name'] . '</a>';
-				$return .='</li>';
-			}
-		}
-
-		echo $return;
-	}
-
-	
-	public function generateNestedArray($node){
-		//Sets properties which are referred to in this function
-		$this->getProperties($left, $right, $level);
-
-		// If the level is below the last one then adds its information to the output array
-		if ($node->level > $this->displayLevel) {
-			$return = $this->addDisplayItem($node);
-		}
-
-		// Cycles through every item on the level
-		foreach ($node->getChildren() as $item) {
-			$nodeChildren = $item->getChildren();
-
-			// Does this level have items below it
-			if (!empty($nodeChildren))
-				$nodeHasChildren = true;
-			else
-				$nodeHasChildren = false;
-
-			// The display level needs to be updated to stop infinate looop.
-			$this->displayLevel = $node->$level;
-
-			// If the node has children then calls itself again
-			if ($nodeHasChildren) {
-				$this->generateLiTree($item);
-			}
-
-			// If the bottom node then adds the node information to the output array
-			if ($node->$level == $this->displayLevel) {
-				$this->addDisplayItem($item);
-			}
-		}
-
-		return $return;
 	}
 
 }
