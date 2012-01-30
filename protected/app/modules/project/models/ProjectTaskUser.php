@@ -103,10 +103,7 @@ class ProjectTaskUser extends NActiveRecord {
 	public function projectList(){
 		return CHtml::listData(TaskProject::model()->findAll(), 'id', 'name');
 	}
-	
-	public function customerList(){
-		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
-	}
+
 	
 	public function getUserLink($displayIcon=true) {
 		$user = NActiveRecord::model('User')->findByPk($this->user_id);

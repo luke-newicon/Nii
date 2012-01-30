@@ -75,7 +75,7 @@ Class ModulesController extends AController
 				$msg .= ' <a class="label warning" href="#" onclick="jQuery(\'#exception-error-details\').toggle();return false;">Show Error Details</a>'."<div style=\"display:none;\" id=\"exception-error-details\">$errorHtml</div>";
 				Yii::app()->user->setFlash('error-block-message', $msg);
 			}
-						//"PHP error message: {$e->getMessage()}, <br /> File: {$e->getFile()} <br /> Line: {$e->getLine()}");
+			//"PHP error message: {$e->getMessage()}, <br /> File: {$e->getFile()} <br /> Line: {$e->getLine()}");
 		}
 		$this->redirect(array('/admin/modules/index'));
 	}

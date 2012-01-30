@@ -111,11 +111,7 @@ class ProjectTask extends NActiveRecord {
 	public function projectList(){
 		return CHtml::listData(ProjectProject::model()->findAll(), 'id', 'name');
 	}
-	
-	public function customerList(){
-		return CHtml::listData(ContactCustomer::model()->findAll(), 'id', 'name');
-	}
-	
+
 	
 	public function getEstimatedTimeNice() {
 		if ($this->estimated_time)

@@ -333,6 +333,7 @@ class Nii extends CWebApplication
 			$m = Yii::app()->getModule($moduleId);
 			$m->install();
 			$m->setup();
+			Yii::flushAssets();
 			return $m;
 			
 		} catch(Exception $e) {

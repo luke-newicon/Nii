@@ -40,7 +40,9 @@ nbproject
 files/*
 config.php
 
+
 # Nii files #
 #############
 protected/app/config/local.php
+htdocs/assets
 /.idea/

@@ -50,10 +50,7 @@ class AdminController extends AController {
 	 * remove all assets from the assets folder
 	 */
 	public function actionFlushAssets($return='index'){
-		$ignore = array(
-			Yii::app()->getAssetManager()->basePath.'/.gitignore',
-		);
-		NFileHelper::deleteFilesRecursive(Yii::app()->getAssetManager()->basePath,$ignore);
+		Yii::flushAssets();
 		Yii::app()->user->setFlash('success','Assets folder succesfully flushed');
 		$this->redirect(array($return));
 	}

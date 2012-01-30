@@ -37,14 +37,6 @@ class ProjectProject extends NActiveRecord {
 		);
 	}
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations() {
-		return array(
-			'customer' => array(self::BELONGS_TO, 'ContactCustomer', 'customer_id'),
-		);
-	}
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -56,7 +48,6 @@ class ProjectProject extends NActiveRecord {
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
-		$criteria->compare('customer_id', $this->customer_id, true);
 
 		return new NActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -74,12 +65,6 @@ class ProjectProject extends NActiveRecord {
 				'name' => 'name',
 				'type' => 'raw',
 				'value' => '$data->viewLink()',
-			),
-			array(
-				'name' => 'customer_id',
-				'type' => 'raw',
-				'value' => '$data->customerLink',
-				'exportValue' => '$data->customerName',
 			),
 			array(
 				'name' => 'countTasks',
@@ -105,20 +90,7 @@ class ProjectProject extends NActiveRecord {
 		return CHtml::link($text, array('/project/index/view', 'id'=>$this->id()));
 	}
 	
-		
-	public function getCustomerName(){
-		if($this->customer)
-			return $this->customer->name;
-		else
-			return '<span class="noData">No customer assigned</span>';
-	}
 	
-	public function getCustomerLink(){
-		if($this->customer)
-			return NHtml::link($this->customer->name, array('/contact/admin/view', 'id'=>$this->customer->id()));
-		else
-			return '<span class="noData">No customer assigned</a>';
-	}
 	
 	public function getEditLink() {
 		if ($this->id)
