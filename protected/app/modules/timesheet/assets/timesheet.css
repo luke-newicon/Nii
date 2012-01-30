@@ -1,2 +1,4 @@
-#timesheet-grid tr td.hour_units{width:30px;}
-#timesheet-grid tr td.hour_units imput{width:25px;}
+.txtC{text-align:center}
+#timesheet-grid .hour_units{width:30px;text-align:center}
+#timesheet-grid .delete-column,#timesheet-grid .add-column{width:30px;text-align:center}
+#timesheet-grid td.hour_units input{width:25px;text-align:center}
