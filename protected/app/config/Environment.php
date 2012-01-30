@@ -149,7 +149,6 @@ class Environment {
     public $yiitPath; // path to yiit.php
     public $yiiDebug; // int
     public $yiiTraceLevel; // int
-    public $hasLocalConfig = false;
     // Environment Yii statics to run
     // @see http://www.yiiframework.com/doc/api/1.1/YiiBase#setPathOfAlias-detail
     public $yiiSetPathOfAlias = array(); // array with "$alias=>$path" elements
@@ -223,7 +222,6 @@ class Environment {
         if (file_exists($localConfFile)) {
             $localConf = require $localConfFile;
             $config['config'] = self::mergeArray($localConf, $config['config']);
-            $this->hasLocalConfig = true;
         }
 
 

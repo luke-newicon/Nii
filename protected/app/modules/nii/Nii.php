@@ -105,6 +105,7 @@ class Nii extends CWebApplication
 			FB::setEnabled(false);
 		}
 		
+		$this->checkInstalled();
 		
 		if($this->domain)
 			$this->setupDomainMultisite();
@@ -125,6 +126,13 @@ class Nii extends CWebApplication
 	 */
 	public function setupApplication(){
 		$this->configure(Yii::app()->settings->get('application','config'));
+	}
+	
+	public function checkInstalled(){
+		$i = new InstallForm();
+		if(!$i->isDbInstalled($e) || !$i->isUserInstalled()){
+			$this->goToInstall();
+		}
 	}
 	
 	/**
@@ -551,7 +559,6 @@ class Nii extends CWebApplication
 		if ($route[0] != 'install') {
 			$this->catchAllRequest = array('install');
 		}
-		$this->run();
 	}
 	
 	/**

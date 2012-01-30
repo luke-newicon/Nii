@@ -4,10 +4,7 @@ require_once (dirname(__FILE__) . '/../protected/app/config/Environment.php');
 // set environment * new Environment('PRODUCTION'); (override mode)
 $env = new Environment();
 
-if ($env->hasLocalConfig)
-    Yii::createWebApplication($env->config)->run();
-else
-    Yii::createWebApplication($env->config)->goToInstall();
+Yii::createWebApplication($env->config)->run();
 
 /**
  * debug print functionn

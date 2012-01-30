@@ -29,9 +29,9 @@ class ProjectModule extends NWebModule
 //		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
 //			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
 //		));
-		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
-			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
-		));
+//		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
+//			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
+//		));
 //		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label, array(
 //			'visible' => Yii::app()->user->checkAccess('contact/supplier/index'),
 //		));

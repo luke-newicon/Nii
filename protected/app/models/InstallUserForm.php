@@ -57,41 +57,31 @@ class InstallUserForm extends InstallForm
 		);
 	}
 	
+	/**
+	 * Admin user create
+	 * @return boolean result of save function
+	 */
 	public function createAdminUser(){
+		// method can only be used if a user does not already exist!
+		// In affect it can only be ran once
+		if($this->isUserInstalled())
+			return false;
 		// add the admin user
 		// if the user already exists we will still make it work
 		$user = User::model()->findByAttributes(array('username'=>$this->username));
 		if ($user === null)
 			$user = new User;
-//		if ($user->getScenario() != 'insert') {
-//			$user->password = $user->cryptPassword($this->password);
-//			$user->activekey = $user->cryptPassword(microtime().$this->password);
-//		} else {
+		
 		$user->password = $this->password;
-//		}
-
 		$user->username = $this->username;
 		$user->email = $this->email;
 		$user->superuser = 1;
 		$user->status = 1;
 		$user->roleName = 'admin';
 
-		if ($user->validate()) {
-			return $user->save();
-			if($user->save())
-				return $user->saveRole();
-			else
-				return false;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Checks if there is a user installed 
-	 */
-	public function isUserInstalled(){
-		return	(User::model()->count() > 0);
+		// we do not want to use validation as it will fail because we are a guest user.
+		// bu this is an exception as we are in the install and this is never called again.
+		return $user->save(false);
 	}
 	
 }

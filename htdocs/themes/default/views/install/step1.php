@@ -4,6 +4,19 @@
 		'htmlOptions'=>array('class'=>'float')
 	));
 ?>
+<?php if(Yii::app()->user->hasFlash('debug')): ?>
+	<div class="alert-message error block-message">
+		<?php echo Yii::app()->user->getFlash('debug'); ?>
+	</div>
+<? endif; ?>
+
+<?php if(Yii::app()->user->hasFlash('error')): ?>
+	<div class="alert-message error block-message">
+		<p><?php echo Yii::app()->user->getFlash('error'); ?></p>
+	</div>
+<? endif; ?>
+
+
 	<div class="alert-message info block-message">
 		<p>Please fill in the details below to install this application.</p>
 		<div class="alert-actions">
@@ -70,36 +83,9 @@
 			<span class="hint">Leave blank for no prefix</span>
 		</div>
 	</fieldset>
-	<fieldset>
-		<legend>Admin User Details</legend>
-		<div class="field <?php echo ($userForm->hasErrors('email'))?'error':''; ?>">
-			<?php echo $form->labelEx($userForm, 'email'); ?>
-			<div class="input large">
-				<?php echo $form->textField($userForm, 'email'); ?>
-			</div>
-			<?php echo $form->error($userForm, 'email'); ?>
-		</div>
-		<div class="field <?php echo ($userForm->hasErrors('username'))?'error':''; ?>">
-			<?php echo $form->labelEx($userForm, 'username'); ?>
-			<div class="input medium">
-				<?php echo $form->textField($userForm, 'username'); ?>
-			</div>
-			<?php echo $form->error($userForm, 'username'); ?>
-		</div>
-		<div class="field <?php echo ($userForm->hasErrors('password'))?'error':''; ?>">
-			<?php echo $form->labelEx($userForm, 'password'); ?>
-			<div class="input medium">
-				<?php echo $form->passwordField($userForm, 'password'); ?>
-			</div>
-			<?php echo $form->error($userForm, 'password'); ?>
-		</div>
-		<div class="line ptm">
-			<div class="unit size1of5">&nbsp;</div>
-			<div class="lastUnit">
-				<?php echo NHtml::btn('Install','icon fam-database-go','installSubmit primary large'); ?>
-			</div>
-		</div>
-	</fieldset>
+	<div class="actions">
+		<?php echo NHtml::submitButton('Install Database - Next',array('class'=>'btn installSubmit primary large')); ?>
+	</div>
 <?php 
 $this->endWidget(); ?>
 <script>
