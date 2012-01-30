@@ -333,7 +333,7 @@ class Nii extends CWebApplication
 			$m = Yii::app()->getModule($moduleId);
 			$m->install();
 			$m->setup();
-			Yii::flushAssets();
+			$this->flushAssets();
 			return $m;
 			
 		} catch(Exception $e) {
@@ -568,5 +568,14 @@ class Nii extends CWebApplication
 	public function onAfterModulesSetup($event){
 		$this->raiseEvent('onAfterModulesSetup', $event);
 	}
+	
+	/**
+	 * Clear all the assets from the assets folder
+	 */
+	public static function flushAssets(){
+		$ignore = array(Yii::app()->getAssetManager()->basePath.'/.gitignore');
+		NFileHelper::deleteFilesRecursive(Yii::app()->getAssetManager()->basePath,$ignore);
+	}
+	
 	
 }

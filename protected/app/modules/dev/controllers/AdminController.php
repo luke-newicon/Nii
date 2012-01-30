@@ -50,7 +50,7 @@ class AdminController extends AController {
 	 * remove all assets from the assets folder
 	 */
 	public function actionFlushAssets($return='index'){
-		Yii::flushAssets();
+		Yii::app()->flushAssets();
 		Yii::app()->user->setFlash('success','Assets folder succesfully flushed');
 		$this->redirect(array($return));
 	}

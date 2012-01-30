@@ -42,13 +42,4 @@ class Yii extends YiiBase
 		return self::createApplication('Nii',$config);
 	}
 
-	/**
-	 * Clear all the assets from the assets folder
-	 */
-	public static function flushAssets(){
-		$ignore = array(Yii::app()->getAssetManager()->basePath.'/.gitignore');
-		NFileHelper::deleteFilesRecursive(Yii::app()->getAssetManager()->basePath,$ignore);
-	}
-
-	
 }

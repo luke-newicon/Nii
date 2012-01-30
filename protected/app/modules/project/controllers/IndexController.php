@@ -35,6 +35,7 @@ class IndexController extends AController {
 		));
 	}
 	
+	
 	public function actionView($id) {
 				
 		$this->pageTitle = Yii::app()->name . ' - View Project Details';
@@ -62,11 +63,9 @@ class IndexController extends AController {
 		
 		if ($_POST[$modelName]) {
 			$model->attributes = $_POST[$modelName];
-			if ($model->save())
-				$this->redirect(array('/project/index', 'id' => $model->id()));
+			$model->save();
 		}
-		
-		$this->render('create', array('model'=>$model));
+		Yii::app()->end();
 	}
 	
 	public function actionTasks($id) {

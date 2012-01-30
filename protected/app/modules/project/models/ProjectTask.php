@@ -2,6 +2,11 @@
 
 class ProjectTask extends NActiveRecord {
 
+	
+	const STATUS_NEW = 'new';
+	const STATUS_CURRENT = 'current';
+	const STATUS_COMPLETE = 'complete';
+	
 	public $estimated_time_nice;
 	/**
 	 * Returns the static model of the specified AR class.
@@ -35,6 +40,7 @@ class ProjectTask extends NActiveRecord {
 			'assigned_id' => 'Owner',
 			'project_id' => 'Project',
 			'customer_id' => 'Customer',
+			'type'=>'Type'
 		);
 	}
 
@@ -98,15 +104,6 @@ class ProjectTask extends NActiveRecord {
 		);
 	}
 	
-	public function getCustomer_name(){
-		if($this->customer)
-			return $this->customer->name;
-	}
-	
-	public function getProject_name(){
-		if($this->project)
-			return $this->project->name;
-	}
 
 	public function projectList(){
 		return CHtml::listData(ProjectProject::model()->findAll(), 'id', 'name');

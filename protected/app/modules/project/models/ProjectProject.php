@@ -1,9 +1,21 @@
 <?php
 
-class ProjectProject extends NActiveRecord {
+/**
+ * ProjectProject class file.
+ *
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://newicon.net/framework
+ * @copyright Copyright &copy; 2009-2011 Newicon Ltd
+ * @license http://newicon.net/framework/license/
+ */
 
-	public $countTasks;
-	
+/**
+ * Description of ProjectProject
+ *
+ * @author steve
+ */
+class ProjectProject extends NActiveRecord
+{
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class
@@ -19,101 +31,47 @@ class ProjectProject extends NActiveRecord {
 	public function rules() {
 		return array(
 			array('name', 'required'),
-			array('code, description, customer_id, assigned_by_id', 'safe'),
-			array('id, name, description, customer_id', 'safe', 'on' => 'search'),
+			array('description, created_by_id, assigned_id, customer_id', 'safe'),
 		);
 	}
-
-	/**
-	 * Declares attribute labels.
-	 */
-	public function attributeLabels() {
-		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'description' => 'Description',
-			'customer_id' => 'Customer',
-			'countTasks' => '# Tasks',
-		);
-	}
-
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
 	public function search() {
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
 		$criteria->compare('description', $this->description, true);
 
-		return new NActiveDataProvider($this, array(
+		return new NActiveDataProvider('ProjectProject', array(
 			'criteria' => $criteria,
 		));
 	}
 	
-	public function columns() {
-		
+	/**
+	 * Declares attribute labels.
+	 */
+	public function attributeLabels() {
 		return array(
-			array(
-				'name' => 'id',
-				'htmlOptions'=>array('width'=>'30px'),
-			),
-			array(
-				'name' => 'name',
-				'type' => 'raw',
-				'value' => '$data->viewLink()',
-			),
-			array(
-				'name' => 'countTasks',
-				'type' => 'raw',
-				'value' => '$data->countProjectTasks()',
-				'htmlOptions'=>array('width'=>'30px'),
-			),
-			array(
-				'name' => 'editLink',
-				'type' => 'raw',
-				'value' => '$data->editLink',
-				'filter' => false,
-				'sortable' => false,
-				'htmlOptions'=>array('width'=>'30px'),
-				'export'=>false,
-			),
+			'id' => 'Project Number',
+			'name' => 'Project',
+			'description' => 'Description',
+			'created_by_id' => 'Created By',
+			'assigned_id' => 'Owner',
+			'customer_id' => 'Customer',
 		);
 	}
 	
-	public function viewLink($text=null){
-		if(!$text)
-			$text = $this->name;
-		return CHtml::link($text, array('/project/index/view', 'id'=>$this->id()));
+	public function viewLink(){
+		return '<a href="'.NHtml::url(array('/project/index/view', 'id'=>$this->id())).'">' . $this->name . '</a>';
 	}
-	
-	
-	
-	public function getEditLink() {
-		if ($this->id)
-			return NHtml::link('Edit', array('/project/index/edit', 'id'=>$this->id));
-	}
-	
-	public function countProjectTasks($status=array('new','current')) {
-		if (is_array($status))
-			$condition = '`status` IN ("'.implode ('","', $status).'")';
-		else
-			$condition = '`status` = "'.$status.'"';
-		return NActiveRecord::model('ProjectTask')->countByAttributes(array('project_id'=>$this->id), $condition);
-	}
-	
-	public function getProjectTasks($status=array('new','current')) {
-		if (is_array($status))
-			$condition = '`status` IN ("'.implode ('","', $status).'")';
-		else
-			$condition = '`status` = "'.$status.'"';
-		$tasks = NActiveRecord::model('ProjectTask')->findByAttributes(array('project_id'=>$this->id), $condition);
-		return NHtml::listData($tasks, 'id', 'name');
-	}
-	
+
 
 	public static function install($className=__CLASS__) {
 		parent::install($className);
@@ -126,26 +84,14 @@ class ProjectProject extends NActiveRecord {
 				'name' => 'string',
 				'description' => 'text',
 				'created_by_id' => 'int',
-				'customer_id' => 'int',
 				'assigned_id' => 'int',
-				'tree_left' => 'int',
-				'tree_right' => 'int',
-				'tree_level' => 'int',
-				'tree_parent' => 'int',
+				'customer_id' => 'int',
 			),
 		);
 	}
 	
-	public static function projectList(){
-		return CHtml::listData(self::model()->findAll(), 'id', 'name');
-	}
 	
-	public function behaviors() {
-		return array(
-			'tree'=>array(
-               'class'=>'nii.components.behaviors.NTreeTable'
-           )
-		);
+	public function countProjectTasks(){
+		return 0;
 	}
-
 }

@@ -21,7 +21,7 @@
 	<div class="row">
 		<div class="span4">
 			<p class="hint">Customer:</p>
-			<?php echo $model->customerLink ?>
+			<?php //echo $model->customerLink ?>
 		</div>
 		<div class="span2">
 			<p class="hint">Manager:</p>
