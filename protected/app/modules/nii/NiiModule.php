@@ -86,6 +86,7 @@ class NiiModule extends NWebModule
 			)
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
+		Yii::app()->getClientScript()->registerPackage('backbone');
 		
 		
 		if($this->juiThemeUrl===null){

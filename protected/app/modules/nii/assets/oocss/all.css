@@ -9,12 +9,10 @@
 @import url("oocss/core/media/media.css");
 
 @import url("oocss/core/spacing/space.css");
-
+@import url("oocss/core/table/table.css");
 @import url("nii/core/grid.css");
 
 /*@import url("nii/plugins/buttons/buttons.css");*/
 @import url("nii/plugins/forms/forms.css");
 
 @import url("nii/core/content.css");
-/*@import url("oocss/core/content.css");*/
-/*@import url("nii/plugins/tabs/tabs.css");*/
