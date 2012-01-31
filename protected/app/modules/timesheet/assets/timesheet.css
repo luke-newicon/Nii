@@ -1,6 +1,6 @@
 .txtC{text-align:center}
 #timesheet-grid .hour_units{width:37px;text-align:right}
-#timesheet-grid .delete-column,#timesheet-grid .add-column{width:30px;text-align:center}
-#timesheet-grid td.hour_units input{width:25px;text-align:right;}
+#timesheet-grid .delete-col,#timesheet-grid .add-col{width:30px;text-align:center}
+#timesheet-grid td.hour_units input{width:32px;text-align:right;}
 #timesheet-grid tfoot th {font-weight:normal;}
 #timesheet-grid tfoot th.total-col {font-weight:bold;}

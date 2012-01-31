@@ -11,7 +11,28 @@ class TimesheetController extends AController {
 			$timesheet->week_date = $date;
 			$timesheet->save();
 		}
-		$this->render('index', array('timesheet' => $timesheet));
+
+		// find the monday of this week
+		$monday = TimesheetLog::model()->getMonday();
+		
+		// find the logs for this week
+		$logs = TimesheetLog::model()->findAllForWeek($monday);
+		
+		
+		
+		$this->render('index', array(
+			'startDate'=>$monday,
+			'logs'=>CJSON::encode($logs)
+		));
+	}
+	
+	/**
+	 * get the timesheet logs for week commencing...
+	 * @param unix time 
+	 */
+	public function actionWeekLog($date){
+		$logs = TimesheetLog::model()->findAllForWeek(NTime::dateToUnix($date));
+		echo CJSON::encode($logs);
 	}
 	
 	public function actionAdd($timesheet){

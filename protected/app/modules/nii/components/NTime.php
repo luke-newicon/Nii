@@ -538,4 +538,29 @@ class NTime {
 
 		return $time;		
 	}
+	
+	/**
+	 * convert a string mysql date to unix timestamp
+	 * 
+	 * @param string $date format: 2012-01-30
+	 * @return int seconds unix timestamp 
+	 */
+	public static function dateToUnix($date){
+		list($year, $month, $day) = explode('-', $date);
+		return mktime(0, 0, 0, $month, $day, $year);
+	}
+	
+	/**
+	 * convert a string mysql datetime to unix timestamp
+	 * 
+	 * @param string $datetime format: 2012-01-30 12:30:00
+	 * @return int seconds unix timestamp 
+	 */
+	public static function datetimeToUnix($datetime){
+		list($date, $time) = explode(' ',$datetime);
+		list($year, $month, $day) = explode('-', $date);
+		list($hours, $minutes, $seconds) = explode(':', $time);
+		return mktime($hours, $minutes, $seconds, $month, $day, $year);
+	}
+	
 }

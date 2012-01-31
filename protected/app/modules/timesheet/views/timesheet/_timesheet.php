@@ -44,93 +44,198 @@
 		</tr>
 	</tfoot>
 	<tbody>
-		<?php if($timesheet->records): foreach($timesheet->records as $record): ?>
-			<?php $this->renderPartial('_row',array('record' => $record)) ?>
-		<?php endforeach;endif; ?>
-		<tr id="record-add-row">
-			<td>
-				<div class="input">
-					<select>
-						<option>Select a Project</option>
-					</select>
-				</div>
-			</td>
-			<td>
-				<div class="input">
-					<select>
-						<option>Select a Task</option>
-					</select>
-				</div>
-			</td>
-			<td class="hour_units mon-col"><input type="text" value="<?php echo $record->time_monday; ?>" maxlength="4" /></td>
-			<td class="hour_units tue-col"><input type="text" value="<?php echo $record->time_tuesday; ?>" maxlength="4" /></td>
-			<td class="hour_units wed-col"><input type="text" value="<?php echo $record->time_wednesday; ?>" maxlength="4" /></td>
-			<td class="hour_units thu-col"><input type="text" value="<?php echo $record->time_thursday; ?>" maxlength="4" /></td>
-			<td class="hour_units fri-col"><input type="text" value="<?php echo $record->time_friday; ?>" maxlength="4" /></td>
-			<td class="hour_units sat-col"><input type="text" value="<?php echo $record->time_saturday; ?>" maxlength="4" /></td>
-			<td class="hour_units sun-col"><input type="text" value="<?php echo $record->time_sunday; ?>" maxlength="4" /></td>
-			<td class="hour_units total-col">0:00</td>
-			<td class="add-col">
-				<a id="record-add" href="#" class="icon fam-add"></a>
-			</td>
-		</tr>
 	</tbody>
 </table>
 
 
-<script>
+
+
+<script type="text/template" id="time-log-row-template">
+	<td>
+		Project <%= project_id %>
+	</td>
+	<td>
+		Task <%= task_id %>
+	</td>
+	<td class="hour_units mon-col"><input name="time[<%= rows %>][]" value="<%= mon %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units tue-col"><input name="time[<%= rows %>][]" value="<%= tue %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units wed-col"><input name="time[<%= rows %>][]" value="<%= wed %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units thu-col"><input name="time[<%= rows %>][]" value="<%= thu %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units fri-col"><input name="time[<%= rows %>][]" value="<%= fri %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sat-col"><input name="time[<%= rows %>][]" value="<%= sat %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sun-col"><input name="time[<%= rows %>][]" value="<%= sun %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units total-col">0:00</td>
+	<td class="delete-col">
+		<a id="record-delete" href="#" class="icon fam-delete"></a>
+	</td>
+</script>
+
+<script type="text/javascript">
+	
+	
+	
 	jQuery(function($){
-		$('#record-add').click(function(){
-			$.ajax({
-				url: '<?php echo NHtml::url(array('/timesheet/timesheet/add','timesheet'=>$timesheet->id)) ?>',
-				success: function(msg){
-					$('#record-add-row').before(msg);
-				}
-			});
-			return false;
-		});
 		
-		
-		
-		var doTotal = function(el, elTotal){
-			var total=0;
-			el.each(function(){
-				var val = $(this).is('input') ? $(this).val() : $(this).text();
-				var num = parseFloat(val);
-				if(_.isNaN(num))num = 0;
-				total = total + num;
-			});
-			elTotal.html(total.toFixed(2));
+		window.timesheet = {
+			// can be set to hours or minutes
+			logTimeIn:'hours',
+			// calendar view
+			cal:{},
+			// model storing the start and end dates for timesheet week
+			week:{},
+			timeLogList:{},
+			/**
+			 * Init the timesheet app
+			 * start time is the unix epoch time in seconds (equivelent to PHP's)
+			 * note: javascripts unix time is in milliseconds so multiply by 1000
+			 * this function is only called once, to set the date after init use the time model directly
+			 */
+			init:function(startTime){
+				// javascript unix epoch is in milliseconds multiple by 1000
+				var d = new Date(parseInt(startTime)*1000);
+				this.week = new CTimesheetWeek();
+				this.cal = new CTimesheetCal({model:this.week});
+				// start the ball rolling
+				this.week.set({startDate:d});
+				
+				this.timeLogList = new CTimeLogCollection;
+				this.timeLogRows = new CTimeLogRows({collection:this.timeLogList});
+				
+				
+				this.timeLogList.reset(<?php echo $logs; ?>)
+				
+			},
+			dateToMysql:function(date){
+				return date.getFullYear() + '-' +
+					(date.getMonth() < 9 ? '0' : '') + (date.getMonth()+1) + '-' +
+					(date.getDate() < 10 ? '0' : '') + date.getDate();
+			}
 		}
 		
-		$(':input').bind('blur change',function(){
-			// update totals
-			// cols first
-			doTotal($('.mon-col input'), $('#timesheet-totals .mon-col'));
-			doTotal($('.tue-col input'), $('#timesheet-totals .tue-col'));
-			doTotal($('.wed-col input'), $('#timesheet-totals .wed-col'));
-			doTotal($('.thu-col input'), $('#timesheet-totals .thu-col'));
-			doTotal($('.fri-col input'), $('#timesheet-totals .fri-col'));
-			doTotal($('.sat-col input'), $('#timesheet-totals .sat-col'));
-			doTotal($('.sun-col input'), $('#timesheet-totals .sun-col'));
-			
-			// update rows
-			$('#timesheet-grid tbody tr').each(function(){
-				doTotal($(this).find('input'), $(this).find('.total-col'))
-			});
-			
-			// update main total
-			doTotal($('#timesheet-grid tbody .total-col'), $('#timesheet-grid tfoot .total-col'));
-			
+		
+		var CTimeLog = Backbone.Model.extend({});
+		
+		var CTimeLogCollection = Backbone.Collection.extend({
+			url:function(){
+				return '<?php echo NHtml::url("/timesheet/timesheet/weeklog/") ?>'
+			},
+			model:CTimeLog,
+			getProjects:function(){
+				return this.groupBy(function(m){
+					return m.get('project_id') + m.get('task_id');
+				})
+			},
+			fetchLogsFor:function(date){
+				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
+			}
 		})
 		
-		var CTimesheet = Backbone.View.extend({
+		var CTimesheetWeek = Backbone.Model.extend({
+			defaults:{
+				startDate:null
+			}
+		});
+			
+			
+		/**
+		 * parent view to create table rows
+		 */
+		var CTimeLogRows = Backbone.View.extend({
+			el:$('#timesheet-grid tbody'),
+			initialize:function(){
+				this.collection.bind('reset', this.render, this);
+			},
+			render:function(){
+				this.el.html('');
+				_.each(this.collection.getProjects(),function(row){
+					var row = new CTimeLogRow({collection:row});
+					this.el.append(row.render().el)
+				}, this)
+				
+				// update totals
+				$(':input').bind('blur change',_.bind(this.doTotals,this));
+				this.doTotals();
+			},
+			doTotals:function(){
+				// cols first
+				this.doTotal($('#timesheet-grid .mon-col input'), $('#timesheet-totals .mon-col'));
+				this.doTotal($('#timesheet-grid .tue-col input'), $('#timesheet-totals .tue-col'));
+				this.doTotal($('#timesheet-grid .wed-col input'), $('#timesheet-totals .wed-col'));
+				this.doTotal($('#timesheet-grid .thu-col input'), $('#timesheet-totals .thu-col'));
+				this.doTotal($('#timesheet-grid .fri-col input'), $('#timesheet-totals .fri-col'));
+				this.doTotal($('#timesheet-grid .sat-col input'), $('#timesheet-totals .sat-col'));
+				this.doTotal($('#timesheet-grid .sun-col input'), $('#timesheet-totals .sun-col'));
+
+				// update rows
+				$('#timesheet-grid tbody tr').each(function(){
+					window.timesheet.timeLogRows.doTotal($(this).find('input'), $(this).find('.total-col'));
+				});
+
+				// update main total
+				this.doTotal($('#timesheet-grid tbody .total-col'), $('#timesheet-grid tfoot .total-col'));
+			},
+			// count totals and update elements
+			doTotal:function(el, elTotal){
+				var total=0;
+				el.each(function(){
+					var val = $(this).is('input') ? $(this).val() : $(this).text();
+					var num = parseFloat(val);
+					if(_.isNaN(num))num = 0;
+					total = total + num;
+				});
+				elTotal.html(total.toFixed(2));
+			}
+		});
+		
+		/**
+		 * view for each unique row project_id and task_id 
+		 */
+		var CTimeLogRow = Backbone.View.extend({
+			tagName:'tr',
+			template:_.template($('#time-log-row-template').html()),
+			render:function(){
+				var model = {};
+				model.project_id = this.collection[0].get('project_id');
+				model.task_id = this.collection[0].get('task_id');
+				model.rows = $('#timesheet-grid tbody tr').length;
+				model.mon = this.sumDayLogs(window.timesheet.cal.mon);
+				model.tue = this.sumDayLogs(window.timesheet.cal.tue);
+				model.wed = this.sumDayLogs(window.timesheet.cal.wed);
+				model.thu = this.sumDayLogs(window.timesheet.cal.thu);
+				model.fri = this.sumDayLogs(window.timesheet.cal.fri);
+				model.sat = this.sumDayLogs(window.timesheet.cal.sat);
+				model.sun = this.sumDayLogs(window.timesheet.cal.sun);
+				$(this.el).html(this.template(model));
+				return this;
+			},
+			// date as javascript unix epoch
+			sumDayLogs:function(date){
+				var logs = _.filter(this.collection, function(log){
+					return log.get('date').substring(0,10) == window.timesheet.dateToMysql(date).substring(0,10);
+				}, this)
+				var mins = 0;
+				if(logs.length > 0){
+					_.each(logs, function(l){
+						mins = mins + parseInt(l.get('minutes'));
+					}, this);
+				}
+				
+				if(window.timesheet.logTimeIn == 'hours'){
+					mins = mins / 60;
+					mins = mins.toFixed(2);
+				}
+				
+				return (mins==0) ? '' : mins;
+			},
+		})
+		
+		// timesheet 
+		var CTimesheetCal = Backbone.View.extend({
 			el:$('#timesheet-selector'),
-			startDate:null,
-			endDate:null,
 			months:null,
 			msWeek:604800000, 
 			msDay:86400000,
+			mon:null,tue:null,wed:null,thu:null,fri:null,sat:null,sun:null,
 			events:{
 				'click .prev-week':'prevWeek',
 				'click .next-week':'nextWeek',
@@ -138,9 +243,6 @@
 				'click .next-month':'nextMonth'
 			},
 			initialize:function(){
-				var d = new Date();
-				d.setFullYear(2012,0,30);
-				this.startDate = d;
 				this.months = Array();
 				this.months[this.months.length] = 'January';
 				this.months[this.months.length] = 'Febuary';
@@ -154,29 +256,29 @@
 				this.months[this.months.length] = 'October';
 				this.months[this.months.length] = 'November';
 				this.months[this.months.length] = 'December';
-				this.render();
+				this.model.bind('change:startDate', this.render, this);
 			},
 			render:function(){
-				var time = this.startDate.getTime();
-				var mon = this.startDate;
-				var tue = new Date(time+this.msDay);
-				var wed = new Date(time+this.msDay*2);
-				var thu = new Date(time+this.msDay*3);
-				var fri = new Date(time+this.msDay*4);
-				var sat = new Date(time+this.msDay*5);
-				var sun = new Date(time+(this.msDay*6));
+				var time = this.model.get('startDate').getTime();
+				this.mon = this.model.get('startDate');
+				this.tue = new Date(time+this.msDay);
+				this.wed = new Date(time+this.msDay*2);
+				this.thu = new Date(time+this.msDay*3);
+				this.fri = new Date(time+this.msDay*4);
+				this.sat = new Date(time+this.msDay*5);
+				this.sun = new Date(time+(this.msDay*6));
 				
-				this.$('.date-start').html(mon.getDate()+' '+this.month(mon));
-				this.$('.date-end').html(sun.getDate()+' '+this.month(sun) + ', ' + sun.getFullYear());
+				this.$('.date-start').html(this.mon.getDate()+' '+this.month(this.mon));
+				this.$('.date-end').html(this.sun.getDate()+' '+this.month(this.sun) + ', ' + this.sun.getFullYear());
 				
 				// update displayed timesheet table dates
-				$('.date-headings .mon-col .sdate').html(mon.getDate()+' '+this.monthShort(mon));
-				$('.date-headings .tue-col .sdate').html(tue.getDate()+' '+this.monthShort(tue));
-				$('.date-headings .wed-col .sdate').html(wed.getDate()+' '+this.monthShort(wed));
-				$('.date-headings .thu-col .sdate').html(thu.getDate()+' '+this.monthShort(thu));
-				$('.date-headings .fri-col .sdate').html(fri.getDate()+' '+this.monthShort(fri));
-				$('.date-headings .sat-col .sdate').html(sat.getDate()+' '+this.monthShort(sat));
-				$('.date-headings .sun-col .sdate').html(sun.getDate()+' '+this.monthShort(sun));
+				$('.date-headings .mon-col .sdate').html(this.mon.getDate()+' '+this.monthShort(this.mon));
+				$('.date-headings .tue-col .sdate').html(this.tue.getDate()+' '+this.monthShort(this.tue));
+				$('.date-headings .wed-col .sdate').html(this.wed.getDate()+' '+this.monthShort(this.wed));
+				$('.date-headings .thu-col .sdate').html(this.thu.getDate()+' '+this.monthShort(this.thu));
+				$('.date-headings .fri-col .sdate').html(this.fri.getDate()+' '+this.monthShort(this.fri));
+				$('.date-headings .sat-col .sdate').html(this.sat.getDate()+' '+this.monthShort(this.sat));
+				$('.date-headings .sun-col .sdate').html(this.sun.getDate()+' '+this.monthShort(this.sun));
 			},
 			month:function(d){
 				return this.months[d.getMonth()];
@@ -184,29 +286,40 @@
 			monthShort:function(d){
 				return this.month(d).substring(0,3);
 			},
+			getStartTime:function(){
+				return this.model.get('startDate').getTime();
+			},
+			setStartTime:function(miliseconds, operator){
+				if(operator=='-')
+					var start = new Date(this.getStartTime()  - miliseconds);
+				else
+					var start = new Date(this.getStartTime() + miliseconds); 
+				this.model.set({startDate:start});
+				window.timesheet.timeLogList.fetchLogsFor(start);
+			},
 			prevWeek:function(){
-				this.startDate = new Date(this.startDate.getTime() - this.msWeek);
-				this.render();
+				this.setStartTime(this.msWeek, '-');
 			},
 			nextWeek:function(){
-				this.startDate = new Date(this.startDate.getTime() + this.msWeek);
-				this.render();
+				this.setStartTime(this.msWeek, '+');
 			},
 			nextMonth:function(){
-				this.startDate = new Date(this.startDate.getTime() + this.msWeek * 4);
-				this.render();
+				this.setStartTime(this.msWeek * 4, '+');
 			},
 			prevMonth:function(){
-				this.startDate = new Date(this.startDate.getTime() - this.msWeek * 4);
-				this.render();
+				this.setStartTime(this.msWeek * 4, '-');
 			}
 		});
 		
-		window.timesheet = new CTimesheet();
 		
+		// GO GO GO!
+		window.timesheet.init(<?php echo $startDate; ?>);
+
 		
 	});
+	
+	
+	
 
 
 </script>
-

@@ -15,11 +15,11 @@ class UpgradesController extends AController {
 			Yii::app()->cache->flush();
 			Yii::app()->installAll();
 			Yii::app()->cache->flush();
+			Yii::app()->flushAssets();
 			Yii::app()->user->setFlash('success','Modules and db installed.');
 		} catch (Exception $e){
 			throw $e;
 		}
-		
 		$this->redirect(array('index'));
 	}
 

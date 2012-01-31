@@ -23,6 +23,7 @@ class TimesheetModule extends NWebModule {
 		TimesheetTimerecord::install();
 		TimesheetTimesheet::install();
 		TimesheetHoliday::install();
+		TimesheetLog::install();
 	}
 
 	public function uninstall() {

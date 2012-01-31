@@ -117,7 +117,7 @@ class NActiveRecord extends CActiveRecord
 	 * 
 	 * @param string $className 
 	 */
-	public static function install($className){
+	public static function install($className=__CLASS__){
 		FB::log('install ');
 		$t = new $className(null);
 		
