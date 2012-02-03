@@ -49,7 +49,7 @@ class TimesheetLog extends NActiveRecord
 		$startDate = date('Y-m-d',$commencing);
 		$endDate = date('Y-m-d',mktime(0,0,0,date('m',$commencing),date('d',$commencing)+6, date('Y',$commencing)));
 		return TimesheetLog::model()->findAll(array(
-			'condition'=>"date between '$commencing' and '$endDate' and `user_id`=$userId",
+			'condition'=>"date between '$startDate' and '$endDate' and `user_id`=$userId",
 			'order'=>'project_id'
 		));
 	}

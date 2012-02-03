@@ -35,6 +35,13 @@ class TimesheetController extends AController {
 		echo CJSON::encode($logs);
 	}
 	
+	/**
+	 * save a week log row custom functionality for timesheet view.
+	 */
+	public function actionSaveWeekLog(){
+		
+	}
+	
 	public function actionAdd($timesheet){
 		$record = new TimesheetTimerecord;
 		$record->timesheet_id = $timesheet;
