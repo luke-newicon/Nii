@@ -10,6 +10,7 @@
 	</div>
 	<div class="lastUnit txtL">
 		<a class="btn next-week small">&gt;</a><a class="btn next-month small">&gt;&gt;</a> 
+		<a class="btn primary addLog">Add Log</a>
 	</div>
 </div>
 
@@ -46,7 +47,7 @@
 	<tbody>
 	</tbody>
 </table>
-
+<a class="btn primary">Save Log</a>
 
 
 
@@ -57,13 +58,39 @@
 	<td>
 		Task <%= task_id %>
 	</td>
-	<td class="hour_units mon-col"><input name="time[<%= rows %>][]" value="<%= mon %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units tue-col"><input name="time[<%= rows %>][]" value="<%= tue %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units wed-col"><input name="time[<%= rows %>][]" value="<%= wed %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units thu-col"><input name="time[<%= rows %>][]" value="<%= thu %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units fri-col"><input name="time[<%= rows %>][]" value="<%= fri %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units sat-col"><input name="time[<%= rows %>][]" value="<%= sat %>" type="text"  maxlength="4" /></td>
-	<td class="hour_units sun-col"><input name="time[<%= rows %>][]" value="<%= sun %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units mon-col"><input name="time[<%= row %>][]" value="<%= mon %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units tue-col"><input name="time[<%= row %>][]" value="<%= tue %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units wed-col"><input name="time[<%= row %>][]" value="<%= wed %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units thu-col"><input name="time[<%= row %>][]" value="<%= thu %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units fri-col"><input name="time[<%= row %>][]" value="<%= fri %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sat-col"><input name="time[<%= row %>][]" value="<%= sat %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sun-col"><input name="time[<%= row %>][]" value="<%= sun %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units total-col">0:00</td>
+	<td class="delete-col">
+		<a id="record-delete" href="#" class="icon fam-delete"></a>
+	</td>
+</script>
+
+
+<script type="text/template" id="time-log-row-add-template">
+	<td>
+		Project <%= project_id %>
+	</td>
+	<td>
+		<div class="field mbn">
+			<label class="inFieldLabel" for="task_<%= row %>">Task</label>
+			<div class="input">
+				<input name="task[<%= row %>]" id="task_<%= row %>" type="text" />
+			</div>
+		</div>
+	</td>
+	<td class="hour_units mon-col"><input name="time[<%= row %>][]" value="<%= mon %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units tue-col"><input name="time[<%= row %>][]" value="<%= tue %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units wed-col"><input name="time[<%= row %>][]" value="<%= wed %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units thu-col"><input name="time[<%= row %>][]" value="<%= thu %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units fri-col"><input name="time[<%= row %>][]" value="<%= fri %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sat-col"><input name="time[<%= row %>][]" value="<%= sat %>" type="text"  maxlength="4" /></td>
+	<td class="hour_units sun-col"><input name="time[<%= row %>][]" value="<%= sun %>" type="text"  maxlength="4" /></td>
 	<td class="hour_units total-col">0:00</td>
 	<td class="delete-col">
 		<a id="record-delete" href="#" class="icon fam-delete"></a>
@@ -113,7 +140,20 @@
 		}
 		
 		
-		var CTimeLog = Backbone.Model.extend({});
+		var CTimeLog = Backbone.Model.extend({
+			defaults:{
+				row:0,
+				project_id:0,
+				task_id:0,
+				mon:'',
+				tue:'',
+				wed:'',
+				thu:'',
+				fri:'',
+				sat:'',
+				sun:''
+			}
+		});
 		
 		var CTimeLogCollection = Backbone.Collection.extend({
 			url:function(){
@@ -152,6 +192,9 @@
 					this.el.append(row.render().el)
 				}, this)
 				
+				
+				this.addRowForm();
+				
 				// update totals
 				$(':input').bind('blur change',_.bind(this.doTotals,this));
 				this.doTotals();
@@ -184,6 +227,31 @@
 					total = total + num;
 				});
 				elTotal.html(total.toFixed(2));
+			},
+			addRowForm:function(){
+				var form = new CTimeLogRowAdd();
+				this.el.append(form.render().el);
+			}
+		});
+		
+		
+		var CTimeLogRowAdd = Backbone.View.extend({
+			tagName:'tr',
+			template:_.template($('#time-log-row-add-template').html()),
+			events:{
+				'click .delete-col':'deleteRow'
+			},
+			initialize:function(){
+				this.model = new CTimeLog;
+			},
+			render:function(){
+				this.model.set({row:$('#timesheet-grid tbody tr').length});
+				$(this.el).html(this.template(this.model.toJSON()));
+				$.fn.nii.form();
+				return this;
+			},
+			deleteRow:function(){
+				this.remove();
 			}
 		});
 		
@@ -197,7 +265,7 @@
 				var model = {};
 				model.project_id = this.collection[0].get('project_id');
 				model.task_id = this.collection[0].get('task_id');
-				model.rows = $('#timesheet-grid tbody tr').length;
+				model.row = $('#timesheet-grid tbody tr').length;
 				model.mon = this.sumDayLogs(window.timesheet.cal.mon);
 				model.tue = this.sumDayLogs(window.timesheet.cal.tue);
 				model.wed = this.sumDayLogs(window.timesheet.cal.wed);
@@ -226,7 +294,7 @@
 				}
 				
 				return (mins==0) ? '' : mins;
-			},
+			}
 		})
 		
 		// timesheet 
@@ -240,7 +308,8 @@
 				'click .prev-week':'prevWeek',
 				'click .next-week':'nextWeek',
 				'click .prev-month':'prevMonth',
-				'click .next-month':'nextMonth'
+				'click .next-month':'nextMonth',
+				'click .addLog':'addLog'
 			},
 			initialize:function(){
 				this.months = Array();
@@ -308,6 +377,9 @@
 			},
 			prevMonth:function(){
 				this.setStartTime(this.msWeek * 4, '-');
+			},
+			addLog:function(){
+				window.timesheet.timeLogRows.addRowForm();
 			}
 		});
 		
