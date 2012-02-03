@@ -208,7 +208,7 @@
 				this.timeLogList.reset(<?php echo $logs; ?>);
 				
 				$('.saveLog').click(_.bind(function(){
-					var date = window.timesheet.dateToMysql(window.timesheet.timesheet.get('startdate'));
+					var date = window.timesheet.dateToMysql(window.timesheet.timesheet.get('startDate'));
 					$('#timesheet form input[name="date"]').val(date);
 					var data = $('#timesheet form').serialize();
 					$.post("<?php echo NHtml::url('/timesheet/timesheet/saveWeekLog') ?>",data, function(){
