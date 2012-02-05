@@ -29,27 +29,8 @@ class TimesheetController extends AController {
 	 * save a week log row custom functionality for timesheet view.
 	 */
 	public function actionSaveWeekLog(){
-		$rows = $_POST['log'];
-		
-		foreach($rows as $log){
-			if(is_array($log['time'])) {
-				foreach($log['time'] as $i=>$day){
-					if($log['time'][$i]!=''){
-						$l = new TimesheetLog;
-						$l->minutes = $log['time'][$i]*60;
-						$l->project_id = $log['project'];
-						$l->task_id = $log['task'];
-						$d = NTime::dateToUnix($rows['date']);
-						dp(date('d', $d));
-						dp(date('m', $d));
-						dp(date('Y', $d));
-						$l->date = date('Y-m-d',mktime(0, 0, 0, date('m', $d), date('j', $d)+$i, date('Y', $d)));
-						$l->user_id = Yii::app()->user->record->id;
-						$l->save();
-					}
-				}
-			}
-		}
+		dp($_POST['log']);
+		TimesheetLog::model()->saveWeekLog($_POST['log']);
 	}
 	
 

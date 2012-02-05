@@ -165,8 +165,6 @@
 
 <script type="text/javascript">
 	
-	
-	
 	jQuery(function($){
 		
 		window.timesheet = {
@@ -537,9 +535,5 @@
 
 		
 	});
-	
-	
-	
-
 
 </script>

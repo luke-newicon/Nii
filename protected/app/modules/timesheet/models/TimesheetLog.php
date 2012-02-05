@@ -35,7 +35,7 @@ class TimesheetLog extends NActiveRecord
 	
 	
 	/**
-	 * Get all time logs for a particular week.
+	 * Get all time logs for a particular week. The week is defined by the first Monday.
 	 * 
 	 * @param unix time $commencing 
 	 * - the first monday of the week you wish to retrieve records for.
@@ -64,6 +64,64 @@ class TimesheetLog extends NActiveRecord
 		if(date('w') == 1)
 			return time();
 		return strtotime('last monday');
+	}
+	
+	
+	/**
+	 * Saves a group of logs representing a timesheet week
+	 * @see self::findAllForWeek to return all logs for the timesheet week.
+	 * 
+	 * @param array $log 
+	 * $log = array(
+	 *		'date'=>'2012-01-30',
+	 *		0 => array(
+	 *			'task'=>'1',    // task id
+	 *			'project'=>'1', // project id
+	 *			'time'=>array(
+	 *				// worked 20 hours with 4 hours per day on project id 1
+	 *				0=>4, // mon
+	 *				1=>4, // tue
+	 *				2=>4, // wed
+	 *				3=>4, // thu
+	 *				4=>4, // fri
+	 *				5=>4, // sat
+	 *				6=>0, // sun
+	 *			)
+	 *		),
+	 *      0 => array(
+	 *			'task'=>'2',
+	 *			'project'=>'2',
+	 *			'time'=>array(
+	 *				// worked 20 hours on project id 2
+	 *				0=>4,
+	 *				1=>4,
+	 *				2=>4,
+	 *				3=>4,
+	 *				4=>4,
+	 *				5=>4,
+	 *				6=>0,
+	 *			)
+	 *		)
+	 *	)
+	 */
+	public function saveWeekLog($logs){
+		$d = NTime::dateToUnix($logs['date']);
+		$date = date('Y-m-d',mktime(0, 0, 0, date('m', $d), date('j', $d)+$i, date('Y', $d)));
+		foreach($logs as $log){
+			if(is_array($log['time'])) {
+				foreach($log['time'] as $i=>$day){
+					if($log['time'][$i]!=''){
+						$l = new TimesheetLog;
+						$l->minutes = $log['time'][$i]*60;
+						$l->project_id = $log['project'];
+						$l->task_id = $log['task'];
+						$l->date = $date;
+						$l->user_id = Yii::app()->user->record->id;
+						$l->save();
+					}
+				}
+			}
+		}
 	}
 	
 }
