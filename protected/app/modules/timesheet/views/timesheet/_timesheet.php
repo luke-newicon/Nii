@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	<form>
-		<input type="hidden" name="date" />
+		<input type="hidden" name="log[date]" id="log_date" />
 		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped">
 			<thead>
 				<tr class="date-headings">
@@ -63,7 +63,7 @@
 		<% if (editable) { %>
 			<div class="field mbn" >
 				<div class="input">
-					<input name="project[<%= row %>]" id="project_<%= row %>" type="text" />
+					<input name="log[<%= row %>][project]" id="project_<%= row %>" type="text" />
 				</div>
 			</div>
 		<% } %>
@@ -76,7 +76,7 @@
 			<div class="field mbn">
 				<label class="inFieldLabel" for="task_<%= row %>">Task</label>
 				<div class="input">
-					<input name="task[<%= row %>]" id="task_<%= row %>" type="text" />
+					<input name="log[<%= row %>][task]" id="task_<%= row %>" type="text" />
 				</div>
 			</div>
 		<% } %>
@@ -87,7 +87,7 @@
 	<td class="hour_units mon-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= mon %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -97,7 +97,7 @@
 	<td class="hour_units tue-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= tue %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -107,7 +107,7 @@
 	<td class="hour_units wed-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= wed %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -117,7 +117,7 @@
 	<td class="hour_units thu-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= thu %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -127,7 +127,7 @@
 	<td class="hour_units fri-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= fri %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -137,7 +137,7 @@
 	<td class="hour_units sat-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= sat %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -147,7 +147,7 @@
 	<td class="hour_units sun-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="time[<%= row %>][]" value="<%= sun %>" type="text"  maxlength="4" />
+				<input name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -209,10 +209,11 @@
 				
 				$('.saveLog').click(_.bind(function(){
 					var date = window.timesheet.dateToMysql(window.timesheet.timesheet.get('startDate'));
-					$('#timesheet form input[name="date"]').val(date);
+					$('#log_date').val(date);
 					var data = $('#timesheet form').serialize();
 					$.post("<?php echo NHtml::url('/timesheet/timesheet/saveWeekLog') ?>",data, function(){
-						
+						// refresh the timesheet
+						window.timesheet.timeLogList.refresh();
 					});
 				},this));
 				
@@ -260,6 +261,11 @@
 				})
 			},
 			fetchLogsFor:function(date){
+				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
+			},
+			// refresh the log list, this will force a redraw of the timesheet table
+			refresh:function(){
+				var date = window.timesheet.timesheet.get('startDate');
 				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
 			}
 		})

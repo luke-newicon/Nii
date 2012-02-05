@@ -546,6 +546,8 @@ class NTime {
 	 * @return int seconds unix timestamp 
 	 */
 	public static function dateToUnix($date){
+		if (!is_string($date) || $date=='')
+			throw new CException('the $date parameter must be a string representation of a date, 2012-01-30');
 		list($year, $month, $day) = explode('-', $date);
 		return mktime(0, 0, 0, $month, $day, $year);
 	}
@@ -557,6 +559,8 @@ class NTime {
 	 * @return int seconds unix timestamp 
 	 */
 	public static function datetimeToUnix($datetime){
+		if (!is_string($datetime) || $datetime=='')
+			throw new CException('The $datetime parameter must be a string representation of a date, 2012-01-30');
 		list($date, $time) = explode(' ',$datetime);
 		list($year, $month, $day) = explode('-', $date);
 		list($hours, $minutes, $seconds) = explode(':', $time);

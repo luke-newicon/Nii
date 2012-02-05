@@ -27,7 +27,8 @@ class TimesheetLog extends NActiveRecord
 				'user_id'=>'int',
 				'date'=>'datetime',
 				'project_id'=>'int',
-				'task_id'=>'int'
+				'task_id'=>'int',
+				'minutes'=>'int'
 			)
 		);
 	}
