@@ -11,8 +11,10 @@ class TimesheetController extends AController {
 		$logs = TimesheetLog::model()->findAllForWeek($monday);
 		
 		$this->render('index', array(
-			'startDate'=>$monday,
-			'logs'=>CJSON::encode($logs)
+			'startDate' => $monday,
+			'logs'      => CJSON::encode($logs),
+			'projects'  => CJSON::encode(Yii::app()->getModule('project')->getProjectList()),
+			'tasks'     => CJSON::encode(Yii::app()->getModule('project')->getTaskList())
 		));
 	}
 	
@@ -29,8 +31,14 @@ class TimesheetController extends AController {
 	 * save a week log row custom functionality for timesheet view.
 	 */
 	public function actionSaveWeekLog(){
-		dp($_POST['log']);
 		TimesheetLog::model()->saveWeekLog($_POST['log']);
+	}
+	
+	/**
+	 * get a list of tasks, gets the latest 30 tasks
+	 */
+	public function actionTasks(){
+		echo CJSON::encode(Yii::app()->getModule('project')->getTaskList(array('limit'=>30,'order'=>'id DESC')));
 	}
 	
 

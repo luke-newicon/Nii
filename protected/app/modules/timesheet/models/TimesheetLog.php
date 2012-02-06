@@ -73,9 +73,10 @@ class TimesheetLog extends NActiveRecord
 	 * 
 	 * @param array $log 
 	 * $log = array(
-	 *		'date'=>'2012-01-30',
+	 *		// date of the first monday. i.e. the week commencing monday the 30th. The following log in position 0 will represent the log for monday, 1 for tuesday etc.
+	 *		'date'=>'2012-01-30', 
 	 *		0 => array(
-	 *			'task'=>'1',    // task id
+	 *			'task'=>'1',    // task id or text (to create a new task)
 	 *			'project'=>'1', // project id
 	 *			'time'=>array(
 	 *				// worked 20 hours with 4 hours per day on project id 1
@@ -88,7 +89,7 @@ class TimesheetLog extends NActiveRecord
 	 *				6=>0, // sun
 	 *			)
 	 *		),
-	 *      0 => array(
+	 *      1 => array(
 	 *			'task'=>'2',
 	 *			'project'=>'2',
 	 *			'time'=>array(
@@ -106,22 +107,58 @@ class TimesheetLog extends NActiveRecord
 	 */
 	public function saveWeekLog($logs){
 		$d = NTime::dateToUnix($logs['date']);
-		$date = date('Y-m-d',mktime(0, 0, 0, date('m', $d), date('j', $d)+$i, date('Y', $d)));
 		foreach($logs as $log){
 			if(is_array($log['time'])) {
-				foreach($log['time'] as $i=>$day){
-					if($log['time'][$i]!=''){
+				// check logs for monday to sunday 0=>monday - 6=>sunday
+				for($i=0; $i<=6; $i++){
+					if(array_key_exists($i, $log['time']) && $log['time'][$i]!=''){
 						$l = new TimesheetLog;
 						$l->minutes = $log['time'][$i]*60;
 						$l->project_id = $log['project'];
+						
+						if(!is_numeric($log['task'])){
+							// check if the number is an id and exists in the tasks db?
+							$taskId = Yii::app()->getModule('project')->createTask($log['project'], array(
+								'name'=>$log['task'],
+								'created_by_id'=>Yii::app()->user->record->id
+							));
+							$log['task'] = $taskId;
+						}
+													
 						$l->task_id = $log['task'];
-						$l->date = $date;
+						$l->date = date('Y-m-d',mktime(0, 0, 0, date('m', $d), date('j', $d)+$i, date('Y', $d)));
 						$l->user_id = Yii::app()->user->record->id;
 						$l->save();
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * deletes a row of logs for the timesheet.
+	 * Logs are grouped by project and task id.
+	 * 
+	 * @param int $projectId
+	 * @param int $taskId
+	 * @param mixed $dateCommencing timestamp or string in mysql format
+	 * @param int $userId | null use current user id
+	 */
+	public function deleteWeekLog($projectId, $taskId, $dateCommencing, $userId=null){
+		if($userId==null)
+			$userId = Yii::app()->user->record->id;
+		
+		if(is_string($dateCommencing))
+			$startDate = NTime::dateToUnix($dateCommencing);
+		
+		$endDate = date('Y-m-d',mktime(0, 0, 0, date('m', $startDate), date('j', $startDate)+6, date('Y', $startDate)));
+		
+		$this->deleteAllByAttributes(
+			array('project_id'=>$projectId, 'task_id'=>$taskId),
+			'date between :startDate and :endDate and `user_id` = :userId',
+			array(':startDate'=>$startDate, ':endDate'=>$endDate, ':userId'=>$userId)
+		);
+				
 	}
 	
 }

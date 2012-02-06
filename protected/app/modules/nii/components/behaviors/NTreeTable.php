@@ -6,7 +6,7 @@
  *
  * @version 0.1
  */
-class NTreeTable extends CActiveRecordBehavior 
+class NTreeTable extends NActiveRecordBehavior 
 {
 
 	/**
@@ -834,8 +834,12 @@ class NTreeTable extends CActiveRecordBehavior
 	public function afterInstall($event) {
 		$this->getProperties($left, $right, $level, $parent);
 		// check we don't already have a root node
+		
 		if ($this->getOwner()->countByAttributes(array($left=>0)))
 			return;
+		
+		
+		
 		// if the table exists
 		if($this->getDb()->getSchema()->getTable($event->sender->tableName())){
 			// ok, so create a root node

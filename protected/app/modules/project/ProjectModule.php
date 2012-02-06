@@ -26,23 +26,7 @@ class ProjectModule extends NWebModule
 		Yii::app()->menus->addItem('main', 'Tasks', array('/project/task'), null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
-//		Yii::app()->menus->addItem('main', 'Actions', array('/task/admin/actions'), 'Tasks', array(
-//			'visible' => Yii::app()->user->checkAccess('task/admin/actions'),
-//		));
-//		Yii::app()->menus->addItem('main', 'Customers', array('/contact/customer/index'), Yii::app()->getModule('contact')->menu_label, array(
-//			'visible' => Yii::app()->user->checkAccess('contact/customer/index'),
-//		));
-//		Yii::app()->menus->addItem('main', 'Suppliers', array('/contact/supplier/index'), Yii::app()->getModule('contact')->menu_label, array(
-//			'visible' => Yii::app()->user->checkAccess('contact/supplier/index'),
-//		));
-//		Yii::app()->menus->addItem('main', 'Staff', array('/contact/staff/index'), Yii::app()->getModule('contact')->menu_label, array(
-//			'visible' => Yii::app()->user->checkAccess('contact/staff/index'),
-//		));
 		
-//		Yii::app()->getModule('project')->controllerMap = CMap::mergeArray(Yii::app()->controllerMap, array(
-//			'project' => 'project.controllers.ProjectController',
-//			'task' => 'project.controllers.TaskController',
-//		));
 		Yii::app()->sprite->addImageFolderPath(Yii::getPathOfAlias('project.images'));
 		
 		Yii::app()->urlManager->addRules(array(
@@ -82,12 +66,7 @@ class ProjectModule extends NWebModule
 	public function notifications(){
 		
 	}
-	
-	public function settings(){
-		return array(
-//			'projects' => '/project/settings/index',
-		);
-	}
+
 	
 	public function permissions() {
 		return array(
@@ -113,5 +92,40 @@ class ProjectModule extends NWebModule
 			),
 		);
 	}
+	
+	
+	/**
+	 * gets a list of all projects
+	 * 
+	 * @return array ProjectProject
+	 */
+	public function getProjectList(){
+		return ProjectProject::model()->findAll();
+	}
+	
+	/**
+	 * Create a task for a project
+	 * 
+	 * @param mixed $project ProjectProject or project id
+	 * @param array $taskAttributes array of task attributes
+	 * return int id of the created task
+	 */
+	public function createTask($project, $taskAttributes){
+		$pid = ($project instanceof ProjectProject) ? $project->id : $project;
+		$t = new ProjectTask;
+		$t->project_id = $pid;
+		$t->attributes = $taskAttributes;
+		$t->save();
+		return $t->id;
+	}
 
+	/**
+	 * get an array of tasks
+	 * 
+	 * @return array of task models 
+	 */
+	public function getTaskList($condition=''){
+		return ProjectTask::model()->findAll($condition);
+	}
+	
 }

@@ -17,6 +17,10 @@ class TimesheetModule extends NWebModule {
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/timesheet.css');
 		
 		Yii::app()->menus->addItem('user', 'Timesheets', array('/timesheet/index/index'),'User');
+		
+		$project = Yii::app()->getModule('project');
+		if ($project==null)
+			throw new CException('Timesheet module requires the project module to be installed and enabled');
 	}
 
 	public function install() {

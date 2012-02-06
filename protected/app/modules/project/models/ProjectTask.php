@@ -96,10 +96,6 @@ class ProjectTask extends NActiveRecord {
 				'customer_id' => 'int',
 				'project_id' => 'int',
 				'status' => "enum('new','current','complete')",
-				'tree_left' => 'int',
-				'tree_right' => 'int',
-				'tree_level' => 'int',
-				'tree_parent' => 'int',
 			),
 		);
 	}
@@ -132,12 +128,12 @@ class ProjectTask extends NActiveRecord {
 		return $u;
 	}
 	
-	public function behaviors() {
-		return array(
-			'tree'=>array(
-               'class'=>'nii.components.behaviors.NTreeTable'
-           )
-		);
-	}
+//	public function behaviors() {
+//		return array(
+//			'tree'=>array(
+//               'class'=>'nii.components.behaviors.NTreeTable'
+//           )
+//		);
+//	}
 	
 }

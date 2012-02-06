@@ -2,9 +2,10 @@
 	.sdate{font-size:11px;font-weight:normal;white-space: nowrap;}
 	#timesheet-grid .field .input {border-radius:0px; padding:3px;}
 	#timesheet-totals th{text-align:right;}
+	#timesheet-totals th.total{font-weight:bold;}
 </style>
 <div id="timesheet">
-	<div id="timesheet-selector" class="line">
+	<div id="timesheet-selector" class="line well">
 		<div class="unit size1of3 txtR">
 			<a class="btn prev-month small">&lt;&lt;</a><a class="btn prev-week small">&lt;</a> 
 		</div>
@@ -61,27 +62,29 @@
 <script type="text/template" id="time-log-row-template">
 	<td>
 		<% if (editable) { %>
-			<div class="field mbn" >
-				<div class="input">
-					<input name="log[<%= row %>][project]" id="project_<%= row %>" type="text" />
-				</div>
+		<div class="field mbn project" >
+			<div class="input">
+				<select name="log[<%= row %>][project]"  id="project_<%= row %>">
+					<option value="">Select a project</option>
+					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>
+				</select>
 			</div>
+		</div>
 		<% } %>
 		<% if (!editable) { %>
-			Project <%= project_id %>
+			<% print(window.timesheet.projects.displayProject(project_id)); %>
 		<% } %>
 	</td>
 	<td>
 		<% if (editable) { %>
-			<div class="field mbn">
-				<label class="inFieldLabel" for="task_<%= row %>">Task</label>
+			<div class="field mbn task">
 				<div class="input">
 					<input name="log[<%= row %>][task]" id="task_<%= row %>" type="text" />
 				</div>
 			</div>
 		<% } %>
 		<% if (!editable) { %>
-			Task <%= task_id %>
+			<% print(window.timesheet.tasks.displayTask(task_id)); %>
 		<% } %>
 	</td>
 	<td class="hour_units mon-col field">
@@ -165,6 +168,103 @@
 
 <script type="text/javascript">
 	
+	(function( $ ) {
+		$.widget( "ui.combobox", {
+			_create: function() {
+				var self = this,
+					select = this.element.hide(),
+					selected = select.children( ":selected" ),
+					value = selected.val() ? selected.text() : "";
+				var input = this.input = $( "<input>" )
+					.insertAfter( select )
+					.val( value )
+					.autocomplete({
+						delay: 0,
+						minLength: 0,
+						source: function( request, response ) {
+							var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+							response( select.children( "option" ).map(function() {
+								var text = $( this ).text();
+								if ( this.value && ( !request.term || matcher.test(text) ) )
+									return {
+										label: text.replace(
+											new RegExp(
+												"(?![^&;]+;)(?!<[^<>]*)(" +
+												$.ui.autocomplete.escapeRegex(request.term) +
+												")(?![^<>]*>)(?![^&;]+;)", "gi"
+											), "<strong>$1</strong>" ),
+										value: text,
+										option: this
+									};
+							}) );
+						},
+						select: function( event, ui ) {
+							ui.item.option.selected = true;
+							self._trigger( "selected", event, {
+								item: ui.item.option
+							});
+						},
+						change: function( event, ui ) {
+							if ( !ui.item ) {
+								var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+									valid = false;
+								select.children( "option" ).each(function() {
+									if ( $( this ).text().match( matcher ) ) {
+										this.selected = valid = true;
+										return false;
+									}
+								});
+								if ( !valid ) {
+									// remove invalid value, as it didn't match anything
+									$( this ).val( "" );
+									select.val( "" );
+									input.data( "autocomplete" ).term = "";
+									return false;
+								}
+							}
+						},
+						position:{my:'left top',at:'left bottom',of:input,offset:'-4 5',collision:'flip'}
+					})
+					.addClass( "ui-widget ui-widget-content ui-corner-left" );
+
+				input.data( "autocomplete" )._renderItem = function( ul, item ) {
+					return $( "<li></li>" )
+						.data( "item.autocomplete", item )
+						.append( "<a>" + item.label + "</a>" )
+						.appendTo( ul );
+				};
+
+				this.button = $( '<span style="position:absolute;top:5px;right:5px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>' )
+					.attr( "tabIndex", -1 )
+					.attr( "title", "Show All Items" )
+					.insertAfter( input )
+					.click(function() {
+						// close if already visible
+						if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+							input.autocomplete( "close" );
+							return;
+						}
+
+						// work around a bug (likely same cause as #5265)
+						$( this ).blur();
+
+						// pass empty string as value to search for, displaying all results
+						input.autocomplete( "search", "");
+						input.focus();
+					});
+			},
+
+			destroy: function() {
+				this.input.remove();
+				this.button.remove();
+				this.element.show();
+				$.Widget.prototype.destroy.call( this );
+			}
+		});
+	})( jQuery );
+	
+
+		
 	jQuery(function($){
 		
 		window.timesheet = {
@@ -182,6 +282,10 @@
 			timeLogRowList:{},
 			// time log rows parent view
 			timeLogRows:{},
+			// stores the project collection
+			projects:null,
+			// task collection
+			tasks:null,
 			/**
 			 * Init the timesheet app
 			 * start time is the unix epoch time in seconds (equivelent to PHP's)
@@ -189,6 +293,11 @@
 			 * this function is only called once, to set the date after init use the time model directly
 			 */
 			init:function(startTime){
+				this.projects = new this.models.Projects;
+				this.projects.reset(<?php echo $projects; ?>);
+				this.tasks = new this.models.Tasks;
+				this.tasks.reset(<?php echo $tasks; ?>);
+				
 				// javascript unix epoch is in milliseconds multiple by 1000
 				var d = new Date(parseInt(startTime)*1000);
 				this.timesheet = new this.models.Timesheet();
@@ -211,10 +320,11 @@
 					var data = $('#timesheet form').serialize();
 					$.post("<?php echo NHtml::url('/timesheet/timesheet/saveWeekLog') ?>",data, function(){
 						// refresh the timesheet
-						window.timesheet.timeLogList.refresh();
+						window.timesheet.tasks.fetch({success:function(){
+							window.timesheet.timeLogList.refresh();
+						}});
 					});
 				},this));
-				
 			},
 			dateToMysql:function(date){
 				return date.getFullYear() + '-' +
@@ -339,7 +449,39 @@
 				return (mins==0) ? '' : mins;
 			}
 		});
-			
+		
+		timesheet.models.Project = Backbone.Model.extend({
+			defaults:{
+				name:''
+			}
+		});
+		
+		/**
+		 * Project Collection
+		 */
+		timesheet.models.Projects = Backbone.Collection.extend({
+			model:timesheet.models.Project,
+			displayProject:function(project_id){
+				var p = this.get(project_id);
+				return _.isNull(p) ? 'unknown' :  p.get('name');
+			}
+		});
+		
+		timesheet.models.Task = Backbone.Model.extend({
+			defaults:{name:''}
+		});
+		
+		/**
+		 * Task Collection
+		 */
+		timesheet.models.Tasks = Backbone.Collection.extend({
+			model:timesheet.models.Task,
+			url:"<?php echo NHtml::url('/timesheet/timesheet/tasks'); ?>",
+			displayTask:function(task_id){
+				var t = this.get(task_id);
+				return _.isEmpty(t) ? 'unknown' :  t.get('name');
+			}
+		});
 			
 		/**
 		 * parent view to create table rows
@@ -415,7 +557,7 @@
 				
 				var row = new window.timesheet.views.TimeLogRow({model:model});
 				this.el.append(row.render().el)
-				
+				row.focusProject();
 				this.doTotals();
 			}
 		});
@@ -434,7 +576,22 @@
 			},
 			render:function(){
 				$(this.el).html(this.template(this.model.toJSON()));
+				this.projectAutocomplete();
+				this.taskAutocomplete();
 				return this;
+			},
+			focusProject:function(){
+				this.$('.project .ui-autocomplete-input').focus();
+			},
+			projectAutocomplete:function(){
+				this.$('.project select').combobox('destroy');
+				this.$('.project select').combobox();
+			},
+			taskAutocomplete:function(){
+				this.$('.task input').autocomplete('destroy');
+				this.$('.task input').autocomplete({
+					
+				});
 			},
 			deleteRow:function(){
 				this.model.destroy();

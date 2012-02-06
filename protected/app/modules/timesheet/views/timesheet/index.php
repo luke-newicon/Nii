@@ -2,4 +2,4 @@
 	<h2><?php echo $this->t('Timesheets') ?></h2>
 </div>
 
-<?php $this->renderPartial('_timesheet',array('startDate'=>$startDate, 'logs'=>$logs)); ?>
+<?php $this->renderPartial('_timesheet',array('startDate'=>$startDate, 'logs'=>$logs, 'projects'=>$projects, 'tasks'=>$tasks)); ?>
