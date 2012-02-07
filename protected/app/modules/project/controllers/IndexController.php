@@ -2,7 +2,6 @@
 /**
  * Project index controller class file.
  *
- * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/nii
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/nii/license/
@@ -37,24 +36,10 @@ class IndexController extends AController
 	}
 	
 	
-	public function actionView($id) {
-				
-		$this->pageTitle = Yii::app()->name . ' - View Project Details';
-		
-		$modelName = 'ProjectProject';
-		$model = NActiveRecord::model($modelName)->findByPk($id);
-		
-		$this->checkModelExists($model, "<strong>No project exists for ID: ".$id."</strong>");
-		
-		$viewData = array(
-			'model'=>$model,
-		);
-		
-		$this->render('view',array(
-			'model'=>$model,
-		));
-	}
 	
+	/**
+	 * Create a new project
+	 */
 	public function actionCreate() {
 		// todo validate project name is unique
 		
@@ -69,25 +54,5 @@ class IndexController extends AController
 		Yii::app()->end();
 	}
 	
-	public function actionTasks($id) {
-		$this->render('tabs/tasks');
-	}
-	
-	public function actionMilestones($id) {
-		$this->render('tabs/milestones');
-	}
-	
-	public function actionFiles($id) {
-		$model = NActiveRecord::model('ProjectProject')->findByPk($id);
-				
-		$viewData = array(
-			'model'=>$model,
-		);
-		
-		$this->render('tabs/files',array(
-			'model'=>$model,
-		));
-	
-	}
 	
 }

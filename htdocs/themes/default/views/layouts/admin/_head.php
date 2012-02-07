@@ -72,14 +72,14 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 		</div>
 	<?php endif; ?>
 	<div class="topbar-wrapper">
-		<div class="topbar">
-			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
+		<div class="navbar">
+			<div class="navbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
 					<?php if (Yii::app()->getModule('admin')->menuAppname) : ?>
-						<h3><a href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a></h3>
+						<a class="brand" href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a>
 					<?php else : ?>
-						<ul>
-							<li class="menu">
+						<ul class="nav">
+							<li>
 								<a href="<?php echo CHtml::normalizeUrl(array('/admin/index/dashboard')) ?>">Dashboard</a>
 							</li>
 						</ul>
@@ -89,7 +89,8 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 						'items' => Yii::app()->menus->getItems('main'),
 						'id' => 'mainMenu',
 						'activateParents' => true,
-						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
+						'htmlOptions' => array('class' => 'nav'),
+						'submenuHtmlOptions' => array('class' => 'dropdown-menu'),
 					));
 					?>
 					<?php if(Yii::app()->getModule('admin')->menuSearch) : ?>
@@ -109,16 +110,15 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 						'items' => Yii::app()->menus->getItems('user'),
 						'id' => 'userMenu',
 						'activateParents' => true,
-						'htmlOptions' => array('class' => 'secondary-nav'),
-						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
-//						'encodeLabel' => false,
+						'htmlOptions' => array('class' => 'nav pull-right'),
+						'submenuHtmlOptions' => array('class' => 'dropdown-menu'),
 					));
 					$this->widget('nii.widgets.NMenu', array(
 						'items' => Yii::app()->menus->getItems('secondary'),
 						'id' => 'secondaryMenu',
 						'activateParents' => true,
-						'htmlOptions' => array('class' => 'secondary-nav'),
-						'submenuHtmlOptions' => array('class' => 'menu-dropdown'),
+						'htmlOptions' => array('class' => 'nav pull-right'),
+						'submenuHtmlOptions' => array('class' => 'dropdown-menu'),
 					));
 					?>
                 </div>

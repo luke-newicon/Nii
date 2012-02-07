@@ -21,7 +21,8 @@ class NMenu extends CMenu {
 	/**
 	 * Initialize the widget
 	 */
-	public function init() {
+	public function init() 
+	{
 		parent::init();
 		$this->assetUrl = Yii::app()->getAssetManager()->publish(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets');
 		Yii::app()->clientScript->registerCoreScript('jquery');

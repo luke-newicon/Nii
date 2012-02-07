@@ -8,6 +8,8 @@ class NMenu extends CMenu {
 	
 	public $noticeHtmlOptions = array('class'=>'label warning');
 	
+	public $firstItemCssClass = 'dropdown-toggle';
+	
 	/**
 	 * Renders the content of a menu item.
 	 * Note that the container and the sub-menus are not rendered here.
@@ -20,6 +22,7 @@ class NMenu extends CMenu {
 		if(isset($item['url']))
 		{
 			$label=$this->linkLabelWrapper===null ? $item['label'] : '<'.$this->linkLabelWrapper.'>'.$item['label'].'</'.$this->linkLabelWrapper.'>';
+			
 			if($this->enableNotifications && isset($item['notice'])){
 				$noticeHtmlOptions = isset($item['noticeHtmlOptions']) ? $item['noticeHtmlOptions'] : $this->noticeHtmlOptions;
 				$label = $label . ' <span class="menu-notice">' . CHtml::tag('span',$noticeHtmlOptions,$item['notice']) . '</span>';

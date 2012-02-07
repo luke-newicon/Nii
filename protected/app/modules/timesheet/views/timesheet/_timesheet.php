@@ -66,6 +66,7 @@
 			<div class="input">
 				<select name="log[<%= row %>][project]"  id="project_<%= row %>">
 					<option value="">Select a project</option>
+					<option class="create-project" value="">[Create a new project]</option>
 					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>
 				</select>
 			</div>
@@ -572,13 +573,17 @@
 				this.model.bind('destroy', this.remove, this);
 			},
 			events:{
-				'click .record-delete':'deleteRow'
+				'click .record-delete':'deleteRow',
 			},
 			render:function(){
 				$(this.el).html(this.template(this.model.toJSON()));
 				this.projectAutocomplete();
 				this.taskAutocomplete();
+				
 				return this;
+			},
+			projectSelect:function(){
+				alert('poi');
 			},
 			focusProject:function(){
 				this.$('.project .ui-autocomplete-input').focus();
@@ -588,10 +593,7 @@
 				this.$('.project select').combobox();
 			},
 			taskAutocomplete:function(){
-				this.$('.task input').autocomplete('destroy');
-				this.$('.task input').autocomplete({
-					
-				});
+				// TODO
 			},
 			deleteRow:function(){
 				this.model.destroy();

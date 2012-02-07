@@ -3,31 +3,6 @@
 
 
 
-
-
-/**
- * 
- * 
- * // REST Api
- *  URL RULES
-	array('/project/api/list',   'pattern'=>'api/<model:\w+>',          'verb'=>'GET', 'urlSuffix'=>'.json'),
-	array('/project/api/view',   'pattern'=>'api/<model:\w+>/<id:\w+>', 'verb'=>'GET'),
-	array('/project/api/update', 'pattern'=>'api/<model:\w+>/<id:\w+>', 'verb'=>'PUT'),
-	array('/project/api/delete', 'pattern'=>'api/<model:\w+>/<id:\w+>', 'verb'=>'DELETE'),
-	array('/project/api/create', 'pattern'=>'api/<model:\w+>',          'verb'=>'POST'),
-
-	array('/project/api/projectList',   'pattern'=>'api/project/<pid:\d+>/<model:\w+>',			 'verb'=>'GET',),
-	array('/project/api/projectCreate', 'pattern'=>'api/project/<pid:\d+>/<model:\w+>',          'verb'=>'POST'),
-	array('/project/api/projectView',   'pattern'=>'api/project/<pid:\d+>/<model:\w+>/<id:\w+>', 'verb'=>'GET'),
-	array('/project/api/projectUpdate', 'pattern'=>'api/project/<pid:\d+>/<model:\w+>/<id:\w+>', 'verb'=>'PUT'),
-	array('/project/api/projectDelete', 'pattern'=>'api/project/<pid:\d+>/<model:\w+>/<id:\w+>', 'verb'=>'DELETE'),
- * 
- * 
- * 
- * 
- */
-
-
 Class ApiController extends RestController 
 {
 	
