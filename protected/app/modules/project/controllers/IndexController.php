@@ -62,6 +62,7 @@ class IndexController extends AController
 			$model->attributes = $_POST[$modelName];
 			$model->save();
 		}
+		echo CJSON::encode($model);
 		Yii::app()->end();
 	}
 	
