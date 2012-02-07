@@ -1,18 +1,18 @@
 <?php $this->pageTitle=Yii::app()->name . ' - '.UserModule::t("Change Password"); ?>
-
+<?php
+	$form = $this->beginWidget('NActiveForm', array(
+		'id' => 'user-password-form',
+	));
+?>
 <div class="modal hide" id="modal-change-password">
 	<div class="modal-header">
 		<h3><?php echo UserModule::t("Change Password"); ?></h3>
 	</div>
+	
 	<div class="modal-body">
 		<div class="alert-message block-message info">
 			<p>Your password needs to be updated.</p>
 		</div>
-		<?php
-		$form = $this->beginWidget('NActiveForm', array(
-			'id' => 'user-password-form',
-		));
-		?>
 		<fieldset>
 			<div class="line">
 				<div class="field unit size1of2">
@@ -35,12 +35,13 @@
 				</div>
 			</div>
 		</fieldset>
-		<?php $this->endWidget(); ?>
 	</div>
 	<div class="modal-footer">
-		<a id="user-password-save" class="btn primary" href="#">Update Password</a>
+		<?php echo CHtml::submitButton(UserModule::t("Update Password"),array('class'=>'btn btn-primary')); ?>
+<!--		<a id="user-password-save" class="btn primary" href="#">Update Password</a>-->
 	</div>
 </div>
+<?php $this->endWidget(); ?>
 <script>
 	jQuery(function($){
 		$('#modal-change-password').modal({backdrop:'static',show:true});

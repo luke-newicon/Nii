@@ -66,7 +66,7 @@
 			<div class="input">
 				<select name="log[<%= row %>][project]"  id="project_<%= row %>">
 					<option value="">Select a project</option>
-					<option class="create-project" value="">[Create a new project]</option>
+					<option value="createnewproject">[Create a new project]</option>
 					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>
 				</select>
 			</div>
@@ -200,6 +200,10 @@
 							}) );
 						},
 						select: function( event, ui ) {
+							alert(ui.item.option);
+							if($(this).val() == 'createnewproject'){
+								
+							}
 							ui.item.option.selected = true;
 							self._trigger( "selected", event, {
 								item: ui.item.option

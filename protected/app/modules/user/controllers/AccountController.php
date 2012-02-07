@@ -60,7 +60,7 @@ class AccountController extends NController {
         if ($ui->authenticate()) {
             $user=Yii::app()->user;
             $user->login($ui);
-            $this->redirect($user->returnUrl);
+            $this->redirect($user->getReturnUrl());
         }
         else throw new CHttpException(401, $ui->error);
  
@@ -317,16 +317,16 @@ class AccountController extends NController {
 	public function actionRecovery () {
 		$form = new UserRecoveryForm;
 		if (Yii::app()->user->id) {
-			$this->redirect(Yii::app()->controller->module->returnUrl);
+			$this->redirect(Yii::app()->user->getReturnUrl());
 		} else {
 			$email = NData::base64UrlDecode(((isset($_GET['e']))?$_GET['e']:''));
 			$activekey = ((isset($_GET['activekey']))?$_GET['activekey']:'');
 			if ($email&&$activekey) {
-				$form2 = new UserChangePassword;
+				$form2 = new UserPasswordForm;
 				$find = UserModule::userModel()->notsafe()->findByAttributes(array('email'=>$email));
 				if (isset($find) && $this->checkActivationKey($find, $activekey)) {
-					if(isset($_POST['UserChangePassword'])) {
-						$form2->attributes=$_POST['UserChangePassword'];
+					if(isset($_POST['UserPasswordForm'])) {
+						$form2->attributes=$_POST['UserPasswordForm'];
 						if($form2->validate()) {
 							// if account is not active make it active
 							if ($find->status==0) {
@@ -338,7 +338,7 @@ class AccountController extends NController {
 							$this->redirect(Yii::app()->controller->module->loginUrl);
 						}
 					}
-					$this->render('changepassword',array('form'=>$form2));
+					$this->render('changepassword',array('model'=>$form2));
 				} else {
 					Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Incorrect recovery link."));
 					$this->redirect(Yii::app()->controller->module->recoveryUrl);
