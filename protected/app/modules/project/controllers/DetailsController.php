@@ -17,6 +17,18 @@
  */
 class DetailsController extends AController
 {
+	
+	public function accessRules() {
+		return array(
+			array('allow',
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('?'),
+			),
+		);
+	}
+	
 	/**
 	 * Draws the project details screen
 	 * 

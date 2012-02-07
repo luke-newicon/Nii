@@ -15,6 +15,17 @@
  */
 class IndexController extends AController 
 {
+	
+	public function accessRules() {
+		return array(
+			array('allow',
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('?'),
+			),
+		);
+	}
 
 	/**
 	 *	Grid view - for now - of the open projects 

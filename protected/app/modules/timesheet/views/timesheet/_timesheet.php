@@ -1,6 +1,7 @@
 <style>
 	.sdate{font-size:11px;font-weight:normal;white-space: nowrap;}
 	#timesheet-grid .field .input {border-radius:0px; padding:3px;}
+	#timesheet-totals {background-color: #eee;}
 	#timesheet-totals th{text-align:right;}
 	#timesheet-totals th.total{font-weight:bold;}
 </style>
@@ -200,9 +201,9 @@
 							}) );
 						},
 						select: function( event, ui ) {
-							alert(ui.item.option);
-							if($(this).val() == 'createnewproject'){
-								
+							if($(ui.item.option).val() == 'createnewproject'){
+								alert('TODO: create a new project!')
+								return false;
 							}
 							ui.item.option.selected = true;
 							self._trigger( "selected", event, {
