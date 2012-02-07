@@ -94,4 +94,5 @@ class ProjectProject extends NActiveRecord
 	public function countProjectTasks(){
 		return 0;
 	}
+	
 }

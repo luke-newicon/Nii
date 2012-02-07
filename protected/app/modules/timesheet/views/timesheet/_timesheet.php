@@ -7,17 +7,20 @@
 </style>
 <div id="timesheet">
 	<div id="timesheet-selector" class="line well">
-		<div class="unit size1of3 txtR">
-			<a class="btn prev-month small">&lt;&lt;</a><a class="btn prev-week small">&lt;</a> 
+		<div class="unit size1of3 txtR btn-group">
+			<a class="btn prev-month"><i class="icon-backward"></i></a><a class="btn prev-week"><i class="icon-chevron-left"></i></a> 
 		</div>
 		<div class="unit size1of3 txtC">
 			<span class="date-start">2 January</span> - <span class="date-end">9 January, 2012</span> 
 		</div>
 		<div class="lastUnit txtL">
-			<a class="btn next-week small">&gt;</a><a class="btn next-month small">&gt;&gt;</a> 
-			<a class="btn primary addLog">Add Log</a>
+			<div class="pull-right btn-group">
+				<a class="btn next-week"><i class="icon-chevron-right"></i></a><a class="btn next-month"><i class="icon-forward"></i></a> 
+			</div>
+			<a class="btn btn-primary addLog">Add Log</a>
 		</div>
 	</div>
+	
 	<form>
 		<input type="hidden" name="log[date]" id="log_date" />
 		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped table table-bordered table-striped">
@@ -54,7 +57,7 @@
 			</tbody>
 		</table>
 	</form>
-	<div class="txtR"><a class="saveLog btn primary large">Save Log</a></div>
+	<div class="txtR"><a class="saveLog btn btn-primary btn-large">Save Log</a></div>
 </div>
 
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
@@ -108,7 +111,7 @@
 	<td class="hour_units mon-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -118,7 +121,7 @@
 	<td class="hour_units tue-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -128,7 +131,7 @@
 	<td class="hour_units wed-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -138,7 +141,7 @@
 	<td class="hour_units thu-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -148,7 +151,7 @@
 	<td class="hour_units fri-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -158,7 +161,7 @@
 	<td class="hour_units sat-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -168,7 +171,7 @@
 	<td class="hour_units sun-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -182,7 +185,7 @@
 		<% } %>
 	</td>
 </script>
-
+<?php $this->createWidget('CMaskedTextField')->registerClientScript(); ?>
 
 <script type="text/javascript">
 	
@@ -548,6 +551,7 @@
 						$input =  $(this).find('input');
 						if($input.length)
 							val = $input.val();
+						console.log(val)
 					}
 					var num = parseFloat(val);
 					if(_.isNaN(num))num = 0;
@@ -592,6 +596,10 @@
 			render:function(){
 				$(this.el).html(this.template(this.model.toJSON()));
 				if(this.model.get('editable')){
+					//add input mask to time fields
+//					$.mask.definitions['m']='[012345]';
+//					this.$('input.time').mask('9:?m9',{placeholder:' '});
+					
 					this.projectAutocomplete();
 					this.taskAutocomplete();
 				}

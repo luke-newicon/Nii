@@ -567,4 +567,33 @@ class NTime {
 		return mktime($hours, $minutes, $seconds, $month, $day, $year);
 	}
 	
+	/**
+	 * Transform hours like "1:45" into the total number of minutes, "105".
+	 * @param int $hours
+	 * @return string 
+	 */
+	public static function hoursToMinutes($hours) 
+	{ 
+		$minutes = 0; 
+		if (strpos($hours, ':') !== false) 
+		{ 
+			// Split hours and minutes. 
+			list($hours, $minutes) = explode(':', $hours); 
+		} 
+		return $hours * 60 + $minutes; 
+	} 
+	
+	/**
+	 * converts total minutes to hours
+	 * e.g. 105 minutes becomes 1:45
+	 * @param int $minutes
+	 * @return string 
+	 */
+	public static function minutesToHours($minutes) 
+	{ 
+		$hours = (int)($minutes / 60); 
+		$minutes -= $hours * 60; 
+		return sprintf("%d:%02.0f", $hours, $minutes); 
+	} 
+	
 }
