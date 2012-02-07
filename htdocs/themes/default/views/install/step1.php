@@ -8,13 +8,13 @@
 	<div class="alert-message error block-message">
 		<?php echo Yii::app()->user->getFlash('debug'); ?>
 	</div>
-<? endif; ?>
+<?php endif; ?>
 
 <?php if(Yii::app()->user->hasFlash('error')): ?>
 	<div class="alert-message error block-message">
 		<p><?php echo Yii::app()->user->getFlash('error'); ?></p>
 	</div>
-<? endif; ?>
+<?php endif; ?>
 
 
 	<div class="alert-message info block-message">
@@ -52,13 +52,6 @@
 			<small>e.g. localhost <em>-or-</em> mydomain.com</small>
 			<?php echo $form->error($dbForm, 'host'); ?>
 		</div>
-		<div class="field <?php echo ($dbForm->hasErrors('name'))?'error':''; ?>">
-			<?php echo $form->labelEx($dbForm, 'name'); ?>
-			<div class="input large">
-				<?php echo $form->textField($dbForm, 'name'); ?>
-			</div>
-			<?php echo $form->error($dbForm, 'name'); ?>
-		</div>
 		<div class="field <?php echo ($dbForm->hasErrors('password'))?'error':''; ?> <?php echo ($dbForm->hasErrors('username'))?'error':''; ?>">
 			<?php echo $form->labelEx($dbForm, 'username'); ?>
 			<div class="input large">
@@ -73,6 +66,13 @@
 			</div>
 			<?php echo $form->error($dbForm, 'password'); ?>
 			<span class="hint">Leave blank if using root with no password (not recommended)</span>
+		</div>
+		<div class="field <?php echo ($dbForm->hasErrors('name'))?'error':''; ?>">
+			<?php echo $form->labelEx($dbForm, 'name'); ?>
+			<div class="input large">
+				<?php echo $form->textField($dbForm, 'name'); ?>
+			</div>
+			<?php echo $form->error($dbForm, 'name'); ?>
 		</div>
 		<div class="line field">
 			<?php echo $form->labelEx($dbForm, 'tablePrefix'); ?>
