@@ -38,7 +38,6 @@
 	</div>
 	<div class="modal-footer">
 		<?php echo CHtml::submitButton(UserModule::t("Update Password"),array('class'=>'btn btn-primary')); ?>
-<!--		<a id="user-password-save" class="btn primary" href="#">Update Password</a>-->
 	</div>
 </div>
 <?php $this->endWidget(); ?>
