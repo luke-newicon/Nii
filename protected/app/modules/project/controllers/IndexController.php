@@ -1,20 +1,21 @@
 <?php
-
 /**
- * Project class file.
+ * Project index controller class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
- * @link http://newicon.net/framework
+ * @link http://newicon.net/nii
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
- * @license http://newicon.net/framework/license/
+ * @license http://newicon.net/nii/license/
  */
 
 /**
  * Description of Project
  *
  * @author steve
+ * @package nii.project
  */
-class IndexController extends AController {
+class IndexController extends AController 
+{
 
 	/**
 	 *	Grid view - for now - of the open projects 
