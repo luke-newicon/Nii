@@ -69,7 +69,7 @@ class ProjectProject extends NActiveRecord
 	}
 	
 	public function viewLink(){
-		return '<a href="'.NHtml::url(array('/project/index/view', 'id'=>$this->id())).'">' . $this->name . '</a>';
+		return '<a href="'.NHtml::url(array('/project/details/index', 'id'=>$this->id())).'">' . $this->name . '</a>';
 	}
 
 

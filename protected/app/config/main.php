@@ -45,7 +45,6 @@ return array(
 			'application.modules.nii.widgets.*',
 			'application.vendors.*',
 			'application.vendors.FirePHPCore.*',
-			'application.widgets.*',
 			'application.modules.user.models.*',
 			'application.modules.user.components.*',
 			'application.extensions.bootstrap.components.*',
