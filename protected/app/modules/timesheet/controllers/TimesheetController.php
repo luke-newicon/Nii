@@ -1,7 +1,19 @@
 <?php
 
-class TimesheetController extends AController {
+class TimesheetController extends AController 
+{
 
+	public function accessRules() {
+		return array(
+			array('allow',
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('?'),
+			),
+		);
+	}
+	
 	public function actionIndex($date=null) {
 
 		// find the monday of this week

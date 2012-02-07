@@ -2,6 +2,17 @@
 
 class HolidayController extends AController {
 
+	public function accessRules() {
+		return array(
+			array('allow',
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('?'),
+			),
+		);
+	}
+	
 	/**
 	 * Displays all the holidays for the currently logged in user
 	 */

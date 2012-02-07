@@ -29,7 +29,7 @@ class Bootstrap extends CApplicationComponent
 	 */
 	public function registerScriptFile($fileName)
 	{
-		Yii::app()->getClientScript()->registerScriptFile($this->getAssetsUrl().'/js/'.$fileName);
+		//Yii::app()->getClientScript()->registerScriptFile($this->getAssetsUrl().'/js/'.$fileName);
 	}
 
 	/**
