@@ -274,7 +274,7 @@ class HftContact extends Contact
 				'with' =>'donation',
 			),
 			'newsletter' => array(
-				'condition' => 'newsletter = 1 AND t.trashed <> 1',
+				'condition' => 't.receive_emails = 1 AND t.trashed <> 1',
 			),
 			'active' => array(
 				'condition' => 't.`status` = "Active" AND t.trashed <> 1',
