@@ -19,7 +19,7 @@
 	</div>
 	<form>
 		<input type="hidden" name="log[date]" id="log_date" />
-		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped">
+		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped table table-bordered table-striped">
 			<thead>
 				<tr class="date-headings">
 					<th class="project-col">Project</th>
