@@ -191,7 +191,7 @@ class NScopeList extends CWidget {
 		}
 		
 		if ($twipsy==true)
-			$render .= "<script>jQuery(function($){ $('.twipsy-button').twipsy({'placement':'below'});	});</script>";
+			$render .= "<script>jQuery(function($){ $('.twipsy-button').tooltip({'placement':'below'});	});</script>";
 
 		return $render;
 	}
