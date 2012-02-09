@@ -9,44 +9,14 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'user-account-form',
-//	'enableAjaxValidation' => true,
-//	'enableClientValidation' => false,
 	'clientOptions' => array(
 		'validateOnSubmit' => true,
-		'validateOnChange' => true,
 	),
-	'focus' => array($model, 'first_name'),
 ));
 ?>
 <fieldset>
-	<div class="line">
-		<div class="field unit size1of2">
-			<?php echo $form->labelEx($model, 'first_name'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'first_name'); ?>
-				</div>
-				<?php echo $form->error($model, 'first_name'); ?>
-			</div>
-		</div>
-		<div class="field lastUnit">
-			<?php echo $form->labelEx($model, 'last_name'); ?>
-			<div class="inputContainer">
-				<div class="input">
-					<?php echo $form->textField($model, 'last_name'); ?>
-				</div>
-				<?php echo $form->error($model, 'last_name'); ?>
-			</div>
-		</div>
-	</div>
-	<div class="field">
-		<?php echo $form->labelEx($model, 'email'); ?>
-		<div class="inputContainer">
-			<div class="input">
-				<?php echo $form->textField($model, 'email'); ?>
-			</div>
-			<?php echo $form->error($model, 'email'); ?>
-		</div>
-	</div>
+	<?php echo $form->field($model, 'first_name'); ?>
+	<?php echo $form->field($model, 'last_name'); ?>
+	<?php echo $form->field($model, 'email'); ?>
 </fieldset>
 <?php $this->endWidget(); ?>

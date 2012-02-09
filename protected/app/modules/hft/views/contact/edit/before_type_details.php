@@ -1,13 +1,4 @@
-<div class="line field">
-	<div class="unit size1of6"><?= $form->labelEx($c,'classification_id') ?></div>
-	<div class="lastUnit">
-		<div class="input w120"><?php echo $form->dropDownList($c, 'classification_id', HftContactClassification::getClassificationsArray(), array('prompt'=>'select...')); ?></div>
-		<?php echo $form->error($c,'classification_id'); ?>
-	</div>
-</div>
-<div class="line field">
-	<div class="unit size1of6"><?= $form->labelEx($c,'id') ?></div>
-	<div class="lastUnit">
-		<div class="w170"><?php echo $c->id; ?></div>
-	</div>
-</div>
+<legend>Account</legend>
+<?php echo $form->viewField($c, 'id'); ?>
+<?php echo $form->field($c, 'classification_id', 'dropDownList', HftContactClassification::getClassificationsArray(), array('prompt'=>'Select')); ?>
+<?php echo $form->field($c, 'status', 'dropDownList', NHtml::enumItem($c, 'status'), array('prompt'=>'Select')); ?>

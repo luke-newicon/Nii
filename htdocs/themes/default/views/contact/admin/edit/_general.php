@@ -1,189 +1,98 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
-		'id' => 'contactForm',
-		'action' => $action,
-		'enableAjaxValidation'=>false,
-		'enableClientValidation'=>true,
-	));
+	'id' => 'contactForm',
+	'action' => $action,
+	'enableAjaxValidation' => false,
+	'enableClientValidation' => true,
+		));
 
-$event = new CEvent($this, array('c'=>$c,'form'=>$form));
+$event = new CEvent($this, array('c' => $c, 'form' => $form));
 ?>
-<?php if($c->hasErrors()) : ?>
-	<div class="alert-message block-message error">
+<?php if ($c->hasErrors()) : ?>
+	<div class="alert alert-block alert-error">
 		<?php echo $form->errorSummary($c); ?>
 	</div>
 <?php elseif (!$c->id) : ?>
-	<div class="alert-message block-message">
+	<div class="alert alert-block alert-info">
 		<p>This is where you can create a new contact.  Fill in all the required fields marked with a <span class="required">*</span>.</p>
 		<p>Additional information can be added at any other time.</p>
 	</div>
 <?php endif; ?>
 <div id="contact-general">
-	<div class="line">
-		<div class="unit size1of6" id="contactPhoto">
-			<div id="currentImage"><?php echo $c->getPhoto('profile-main-'.strtolower($type)); ?></div>
-			<a href="#" class="removeButton btn">Remove</a>
-			<span class="uploadButton btn primary">Upload</span>
-			<?php
-			$this->widget('nii.widgets.uploadify.UploadifyWidget', array(
-				'multi' => false,
-				'ID' => 'photoUpload',
-				'script' => Yii::app()->createAbsoluteUrl('contact/admin/uploadPhoto'),
-				'onComplete' => 'js:function(event, queueID, fileObj, response, data){updateContactPhoto(response)}',
-				'hideButton' => true,
-				'wmode' => 'transparent',
-				'width' => 64,
-			));
-			?>
-<?php echo $form->hiddenField($c, 'photoID'); ?>
-		</div>
-		<div class="lastUnit">
-			<div class="line">
-				<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit($event); ?>
-				<?php $this->renderPartial('edit/_' . strtolower($type), array('c' => $c, 'form' => $form)); ?>
-				<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetailsEdit($event); ?>
+	<fieldset>
+		<?php Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit($event); ?>
+		<?php $this->renderPartial('edit/_' . strtolower($type), array('c' => $c, 'form' => $form)); ?>
+		<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetailsEdit($event); ?>
+		<legend>Address & Contact Details</legend>
+		<div class="row">
+			<div class="span6">
+				<?php echo $form->field($c, 'addr1'); ?>
+				<?php echo $form->field($c, 'addr2'); ?>
+				<?php echo $form->field($c, 'addr3'); ?>
+				<?php echo $form->field($c, 'city'); ?>
+				<?php echo $form->field($c, 'county'); ?>
+				<?php echo $form->field($c, 'postcode'); ?>
+				<?php echo $form->field($c, 'country', 'dropDownList', Contact::getCountriesArray(), array('prompt' => 'select...', 'options' => array('-' => array('disabled' => true)))); ?>
 			</div>
-			<div class="line">
-				<div class="unit size1of2">
-					<div class="line">
-						<div class="unit size1of3"><?= $form->labelEx($c,'addr1') ?></div>
-						<div class="lastUnit">
-							<div class="field inputContainer">
-								<div class="input">
-									<?php echo $form->textField($c, 'addr1', array('size' => 30)); ?>
-								</div>
-								<?php echo $form->error($c,'addr1'); ?>
-							</div>
-							<div class="field inputContainer">
-								<div class="input">
-									<?php echo $form->textField($c, 'addr2', array('size' => 30)); ?>
-								</div>
-							</div>
-							<div class="field inputContainer">
-								<div class="input">
-									<?php echo $form->textField($c, 'addr3', array('size' => 30)); ?>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'city') ?></div>
-						<div class="lastUnit">
-							<div class="input w170"><?php echo $form->textField($c, 'city', array('size' => 30)); ?></div>
-							<?php echo $form->error($c,'city'); ?>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'county') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w150"><?php echo $form->textField($c, 'county', array('size' => 30)); ?></div>
-							<?php echo $form->error($c,'county'); ?>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'postcode') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w70"><?php echo $form->textField($c, 'postcode', array('size' => 10)); ?></div>
-							<?php echo $form->error($c,'postcode'); ?>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'country') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w180">
-								<?php 
-								echo $form->dropDownList($c, 'country', Contact::getCountriesArray(), array(
-									'prompt'=>'select...', 
-									'options'=>array(
-										'-'=>array('disabled'=>true),
-									),
-								)); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="unit size1of2 lastUnit">
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'email') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input"><?php echo $form->textField($c, 'email', array('size' => 30)); ?></div>
-							<?php echo $form->error($c,'email'); ?>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'email_secondary') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input"><?php echo $form->textField($c, 'email_secondary', array('size' => 30)); ?></div>
-							<?php echo $form->error($c,'email_secondary'); ?>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'tel_primary') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w120"><?php echo $form->textField($c, 'tel_primary', array('size' => 20)); ?></div>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'tel_secondary') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w120"><?php echo $form->textField($c, 'tel_secondary', array('size' => 20)); ?></div>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'mobile') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w120"><?php echo $form->textField($c, 'mobile', array('size' => 20)); ?></div>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'fax') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input w120"><?php echo $form->textField($c, 'fax', array('size' => 20)); ?></div>
-						</div>
-					</div>
-					<div class="line field">
-						<div class="unit size1of3"><?= $form->labelEx($c,'website') ?></div>
-						<div class="lastUnit inputContainer">
-							<div class="input"><?php echo $form->textField($c, 'website', array('size' => 20)); ?></div>
-							<?php echo $form->error($c,'website'); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-			<?php Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit($event); ?>
-			<div class="line field">
-				<div class="unit size1of6"><?= $form->labelEx($c,'comment') ?></div>
-				<div class="lastUnit inputContainer">
-					<div class="input w400"><?php echo $form->textArea($c, 'comment',array('rows'=>6)); ?></div>
-				</div>
-			</div>
-			<?php Yii::app()->getModule('contact')->onRenderContactAfterCommentEdit($event); ?>
-			<div class="line field">
-				<div class="unit size1of6"><?= $form->labelEx($c,'tags') ?></div>
-				<div class="lastUnit">
-					<?php 
-						$this->widget('nii.widgets.NTagInput', array(
-							'model'=>$c,
-							'attribute'=>'tags',
-							'showSelectDropdown'=>true,
-						)); ?>
-				</div>
+			<div class="span6">
+				<?php echo $form->field($c, 'email'); ?>
+				<?php echo $form->field($c, 'email_secondary'); ?>
+				<?php echo $form->field($c, 'tel_primary'); ?>
+				<?php echo $form->field($c, 'tel_secondary'); ?>
+				<?php echo $form->field($c, 'mobile'); ?>
+				<?php echo $form->field($c, 'fax'); ?>
+				<?php echo $form->field($c, 'website'); ?>
 			</div>
 		</div>
-	</div>
-	<div class="actions">
-		<?php
-		$cancelUrl = ($c->id) ? array('admin/view','id'=>$c->id) : array('admin/index');
-		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
-		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-		?>		
-	</div>
+		<?php Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit($event); ?>
+		<legend>Photo</legend>
+		<div class="control-group">
+			<div class="controls" id="contactPhoto">
+				<div id="currentImage"><?php echo $c->getPhoto('profile-main-' . strtolower($type)); ?></div>
+				<a href="#" class="removeButton btn">Remove</a>
+				<span class="uploadButton btn primary">Upload</span>
+				<?php
+				$this->widget('nii.widgets.uploadify.UploadifyWidget', array(
+					'multi' => false,
+					'ID' => 'photoUpload',
+					'script' => Yii::app()->createAbsoluteUrl('contact/admin/uploadPhoto'),
+					'onComplete' => 'js:function(event, queueID, fileObj, response, data){updateContactPhoto(response)}',
+					'hideButton' => true,
+					'wmode' => 'transparent',
+					'width' => 64,
+				));
+				?>
+				<?php echo $form->hiddenField($c, 'photoID'); ?>
+			</div>
+		</div>
+		<legend>Additional Details</legend>
+		<?php echo $form->field($c, 'comment', 'textArea', null, array('class' => 'span9')); ?>
+		<?php Yii::app()->getModule('contact')->onRenderContactAfterCommentEdit($event); ?>
+		<div class="control-group">
+			<?php echo $form->labelEx($c, 'tags') ?>
+			<div class="controls">
+				<?php
+				$this->widget('nii.widgets.NTagInput', array(
+					'model' => $c,
+					'attribute' => 'tags',
+					'showSelectDropdown' => true,
+				));
+				?>
+			</div>
+		</div>
+		<div class="form-actions">
+			<?php $cancelUrl = ($c->id) ? array('admin/view', 'id' => $c->id) : array('admin/index'); ?>
+			<?php echo NHtml::submitButton('Save', array('class' => 'btn btn-primary')); ?>
+			<?php echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class' => 'btn')); ?>		
+		</div>
+	</fieldset>
 </div>
-
 <?php echo $form->hiddenField($c, 'changedFields') ?>
-<?php if ($action[0] == 'admin/create')
+<?php
+if ($action[0] == 'admin/create')
 	$c->contact_type = $type;
-echo $form->hiddenField($c, 'contact_type') ?>
+echo $form->hiddenField($c, 'contact_type')
+?>
 <?php $this->endWidget(); ?>
 <script type="text/javascript">
 	$(function(){

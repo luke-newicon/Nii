@@ -1,70 +1,47 @@
 <?php
-$formAction = $action=='edit' ? array($action, 'id'=>$model->id) : array($action);
+$formAction = $action == 'edit' ? array($action, 'id' => $model->id) : array($action);
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'eventForm',
 	'action' => $formAction,
-	'enableAjaxValidation'=>false,
-	'enableClientValidation'=>true,
+	'enableAjaxValidation' => false,
+	'enableClientValidation' => true,
 ));
 
 $modelName = get_class($model);
 ?>
-<div class="pull-left">
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'name') ?></div>
-		<div class="lastUnit">
-			<div class="input w300"><?php echo $form->textField($model, 'name', array('size' => 30)); ?></div>
-			<?php echo $form->error($model,'name'); ?>
+<?php if ($model->hasErrors()) : ?>
+	<div class="alert alert-block alert-error">
+		<?php echo $form->errorSummary($model); ?>
+	</div>
+<?php elseif (!$model->id) : ?>
+	<div class="alert alert-block alert-info">
+		<p>This is where you can create a new event.  Fill in all the required fields marked with a <span class="required">*</span>.</p>
+		<p>Additional information can be added at any other time.</p>
+	</div>
+<?php endif; ?>
+<fieldset>
+	<?php echo $form->field($model, 'name'); ?>
+	<div class="control-group">
+		<?php echo $form->labelEx($model, 'start_date', array('class' => 'control-label')) ?>
+		<div class="controls">
+			<?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'start_date')); ?>
+			<?php echo $form->error($model, 'start_date'); ?>
 		</div>
 	</div>
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'start_date') ?></div>
-		<div class="lastUnit">
-			<div class="w170"><?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'start_date')); ?></div>
-			<?php echo $form->error($model,'start_date'); ?>
+	<div class="control-group">
+		<?php echo $form->labelEx($model, 'end_date', array('class' => 'control-label')) ?>
+		<div class="controls">
+			<?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'end_date')); ?>
+			<?php echo $form->error($model, 'end_date'); ?>
 		</div>
 	</div>
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'end_date') ?></div>
-		<div class="lastUnit">
-			<div class="w170"><?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'end_date')); ?></div>
-			<?php echo $form->error($model,'end_date'); ?>
-		</div>
+	<?php echo $form->field($model, 'organiser_type_id', 'dropDownList', HftEventOrganiserType::getTypesArray(), array('prompt' => 'select...')); ?>
+	<?php echo $form->field($model, 'organiser_name'); ?>
+	<?php echo $form->field($model, 'description', 'textArea', null, array('rows' => '4')); ?>
+	<div class="form-actions">
+		<?php echo NHtml::submitButton('Save', array('class' => 'btn btn-primary')); ?>
+		<?php echo NHtml::btnLink('Cancel', (($model->id) ? array('event/view', 'id' => $model->id) : array('event/index')), null, array('class' => 'btn')); ?>
 	</div>
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'organiser_type_id') ?></div>
-		<div class="lastUnit">
-			<div class="input w170"><?php echo $form->dropDownList($model,'organiser_type_id', HftEventOrganiserType::getTypesArray(), array('prompt'=>'select...')); ?></div>
-			<?php echo $form->error($model,'organiser_type_id'); ?>
-		</div>
-	</div>
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'organiser_name') ?></div>
-		<div class="lastUnit">
-			<div class="input w200"><?php echo $form->textField($model, 'organiser_name', array('size' => 30)); ?></div>
-			<?php echo $form->error($model,'organiser_name'); ?>
-		</div>
-	</div>
-	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'description') ?></div>
-		<div class="lastUnit">
-			<div class="input w400"><?php echo $form->textArea($model, 'description',array('rows'=>4)); ?></div>
-			<?php echo $form->error($model,'description'); ?>
-		</div>
-	</div>	
-	
-	<div class="actions">
-		<?php
-		$cancelUrl = ($model->id) ? array('event/view','id'=>$model->id) : array('event/index');
-		echo NHtml::submitButton('Save', array('class'=>'btn primary')) . '&nbsp;';
-		echo NHtml::btnLink('Cancel', $cancelUrl, null, array('class'=>'btn cancel cancelButton')) . '&nbsp;';
-//		if ($model->id)
-//			echo NHtml::trashButton($model, 'event', 'event/index', 'Successfully deleted event');
-
-		?>		
-	</div>
-	
-</div>
-
-
-<?php $this->endWidget();
+</fieldset>
+<?php
+$this->endWidget();
