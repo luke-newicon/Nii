@@ -65,16 +65,16 @@ class NGridView extends CGridView
 	 * to refer to the grid id use '{grid_id}' (it is a good idea to use id's so that jquery runs faster, especially on IE)
 	 * @var string 
 	 */
-	public $ajaxUpdate = "#{grid_id} .grid-top-summary, #{grid_id} .grid-bottom-summary, #{grid_id}-head, #{grid_id}-body";
+//	public $ajaxUpdate = "#{grid_id} .grid-top-summary, #{grid_id} .grid-bottom-summary, #{grid_id}-head, #{grid_id}-body";
 
 	/**
 	 * 
 	 * @return string 
 	 */
-	public function getAjaxUpdate(){
-		if($this->_ajaxUpdate===null)
-			return "#{$this->id} .grid-top-summary, #{$this->id}-head, #{$this->id}-body";
-	}
+//	public function getAjaxUpdate(){
+//		if($this->_ajaxUpdate===null)
+//			return "#{$this->id} .grid-top-summary, #{$this->id}-head, #{$this->id}-body";
+//	}
 	
 	public function init() {
 
@@ -334,7 +334,7 @@ class NGridView extends CGridView
 			buttons: [
 				{
 					text: "Save",
-					class: "btn primary",
+					class: "btn btn-primary",
 					click: function() {
 						pageUrl = "'.CHtml::normalizeUrl(array('/nii/grid/updateGridSettings/', 'key'=>$params['gridId'])).'";
 						$.ajax({
