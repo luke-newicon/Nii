@@ -3,24 +3,24 @@
 <div id="customScopeDialog"></div>
 <div class="modal hide fade" id="modal-user-account">
 	<div class="modal-header">
-		<a class="close" href="#">×</a>
+		<a class="close" data-dismiss="modal" href="#">×</a>
 		<h3>My Account</h3>
 	</div>
 	<div class="modal-body"></div>
 	<div class="modal-footer">
-		<a id="user-password" class="btn pull-left" data-controls-modal="modal-user-password" data-backdrop="static" href="#">Change Password</a>
-		<a id="user-account-save" class="btn primary" href="#">Save</a>
+		<a id="user-password" class="btn pull-left" data-toggle="modal" data-backdrop="static" href="#modal-user-password">Change Password</a>
+		<a id="user-account-save" class="btn btn-primary" href="#">Save</a>
 	</div>
 </div>
 <div class="modal hide fade" id="modal-user-password">
 	<div class="modal-header">
-		<a class="close" href="#">×</a>
+		<a class="close" data-dismiss="modal" href="#">×</a>
 		<h3>Change Password</h3>
 	</div>
 	<div class="modal-body"></div>
 	<div class="modal-footer">
-		<a id="user-account" class="btn pull-left" data-controls-modal="modal-user-account" data-backdrop="static" href="#">My Account</a>
-		<a id="user-password-save" class="btn primary" href="#">Update Password</a>
+		<a id="user-account" class="btn pull-left" data-toggle="modal" data-backdrop="static" href="#modal-user-account">My Account</a>
+		<a id="user-password-save" class="btn btn-primary" href="#">Update Password</a>
 	</div>
 </div>
 <script>
