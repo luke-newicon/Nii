@@ -65,7 +65,7 @@ class Contact extends NActiveRecord {
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, title, givennames, lastname, suffix, dob, gender, email, addr1, addr2, addr3, city, county, country, postcode, telephone_numbers, tel_primary, tel_secondary, mobile, fax, email_secondary, type, comment, website', 'safe', 'on' => 'search'),
-			array('givennames, lastname', 'required', 'on' => 'Person'),
+			array('lastname', 'required', 'on' => 'Person'),
 			array('company_name, contact_name', 'required', 'on' => 'Organisation'),
 		);
 	}
