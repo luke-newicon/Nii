@@ -14,28 +14,16 @@
  *     <!-- errors labels or messages relating to the field -->
  *     <p class="hint">enter this and that</p> 
  * </div>
- *
- * 
- *
- *
- * Add custom form styles by adding a new object root level class on the surrounding top level element (like the form)
- * for example:
- * .myFunkFormSkin .input{//input styles} // can use input style outside of a field but you will have to manually implement focus, error and success classes
- * .myFunkFormSkin .field .input{//input styles}
- * .myFunkFormSkin .field.error .input{//input error style}
  */
  
 /* Resets the input elements styles, make expand to fit container (.input) */
-.input input,.input select,.input textarea{margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
-
-textarea {height: auto;}
-label, input, select, textarea {font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size: 13px;line-height: 18px;}
-
+.input input,.input select,.input textarea{box-shadow:none;margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
+.input input:focus,.input select:focus,.input textarea:focus{box-shadow:none;}
 
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
 .field{margin-bottom:10px;position:relative;}
 /* padding and margin break widths so remove them, the input elements pading is defined by padding on .input*/
-input.btn{width:auto;}
+/*input.btn{width:auto;}*/
 /* make required * red have to use span element here becuase that's what yii creates */
 span.required {color:#CC0000}
 /* the input container class can be used to wrap the inputBox class it ensures positioning is not skewed by error messages appearing within the .field container */
@@ -58,16 +46,8 @@ label{float:none;padding-top:0;color:#404040;}
 .validating .input{/*border-color:#ccc;*/}/* this class is applied when the form is validating the input, typically when sending the ajax response to check validation */
 .validating.focus .input,.validating.focused .input{}
 
-.bLeft{border-left:0px;border-bottom-left-radius:0px;border-top-left-radius:0px;}
-.bRight{border-right:0px;border-bottom-right-radius:0px;border-top-right-radius:0px;}
-/*.input:hover{border-color: #999999 #aaaaaa #aaaaaa;}
-.focus .input:hover,.focused .input:hover{border-color:rgba(82, 168, 236, 0.8);}
-.error .input:hover{border-color:#c99393 #e2a3a3 #e2a3a3;}
-.success .input:hover{border-color:#94c78c #a4da9b #a4da9b;}*/
-
 /* formHint style */
 .hint, .help-block{color:#bbbbbb;font-size:80%;line-height:18px}
-
 
 /* .inFieldLabel you may need to tweak the positions for different forms */
 label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
@@ -82,40 +62,11 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 /* if a field is within a field then we most likely don't want bottom margin */
 .field .field{margin-bottom:0px;margin-left:0px;}
 .field.error .lbl {color:#9D261D;}
-
-
-fieldset legend{color:#404040;display:block;font-size:19.5px;line-height:1;}
 .float legend{padding-left:150px}
-form{margin-bottom:18px;}
-fieldset{margin-bottom:18px;padding-top:18px;}
-
-/* 
- * bootstrap styles 
- * ----------------
- */
-.inputs-list li:first-child {padding-top: 6px;}
-.inputs-list {margin: 0 0 5px; width: 100%;}
-.inputs-list li{display: block; padding: 0; width: 100%;}
-.inputs-list label {display: block;float: none;line-height: 18px;padding: 0;text-align: left;white-space: normal;width: auto;}
-/* width styles */
-.input-mini,.input.mini,.input.xsmall {width: 60px;}
-.input-small,.input.small {width: 90px;}
-.input-medium,.input.medium {width: 150px;}
-.input-large,.input.large {width: 210px;}
-.input-xlarge,.input.xlarge {width: 270px;}
-.input-xxlarge,.input.xxlarge {width: 530px;}
 
 .uneditable-input {border-color: #EEEEEE; cursor: not-allowed;color: #808080;font-size: 13px; height: 18px;line-height: 18px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;}
-
 .disabled{background-image:none;background-color: #F5F5F5;border-color: #DDDDDD;box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset}
-input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {cursor: not-allowed;}
 
 /** complex elements */
 .joinedRight{border-radius:3px 0px 0px 3px;}
 .joinedLeft{border-radius:0px 3px 3px 0px; border-left:0px;}
-/* style checkboxes and radios for consistency across broswers */
-input[type=checkbox],input[type=radio]{cursor:pointer;}
-input[type=checkbox],input[type=radio]{width:auto;height:auto;padding:0;margin:3px 0;*margin-top:0;line-height:normal;border:none;}
-input[type=file]{background-color:#ffffff;padding:initial;border:initial;line-height:initial;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
-select[multiple]{height:inherit;}
-input[type=file]:focus,input[type=checkbox]:focus,select:focus{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;outline:1px dotted #666;}
