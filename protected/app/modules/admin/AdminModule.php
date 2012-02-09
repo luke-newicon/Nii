@@ -47,7 +47,7 @@ class AdminModule extends NWebModule {
 		Yii::app()->menus->addMenu('user');
 		
 		Yii::app()->menus->addItem('user','User','#');
-		Yii::app()->menus->addItem('user','My Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-controls-modal'=>'modal-user-account','data-backdrop'=>'static')));
+		Yii::app()->menus->addItem('user','My Account',array('/user/admin/account'),'User',array('linkOptions'=>array('data-toggle'=>'modal','data-target'=>'#modal-user-account','data-backdrop'=>'static')));
 		Yii::app()->menus->addItem('user','Settings',array('/user/admin/settings'),'User');
 		
 		Yii::app()->menus->addDivider('secondary','Admin');
