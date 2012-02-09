@@ -354,7 +354,7 @@ class AccountController extends NController {
 						$message = UserModule::t("You have requested password recovery from {site_name}. To receive a new password, go to {activation_url}.",array('{site_name}'=>Yii::app()->name, '{activation_url}'=>$activation_url));
 						UserModule::sendMail($user->email,$subject,$message);
 
-						Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Please check your email. Instructions have been sent to your email address."));
+						Yii::app()->user->setFlash('recoveryMessage',UserModule::t("Instructions on how to reset your password have been sent to your registered email address."));
 						$this->refresh();
 					}
 				}
