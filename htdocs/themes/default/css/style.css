@@ -6,50 +6,51 @@ a:focus{outline:none}
 .page-header{overflow:hidden}
 .page-header h1,.page-header h2,.page-header h3{float:left}
 .page-header .action-buttons{float:right;padding: 0 10px}
-.modal-backdrop,.modal-backdrop.fade.in{opacity:0.5}
-/** what?? I don't always want actions to float right (removed it) this should extend bootstrap actions!*/
+.modal-backdrop,.modal-backdrop.fade.in{opacity:0.5}/*
+* what?? I don't always want actions to float right (removed it) this should extend bootstrap actions!
 .actions .topbar{border-bottom:1px solid #DDDDDD;text-align:right;}
 .container.pull-left{float:none;margin-left:0}
 .container.pull-right{float:none;margin-right:0}
-.modal-footer .btn.pull-left{float:left;margin-left:0;margin-right:5px}
+*/.modal-footer .btn.pull-left{float:left;margin-left:0;margin-right:5px}/*
 .tabs .heading{margin-right:20px}
 .tab-content > *{display:none}
 
-/* Vertical Tabs */
+ Vertical Tabs 
 .tabs.vertical{width:250px;border-bottom:none;border-right:1px solid #DDD;margin:0 20px 0 0;padding-bottom:4px;float:left}
 .tabs.vertical > li{float:none;left:1px;margin-top:2px}
 .tabs.vertical > li > a{border-radius:4px 0 0 4px;margin-right:0px;padding:0 12px;line-height:30px}
 .tabs.vertical > li > a:hover{border-color:#EEEEEE #DDDDDD #EEEEEE #EEEEEE}
 .tabs.vertical > li.active > a{border-color:#DDDDDD;border-right:1px solid transparent}
 .tabs.vertical .heading{margin-right:0}
-.tab-content.vertical{display:table-cell;width:9999em}
+.tab-content.vertical{display:table-cell;width:9999em}*/
+
+.btn{vertical-align:middle}
 
 /* Site Styles */
-html,body{height:100%}
+/*html,body{height:100%}*/
 .page{min-width:980px}
 
 /**
  * head and menu style
  */
-.head{position:relative;background:#FFFFFF url(../images/head_bg.jpg) -780px top repeat-x;}
-body.fixed .head {position:fixed;width: 100%;z-index:1000;}
-#sitelogo{padding:10px}
-.body{padding:15px;}
-body.fixed .body {position:absolute; top:40px;}
-body.fixed.show-logo .body {top:95px;}
+.head{position:relative;background:#FFFFFF url(../images/head_bg.jpg) repeat-x -780px top}
+body.fixed .head {position:fixed;width: 100%;z-index:1000}
+#sitelogo{padding:5px 10px}
+.body{padding:0 15px 15px}
+body.fixed .body{position:absolute; top:40px}
+body.fixed.show-logo .body{top:95px}
 /**
  * Override the default yii grid styles.
  */
 .grid-view,.tab-content .grid-view{padding:0}
-.grid-view .filters input, .grid-view .filters select{border:none;}
+.grid-view .filters input, .grid-view .filters select{margin:0;width:auto}
 .grid-view tbody tr td.success{background-color:#D1EED1;border-color:#BFE7BF}
 /*.grid-view table th,.grid-view table td{padding:6px 7px}*/
-.grid-view .filters td {border-top:1px solid #ecf7fd; background-image: url(../images/grid-search-bg.png); padding: 3px 2px;}
-.grid-view .filters .input{padding:1px 3px; height: 18px; }
-.filters .input input, .filters .input select {}
-.grid-view .filters .field{margin-bottom:0px;}
+.grid-view .filters td {border-top:1px solid #ecf7fd;background-image: url(../images/grid-search-bg.png);padding:3px 2px}
+.grid-view .filters .input{/*padding:1px 3px;height: 18px;*/}
+.grid-view .filters .field{margin-bottom:0px}
 
-.condensed-table th, .condensed-table td { padding: 3px 4px 3px; }
+.condensed-table th, .condensed-table td{padding:3px 4px 3px}
 .grid-view tbody tr:first-child td {
 	border-top: 1px solid #aaa;
 	border-radius: 0!important;
@@ -297,10 +298,10 @@ div.scopes .scopeDescription {
 	color: #999;
 }
 
-#contact-general {
+/*#contact-general {
 	padding: 12px;
 	min-height: 145px;
-}
+}*/
 
 .shadowBlockLarge {
 	
@@ -614,9 +615,9 @@ div.topbar div > ul > li.menu:hover ul {
 	color: #fff;
 }
 
-.topbar div > ul a, .nav a {
+/*.topbar div > ul a, .nav a {
 	white-space: nowrap;
-}
+}*/
 
 .portlet{
   background-color: #ffffff;
@@ -701,9 +702,9 @@ div.topbar div > ul > li.menu:hover ul {
 
 .hidden { display: none; }
 
-.input select {
+/*.input select {
 	background: transparent url(../images/select-arrow.png) right center no-repeat;
-}
+}*/
 
 .currency {
 	letter-spacing: 2px;

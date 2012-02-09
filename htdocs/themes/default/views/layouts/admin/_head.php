@@ -3,7 +3,7 @@ $topbarColor = Yii::app()->getModule('admin')->topbarColor;
 $h2Color = Yii::app()->getModule('admin')->h2Color;
 $h3Color = Yii::app()->getModule('admin')->h3Color;
 ?>
-<?php if ($topbarColor) : ?>
+<?php if(false): //if($topbarColor): ?>
 <?php $topbarColorLighter = NHtml::hexLighter(Yii::app()->getModule('admin')->topbarColor, 8) ?>
 	<style>
 		.topbar-inner, .topbar .fill {
@@ -71,9 +71,8 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 			</a>
 		</div>
 	<?php endif; ?>
-	<div class="topbar-wrapper">
 		<div class="navbar">
-			<div class="navbar-inner" style="padding-left:20px;padding-right:20px;">
+			<div class="navbar-inner">
                 <div class="container" style="width:auto">
 					<?php if (Yii::app()->getModule('admin')->menuAppname) : ?>
 						<a class="brand" href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a>
@@ -94,13 +93,9 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 					));
 					?>
 					<?php if(Yii::app()->getModule('admin')->menuSearch) : ?>
-						<ul class="nav secondary-nav">
-							<li>
-								<form action="">
-									<input type="text" placeholder="Search">
-								</form>
-							</li>
-						</ul>
+						<form class="navbar-search pull-right">
+							<input type="text" class="search-query" placeholder="Search">
+						</form>
 					<?php endif; ?>
 					<?php
 					Yii::app()->menus->addDivider('user', 'User');
@@ -123,7 +118,6 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 					?>
                 </div>
 			</div>
-		</div>
 	</div>
 	<script>
 		jQuery(function($){
