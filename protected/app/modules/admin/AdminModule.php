@@ -104,6 +104,28 @@ class AdminModule extends NWebModule {
 							'nii/index/trash',
 						),
 					),
+					'notes' => array('description' => 'Notes',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'nii/index/notes',
+							'nii/index/markdownPreview',
+						),
+					),
+					'attachments' => array('description' => 'Attachments',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'nii/index/attachments',
+							'nii/index/show',
+							'nii/index/file',
+							'nii/index/heartbeat',
+						),
+					),
+					'relationships' => array('description' => 'Relationships',
+						'roles' => array('administrator','editor'),
+						'operations' => array(
+							'nii/index/relationships',
+						),
+					),
 					'dashboard' => array('description' => 'Dashboard',
 						'roles' => array('administrator','editor','viewer'),
 						'operations' => array(

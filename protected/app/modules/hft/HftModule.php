@@ -116,6 +116,7 @@ class HftModule extends NWebModule
 					'edit' => array('description' => 'Edit Events',
 						'roles' => array('administrator', 'editor'),
 						'operations' => array(
+							'hft/event/create',
 							'hft/event/edit',
 							'hft/event/addAttendee',
 							'hft/event/deleteAttendee',

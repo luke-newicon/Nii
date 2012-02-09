@@ -8,6 +8,21 @@
 class IndexController extends AController
 {
 	
+	public function accessRules() {
+		return array(
+			array('allow',
+				'expression' => '$user->checkAccessToRoute()',
+			),
+			array('allow',
+				'actions' => array('attachments'),
+				'users'=>array('?'),
+			),
+			array('deny', // deny all users
+				'users' => array('*'),
+			),
+		);
+	}
+	
 	public function actions(){
 		return array(
 			'markdownPreview'=>'modules.nii.widgets.markdown.NMarkdownAction',

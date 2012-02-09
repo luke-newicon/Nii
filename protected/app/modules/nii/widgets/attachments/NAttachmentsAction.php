@@ -89,13 +89,10 @@ class NAttachmentsAction extends CAction
 	 * 
 	 */
 	private function _uploadAttachment() {
-
 		$upload = Yii::app()->fileManager;
 		$newFileId = $upload->saveFile();
-		
 		echo $newFileId;
 		exit;
-
 	}
 
 }
