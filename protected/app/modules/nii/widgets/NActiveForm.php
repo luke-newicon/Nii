@@ -8,38 +8,18 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-
-/**
- * NActive form applies frequently used defaults to the CActiveForm widget
- * 
- * it asssumes you have used the following oocss form field structure for form elements
- * <div class="field"> // this element will recieve error and validation classes
- *     // labels and other elements
- *     <div class="inputBox">
- *         // input element
- *     </div>
- *     // error messages
- * </div>
- * 
- *  
- * @author steve
- */
 class NActiveForm extends CActiveForm {
 
 	public $enableAjaxValidation = true;
 	public $enableClientValidation = true;
-
-	/**
-	 * options passed to javascript validation
-	 * @see CActiveForm::clientOptions this
-	 * sets the default to set error message class onto the .field html object
-	 * @var type 
-	 */
-	public $clientOptions = array('inputContainer' => '.field');
+	public $errorMessageCssClass = 'errorMessage help-inline';
 
 	public function init() {
 		// add small script to add focus class to parent .field element
-		$cs = Yii::app()->clientScript;
+		if (!isset($this->clientOptions['inputContainer']))
+			$this->clientOptions['inputContainer'] = '.control-group';
+		if (!isset($this->htmlOptions['class']))
+			$this->htmlOptions['class'] = 'form-horizontal';
 		parent::init();
 	}
 
@@ -63,23 +43,53 @@ class NActiveForm extends CActiveForm {
 	 */
 	public function labelEx($model, $attribute, $htmlOptions=array()) {
 		if (empty($htmlOptions)) {
-			$htmlOptions = array('class' => 'lbl');
+			$htmlOptions = array('class' => 'control-label');
 		}
 		return parent::labelEx($model, $attribute, $htmlOptions);
 	}
 
 	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
-		$return = '<div class="field">';
+		return $this->editField($model, $attribute, $type, $data, $htmlOptions);
+	}
+
+	/**
+	 * Default field structure supporting Bootstrap syntax.
+	 * @param CModel $model The model holding the data
+	 * @param string $attribute The attribute to display
+	 * @param string $type The type of field you want i.e textField, dropDownList
+	 * @param array $data Required for dropDownList type
+	 * @param array $htmlOptions Any optional HTML options to be applied
+	 * @return string The HTML to be rendered
+	 */
+	public function editField($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
+		$error = $model->hasErrors($attribute) ? ' error' : '';
+		$return = '<div class="control-group'.$error.'">';
 		$return .= $this->labelEx($model, $attribute);
-		$return .= '<div class="input">';
-		if($type == 'dropDownList'){
-			$return .= $this->dropDownList($model, $attribute, $data);
+		$return .= '<div class="controls">';
+		if ($type == 'dropDownList') {
+			$return .= $this->dropDownList($model, $attribute, $data, $htmlOptions);
 		} else
-			$return .= $this->$type($model, $attribute);
-		$return .= '</div>';
+			$return .= $this->$type($model, $attribute, $htmlOptions);
 		$return .= $this->error($model, $attribute);
-		$return .= '</div>';
+		$return .= '</div></div>';
 		return $return;
+	}
+
+	public function viewField($model, $attribute, $data=array()) {
+		$return = '<div class="control-group">';
+		$return .= $this->labelEx($model, $attribute);
+		$return .= '<div class="controls">';
+		$value = CHtml::resolveValue($model, $attribute);
+		$return .= (array_key_exists($value, $data) ? $data[$value] : $value);
+		$return .= '</div></div>';
+		return $return;
+	}
+	
+	public function checkBoxField($model, $attribute){
+		return $this->labelEx($model, $attribute, array(
+			'label' => $this->checkBox($model, $attribute) . $model->getAttributeLabel($attribute),
+			'class' => 'checkbox',
+		));
 	}
 
 }
