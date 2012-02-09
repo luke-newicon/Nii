@@ -29,7 +29,7 @@ $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 			'header' => 'Enabled',
 			'type' => 'raw',
 			'htmlOptions' => array('width' => '100', 'align' => 'center'),
-			'value' => '($data["enabled"]) ? CHtml::link("Disable", array("/admin/modules/disable","module"=>$data["id"]), array("class"=>"btn disable")) : CHtml::link("Enable", array("/admin/modules/enable","module"=>$data["id"]), array("class"=>"btn aristo primary enable"))',
+			'value' => '($data["enabled"]) ? CHtml::link("Disable", array("/admin/modules/disable","module"=>$data["id"]), array("class"=>"btn btn-danger disable")) : CHtml::link("Enable", array("/admin/modules/enable","module"=>$data["id"]), array("class"=>"btn btn-success enable"))',
 		),
 	),
 ));
