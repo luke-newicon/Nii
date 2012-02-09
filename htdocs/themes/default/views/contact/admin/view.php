@@ -4,7 +4,7 @@
 		<?php if($model->addableTabs) : ?>
 			<a href="#" class="btn" data-controls-modal="modal-add-relation" data-backdrop="true"><?php echo $this->t('Add a Relation') ?></a>
 		<?php endif; ?>
-		<?php echo NHtml::link($this->t('Edit'), array("edit", "id" => $model->id), array('id' => 'contact-edit-button', 'class' => 'btn primary')); ?>
+		<?php echo NHtml::link($this->t('Edit'), array("edit", "id" => $model->id), array('id' => 'contact-edit-button', 'class' => 'btn btn-primary')) ?>
 	</div>
 </div>
 <div class="container pull-left">

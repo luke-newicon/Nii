@@ -37,7 +37,7 @@ $modelName = get_class($model);
 	</div>
 	<?php echo $form->field($model, 'organiser_type_id', 'dropDownList', HftEventOrganiserType::getTypesArray(), array('prompt' => 'select...')); ?>
 	<?php echo $form->field($model, 'organiser_name'); ?>
-	<?php echo $form->field($model, 'description', 'textArea', null, array('rows' => '4')); ?>
+	<?php echo $form->field($model, 'description', 'textArea', null, array('rows' => '4', 'class' => 'span9')); ?>
 	<div class="form-actions">
 		<?php echo NHtml::submitButton('Save', array('class' => 'btn btn-primary')); ?>
 		<?php echo NHtml::btnLink('Cancel', (($model->id) ? array('event/view', 'id' => $model->id) : array('event/index')), null, array('class' => 'btn')); ?>

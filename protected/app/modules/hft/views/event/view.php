@@ -1,8 +1,8 @@
 <div class="page-header">
 	<h1><?php echo $this->t('View Event Details') ?></h1>
 	<div class="action-buttons">
-		<?php echo NHtml::link($this->t('Email Attendees'), array("emailAttendees","id"=>$model->id),array('class'=>'btn'));?>
-		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'event-edit-button', 'class'=>'btn primary'));?>
+		<?php echo NHtml::link($this->t('Email Attendees'), array("emailAttendees","id"=>$model->id),array('class'=>'btn')) ?>
+		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'event-edit-button', 'class'=>'btn btn-primary')) ?>
 	</div>
 </div>
 <div class="container pull-left">

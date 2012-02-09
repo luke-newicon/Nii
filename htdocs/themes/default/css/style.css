@@ -323,10 +323,10 @@ div.vertical .ui-tabs .ui-tabs-panel {
 	padding: 12px;
 }
 
-#contact-edit-button, .right-button {
+/*#contact-edit-button, .right-button {
 	float: right;
 	margin: 0 5px 10px 5px;
-}
+}*/
 
 .contact-photo {
 	float: left;
