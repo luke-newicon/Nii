@@ -6,8 +6,6 @@ $form = $this->beginWidget('NActiveForm', array(
 	'enableAjaxValidation' => false,
 	'enableClientValidation' => true,
 ));
-
-$modelName = get_class($model);
 ?>
 <?php if ($model->hasErrors()) : ?>
 	<div class="alert alert-block alert-error">
@@ -21,20 +19,8 @@ $modelName = get_class($model);
 <?php endif; ?>
 <fieldset>
 	<?php echo $form->field($model, 'name'); ?>
-	<div class="control-group">
-		<?php echo $form->labelEx($model, 'start_date', array('class' => 'control-label')) ?>
-		<div class="controls">
-			<?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'start_date')); ?>
-			<?php echo $form->error($model, 'start_date'); ?>
-		</div>
-	</div>
-	<div class="control-group">
-		<?php echo $form->labelEx($model, 'end_date', array('class' => 'control-label')) ?>
-		<div class="controls">
-			<?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'end_date')); ?>
-			<?php echo $form->error($model, 'end_date'); ?>
-		</div>
-	</div>
+	<?php echo $form->field($model, 'start_date', 'dateField'); ?>
+	<?php echo $form->field($model, 'end_date', 'dateField'); ?>
 	<?php echo $form->field($model, 'organiser_type_id', 'dropDownList', HftEventOrganiserType::getTypesArray(), array('prompt' => 'select...')); ?>
 	<?php echo $form->field($model, 'organiser_name'); ?>
 	<?php echo $form->field($model, 'description', 'textArea', null, array('rows' => '4', 'class' => 'span9')); ?>
@@ -43,5 +29,4 @@ $modelName = get_class($model);
 		<?php echo NHtml::btnLink('Cancel', (($model->id) ? array('event/view', 'id' => $model->id) : array('event/index')), null, array('class' => 'btn')); ?>
 	</div>
 </fieldset>
-<?php
-$this->endWidget();
+<?php $this->endWidget(); ?>

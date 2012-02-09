@@ -10,12 +10,12 @@
 	</div>
 	
 	<div class="modal-body">
-		<div class="alert-message block-message info">
-			<p>Your password needs to be updated.</p>
+		<div class="alert alert-block alert-info">
+			<p>Enter your new password below.</p>
 		</div>
 		<fieldset>
-			<?php echo $form->field($model, 'password', passwordField); ?>
-			<?php echo $form->field($model, 'verifyPassword', passwordField); ?>
+			<?php echo $form->field($model, 'password', 'passwordField'); ?>
+			<?php echo $form->field($model, 'verifyPassword', 'passwordField'); ?>
 		</fieldset>
 	</div>
 	<div class="modal-footer">

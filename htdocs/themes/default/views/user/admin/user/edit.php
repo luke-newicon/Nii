@@ -1,93 +1,37 @@
+<?php $this->pageTitle = Yii::app()->name . ' - Edit User: ' . $model->name; ?>
+<div class="page-header">
+	<h1>Edit User: <?php echo $model->name ?></h1>
+	<div class="action-buttons">
+		<?php if(Yii::app()->user->record->superuser) : ?>
+			<a href="<?php echo CHtml::normalizeUrl(array('impersonate','id'=>$model->id())) ?>" class="btn btn-info">Impersonate</a>
+		<?php endif; ?>
+		<a href="<?php echo CHtml::normalizeUrl(array('deleteUser','id'=>$model->id())) ?>" class="btn btn-danger" data-confirm="Are you sure you want to delete <?php echo $model->name; ?>?"><i class="icon-trash icon-white"></i> Delete <?php echo $model->name; ?></a>
+	</div>
+</div>
 <?php
 $form = $this->beginWidget('NActiveForm', array(
 	'id' => 'edit-user-form',
 ));
 ?>
-<?php if(!Yii::app()->request->isAjaxRequest) : ?>
-	<?php $this->pageTitle = Yii::app()->name . ' - Edit User: ' . $model->name; ?>
-	<div class="page-header">
-		<h1>Edit User: <?php echo $model->name ?></h1>
-		<div class="action-buttons">
-			<?php if(Yii::app()->user->record->superuser) : ?>
-				<a href="<?php echo CHtml::normalizeUrl(array('impersonate','id'=>$model->id())) ?>" class="btn info">Impersonate</a>
-			<?php endif; ?>
-			<a href="<?php echo CHtml::normalizeUrl(array('deleteUser','id'=>$model->id())) ?>" class="btn danger" data-confirm="Are you sure you want to delete <?php echo $model->name; ?>?">Delete <?php echo $model->name; ?></a>
-		</div>
-	</div>
-
-<?php endif; ?>
 <fieldset>
-	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
-		<div class="container pull-left">
-	<?php endif; ?>
-	<div class="line">
-		<div class="unit size1of2">
-			<?php echo $form->field($model, 'first_name'); ?>
-		</div>
-		<div class="lastUnit">
-			<?php echo $form->field($model, 'last_name'); ?>
-		</div>
-	</div>
-	<div class="line">
-		<div class="unit size1of2">
-			<?php echo $form->field($model, 'email'); ?>
-		</div>
-		<div class="lastUnit">
-			<?php echo $form->field($model, 'username'); ?>
-		</div>
-	</div>
-	<div class="line">
-		<div class="unit size1of2">
-			<?php echo $form->field($model, 'superuser', 'dropDownList', User::itemAlias('AdminStatus')); ?>
-		</div>
-		<div class="lastUnit">
-			<?php echo $form->field($model, 'status', 'dropDownList', User::itemAlias('UserStatus')); ?>
-		</div>
-	</div>
-	<div class="line">
-		<div class="unit size1of2">
-			<div class="field">
-				<?php echo $form->labelEx($model,'contact_id') ?>
-				<div class="input">
-					<?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-						'name'=>'contactName',
-						'value'=>$model->contactName,
-						'source'=>$this->createUrl('/contact/autocomplete/contactList/type/Person/'),
-						// additional javascript options for the autocomplete plugin
-						'options'=>array(
-							'showAnim'=>'fold',
-							'change'=>'js:function(event, ui) {
-								if (ui.item)
-									$("#UserEditForm_contact_id").val(ui.item.id);
-								else
-									$("#UserEditForm_contact_id").val(null);
-							}'
-							),
-						));
-						echo $form->hiddenField($model, 'contact_id');
-					?>
-				</div>
-				<?php echo $form->error($model,'contact_id'); ?>
-			</div>
-		</div>
-		<div class="lastUnit">
-			<?php echo $form->field($model, 'roleName', 'dropDownList', CHtml::listData(Yii::app()->authManager->roles,'name','description')); ?>
-		</div>
-	</div>
-	<div class="line">
+	<?php echo $form->field($model, 'first_name'); ?>
+	<?php echo $form->field($model, 'last_name'); ?>
+	<?php echo $form->field($model, 'email'); ?>
+	<?php echo $form->field($model, 'username'); ?>
+	<?php echo $form->field($model, 'superuser', 'dropDownList', User::itemAlias('AdminStatus')); ?>
+	<?php echo $form->field($model, 'status', 'dropDownList', User::itemAlias('UserStatus')); ?>
+	<?php echo $form->beginField($model, 'contact_id'); ?>
+		<?php echo $form->autoComplete($model, 'contact_id', $this->createUrl('/contact/autocomplete/contactList/type/Person/'), 'contactName'); ?>
+	<?php echo $form->endField($model, 'contact_id'); ?>
+	<?php echo $form->field($model, 'roleName', 'dropDownList', CHtml::listData(Yii::app()->authManager->roles,'name','description')); ?>
+	<?php echo $form->beginField($model, 'password'); ?>
 		<a href="#" class="btn" data-controls-modal="modal-user-edit-password" data-backdrop="static">Change Password</a>
-		<label>
-			<?php echo $form->checkBox($model, 'update_password'); ?>
-			<?php echo $form->label($model, 'update_password'); ?>
-		</label>
+		<?php //echo $form->checkBoxField($model, 'update_password'); ?>
+	<?php echo $form->endField($model, 'update_password'); ?>
+	<div class="form-actions">
+		<input type="submit" class="btn btn-primary" value="Save" />
+		<a href="<?php echo CHtml::normalizeUrl(array('users')) ?>" class="btn">Cancel</a>
 	</div>
-	<?php if(!Yii::app()->request->isAjaxRequest) : ?>
-	</div>
-		<div class="actions">
-			<a href="<?php echo CHtml::normalizeUrl(array('users')) ?>" class="btn">Cancel</a>
-			<input type="submit" class="btn primary" value="Save" />
-		</div>
-	<?php endif; ?>
 </fieldset>
 <?php $this->endWidget(); ?>
 <div class="modal hide fade" id="modal-user-edit-password">
@@ -97,7 +41,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 	<div class="modal-body"></div>
 	<div class="modal-footer">
-		<a id="user-edit-password-save" class="btn primary" href="#">Update Password</a>
+		<a id="user-edit-password-save" class="btn btn-primary" href="#">Update Password</a>
 	</div>
 </div>
 <script>

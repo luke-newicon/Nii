@@ -164,6 +164,9 @@ class NiiModule extends NWebModule
 			'bootstrap-min.css'=>false,
 			// Prevent gridview styles from loading on ajax
 			'styles.css'=>false,
+			'bootstrap.min.js'=>false,
+			'functions.js'=>false,
+			'jquery.ba-bbq.js'=>false,
 		);
 	}
 	

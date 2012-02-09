@@ -183,7 +183,7 @@ class Contact extends NActiveRecord {
 	public function getSearchCriteria(&$criteria) {
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
-		$criteria->compare('title', $this->title, true);
+		$criteria->compare('title', $this->title);
 		$criteria->compare('givennames', $this->givennames, true);
 		$criteria->compare('lastname', $this->lastname, true);
 		$criteria->compare('suffix', $this->suffix, true);
@@ -196,7 +196,7 @@ class Contact extends NActiveRecord {
 		$criteria->compare('addr3', $this->addr3, true);
 		$criteria->compare('city', $this->city, true);
 		$criteria->compare('county', $this->county, true);
-		$criteria->compare('country', $this->country, true);
+		$criteria->compare('country', $this->country);
 		$criteria->compare('postcode', $this->postcode, true);
 		$criteria->compare('CONCAT(tel_primary, " " ,tel_secondary)', $this->telephone_numbers, true);
 		$criteria->compare('tel_primary', $this->tel_primary, true);
@@ -206,7 +206,7 @@ class Contact extends NActiveRecord {
 		$criteria->compare('website', $this->fax, true);
 		$criteria->compare('company_name', $this->company_name, true);
 		$criteria->compare('contact_name', $this->contact_name, true);
-		$criteria->compare('contact_type', $this->contact_type, true);
+		$criteria->compare('contact_type', $this->contact_type);
 		$criteria->compare('comment', $this->comment, true);
 		return true;
 	}

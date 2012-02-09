@@ -224,99 +224,99 @@ Array.prototype.remove = function(from, to) {
 		}
 	}
 	
-	if(jQuery.fn.yiiGridView != undefined){
-		
-		/**
-		 * Performs an AJAX-based update of the grid view contents.
-		 * @param id string the ID of the grid view container
-		 * @param options map the AJAX request options (see jQuery.ajax API manual). By default,
-		 * the URL to be requested is the one that generates the current content of the grid view.
-		 */
-		$.fn.yiiGridView.update = function(id, options) {
-			alert('oi');
-			var settings = $.fn.yiiGridView.settings[id];
-			$('#'+id).addClass(settings.loadingClass);
-
-			if(options && options.error !== undefined) {
-				var customError=options.error;
-				delete options.error;
-			}
-
-			options = $.extend({
-				type: 'GET',
-				url: $.fn.yiiGridView.getUrl(id),
-				success: function(data,status) {
-					$.each(settings.ajaxUpdate, function(i,v) {
-						var id='#'+v;
-						$(id).replaceWith($(id,'<div>'+data+'</div>'));
-					});
-					if(settings.afterAjaxUpdate !== undefined)
-						settings.afterAjaxUpdate(id, data);
-					$('#'+id).removeClass(settings.loadingClass);
-					$.fn.yiiGridView.selectCheckedRows(id);
-				},
-				error: function(XHR, textStatus, errorThrown) {
-					$('#'+id).removeClass(settings.loadingClass);
-					if(XHR.readyState == 0 || XHR.status == 0)
-						return;
-					if(customError!==undefined) {
-						var ret = customError(XHR);
-						if( ret!==undefined && !ret)
-							return;
-					}
-					var err='';
-					switch(textStatus) {
-						case 'timeout':
-							err='The request timed out!';
-							break;
-						case 'parsererror':
-							err='Parser error!';
-							break;
-						case 'error':
-							if(XHR.status && !/^\s*$/.test(XHR.status))
-								err='Error ' + XHR.status;
-							else
-								err='Error';
-							if(XHR.responseText && !/^\s*$/.test(XHR.responseText))
-								err=err + ': ' + XHR.responseText;
-							break;
-					}
-
-					if(settings.ajaxUpdateError !== undefined)
-						settings.ajaxUpdateError(XHR, textStatus, errorThrown,err);
-					else if(err)
-						alert(err);
-				}
-			}, options || {});
-			if(options.data!==undefined && options.type=='GET') {
-				options.url = $.param.querystring(options.url, options.data);
-				options.data = {};
-			}
-
-			if(settings.ajaxUpdate!==false) {
-				options.url = $.param.querystring(options.url, settings.ajaxVar+'='+id);
-				if(settings.beforeAjaxUpdate !== undefined)
-					settings.beforeAjaxUpdate(id, options);
-				$.ajax(options);
-			}
-			else {  // non-ajax mode
-				if(options.type=='GET') {
-					window.location.href=options.url;
-				}
-				else {  // POST mode
-					var $form=$('<form action="'+options.url+'" method="post"></form>').appendTo('body');
-					if(options.data===undefined)
-						options.data={};
-
-					if(options.data.returnUrl===undefined)
-						options.data.returnUrl=window.location.href;
-
-					$.each(options.data, function(name,value) {
-						$form.append($('<input type="hidden" name="t" value="" />').attr('name',name).val(value));
-					});
-					$form.submit();
-				}
-			}
-		};
-	}
+//	if(jQuery.fn.yiiGridView != undefined){
+//		
+//		/**
+//		 * Performs an AJAX-based update of the grid view contents.
+//		 * @param id string the ID of the grid view container
+//		 * @param options map the AJAX request options (see jQuery.ajax API manual). By default,
+//		 * the URL to be requested is the one that generates the current content of the grid view.
+//		 */
+//		$.fn.yiiGridView.update = function(id, options) {
+//			alert('oi');
+//			var settings = $.fn.yiiGridView.settings[id];
+//			$('#'+id).addClass(settings.loadingClass);
+//
+//			if(options && options.error !== undefined) {
+//				var customError=options.error;
+//				delete options.error;
+//			}
+//
+//			options = $.extend({
+//				type: 'GET',
+//				url: $.fn.yiiGridView.getUrl(id),
+//				success: function(data,status) {
+//					$.each(settings.ajaxUpdate, function(i,v) {
+//						var id='#'+v;
+//						$(id).replaceWith($(id,'<div>'+data+'</div>'));
+//					});
+//					if(settings.afterAjaxUpdate !== undefined)
+//						settings.afterAjaxUpdate(id, data);
+//					$('#'+id).removeClass(settings.loadingClass);
+//					$.fn.yiiGridView.selectCheckedRows(id);
+//				},
+//				error: function(XHR, textStatus, errorThrown) {
+//					$('#'+id).removeClass(settings.loadingClass);
+//					if(XHR.readyState == 0 || XHR.status == 0)
+//						return;
+//					if(customError!==undefined) {
+//						var ret = customError(XHR);
+//						if( ret!==undefined && !ret)
+//							return;
+//					}
+//					var err='';
+//					switch(textStatus) {
+//						case 'timeout':
+//							err='The request timed out!';
+//							break;
+//						case 'parsererror':
+//							err='Parser error!';
+//							break;
+//						case 'error':
+//							if(XHR.status && !/^\s*$/.test(XHR.status))
+//								err='Error ' + XHR.status;
+//							else
+//								err='Error';
+//							if(XHR.responseText && !/^\s*$/.test(XHR.responseText))
+//								err=err + ': ' + XHR.responseText;
+//							break;
+//					}
+//
+//					if(settings.ajaxUpdateError !== undefined)
+//						settings.ajaxUpdateError(XHR, textStatus, errorThrown,err);
+//					else if(err)
+//						alert(err);
+//				}
+//			}, options || {});
+//			if(options.data!==undefined && options.type=='GET') {
+//				options.url = $.param.querystring(options.url, options.data);
+//				options.data = {};
+//			}
+//
+//			if(settings.ajaxUpdate!==false) {
+//				options.url = $.param.querystring(options.url, settings.ajaxVar+'='+id);
+//				if(settings.beforeAjaxUpdate !== undefined)
+//					settings.beforeAjaxUpdate(id, options);
+//				$.ajax(options);
+//			}
+//			else {  // non-ajax mode
+//				if(options.type=='GET') {
+//					window.location.href=options.url;
+//				}
+//				else {  // POST mode
+//					var $form=$('<form action="'+options.url+'" method="post"></form>').appendTo('body');
+//					if(options.data===undefined)
+//						options.data={};
+//
+//					if(options.data.returnUrl===undefined)
+//						options.data.returnUrl=window.location.href;
+//
+//					$.each(options.data, function(name,value) {
+//						$form.append($('<input type="hidden" name="t" value="" />').attr('name',name).val(value));
+//					});
+//					$form.submit();
+//				}
+//			}
+//		};
+//	}
 })();

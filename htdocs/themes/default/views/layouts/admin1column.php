@@ -14,14 +14,14 @@
 				?>
 				<?php foreach($flashes as $k => $flashKey): ?>
 					<?php if(Yii::app()->user->hasFlash($flashKey)): ?>
-						<div data-alert class="alert-message fade in <?php echo $flashKey ?>">
-							<a class="close" href="#">×</a>
+						<div class="alert alert-block fade in alert-<?php echo $flashKey ?>">
+							<a class="close" data-dismiss="alert" href="#">&times;</a>
 							<p><?php echo Yii::app()->user->getFlash($flashKey); ?></p>
 						</div>
 					<?php endif; ?>
 				<?php endforeach; ?>
 				<?php if (Yii::app()->user->hasFlash('error-block-message')) : ?>
-					<div class="alert-message block-message error"><?php echo Yii::app()->user->getFlash('error-block-message'); ?></div>
+					<div class="alert alert-block alert-error"><?php echo Yii::app()->user->getFlash('error-block-message'); ?></div>
 				<?php endif; ?>
 			</div>
 			<div class="main">

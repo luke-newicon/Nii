@@ -18,7 +18,8 @@ class DateInput extends CInputWidget {
 		//Gets the name and id of the form item to be used throughout the run function.
 		list($name, $id) = $this->resolveNameID();
 
-		$inputDate = $this->model->getAttribute($this->attribute);
+		$dateTime = explode(' ', $this->model->getAttribute($this->attribute));
+		$inputDate = $dateTime[0];
 
 		$dateDay = $dateMonth = $dateYear = null;
 		//Explodes the date into its various parts.
@@ -121,7 +122,7 @@ class DateInput extends CInputWidget {
 	}
 
 	public function drawElement($contents, $id, $title, $outerClass=null, $innerClass=null) {
-		return '<span class="input-prepend" style="float:left;margin:0 3px 0 0"><span class="add-on">' . $title . '</span>' . $contents . '</span>';
+		return '<div style="float:left;"><div class="input-prepend" style="margin:0 3px 0 0"><span class="add-on">' . $title . '</span>' . $contents . '</div></div>';
 //		$el  = '<div class="'.$outerClass.'"><label for="'.$id.'" class="inFieldLabel">'.$title.'</label><div class="'.$innerClass.'">';
 //		$el .= $contents;
 //		$el .= '</div></div>';

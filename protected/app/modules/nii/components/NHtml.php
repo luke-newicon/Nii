@@ -509,7 +509,7 @@ class NHtml extends CHtml {
 	 */
 	public static function trashButton ($model, $modelName, $returnUrl, $successMsg=null) {
 
-		$label = AController::t('Delete this '.$modelName);
+		$label = AController::t('Delete this '.ucwords($modelName));
 		$className = get_class($model);
 		
 		$params = array(
@@ -523,7 +523,7 @@ class NHtml extends CHtml {
 		
 		$url = NHtml::url(array_merge(array('/nii/index/trash'),$params));
 		
-		return NHtml::btnLink($label,'#', null,
+		return NHtml::btnLink('<i class="icon-trash icon-white"></i> '.$label,'#', null,
 			array(
 				'onclick'=> '
 					var answer = confirm("Are you sure you wish to delete this '.$modelName.'?");
