@@ -1,22 +1,26 @@
 <style>
 	.sdate{font-size:11px;font-weight:normal;white-space: nowrap;}
 	#timesheet-grid .field .input {border-radius:0px; padding:3px;}
+	#timesheet-totals {background-color: #eee;}
 	#timesheet-totals th{text-align:right;}
 	#timesheet-totals th.total{font-weight:bold;}
 </style>
 <div id="timesheet">
 	<div id="timesheet-selector" class="line well">
-		<div class="unit size1of3 txtR">
-			<a class="btn prev-month small">&lt;&lt;</a><a class="btn prev-week small">&lt;</a> 
+		<div class="unit size1of3 txtR btn-group">
+			<a class="btn prev-month"><i class="icon-backward"></i></a><a class="btn prev-week"><i class="icon-chevron-left"></i></a> 
 		</div>
 		<div class="unit size1of3 txtC">
 			<span class="date-start">2 January</span> - <span class="date-end">9 January, 2012</span> 
 		</div>
 		<div class="lastUnit txtL">
-			<a class="btn next-week small">&gt;</a><a class="btn next-month small">&gt;&gt;</a> 
-			<a class="btn primary addLog">Add Log</a>
+			<div class="pull-right btn-group">
+				<a class="btn next-week"><i class="icon-chevron-right"></i></a><a class="btn next-month"><i class="icon-forward"></i></a> 
+			</div>
+			<a class="btn btn-primary addLog">Add Log</a>
 		</div>
 	</div>
+	
 	<form>
 		<input type="hidden" name="log[date]" id="log_date" />
 		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped table table-bordered table-striped">
@@ -53,10 +57,23 @@
 			</tbody>
 		</table>
 	</form>
-	<div class="txtR"><a class="saveLog btn primary large">Save Log</a></div>
+	<div class="txtR"><a class="saveLog btn btn-primary btn-large">Save Log</a></div>
 </div>
 
-
+<div id="addprojectDialog" class="" title="New Project" style="display:none;">
+	<form>
+		<div class="field stacked	">
+			<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
+			<div class="inputContainer">
+				<label for="projectname" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
+				<div class="input">
+					<input style="font-size:16px;" type="text" id="projectname" name="projectname">
+				</div>
+			</div>
+			
+		</div>
+	</form>
+</div>
 
 
 <script type="text/template" id="time-log-row-template">
@@ -64,12 +81,15 @@
 		<% if (editable) { %>
 		<div class="field mbn project" >
 			<div class="input">
-				<select name="log[<%= row %>][project]"  id="project_<%= row %>">
-					<option value="">Select a project</option>
-					<option class="create-project" value="">[Create a new project]</option>
-					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>
-				</select>
+<!--				<select name="log[<%= row %>][project]" id="project_<%= row %>">-->
+<!--					<option value="">Select a project</option>-->
+<!--					<option value="createnewproject">[Create a new project]</option>-->
+<!--					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>-->
+<!--				</select>-->
+				<input class="select" type="text" value="">
+				<input class="project-id" type="hidden" name="log[<%= row %>][project]" id="project_<%= row %>" />
 			</div>
+			<span style="position:absolute;top:5px;right:5px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>
 		</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -91,7 +111,7 @@
 	<td class="hour_units mon-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -101,7 +121,7 @@
 	<td class="hour_units tue-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -111,7 +131,7 @@
 	<td class="hour_units wed-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -121,7 +141,7 @@
 	<td class="hour_units thu-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -131,7 +151,7 @@
 	<td class="hour_units fri-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -141,7 +161,7 @@
 	<td class="hour_units sat-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -151,7 +171,7 @@
 	<td class="hour_units sun-col field">
 		<% if (editable) { %>
 			<div class="input">
-				<input name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
+				<input class="time" name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
 			</div>
 		<% } %>
 		<% if (!editable) { %>
@@ -165,105 +185,65 @@
 		<% } %>
 	</td>
 </script>
-
+<?php $this->createWidget('CMaskedTextField')->registerClientScript(); ?>
 
 <script type="text/javascript">
 	
-	(function( $ ) {
-		$.widget( "ui.combobox", {
-			_create: function() {
-				var self = this,
-					select = this.element.hide(),
-					selected = select.children( ":selected" ),
-					value = selected.val() ? selected.text() : "";
-				var input = this.input = $( "<input>" )
-					.insertAfter( select )
-					.val( value )
-					.autocomplete({
-						delay: 0,
-						minLength: 0,
-						source: function( request, response ) {
-							var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-							response( select.children( "option" ).map(function() {
-								var text = $( this ).text();
-								if ( this.value && ( !request.term || matcher.test(text) ) )
-									return {
-										label: text.replace(
-											new RegExp(
-												"(?![^&;]+;)(?!<[^<>]*)(" +
-												$.ui.autocomplete.escapeRegex(request.term) +
-												")(?![^<>]*>)(?![^&;]+;)", "gi"
-											), "<strong>$1</strong>" ),
-										value: text,
-										option: this
-									};
-							}) );
-						},
-						select: function( event, ui ) {
-							ui.item.option.selected = true;
-							self._trigger( "selected", event, {
-								item: ui.item.option
-							});
-						},
-						change: function( event, ui ) {
-							if ( !ui.item ) {
-								var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
-									valid = false;
-								select.children( "option" ).each(function() {
-									if ( $( this ).text().match( matcher ) ) {
-										this.selected = valid = true;
-										return false;
-									}
-								});
-								if ( !valid ) {
-									// remove invalid value, as it didn't match anything
-									$( this ).val( "" );
-									select.val( "" );
-									input.data( "autocomplete" ).term = "";
-									return false;
-								}
-							}
-						},
-						position:{my:'left top',at:'left bottom',of:input,offset:'-4 5',collision:'flip'}
-					})
-					.addClass( "ui-widget ui-widget-content ui-corner-left" );
-
-				input.data( "autocomplete" )._renderItem = function( ul, item ) {
-					return $( "<li></li>" )
-						.data( "item.autocomplete", item )
-						.append( "<a>" + item.label + "</a>" )
-						.appendTo( ul );
-				};
-
-				this.button = $( '<span style="position:absolute;top:5px;right:5px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>' )
-					.attr( "tabIndex", -1 )
-					.attr( "title", "Show All Items" )
-					.insertAfter( input )
-					.click(function() {
-						// close if already visible
-						if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
-							input.autocomplete( "close" );
-							return;
-						}
-
-						// work around a bug (likely same cause as #5265)
-						$( this ).blur();
-
-						// pass empty string as value to search for, displaying all results
-						input.autocomplete( "search", "");
-						input.focus();
-					});
-			},
-
-			destroy: function() {
-				this.input.remove();
-				this.button.remove();
-				this.element.show();
-				$.Widget.prototype.destroy.call( this );
-			}
-		});
-	})( jQuery );
-	
+		
+//							if($(ui.item.option).val() == 'createnewproject'){
+//								$.fn.nii.form();
+//								$('#addprojectDialog').dialog({
+//									modal:true,
+//									width:'400',
+//									buttons:[
+//										{
+//											text:'Create Project',
+//											class:'btn btn-primary',
+//											click:function(){
+//												$.post('<?php echo NHtml::url('project/index/create'); ?>', {ProjectProject:{name:$('#projectname').val()}}, function(project){
+//													$('#addprojectDialog').dialog('close');
+//													$('#projectname').val('');
+//													$('#projectname').blur();
+//													var p = new window.timesheet.models.Project(project);
+//													window.timesheet.projects.add(p);
+//													
+//												})
+//											}
+//										},
+//										{
+//											text:'Cancel',
+//											class:'btn',
+//											click:function(){
+//												$('#addprojectDialog').dialog('close');
+//											}
+//										}
+//									]
+//								});
+//								return false;
+//							}
+//							ui.item.option.selected = true;
+//							self._trigger( "selected", event, {
+//								item: ui.item.option
+//							});
+//						change: function( event, ui ) {
+//							if ( !ui.item ) {
+//								var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+//									valid = false;
+//								select.children( "option" ).each(function() {
+//									if ( $( this ).text().match( matcher ) ) {
+//										this.selected = valid = true;
+//										return false;
+//									}
+//								});
+//								if ( !valid ) {
+//									// remove invalid value, as it didn't match anything
+//									$( this ).val( "" );
+//									select.val( "" );
+//									input.data( "autocomplete" ).term = "";
+//									return false;
+//								}
+//							}
+//						},
 
 		
 	jQuery(function($){
@@ -454,6 +434,23 @@
 		timesheet.models.Project = Backbone.Model.extend({
 			defaults:{
 				name:''
+			},
+			/**
+			 * gets the name and formats it to highlight the last search string
+			 * @return string html
+			 */
+			getNameSearchHighlight:function(){
+				return this.getNameHighlight(window.timesheet.projects.nameSearchFilter)
+			},
+			/**
+			 * return a string with the filter text highlighted in a strong tag
+			 * @param string filterName
+			 * @return string html
+			 */
+			getNameHighlight:function(highlight){
+				return this.get('name').replace(
+					new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + $.ui.autocomplete.escapeRegex(highlight) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"
+				);
 			}
 		});
 		
@@ -465,6 +462,23 @@
 			displayProject:function(project_id){
 				var p = this.get(project_id);
 				return _.isNull(p) ? 'unknown' :  p.get('name');
+			},
+			/**
+			 * store the last name search filter string. as passed to this.filterByNameSearch
+			 */
+			nameSearchFilter:'',
+			/**
+			 * function to filter projects by a partial string name match
+			 * @param string nameSearchFilter the search string to look up screens by name
+			 * @return array
+			 */
+			filterByProjectName:function(nameSearchFilter){
+				this.nameSearchFilter = nameSearchFilter;
+				var matcher = new RegExp($.ui.autocomplete.escapeRegex(nameSearchFilter), "i");
+				var filtered = this.filter(function(model) {
+					return (model.get('id') && (!nameSearchFilter || matcher.test(model.get('name'))));
+				});
+				return filtered;
 			}
 		});
 		
@@ -537,6 +551,7 @@
 						$input =  $(this).find('input');
 						if($input.length)
 							val = $input.val();
+						console.log(val)
 					}
 					var num = parseFloat(val);
 					if(_.isNaN(num))num = 0;
@@ -571,26 +586,78 @@
 			template:_.template($('#time-log-row-template').html()),
 			initialize:function(){
 				this.model.bind('destroy', this.remove, this);
+				this.model.bind('change:project_id', this.projectIdChange, this);
+				window.timesheet.projects.bind('add', this.redrawProjects, this);
 			},
 			events:{
 				'click .record-delete':'deleteRow',
+				'click .project .down':'projectAutocompleteDropDown'
 			},
 			render:function(){
 				$(this.el).html(this.template(this.model.toJSON()));
-				this.projectAutocomplete();
-				this.taskAutocomplete();
-				
+				if(this.model.get('editable')){
+					//add input mask to time fields
+//					$.mask.definitions['m']='[012345]';
+//					this.$('input.time').mask('9:?m9',{placeholder:' '});
+					
+					this.projectAutocomplete();
+					this.taskAutocomplete();
+				}
 				return this;
-			},
-			projectSelect:function(){
-				alert('poi');
 			},
 			focusProject:function(){
 				this.$('.project .ui-autocomplete-input').focus();
 			},
 			projectAutocomplete:function(){
-				this.$('.project select').combobox('destroy');
-				this.$('.project select').combobox();
+				this.$('.project input.select').autocomplete('destroy');
+				this.$('.project input.select').autocomplete({
+					minLength: 0,
+					source: function(request, response) {
+						response(window.timesheet.projects.filterByProjectName(request.term));
+					},
+					select:_.bind(function(event, ui) {
+						this.model.set({'project_id':ui.item.get('id')});
+						//this.model.save();
+						return false;
+					},this),
+					change:_.bind(function(event, ui){
+						if(_.isNull(ui.item)) {
+							
+							// remove invalid value, as it didn't match anything
+							this.$('.project input.select').val("");
+							this.$('.project input.project-id').val("");
+							this.$('.project input.select').data("autocomplete").term = "";
+							return false;
+						}
+					},this),
+					position:{'my':'left top','at':'left bottom','of':this.$('.project input'),'collision':'flip'}
+				})
+				.data("autocomplete")._renderItem = _.bind(function(ul, item) {
+					return $("<li></li>")
+						.data("item.autocomplete", item)
+						.append("<a>" + item.getNameSearchHighlight() + "</a>")
+						.appendTo(ul);
+				},this);
+			},
+			// function called when the drop down button of the combo box is clicked
+			projectAutocompleteDropDown:function(){
+				// close if already visible
+				if (this.$('.project input.select').autocomplete("widget").is(":visible")) {
+					this.$('.project input.select').autocomplete("close");
+					return false;
+				}
+				// work around a bug (likely same cause as #5265)
+				$(this).blur();
+				// pass empty string as value to search for, displaying all results
+				this.$('.project input.select').autocomplete("search", "");
+				this.$('.project input.select').focus();
+				return false;
+			},
+			// update the view with new project id
+			projectIdChange:function(){
+				var p = window.timesheet.projects.get(this.model.get('project_id'));
+				this.$('.project input.select').val(p.get('name'));
+				this.$('.project input.project-id').val(p.get('id'));
 			},
 			taskAutocomplete:function(){
 				// TODO
@@ -619,7 +686,7 @@
 			initialize:function(){
 				this.months = Array();
 				this.months[this.months.length] = 'January';
-				this.months[this.months.length] = 'Febuary';
+				this.months[this.months.length] = 'February';
 				this.months[this.months.length] = 'March';
 				this.months[this.months.length] = 'April';
 				this.months[this.months.length] = 'May';

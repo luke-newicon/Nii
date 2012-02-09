@@ -16,6 +16,18 @@
  */
 class TaskController extends AController {
 
+	
+	public function accessRules() {
+		return array(
+			array('allow',
+				'users' => array('@'),
+			),
+			array('deny', // deny all users
+				'users' => array('?'),
+			),
+		);
+	}
+	
 	public function actionIndex() {
 		
 		$allTasks = NActiveRecord::model('ProjectTask')->findAll();

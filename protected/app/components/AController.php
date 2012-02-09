@@ -5,7 +5,8 @@
  * All controller classes for this application should extend from this base class.
  * Implements a default Deny behaviour
  */
-class AController extends NController {
+class AController extends NController 
+{
 
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',

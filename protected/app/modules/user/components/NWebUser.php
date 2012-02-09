@@ -14,7 +14,8 @@
  *
  * @author steve
  */
-class NWebUser extends CWebUser {
+class NWebUser extends CWebUser 
+{
 
 	/**
 	 * Store the NActiveRecord User model object

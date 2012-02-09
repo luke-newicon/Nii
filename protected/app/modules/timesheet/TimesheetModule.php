@@ -1,6 +1,7 @@
 <?php
 
-class TimesheetModule extends NWebModule {
+class TimesheetModule extends NWebModule 
+{
 
 	public $name = 'Timesheet';
 	public $description = 'Timesheet goodness';
@@ -30,6 +31,18 @@ class TimesheetModule extends NWebModule {
 
 	public function uninstall() {
 		
+	}
+	
+	/**
+	 * get the total minutes currently logged again this project
+	 * 
+	 * @param int $projectId
+	 * @return int number of minutes 
+	 */
+	public function getTotalProjectMinutes($projectId){
+		$minutes = TimesheetLog::model()->cmdSelect('sum(minutes) as totalminutes')
+				->where("project_id = $projectId")->queryColumn();
+		return $minutes[0];
 	}
 
 }
