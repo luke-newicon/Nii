@@ -53,8 +53,8 @@ class NActiveForm extends CActiveForm {
 	}
 
 	/**
-	 * Default field structure supporting Bootstrap syntax.
-	 * @param CModel $model The model holding the data
+	 * Creates a form field using a default structure for labels, field and error message
+	 * @param CModel $model the data model
 	 * @param string $attribute The attribute to display
 	 * @param string $type The type of field you want i.e textField, dropDownList
 	 * @param array $data Required for dropDownList type
@@ -63,7 +63,7 @@ class NActiveForm extends CActiveForm {
 	 */
 	public function editField($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
 		$error = $model->hasErrors($attribute) ? ' error' : '';
-		$return = '<div class="control-group'.$error.'">';
+		$return = '<div class="control-group' . $error . '">';
 		$return .= $this->labelEx($model, $attribute);
 		$return .= '<div class="controls">';
 		if ($type == 'dropDownList') {
@@ -75,6 +75,13 @@ class NActiveForm extends CActiveForm {
 		return $return;
 	}
 
+	/**
+	 * Creates a field using a default structure for labels and text
+	 * @param CModel $model the data model
+	 * @param string $attribute the attribute
+	 * @param array $data When the attribute is a represented by a array lookup i.e select boxes
+	 * @return string The HTML output 
+	 */
 	public function viewField($model, $attribute, $data=array()) {
 		$return = '<div class="control-group">';
 		$return .= $this->labelEx($model, $attribute);
@@ -84,12 +91,31 @@ class NActiveForm extends CActiveForm {
 		$return .= '</div></div>';
 		return $return;
 	}
-	
-	public function checkBoxField($model, $attribute){
+
+	/**
+	 * Creates a checkbox field
+	 * @param CModel $model the data model
+	 * @param string $attribute the attribute
+	 * @return string HTML output 
+	 */
+	public function checkBoxField($model, $attribute) {
 		return $this->labelEx($model, $attribute, array(
-			'label' => $this->checkBox($model, $attribute) . $model->getAttributeLabel($attribute),
-			'class' => 'checkbox',
-		));
+					'label' => $this->checkBox($model, $attribute) . $model->getAttributeLabel($attribute),
+					'class' => 'checkbox',
+				));
+	}
+
+	/**
+	 * Creates a form date field
+	 * @param CModel $model the data model
+	 * @param string $attribute the attribute
+	 * @param array $options Additional options to be passed into the datePicker widget
+	 * @return CInputWidget
+	 */
+	public function dateField($model, $attribute, $options=array()) {
+		$options['model'] = $model;
+		$options['attribute'] = $attribute;
+		return $this->widget('nii.widgets.forms.DateInput', $options, true);
 	}
 
 }
