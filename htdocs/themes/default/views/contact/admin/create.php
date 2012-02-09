@@ -1,6 +1,6 @@
 <?php if ($dialog==null) : ?>
 <div class="page-header">
-	<h2><?php echo $this->t('Create a Contact'); ?></h2>
+	<h1><?php echo $this->t('Create a Contact'); ?></h1>
 </div>
 <?php endif; ?>
 <?php

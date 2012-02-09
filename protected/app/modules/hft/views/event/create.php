@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $this->t('Create an Event') ?></h2>
+	<h1><?php echo $this->t('Create an Event') ?></h1>
 </div>	
 <?php 
 $this->renderPartial('edit/_editEvent', array(

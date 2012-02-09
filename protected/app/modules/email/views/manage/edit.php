@@ -6,7 +6,7 @@ $form = $this->beginWidget('NActiveForm', array(
 ));
 ?>
 <div class="page-header">
-	<h2><?php echo isset($model->id) ? $this->t('Edit Saved Campaign') : $this->t('New Saved Campaign'); ?></h2>
+	<h1><?php echo isset($model->id) ? $this->t('Edit Saved Campaign') : $this->t('New Saved Campaign'); ?></h1>
 	<div class="action-buttons">
 		<?php 
 		if (isset($model->id))
@@ -15,7 +15,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'name') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'name') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->textField($model,'name'); ?>
@@ -24,7 +24,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'description') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'description') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->textArea($model,'description'); ?>
@@ -33,7 +33,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'default_group_id') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'default_group_id') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->dropDownList($model,'default_group_id', ContactGroup::getGroups(), array('prompt'=>'None')); ?>
@@ -42,7 +42,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'design_template_id') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'design_template_id') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->dropDownList($model,'design_template_id', EmailTemplate::getTemplates(), array('prompt'=>'None')); ?>
@@ -51,7 +51,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'subject') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'subject') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->textField($model,'subject'); ?>
@@ -60,7 +60,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="lbl"><?= $form->labelEx($model,'content') ?></div>
+	<div class="lbl"><?php echo $form->labelEx($model,'content') ?></div>
 	<div class="unit size2of3">
 		<div class="input">
 		<?php

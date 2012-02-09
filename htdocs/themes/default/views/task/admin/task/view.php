@@ -2,7 +2,7 @@
 <?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	<?php $this->pageTitle = Yii::app()->name . ' - Task: ' . $model->name; ?>
 	<div class="page-header">
-		<h2><?php echo $model->name ?></h2>
+		<h1><?php echo $model->name ?></h1>
 		<div class="action-buttons">
 			<a href="<?php echo CHtml::normalizeUrl(array('tasks')) ?>" class="btn">Back to All Tasks</a>
 			<?php if(Yii::app()->user->checkAccess('task/admin/editTask')) : ?>

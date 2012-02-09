@@ -21,35 +21,35 @@ $modelName = get_class($model);
 ?>
 <div class="pull-left">
 	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'name') ?></div>
+		<div class="unit size1of6"><?php echo $form->labelEx($model,'name') ?></div>
 		<div class="lastUnit">
 			<div class="input w170"><?php echo $form->textField($model, 'name', array('size' => 30)); ?></div>
 			<?php echo $form->error($model,'name'); ?>
 		</div>
 	</div>
 	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'server_name') ?></div>
+		<div class="unit size1of6"><?php echo $form->labelEx($model,'server_name') ?></div>
 		<div class="lastUnit">
 			<div class="input w170"><?php echo $form->textField($model, 'server_name', array('size' => 30)); ?></div>
 			<?php echo $form->error($model,'server_name'); ?>
 		</div>
 	</div>
 	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'ip_address') ?></div>
+		<div class="unit size1of6"><?php echo $form->labelEx($model,'ip_address') ?></div>
 		<div class="lastUnit">
 			<div class="input w170"><?php echo $form->textField($model, 'ip_address', array('size' => 30)); ?></div>
 			<?php echo $form->error($model,'ip_address'); ?>
 		</div>
 	</div>
 	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'root_password') ?></div>
+		<div class="unit size1of6"><?php echo $form->labelEx($model,'root_password') ?></div>
 		<div class="lastUnit">
 			<div class="input w170"><?php echo $form->textField($model, 'root_password', array('size' => 30)); ?></div>
 			<?php echo $form->error($model,'root_password'); ?>
 		</div>
 	</div>
 	<div class="line field">
-		<div class="unit size1of6"><?= $form->labelEx($model,'created_date') ?></div>
+		<div class="unit size1of6"><?php echo $form->labelEx($model,'created_date') ?></div>
 		<div class="lastUnit">
 			<div class="w170"><?php $this->widget('nii.widgets.forms.DateInput', array('model' => $model, 'attribute' => 'created_date')); ?></div>
 			<?php echo $form->error($model,'created_date'); ?>

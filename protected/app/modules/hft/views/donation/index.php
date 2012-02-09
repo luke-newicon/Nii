@@ -1,9 +1,8 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Donations'; ?>
 <div class="page-header">
-	<h2>Donations</h2>
+	<h1>Donations</h1>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Add a Donation', array('create'), array('class'=>'btn primary')); ?>
-<!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
+		<?php echo NHtml::link('Add a Donation', array('create'), array('class'=>'btn btn-primary')); ?>
 	</div>
 </div>
 <?php

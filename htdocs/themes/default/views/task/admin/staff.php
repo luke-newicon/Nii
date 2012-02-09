@@ -1,6 +1,6 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Staff'; ?>
 <div class="page-header">
-	<h2>Staff</h2>
+	<h1>Staff</h1>
 	<div class="action-buttons">
 		<?php echo NHtml::link('Add a Member of Staff', '#', array('class'=>'btn primary')); ?>
 	</div>

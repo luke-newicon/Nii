@@ -6,14 +6,14 @@ $form = $this->beginWidget('NActiveForm', array(
 ));
 ?>
 <div class="page-header">
-	<h2>Send an Email</h2>
+	<h1>Send an Email</h1>
 	<div class="action-buttons email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
 		<?php echo NHtml::submitButton('Continue', array('class'=>'btn primary')) . '&nbsp;'; ?>		
 	</div>
 </div>
 <div class="container pull-left">
 	<div class="line field">
-		<div class="unit w140"><?= $form->labelEx($model,'template_id') ?></div>
+		<div class="unit w140"><?php echo $form->labelEx($model,'template_id') ?></div>
 		<div class="lastUnit w500">
 			<div class="input">
 				<?php echo $form->dropDownList($model,'template_id',EmailCampaignTemplate::getTemplatesArray(), array(
@@ -27,7 +27,7 @@ $form = $this->beginWidget('NActiveForm', array(
 </div>
 <div class="email-campaign-details"<?php echo (isset($model->template_id)) ? '' : ' style="display:none;"';?>>
 	<div class="line field">
-		<div class="unit w140"><?= $form->labelEx($model,'recipients') ?></div>
+		<div class="unit w140"><?php echo $form->labelEx($model,'recipients') ?></div>
 		<div class="lastUnit">
 				<?php $this->widget('nii.widgets.tokeninput.NTokenInput', array(
 					'model'=>$model,
@@ -40,7 +40,7 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 	</div>
 	<div class="line field">
-		<div class="unit w140"><?= $form->labelEx($model,'subject') ?></div>
+		<div class="unit w140"><?php echo $form->labelEx($model,'subject') ?></div>
 		<div class="lastUnit w500">
 			<div class="input">
 				<?php echo $form->textField($model,'subject'); ?>
@@ -49,7 +49,7 @@ $form = $this->beginWidget('NActiveForm', array(
 		</div>
 	</div>
 	<div class="line field">
-		<div class="lbl"><?= $form->labelEx($model,'content') ?></div>
+		<div class="lbl"><?php echo $form->labelEx($model,'content') ?></div>
 		<div class="unit size2of3">
 			<div class="input">
 			<?php

@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $this->t('View Contact') ?></h2>
+	<h1><?php echo $this->t('View Contact') ?></h1>
 	<div class="action-buttons">
 		<?php if($model->addableTabs) : ?>
 			<a href="#" class="btn" data-controls-modal="modal-add-relation" data-backdrop="true"><?php echo $this->t('Add a Relation') ?></a>
@@ -16,50 +16,50 @@
 				<?php Yii::app()->getModule('contact')->onRenderContactAfterHeader($event); ?>
 				<div class="unit size1of2">
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Address') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Address') ?></div>
 						<div class="lastUnit"><?php echo $model->fullAddress; ?></div>
 					</div>
 				</div>
 				<div class="lastUnit pll">
 					<?php if ($model->email) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Email - Home') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Email - Home') ?></div>
 						<div class="lastUnit"><?php echo $model->getEmailLink(); ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->email_secondary) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Email - Work') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Email - Work') ?></div>
 						<div class="lastUnit"><?php echo $model->getEmailLink('work'); ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->tel_primary) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Home') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Tel - Home') ?></div>
 						<div class="lastUnit"><?php echo $model->tel_primary; ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->tel_secondary) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Work') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Tel - Work') ?></div>
 						<div class="lastUnit"><?php echo $model->tel_secondary; ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->mobile) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Tel - Mobile') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Tel - Mobile') ?></div>
 						<div class="lastUnit"><?php echo $model->mobile; ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->fax) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Fax') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Fax') ?></div>
 						<div class="lastUnit"><?php echo $model->fax; ?></div>
 					</div>
 					<?php } ?>
 					<?php if ($model->website) { ?>
 					<div class="detailRow">
-						<div class="unit size1of3 detailLabel"><?= $this->t('Website URL') ?></div>
+						<div class="unit size1of3 detailLabel"><?php echo $this->t('Website URL') ?></div>
 						<div class="lastUnit"><?php echo $model->websiteLink; ?></div>
 					</div>
 					<?php } ?>
@@ -69,12 +69,12 @@
 			<?php $this->renderPartial('view/_' . strtolower($model->contact_type), array('model' => $model)); ?>
 			<?php Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails($event); ?>
 			<div class="detailRow">
-				<div class="unit size1of6 detailLabel"><?= $this->t('Comment') ?></div>
+				<div class="unit size1of6 detailLabel"><?php echo $this->t('Comment') ?></div>
 				<div class="lastUnit"><?php echo nl2br($model->comment); ?></div>
 			</div>
 			<?php Yii::app()->getModule('contact')->onRenderContactAfterComment($event); ?>
 			<div class="detailRow">
-				<div class="unit size1of6 detailLabel"><?= $this->t('Categories') ?></div>
+				<div class="unit size1of6 detailLabel"><?php echo $this->t('Categories') ?></div>
 				<div class="lastUnit pbs"><?php echo $model->printTags(); ?></div>
 			</div>
 		</div>

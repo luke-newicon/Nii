@@ -1,11 +1,9 @@
 <?php $this->pageTitle = Yii::app()->name . ' - All Contacts'; ?>
 <div class="page-header">
-	<h2>All Contacts</h2>
+	<h1>All Contacts</h1>
 	<div class="action-buttons">
-		<?php //echo NHtml::link('Add a Contact', '#', array('class'=>'btn primary', 'onclick' => $model->createContactDialog())); ?>
-		<?php echo NHtml::link('Add a Person', CHtml::normalizeUrl(array('/contact/admin/create/type/Person')), array('class'=>'btn primary')); ?>
-		<?php echo NHtml::link('Add an Organisation', CHtml::normalizeUrl(array('/contact/admin/create/type/Organisation')), array('class'=>'btn primary')); ?>
-<!--		<a class="btn primary" data-controls-modal="modal-contact-add" data-backdrop="static">Add a Contact</a>-->
+		<?php echo NHtml::link('Add a Person', CHtml::normalizeUrl(array('/contact/admin/create/type/Person')), array('class'=>'btn btn-primary')); ?>
+		<?php echo NHtml::link('Add an Organisation', CHtml::normalizeUrl(array('/contact/admin/create/type/Organisation')), array('class'=>'btn btn-primary')); ?>
 	</div>
 </div>
 <?php

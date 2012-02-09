@@ -11,7 +11,7 @@
 ?>
 
 <div class="page-header">
-	<h2>Projects</h2>
+	<h1>Projects</h1>
 	<div class="action-buttons">
 		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
 			<a id="add-project" class="btn primary">Add a Project</a>

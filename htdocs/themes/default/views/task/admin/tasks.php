@@ -1,6 +1,6 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Tasks'; ?>
 <div class="page-header">
-	<h2>Tasks</h2>
+	<h1>Tasks</h1>
 	<div class="action-buttons">
 		<?php if(Yii::app()->user->checkAccess('task/admin/addTask')) : ?>
 		<a class="btn primary" href="<?php echo CHtml::normalizeUrl(array('/task/admin/addTask')) ?>">Add a Task</a>

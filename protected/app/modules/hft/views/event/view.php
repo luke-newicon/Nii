@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $this->t('View Event Details') ?></h2>
+	<h1><?php echo $this->t('View Event Details') ?></h1>
 	<div class="action-buttons">
 		<?php echo NHtml::link($this->t('Email Attendees'), array("emailAttendees","id"=>$model->id),array('class'=>'btn'));?>
 		<?php echo NHtml::link($this->t('Edit'), array("edit","id"=>$model->id),array('id'=>'event-edit-button', 'class'=>'btn primary'));?>
@@ -10,36 +10,36 @@
 		<div class="line detailRow">
 			
 			<div class="unit">
-				<div class="unit size1of6 detailLabel"><?=$this->t('Event Name')?></div>
+				<div class="unit size1of6 detailLabel"><?php echo $this->t('Event Name')?></div>
 				<div class="lastUnit item-title"><?php echo $model->name; ?></div>
 			</div>
 		</div>
 		
 		<div class="line detailRow">
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Start Date')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Start Date')?></div>
 				<div class="lastUnit"><?php echo NHtml::formatDate($model->start_date, 'jS F Y'); ?></div>
 			</div>
 			<div class="lastUnit">
-				<div class="unit size1of3 detailLabel"><?=$this->t('End Date')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('End Date')?></div>
 				<div class="lastUnit"><?php echo NHtml::formatDate($model->end_date, 'jS F Y'); ?></div>
 			</div>
 		</div>
 		
 		<div class="line detailRow">
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Organiser Type')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Organiser Type')?></div>
 				<div class="lastUnit"><?php echo $model->displayOrganiserType; ?></div>
 			</div>
 			<div class="lastUnit">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Organiser\'s Name')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Organiser\'s Name')?></div>
 				<div class="lastUnit"><?php echo $model->organiser_name; ?></div>
 			</div>
 		</div>
 		
 		<div class="line detailRow">
 			<div class="unit">
-				<div class="unit size1of6 detailLabel"><?=$this->t('Description')?></div>
+				<div class="unit size1of6 detailLabel"><?php echo $this->t('Description')?></div>
 				<div class="lastUnit"><?php echo $model->description; ?></div>
 			</div>
 			

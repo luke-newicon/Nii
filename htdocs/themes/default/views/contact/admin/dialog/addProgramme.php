@@ -1,6 +1,6 @@
 <div class="line">
 	<div class="field">
-		<div class="unit size1of4"><?= $this->t('Select a Programme') ?></div>
+		<div class="unit size1of4"><?php echo $this->t('Select a Programme') ?></div>
 		<div class="lastUnit">
 			<div class="inputBox">
 				<?php

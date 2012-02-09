@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $action=='create' ? 'Create a New' : 'Edit a ' ?> Contact Group</h2>
+	<h1><?php echo $action=='create' ? 'Create a New' : 'Edit a ' ?> Contact Group</h1>
 </div>
 <?php
 $form = $this->beginWidget('NActiveForm', array(
@@ -12,7 +12,7 @@ $form = $this->beginWidget('NActiveForm', array(
 ?>
 <div class="container pull-left">
 		<div class="line field">
-			<div class="unit size1of4 detailLabel"><?= $this->t('Group Name') ?></div>
+			<div class="unit size1of4 detailLabel"><?php echo $this->t('Group Name') ?></div>
 			<div class="lastUnit">
 				<div class="input">
 					<?php echo $form->textField($model, 'name', array('size' => 30)); ?>
@@ -21,7 +21,7 @@ $form = $this->beginWidget('NActiveForm', array(
 			</div>
 		</div>
 		<div class="line field">
-			<div class="unit size1of4 detailLabel"><?= $this->t('Description') ?></div>
+			<div class="unit size1of4 detailLabel"><?php echo $this->t('Description') ?></div>
 			<div class="lastUnit">
 				<div class="input">
 					<?php echo $form->textArea($model, 'description', array('rows' => 3)); ?>

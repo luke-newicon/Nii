@@ -1,6 +1,6 @@
 <?php //Yii::app()->bootstrap->registerScriptFile('bootstrap-tabs.js'); ?>
 <div class="page-header">
-	<h2>Permissions</h2>
+	<h1>Permissions</h1>
 	<div class="action-buttons">
 		<a class="btn danger" href="<?php echo CHtml::normalizeUrl(array('/user/admin/flushPermissions')) ?>" data-confirm="Are you sure you want to reset all permissions?  This will also remove any user created roles.">Reset All Permissions</a>
 		<a class="btn primary" data-controls-modal="modal-add-role" data-backdrop="true">Add a Role</a>

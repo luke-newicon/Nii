@@ -1,6 +1,6 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Categories'; ?>
 <div class="page-header">
-	<h2>Categories</h2>
+	<h1>Categories</h1>
 </div>
 <?php
 $this->widget('ext.bootstrap.widgets.grid.BootGridView', array(

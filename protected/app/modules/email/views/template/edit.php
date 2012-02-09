@@ -6,7 +6,7 @@ $form = $this->beginWidget('NActiveForm', array(
 ));
 ?>
 <div class="page-header">
-	<h2><?php echo isset($model->id) ? $this->t('Edit Design Template') : $this->t('New Design Template'); ?></h2>
+	<h1><?php echo isset($model->id) ? $this->t('Edit Design Template') : $this->t('New Design Template'); ?></h1>
 	<div class="action-buttons">
 		<?php 
 		if (isset($model->id))
@@ -15,7 +15,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'name') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'name') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->textField($model,'name'); ?>
@@ -24,7 +24,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'description') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'description') ?></div>
 	<div class="lastUnit w500">
 		<div class="input">
 			<?php echo $form->textArea($model,'description'); ?>
@@ -33,7 +33,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="unit w140"><?= $form->labelEx($model,'default_template') ?></div>
+	<div class="unit w140"><?php echo $form->labelEx($model,'default_template') ?></div>
 	<div class="lastUnit w500">
 		<div>
 			<?php echo $form->checkBox($model,'default_template'); ?>
@@ -42,7 +42,7 @@ $form = $this->beginWidget('NActiveForm', array(
 	</div>
 </div>
 <div class="line field">
-	<div class="lbl"><?= $form->labelEx($model,'content') ?></div>
+	<div class="lbl"><?php echo $form->labelEx($model,'content') ?></div>
 	<div class="lastUnit">
 		<div class="alert-message block-message info">
 			Use the [content] tag to define where the main email content will be displayed.

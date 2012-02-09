@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>Kashflow Receipts</h2>
+	<h1>Kashflow Receipts</h1>
 </div>
 <?php
 $sort = new CSort;

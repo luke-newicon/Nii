@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>Users</h2>
+	<h1>Users</h1>
 	<div class="action-buttons">
 		<a class="btn primary" data-controls-modal="modal-add-user" data-backdrop="true">Add a User</a>
 	</div>

@@ -6,7 +6,7 @@ $form = $this->beginWidget('NActiveForm', array(
 <?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	<?php $this->pageTitle = Yii::app()->name . ' - Edit User: ' . $model->name; ?>
 	<div class="page-header">
-		<h2>Edit User: <?php echo $model->name ?></h2>
+		<h1>Edit User: <?php echo $model->name ?></h1>
 		<div class="action-buttons">
 			<?php if(Yii::app()->user->record->superuser) : ?>
 				<a href="<?php echo CHtml::normalizeUrl(array('impersonate','id'=>$model->id())) ?>" class="btn info">Impersonate</a>

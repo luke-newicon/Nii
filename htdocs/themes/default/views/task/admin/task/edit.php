@@ -11,7 +11,7 @@ $form = $this->beginWidget('NActiveForm', array(
 <?php if(!Yii::app()->request->isAjaxRequest) : ?>
 	<?php $this->pageTitle = Yii::app()->name . ' - Edit Task: ' . $model->name; ?>
 	<div class="page-header">
-		<h2>Editing: <?php echo $model->name ?></h2>
+		<h1>Editing: <?php echo $model->name ?></h1>
 		<div class="action-buttons">
 			<a href="<?php echo CHtml::normalizeUrl(array('deleteTask','id'=>$model->id())) ?>" class="btn danger" data-confirm="Are you sure you want to delete this task?">Delete this Task</a>
 		</div>

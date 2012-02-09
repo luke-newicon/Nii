@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>Modules</h2>
+	<h1>Modules</h1>
 </div>
 <?php
 $dataProvider = new CArrayDataProvider($data, array(

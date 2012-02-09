@@ -1,7 +1,7 @@
 <div class="page-header">
-	<h2>Email Campaigns</h2>
+	<h1>Email Campaigns</h1>
 	<div class="action-buttons">
-		<?php echo NHtml::link('Create a New Email', array('create'), array('class'=>'btn primary')); ?>
+		<?php echo NHtml::link('Create a New Email', array('create'), array('class'=>'btn btn-primary')); ?>
 	</div>
 </div>
 <?php

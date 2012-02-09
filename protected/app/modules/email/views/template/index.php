@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>Manage Design Templates</h2>
+	<h1>Manage Design Templates</h1>
 	<div class="action-buttons">
 		<?php echo NHtml::link('Create a New Template', array('create'), array('class'=>'btn primary')); ?>
 	</div>

@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2>Preview Your Email</h2>
+	<h1>Preview Your Email</h1>
 	<div class="action-buttons">
 		<?php 
 		if ($canEdit==1) {

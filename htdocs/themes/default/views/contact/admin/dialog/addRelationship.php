@@ -1,5 +1,5 @@
 <div class="line">
-	<div class="unit size1of3"><?=$this->t('Relationship Type')?></div>
+	<div class="unit size1of3"><?php echo$this->t('Relationship Type')?></div>
 	<div class="lastUnit">
 		<?php
 			$data = $c->getContactTypePairs($c->contact_type,true);

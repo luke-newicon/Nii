@@ -1,5 +1,5 @@
 <div class="page-header">
-	<h2><?php echo $this->t('Edit a Donation'); ?></h2>
+	<h1><?php echo $this->t('Edit a Donation'); ?></h1>
 	<div class="pull-right">
 		<?php echo NHtml::trashButton($model, 'donation', '/hft/donation/', 'Successfully deleted donation'); ?>
 	</div>

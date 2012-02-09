@@ -19,7 +19,7 @@ $form=$this->beginWidget('NActiveForm', array(
 <?php endif; ?>
 <div class="line">
 		<div class="inputRow field">
-			<span class="inputLabel"><?=$this->t('Select a contact type:')?></span>
+			<span class="inputLabel"><?php echo$this->t('Select a contact type:')?></span>
 			<span class="inputContainer">
 				<?php echo $form->dropDownList($c,'contact_type',NHtml::enumItem($c, 'contact_type'),array('class'=>'inputInline input', 'prompt' => 'select...')); ?>
 			</span>

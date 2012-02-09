@@ -1,6 +1,6 @@
 <?php $this->pageTitle = Yii::app()->name . ' - Suppliers'; ?>
 <div class="page-header">
-	<h2>Suppliers</h2>
+	<h1>Suppliers</h1>
 	<div class="action-buttons">
 		<?php echo NHtml::link('Add a Supplier', '#', array('class'=>'btn primary')); ?>
 	</div>

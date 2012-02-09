@@ -7,28 +7,28 @@
 <div class="container pull-left">
 	<div class="well">
 		<div class="line detailRow">
-				<div class="unit size1of6 detailLabel"><?=$this->t('Name')?></div>
+				<div class="unit size1of6 detailLabel"><?php echo $this->t('Name')?></div>
 				<div class="lastUnit item-title"><?php echo $model->name; ?></div>
 		</div>
 		
 		<div class="line detailRow">
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Server Name')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Server Name')?></div>
 				<div class="lastUnit"><?php echo $model->server_name; ?></div>
 			</div>			
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('IP Address')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('IP Address')?></div>
 				<div class="lastUnit"><?php echo $model->ip_address; ?></div>
 			</div>
 		</div>
 		
 		<div class="line detailRow">
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Root Password')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Root Password')?></div>
 				<div class="lastUnit"><?php echo $model->root_password; ?></div>
 			</div>
 			<div class="unit size1of2">
-				<div class="unit size1of3 detailLabel"><?=$this->t('Created Date')?></div>
+				<div class="unit size1of3 detailLabel"><?php echo $this->t('Created Date')?></div>
 				<div class="lastUnit"><?php echo NHtml::formatDate($model->created_date, "d M Y"); ?></div>
 			</div>
 		</div>
