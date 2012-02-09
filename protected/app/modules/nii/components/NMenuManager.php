@@ -17,9 +17,9 @@ class NMenuManager extends CApplicationComponent {
 	 */
 	public function addItem($menu,$label,$url=null,$parent=null,$options=array()){
 		if($parent){
-			$this->_menus[$menu][$parent]['itemOptions']['class'] = 'dropdown';
-			$this->_menus[$menu][$parent]['linkOptions']['class'] = 'dropdown-toggle';
-			$this->_menus[$menu][$parent]['linkOptions']['data-toggle'] = 'dropdown';
+//			$this->_menus[$menu][$parent]['itemOptions']['class'] = 'dropdown';
+//			$this->_menus[$menu][$parent]['linkOptions']['class'] = 'dropdown-toggle';
+//			$this->_menus[$menu][$parent]['linkOptions']['data-toggle'] = 'dropdown';
 			$this->_menus[$menu][$parent]['items'][$label] = $options;
 			$this->_menus[$menu][$parent]['items'][$label]['label'] = $label;
 			if(isset($options['notice'])){
