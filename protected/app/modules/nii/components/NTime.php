@@ -471,74 +471,7 @@ class NTime {
 		return $relativeDate;
 	}
 	
-	
-//	/**
-//	 * Returns the estimated time from the database in a readable format
-//	 * @param int $time
-//	 * @param string $length - 'long' or 'short'
-//	 * @return string 
-//	 */
-//	public static function getTimeInMinutes($time, $length='long') {
-//		
-//		if ($time >= 450) :
-//			$time = $time/450;
-//			$granularity = $length=='long' ? (' day' . ($time>1?'s':'')) : 'd';
-//		elseif ($time >= 60) :
-//			$time = $time/60;
-//			$granularity = $length=='long' ? (' hour' . ($time>1?'s':'')) : 'h';
-//		else :
-//			$granularity = $length=='long' ? (' min' . ($time>1?'s':'')) : 'm';
-//		endif;
-//			
-//		return number_format($time,(strstr($time, '.')?1:0)) . $granularity;
-//	}
 
-//	/**
-//	 * Takes a string and returns the estimated time in integer of minutes format
-//	 * Also checks to see if the string is actually just numerical
-//	 * @param string $string - '1d', '2 hours' etc
-//	 * @return int 
-//	 */
-//	public static function setTimeInMinutes($string, $default='h') {
-//		
-//		if (ctype_digit($string)) {
-//			$number = $string;
-//			$alpha = $default;
-//		} else {				
-//			// split string into number + alpha
-//			$splitResults=array();
-//			preg_match("/(\d+)(.+)$/",$string,$splitResults);
-//			$number = $splitResults[1];
-//			$alpha = str_replace(' ', '', $splitResults[2]);
-//		}
-//		
-//		switch($alpha) {
-//			
-//			case "d":
-//			case "day":
-//			case "days":
-//				$time = $number * 450;
-//				break;
-//			
-//			case "h":
-//			case "hour":
-//			case "hours":
-//				$time = $number * 60;
-//				break;
-//			
-//			case "m":
-//			case "min":
-//			case "mins":
-//			case "minute":
-//			case "minutes":
-//				$time = $number;
-//				break;
-//			
-//		}
-//
-//		return $time;		
-//	}
-	
 	/**
 	 * convert a string mysql date to unix timestamp
 	 * 

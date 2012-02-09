@@ -10,5 +10,5 @@
 <div class="timelogs">
 	
 	<?php $mins = Yii::app()->getModule('timesheet')->getTotalProjectMinutes($model->id); ?>
-	<?php echo '<strong>Total time: ' . NTime::minutesToHours($mins) . '</strong>'; ?>
+	<?php echo '<strong>Total time: ' . NTime::minutesToTime($mins) . '</strong>'; ?>
 </div>

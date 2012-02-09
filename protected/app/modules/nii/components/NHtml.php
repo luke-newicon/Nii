@@ -464,7 +464,7 @@ class NHtml extends CHtml {
 	}
 	
 	/**
-	 *	Returns a properly formatted price based on an integer or float
+	 * Returns a properly formatted price based on an integer or float
 	 * @param int/float $value
 	 * @param string $currency - the character, html-encoded, to place before the price
 	 * @param int $decimals - number of decimals to display
@@ -476,7 +476,7 @@ class NHtml extends CHtml {
 	}
 	
 	/**
-	 *	Returns a properly formatted mailto link from an email address
+	 * Returns a properly formatted mailto link from an email address
 	 * @param string $email - email address
 	 * @return string 
 	 */
