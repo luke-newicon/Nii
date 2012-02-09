@@ -63,15 +63,13 @@ class NiiModule extends NWebModule
 				'basePath'=>'nii.assets',
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
-					'js/jquery.metadata.js', 
-					'js/bootstrap-twipsy.js', 
-					'js/nii.js', 
+					'js/jquery.metadata.js',
+					'js/nii.js',
 					'js/functions.js',
-					'js/backbone/underscore-1.3.1.min.js',
 				),
 				'css'=>array(
 					'oocss/all.css',
-					'jqueryui/nii/jquery-ui.css'
+					'jqueryui/nii/jquery-ui.css',
 				),
 				'depends'=>array('jquery.ui')
 			),
@@ -80,7 +78,7 @@ class NiiModule extends NWebModule
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/backbone/underscore-1.3.1.min.js',
-					'js/backbone/backbone-0.5.3.min.js'
+					'js/backbone/backbone-0.5.3.min.js',
 				),
 				'depends'=>array('jquery')
 			)
@@ -163,7 +161,6 @@ class NiiModule extends NWebModule
 			'jquery.gritter.min.js'=>false,
 			'jquery.gritter.css'=>false,
 			'jquery.yiiactiveform.js'=>false,
-			'bootstrap-twipsy.js'=>false, 
 			'bootstrap-min.css'=>false,
 			// Prevent gridview styles from loading on ajax
 			'styles.css'=>false,
