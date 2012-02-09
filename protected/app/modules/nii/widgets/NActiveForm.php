@@ -48,6 +48,22 @@ class NActiveForm extends CActiveForm {
 		return parent::labelEx($model, $attribute, $htmlOptions);
 	}
 
+	public function beginField($model, $attribute, $error=true) {
+		$errorClass = ($error && $model->hasErrors($attribute)) ? ' error' : '';
+		$return = '<div class="control-group' . $errorClass . '">';
+		$return .= $this->labelEx($model, $attribute);
+		$return .= '<div class="controls">';
+		return $return;
+	}
+
+	public function endField($model=null, $attribute=null) {
+		$return = '';
+		if ($model && $attribute)
+			$return = $this->error($model, $attribute);
+		$return .= '</div></div>';
+		return $return;
+	}
+
 	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
 		return $this->editField($model, $attribute, $type, $data, $htmlOptions);
 	}
@@ -62,16 +78,12 @@ class NActiveForm extends CActiveForm {
 	 * @return string The HTML to be rendered
 	 */
 	public function editField($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
-		$error = $model->hasErrors($attribute) ? ' error' : '';
-		$return = '<div class="control-group' . $error . '">';
-		$return .= $this->labelEx($model, $attribute);
-		$return .= '<div class="controls">';
+		$return = $this->beginField($model, $attribute);
 		if ($type == 'dropDownList') {
 			$return .= $this->dropDownList($model, $attribute, $data, $htmlOptions);
 		} else
 			$return .= $this->$type($model, $attribute, $htmlOptions);
-		$return .= $this->error($model, $attribute);
-		$return .= '</div></div>';
+		$return .= $this->endField($model, $attribute);
 		return $return;
 	}
 
@@ -83,12 +95,10 @@ class NActiveForm extends CActiveForm {
 	 * @return string The HTML output 
 	 */
 	public function viewField($model, $attribute, $data=array()) {
-		$return = '<div class="control-group">';
-		$return .= $this->labelEx($model, $attribute);
-		$return .= '<div class="controls">';
+		$return = $this->beginField($model, $attribute, false);
 		$value = CHtml::resolveValue($model, $attribute);
-		$return .= (array_key_exists($value, $data) ? $data[$value] : $value);
-		$return .= '</div></div>';
+		$return .= '<span class="view-field">' . (array_key_exists($value, $data) ? $data[$value] : $value) . '</span>';
+		$return .= $this->endField();
 		return $return;
 	}
 
@@ -116,6 +126,28 @@ class NActiveForm extends CActiveForm {
 		$options['model'] = $model;
 		$options['attribute'] = $attribute;
 		return $this->widget('nii.widgets.forms.DateInput', $options, true);
+	}
+
+	public function autoComplete($model, $attribute, $source, $alt_attribute=null, $options=array()) {
+		$options['source'] = $source;
+		$options['name'] = $alt_attribute ? $alt_attribute : $attribute;
+		$options['value'] = $alt_attribute ? CHtml::resolveValue($model, $alt_attribute) : CHtml::resolveValue($model, $attribute);
+		if(!isset($options['options'])) {
+			$hidden_field_id = get_class($model).'_'.$attribute;
+			$options['options'] = array(
+				'showAnim' => 'fold',
+				'change' => 'js:function(event, ui) {
+					if (ui.item)
+						$("#'.$hidden_field_id.'").val(ui.item.id);
+					else
+						$("#'.$hidden_field_id.'").val(null);
+				}',
+			);
+		}
+		$return = $this->widget('zii.widgets.jui.CJuiAutoComplete', $options, true);
+		if($alt_attribute)
+			$return .= $this->hiddenField($model, $attribute);
+		return $return;
 	}
 
 }
