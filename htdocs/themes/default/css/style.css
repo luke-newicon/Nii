@@ -26,6 +26,8 @@ a:focus{outline:none}
 
 .btn{vertical-align:middle}
 
+.view-field{display:inline-block;padding:5px}
+
 /* Site Styles */
 /*html,body{height:100%}*/
 .page{min-width:980px}
@@ -709,3 +711,9 @@ div.topbar div > ul > li.menu:hover ul {
 .currency {
 	letter-spacing: 2px;
 }
+
+.modal form{margin-bottom:0px}
+
+#gridSettingsForm .line,#exportGridForm .line{border-bottom:1px solid #CCC;padding-top:4px}
+#gridSettingsForm .icon-resize-vertical{display:none;float:right}
+#gridSettingsForm .line:hover .icon-resize-vertical{display:block}
