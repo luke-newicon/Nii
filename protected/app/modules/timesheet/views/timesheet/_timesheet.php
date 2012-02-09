@@ -185,7 +185,7 @@
 		<% } %>
 	</td>
 </script>
-<?php $this->createWidget('CMaskedTextField')->registerClientScript(); ?>
+<?php Yii::app()->clientScript->registerCoreScript('maskedinput'); ?>
 
 <script type="text/javascript">
 	
@@ -597,8 +597,8 @@
 				$(this.el).html(this.template(this.model.toJSON()));
 				if(this.model.get('editable')){
 					//add input mask to time fields
-//					$.mask.definitions['m']='[012345]';
-//					this.$('input.time').mask('9:?m9',{placeholder:' '});
+					$.mask.definitions['m']='[012345]';
+					this.$('input.time').mask('9:?m9',{placeholder:' '});
 					
 					this.projectAutocomplete();
 					this.taskAutocomplete();
