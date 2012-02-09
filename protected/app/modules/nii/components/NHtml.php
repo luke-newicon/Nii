@@ -530,7 +530,7 @@ class NHtml extends CHtml {
 					if(!answer) { return; }
 					window.location = "'.$url.'";
 				',
-				'class'=>'trash-link btn danger'
+				'class'=>'trash-link btn btn-danger'
 			)
 		);
 	}
