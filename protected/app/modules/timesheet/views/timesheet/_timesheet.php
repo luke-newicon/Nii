@@ -75,7 +75,6 @@
 	</form>
 </div>
 
-
 <script type="text/template" id="time-log-row-template">
 	<td>
 		<% if (editable) { %>
@@ -250,7 +249,7 @@
 		
 		window.timesheet = {
 			// can be set to hours or minutes
-			logTimeIn:'hours',
+			format:'time',
 			// calendar view
 			cal:{},
 			// store our Model classes
@@ -298,8 +297,10 @@
 				$('.saveLog').click(_.bind(function(){
 					var date = window.timesheet.dateToMysql(window.timesheet.timesheet.get('startDate'));
 					$('#log_date').val(date);
-					var data = $('#timesheet form').serialize();
-					$.post("<?php echo NHtml::url('/timesheet/timesheet/saveWeekLog') ?>",data, function(){
+					
+					var data = $('#timesheet form').serializeArray();
+					data.push({name:'log[format]',value:'time'});
+					$.post("<?php echo NHtml::url('/timesheet/timesheet/saveWeekLog') ?>", data, function(){
 						// refresh the timesheet
 						window.timesheet.tasks.fetch({success:function(){
 							window.timesheet.timeLogList.refresh();
@@ -314,6 +315,34 @@
 			},
 			getStartDate:function(){
 				return this.timesheet.get('startDate');
+			},
+			
+			/**
+			 * hours:minutes a time of 1:30 will return 90 minutes
+			 * @param string time format 1:20 (H:MM)
+			 */
+			timeToMinutes:function(time){
+				var hm = time.split(':');
+				var h = parseInt(hm[0]);
+				var m = parseInt(hm[1]);
+
+				if(_.isNaN(h))h = 0;
+				if(_.isNaN(m))m = 0;
+
+				return (h*60) + m;
+			},
+			/**
+			 * Takes a number of minutes and returns a time H:MM
+			 * 
+			 * @param int minutes total minutes
+			 */
+			minutesToTime:function(minutes){
+				var mins = minutes % 60;
+				var hours = Math.floor(minutes / 60);
+				// add leading zero on minutes
+				mins = '0'+mins;
+				mins = mins.substr(mins.length-2);
+				return hours + ':' + mins;
 			}
 		}
 		
@@ -422,12 +451,13 @@
 					}, this);
 				}
 				
-				if(window.timesheet.logTimeIn == 'hours'){
-					mins = mins / 60;
-					mins = mins.toFixed(2);
+				if(window.timesheet.format == 'time'){
+					//mins = mins / 60;
+					// mins = mins.toFixed(2);
+					mins = timesheet.minutesToTime(mins);
 				}
 				
-				return (mins==0) ? '' : mins;
+				return (mins=='0:00') ? '' : mins;
 			}
 		});
 		
@@ -551,13 +581,13 @@
 						$input =  $(this).find('input');
 						if($input.length)
 							val = $input.val();
-						console.log(val)
 					}
-					var num = parseFloat(val);
-					if(_.isNaN(num))num = 0;
+					// get the total in minutes
+					var num = timesheet.timeToMinutes(val);
 					total = total + num;
 				});
-				elTotal.html(total.toFixed(2));
+				
+				elTotal.html(timesheet.minutesToTime(total));
 			},
 			addRowForm:function(){
 				var log = new window.timesheet.models.TimeLogRow({
@@ -591,7 +621,8 @@
 			},
 			events:{
 				'click .record-delete':'deleteRow',
-				'click .project .down':'projectAutocompleteDropDown'
+				'click .project .down':'projectAutocompleteDropDown',
+				'change input.time':'timeChange'
 			},
 			render:function(){
 				$(this.el).html(this.template(this.model.toJSON()));
@@ -604,6 +635,14 @@
 					this.taskAutocomplete();
 				}
 				return this;
+			},
+			// update the time format after user input
+			// mainly add trailing zeros if minutes have not been entered
+			timeChange:function(e){
+				if(timesheet.format == 'time'){
+					var time = $(e.target).val()+'00';
+					$(e.target).val(time.substr(0,4));
+				}
 			},
 			focusProject:function(){
 				this.$('.project .ui-autocomplete-input').focus();

@@ -106,15 +106,7 @@ class ProjectTask extends NActiveRecord {
 	}
 
 	
-	public function getEstimatedTimeNice() {
-		if ($this->estimated_time)
-			return NTime::getTimeInMinutes($this->estimated_time);
-	}
 	
-	public function getAttributes($names = true) {
-		$parent = parent::getAttributes($names);
-		return array_merge($parent, array('estimated_time_nice'=>$this->estimatedTimeNice));
-	}
 	
 	public function getAdditionalUsers($displayIcon=true) {
 		$users = NActiveRecord::model('ProjectTaskUser')->findByAttributes(array('task_id'=>$this->id));

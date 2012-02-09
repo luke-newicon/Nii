@@ -74,7 +74,10 @@ class TimesheetLog extends NActiveRecord
 	 * @param array $log 
 	 * $log = array(
 	 *		// date of the first monday. i.e. the week commencing monday the 30th. The following log in position 0 will represent the log for monday, 1 for tuesday etc.
-	 *		'date'=>'2012-01-30', 
+	 *		'date'=>'2012-01-30',
+	 *		// format of each time log, can be time:'the time in H:MM', minutes:'the time in minutes', hours:'the time in hours'
+	 *		// if empty assumes hours
+	 *		'format' => one of ('time', 'minutes', 'hours')
 	 *		0 => array(
 	 *			'task'=>'1',    // task id or text (to create a new task)
 	 *			'project'=>'1', // project id
@@ -113,7 +116,23 @@ class TimesheetLog extends NActiveRecord
 				for($i=0; $i<=6; $i++){
 					if(array_key_exists($i, $log['time']) && $log['time'][$i]!=''){
 						$l = new TimesheetLog;
-						$l->minutes = $log['time'][$i]*60;
+						
+						// work out the total minutes based on supplied format
+						switch ($logs['format']) {
+							case 'time':
+								$l->minutes = NTime::timeToMinutes($log['time'][$i]);
+							break;
+							case 'minutes':
+								$l->minutes = $log['time'][$i];
+							break;
+							default:
+								$l->minutes = $log['time'][$i]*60;
+						}
+						
+						if($logs['format']=='hours')
+							$l->minutes = $log['time'][$i]*60;
+						
+						
 						$l->project_id = $log['project'];
 						
 						if(!is_numeric($log['task'])){
