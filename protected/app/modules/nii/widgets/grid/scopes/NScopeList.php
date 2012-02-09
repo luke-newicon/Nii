@@ -220,7 +220,7 @@ class NScopeList extends CWidget {
 			buttons: [
 				{
 					text: "Save",
-					class: "btn primary",
+					class: "btn btn-primary",
 					click: function(){
 						$.ajax({
 							url: "'.$postUrl.'",

@@ -1,43 +1,44 @@
-<form id="customScopeForm" method="post">
+<form id="customScopeForm" method="post" class="form-horizontal">
 <?php
 $url = array('/nii/grid/updateCustomScope/', 'gridId'=>$gridId);
 if ($formAction=='edit')
 	$url['scopeId']=$scopeId;
 ?>
-	<div class="line pbm">
-		<div class="unit size1of5 ptm">
-				<?php echo Chtml::label($this->t('Name:'), 'scopeName', array('style'=>'font-weight:bold;')); ?>
-		</div>
-		<div class="lastUnit">
-			<div class="field">
-			<div class="input w300">
-				<?php echo CHtml::textField('scopeName', @$scope['scopeName']); ?>
-			</div>
-			</div>
-		</div>
+<div class="control-group">
+	<?php echo CHtml::label($this->t('Name:'), 'scopeName', array('class'=>'control-label')); ?>
+	<div class="controls">
+		<?php echo CHtml::textField('scopeName', @$scope['scopeName'], array('class'=>'span4')); ?>
 	</div>
-	<div class="line pbm">
-		<div class="unit size1of5 ptm">
-				<?php echo Chtml::label($this->t('Description:'), 'scopeDescription', array('style'=>'font-weight:bold;')); ?>
-		</div>
-		<div class="lastUnit">
-			<div class="field">
-			<div class="input w300">
-				<?php echo CHtml::textArea('scopeDescription', @$scope['scopeDescription'], array('rows'=>2)); ?>
-			</div>
-			</div>
-		</div>
+</div>
+<div class="control-group">
+	<?php echo CHtml::label($this->t('Description:'), 'scopeDescription', array('class'=>'control-label')); ?>
+	<div class="controls">
+		<?php echo CHtml::textArea('scopeDescription', @$scope['scopeDescription'], array('rows'=>2, 'class'=>'span4')); ?>
 	</div>
-	<div class="line">
-		<div class="unit size1of5">
-			<?php echo CHtml::label($this->t('Matches:'),'match', array('style'=>'font-weight:bold;')).'&nbsp;&nbsp;&nbsp;'; ?>
-		</div>
-		<div class="lastUnit">
-			<?php $match = (isset($scope['match'])) ? $scope['match'] : 'AND';
-			echo CHtml::radioButtonList('match', $match, array('AND'=>'ALL of the rules','OR'=>'ANY of the rules'), array('separator'=>'&nbsp;&nbsp;&nbsp;')); ?>
-		</div>
+</div>
+<div class="control-group">
+	<?php echo CHtml::label($this->t('Matches:'),'match', array('class'=>'control-label')); ?>
+	<div class="controls">
+		<?php
+			$match_and = '';
+			$match_or = '';
+			if(isset($scope['match']) && $scope['match'])
+				$match_or = ' checked="checked"';
+			else 
+				$match_and = ' checked="checked"';
+		?>
+		<label class="radio">
+			<input type="radio" name="match"<?php echo $match_and ?> id="match_0" value="AND">
+			ALL of the rules
+		</label>
+		<label class="radio">
+			<input type="radio" name="match"<?php echo $match_or ?> id="match_1" value="OR">
+			ANY of the rules
+		</label>
+		<?php //echo CHtml::radioButtonList('match', $match, array('AND'=>'ALL of the rules','OR'=>'ANY of the rules'), array('separator'=>'&nbsp;&nbsp;&nbsp;')); ?>
 	</div>
-	<h3 class="ptm pbn mtm mbs topLine"><?php echo $this->t('Rules'); ?></h3>
+</div>
+<h3 class="ptm pbn mtm mbs topLine"><?php echo $this->t('Rules'); ?></h3>
 <div id="customScopes">
 	<?php 
 	if ($formAction == 'edit')
