@@ -66,7 +66,7 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 <div class="head">
 	<?php if (Yii::app()->getModule('admin')->logo) : ?>
 		<div id="sitelogo">
-			<a href="<?php echo Yii::app()->baseUrl; ?>">
+			<a href="<?php echo Yii::app()->homeUrl; ?>">
 				<img src="<?php echo Yii::app()->theme->baseUrl; ?>/images/<?php echo Yii::app()->getModule('admin')->logo ?>" />
 			</a>
 		</div>
@@ -76,7 +76,7 @@ $h3Color = Yii::app()->getModule('admin')->h3Color;
 			<div class="topbar-inner" style="padding-left:20px;padding-right:20px;">
                 <div class="container" style="width:auto">
 					<?php if (Yii::app()->getModule('admin')->menuAppname) : ?>
-						<h3><a href="<?php echo Yii::app()->baseUrl ?>"><?php echo Yii::app()->name ?></a></h3>
+						<h3><a href="<?php echo Yii::app()->homeUrl ?>"><?php echo Yii::app()->name ?></a></h3>
 					<?php else : ?>
 						<ul>
 							<li class="menu">
