@@ -333,6 +333,19 @@ class HftDonation extends NActiveRecord
 					'donation_amount' => array(
 						'label' => 'Donation Amount',
 					),
+					'giftaid' => array(
+						'label' => 'Gift Aid?',
+						'type' => 'bool',
+					),
+					'type_id' => array(
+						'label' => 'Donation Type',
+						'type' => 'select',
+						'filter' => HftDonationType::getTypesArray(),
+					),
+					'thankyou_sent' => array(
+						'label' => 'Thankyou Sent?',
+						'type' => 'bool',
+					),
 				),
 			)
 		);

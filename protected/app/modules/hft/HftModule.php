@@ -23,6 +23,7 @@ class HftModule extends NWebModule
 		
 		Yii::app()->menus->addDivider('main','Contacts');
 		Yii::app()->menus->addItem('main', 'Categories', array('/hft/category/index'), 'Contacts');
+		Yii::app()->menus->addItem('main', 'Sources', array('/hft/source/index'), 'Contacts');
 
 		Yii::app()->getModule('contact')->contactModel = 'HftContact';
 		
@@ -30,6 +31,7 @@ class HftModule extends NWebModule
 		Yii::app()->getModule('contact')->onRenderContactAfterTypeDetails= array($this, 'handleOnRenderAfterTypeDetails');
 
 		Yii::app()->getModule('contact')->onRenderContactBeforeTypeDetailsEdit = array($this, 'handleOnRenderBeforeTypeDetailsEdit');
+		Yii::app()->getModule('contact')->onRenderContactAfterTypeDetailsEdit = array($this, 'handleOnRenderAfterTypeDetailsEdit');
 		Yii::app()->getModule('contact')->onRenderContactAfterAddressEdit = array($this, 'handleOnRenderContactAfterAddressEdit');
 		/**
 		 *	Change configuration of contacts module
@@ -75,6 +77,7 @@ class HftModule extends NWebModule
 		// Add extra rule fields to contact group rule fields
 		Yii::app()->getModule('contact')->addGroupRuleField(HftDonation::groupRuleFields());
 		Yii::app()->getModule('contact')->addGroupRuleField(HftEvent::groupRuleFields());
+		Yii::app()->getModule('contact')->addGroupRuleField(HftContact::groupRuleFields());
 	}
 	
 
@@ -136,6 +139,19 @@ class HftModule extends NWebModule
 					),
 				),
 			),
+			'contact_source' => array('description' => 'Contact Sources',
+				'tasks' => array(
+					'manage_sources' => array('description' => 'Manage Sources',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/source/index',
+							'hft/source/delete',							
+							'hft/source/create',							
+							'hft/source/update',
+						),
+					),
+				),
+			),
 		);
 	}
 	
@@ -147,9 +163,13 @@ class HftModule extends NWebModule
 	public function handleOnRenderAfterTypeDetails($event){
 		$event->sender->renderPartial('hft.views.contact.view.after_type_details', $event->params);
 	}
-		
+	
 	public function handleOnRenderBeforeTypeDetailsEdit($event){
 		$event->sender->renderPartial('hft.views.contact.edit.before_type_details', $event->params);
+	}
+		
+	public function handleOnRenderAfterTypeDetailsEdit($event){
+		$event->sender->renderPartial('hft.views.contact.edit.after_type_details', $event->params);
 	}
 	
 	public function handleOnRenderContactAfterAddressEdit($event){

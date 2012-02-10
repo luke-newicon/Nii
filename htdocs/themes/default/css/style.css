@@ -704,3 +704,7 @@ div.topbar div > ul > li.menu:hover ul {
 .currency {
 	letter-spacing: 2px;
 }
+
+.icon-nolabel {
+	margin-right: 0px;
+}

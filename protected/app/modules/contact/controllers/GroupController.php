@@ -71,6 +71,7 @@ class GroupController extends AController
 			
 			if ($model->save()) {
 				NLog::insertLog('Updated contact group '.$model->name.' (id: '.$model->id.')', $model);
+				$this->redirect(array("view","id"=>$id));
 			}
 		
 		}

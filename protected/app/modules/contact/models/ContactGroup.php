@@ -303,14 +303,27 @@ class ContactGroup extends NActiveRecord
 			'Contacts' => array(
 				'model' => Yii::app()->getModule('contact')->contactModel,
 				'fields' => array(
-					'newsletter' => array(
-						'label' => 'Receives Newsletter',
-						'type' => 'bool',
+					'name' => array(
+						'label' => 'Name',
+					),
+					'addr1' => array(
+						'label' => 'Address',
+					),
+					'city' => array(
+						'label' => 'City',
+					),
+					'county' => array(
+						'label' => 'County',
 					),
 					'country' => array(
 						'label' => 'Country',
 						'type' => 'select',
 						'filter' => NData::countries(),
+					),
+					'contact_type' => array(
+						'label' => 'Person/Organisation',
+						'type' => 'select',
+						'filter' => NHtml::enumItem(NActiveRecord::model(Yii::app()->getModule('contact')->contactModel), 'contact_type'),
 					),
 				),
 			)

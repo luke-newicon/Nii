@@ -239,6 +239,14 @@ class HftEvent extends NActiveRecord
 						'label' => 'End Date',
 						'type' => 'date',
 					),
+					'organiser_type_id' => array(
+						'label' => 'Organiser Type',
+						'type' => 'select',
+						'filter' => HftEventOrganiserType::getTypesArray(),
+					),
+					'organiser_name' => array(
+						'label' => 'Organiser Name',
+					),
 				),
 			)
 		);

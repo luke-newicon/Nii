@@ -50,8 +50,8 @@ class HftContact extends Contact
 	public function rules() {
 		$rules = Contact::model()->rules();
 		return array_merge($rules, array(
-			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, classification_id', 'safe'),
-			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category, classification_id', 'safe','on'=>'search'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, classification_id, company_position', 'safe'),
+			array('account_number, source_id, newsletter, receive_letters, receive_emails, status, category, classification_id, company_position', 'safe','on'=>'search'),
 		));
 	}
 	
@@ -101,7 +101,7 @@ class HftContact extends Contact
 	public function columns() {
 		
 		$columns = Contact::model()->columns();
-		return array_merge(
+		return CMap::mergeArray(
 			array(
 				array(
 					'name' => 'id',
@@ -176,7 +176,7 @@ class HftContact extends Contact
 		return array(
 			'columns' => array(
 				'id' => "pk",
-				'title' => "enum('Mr','Mrs','Ms','Miss','Dr','Prof','Revd','Revd Dr','Revd Prof','Revd Canon','Most Revd','Rt Revd','Rt Revd Dr','Venerable','Revd Preb','Pastor','Sister')",
+				'title' => "varchar(255)",
 				'lastname' => "varchar(255)",
 				'salutation' => "varchar(255)",
 				'givennames' => "varchar(255)",
@@ -198,6 +198,7 @@ class HftContact extends Contact
 				'comment' => "text",
 				'company_name' => "varchar(255)",
 				'contact_name' => "varchar(255)",
+				'company_position' => "varchar(255)",
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'source_id' => 'int(11)',
@@ -227,6 +228,15 @@ class HftContact extends Contact
 		else
 			return '<span class="noData">None</span>';
 	}	
+	
+	public static function getTitlesArray() {
+		$titles = NActiveRecord::model('HftContact')->findAll(array('group'=>'title', 'order'=>'title'));
+		foreach ($titles as $title) {
+			if ($title->title)
+				$t[$title->title] = $title->title;
+		}
+		return $t;
+	}
 	
 	public function getDonations() {
 		$donations = HftDonation::model()->findAllByAttributes(array('contact_id'=>$this->id));
@@ -319,6 +329,44 @@ class HftContact extends Contact
 		));
 		unset($scopes['items']['default']);
 		return $scopes;
+	}
+	
+	
+	/**
+	 *	Array of rule fields, to be used in contact group rules
+	 * @return array - assoc. array of grouped fields. See Contacts group below as an example
+	 */
+	public static function groupRuleFields() {
+		return array(
+			'Contacts' => array(
+				'model' => Yii::app()->getModule('contact')->contactModel,
+				'fields' => array(
+					'source_id' => array(
+						'label' => 'Source',
+						'type'=>'select',
+						'filter'=>  HftContactSource::getSourcesArray(),
+					),
+					'receive_letters' => array(
+						'label' => 'Receives Letters?',
+						'type' => 'bool',
+					),
+					'receive_emails' => array(
+						'label' => 'Receives Emails?',
+						'type' => 'bool',
+					),
+					'classification_id' => array(
+						'label' => 'Contact Type',
+						'type'=>'select',
+						'filter'=> HftContactClassification::getClassificationsForGridFilter(),
+					),
+					'status' => array(
+						'label' => 'Status',
+						'type' => 'select',
+						'filter' => NHtml::enumItem(NActiveRecord::model(Yii::app()->getModule('contact')->contactModel), 'status'),
+					),
+				),
+			)
+		);
 	}
 	
 }

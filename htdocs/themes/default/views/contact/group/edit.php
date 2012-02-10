@@ -4,7 +4,6 @@
 <?php
 $form = $this->beginWidget('NActiveForm', array(
 		'id' => 'contactGroupForm',
-		'action' => $action,
 		'enableAjaxValidation'=>false,
 		'enableClientValidation'=>true,
 	));
