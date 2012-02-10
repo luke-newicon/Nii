@@ -3,24 +3,26 @@
 	<div class="lastUnit">
 		<div class="field nopad inputInline">
 			<div class="input  w100">
-				<?php echo $form->dropDownList($c, 'title', NHtml::enumItem($c, 'title'), array('class' => 'inputInline', 'prompt' => 'Title...')); ?>
+				<?php //echo $form->dropDownList($c, 'title', NHtml::enumItem($c, 'title'), array('class' => 'inputInline', 'prompt' => 'Title...')); ?>
+				<?php echo $form->labelEx($c, 'title', array('class'=>'inFieldLabel')) ?>
+				<?php echo $form->textField($c, 'title', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'Title')); ?>
 			</div>
 		</div>
 		<div class="field nopad inputInline">
 			<div class="input w150">
-				<?= $form->labelEx($c, 'givennames', array('class'=>'inFieldLabel')) ?>
+				<?php echo $form->labelEx($c, 'givennames', array('class'=>'inFieldLabel')) ?>
 				<?php echo $form->textField($c, 'givennames', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'First Name(s)')); ?>
 			</div>
 		</div>
 		<div class="field nopad inputInline">
 			<div class="input w150">
-				<?= $form->labelEx($c, 'lastname', array('class'=>'inFieldLabel')) ?>
+				<?php echo $form->labelEx($c, 'lastname', array('class'=>'inFieldLabel')) ?>
 				<?php echo $form->textField($c, 'lastname', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'Last name')); ?>
 			</div>
 		</div>
 		<div class="field nopad inputInline">
 			<div class="input w100">
-				<?= $form->labelEx($c, 'suffix', array('class'=>'inFieldLabel')) ?>
+				<?php echo $form->labelEx($c, 'suffix', array('class'=>'inFieldLabel')) ?>
 				<?php echo $form->textField($c, 'suffix', array('class' => 'inputInline', 'data-tip' => '{gravity:\'s\', trigger:\'hover\', fade:true}', 'title'=>'Suffix')); ?>
 			</div>
 		</div>

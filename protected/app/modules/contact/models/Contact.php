@@ -144,6 +144,7 @@ class Contact extends NActiveRecord {
 			'fax' => 'Fax',
 			'website' => 'Website URL',
 			'company_name' => 'Company Name',
+			'company_position' => 'Position',
 			'contact_name' => 'Contact Name',
 			'contact_type' => 'Contact Type',
 			'type' => 'Relationship',
@@ -183,7 +184,7 @@ class Contact extends NActiveRecord {
 	public function getSearchCriteria(&$criteria) {
 		$criteria->compare('id', $this->id);
 		$criteria->compare('name', $this->name, true);
-		$criteria->compare('title', $this->title, true);
+		$criteria->compare('title', $this->title);
 		$criteria->compare('givennames', $this->givennames, true);
 		$criteria->compare('lastname', $this->lastname, true);
 		$criteria->compare('suffix', $this->suffix, true);
@@ -205,6 +206,7 @@ class Contact extends NActiveRecord {
 		$criteria->compare('fax', $this->fax, true);
 		$criteria->compare('website', $this->fax, true);
 		$criteria->compare('company_name', $this->company_name, true);
+		$criteria->compare('company_position', $this->company_position, true);
 		$criteria->compare('contact_name', $this->contact_name, true);
 		$criteria->compare('contact_type', $this->contact_type, true);
 		$criteria->compare('comment', $this->comment, true);
@@ -296,7 +298,7 @@ class Contact extends NActiveRecord {
 			),
 			array(
 				'name' => 'title',
-				'filter' => NHtml::enumItem(Contact::model(), 'title'),
+				'filter' => NActiveRecord::model(Yii::app()->getModule('contact')->contactModel)->getTitlesArray(),
 				'htmlOptions' => array('width' => '50px'),
 			),
 			array(
@@ -367,6 +369,9 @@ class Contact extends NActiveRecord {
 				'type' => 'raw',
 				'value' => '$data->getWebsiteLink()',
 				'htmlOptions' => array('width' => '120px', 'style' => 'text-align:center'),
+			),
+			array(
+				'name' => 'company_position',
 			),
 		);
 
@@ -537,6 +542,19 @@ class Contact extends NActiveRecord {
 		$countries = NData::countries();
 		return $countries;
 	}
+//	
+//	public static function getTitlesArray() {
+//		return NHtml::enumItem(NActiveRecord::model(Yii::app()->getModule('contact')->contactModel), 'title');
+//	}
+	
+	public static function getTitlesArray() {
+		$titles = NActiveRecord::model(Yii::app()->getModule('contact')->contactModel)->findAll(array('group'=>'title', 'order'=>'title'));
+		foreach ($titles as $title) {
+			if ($title->title)
+				$t[$title->title] = $title->title;
+		}
+		return $t;
+	}
 
 	public function getTelephone_numbers() {
 		return
@@ -688,7 +706,8 @@ class Contact extends NActiveRecord {
 		return array(
 			'columns' => array(
 				'id' => "pk",
-				'title' => "enum('Mr','Mrs','Ms','Miss','Dr','Prof','Revd','Revd Dr','Revd Prof','Revd Canon','Most Revd','Rt Revd','Rt Revd Dr','Venerable','Revd Preb','Pastor','Sister')",
+//				'title' => "enum('Mr','Mrs','Ms','Miss','Dr','Prof','Revd','Revd Dr','Revd Prof','Revd Canon','Most Revd','Rt Revd','Rt Revd Dr','Venerable','Revd Preb','Pastor','Sister')",
+				'title' => "varchar(255)",
 				'lastname' => "varchar(255)",
 				'salutation' => "varchar(255)",
 				'givennames' => "varchar(255)",
@@ -712,6 +731,7 @@ class Contact extends NActiveRecord {
 				'comment' => "text",
 				'company_name' => "varchar(255)",
 				'contact_name' => "varchar(255)",
+				'company_position' => "varchar(255)",
 				'name' => "varchar(255) NOT NULL",
 				'contact_type' => "enum('Person','Organisation')",
 				'created_date' => 'datetime',
