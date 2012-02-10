@@ -20,7 +20,7 @@
 	<div class="tab-pane " id="day">
 		<form class="form-horizontal">
 			<fieldset>
-			<legend>Form control states</legend>
+			<legend>Timesheet Day</legend>
 			<div class="control-group">
 				<label for="focusedInput" class="control-label">Project</label>
 				<div class="controls" id="project-select">
@@ -135,111 +135,53 @@
 	</form>
 </div>
 
-
-<script type="text/template" id="time-log-row-template">
-	<td>
-		<% if (editable) { %>
-		<div class="field mbn project" >
-			<div class="input">
-				<input class="select" type="text" value="">
-				<input class="project-id" type="hidden" name="log[<%= row %>][project]" id="project_<%= row %>" />
-			</div>
-			<span style="position:absolute;top:5px;right:5px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>
+<div id="timelogday" title="Add Time Log" class="ptm" style="position:relative;width:400px;background-color:#fff;box-shadow:0px 0px 5px #000;z-index:3" >
+	<div style="position:absolute;bottom:-15px;left:190px;width:20px;height:15px;border:1px solid #000;"></div>
+<form id="timelogday" class="form-horizontal">
+	<div class="control-group mbs">
+		<label for="project" class="control-label"  style="width:60px;">When:</label>
+		<div class="controls" style="margin-left:75px;">
+			<p class="mts mbn"> Fri, 10 February, 9:00 - 11:30</p>
 		</div>
-		<% } %>
-		<% if (!editable) { %>
-			<% print(window.timesheet.projects.displayProject(project_id)); %>
-		<% } %>
-	</td>
-	<td>
-		<% if (editable) { %>
-			<div class="field mbn task">
-				<div class="input">
-					<input name="log[<%= row %>][task]" id="task_<%= row %>" type="text" />
-				</div>
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<% print(window.timesheet.tasks.displayTask(task_id)); %>
-		<% } %>
-	</td>
-	<td class="hour_units mon-col field <% print(window.timesheet.printToday(1)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= mon %>
-		<% } %>
-	</td>
-	<td class="hour_units tue-col field <% print(window.timesheet.printToday(2)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= tue %>
-		<% } %>
-	</td>
-	<td class="hour_units wed-col field <% print(window.timesheet.printToday(3)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= wed %>
-		<% } %>
-	</td>
-	<td class="hour_units thu-col field <% print(window.timesheet.printToday(4)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= thu %>
-		<% } %>
-	</td>
-	<td class="hour_units fri-col field <% print(window.timesheet.printToday(5)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= fri %>
-		<% } %>
-	</td>
-	<td class="hour_units sat-col field <% print(window.timesheet.printToday(6)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= sat %>
-		<% } %>
-	</td>
-	<td class="hour_units sun-col field <% print(window.timesheet.printToday(0)) %>">
-		<% if (editable) { %>
-			<div class="input">
-				<input class="time" name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
-			</div>
-		<% } %>
-		<% if (!editable) { %>
-			<%= sun %>
-		<% } %>
-	</td>
-	<td class="hour_units total-col">0:00</td>
-	<td class="delete-col">
-		<% if (editable){ %>
-			<a href="#" class="icon fam-delete record-delete"></a>
-		<% } %>
-	</td>
-</script>
+	</div>
+	<div class="control-group mbs">
+		<label for="project" class="control-label"  style="width:60px;">Project</label>
+		<div class="controls" style="margin-left:75px;" id="project-select">
+			<input type="text" id="focusedInput" class="input-large focused">
+		</div>
+	</div>
+	<div class="control-group mbs">
+		<label for="task" class="control-label" style="width:60px;">Task</label>
+		<div class="controls" style="margin-left:75px;">
+			<input type="text" id="focusedInput" class="input-large focused">
+		</div>
+	</div>
+	<div class="control-group mbs">
+		<label for="focusedInput" class="control-label" style="width:60px;">Time</label>
+		<div class="controls" style="margin-left:75px;">
+			<input type="text" id="time" class="focused" style="width:40px;">
+			<script>
+				$(function(){
+					$.mask.definitions['m']='[012345]';
+					$('#time').mask('9:?m9',{placeholder:' '});
+				});	
+			</script>
+		</div>
+	</div>
+<!--	<div class="control-group">
+		<label for="focusedInput" class="control-label">Notes</label>
+		<div class="controls">
+			<textarea class="input-large"></textarea>
+		</div>
+	</div>-->
+
+	<div class="form-actions pvs">
+		<button class="btn btn-primary" type="submit">Save changes</button>
+		<button class="btn" type="reset">Cancel</button>
+	</div>
+</form>
+</div>
+<?php $this->renderPartial('_templates'); ?>
 <?php Yii::app()->clientScript->registerCoreScript('maskedinput'); ?>
 
 
@@ -308,35 +250,7 @@
 
 		// page is now ready, initialize the calendar...
 
-//		var calendar = $('#calendar').fullCalendar({
-//			// put your options and callbacks here
-//			header: {
-//				left: 'prev,next today',
-//				center: 'title',
-//				right: 'month,agendaWeek,agendaDay'
-//			},
-//			selectable: true,
-//			selectHelper: true,
-//			select: function(start, end, allDay) {
-//				var title = prompt('Event Title:');
-//				if (title) {
-//					calendar.fullCalendar('renderEvent',{
-//						title: title,
-//						start: start,
-//						end: end,
-//						allDay: allDay
-//					}, 
-//					true // make the event "stick"
-//					);
-//				}
-//				calendar.fullCalendar('unselect');
-//			},
-//			editable: true,
-//			firstDay:1,
-//			slotMinutes:15,
-//			firstHour:8,
-//			minTime:5
-//		});
+		
 
 		
 		window.project = {};
@@ -406,6 +320,15 @@
 					(date.getMonth() < 9 ? '0' : '') + (date.getMonth()+1) + '-' +
 					(date.getDate() < 10 ? '0' : '') + date.getDate();
 			},
+			/**
+			 * converts a mysql date string to a javascript date object
+			 * @param string date mysql date string YYYY-MM-DD
+			 */
+			mysqlToDate:function(date){
+				var t = date.split(/[- :]/);
+				// Apply each element to the Date function
+				return new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+			},
 			getStartDate:function(){
 				return this.timesheet.get('startDate');
 			},
@@ -467,6 +390,12 @@
 				project_id:0,
 				task_id:0,
 				minutes:0
+			},
+			/**
+			 * return the javascript date object for the date attribute
+			 */
+			date:function(){
+				return window.timesheet.mysqlToDate(this.get('date'));
 			}
 		});
 		
@@ -616,7 +545,24 @@
 		});
 		
 		timesheet.models.Task = Backbone.Model.extend({
-			defaults:{name:''}
+			defaults:{name:''},
+			/**
+			 * gets the name and formats it to highlight the last search string
+			 * @return string html
+			 */
+			getNameSearchHighlight:function(){
+				return this.getNameHighlight(window.timesheet.tasks.nameSearchFilter)
+			},
+			/**
+			 * return a string with the filter text highlighted in a strong tag
+			 * @param string filterName
+			 * @return string html
+			 */
+			getNameHighlight:function(highlight){
+				return this.get('name').replace(
+					new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + $.ui.autocomplete.escapeRegex(highlight) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>"
+				);
+			}
 		});
 		
 		/**
@@ -625,9 +571,24 @@
 		timesheet.models.Tasks = Backbone.Collection.extend({
 			model:timesheet.models.Task,
 			url:"<?php echo NHtml::url('/timesheet/timesheet/tasks'); ?>",
+			nameSearchFilter:null,
 			displayTask:function(task_id){
 				var t = this.get(task_id);
 				return _.isEmpty(t) ? 'unknown' :  t.get('name');
+			},
+			filterTaskForProject:function(id, nameSearchFilter){
+				this.nameSearchFilter = nameSearchFilter;
+				var filtered = this.filter(function(model){
+					return model.get('project_id') == id
+				});
+				return filtered;
+				console.log(filtered)
+				this.nameSearchFilter = nameSearchFilter;
+				var matcher = new RegExp($.ui.autocomplete.escapeRegex(nameSearchFilter), "i");
+				var filtered = _.each(filtered,function(model) {
+					return (model.get('id') && (!nameSearchFilter || matcher.test(model.get('name'))));
+				});
+				return filtered;
 			}
 		});
 			
@@ -735,7 +696,9 @@
 					this.$('input.time').mask('9:?m9',{placeholder:' '});
 					
 					this.projectAutocomplete();
-					this.taskAutocomplete();
+					// this.taskAutocomplete();
+					this.$('.task .input').addClass('disabled');
+					this.$('.task input').attr('disabled','disabled');
 				}
 				return this;
 			},
@@ -800,9 +763,39 @@
 				var p = window.timesheet.projects.get(this.model.get('project_id'));
 				this.$('.project input.select').val(p.get('name'));
 				this.$('.project input.project-id').val(p.get('id'));
+				
+				// trigger reload of task list
+				//this.$('.task input').addClass('loading');
+				this.taskAutocomplete();
+				
 			},
 			taskAutocomplete:function(){
-				// TODO
+				this.$('.task input').removeAttr('disabled').focus();
+				this.$('.task .input').removeClass('disabled');
+				this.$('.task input').autocomplete('destroy');
+				this.$('.task input').autocomplete({
+					minLength: 0,
+					source: _.bind(function(request, response) {
+						response(window.timesheet.tasks.filterTaskForProject(this.model.get('project_id'), request.term));
+					},this),
+					select:_.bind(function(event, ui) {
+						//this.model.set({'task_id':ui.item.get('id')});
+						//alert(ui.item.get('name'))
+						this.$('.task input').val(ui.item.get('name'));
+					},this),
+//					change:_.bind(function(event, ui){
+//						if(_.isNull(ui.item)) {
+//							// invalid value?
+//						}
+//					},this),
+					position:{'my':'left top','at':'left bottom','of':this.$('.task input'),'collision':'flip'}
+				})
+				.data("autocomplete")._renderItem = _.bind(function(ul, item) {
+					return $("<li></li>")
+						.data("item.autocomplete", item)
+						.append("<a>" + item.getNameSearchHighlight() + "</a>")
+						.appendTo(ul);
+				},this);
 			},
 			deleteRow:function(){
 				this.model.destroy();
@@ -961,6 +954,54 @@
 		// GO GO GO!
 		window.timesheet.init(<?php echo $startDate; ?>);
 
+		var events = Array();
+		window.timesheet.timeLogList.forEach(function(log){
+			var start = log.date();
+			var end = new Date(start.getTime() + log.get('minutes')*60000);
+			
+			var event = {
+				title:'event',
+				start:start,
+				end:end,
+				allDay: false
+			}
+			events.push(event);
+		});
+		
+		console.log(events)
+
+
+		var calendar = $('#calendar').fullCalendar({
+			// put your options and callbacks here
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'agendaWeek,agendaDay'
+			},
+			defaultView:'agendaWeek',
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end, allDay, jsEvent) {
+				
+				$('#timelogday').show().position({my:'center bottom',at:'center top', of:$('.fc-select-helper'), offset:'0px -15px'})
+				calendar.fullCalendar('refetchEvents');
+				//if (title) {
+					calendar.fullCalendar('renderEvent',{
+						title: '',
+						start: start,
+						end: end,
+						allDay: false
+					});
+				//}
+				calendar.fullCalendar('unselect');
+			},
+			editable: true,
+			firstDay:1,
+			slotMinutes:15,
+			firstHour:8,
+			minTime:5,
+			events:events
+		});
 		
 		var p = new CProjectView;
 		$('#project-select').html(p.render().el);

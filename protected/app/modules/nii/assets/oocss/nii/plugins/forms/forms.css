@@ -64,3 +64,5 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 /** complex elements */
 .joinedRight{border-radius:3px 0px 0px 3px;}
 .joinedLeft{border-radius:0px 3px 3px 0px; border-left:0px;}
+
+.loading {background: url("skin/loading.gif") no-repeat scroll right 0 transparent;}
