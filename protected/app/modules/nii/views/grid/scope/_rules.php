@@ -54,8 +54,8 @@ foreach ($scope['rule'] as $rule) {
 			else
 				$deleteOptions = array('class'=>'customScopeDelete hidden');
 
-			echo NHtml::btnLink('','#', 'icon fam-add', array('class'=>'customScopeAdd'));
-			echo NHtml::btnLink('','#', 'icon fam-delete', $deleteOptions);
+			echo NHtml::btnLink('','#', 'fam-add', array('class'=>'customScopeAdd'));
+			echo NHtml::btnLink('','#', 'fam-delete', $deleteOptions);
 			?>
 		</div>
 	</div>

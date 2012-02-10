@@ -264,7 +264,7 @@ class NHtml extends CHtml {
 	// DOCUMENTATION PLEASE!
 	public static function btnLink($label, $url, $iconClass=null, $attributes=array()) {
 		if ($iconClass !== null)
-			$label = "<span class=\"icon $iconClass\"></span>$label";
+			$label = "<span class=\"icon ".($label=='' ? 'icon-nolabel ':'').$iconClass."\">".($label=='' ? '&nbsp;':'')."</span>".$label;
 		return CHtml::link($label, $url, $attributes);
 	}
 
