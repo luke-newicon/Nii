@@ -10,5 +10,12 @@
 <div class="timelogs">
 	
 	<?php $mins = Yii::app()->getModule('timesheet')->getTotalProjectMinutes($model->id); ?>
-	<?php echo '<strong>Total time: ' . NTime::minutesToTime($mins) . '</strong>'; ?>
+	<p><strong>Total time:<?php echo NTime::minutesToTime($mins); ?></strong></p>
+	
+	<p><strong><?php echo NTime::minutesToDaysNice($mins); ?></strong></p>
+	
+	
+	<?php foreach(Yii::app()->getModule('timesheet')->getProjectTimeLogs($model->id) as $log): ?>
+		<?php echo NTime::minutesToTime($log->minutes); ?>
+	<?php endforeach; ?>
 </div>

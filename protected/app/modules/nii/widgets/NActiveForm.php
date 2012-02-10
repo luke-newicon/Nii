@@ -56,7 +56,8 @@ class NActiveForm extends CActiveForm {
 		return $return;
 	}
 
-	public function endField($model=null, $attribute=null) {
+	public function endField($model=null, $attribute=null) 
+	{
 		$return = '';
 		if ($model && $attribute)
 			$return = $this->error($model, $attribute);
@@ -64,7 +65,8 @@ class NActiveForm extends CActiveForm {
 		return $return;
 	}
 
-	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
+	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) 
+	{
 		return $this->editField($model, $attribute, $type, $data, $htmlOptions);
 	}
 
@@ -77,7 +79,8 @@ class NActiveForm extends CActiveForm {
 	 * @param array $htmlOptions Any optional HTML options to be applied
 	 * @return string The HTML to be rendered
 	 */
-	public function editField($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) {
+	public function editField($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) 
+	{
 		$return = $this->beginField($model, $attribute);
 		if ($type == 'dropDownList') {
 			$return .= $this->dropDownList($model, $attribute, $data, $htmlOptions);
@@ -94,7 +97,8 @@ class NActiveForm extends CActiveForm {
 	 * @param array $data When the attribute is a represented by a array lookup i.e select boxes
 	 * @return string The HTML output 
 	 */
-	public function viewField($model, $attribute, $data=array()) {
+	public function viewField($model, $attribute, $data=array()) 
+	{
 		$return = $this->beginField($model, $attribute, false);
 		$value = CHtml::resolveValue($model, $attribute);
 		$return .= '<span class="view-field">' . (array_key_exists($value, $data) ? $data[$value] : $value) . '</span>';
@@ -108,7 +112,8 @@ class NActiveForm extends CActiveForm {
 	 * @param string $attribute the attribute
 	 * @return string HTML output 
 	 */
-	public function checkBoxField($model, $attribute) {
+	public function checkBoxField($model, $attribute)
+	{
 		return $this->labelEx($model, $attribute, array(
 					'label' => $this->checkBox($model, $attribute) . $model->getAttributeLabel($attribute),
 					'class' => 'checkbox',
@@ -122,13 +127,15 @@ class NActiveForm extends CActiveForm {
 	 * @param array $options Additional options to be passed into the datePicker widget
 	 * @return CInputWidget
 	 */
-	public function dateField($model, $attribute, $options=array()) {
+	public function dateField($model, $attribute, $options=array())
+	{
 		$options['model'] = $model;
 		$options['attribute'] = $attribute;
 		return $this->widget('nii.widgets.forms.DateInput', $options, true);
 	}
 
-	public function autoComplete($model, $attribute, $source, $alt_attribute=null, $options=array()) {
+	public function autoComplete($model, $attribute, $source, $alt_attribute=null, $options=array()) 
+	{
 		$options['source'] = $source;
 		$options['name'] = $alt_attribute ? $alt_attribute : $attribute;
 		$options['value'] = $alt_attribute ? CHtml::resolveValue($model, $alt_attribute) : CHtml::resolveValue($model, $attribute);

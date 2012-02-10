@@ -4,60 +4,121 @@
 	#timesheet-totals {background-color: #eee;}
 	#timesheet-totals th{text-align:right;}
 	#timesheet-totals th.total{font-weight:bold;}
+	.today .input{border: 1px solid #999;}
 </style>
-<div id="timesheet">
-	<div id="timesheet-selector" class="line well">
-		<div class="unit size1of3 txtR btn-group">
-			<a class="btn prev-month"><i class="icon-backward"></i></a><a class="btn prev-week"><i class="icon-chevron-left"></i></a> 
-		</div>
-		<div class="unit size1of3 txtC">
-			<span class="date-start">2 January</span> - <span class="date-end">9 January, 2012</span> 
-		</div>
-		<div class="lastUnit txtL">
-			<div class="pull-right btn-group">
-				<a class="btn next-week"><i class="icon-chevron-right"></i></a><a class="btn next-month"><i class="icon-forward"></i></a> 
+
+<div id="calendar"></div>
+
+<ul class="nav nav-tabs">
+	<li class="active"><a href="#timesheet" data-toggle="tab">Week</a></li>
+	<li >
+		<a href="#day" data-toggle="tab">Day</a>
+	</li>
+</ul>
+<div class="tab-content">
+	<!-- timesheet day -->
+	<div class="tab-pane " id="day">
+		<form class="form-horizontal">
+			<fieldset>
+			<legend>Form control states</legend>
+			<div class="control-group">
+				<label for="focusedInput" class="control-label">Project</label>
+				<div class="controls" id="project-select">
+				</div>
 			</div>
-			<a class="btn btn-primary addLog">Add Log</a>
-		</div>
+			<div class="control-group">
+				<label for="focusedInput" class="control-label">Task</label>
+				<div class="controls">
+					<input type="text" id="focusedInput" class="input-xlarge focused">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="focusedInput" class="control-label">Task</label>
+				<div class="controls">
+					<?php $this->widget('nii.widgets.forms.DateInput', array('name'=>'date', 'value'=>date('Y-m-d',time()))); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="focusedInput" class="control-label">Time</label>
+				<div class="controls">
+					<input type="text" id="time" class="focused" style="width:40px;">
+					<script>
+						$(function(){
+							$.mask.definitions['m']='[012345]';
+							$('#time').mask('9:?m9',{placeholder:' '});
+						});	
+					</script>
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="focusedInput" class="control-label">Notes</label>
+				<div class="controls">
+					<textarea class="input-xlarge"></textarea>
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">Save changes</button>
+				<button class="btn" type="reset">Cancel</button>
+			</div>
+			</fieldset>
+		</form>
 	</div>
+	<!-- timesheet tab -->
+	<div class="tab-pane active" id="timesheet">
+		<div id="timesheet-selector" class="line well">
+			<div class="unit size1of3 txtR btn-group">
+				<a class="btn prev-month"><i class="icon-backward"></i></a><a class="btn prev-week"><i class="icon-chevron-left"></i></a> 
+			</div>
+			<div class="unit size1of3 txtC">
+				<span class="date-start">2 January</span> - <span class="date-end">9 January, 2012</span> 
+			</div>
+			<div class="lastUnit txtL">
+				<div class="pull-right btn-group">
+					<a class="btn next-week"><i class="icon-chevron-right"></i></a><a class="btn next-month"><i class="icon-forward"></i></a> 
+				</div>
+				<a class="btn btn-primary addLog">Add Log</a>
+			</div>
+		</div>
 	
-	<form>
-		<input type="hidden" name="log[date]" id="log_date" />
-		<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped table table-bordered table-striped">
-			<thead>
-				<tr class="date-headings">
-					<th class="project-col">Project</th>
-					<th class="task-col">Task</th>
-					<th class="hour_units mon-col">Mon<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units tue-col">Tue<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units wed-col">Wed<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units thu-col">Thu<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units fri-col">Fri<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units sat-col">Sat<br/><span class="sdate">30 Jan</span></th>
-					<th class="hour_units sun-col">Sun<br/><span class="sdate">30 Jan</span></th>
-					<th class=" total-col">Total</th>
-					<th class=""></th>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr id="timesheet-totals">
-					<th colspan="2"></th>
-					<th class="hour_units mon-col">0:00</th>
-					<th class="hour_units tue-col">0:00</th>
-					<th class="hour_units wed-col">0:00</th>
-					<th class="hour_units thu-col">0:00</th>
-					<th class="hour_units fri-col">0:00</th>
-					<th class="hour_units sat-col">0:00</th>
-					<th class="hour_units sun-col">0:00</th>
-					<th class="total">0:00</th>
-					<th></th>
-				</tr>
-			</tfoot>
-			<tbody>
-			</tbody>
-		</table>
-	</form>
-	<div class="txtR"><a class="saveLog btn btn-primary btn-large">Save Log</a></div>
+		<form>
+			<input type="hidden" name="log[date]" id="log_date" />
+			<table id="timesheet-grid" class="condensed-table bordered-table zebra-striped table table-bordered table-striped">
+				<thead>
+					<tr class="date-headings">
+						<th class="project-col">Project</th>
+						<th class="task-col">Task</th>
+						<th class="hour_units mon-col">Mon<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units tue-col">Tue<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units wed-col">Wed<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units thu-col">Thu<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units fri-col">Fri<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units sat-col">Sat<br/><span class="sdate">30 Jan</span></th>
+						<th class="hour_units sun-col">Sun<br/><span class="sdate">30 Jan</span></th>
+						<th class=" total-col">Total</th>
+						<th class=""></th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr id="timesheet-totals">
+						<th colspan="2"></th>
+						<th class="hour_units mon-col">0:00</th>
+						<th class="hour_units tue-col">0:00</th>
+						<th class="hour_units wed-col">0:00</th>
+						<th class="hour_units thu-col">0:00</th>
+						<th class="hour_units fri-col">0:00</th>
+						<th class="hour_units sat-col">0:00</th>
+						<th class="hour_units sun-col">0:00</th>
+						<th class="total">0:00</th>
+						<th></th>
+					</tr>
+				</tfoot>
+				<tbody>
+				</tbody>
+			</table>
+		</form>
+		<div class="txtR"><a class="saveLog btn btn-primary btn-large">Save Log</a></div>
+	</div>
 </div>
 
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
@@ -70,21 +131,16 @@
 					<input style="font-size:16px;" type="text" id="projectname" name="projectname">
 				</div>
 			</div>
-			
 		</div>
 	</form>
 </div>
+
 
 <script type="text/template" id="time-log-row-template">
 	<td>
 		<% if (editable) { %>
 		<div class="field mbn project" >
 			<div class="input">
-<!--				<select name="log[<%= row %>][project]" id="project_<%= row %>">-->
-<!--					<option value="">Select a project</option>-->
-<!--					<option value="createnewproject">[Create a new project]</option>-->
-<!--					<% window.timesheet.projects.forEach(function(p) { %> <option value="<%= p.get('id') %>" ><%= p.get('name') %></option><% }) %>-->
-<!--				</select>-->
 				<input class="select" type="text" value="">
 				<input class="project-id" type="hidden" name="log[<%= row %>][project]" id="project_<%= row %>" />
 			</div>
@@ -107,7 +163,7 @@
 			<% print(window.timesheet.tasks.displayTask(task_id)); %>
 		<% } %>
 	</td>
-	<td class="hour_units mon-col field">
+	<td class="hour_units mon-col field <% print(window.timesheet.printToday(1)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= mon %>" type="text"  maxlength="4" />
@@ -117,7 +173,7 @@
 			<%= mon %>
 		<% } %>
 	</td>
-	<td class="hour_units tue-col field">
+	<td class="hour_units tue-col field <% print(window.timesheet.printToday(2)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= tue %>" type="text"  maxlength="4" />
@@ -127,7 +183,7 @@
 			<%= tue %>
 		<% } %>
 	</td>
-	<td class="hour_units wed-col field">
+	<td class="hour_units wed-col field <% print(window.timesheet.printToday(3)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= wed %>" type="text"  maxlength="4" />
@@ -137,7 +193,7 @@
 			<%= wed %>
 		<% } %>
 	</td>
-	<td class="hour_units thu-col field">
+	<td class="hour_units thu-col field <% print(window.timesheet.printToday(4)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= thu %>" type="text"  maxlength="4" />
@@ -147,7 +203,7 @@
 			<%= thu %>
 		<% } %>
 	</td>
-	<td class="hour_units fri-col field">
+	<td class="hour_units fri-col field <% print(window.timesheet.printToday(5)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= fri %>" type="text"  maxlength="4" />
@@ -157,7 +213,7 @@
 			<%= fri %>
 		<% } %>
 	</td>
-	<td class="hour_units sat-col field">
+	<td class="hour_units sat-col field <% print(window.timesheet.printToday(6)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= sat %>" type="text"  maxlength="4" />
@@ -167,7 +223,7 @@
 			<%= sat %>
 		<% } %>
 	</td>
-	<td class="hour_units sun-col field">
+	<td class="hour_units sun-col field <% print(window.timesheet.printToday(0)) %>">
 		<% if (editable) { %>
 			<div class="input">
 				<input class="time" name="log[<%= row %>][time][]" value="<%= sun %>" type="text"  maxlength="4" />
@@ -185,6 +241,7 @@
 	</td>
 </script>
 <?php Yii::app()->clientScript->registerCoreScript('maskedinput'); ?>
+
 
 <script type="text/javascript">
 	
@@ -247,6 +304,42 @@
 		
 	jQuery(function($){
 		
+		
+
+		// page is now ready, initialize the calendar...
+
+//		var calendar = $('#calendar').fullCalendar({
+//			// put your options and callbacks here
+//			header: {
+//				left: 'prev,next today',
+//				center: 'title',
+//				right: 'month,agendaWeek,agendaDay'
+//			},
+//			selectable: true,
+//			selectHelper: true,
+//			select: function(start, end, allDay) {
+//				var title = prompt('Event Title:');
+//				if (title) {
+//					calendar.fullCalendar('renderEvent',{
+//						title: title,
+//						start: start,
+//						end: end,
+//						allDay: allDay
+//					}, 
+//					true // make the event "stick"
+//					);
+//				}
+//				calendar.fullCalendar('unselect');
+//			},
+//			editable: true,
+//			firstDay:1,
+//			slotMinutes:15,
+//			firstHour:8,
+//			minTime:5
+//		});
+
+		
+		window.project = {};
 		window.timesheet = {
 			// can be set to hours or minutes
 			format:'time',
@@ -316,7 +409,17 @@
 			getStartDate:function(){
 				return this.timesheet.get('startDate');
 			},
-			
+			/**
+			 * If the day integer matches the current day returns true
+			 * @param int day number integer 0 = sunday, monday = 1
+			 */
+			isToday:function(day){
+				var d = new Date();
+				return (day == d.getDay());
+			},
+			printToday:function(day){
+				return this.isToday(day) ? 'today' : '';
+			},
 			/**
 			 * hours:minutes a time of 1:30 will return 90 minutes
 			 * @param string time format 1:20 (H:MM)
@@ -491,7 +594,7 @@
 			model:timesheet.models.Project,
 			displayProject:function(project_id){
 				var p = this.get(project_id);
-				return _.isNull(p) ? 'unknown' :  p.get('name');
+				return _.isNull(p) ? 'unknown' :  p.get('link');
 			},
 			/**
 			 * store the last name search filter string. as passed to this.filterByNameSearch
@@ -706,6 +809,66 @@
 			}
 		})
 		
+		var CProjectView = Backbone.View.extend({
+			className:'inputContainer input-xlarge',
+			render:function(){
+				$(this.el).append('<input class="select input-xlarge" type="text" /><input class="project-id" type="hidden" />\n\
+				<span style="position:absolute;top:5px;right:0px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>');
+				this.autocomplete();
+				return this;
+			},
+			events:{
+				'click .down':'dropDown'
+			},
+			autocomplete:function(){
+				this.$('.select').autocomplete('destroy');
+				this.$('.select').autocomplete({
+					minLength: 0,
+					source: function(request, response) {
+						response(window.timesheet.projects.filterByProjectName(request.term));
+					},
+					select:_.bind(function(event, ui) {
+						this.$('.select').val(ui.item.get('name'));
+						this.$('.project-id').val(ui.item.get('id'));
+						//this.model.set({'project_id':ui.item.get('id')});
+						//this.model.save();
+						return false;
+					},this),
+					change:_.bind(function(event, ui){
+						if(_.isNull(ui.item)) {
+							
+							// remove invalid value, as it didn't match anything
+							this.$('.select').val("");
+							this.$('.project-id').val("");
+							this.$('.select').data("autocomplete").term = "";
+							return false;
+						}
+					},this),
+					position:{'my':'left top','at':'left bottom','of':this.$('.select'),'collision':'flip'}
+				})
+				.data("autocomplete")._renderItem = _.bind(function(ul, item) {
+					return $("<li></li>")
+						.data("item.autocomplete", item)
+						.append("<a>" + item.getNameSearchHighlight() + "</a>")
+						.appendTo(ul);
+				},this);
+			},
+			// function called when the drop down button of the combo box is clicked
+			dropDown:function(){
+				// close if already visible
+				if (this.$('.select').autocomplete("widget").is(":visible")) {
+					this.$('.select').autocomplete("close");
+					return false;
+				}
+				// work around a bug (likely same cause as #5265)
+				$(this).blur();
+				// pass empty string as value to search for, displaying all results
+				this.$('.select').autocomplete("search", "");
+				this.$('.select').focus();
+				return false;
+			}
+		});
+		
 		
 		
 		// timesheet 
@@ -798,6 +961,9 @@
 		// GO GO GO!
 		window.timesheet.init(<?php echo $startDate; ?>);
 
+		
+		var p = new CProjectView;
+		$('#project-select').html(p.render().el);
 		
 	});
 

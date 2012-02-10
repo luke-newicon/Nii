@@ -44,5 +44,14 @@ class TimesheetModule extends NWebModule
 				->where("project_id = $projectId")->queryColumn();
 		return $minutes[0];
 	}
+	
+	/**
+	 * get a list of all project time logs
+	 * @param int $projectId 
+	 * @return array TimesheetLog records
+	 */
+	public function getProjectTimeLogs($projectId){
+		return TimesheetLog::model()->findAllByAttributes(array('project_id'=>$projectId));
+	}
 
 }

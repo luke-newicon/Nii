@@ -525,8 +525,56 @@ class NTime {
 	public static function minutesToTime($minutes) 
 	{ 
 		$hours = (int)($minutes / 60); 
-		$minutes -= $hours * 60; 
+		$minutes -= $hours * 60;
 		return sprintf("%d:%02.0f", $hours, $minutes); 
 	} 
+	
+	/**
+	 * converts total minutes into string "D:H:M"
+	 * To get individual values for days, hours and minutes use the following code
+	 * on the result of this function.
+	 * <code>
+	 * list($days, $hours, $mins) = explode(':', $result)
+	 * </code>
+	 * @param integer $minutes
+	 * @param float $hoursPerDay the number of hours in the working day, defaults to 7.5
+	 * @return string
+	 */
+	public static function minutesToDays($minutes, $hoursPerDay=7.5)
+	{
+		$minsPerDay = $hoursPerDay*60;
+		$days = floor($minutes / $minsPerDay);
+		
+		$remainMinutes = $minutes % $minsPerDay;
+		$hours = floor($remainMinutes / 60);
+		$mins = floor($remainMinutes % 60);
+		
+		return $days . ":" . $hours . ":" . $mins;
+	}
+	
+	/**
+	 * formats the result of minutesToDays into a nice string like:
+	 * 3 Days, 2 hours, 4 minutes
+	 * 
+	 * @see self::minutesToDays
+	 * @param integer $minutes
+	 * @param float $hoursPerDay the number of hours in the working day, defaults to 7.5
+	 * @return string
+	 */
+	public static function minutesToDaysNice($minutes, $hoursPerDay=7.5){
+		list($days,$hours,$mins) = explode(':',self::minutesToDays($minutes, $hoursPerDay));
+		$dLabal = ($days==1) ? 'Day':'Days';
+		$hLabal = ($hours==1) ? 'Hour':'Hours';		
+		$mLabal = ($mins==1) ? 'Minute':'Minutes';
+		
+		$ret = "";
+		if ($days > 0)
+			$ret .= "$days $dLabal";
+		if ($hours > 0)
+			$ret .= ($ret != '') ? ", $hours $hLabal" : "$hours $hLabal";
+		if ($mins > 0)
+			$ret .= ($ret != '') ? "and $mins $mLabal" : "$mins $mLabal";
+		return $ret;
+	}
 	
 }

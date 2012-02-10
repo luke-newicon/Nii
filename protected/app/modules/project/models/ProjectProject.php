@@ -68,7 +68,7 @@ class ProjectProject extends NActiveRecord
 		);
 	}
 	
-	public function viewLink(){
+	public function getLink(){
 		return '<a href="'.NHtml::url(array('/project/details/index', 'id'=>$this->id())).'">' . $this->name . '</a>';
 	}
 
@@ -93,6 +93,18 @@ class ProjectProject extends NActiveRecord
 	
 	public function countProjectTasks(){
 		return 0;
+	}
+	
+	/**
+	 *
+	 * @param type $names
+	 * @return type 
+	 */
+	public function getAttributes($names = true) {
+		return array_merge(
+			parent::getAttributes($names),
+			array('link'=>$this->link)	
+		);
 	}
 	
 }

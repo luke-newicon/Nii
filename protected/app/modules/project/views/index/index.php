@@ -31,7 +31,7 @@
 			'name' => array(
 				'name' => 'name',
 				'type' => 'raw',
-				'value' => '$data->viewLink($data->name)',
+				'value' => '$data->getLink()',
 			),
 		),
 	));

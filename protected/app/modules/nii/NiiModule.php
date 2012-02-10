@@ -81,11 +81,22 @@ class NiiModule extends NWebModule
 					'js/backbone/backbone-0.5.3.min.js',
 				),
 				'depends'=>array('jquery')
+			),
+			'fullcalendar'=>array(
+				'basePath'=>'nii.assets',
+				'baseUrl'=>$this->getAssetsUrl(),
+				'css'=>array(
+					'js/fullcalendar/fullcalendar.css',
+				),
+				'js'=>array(
+					'js/fullcalendar/fullcalendar.min.js',
+				),
+				'depends'=>array('jquery')
 			)
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		Yii::app()->getClientScript()->registerPackage('backbone');
-		
+		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 		
 		if($this->juiThemeUrl===null){
 			$this->juiThemeUrl = $this->getAssetsUrl().'/jqueryui';

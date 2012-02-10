@@ -2,10 +2,13 @@
 
 /**
  * Description of test
- *
+ * 
+ * 
+ * @param string $value expects the value or attribute to be a mysql date format string YYYY-MM-DD
  * @author robinwiliams
  */
-class DateInput extends CInputWidget {
+class DateInput extends CInputWidget 
+{
 
 	public $showAmim = 'fold';
 
@@ -15,14 +18,18 @@ class DateInput extends CInputWidget {
 
 	public function run() {
 
-		//Gets the name and id of the form item to be used throughout the run function.
+		// Gets the name and id of the form item to be used throughout the run function.
 		list($name, $id) = $this->resolveNameID();
-
-		$dateTime = explode(' ', $this->model->getAttribute($this->attribute));
+		if($this->hasModel()){
+			$dateTime = $this->model->getAttribute($this->attribute);
+		}else{
+			$dateTime = $this->value;
+		}
+		$dateTime = explode(' ',$dateTime);
 		$inputDate = $dateTime[0];
 
 		$dateDay = $dateMonth = $dateYear = null;
-		//Explodes the date into its various parts.
+		// Explodes the date into its various parts.
 		if ($inputDate && $inputDate != '0000-00-00') {
 			$date = explode('-', $inputDate);
 			$dateDay = $date[2];
@@ -30,37 +37,37 @@ class DateInput extends CInputWidget {
 			$dateYear = $date[0];
 		}
 
-		//The visible part of the application.
+		// The visible part of the application.
 
 		$day_field = CHtml::textField($id . '_day', $dateDay, array(
 					'class' => $id . ' datePickerDay',
-					'size' => 3,
 					'maxlength' => 2,
-					'style' => 'width:20px',
+					'style' => 'width:20px;margin-right:4px;',
+					'placeholder'=>'DD',
 				));
 		$month_field = CHtml::textField($id . '_month', $dateMonth, array(
 					'class' => $id . ' datePickerMonth',
-					'size' => 4,
 					'maxlength' => 2,
-					'style' => 'width:20px',
+					'style' => 'width:25px;;margin-right:4px;',
+					'placeholder'=>'MM',
 				));
 		$year_field = CHtml::textField($id . '_year', $dateYear, array(
 					'class' => $id . ' datePickerYear',
 					'size' => 6,
 					'maxlength' => 4,
-					'style' => 'width:35px',
+					'style' => 'width:35px;',
+					'placeholder'=>'YYYY',
 				));
 
 		echo '<div id="' . $id . '_box" style="overflow:hidden">';
-		echo $this->drawElement($day_field, $id . '_day', 'DD');
-		echo $this->drawElement($month_field, $id . '_month', 'MM');
-		echo $this->drawElement($year_field, $id . '_year', 'YYYY');
+		echo '<div style="float:left;margin-right:4px;">' . $day_field . '<span>/</span></div>';
+		echo '<div style="float:left;margin-right:4px;">' . $month_field . '<span>/</span></div>';
+		echo '<div style="float:left;margin-right:5px;"">' . $year_field . '</div>';
 		echo '<a href="#" style="display:inline-block;margin-top:4px" id="' . $id . '_btn"><span class="icon fam-calendar"></span></a>';
 		echo '</div>';
 
 		$this->widget('zii.widgets.jui.CJuiDatePicker', array(
 			'name' => $name,
-//			'flat' => true,
 			// additional javascript options for the date picker plugin
 			'options' => array(
 				'showAnim' => $this->showAmim,
@@ -121,13 +128,9 @@ class DateInput extends CInputWidget {
 		);
 	}
 
-	public function drawElement($contents, $id, $title, $outerClass=null, $innerClass=null) {
+	public function drawElement($contents, $id, $title, $outerClass=null, $innerClass=null)
+	{
 		return '<div style="float:left;"><div class="input-prepend" style="margin:0 3px 0 0"><span class="add-on">' . $title . '</span>' . $contents . '</div></div>';
-//		$el  = '<div class="'.$outerClass.'"><label for="'.$id.'" class="inFieldLabel">'.$title.'</label><div class="'.$innerClass.'">';
-//		$el .= $contents;
-//		$el .= '</div></div>';
-//		
-//		return $el;
 	}
 
 }
