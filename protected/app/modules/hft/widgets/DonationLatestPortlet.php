@@ -20,6 +20,8 @@ class DonationLatestPortlet extends NPortlet {
 				echo '<td>'. NHtml::formatDate($donation->date_received, 'd-m-y').'</td></tr>';
 			}
 			echo '</tbody></table>';
+		} else {
+			echo '<span class="noData">No new donations to display</span>';
 		}
 	}
 

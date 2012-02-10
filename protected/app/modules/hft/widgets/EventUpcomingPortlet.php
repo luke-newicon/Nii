@@ -21,6 +21,8 @@ class EventUpcomingPortlet extends NPortlet {
 				echo '</tr>';
 			}
 			echo '</tbody></table>';
+		} else {
+			echo '<span class="noData">No upcoming events to display</span>';
 		}
 	}
 

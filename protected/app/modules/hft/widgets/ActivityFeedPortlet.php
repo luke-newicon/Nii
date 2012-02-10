@@ -9,7 +9,7 @@ class ActivityFeedPortlet extends NPortlet {
 
 	protected function renderContent() {
 		
-		$logs = NActiveRecord::model('NLog')->findAll(array('condition' => "model IN (".$this->logModels.")",'limit' => $this->limit, 'order'=>'datetime DESC, id DESC'));
+		$logs = NActiveRecord::model('NLog')->findAll(array('condition' => "model IN (".$this->logModels.")",'limit' => $this->limit, 'order'=>'datetime DESC, id DESC', 'group' => 'CONCAT(model, model_id, DATE_FORMAT(datetime, "%d%M%Y"),controller,action)'));
 		$notes = NActiveRecord::model('HftContactNote')->findAll(array('limit' => $this->limit, 'order'=>'added DESC, id DESC'));
 		
 		$feed=array();
