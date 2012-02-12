@@ -78,7 +78,7 @@ class NiiModule extends NWebModule
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/backbone/underscore-1.3.1.min.js',
-					'js/backbone/backbone-0.5.3.min.js',
+					'js/backbone/backbone-0.9.1.min.js',
 				),
 				'depends'=>array('jquery')
 			),
@@ -167,7 +167,7 @@ class NiiModule extends NWebModule
 			'nii.js'=>false,
 			'all.css'=>false,
 			'sprite.css'=>false,
-			'backbone-0.5.3.min.js'=>false,
+			'backbone-0.9.1.min.js'=>false,
 			'underscore-1.3.1.min.js'=>false,
 			'jquery.gritter.min.js'=>false,
 			'jquery.gritter.css'=>false,

@@ -34,9 +34,20 @@ class TimesheetController extends AController
 	 * get the timesheet logs for week commencing...
 	 * @param unix time 
 	 */
-	public function actionWeekLog($date){
+	public function actionLog($date=null){
 		$logs = TimesheetLog::model()->findAllForWeek(NTime::dateToUnix($date));
 		echo CJSON::encode($logs);
+	}
+	
+	/**
+	 * create an individual Time log 
+	 * This action is only fired through a post request
+	 */
+	public function actionLogCreate(){
+		$t = new TimesheetLog;
+		$t->attributes = $_POST;
+		$t->save();
+		echo CJSON::encode($t);
 	}
 	
 	/**

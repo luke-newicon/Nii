@@ -478,11 +478,22 @@ class NTime {
 	 * @param string $date format: 2012-01-30
 	 * @return int seconds unix timestamp 
 	 */
-	public static function dateToUnix($date){
+	public static function dateToUnix($date)
+	{
 		if (!is_string($date) || $date=='')
 			throw new CException('the $date parameter must be a string representation of a date, 2012-01-30');
 		list($year, $month, $day) = explode('-', $date);
 		return mktime(0, 0, 0, $month, $day, $year);
+	}
+	
+	/**
+	 * convert a unix timestamp into a mysql string datetime format
+	 * @param int $unixTimestamp seconds since 1 ,1 1970
+	 * @return string mydql datetime e.g.  2004-01-02 13:00:00 
+	 */
+	public static function unixToDatetime($unixTimestamp)
+	{
+		return date('Y-m-d H:i:s', $unixTimestamp);
 	}
 	
 	/**
@@ -491,7 +502,8 @@ class NTime {
 	 * @param string $datetime format: 2012-01-30 12:30:00
 	 * @return int seconds unix timestamp 
 	 */
-	public static function datetimeToUnix($datetime){
+	public static function datetimeToUnix($datetime)
+	{
 		if (!is_string($datetime) || $datetime=='')
 			throw new CException('The $datetime parameter must be a string representation of a date, 2012-01-30');
 		list($date, $time) = explode(' ',$datetime);
@@ -561,7 +573,8 @@ class NTime {
 	 * @param float $hoursPerDay the number of hours in the working day, defaults to 7.5
 	 * @return string
 	 */
-	public static function minutesToDaysNice($minutes, $hoursPerDay=7.5){
+	public static function minutesToDaysNice($minutes, $hoursPerDay=7.5)
+	{
 		list($days,$hours,$mins) = explode(':',self::minutesToDays($minutes, $hoursPerDay));
 		$dLabal = ($days==1) ? 'Day':'Days';
 		$hLabal = ($hours==1) ? 'Hour':'Hours';		

@@ -272,24 +272,134 @@ Class RestController extends AController
 {
 	
 	
+	public function actionView($model, $id){
+		$m = $this->modelLookup($model);
+		$m = $this->modelLoad($m, $id);
+		$this->response($m);
+	}
 	
+	/**
+	 * Handle a RESTful POST request (post requests instruct the API to create new records / resources).
+	 * @param type $model 
+	 */
+	public function actionCreate($model)
+	{
+		$m = $this->modelLookup($model);
+		$m = new $m;
+		if($m===null)
+			throw new CHttpException (404,'no model found');
+
+		$m->attributes = $this->getData();
+		$m->save();
+		$this->response($m);
+	}
 	
-	
-	public function createAction($actionID){
+	/**
+	 * handle a RESTfull UPDATE request
+	 * @param type $model
+	 * @param type $id 
+	 */
+	public function actionUpdate($model, $id){
+		$m = $this->modelLookup($model);
+		$m = $this->modelLoad($m,$id);
 		
+		$m->attributes = $this->getData();;
+		$saved = $m->save();
+		Yii::log("saved: $saved",'error');
+		$this->response($m);
+	}
+	
+	/**
+	 * Handle RESTfull DELETE request
+	 * @param type $model
+	 * @param type $id 
+	 */
+	public function actionDelete($model, $id){
+		$m = $this->modelLookup($model);	
+		$m = $this->modelLoad($m,$id);
+		$m->delete();
+	}
+	
+	
+	/**
+	 * overrides default action if a specific model action exists.
+	 * the default actions are ,create,view,update,delete,list.
+	 * A specific acition would be named actionView_ProjectProject
+	 * then when this action will be called for the ProjecrProject model instead of the default actionView
+	 * @param type $actionID
+	 * @return CInlineAction 
+	 */
+	public function createAction($actionID){
 		// overrides default action to provide a model (resource) specific action implementation
 		if(isset($_REQUEST['model'])){
 			$model = $_REQUEST['model'];
-			$overideActionID = $model.'_'.$actionID;
+			$overideActionID = $actionID.'_'.$model;
 			if(method_exists($this, 'action'.$overideActionID)){
 				return new CInlineAction($this,$overideActionID);
 			}
 		}
-		
 		return parent::createAction($actionID);
 	}
 	
+	public function modelLoad($model, $id){
+		$model = CActiveRecord::model($model)->findByPk($id);
+		if($model===null)
+			throw new CHttpException (404,'no model found');
+		return $model;
+	}
 	
+	public function modelLookup($model){
+		$mr = $this->modelResources();
+		if(array_key_exists($model, $mr)){
+			return $mr[$model];
+		}
+		return $model;
+	}
+	
+	/**
+	 * override this method to provide a list of model alias names
+	 * for example 'project'=>'ProjectProject' the mapping is key to model class, 
+	 * the key is the url representation of the model
+	 * @return array 
+	 */
+	public function modelResources(){
+		return array();
+	}
+	
+	/**
+	 * gets the request data
+	 * 
+	 * @return array 
+	 */
+	public function getData(){
+		// if the request is formatted as json!
+		// Yii::app()->request->getAcceptTypes() // make sure we are dealing with json
+		if(Yii::app()->request->getIsPutRequest() || Yii::app()->request->getIsPostRequest()){
+			// asumming json passed so
+			$data = file_get_contents('php://input');
+			return CJSON::decode($data);
+		}
+	}
+	
+	/**
+	 * sends the response
+	 * @param type $data
+	 * @param type $status
+	 * @param type $contentType 
+	 */
+	public function response($data, $status = 200, $contentType = 'application/json'){
+		// should use the content-type header or the url suffix to determine the output format
+		// var_export($data, TRUE);
+		// header("Content-Type: $contentType");
+		
+		$output = CJSON::encode($data);
+		
+		header('HTTP/1.1: ' . $status);
+		header('Status: ' . $status);
+		header('Content-Length: ' . strlen($output));
+
+		exit($output);
+	}
 	
 	
 

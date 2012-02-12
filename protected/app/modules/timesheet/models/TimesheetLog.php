@@ -33,6 +33,23 @@ class TimesheetLog extends NActiveRecord
 		);
 	}
 	
+	/**
+	 * define rules for model 
+	 */
+	public function rules()
+	{
+		return array(
+			array('date, minutes, project_id, task_id','safe'),
+		);
+	}
+	
+	public function beforeSave() {
+		if(empty($this->user_id)){
+			$this->user_id = Yii::app()->user->record->id;
+		}
+		return parent::beforeSave();
+	}
+	
 	
 	/**
 	 * Get all time logs for a particular week. The week is defined by the first Monday.
@@ -42,7 +59,8 @@ class TimesheetLog extends NActiveRecord
 	 * - optional: if not specified $comencing will default to the monday of the current week
 	 * @return array TimesheetLog active record classes 
 	 */
-	public function findAllForWeek($commencing=null, $userId=null){
+	public function findAllForWeek($commencing=null, $userId=null)
+	{
 		if($commencing===null)
 			$commencing = $this->getMonday();
 		if($userId===null)
@@ -56,11 +74,30 @@ class TimesheetLog extends NActiveRecord
 	}
 	
 	/**
+	 * find all logs between start and end dates.
+	 * @param int $start timestamp start date
+	 * @param int $end timestamp start date
+	 * @param int $userId | null if null uses current user id
+	 */
+	public function findLogsBetween($start, $end, $userId=null)
+	{
+		if($userId===null)
+			$userId = Yii::app()->user->record->id;
+		$start = NTime::unixToDatetime($_GET['start']);
+		$end = NTime::unixToDatetime($_GET['end']);
+		return TimesheetLog::model()->findAll(array(
+			'condition'=>"date between '$start' and '$end' and `user_id`=$userId",
+			'order'=>'project_id'
+		));
+	}
+	
+	/**
 	 * Get the monday for this week
 	 * 
 	 * @return unix timestamp for the monday of the current week
 	 */
-	public function getMonday(){
+	public function getMonday()
+	{
 		if(date('w') == 1)
 			return time();
 		return strtotime('last monday');
@@ -108,7 +145,8 @@ class TimesheetLog extends NActiveRecord
 	 *		)
 	 *	)
 	 */
-	public function saveWeekLog($logs){
+	public function saveWeekLog($logs)
+	{
 		$d = NTime::dateToUnix($logs['date']);
 		foreach($logs as $log){
 			if(is_array($log['time'])) {
@@ -163,7 +201,8 @@ class TimesheetLog extends NActiveRecord
 	 * @param mixed $dateCommencing timestamp or string in mysql format
 	 * @param int $userId | null use current user id
 	 */
-	public function deleteWeekLog($projectId, $taskId, $dateCommencing, $userId=null){
+	public function deleteWeekLog($projectId, $taskId, $dateCommencing, $userId=null)
+	{
 		if($userId==null)
 			$userId = Yii::app()->user->record->id;
 		
@@ -178,6 +217,24 @@ class TimesheetLog extends NActiveRecord
 			array(':startDate'=>$startDate, ':endDate'=>$endDate, ':userId'=>$userId)
 		);
 				
+	}
+	
+	public function getTask()
+	{
+		return ProjectTask::model()->findByPk($this->task_id);
+	}
+	
+	public function getProject()
+	{
+		return ProjectProject::model()->findByPk($this->project_id);
+	}
+	
+	public function getAttributes($names=true)
+	{
+		$task = $this->task ? $this->task->name : '0';
+		return array_merge(parent::getAttributes($names),array(
+			'task'=>$task
+		));
 	}
 	
 }

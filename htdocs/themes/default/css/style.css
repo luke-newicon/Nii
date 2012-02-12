@@ -87,8 +87,12 @@ body.fixed.show-logo .body{top:95px}
 .menu-notice{float:left;margin-right:5px}
 .menu-dropdown .menu-notice{float:right;margin:0px}
 
-form .unit,fieldset .unit{padding-right:5px}
-form .lastUnit,fieldset .lastUnit{padding-left:5px}
+/** 
+ * Location dependant styling is one of the cardinal sins of css! 
+ * Any form throughout the whole app is going to have this anoying padding! this is not the default behavior. 
+ */
+/*form .unit,fieldset .unit{padding-right:5px}
+form .lastUnit,fieldset .lastUnit{padding-left:5px}*/
 
 .login-page{background:url('../images/background.jpg') no-repeat left top}
 
