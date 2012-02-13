@@ -14,7 +14,7 @@ class IndexController extends AController
 				'expression' => '$user->checkAccessToRoute()',
 			),
 			array('allow',
-				'actions' => array('attachments'),
+				'actions' => array('attachments','fileNameWithIcon'),
 				'users'=>array('?'),
 			),
 			array('deny', // deny all users
@@ -73,8 +73,12 @@ class IndexController extends AController
 				echo 'Error';
 			}
 		}
-	}	
+	}
 	
-	
+	public function actionFileNameWithIcon($id) {
+		$file = NFileManager::get()->getFile($id);
+		$iconClass = NHtml::getMimeTypeIcon($file->mime);
+		echo '<span class="'.$iconClass.'"></span>'.$file->original_name;
+	}
 	
 }
