@@ -11,7 +11,6 @@
 				'dataProvider'=>$dataProvider,
 				'itemView'=>'_item',
 				'id'=>$id.'_attachmentlist',
-				'afterAjaxUpdate'=>'function(){$("#'.$id.'_notelist").NAttachments("highlightNote");}',
 				'emptyText'=>$emptyText,
 				'htmlOptions'=>array('class'=>'list-view attachments-list'),
 				'summaryText'=>'',
@@ -51,12 +50,11 @@
 						} else {
 							$('.attachments_count').removeClass('notice');
 						}
-						showMessage('Attachment deleted');
+						nii.showMessage('Attachment deleted');
 					}
 				});
-			} else {
-				return false;
 			}
+			return false;
 		});
 	});
 </script>

@@ -56,13 +56,13 @@ class NAttachmentsAction extends CAction
 	 */
 	private function _saveAttachment(){
 		
-		if ($_REQUEST['Attachment']) {
+		if ($_REQUEST['NAttachment']) {
 
 			$a = new NAttachment;
-			$a->attributes = $_REQUEST['Attachment'];
+			$a->attributes = $_REQUEST['NAttachment'];
 
 			if($a->save())
-				echo CJSON::encode (array('success'=> 'Attachment successfully added','id'=>$a->id,'count'=>$a->totalAttachments));
+				echo CJSON::encode (array('success'=> 'Attachment successfully added','id'=>$a->id,'count'=>$a->getTotalAttachments()));
 			else
 				print_r($a->attributes);
 //				return false;

@@ -52,7 +52,7 @@ $this->endWidget(); ?>
 	function updateAttachmentID(response) {
 		var url = '<?php echo Yii::app()->createAbsoluteUrl('/nii/index/fileNameWithIcon/');?>?id='+response;
 		$('#fileSelector-<?php echo $id?>').load(url);
-		$('#Attachment_file_id').val(response);
+		$('#NAttachment_file_id').val(response);
 	}
 	
 	$(function() {
@@ -78,13 +78,13 @@ $this->endWidget(); ?>
 						setTimeout(function(response) {
 							$('.line.attachment_'+reponseID).effect("highlight");
 						}, 500 );
-						return false;
 					}
 				},
 				error: function(response) {
 					alert ("JSON failed to return a valid response...");
 				}
-			}); 
+			});
+			return false;
 		}); 
 		
 		$('#newAttachmentForm-<?php echo $id?>').delegate('#attachmentCancel-<?php echo $id?>','click',function(){

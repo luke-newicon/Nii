@@ -140,5 +140,9 @@ class NAttachment extends NActiveRecord
 		$attributes = array('model'=>$model,'model_id'=>$model_id);
 		return self::model()->countByAttributes($attributes);
 	}
+	
+	public function getTotalAttachments() {
+		return $this->countByAttributes(array('model'=>$this->model,'model_id'=>$this->model_id));
+	}
 
 }
