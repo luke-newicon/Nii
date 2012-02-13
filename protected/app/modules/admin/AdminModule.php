@@ -118,6 +118,7 @@ class AdminModule extends NWebModule {
 							'nii/index/show',
 							'nii/index/file',
 							'nii/index/heartbeat',
+							'nii/index/fileNameWithIcon'
 						),
 					),
 					'relationships' => array('description' => 'Relationships',

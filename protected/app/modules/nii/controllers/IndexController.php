@@ -14,7 +14,7 @@ class IndexController extends AController
 				'expression' => '$user->checkAccessToRoute()',
 			),
 			array('allow',
-				'actions' => array('attachments','fileNameWithIcon'),
+				'actions' => array('attachments'),
 				'users'=>array('?'),
 			),
 			array('deny', // deny all users
