@@ -51,20 +51,25 @@
 		'id'=>'createproject', 
 		'action'=>NHtml::url('/project/index/create'),
 		'clientOptions'=>array(
-			//'inputContainer'=>'.field'
+			'inputContainer'=>'.field'
 		)
 	)); ?>
-	<?php echo $form->field($project, 'name'); ?>
-<!--	<div class="field stacked	">
+	
+	
+	<?php //echo $form->field($project, 'name'); ?>
+	<div class="field stacked	">
 		
 			<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
 			<div class="inputContainer">
 				<label for="ProjectProject_name" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
 				<div class="input">
+ <?php echo $form->labelEx($model,'name'); ?>
+    <?php echo $form->textField($model,'name'); ?>
+    <?php echo $form->error($model,'name'); ?>
 					<?php //echo $form->textField($project, 'name'); ?>
 				</div>
 			</div>
-	</div>-->
+	</div>
 	<?php $this->endWidget(); ?>
 </div>
 <script>
