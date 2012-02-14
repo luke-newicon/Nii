@@ -46,18 +46,26 @@
 	</div>
 <?php endif; ?>
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
-	<form>
-		<div class="field stacked	">
+	<?php $project = new ProjectProject; ?>
+	<?php $form = $this->beginWidget('nii.widgets.NActiveForm',array(
+		'id'=>'createproject', 
+		'action'=>NHtml::url('/project/index/create'),
+		'clientOptions'=>array(
+			//'inputContainer'=>'.field'
+		)
+	)); ?>
+	<?php echo $form->field($project, 'name'); ?>
+<!--	<div class="field stacked	">
+		
 			<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
 			<div class="inputContainer">
-				<label for="projectname" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
+				<label for="ProjectProject_name" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
 				<div class="input">
-					<input style="font-size:16px;" type="text" id="projectname" name="projectname">
+					<?php //echo $form->textField($project, 'name'); ?>
 				</div>
 			</div>
-			
-		</div>
-	</form>
+	</div>-->
+	<?php $this->endWidget(); ?>
 </div>
 <script>
 	jQuery(function($){
@@ -71,12 +79,9 @@
 						text:'Create Project',
 						class:'btn primary',
 						click:function(){
-							$.post('<?php echo NHtml::url('project/index/create'); ?>', {ProjectProject:{name:$('#projectname').val()}}, function(){
-								$.fn.yiiGridView.update('project-grid');
-								$('#addprojectDialog').dialog('close');
-								$('#projectname').val('');
-								$('#projectname').blur()
-							})
+							$.fn.yiiactiveform.doValidate('#addprojectDialog form', {success:function(){
+								$('#addprojectDialog form').submit();
+							}})
 						}
 					},
 					{

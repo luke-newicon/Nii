@@ -96,7 +96,6 @@ class NiiModule extends NWebModule
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		Yii::app()->getClientScript()->registerPackage('backbone');
-		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 		
 		if($this->juiThemeUrl===null){
 			$this->juiThemeUrl = $this->getAssetsUrl().'/jqueryui';

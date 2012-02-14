@@ -57,14 +57,20 @@ class IndexController extends AController
 		$modelName = 'ProjectProject';
 		
 		$model = new $modelName;
+		$this->performAjaxValidation($model, 'createproject');
 		
 		if ($_POST[$modelName]) {
 			$model->attributes = $_POST[$modelName];
 			$model->save();
 		}
-		echo CJSON::encode($model);
-		Yii::app()->end();
+		
+		// after creating a project we redirect to the project index page
+		$this->redirect(array('/project/details/index', 'id'=>$model->id));
 	}
 	
+	
+	public function actionDocs(){
+		$this->render('docs');
+	}
 	
 }

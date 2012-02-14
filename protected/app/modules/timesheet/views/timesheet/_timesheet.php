@@ -961,18 +961,10 @@
 			},
 			save:function(e){
 				this.model.save();
-//				calendar.fullCalendar('refetchEvents');
+				// calendar.fullCalendar('refetchEvents');
 				var ev = this.model.createCalEventObj();
 				console.log(ev);
-				window.calendar.fullCalendar('renderEvent',{
-					className:'event-test',
-					id:123,
-					title: 'TEST!',
-					start: new Date("February 12, 2012 09:13:00"),
-					end: new Date("February 12, 2012 12:00:00"),
-					allDay: false,
-					editable:false
-				});
+				this.close();
 			},
 			cancel:function(e){
 				calendar.fullCalendar('refetchEvents');
