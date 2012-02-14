@@ -77,13 +77,13 @@ class AdminController extends AController {
 			$model->attributes = $_POST[$contactModel];
 			
 			if ($model->contact_type == 'Person') 
-				$model->name = $model->salutation . ' ' . $model->lastname;
+				$model->name = $model->givennames . ' ' . $model->lastname;
 			else
 				$model->name = $model->company_name;
 			
 			if ($model->save()) {
 				
-				NLog::insertLog('Inserted new contact details: '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Inserted new contact details: '.$model->displayName.' (id: '.$model->id.')', $model);
 				
 				if ($model->photoID) {
 					$a = new Attachment;
@@ -171,14 +171,14 @@ class AdminController extends AController {
 						$a->model_id = $model->id;
 						$a->type = 'contact-thumbnail';
 						if ($a->save()) {
-							NLog::insertLog('Added a contact thumnail for '.$model->name.' (id: '.$model->id.')', $a);
+							NLog::insertLog('Added a contact thumnail for '.$model->displayName.' (id: '.$model->id.')', $a);
 						} else {
 							echo CJSON::encode(array('error'=>'Couldn\'t save attachment.'));
 							Yii::app()->end();		
 						}
 					}
 				}
-				NLog::insertLog('Updated contact details for '.$model->name.' (id: '.$model->id.')', $model);
+				NLog::insertLog('Updated contact details for '.$model->displayName.' (id: '.$model->id.')', $model);
 //				echo CJSON::encode(array('save'=>'Contact saved successfully.'));
 				$this->redirect(array("view","id"=>$model->id));		
 			} 		
