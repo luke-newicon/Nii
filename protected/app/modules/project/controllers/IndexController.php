@@ -1,76 +1,35 @@
 <?php
+
 /**
- * Project index controller class file.
+ * IndexController class file.
  *
- * @link http://newicon.net/nii
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://newicon.net/framework
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
- * @license http://newicon.net/nii/license/
+ * @license http://newicon.net/framework/license/
  */
 
 /**
- * Description of Project
+ * Description of IndexController
  *
  * @author steve
- * @package nii.project
  */
-class IndexController extends AController 
+class IndexController extends AController
 {
 	
-	public function accessRules() {
-		return array(
-			array('allow',
-				'users' => array('@'),
-			),
-			array('deny', // deny all users
-				'users' => array('?'),
-			),
-		);
-	}
-
-	/**
-	 *	Grid view - for now - of the open projects 
-	 */
-	public function actionIndex() {
-		
-		$modelName = 'ProjectProject';
-	
-		$model = new $modelName('search');
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$modelName]))
-			$model->attributes = $_GET[$modelName];
-
-		$this->render('index',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model,
-		));
+	public function actionIndex()
+	{
+		$this->render('index');
 	}
 	
 	
-	
-	/**
-	 * Create a new project
-	 */
-	public function actionCreate() {
-		// todo validate project name is unique
+	public function actionCreateProject()
+	{
+		$this->performAjaxValidation(new ProjectTask, 'create-project');
 		
-		$modelName = 'ProjectProject';
+		$project = ProjectApi::createProject($_POST['ProjectTask']);
 		
-		$model = new $modelName;
-		$this->performAjaxValidation($model, 'createproject');
-		
-		if ($_POST[$modelName]) {
-			$model->attributes = $_POST[$modelName];
-			$model->save();
-		}
-		
-		// after creating a project we redirect to the project index page
-		$this->redirect(array('/project/details/index', 'id'=>$model->id));
-	}
-	
-	
-	public function actionDocs(){
-		$this->render('docs');
+		$this->redirect(array('/project/project/index','project'=>$project->id));
 	}
 	
 }

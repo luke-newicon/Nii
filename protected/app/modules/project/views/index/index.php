@@ -13,12 +13,13 @@
 <div class="page-header">
 	<h2>Projects</h2>
 	<div class="action-buttons">
-		<a id="add-project" class="btn primary">Add a Project</a>
+		<a class="add-project btn btn-primary">Add a Project</a>
 	</div>
 </div>
-<?php if(ProjectProject::model()->count()) : ?>
+<?php if (ProjectTask::model()->projects()->count()) : ?>
+
 <?php
-	$model = new ProjectProject('search');
+	$model = new ProjectTask('search');
 	$dataProvider = $model->search();
 	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
 		'dataProvider' => $dataProvider,
@@ -31,58 +32,52 @@
 			'name' => array(
 				'name' => 'name',
 				'type' => 'raw',
-				'value' => '$data->getLink()',
+				'value' => '"<a href=\"".$data->getLink()."\" >".$data->name."</a>"',
 			),
 		),
 	));
 ?>
 <?php else : ?>
-	<div class="alert-message block-message">
+	<div class="alert alert-info">
 		<h3>Welcome to the Projects Screen</h3>
 		<p>You currently have no projects.  To get started, create a new project.</p>
 		<div class="alert-actions">
-			<a id="add-project-2" class="btn small primary">Create a new Project</a>
+			<a class="add-project btn small btn-primary">Create a new Project</a>
 		</div>
 	</div>
 <?php endif; ?>
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
-	<?php $project = new ProjectProject; ?>
+	<?php $project = new ProjectTask; ?>
 	<?php $form = $this->beginWidget('nii.widgets.NActiveForm',array(
-		'id'=>'createproject', 
-		'action'=>NHtml::url('/project/index/create'),
+		'id'=>'create-project', 
+		'action'=>NHtml::url('/project/index/createProject'),
 		'clientOptions'=>array(
 			'inputContainer'=>'.field'
 		)
 	)); ?>
-	
-	
-	<?php //echo $form->field($project, 'name'); ?>
 	<div class="field stacked	">
-		
-			<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
-			<div class="inputContainer">
-				<label for="ProjectProject_name" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
-				<div class="input">
- <?php echo $form->labelEx($model,'name'); ?>
-    <?php echo $form->textField($model,'name'); ?>
-    <?php echo $form->error($model,'name'); ?>
-					<?php //echo $form->textField($project, 'name'); ?>
-				</div>
+		<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
+		<div class="inputContainer">
+			<label for="ProjectTask_name" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
+			<div class="input">
+				<?php echo $form->textField($project,'name'); ?>
 			</div>
+			<?php echo $form->error($project,'name'); ?>
+		</div>
 	</div>
 	<?php $this->endWidget(); ?>
 </div>
 <script>
 	jQuery(function($){
 		$.fn.nii.form();
-		$('#add-project,#add-project-2').click(function(){
+		$('.add-project').click(function(){
 			$('#addprojectDialog').dialog({
 				modal:true,
 				width:'400',
 				buttons:[
 					{
 						text:'Create Project',
-						class:'btn primary',
+						class:'btn btn-primary',
 						click:function(){
 							$.fn.yiiactiveform.doValidate('#addprojectDialog form', {success:function(){
 								$('#addprojectDialog form').submit();

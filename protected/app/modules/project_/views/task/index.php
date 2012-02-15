@@ -110,9 +110,9 @@ $(function(){
 	
 	
 	var CTaskFormView = Backbone.View.extend({
-		el:$('#task-form'),
 		template:_.template($('#task-form-template').html()),
 		initialize:function(){
+			this.setElement($('#task-form'));
 			this.render();
 		},
 		events:{
@@ -120,7 +120,7 @@ $(function(){
 			'keyup':'keyup'
 		},
 		render:function(){
-			this.el.html(this.template({}));
+			this.$el.html(this.template({}));
 			$.fn.nii.form();
 			this.$('[name="task"]').focus();
 		},
@@ -166,16 +166,16 @@ $(function(){
 	 * view responsible for drawing the list of task views 
 	 */
 	var CTaskListView = Backbone.View.extend({
-		el:$('#task-list'),
 		template:_.template($('#task-list-template').html()),
 		events:{},
 		initialize:function(){
+			this.setElement($('#task-list'));
 			this.collection.bind('add',this.addOne, this);
 			this.collection.bind('reset',this.render, this);
 		},
 		render:function(){
 			this.addAll();
-			this.el.sortable();
+			this.$el.sortable();
 		},
 		addOne:function(task){
 			// create a new task view and pass in the task model then append
@@ -183,7 +183,7 @@ $(function(){
 				model:task
 			});
 			
-			this.el.append(taskView.render().el);
+			this.$el.append(taskView.render().el);
 		},
 		addAll:function(){
 			this.collection.forEach(this.addOne, this);
@@ -201,7 +201,7 @@ $(function(){
 		
 		},
 		render:function(){
-			$(this.el).html(this.template(this.model.toJSON()));
+			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		}
 	})
