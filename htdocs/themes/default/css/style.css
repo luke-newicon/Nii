@@ -721,3 +721,4 @@ div.topbar div > ul > li.menu:hover ul {
 #gridSettingsForm .line,#exportGridForm .line{border-bottom:1px solid #CCC;padding-top:4px}
 #gridSettingsForm .icon-resize-vertical{display:none;float:right}
 #gridSettingsForm .line:hover .icon-resize-vertical{display:block}
+.grid-view .filters input,.grid-view .filters select{border:none;}

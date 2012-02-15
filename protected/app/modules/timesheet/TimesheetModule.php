@@ -33,6 +33,7 @@ class TimesheetModule extends NWebModule
 				array('/timesheet/api/delete', 'pattern'=>'/timesheet/api/<model:\w+>/<id:\w+>', 'verb'=>'DELETE'),
 			)
 		);
+		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 	}
 
 	public function install() 

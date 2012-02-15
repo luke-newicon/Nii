@@ -32,6 +32,7 @@ class ProjectProject extends NActiveRecord
 		return array(
 			array('name', 'required'),
 			array('description, created_by_id, assigned_id, customer_id', 'safe'),
+			array('name', 'unique')
 		);
 	}
 

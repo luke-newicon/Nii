@@ -29,6 +29,8 @@ class NiiModule extends NWebModule
 	
 	
 	public function init(){
+		Yii::import('nii.models.*');
+		Yii::import('nii.components.behaviors.*');
 		
 		if(Yii::app()->domain){
 			// this is important it makes the cache specific to the domain application instance.
@@ -96,7 +98,6 @@ class NiiModule extends NWebModule
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		Yii::app()->getClientScript()->registerPackage('backbone');
-		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 		
 		if($this->juiThemeUrl===null){
 			$this->juiThemeUrl = $this->getAssetsUrl().'/jqueryui';

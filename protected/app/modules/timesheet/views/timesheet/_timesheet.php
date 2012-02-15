@@ -7,25 +7,17 @@
 	.today .input{border: 1px solid #999;}
 	.fc-agenda-slots td div{height:16px;}
 	#calendar{line-height: 16px;}
-	.fc-agenda-allday{display:none;}
 </style>
 
-
+<div id="calendar"></div>
 
 <ul class="nav nav-tabs">
-	<li class="active"><a href="#cal" data-toggle="tab">Calendar</a></li>
-	<li><a href="#timesheet" data-toggle="tab">Week</a></li>
-	<li>
+	<li class="active"><a href="#timesheet" data-toggle="tab">Week</a></li>
+	<li >
 		<a href="#day" data-toggle="tab">Day</a>
 	</li>
 </ul>
-
-
-
 <div class="tab-content">
-	<div class="tab-pane active" id="cal">
-		<div id="calendar"></div>
-	</div>
 	<!-- timesheet day -->
 	<div class="tab-pane " id="day">
 		<form class="form-horizontal">
@@ -75,7 +67,7 @@
 		</form>
 	</div>
 	<!-- timesheet tab -->
-	<div class="tab-pane" id="timesheet">
+	<div class="tab-pane active" id="timesheet">
 		<div id="timesheet-selector" class="line well">
 			<div class="unit size1of3 txtR btn-group">
 				<a class="btn prev-month"><i class="icon-backward"></i></a><a class="btn prev-week"><i class="icon-chevron-left"></i></a> 
@@ -150,7 +142,7 @@
 		<div style="position:absolute;left:1px;top:0px;border-color:#F5F5F5 transparent;border-width:10px;border-style:solid;"></div>
 	</div>
 	<div class="form-horizontal">
-		<div class="control-group mbs pts">
+		<div class="control-group mbs">
 			<label for="project" class="control-label"  style="width:60px;">When:</label>
 			<div class="controls" style="margin-left:75px;">
 				<p class="mts mbn"> <% print(log.startTime()); %> - <% print(log.endTime()); %> </p>
@@ -163,7 +155,7 @@
 		<div class="control-group mbs">
 			<label for="task" class="control-label" style="width:60px;">Task</label>
 			<div class="controls" style="margin-left:75px;">
-				<input type="text" class="input-xlarge">
+				<input type="text" id="focusedInput" class="input-large focused">
 			</div>
 		</div>
 		<div class="form-actions pas line">
@@ -320,7 +312,86 @@
 		});
 		
 		
+		// represents the individual database records
+		timesheet.models.TimeLog = Backbone.Model.extend({
+			defaults:{
+				id:null,
+				date:null,
+				row:0,
+				project_id:0,
+				task_id:0,
+				minutes:0
+			},
+			url : function() {
+				// Important! It's got to know where to send its REST calls.
+				// In this case, POST to '/donuts' and PUT to '/donuts/:id'
+				if(this.id)
+					return '<?php echo NHtml::url("/timesheet/api/log") ?>/'+this.id;
+				else
+					return '<?php echo NHtml::url("/timesheet/api/log") ?>';
+			},
+			start:null,
+			end:null,
+			/**
+			 * return the javascript date object for the date attribute
+			 */
+			date:function(){
+				return window.timesheet.mysqlToDate(this.get('date'));
+			},
+			// set the start and end date for this time log
+			setDate:function(start, end){
+				this.start = new Date(start.getTime());
+				this.end = new Date(end.getTime());
+				var minutes = (end.getTime() - start.getTime()) / 60000;
+				
+				this.set({
+					date:$.fullCalendar.formatDate(start, 'yyyy-MM-dd HH:mm:ss'),
+					minutes:minutes
+				})
+			},
+			startTime:function(){
+				return $.fullCalendar.formatDate(this.start, 'ddd, d MMMM, HH:mm') ;
+			},
+			endTime:function(){
+				return $.fullCalendar.formatDate(this.end, 'HH:mm')
+			},
+			createCalEventObj:function(){
+				var start = this.date();
+				var end = new Date(start.getTime() + this.get('minutes')*60000);
+				var event = {
+					className:'event-'+this.cid,
+					id:this.cid,
+					title:' ',
+					start:start,
+					end:end,
+					allDay: false
+				};
+				this.setDate(start, end);
+				return event;
+			}
+		});
 		
+		
+		timesheet.models.TimeLogCollection = Backbone.Collection.extend({
+			url:'<?php echo NHtml::url("/timesheet/api/log") ?>',
+			model:timesheet.models.TimeLog,
+			getProjects:function(){
+				return this.groupBy(function(m){
+					return m.get('project_id') + m.get('task_id');
+				})
+			},
+			fetchLogsFor:function(date){
+				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
+			},
+			fetchLogsForCal:function(startd, endd){
+				this.fetch({data: $.param({ start: startd}) });
+			},
+			// refresh the log list, this will force a redraw of the timesheet table
+			refresh:function(){
+				var date = window.timesheet.timesheet.get('startDate');
+				this.fetchLogsFor(date);
+			}
+		})
 		
 		
 		// represents a custom condensed week log individual timeLogs are condensed into this.
@@ -786,93 +857,6 @@
 		});
 		
 		
-		// represents the individual database records
-		timesheet.models.TimeLog = Backbone.Model.extend({
-			defaults:{
-				id:null,
-				date:null,
-				row:0,
-				project_id:0,
-				task_id:0,
-				minutes:0
-			},
-			url : function() {
-				// Important! It's got to know where to send its REST calls.
-				// In this case, POST to '/donuts' and PUT to '/donuts/:id'
-				if(this.id)
-					return '<?php echo NHtml::url("/timesheet/api/log") ?>/'+this.id;
-				else
-					return '<?php echo NHtml::url("/timesheet/api/log") ?>';
-			},
-			start:null,
-			end:null,
-			/**
-			 * return the javascript date object for the date attribute
-			 */
-			date:function(){
-				return window.timesheet.mysqlToDate(this.get('date'));
-			},
-			// set the start and end date for this time log
-			setDate:function(start, end){
-				this.start = new Date(start.getTime());
-				this.end = new Date(end.getTime());
-				var minutes = (end.getTime() - start.getTime()) / 60000;
-				
-				this.set({
-					date:$.fullCalendar.formatDate(start, 'yyyy-MM-dd HH:mm:ss'),
-					minutes:minutes
-				})
-			},
-			startTime:function(){
-				return $.fullCalendar.formatDate(this.start, 'ddd, d MMMM, HH:mm') ;
-			},
-			endTime:function(){
-				return $.fullCalendar.formatDate(this.end, 'HH:mm')
-			},
-			getProject:function(){
-				var p = window.timesheet.projects.get(this.get('project_id'));
-				return (_.isNull(p)||_.isUndefined(p)) ? 'unknown' :  p.get('name');	
-			},
-			createCalEventObj:function(){
-				var start = this.date();
-				var end = new Date(start.getTime() + this.get('minutes')*60000);
-				
-				var event = {
-					className:'event-'+this.cid,
-					id:this.cid,
-					title:this.getProject(),
-					start:start,
-					end:end,
-					allDay: false
-				};
-				this.setDate(start, end);
-				return event;
-			}
-		});
-		
-		
-		timesheet.models.TimeLogCollection = Backbone.Collection.extend({
-			url:'<?php echo NHtml::url("/timesheet/api/log") ?>',
-			model:timesheet.models.TimeLog,
-			getProjects:function(){
-				return this.groupBy(function(m){
-					return m.get('project_id') + m.get('task_id');
-				})
-			},
-			fetchLogsFor:function(date){
-				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
-			},
-			fetchLogsForCal:function(startd, endd){
-				this.fetch({data: $.param({ start: startd}) });
-			},
-			// refresh the log list, this will force a redraw of the timesheet table
-			refresh:function(){
-				var date = window.timesheet.timesheet.get('startDate');
-				this.fetchLogsFor(date);
-			}
-		})
-		
-		
 		// GO GO GO!
 		window.timesheet.init(<?php echo $startDate; ?>);
 		
@@ -972,15 +956,15 @@
 				var eventEl = $('.event-'+this.model.cid);
 				if(eventEl.length==0)
 					eventEl = $('.fc-select-helper');
-				this.$el.show().position({my:'center bottom',at:'center top', of:eventEl, offset:'0px -15px', collision:'none'})
+				this.$el.show().position({my:'center bottom',at:'center top', of:eventEl, offset:'0px -15px'})
 				return this;
 			},
 			save:function(e){
 				this.model.save();
-//				calendar.fullCalendar('refetchEvents');
+				// calendar.fullCalendar('refetchEvents');
 				var ev = this.model.createCalEventObj();
 				console.log(ev);
-				window.calendar.fullCalendar('renderEvent');
+				this.close();
 			},
 			cancel:function(e){
 				calendar.fullCalendar('refetchEvents');
@@ -1070,8 +1054,8 @@
 			editable: true,
 			firstDay:1,
 			slotMinutes:15,
-			firstHour:9,
-			minTime:8,
+			firstHour:8,
+			minTime:7,
 			maxTime:20,
 			height:700,
 			events:function(start, end, callback){

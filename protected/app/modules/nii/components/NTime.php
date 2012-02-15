@@ -586,7 +586,7 @@ class NTime {
 		if ($hours > 0)
 			$ret .= ($ret != '') ? ", $hours $hLabal" : "$hours $hLabal";
 		if ($mins > 0)
-			$ret .= ($ret != '') ? "and $mins $mLabal" : "$mins $mLabal";
+			$ret .= ($ret != '') ? " and $mins $mLabal" : "$mins $mLabal";
 		return $ret;
 	}
 	
