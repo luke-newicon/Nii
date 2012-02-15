@@ -1,7 +1,7 @@
 <div class="line field">
 	<div class="unit size1of6"><?= $form->labelEx($c,'status') ?></div>
 	<div class="lastUnit">
-		<div class="input w120"><?php echo $form->dropDownList($c, 'status', NHtml::enumItem($c, 'status'), array('prompt'=>'select...')); ?></div>
+		<div class="input w120"><?php echo $form->dropDownList($c, 'status', NHtml::enumItem($c, 'status')); ?></div>
 		<?php echo $form->error($c,'status'); ?>
 	</div>
 </div>

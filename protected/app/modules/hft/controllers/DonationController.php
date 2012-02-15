@@ -186,6 +186,69 @@ class DonationController extends AController
 
 	}
 	
+/**
+	 *	Action to display the default sources grid view 
+	 */
+	public function actionType() {
+		
+		$this->pageTitle = Yii::app()->name . ' - Donation Types';
+		$typeModel = 'HftDonationType';
+	
+		$model = new $typeModel('search');
+		$model->unsetAttributes();
+		
+		if(isset($_GET[$typeModel]))
+			$model->attributes = $_GET[$typeModel];
+
+		$this->render('type',array(
+			'dataProvider'=>$model->search(),
+			'model'=>$model,
+		));
+	}
+	
+	public function actionDeleteType($id) {
+		if (NActiveRecord::model('HftDonationType')->deleteByPk($id))
+			echo CJSON::encode(array('success'=>'Donation type successfully deleted'));
+		Yii::app()->end();
+	}
+	
+	
+	/**
+	 * Create a new source
+	 */
+	public function actionCreateType() {
+		
+		$modelName = 'HftDonationType';
+		
+		$model = new $modelName;
+		
+		if ($_POST[$modelName]) {
+			$model->attributes = $_POST[$modelName];
+			$model->save();
+		}
+		echo CJSON::encode($model);
+		Yii::app()->end();
+	}
+	
+	
+	/**
+	 * Create a new source
+	 */
+	public function actionUpdateType($id) {
+		
+		$modelName = 'HftDonationType';
+		
+		$model = NActiveRecord::model($modelName)->findByPk($id);
+		
+		if ($_POST[$modelName]) {
+			$model->attributes = $_POST[$modelName];
+			$model->save();
+		}
+		echo CJSON::encode($model);
+		Yii::app()->end();
+	}	
+
+	
 	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated

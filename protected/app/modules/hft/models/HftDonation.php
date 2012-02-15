@@ -354,6 +354,9 @@ class HftDonation extends NActiveRecord
 	
 	public function scopes() {
 		return array(
+			'all' => array(
+				'condition' => 't.trashed <> 1',
+			),
 			'thankyou_sent' => array(
 				'condition' => 'thankyou_sent = 1 AND t.trashed <> 1',
 			),
@@ -365,8 +368,9 @@ class HftDonation extends NActiveRecord
 	
 	public function getGridScopes() {
 		$scopes = array(
+			'default' => 'all',
 			'items'=>array(
-				'default' => array(
+				'all' => array(
 					'label'=>'All',
 				),
 				'thankyou_sent' => array(

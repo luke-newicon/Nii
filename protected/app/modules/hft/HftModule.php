@@ -19,7 +19,14 @@ class HftModule extends NWebModule
 	
 	public function setup() {
 		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donation/index'));
+		Yii::app()->menus->addItem('main', 'Donations', array('/hft/donation/index'), 'Donations');
+		Yii::app()->menus->addItem('main', 'Add a Donation', array('/hft/donation/create'), 'Donations');
+		Yii::app()->menus->addDivider('main','Donations');
+		Yii::app()->menus->addItem('main', 'Donation Types', array('/hft/donation/type'), 'Donations');
+		
 		Yii::app()->menus->addItem('main', 'Events', array('/hft/event/index'));
+		Yii::app()->menus->addItem('main', 'Events', array('/hft/event/index'), 'Events');
+		Yii::app()->menus->addItem('main', 'Add an Event', array('/hft/event/create'), 'Events');
 		
 		Yii::app()->menus->addDivider('main','Contacts');
 		Yii::app()->menus->addItem('main', 'Categories', array('/hft/category/index'), 'Contacts');
@@ -98,6 +105,7 @@ class HftModule extends NWebModule
 					'edit' => array('description' => 'Edit Donations',
 						'roles' => array('administrator', 'editor'),
 						'operations' => array(
+							'hft/donation/create',
 							'hft/donation/edit',
 							'hft/donation/thankyouSent',
 						),
@@ -148,6 +156,19 @@ class HftModule extends NWebModule
 							'hft/source/delete',							
 							'hft/source/create',							
 							'hft/source/update',
+						),
+					),
+				),
+			),
+			'donation_type' => array('description' => 'Donation Types',
+				'tasks' => array(
+					'manage_types' => array('description' => 'Manage Donation Types',
+						'roles' => array('administrator', 'editor'),
+						'operations' => array(
+							'hft/donation/type',
+							'hft/donation/deleteType',							
+							'hft/donation/createType',							
+							'hft/donation/updateType',
 						),
 					),
 				),

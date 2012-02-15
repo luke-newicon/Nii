@@ -255,10 +255,10 @@ class HftEvent extends NActiveRecord
 	public function scopes() {
 		return array(
 			'future' => array(
-				'condition' => 'end_date >= CURDATE() OR (end_date="0000-00-00" AND start_date >= CURDATE())',
+				'condition' => '(end_date >= CURDATE() OR (end_date="0000-00-00" AND start_date >= CURDATE())) AND t.trashed <> 1',
 			),
 			'past' => array(
-				'condition' => '(end_date < CURDATE() AND end_date > "0000-00-00") OR (end_date="0000-00-00" AND start_date < CURDATE())',
+				'condition' => '((end_date < CURDATE() AND end_date > "0000-00-00") OR (end_date="0000-00-00" AND start_date < CURDATE())) AND t.trashed <> 1',
 				'order' => 'start_date DESC',
 			),
 			'all' => array(
