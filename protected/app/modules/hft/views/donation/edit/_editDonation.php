@@ -32,7 +32,7 @@ $modelName = get_class($model);
 				<?php $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
 					'name'=>'contactName',
 					'value'=>$model->contactName,
-					'source'=>$this->createUrl('/contact/autocomplete/contactList/type/Person/'),
+					'source'=>$this->createUrl('/contact/autocomplete/contactList/'),
 					// additional javascript options for the autocomplete plugin
 					'options'=>array(
 							'showAnim'=>'fold',

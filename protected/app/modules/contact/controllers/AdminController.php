@@ -303,5 +303,17 @@ class AdminController extends AController {
 			Yii::app()->db->createCommand("INSERT INTO nii_tag_link (tag_id, model, model_id) VALUES ('".$c['source_id']."', 'HftContact', '".$c['id']."')")->execute();
 		}
 	}
+	
+	public function actionChangeType($id, $newType) {
+		$contactModel = Yii::app()->getModule('contact')->contactModel;
+		$model = NActiveRecord::model($contactModel)->findByPk($id);
+		$oldType = $model->contact_type;
+		$model->contact_type = $newType;
+		if ($model->save()) {
+			NLog::insertLog('Changed contact from '.$oldType.' to '.$model->contact_type.' - '.$model->displayName.' (id: '.$model->id.')', $model);
+			$this->redirect(array("edit","id"=>$model->id));	
+		}
+			
+	}
 
 }

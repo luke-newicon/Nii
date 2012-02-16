@@ -84,6 +84,7 @@ class ContactModule extends NWebModule {
 							'contact/admin/edit',
 							'contact/admin/create',
 							'contact/admin/uploadPhoto',
+							'contact/admin/changeType',
 							'contact/autocomplete/contactList',
 						),
 					),
