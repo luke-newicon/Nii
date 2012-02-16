@@ -19,11 +19,9 @@
 <?php if (ProjectTask::model()->projects()->count()) : ?>
 
 <?php
-	$model = new ProjectTask('search');
-	$dataProvider = $model->search();
 	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-		'dataProvider' => $dataProvider,
-		'filter' => $model,
+		'dataProvider' => $search->search(),
+		'filter' => $search,
 		'id' => 'project-grid',
 		'enableButtons' => false,
 		'enableCustomScopes' => false,

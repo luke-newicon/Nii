@@ -19,17 +19,17 @@ class IndexController extends AController
 	
 	public function actionIndex()
 	{
-		$this->render('index');
+		$this->render('index',array('search'=>new ProjectTask('search')));
 	}
 	
-	
+	/**
+	 * create a new top level project 
+	 */
 	public function actionCreateProject()
 	{
 		$this->performAjaxValidation(new ProjectTask, 'create-project');
-		
 		$project = ProjectApi::createProject($_POST['ProjectTask']);
-		
-		$this->redirect(array('/project/project/index','project'=>$project->id));
+		$this->redirect(array('/project/project/index','project'=>$project->name_slug));
 	}
 	
 }

@@ -20,14 +20,14 @@ class ProjectModule extends NWebModule
 		
 		Yii::app()->urlManager->addRules(array(
 				array('/project/api/createProject', 'pattern' => 'api/project'),
-				array('/project/project/index', 'pattern' => 'project/<project:\d>'),
+				array('/project/project/index', 'pattern' => 'project/<project>'),
 			), false
 		);
 	}
 	
 	public function setup()
 	{
-		Yii::app()->menus->addItem('main', 'Projects', array('/project/index'), null, array(
+		Yii::app()->menus->addItem('main', 'Projects', array('/project/index/index'), null, array(
 			'visible' => Yii::app()->user->checkAccess('menu-tasks'),
 		));
 		

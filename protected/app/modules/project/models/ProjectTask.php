@@ -38,7 +38,8 @@ class ProjectTask extends NActiveRecord
 	public function rules()
 	{
 		return array(
-			array('name','required')
+			array('name','required'),
+			array('name, name_slug', 'unique')
 		);
 	}
 	
@@ -66,6 +67,7 @@ class ProjectTask extends NActiveRecord
 			'columns' => array(
 				'id' => 'pk',
 				'name' => 'string',
+				'name_slug'=>'string',
 				'description' => 'text',
 				'priority' => 'int',
 				'created_by_id' => 'int',
@@ -99,9 +101,24 @@ class ProjectTask extends NActiveRecord
 		));
 	}
 	
+	/**
+	 * get the URI for the record
+	 * @return string 
+	 */
 	public function getLink()
 	{
-		return NHtml::url(array('/project/project/index', 'project'=>$this->id));
+		return NHtml::url(array('/project/project/index', 'project'=>$this->name_slug));
+	}
+	
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public function beforeSave()
+	{
+		if(!isset($this->name_slug))
+			$this->name_slug = NHtml::urlize($this->name);
+		return parent::beforeSave();
 	}
 	
 }

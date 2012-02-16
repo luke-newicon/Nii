@@ -23,11 +23,11 @@ class ProjectController extends AController
 	public function actionIndex($project)
 	{
 		// if integer assume id
-		if(is_int(is_numeric($project))){
+		if(is_numeric($project)){
 			$p = ProjectTask::model()->projects()->findByPk($project);
 		} else {
-			$p = ProjectTask::model()->projects()->findByAttributes(array('name'=>$project));
+			$p = ProjectTask::model()->projects()->findByAttributes(array('name_slug'=>$project));
 		}
-		echo " project is: " . $p->name;
+		$this->render('index',array('project'=>$p));
 	}
 }
