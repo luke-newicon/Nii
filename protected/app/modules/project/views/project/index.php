@@ -12,23 +12,9 @@
 		<?php $job = new ProjectTask; ?>
 		<?php echo $form->field($job, 'name'); ?>
 		<?php echo $form->field($job, 'due'); ?>
-	
-		<?php  
-		//echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);
-		?>
-<?php
-	$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-      'name'=>'city',
-		'source'=>array('ac1', 'ac2', 'ac3'),
-      // additional javascript options for the autocomplete plugin
-      'options'=>array(
-          'minLength'=>'2',
-      ),
-      'htmlOptions'=>array(
-          'style'=>'height:20px;'
-      ),
-  )); ?>
-		<?php echo $form->field($job, 'assigned_id'); ?>
+		<?php echo $form->beginField($job, 'assigned_id'); ?>
+		<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);	?>
+		<?php echo $form->endField($job, 'assigned_id'); ?>
 	<?php $this->endWidget(); ?>
 </div>
 
