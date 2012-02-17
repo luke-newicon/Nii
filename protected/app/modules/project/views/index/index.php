@@ -80,6 +80,7 @@
 							$.fn.yiiactiveform.doValidate('#addprojectDialog form', {success:function(){
 								$('#addprojectDialog form').submit();
 							}})
+							return false;
 						}
 					},
 					{

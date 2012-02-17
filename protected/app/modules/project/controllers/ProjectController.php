@@ -22,12 +22,30 @@ class ProjectController extends AController
 	 */
 	public function actionIndex($project)
 	{
-		// if integer assume id
-		if(is_numeric($project)){
-			$p = ProjectTask::model()->projects()->findByPk($project);
-		} else {
-			$p = ProjectTask::model()->projects()->findByAttributes(array('name_slug'=>$project));
-		}
+		$p = $this->loadProject($project);
 		$this->render('index',array('project'=>$p));
+	}
+
+	public function actionCreateJob($project){
+		$p = $this->loadProject($project);
+		$this->performAjaxValidation(new ProjectTask, 'create-job');
+		ProjectApi::createJob($p->id, $_POST['ProjectTask']);
+	}
+	
+	/**
+	 * Load a project
+	 * @param type $project
+	 * @throws CHttPException if project not found
+	 * @return ProjectTask 
+	 */
+	public function loadProject($project){
+		// if integer assume id
+		if(is_numeric($project))
+			$p = ProjectTask::model()->projects()->findByPk($project);
+		else
+			$p = ProjectTask::model()->projects()->findByAttributes(array('name_slug'=>$project));
+		if($p===null)
+			throw new CHttpException (404, 'Oops, This is not the project you are looking for.');
+		return $p;
 	}
 }

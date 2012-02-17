@@ -7,7 +7,8 @@
 
 <div id="create-job-dialog" title="Create Job" style="display:none;">
 	<?php $form = $this->beginWidget('nii.widgets.NActiveForm',array(
-		'id'=>'create-job'
+		'id'=>'create-job',
+		'action'=>$this->createUrl('/project/project/createJob', array('project'=>$project->id)),
 	)); ?>
 		<?php $job = new ProjectTask; ?>
 		<?php echo $form->field($job, 'name'); ?>
@@ -15,8 +16,27 @@
 		<?php echo $form->beginField($job, 'assigned_id'); ?>
 		<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);	?>
 		<?php echo $form->endField($job, 'assigned_id'); ?>
+		<div class="control-group">
+			<?php echo $form->labelEx($job, 'billable_time'); ?>
+			<div class="controls">
+				<?php echo $form->textField($job, 'billable_time'); ?>
+				<p class="help-block">(in minutes)</p>
+			</div>
+		</div>
+		<div class="control-group">
+			<?php echo $form->labelEx($job, 'estimated_time'); ?>
+			<div class="controls">
+				<?php echo $form->textField($job, 'estimated_time'); ?>
+				<p class="help-block">(in minutes)</p>
+			</div>
+		</div>
+		
 	<?php $this->endWidget(); ?>
 </div>
+
+<?php foreach($project->getChildren() as $job): ?>
+	<?php echo $job->name; ?>
+<?php endforeach; ?>
 
 <script>
 	jQuery(function($){

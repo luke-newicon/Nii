@@ -56,9 +56,9 @@ class NActiveForm extends CActiveForm
 	public function beginField($model, $attribute, $error=true) 
 	{
 		$errorClass = ($error && $model->hasErrors($attribute)) ? ' error' : '';
-		$return = '<div class="control-group' . $errorClass . '">';
-		$return .= $this->labelEx($model, $attribute);
-		$return .= '<div class="controls">';
+			$return = '<div class="control-group' . $errorClass . '">';
+			$return .= $this->labelEx($model, $attribute);
+			$return .= '<div class="controls">';
 		return $return;
 	}
 

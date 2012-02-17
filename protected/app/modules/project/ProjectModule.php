@@ -44,4 +44,25 @@ class ProjectModule extends NWebModule
 		NActiveRecord::uninstall('ProjectTask');
 	}
 	
+	
+	/**
+	 * gets a list of all projects
+	 * 
+	 * @return array ProjectProject
+	 */
+	public function getProjectList()
+	{
+		return ProjectTask::model()->projects()->findAll();
+	}
+	
+	/**
+	 * get an array of tasks
+	 * 
+	 * @return array of task models 
+	 */
+	public function getTaskList($condition='')
+	{
+		return ProjectTask::model()->tasks()->findAll($condition);
+	}
+	
 }

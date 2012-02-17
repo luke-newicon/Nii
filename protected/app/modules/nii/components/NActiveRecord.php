@@ -144,10 +144,14 @@ class NActiveRecord extends CActiveRecord
 		$t->attachBehaviors($t->behaviors());
 		
 		FB::log($className);
+		
 		$db = $t->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
+		
 		$realTable = $t->getRealTableName();
-		$s = $t->schema();
+		
+		$s = $t->getSchemaComplete();
+		
 		if(!array_key_exists('columns', $s))
 			throw new CException('The schema array must contain the array key "columns" with an array of the columns');
 		// add table columns
@@ -230,6 +234,18 @@ class NActiveRecord extends CActiveRecord
 		$this->raiseEvent('onAfterInstall', $event);
 	}
 	
+	
+	/**
+	 * an event called before installing the table, may be used to modify the schema 
+	 * with addiontal columns $event->schema
+	 * 
+	 * @param CEvent $event 
+	 */
+	public function onBeforeInstall($event)
+	{
+		$this->raiseEvent('onAfterInstall', $event);
+	}
+	
 	/**
 	 * tries to determine the standard datatype of the attribute
 	 * @param string $attribute 
@@ -245,6 +261,22 @@ class NActiveRecord extends CActiveRecord
 			}
 		}
 		return $dataType;
+	}
+	
+	/**
+	 * Binds the schema array
+	 * @see NActiveRecord::shema with results in attached behaviors 
+	 * @see NActiveRecordBahevior::schema
+	 * @return array schema
+	 */
+	public function getSchemaComplete()
+	{
+		$schema = $this->schema();
+		foreach($this->behaviors() as $behavior=>$config){
+			if($this->asa($behavior) instanceof NActiveRecordBehavior)
+				$schema = CMap::mergeArray($schema, $this->asa($behavior)->schema());
+		}
+		return $schema;
 	}
 	
 	/**
@@ -269,6 +301,7 @@ class NActiveRecord extends CActiveRecord
 	public function columns() {
 		return array();
 	}
+	
 	
 	public function dateRangeCriteria(&$criteria, $field) {
 		$from = $field.'_from';

@@ -82,7 +82,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @param mixed $tags a string of a singular tag name of an array of tag names to delete
 	 */
-	public function deleteTagNames($tags){
+	public function deleteTagNames($tags)
+	{
 		// now find all of the ids for the names provided
 		$tagRows = NTag::model()->findAllByAttributes(array('name'=>$tags));
 		// get array of tag ids
@@ -98,7 +99,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array array of tag_id => tag name e.g. array(1 => 'tag name', 3=> 'other tag')
 	 */
-	public function getAllTags(){
+	public function getAllTags()
+	{
 		$res = NTag::model()->findAll(array('order'=>'name ASC'));
 		$tags = array(); foreach ($res as $r) $tags[$r->id] = $r->tag->name;
 		return $tags;
@@ -110,7 +112,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array of tag id=>tag
 	 */
-	public function getModelTags() {
+	public function getModelTags() 
+	{
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
@@ -129,7 +132,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * 
 	 * @return array of tag id=>tag
 	 */
-	public function getModelTagsDropdown() {
+	public function getModelTagsDropdown() 
+	{
 		$tagIds = array();
 		$tagRows = NTagLink::model()->with('tag')->findAllByAttributes(array(
 			'model'=>get_class($this->getOwner())), 
@@ -146,7 +150,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * @param $array the array to format
 	 * @return array formt: 'id'=>'tag name', 'name'=>'tag name'
 	 */
-	public function tagWidgetFormat($array){
+	public function tagWidgetFormat($array)
+	{
 		// we want the id to be the name for our tag widget
 		$tags = array(); foreach($array as $id=>$name) $tags[]=array('id'=>$name,'name'=>$name);
 		return $tags;
@@ -177,7 +182,8 @@ class NTaggable extends CActiveRecordBehavior
 		return $tags;
 	}
 	
-	public function printTags() {
+	public function printTags() 
+	{
 		$tags = $this->getTags();
 		foreach ($tags as $tag) {
 			echo '<span class="tag-item"><span class="icon fam-tag-blue"></span>'.$tag.'</span>';
@@ -188,12 +194,22 @@ class NTaggable extends CActiveRecordBehavior
 	 * Deletes all tags associated with this model
 	 * @return void
 	 */
-	public function deleteTags(){
+	public function deleteTags()
+	{
 		NTagLink::model()->deleteAllByAttributes(array(
 			'model_id'=>$this->getOwner()->id(), 
 			'model'=>get_class($this->getOwner()))
 		);
 	}
+	
+	/**
+	 * add as scope?
+	 * public function taggedWith($tags)
+	 * {
+	 *	$this->search($tags);
+	 * }
+	 * @param type $tags 
+	 */
 	
 	/**
 	 * Find the models that have a set of tags associated with them
@@ -295,7 +311,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * @param string $tag the tag
 	 * @return boolean
 	 */
-	public function hasTag($tag){
+	public function hasTag($tag)
+	{
 		return $this->hasTags(array($tag));
 	}
 	
@@ -304,7 +321,8 @@ class NTaggable extends CActiveRecordBehavior
 	 * @param array $tags
 	 * @return boolean 
 	 */
-	public function hasTags($tags){
+	public function hasTags($tags)
+	{
 		foreach($tags as $tag){
 			if(!in_array($tag, $this->tags)) return false;
 		}
@@ -314,7 +332,8 @@ class NTaggable extends CActiveRecordBehavior
 	/**
 	 * Install necessary tables for behavior
 	 */
-	public static function install(){
+	public static function install()
+	{
 		NActiveRecord::install('NTag');
 		NActiveRecord::install('NTagLink');
 	}
@@ -322,7 +341,8 @@ class NTaggable extends CActiveRecordBehavior
 	/**
 	 * Install necessary tables for behavior
 	 */
-	public static function uninstall(){
+	public static function uninstall()
+	{
 		NActiveRecord::uninstall('NTag');
 		NActiveRecord::uninstall('NTagLink');
 	}

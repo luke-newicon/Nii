@@ -19,6 +19,7 @@ class ProjectApi extends CComponent
 	/**
 	 * create a new top level project
 	 * @param array $projectAttributes 
+	 * @return ProjectTask
 	 */
 	public static function createProject($projectAttributes)
 	{
@@ -26,9 +27,28 @@ class ProjectApi extends CComponent
 		
 		$project->attributes = $projectAttributes;
 		$project->type = ProjectTask::TYPE_PROJECT;
-		if($project->save()){
+		if($project->validate()){
 			$project->addNodeToRoot($project);
 		}
 		return $project;
+	}
+	
+	/**
+	 * create a new top level job
+	 * @param int $projectId the project to add the job to
+	 * @param array $projectAttributes 
+	 * @return ProjectTask
+	 */
+	public static function createJob($projectId, $jobAttributes)
+	{
+		$job = new ProjectTask();
+		
+		$job->attributes = $jobAttributes;
+		$job->type = ProjectTask::TYPE_JOB;
+		if($job->validate()){
+			$p = ProjectTask::model()->findByPk($projectId);
+			$p->addChild($job);
+		}
+		return $job;
 	}
 }

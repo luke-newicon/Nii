@@ -30,8 +30,11 @@ class ProjectTask extends NActiveRecord
 	{
 		return array(
 			'tree'=>array(
-               'class'=>'nii.components.behaviors.NTreeTable'
-           )
+				'class'=>'nii.components.behaviors.NTreeTable'
+			),
+			'timestampable'=>array(
+				'class'=>'nii.components.behaviors.NTimestampable'
+			)
 		);
 	}
 	
@@ -39,7 +42,7 @@ class ProjectTask extends NActiveRecord
 	{
 		return array(
 			array('name','required'),
-			array('name, name_slug', 'unique')
+			array('name', 'unique')
 		);
 	}
 	
@@ -70,17 +73,15 @@ class ProjectTask extends NActiveRecord
 				'name_slug'=>'string',
 				'description' => 'text',
 				'priority' => 'int',
-				'created_by_id' => 'int',
-				'estimated_time' => 'int',
 				'assigned_id' => 'int',
 				'customer_id' => 'int',
 				'workflow_id' => "int",
 				'type'=>"enum('".self::TYPE_PROJECT."','".self::TYPE_JOB."','".self::TYPE_TASK."')",
 				'due'=>'datetime',
-				'tree_left' => 'int',
-				'tree_right' =>'int',
-				'tree_level'=>'int',
-				'tree_parent'=>'int',
+				// estimated time in minutes
+				'estimated_time'=>'int',
+				// billable time in minutes
+				'billable_time'=>'int',
 			),
 		);
 	}
