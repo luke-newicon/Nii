@@ -11,16 +11,10 @@
 	)); ?>
 		<?php $job = new ProjectTask; ?>
 		<?php echo $form->field($job, 'name'); ?>
-		<div class="line">
-			<div class="unit size1of2">
-				<?php echo $form->field($job, 'due'); ?>
-			</div>
-			<div class="lastUnit">
-				<?php echo $form->beginField($job, 'assigned_id'); ?>
-				<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);	?>
-				<?php echo $form->endField($job, 'assigned_id'); ?>
-			</div>
-		</div>
+		<?php echo $form->field($job, 'due'); ?>
+		<?php echo $form->beginField($job, 'assigned_id'); ?>
+		<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);	?>
+		<?php echo $form->endField($job, 'assigned_id'); ?>
 	<?php $this->endWidget(); ?>
 </div>
 
