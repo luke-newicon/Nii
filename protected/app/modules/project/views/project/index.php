@@ -14,7 +14,7 @@
 		<?php echo $form->field($job, 'due'); ?>
 	
 		<?php  
-		echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);
+		//echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);
 		?>
 <?php
 	$this->widget('zii.widgets.jui.CJuiAutoComplete', array(
