@@ -20,7 +20,7 @@
 
 <?php
 	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-		'dataProvider' => $search->search(),
+		'dataProvider' => $search->projects()->search(),
 		'filter' => $search,
 		'id' => 'project-grid',
 		'enableButtons' => false,
@@ -58,7 +58,7 @@
 		<div class="inputContainer">
 			<label for="ProjectTask_name" class="inFieldLabel" style="font-size:16px;" >Enter a Name for this Project</label>
 			<div class="input">
-				<?php echo $form->textField($project,'name'); ?>
+				<?php echo $form->textField($project, 'name', array('style'=>'font-size:16px;')); ?>
 			</div>
 			<?php echo $form->error($project,'name'); ?>
 		</div>

@@ -17,7 +17,7 @@
  */
  
 /* Resets the input elements styles, make expand to fit container (.input) */
-.input input,.input select,.input textarea{box-shadow:none;margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;font-size:13px;}
+.input input,.input select,.input textarea{box-shadow:none;margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;font-size:13px;height:auto;}
 
 
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */

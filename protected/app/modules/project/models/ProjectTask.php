@@ -42,9 +42,12 @@ class ProjectTask extends NActiveRecord
 	{
 		return array(
 			array('name','required'),
-			array('name', 'unique')
+			// project names must be unique
+			array('name', 'unique', 'criteria'=>array('condition'=>'tree_level=1')),
+			array('billable_time, due, estimated_time','safe')
 		);
 	}
+
 	
 	public function scopes() 
 	{
@@ -90,7 +93,8 @@ class ProjectTask extends NActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search() {
+	public function search() 
+	{
 		$criteria = $this->getDbCriteria();
 
 		$criteria->compare('id', $this->id);
@@ -108,7 +112,10 @@ class ProjectTask extends NActiveRecord
 	 */
 	public function getLink()
 	{
-		return NHtml::url(array('/project/project/index', 'project'=>$this->name_slug));
+		if($this->type == self::TYPE_PROJECT)
+			return NHtml::url(array('/project/project/index', 'project'=>$this->name_slug));
+		$parent = $this->getParent();
+		return NHtml::url(array('/project/task/index','project'=>$parent->name_slug, 'id'=>$this->id));
 	}
 	
 	/**

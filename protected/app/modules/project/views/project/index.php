@@ -34,9 +34,11 @@
 	<?php $this->endWidget(); ?>
 </div>
 
+<div class="jobcard-list">
 <?php foreach($project->getChildren() as $job): ?>
-	<?php echo $job->name; ?>
+	<div class="jobcard"><a href="<?php echo $job->link; ?>"><?php echo $job->name; ?></a></div>
 <?php endforeach; ?>
+</div>
 
 <script>
 	jQuery(function($){

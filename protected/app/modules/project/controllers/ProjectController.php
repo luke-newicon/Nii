@@ -26,7 +26,12 @@ class ProjectController extends AController
 		$this->render('index',array('project'=>$p));
 	}
 
-	public function actionCreateJob($project){
+	/**
+	 *
+	 * @param mixed $project string project name or int pk
+	 */
+	public function actionCreateJob($project)
+	{
 		$p = $this->loadProject($project);
 		$this->performAjaxValidation(new ProjectTask, 'create-job');
 		ProjectApi::createJob($p->id, $_POST['ProjectTask']);
@@ -38,7 +43,8 @@ class ProjectController extends AController
 	 * @throws CHttPException if project not found
 	 * @return ProjectTask 
 	 */
-	public function loadProject($project){
+	public function loadProject($project)
+	{
 		// if integer assume id
 		if(is_numeric($project))
 			$p = ProjectTask::model()->projects()->findByPk($project);

@@ -19,10 +19,12 @@ class ProjectModule extends NWebModule
 		Yii::import('project.models.*');
 		
 		Yii::app()->urlManager->addRules(array(
-				array('/project/api/createProject', 'pattern' => 'api/project'),
-				array('/project/project/index', 'pattern' => 'project/<project>'),
-			), false
-		);
+			array('/project/api/createProject', 'pattern' => 'api/project'),
+			array('/project/index/index', 'pattern' => 'project'),
+			array('/project/project/index', 'pattern' => 'project/<project>'),
+			array('/project/task/index', 'pattern' => 'project/<project>/<id>'),
+		), false);
+		Yii::app()->clientScript->registerCssFile($this->getAssetsUrl().'/style.css');
 	}
 	
 	public function setup()

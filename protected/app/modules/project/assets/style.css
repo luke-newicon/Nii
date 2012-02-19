@@ -1,0 +1,3 @@
+.jobcard{margin-bottom: 7px;border:1px solid #aaa;box-shadow:0px 0px 2px #999;background-color:#FEFFDE;padding:5px;border-radius:4px;}
+.jobcard-list .jobcard {width: 350px;height: 150px;margin-right: 10px;float: left;}
+.jobcard-list .jobcard:hover{box-shadow:0px 0px 4px #999;}
