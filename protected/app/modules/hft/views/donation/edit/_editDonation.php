@@ -13,7 +13,7 @@ $modelName = get_class($model);
 	<div class="line field">
 		<div class="unit size1of6"><?= $form->labelEx($model,'donation_amount') ?></div>
 		<div class="lastUnit">
-			<div class="input w170"><?php echo $form->textField($model, 'donation_amount', array('size' => 30)); ?></div>
+			<div class="input w170"><?php echo $form->textField($model, 'donation_amount', array('size' => 30, 'value' => NHtml::formatNumber($model->donation_amount, 2, false, false))); ?></div>
 			<span class="help-block">Enter amount in &pound;, no commas</span>
 			<?php echo $form->error($model,'donation_amount'); ?>
 		</div>

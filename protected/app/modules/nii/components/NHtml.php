@@ -463,9 +463,22 @@ class NHtml extends CHtml {
 	 * @param int $decimals - number of decimals to display
 	 * @return string
 	 */
-	public static function formatPrice($value, $currency='&pound;', $decimals=2, $showZeroDecimals=false) {
-		$decimals = (strstr($value,'.') && $showZeroDecimals==true) ? 2 : 0;
-		return '<span class="currency">'.$currency . '</span>'. number_format($value, $decimals);
+	public static function formatNumber($value, $decimals=2, $showZeroDecimals=false, $showThousandsSeparator=true) {
+		$decimals = (strstr($value,'.') || $showZeroDecimals==true) ? 2 : 0;
+		$separator = $showThousandsSeparator==true ? ',' : '';
+		return number_format($value, $decimals, '.', $separator);
+	}
+	
+	/**
+	 *	Returns a properly formatted price based on an integer or float
+	 * @param int/float $value
+	 * @param string $currency - the character, html-encoded, to place before the price
+	 * @param int $decimals - number of decimals to display
+	 * @return string
+	 */
+	public static function formatPrice($value, $currency='&pound;', $decimals=2, $showZeroDecimals=false, $showThousandsSeparator=true) {
+		$decimals = (strstr($value,'.') || $showZeroDecimals==true) ? 2 : 0;
+		return '<span class="currency">'.$currency . '</span>'. self::formatNumber($value, $decimals, $showZeroDecimals);
 	}
 	
 	/**
