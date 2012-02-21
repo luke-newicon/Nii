@@ -29,7 +29,7 @@ class NActiveRecord extends CActiveRecord
 	{
 		require_once 'Zend/Filter/Word/CamelCaseToUnderscore.php';
 		$z = new Zend_Filter_Word_CamelCaseToUnderscore;
-		return '{{'.strtolower($z->filter(get_class($this))).'}}';
+		return '{{'.strtolower($z->filter(__class__)).'}}';
 	}
 	
 	/**
@@ -331,7 +331,20 @@ class NActiveRecord extends CActiveRecord
 		return array();
 	}
 	
-	
-	
+	/**
+	 * Get the model in the search scenario state. Populate with search attributes
+	 * $_GET[$className];
+	 * @param string $className
+	 * @return NActiveRecord in scenario search
+	 */
+	public function searchModel()
+	{
+		$className = get_class($this);
+		$model = new $className('search');
+		$model->unsetAttributes();
+		if(isset($_GET[$className]))
+			$model->attributes = $_GET[$className];
+		return $model;
+	}
 	
 }

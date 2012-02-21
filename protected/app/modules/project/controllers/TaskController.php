@@ -17,13 +17,22 @@
 class TaskController extends AController
 {
 	/**
-	 * 
 	 * @param int $id task id
 	 */
 	public function actionIndex($id)
 	{
 		$t = $this->loadTask($id);
 		$this->render('index', array('task'=>$t));
+	}
+	
+	/**
+	 * create and validates a new task
+	 * @param int $parent id of the parent project, job or task
+	 */
+	public function actionCreate($parent)
+	{
+		$this->performAjaxValidation(new ProjectTask, 'create-job');
+		ProjectApi::createTask($parent, $_POST['ProjectTask']);
 	}
 	
 	/**

@@ -19,11 +19,11 @@ class IndexController extends AController
 	
 	public function actionIndex()
 	{
-		$this->render('index',array('search'=>new ProjectTask('search')));
+		$this->render('index',array('taskSearch'=>ProjectTask::model()->searchModel()));
 	}
 	
 	/**
-	 * create a new top level project 
+	 * create a new top level project  
 	 */
 	public function actionCreateProject()
 	{

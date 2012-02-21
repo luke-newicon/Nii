@@ -16,12 +16,36 @@
 		<a class="add-project btn btn-primary">Add a Project</a>
 	</div>
 </div>
+<?php
+	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
+		'dataProvider' => $taskSearch->search(),
+		'filter' => $taskSearch,
+		'id' => 'job-grid',
+		'enableButtons' => false,
+		'scopes' => array(
+			'items'=>array(
+				'default'=>'All',
+				'jobs'=>'Jobs',
+				'projects'=>'Projects',
+			)
+		),
+		'columns' => array(
+			'name' => array(
+				'name' => 'name',
+				'type' => 'raw',
+//				'value' => '"<a href=\"".$data->getLink()."\" >".$data->name."</a>"',
+			),
+		),
+	));
+?>
+
+
 <?php if (ProjectTask::model()->projects()->count()) : ?>
 
 <?php
 	$this->widget('ext.bootstrap.widgets.grid.BootGridView', array(
-		'dataProvider' => $search->projects()->search(),
-		'filter' => $search,
+		'dataProvider' => $taskSearch->projects()->search(),
+		'filter' => $taskSearch,
 		'id' => 'project-grid',
 		'enableButtons' => false,
 		'enableCustomScopes' => false,
@@ -44,6 +68,12 @@
 		</div>
 	</div>
 <?php endif; ?>
+
+
+
+
+
+
 <div id="addprojectDialog" class="" title="New Project" style="display:none;">
 	<?php $project = new ProjectTask; ?>
 	<?php $form = $this->beginWidget('nii.widgets.NActiveForm',array(

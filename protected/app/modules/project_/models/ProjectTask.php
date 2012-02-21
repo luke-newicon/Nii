@@ -8,6 +8,7 @@ class ProjectTask extends NActiveRecord {
 	const STATUS_COMPLETE = 'complete';
 	
 	public $estimated_time_nice;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return CActiveRecord the static model class

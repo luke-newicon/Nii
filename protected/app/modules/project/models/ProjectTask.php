@@ -26,6 +26,11 @@ class ProjectTask extends NActiveRecord
 		return parent::model($className);
 	}
 	
+	public function tableName()
+	{
+		return '{{project_task}}';
+	}
+	
 	public function behaviors() 
 	{
 		return array(
@@ -44,7 +49,9 @@ class ProjectTask extends NActiveRecord
 			array('name','required'),
 			// project names must be unique
 			array('name', 'unique', 'criteria'=>array('condition'=>'tree_level=1')),
-			array('billable_time, due, estimated_time','safe')
+			array('billable_time, due, estimated_time','safe'),
+			
+			array('name','safe','on'=>'search'),
 		);
 	}
 

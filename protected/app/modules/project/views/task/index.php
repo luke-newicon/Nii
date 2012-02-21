@@ -16,6 +16,15 @@
 </div>
 
 <a class="btn btn-primary add-task">Add Task</a>
+
+
+<div class="jobcard-list">
+<?php foreach($task->getChildren() as $subTask): ?>
+	<div class="jobcard"><a href="<?php echo $subTask->link; ?>"><?php echo $subTask->name; ?></a></div>
+<?php endforeach; ?>
+</div>
+
+
 <div id="create-task-dialog" title="Create Task" style="display:none;">
 	<?php $form = $this->beginWidget('nii.widgets.NActiveForm',array(
 		'id'=>'create-job',
@@ -47,16 +56,15 @@
 		<?php echo $form->beginField($task, 'estimated_time'); ?>
 			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$task,'attribute'=>'estimated_time'), true); ?>
 		<?php echo $form->endField($task, 'estimated_time'); ?>
-		<div class="control-group">
-			<?php echo $form->labelEx($task, 'billable_time'); ?>
-			<div class="controls">
-				<?php echo $form->textField($task, 'billable_time'); ?>
-				<p class="help-block">(in minutes)</p>
-			</div>
-		</div>
+		<?php echo $form->beginField($task, 'billable_time'); ?>
+			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$task,'attribute'=>'billable_time'), true); ?>
+		<?php echo $form->endField($task, 'billable_time'); ?>
 		
 	<?php $this->endWidget(); ?>
 </div>
+
+
+
 
 <script>
 	jQuery(function($){
@@ -87,3 +95,4 @@
 		});
 	});
 </script>
+

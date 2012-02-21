@@ -65,7 +65,7 @@ class ProjectTime extends CInputWidget
 		
 		
 		// value is always minutes
-		echo CHtml::textField($id.'[int]', $value, array('class'=>'input-mini'));
+		echo CHtml::textField($id.'[int]', $value, array('class'=>'input-mini mrs'));
 		echo CHtml::dropDownList($id.'[type]',$type,array('minutes'=>'minutes','hours'=>'hours','days'=>'days','weeks'=>'weeks'),array('class'=>'input-small'));
 		echo CHtml::hiddenField($id, $value);
 		

@@ -16,20 +16,12 @@
 		<?php echo $form->beginField($job, 'assigned_id'); ?>
 		<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$job,'attribute'=>'assigned_id'), true);	?>
 		<?php echo $form->endField($job, 'assigned_id'); ?>
-		<div class="control-group">
-			<?php echo $form->labelEx($job, 'billable_time'); ?>
-			<div class="controls">
-				<?php echo $form->textField($job, 'billable_time'); ?>
-				<p class="help-block">(in minutes)</p>
-			</div>
-		</div>
-		<div class="control-group">
-			<?php echo $form->labelEx($job, 'estimated_time'); ?>
-			<div class="controls">
-				<?php echo $form->textField($job, 'estimated_time'); ?>
-				<p class="help-block">(in minutes)</p>
-			</div>
-		</div>
+		<?php echo $form->beginField($job, 'billable_time'); ?>
+			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$job,'attribute'=>'billable_time'), true); ?>
+		<?php echo $form->endField($job, 'billable_time'); ?>
+		<?php echo $form->beginField($job, 'estimated_time'); ?>
+			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$job,'attribute'=>'estimated_time'), true); ?>
+		<?php echo $form->endField($job, 'estimated_time'); ?>
 		
 	<?php $this->endWidget(); ?>
 </div>
