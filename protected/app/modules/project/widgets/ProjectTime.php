@@ -34,7 +34,6 @@ class ProjectTime extends CInputWidget
 			$value = $this->value;
 		}
 		$value = $this->value;
-		$type = $this->defaultUnit;
 		
 		
 		$minPerWeek = ($this->daysPerWeek*$this->hoursPerDay*60);
@@ -44,7 +43,9 @@ class ProjectTime extends CInputWidget
 		$days = $value / $minPerDay; $daysR = $value % $minPerDay;
 		$hours = $value / 60; $hoursR = $value % 60;
 		
-		if($value < 60){
+		if(empty($value)){
+			$type = $this->defaultUnit;
+	    }elseif($value < 60){
 			$type = 'minutes';
 		}elseif($weeks>=1 && $weeksR==0){
 			$type = 'weeks';
@@ -69,7 +70,7 @@ class ProjectTime extends CInputWidget
 		echo CHtml::hiddenField($id, $value);
 		
 		Yii::app()->clientScript->registerScript($this->getId(), '
-			$("#'.$id.'_int").change(function(){
+			$("#'.$id.'_int,#'.$id.'_type").change(function(){
 				// convert to minutes based on type
 				var type = $("#'.$id.'_type").val();
 				var inc = $("#'.$id.'_int").val();

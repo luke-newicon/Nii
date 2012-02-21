@@ -45,19 +45,12 @@
 		<?php echo $this->widget('user.widgets.UserSelect', array('model'=>$task,'attribute'=>'assigned_id'), true); ?>
 		<?php echo $form->endField($task, 'assigned_id'); ?>
 		<?php echo $form->beginField($task, 'estimated_time'); ?>
-			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$task,'attribute'=>'estimated_time','value'=>4500), true); ?>
+			<?php echo $this->widget('project.widgets.ProjectTime', array('model'=>$task,'attribute'=>'estimated_time'), true); ?>
 		<?php echo $form->endField($task, 'estimated_time'); ?>
 		<div class="control-group">
 			<?php echo $form->labelEx($task, 'billable_time'); ?>
 			<div class="controls">
 				<?php echo $form->textField($task, 'billable_time'); ?>
-				<p class="help-block">(in minutes)</p>
-			</div>
-		</div>
-		<div class="control-group">
-			<?php echo $form->labelEx($task, 'estimated_time'); ?>
-			<div class="controls">
-				<?php echo $form->textField($task, 'estimated_time'); ?>
 				<p class="help-block">(in minutes)</p>
 			</div>
 		</div>
