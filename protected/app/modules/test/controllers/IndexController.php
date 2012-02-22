@@ -18,8 +18,8 @@ class IndexController extends AController {
 		));
 	}
 
-	public function actionGood() {
-		$this->render('good');
+	public function actionGrid() {
+		$this->render('grid');
 	}
 
 }

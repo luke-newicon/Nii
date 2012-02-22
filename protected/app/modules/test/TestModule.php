@@ -7,9 +7,14 @@ class TestModule extends NWebModule {
 	public $version = '0.0.1b';
 
 	public function init() {
+		Yii::import('test.components.*');
 		Yii::import('test.models.*');
+		Yii::import('test.models.db.*');
+		Yii::import('test.models.grid.*');
+		
 		Yii::app()->menus->addItem('main', 'Test Module', '#');
 		Yii::app()->menus->addItem('main', 'First page', array('/test/index/index'), 'Test Module');
+		Yii::app()->menus->addItem('main', 'Test Grid', array('/test/index/grid'), 'Test Module');
 	}
 
 	public function settings() {
@@ -33,7 +38,7 @@ class TestModule extends NWebModule {
 //	}
 
 	public function install() {
-		
+		TestExtra::install('TestExtra');
 	}
 
 	public function uninstall() {
