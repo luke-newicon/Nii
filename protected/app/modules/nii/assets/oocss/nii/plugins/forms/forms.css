@@ -17,8 +17,8 @@
  */
  
 /* Resets the input elements styles, make expand to fit container (.input) */
-.input input,.input select,.input textarea{box-shadow:none;margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;}
-.input input:focus,.input select:focus,.input textarea:focus{box-shadow:none;}
+.input input,.input select,.input textarea{box-shadow:none;margin:0px;padding:0px;width:100%;border:0px;outline:none;background-color:transparent;-webkit-appearance: none;-webkit-focus-ring-color: none;font-size:13px;height:auto;}
+
 
 /* Default padding for field blocks has position relative so things can be positioned relative to the field */
 .field{margin-bottom:10px;position:relative;}
@@ -31,20 +31,22 @@ label{float:none;padding-top:0;color:#404040;}
 
 /* Input boxes and input states */
 /* make a nice looking input, defines padding and input box style */
-.input {background-image: url('skin/input-bg.png');background-position:top left;background-repeat:repeat-x;background-color:#fff;border-top:1px solid #b2b2b2;border:1px solid #ccc;padding:5px;border-top-color:#bbb;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;box-shadow:0px 1px 0px rgba(255,255,255,0.5);-moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);}
+.input {-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);-webkit-transition: border linear 0.2s, box-shadow linear 0.2s;-moz-transition: border linear 0.2s, box-shadow linear 0.2s;-ms-transition: border linear 0.2s, box-shadow linear 0.2s;-o-transition: border linear 0.2s, box-shadow linear 0.2s;transition: border linear 0.2s, box-shadow linear 0.2s; font-size: 13px;line-height: 18px;color: #555555;border: 1px solid #ccc;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:4px;background-color:#fff;}
 .focus .input, .focused .input {border-color:rgba(82, 168, 236, 0.8);box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px rgba(82, 168, 236, 0.6); background-image:none;}
-.error .input {background:#fff1f1 url('skin/input-bg-error.png') repeat-x top left; border-color:#c99393 #e2a3a3 #e2a3a3;}
-.error.focus .input,.error.focused .input {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(171, 41, 32, 0.5);background-image:none;}
-.success .input {background:#eeffeb url('skin/input-bg-success.png') repeat-x top left; border-color:#94c78c #a4da9b #a4da9b;}
-.success.focus .input,.success.focused .input {box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset,0 0 6px rgba(136, 236, 82, 0.7);background-image:none;}
+.error .input {color: #b94a48;border-color: #b94a48;border-color: #953b39;}
+.error.focus .input,.error.focused .input {border-color: #953b39;-webkit-box-shadow: 0 0 6px #d59392;-moz-box-shadow: 0 0 6px #d59392;box-shadow: 0 0 6px #d59392;}
+.success .input {color: #468847;border-color: #468847;}
+.success.focus .input,.success.focused .input {border-color: #356635;-webkit-box-shadow: 0 0 6px #7aba7b;-moz-box-shadow: 0 0 6px #7aba7b;box-shadow: 0 0 6px #7aba7b;}
 .validating .input{}/* this class is applied when the form is validating the input, typically when sending the ajax response to check validation */
 .validating.focus .input,.validating.focused .input{}
 
+.field.control-group.success input:focus, .field.control-group.success select:focus, .field.control-group.success textarea:focus,
+.field.control-group.error input:focus, .field.control-group.error select:focus, .field.control-group.error textarea:focus,.input input:focus,.input select:focus,.input textarea:focus{box-shadow:none;}
 /* formHint style */
 .hint, .help-block{color:#bbbbbb;font-size:80%;line-height:18px}
 
 /* .inFieldLabel you may need to tweak the positions for different forms */
-label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
+label.inFieldLabel{position:absolute;cursor:text;left:7px;top:6px;color:#999;}
 /* yii's default class for error form validation messages */
 .errorMessage{color:red;font-size:0.9em;padding:3px}
 
@@ -60,9 +62,5 @@ label.inFieldLabel{position:absolute;cursor:text;left:7px;top:8px;color:#999;}
 
 .uneditable-input {border-color: #EEEEEE; cursor: not-allowed;color: #808080;font-size: 13px; height: 18px;line-height: 18px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.024) inset;}
 .disabled{background-image:none;background-color: #F5F5F5;border-color: #DDDDDD;box-shadow:0 1px 3px rgba(0, 0, 0, 0.1) inset}
-
-/** complex elements */
-.joinedRight{border-radius:3px 0px 0px 3px;}
-.joinedLeft{border-radius:0px 3px 3px 0px; border-left:0px;}
 
 .loading {background: url("skin/loading.gif") no-repeat scroll right 0 transparent;}

@@ -18,11 +18,27 @@ class NActiveRecord extends CActiveRecord
 {
 	
 	/**
+	 * automatically return the table name based on the active record class name
+	 * Splits the class name by camel case with an underscore, 
+	 * sets as lower case, 
+	 * and wraps with {{}}
+	 * So class of ProjectTask becomes {{project_task}}
+	 * @return string 
+	 */
+	public function tableName()
+	{
+		require_once 'Zend/Filter/Word/CamelCaseToUnderscore.php';
+		$z = new Zend_Filter_Word_CamelCaseToUnderscore;
+		return '{{'.strtolower($z->filter(__class__)).'}}';
+	}
+	
+	/**
 	 * Shorthand method to Yii::app()->db->createCommand()
 	 *
 	 * @return CDbCommand
 	 */
-	public function cmd(){
+	public function cmd()
+	{
 		return Yii::app()->db->createCommand();
 	}
 	
@@ -31,7 +47,8 @@ class NActiveRecord extends CActiveRecord
 	 *
 	 * @return CDbCommand
 	 */
-	public function cmdSelect($select='*'){
+	public function cmdSelect($select='*')
+	{
 		return Yii::app()->db->createCommand()->select($select)->from($this->tableName());
 	}
 	
@@ -42,7 +59,8 @@ class NActiveRecord extends CActiveRecord
 	 * @see CActiveRecord::getPrimaryKey
 	 * @return mixed primary key value 
 	 */
-	public function id(){
+	public function id()
+	{
 		return $this->getPrimaryKey();
 	}
 	
@@ -104,7 +122,8 @@ class NActiveRecord extends CActiveRecord
 	 *		)
 	 *	);
 	 */
-	public function schema(){
+	public function schema()
+	{
 		return array();
 	}
 
@@ -117,17 +136,22 @@ class NActiveRecord extends CActiveRecord
 	 * 
 	 * @param string $className 
 	 */
-	public static function install($className=__CLASS__){
+	public static function install($className=__CLASS__)
+	{
 		FB::log('install ');
 		$t = new $className(null);
 		
 		$t->attachBehaviors($t->behaviors());
 		
 		FB::log($className);
+		
 		$db = $t->getDbConnection();
 		$exists = $db->getSchema()->getTable($t->tableName());
+		
 		$realTable = $t->getRealTableName();
-		$s = $t->schema();
+		
+		$s = $t->getSchemaComplete();
+		
 		if(!array_key_exists('columns', $s))
 			throw new CException('The schema array must contain the array key "columns" with an array of the columns');
 		// add table columns
@@ -188,12 +212,12 @@ class NActiveRecord extends CActiveRecord
 	 * removes the table from the database and destroys all data
 	 * BE CAREFUL!
 	 */
-	public static function uninstall($className){
+	public static function uninstall($className)
+	{
 		$tbl = NActiveRecord::model($className)->getRealTableName();
 		Yii::app()->db->createCommand()->dropTable($tbl);
 		
 	}
-	
 	
 	/**
 	 * an event called after installing the table, may be used to add rows as part
@@ -205,17 +229,63 @@ class NActiveRecord extends CActiveRecord
 	 * 
 	 * @param CEvent $event 
 	 */
-	public function onAfterInstall($event){
+	public function onAfterInstall($event)
+	{
 		$this->raiseEvent('onAfterInstall', $event);
 	}
 	
+	
+	/**
+	 * an event called before installing the table, may be used to modify the schema 
+	 * with addiontal columns $event->schema
+	 * 
+	 * @param CEvent $event 
+	 */
+	public function onBeforeInstall($event)
+	{
+		$this->raiseEvent('onAfterInstall', $event);
+	}
+	
+	/**
+	 * tries to determine the standard datatype of the attribute
+	 * @param string $attribute 
+	 */
+	public function getAttributeDataType($attribute)
+	{
+		$dataType = 'string';
+		$schema = $this->schema();
+		if(!empty($schema) && array_key_exists('columns', $schema)){
+			$cols = $schema['columns'];
+			if(array_key_exists($attribute, $cols)){
+				$dataType = $cols[$attribute];
+			}
+		}
+		return $dataType;
+	}
+	
+	/**
+	 * Binds the schema array
+	 * @see NActiveRecord::shema with results in attached behaviors 
+	 * @see NActiveRecordBahevior::schema
+	 * @return array schema
+	 */
+	public function getSchemaComplete()
+	{
+		$schema = $this->schema();
+		foreach($this->behaviors() as $behavior=>$config){
+			if($this->asa($behavior) instanceof NActiveRecordBehavior)
+				$schema = CMap::mergeArray($schema, $this->asa($behavior)->schema());
+		}
+		return $schema;
+	}
 	
 	/**
 	 * Adds tablePrefix to tableName if necessary
 	 * returns the raw string table name used by the database
 	 * @return string 
 	 */
-	public function getRealTableName(){
+	public function getRealTableName()
+	{
 		$realName = $this->tableName();
 		if($this->getDbConnection()->tablePrefix!==null && strpos($realName,'{{')!==false)
 			$realName=preg_replace('/\{\{(.*?)\}\}/',$this->getDbConnection()->tablePrefix.'$1',$realName);
@@ -223,7 +293,7 @@ class NActiveRecord extends CActiveRecord
 	}
 	
 	/**
-	 *	Generic parent function for displaying a model's columns in a grid (or exporting)
+	 * Generic parent function for displaying a model's columns in a grid (or exporting)
 	 * This function should be set in every model extending NActiveRecord and follow the structure that NGridView expects
 	 * 
 	 * @return array 
@@ -231,6 +301,7 @@ class NActiveRecord extends CActiveRecord
 	public function columns() {
 		return array();
 	}
+	
 	
 	public function dateRangeCriteria(&$criteria, $field) {
 		$from = $field.'_from';
@@ -258,6 +329,22 @@ class NActiveRecord extends CActiveRecord
 	 */
 	public function getGridScopes() {
 		return array();
+	}
+	
+	/**
+	 * Get the model in the search scenario state. Populate with search attributes
+	 * $_GET[$className];
+	 * @param string $className
+	 * @return NActiveRecord in scenario search
+	 */
+	public function searchModel()
+	{
+		$className = get_class($this);
+		$model = new $className('search');
+		$model->unsetAttributes();
+		if(isset($_GET[$className]))
+			$model->attributes = $_GET[$className];
+		return $model;
 	}
 	
 }

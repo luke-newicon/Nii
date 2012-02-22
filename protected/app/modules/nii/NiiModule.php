@@ -29,6 +29,8 @@ class NiiModule extends NWebModule
 	
 	
 	public function init(){
+		Yii::import('nii.models.*');
+		Yii::import('nii.components.behaviors.*');
 		
 		if(Yii::app()->domain){
 			// this is important it makes the cache specific to the domain application instance.
@@ -78,7 +80,7 @@ class NiiModule extends NWebModule
 				'baseUrl'=>$this->getAssetsUrl(),
 				'js'=>array(
 					'js/backbone/underscore-1.3.1.min.js',
-					'js/backbone/backbone-0.5.3.min.js',
+					'js/backbone/backbone-0.9.1.min.js',
 				),
 				'depends'=>array('jquery')
 			),
@@ -96,7 +98,6 @@ class NiiModule extends NWebModule
 		);
 		Yii::app()->getClientScript()->registerPackage('nii');
 		Yii::app()->getClientScript()->registerPackage('backbone');
-		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 		
 		if($this->juiThemeUrl===null){
 			$this->juiThemeUrl = $this->getAssetsUrl().'/jqueryui';
@@ -167,7 +168,7 @@ class NiiModule extends NWebModule
 			'nii.js'=>false,
 			'all.css'=>false,
 			'sprite.css'=>false,
-			'backbone-0.5.3.min.js'=>false,
+			'backbone-0.9.1.min.js'=>false,
 			'underscore-1.3.1.min.js'=>false,
 			'jquery.gritter.min.js'=>false,
 			'jquery.gritter.css'=>false,

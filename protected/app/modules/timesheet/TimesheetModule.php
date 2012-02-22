@@ -8,11 +8,13 @@ class TimesheetModule extends NWebModule
 	public $version = '0.0.1';
 	public $assetUrl;
 
-	public function init() {
+	public function init() 
+	{
 		Yii::import('timesheet.models.*');
 	}
 	
-	public function setup() {
+	public function setup() 
+	{
 		$localPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'assets';
 		$this->assetUrl = Yii::app()->assetManager->publish($localPath);
 		Yii::app()->clientScript->registerCssFile($this->assetUrl . '/timesheet.css');
@@ -22,15 +24,26 @@ class TimesheetModule extends NWebModule
 		$project = Yii::app()->getModule('project');
 		if ($project==null)
 			throw new CException('Timesheet module requires the project module to be installed and enabled');
+		
+		Yii::app()->urlManager->addRules(array(
+				array('/timesheet/api/list',   'pattern'=>'/timesheet/api/<model:\w+>',			 'verb'=>'GET'),
+				array('/timesheet/api/view',   'pattern'=>'/timesheet/api/<model:\w+>/<id:\w+>', 'verb'=>'GET'),
+				array('/timesheet/api/create', 'pattern'=>'/timesheet/api/<model:\w+>',          'verb'=>'POST'),
+				array('/timesheet/api/update', 'pattern'=>'/timesheet/api/<model:\w+>/<id:\w+>', 'verb'=>'PUT'),
+				array('/timesheet/api/delete', 'pattern'=>'/timesheet/api/<model:\w+>/<id:\w+>', 'verb'=>'DELETE'),
+			)
+		);
+		Yii::app()->getClientScript()->registerPackage('fullcalendar');
 	}
 
-	public function install() {
+	public function install() 
+	{
 		TimesheetHoliday::install();
 		TimesheetLog::install();
 	}
 
-	public function uninstall() {
-		
+	public function uninstall() 
+	{	
 	}
 	
 	/**
@@ -39,7 +52,8 @@ class TimesheetModule extends NWebModule
 	 * @param int $projectId
 	 * @return int number of minutes 
 	 */
-	public function getTotalProjectMinutes($projectId){
+	public function getTotalProjectMinutes($projectId)
+	{
 		$minutes = TimesheetLog::model()->cmdSelect('sum(minutes) as totalminutes')
 				->where("project_id = $projectId")->queryColumn();
 		return $minutes[0];
@@ -50,7 +64,8 @@ class TimesheetModule extends NWebModule
 	 * @param int $projectId 
 	 * @return array TimesheetLog records
 	 */
-	public function getProjectTimeLogs($projectId){
+	public function getProjectTimeLogs($projectId)
+	{
 		return TimesheetLog::model()->findAllByAttributes(array('project_id'=>$projectId));
 	}
 

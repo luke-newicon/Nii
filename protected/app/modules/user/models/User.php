@@ -343,7 +343,7 @@ class User extends NActiveRecord {
 	 * @param int $id 
 	 * @param type $size 
 	 */
-	public function getProfileImage($id=null, $type='note-thumbnail'){
+	public function getProfileImage(){
 		// To hook into this function we could use a an event:
 		// $event = new CEvent();
 		// $this->onGetProfileImage($event)
@@ -354,7 +354,7 @@ class User extends NActiveRecord {
 		//     return $event->params->imageUrl   
 		
 		// Display guest photo
-		Yii::app()->controller->widget('nii.widgets.Gravatar',array('email'=>''));
+		return Yii::app()->controller->createWidget('nii.widgets.Gravatar',array('email'=>$this->email))->getUrl();
 	}
 
 }

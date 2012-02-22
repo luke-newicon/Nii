@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Project class file.
+ * ProjectController class file.
  *
  * @author Steven O'Brien <steven.obrien@newicon.net>
  * @link http://newicon.net/framework
@@ -10,76 +10,42 @@
  */
 
 /**
- * Description of Project
+ * Description of TaskController
  *
  * @author steve
  */
-class TaskController extends AController {
-
-	
-	public function accessRules() {
-		return array(
-			array('allow',
-				'users' => array('@'),
-			),
-			array('deny', // deny all users
-				'users' => array('?'),
-			),
-		);
-	}
-	
-	public function actionIndex() {
-		
-		$allTasks = NActiveRecord::model('ProjectTask')->findAll();
-		$tasks = CJSON::encode($allTasks);
-		$this->render('index', array('tasks'=>$tasks));
-	}
-	
-	
+class TaskController extends AController
+{
 	/**
-	 * Handle a RESTful POST request (post requests instruct the API to create new records / resources).
-	 * @param type $model 
+	 * @param int $id task id
 	 */
-	public function actionCreate(){
-		$m = 'ProjectTask';
-		$m = new $m;
-		if($m===null)
-			throw new CHttpException (404,'no model found');
-
-		$m->attributes = $this->getRESTData();
-		if ($m->estimated_time_nice)
-			$m->estimated_time = NTime::setTimeInMinutes($m->estimated_time_nice);
-
-		$m->save();
-		$this->RESTResponse($m);
-	}
-	/**
-	 * handle a RESTful UPDATE request
-	 * @param type $model
-	 * @param type $id 
-	 */
-	public function actionUpdate($id){
-		$m = 'ProjectTask';
-		$m = $this->modelLoad($m,$id);
-		
-		$m->attributes = $this->getRESTData();
-		if ($m->estimated_time_nice)
-			$m->estimated_time = NTime::setTimeInMinutes($m->estimated_time_nice);
-		
-		$saved = $m->save();
-		$this->RESTResponse($m);
+	public function actionIndex($id)
+	{
+		$t = $this->loadTask($id);
+		$this->render('index', array('task'=>$t));
 	}
 	
 	/**
-	 * Handle RESTful DELETE request
-	 * @param type $model
-	 * @param type $id 
+	 * create and validates a new task
+	 * @param int $parent id of the parent project, job or task
 	 */
-	public function actionDelete($id){
-		$m = 'ProjectTask';	
-		$m = $this->modelLoad($m,$id);
-		$m->delete();
+	public function actionCreate($parent)
+	{
+		$this->performAjaxValidation(new ProjectTask, 'create-job');
+		ProjectApi::createTask($parent, $_POST['ProjectTask']);
 	}
-
-
+	
+	/**
+	 * Load in a task by id if it does ot exist then throw a http error
+	 * @param int $id
+	 * @return ProjectTask
+	 * @throws CHttpException 
+	 */
+	public function loadTask($id)
+	{
+		$t = ProjectTask::model()->findByPk($id);
+		if($t===null)
+			throw new CHttpException('This task does not exist');
+		return $t;
+	}
 }

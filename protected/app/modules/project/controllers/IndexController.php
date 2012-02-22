@@ -1,70 +1,35 @@
 <?php
+
 /**
- * Project index controller class file.
+ * IndexController class file.
  *
- * @link http://newicon.net/nii
+ * @author Steven O'Brien <steven.obrien@newicon.net>
+ * @link http://newicon.net/framework
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
- * @license http://newicon.net/nii/license/
+ * @license http://newicon.net/framework/license/
  */
 
 /**
- * Description of Project
+ * Description of IndexController
  *
  * @author steve
- * @package nii.project
  */
-class IndexController extends AController 
+class IndexController extends AController
 {
 	
-	public function accessRules() {
-		return array(
-			array('allow',
-				'users' => array('@'),
-			),
-			array('deny', // deny all users
-				'users' => array('?'),
-			),
-		);
+	public function actionIndex()
+	{
+		$this->render('index',array('taskSearch'=>ProjectTask::model()->searchModel()));
 	}
-
-	/**
-	 *	Grid view - for now - of the open projects 
-	 */
-	public function actionIndex() {
-		
-		$modelName = 'ProjectProject';
-	
-		$model = new $modelName('search');
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$modelName]))
-			$model->attributes = $_GET[$modelName];
-
-		$this->render('index',array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model,
-		));
-	}
-	
-	
 	
 	/**
-	 * Create a new project
+	 * create a new top level project  
 	 */
-	public function actionCreate() {
-		// todo validate project name is unique
-		
-		$modelName = 'ProjectProject';
-		
-		$model = new $modelName;
-		
-		if ($_POST[$modelName]) {
-			$model->attributes = $_POST[$modelName];
-			$model->save();
-		}
-		echo CJSON::encode($model);
-		Yii::app()->end();
+	public function actionCreateProject()
+	{
+		$this->performAjaxValidation(new ProjectTask, 'create-project');
+		$project = ProjectApi::createProject($_POST['ProjectTask']);
+		$this->redirect(array('/project/project/index','project'=>$project->name_slug));
 	}
-	
 	
 }

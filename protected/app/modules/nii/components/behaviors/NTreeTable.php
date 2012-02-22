@@ -26,11 +26,27 @@ class NTreeTable extends NActiveRecordBehavior
 	public $level = 'tree_level';
 	
 	/**
-	 * this class also maintains an acurate parent id cos its great and darn handy
+	 * This class also maintains an acurate parent id cos its great and darn handy
 	 * @var string
 	 */
 	public $parent = 'tree_parent';
 
+	/**
+	 * define additonal columns to add to the table
+	 */
+	public function schema()
+	{
+		$this->getProperties($left, $right, $level, $parent);
+		return array(
+			'columns'=>array(
+				"$left"=>'int',
+				"$right"=>'int',
+				"$level"=>'int',
+				"$parent"=>'int',
+			)
+		);
+	}
+	
 	/**
 	 * Returns left right and level values of the columns.
 	 *
@@ -45,7 +61,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param string $right null
 	 * @param string $level null
 	 */
-	public function getProperties(&$left=null, &$right=null, &$level=null, &$parent=null) {
+	public function getProperties(&$left=null, &$right=null, &$level=null, &$parent=null) 
+	{
 		$left = $this->left;
 		$right = $this->right;
 		$level = $this->level;
@@ -56,7 +73,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * Returns all the nodes in a tree
 	 * @return array of CActiveRecord's
 	 */
-	public function getAllNodes() {
+	public function getAllNodes()
+	{
 		$baseNode = $this->getTreeRoot();
 		return $this->getDescendentsOf($baseNode);
 	}
@@ -65,7 +83,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * Gets the root row of the tree table
 	 * @return CActiveRecord / null if none found
 	 */
-	public function getTreeRoot() {
+	public function getTreeRoot()
+	{
 		$search = $this->getOwner()->find($this->left . '=0');
 		return $search;
 	}
@@ -75,7 +94,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return boolean 
 	 */
-	public function isRoot() {
+	public function isRoot()
+	{
 		$this->getProperties($left);
 		return ($this->getOwner()->$left==0);
 	}
@@ -89,7 +109,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node The node which you would like to find all the descendant of
 	 * @return CActiveRecord
 	 */
-	public function getDescendentsOf(CActiveRecord $node) {
+	public function getDescendentsOf(CActiveRecord $node)
+	{
 		$this->getProperties($left, $right);
 		$nodes = $this->getOwner()->findAll(array(
 			'condition' => "$left > :lft AND $right < :rgt",
@@ -104,7 +125,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return array of CActiveRecord's
 	 */
-	public function getDescendents() {
+	public function getDescendents()
+	{
 		return $this->getDescendentsOf($this->getOwner());
 	}
 
@@ -114,7 +136,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node The node to get all the ancestors on
 	 * @return CActiveRecord
 	 */
-	public function getAncestorsOf(CActiveRecord $node) {
+	public function getAncestorsOf(CActiveRecord $node)
+	{
 		$this->getProperties($left, $right);
 		$ancestors = $this->getOwner()->findAll(array(
 			'condition' => "$left < :lft AND $right > :rgt",
@@ -129,8 +152,9 @@ class NTreeTable extends NActiveRecordBehavior
 	 *  
 	 * @return array of CActiveRecord's 
 	 */
-	public function getAncestors() {
-            return $this->getAncestorsOf($this->getOwner());
+	public function getAncestors()
+	{
+		return $this->getAncestorsOf($this->getOwner());
 	}
 
 	/**
@@ -139,7 +163,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node
 	 * @return CActiveRecord
 	 */
-	public function getParentOf(CActiveRecord $node) {
+	public function getParentOf(CActiveRecord $node)
+	{
 		$this->getProperties($left, $right, $level);
 		$res = $this->getOwner()->find(array(
 			'condition' => "`$left` < :lft AND `$right` > :rgt AND `$level` = :level",
@@ -157,7 +182,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return CActiveRecord 
 	 */
-	public function getParent() {
+	public function getParent()
+	{
 		return $this->getParentOf($this->getOwner());
 	}
 
@@ -167,7 +193,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node
 	 * @return list of CActiveRecords or empty array
 	 */
-	public function getChildrenOf(CActiveRecord $node) {
+	public function getChildrenOf(CActiveRecord $node)
+	{
 
 		$c = $this->getQueryChildrenOf($node);
 
@@ -186,7 +213,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @see TreeTable::getChildrenOf
 	 * @return list of CActiveRecords or empty array
 	 */
-	public function getChildren() {
+	public function getChildren()
+	{
 		return $this->getChildrenOf($this->getOwner());
 	}
 
@@ -196,7 +224,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node
 	 * @return CDbCriteria
 	 */
-	public function getQueryChildrenOf(CActiveRecord $node) {
+	public function getQueryChildrenOf(CActiveRecord $node)
+	{
 		$this->getProperties($left, $right, $level);
 		$c = new CDbCriteria(array(
 			'condition' => "$left > :nodeLeft AND $right < :nodeRight AND $level = :level",
@@ -210,7 +239,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @param CActiveRecord $node 
 	 */
-	public function detachNode(CActiveRecord $node) {
+	public function detachNode(CActiveRecord $node)
+	{
 		$this->getProperties($left, $right);
 		$node->$left = -1;
 		$node->$right = -1;
@@ -220,7 +250,8 @@ class NTreeTable extends NActiveRecordBehavior
 	/**
 	 * deletes node and it's descendants
 	 */
-	public function deleteNode(CActiveRecord $node, $deleteDescendants = false) {
+	public function deleteNode(CActiveRecord $node, $deleteDescendants = false)
+	{
 		$this->getProperties($left, $right, $level);
 
 		$connection=Yii::app()->db;
@@ -248,7 +279,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 *
 	 * @return bool 
 	 */
-	public function isValidNode($treeNode) {
+	public function isValidNode($treeNode)
+	{
 		if ($treeNode instanceof CActiveRecord) {
 			$this->getProperties($left, $right);
 			return ($treeNode->$right > $treeNode->$left);
@@ -262,7 +294,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @param CActiveRecord $node 
 	 */
-	public function addNodeToRoot($node) {
+	public function addNodeToRoot($node)
+	{
 		// get root node
 		$root = $this->getTreeRoot();
 		$this->insertAsLastChildOf($node, $root);
@@ -276,7 +309,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return bool
 	 * @todo Wrap in transaction
 	 */
-	public function insertAsParentOf(CActiveRecord $insertNode, CActiveRecord $refNode) {
+	public function insertAsParentOf(CActiveRecord $insertNode, CActiveRecord $refNode)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 
 		// cannot insert a node that has already has a place within the tree
@@ -326,7 +360,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return bool
 	 * @todo Wrap in transaction
 	 */
-	public function insertBeforeNode(CActiveRecord $insertNode, CActiveRecord $refNode) {
+	public function insertBeforeNode(CActiveRecord $insertNode, CActiveRecord $refNode)
+	{
 		// cannot insert a node that has already has a place within the tree
 		if ($this->isValidNode($insertNode))
 			return false;
@@ -363,7 +398,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return bool
 	 * @todo Wrap in transaction
 	 */
-	public function insertAfterNode(CActiveRecord $insertNode, CActiveRecord $refNode) {
+	public function insertAfterNode(CActiveRecord $insertNode, CActiveRecord $refNode)
+	{
 		// cannot insert a node that already has a place within the tree
 		if ($this->isValidNode($insertNode))
 			throw Exception('node is not valid!');
@@ -404,7 +440,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param int $level The tree level
 	 * @param int $parentId
 	 */
-	private function _insertNode(CActiveRecord $node, $left, $right, $level, $parentId) {
+	private function _insertNode(CActiveRecord $node, $left, $right, $level, $parentId)
+	{
 		$this->getProperties($colLeft,$colRight,$colLevel, $colParent);
 		$node->$colLeft = $left;
 		$node->$colRight = $right;
@@ -417,8 +454,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * Inserts node as first child of dest record
 	 * @return bool Whether or not the insert was a success
 	 */
-	public function insertAsFirstChildOf(CActiveRecord $node, CActiveRecord $parentNode) {
-
+	public function insertAsFirstChildOf(CActiveRecord $node, CActiveRecord $parentNode)
+	{
 		// cannot insert as child of itself
 		if ($parentNode === $node) {
 			throw new CException("Cannot insert node as first child of itself");
@@ -452,7 +489,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return bool
 	 * @todo Wrap in transaction
 	 */
-	public function insertAsLastChildOf(CActiveRecord $node, CActiveRecord $parentNode) {
+	public function insertAsLastChildOf(CActiveRecord $node, CActiveRecord $parentNode)
+	{
 		// cannot insert a node that has already has a place within the tree
 		if ($this->isValidNode($node))
 			return false;
@@ -481,11 +519,13 @@ class NTreeTable extends NActiveRecordBehavior
 		return true;
 	}
 
-	public function insertAsLastChild($node){
+	public function insertAsLastChild($node)
+	{
 		return $this->insertAsLastChildOf($node, $this->getOwner());
 	}
 	
-	public function addChild($node){
+	public function addChild($node)
+	{
 		return $this->insertAsLastChildOf($node, $this->getOwner());
 	}
 	
@@ -500,7 +540,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param bool $rootNode true to include the root node output at the beginning of the path
 	 * @return string string representation of path
 	 */
-	public function getPathOf($node, $seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false) {
+	public function getPathOf($node, $seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false)
+	{
 		$path = array();
 		$ancestors = $node->getAncestors();
 		if ($ancestors) {
@@ -517,7 +558,8 @@ class NTreeTable extends NActiveRecordBehavior
 		return implode($seperator, $path);
 	}
 
-	public function getPath($seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false){
+	public function getPath($seperator = ' / ', $colName=null, $includeNode=false, $includeRoot=false)
+	{
 		return $this->getPathOf($this->getOwner(), $seperator, $colName, $includeNode, $includeRoot);
 	}
 
@@ -537,8 +579,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param $latestPath
 	 * @return Newicon_Db_TreeRow or false if no node found
 	 */
-	public function getNodeWithPath($path, $colName, &$nodes=array(), &$latestPath=array()) {
-
+	public function getNodeWithPath($path, $colName, &$nodes=array(), &$latestPath=array())
+	{
 		$pathBits = explode('/', $path);
 		$node = $this->fetchRow("$colName=?", $pathBits[0]);
 
@@ -571,7 +613,8 @@ class NTreeTable extends NActiveRecordBehavior
 		return $node;
 	}
 
-	public function moveInsideNode($node, $refNode) {
+	public function moveInsideNode($node, $refNode)
+	{
 		$this->moveAsLastChildOf($node, $refNode);
 	}
 
@@ -583,7 +626,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return boolean
 	 * @throws CException
 	 */
-	public function moveAsFirstChildOf(CActiveRecord $node, CActiveRecord $parentNode) {
+	public function moveAsFirstChildOf(CActiveRecord $node, CActiveRecord $parentNode)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 		if ($parentNode === $node || $node->isAncestorOf($parentNode)) {
 			throw new CException("Cannot move node as first child of itself or into a descendant");
@@ -609,7 +653,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @return boolean
 	 * @throws CException
 	 */
-	public function moveAsChildOf(CActiveRecord $node, CActiveRecord $parentNode, $position) {
+	public function moveAsChildOf(CActiveRecord $node, CActiveRecord $parentNode, $position)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 		
 		if ($parentNode === $node || $node->isAncestorOf($parentNode)) {
@@ -650,7 +695,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @throws CException
 	 * @return void
 	 */
-	public function moveAsLastChildOf(CActiveRecord $node, CActiveRecord $parentNode) {
+	public function moveAsLastChildOf(CActiveRecord $node, CActiveRecord $parentNode)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 		if ($parentNode === $node || $node->isAncestorOf($parentNode)) {
 			throw new CException("Cannot move node as last child of itself or into one of its ancestors");
@@ -670,7 +716,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $refNode 
 	 * @return void
 	 */
-	public function moveBeforeNode($node, $refNode) {
+	public function moveBeforeNode($node, $refNode)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 		$oldLevel = $node->$colLevel;
 		$node->$colLevel = $refNode->$colLevel;
@@ -685,7 +732,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node 
 	 * @param CActiveRecord $refNode 
 	 */
-	public function moveAfterNode($node, $refNode) {
+	public function moveAfterNode($node, $refNode)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel, $colParent);
 		$oldLevel = $node->$colLevel;
 		$node->$colLevel = $refNode->$colLevel;
@@ -699,7 +747,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 *
 	 * @param int $destLeft destination left value
 	 */
-	private function _updateNode($node, $destLeft, $levelDiff) {
+	private function _updateNode($node, $destLeft, $levelDiff)
+	{
 		$this->getProperties($colLeft, $colRight, $colLevel);
 		$left = $node->$colLeft;
 		$right = $node->$colRight;
@@ -746,8 +795,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param int $first First node to be shifted
 	 * @param int $delta Value to be shifted by, can be negative
 	 */
-	public function _shiftRlValues($first, $delta) {
-
+	public function _shiftRlValues($first, $delta)
+	{
 		$this->getProperties($left, $right);
 
 		// shift left columns
@@ -761,7 +810,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return CDbConnection 
 	 */
-	public function getDb(){
+	public function getDb()
+	{
 		return $this->getOwner()->getDbConnection();
 	}
 
@@ -776,7 +826,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param int $last	Last node to be shifted (L value)
 	 * @param int $delta Value to be shifted by, can be negative
 	 */
-	private function _shiftRlRange($first, $last, $delta) {
+	private function _shiftRlRange($first, $last, $delta)
+	{
 		$this->getProperties($left,$right);
 		$tableName = $this->getOwner()->tableName();
 		$this->getDb()->createCommand("UPDATE `$tableName` SET `$left` = $left + $delta WHERE $left >= $first AND $left <= $last")->execute();
@@ -791,7 +842,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param int $level
 	 * @return void
 	 */
-	private function rebuildTree($parent, $left, $level=0) {
+	private function rebuildTree($parent, $left, $level=0)
+	{
 		$this->getProperties($colLeft,$colRight,$colLevel,$colParent);
 		
 		// the right value of this node is the left value + 1
@@ -831,7 +883,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return void
 	 */
-	public function afterInstall($event) {
+	public function afterInstall($event)
+	{
 		$this->getProperties($left, $right, $level, $parent);
 		// check we don't already have a root node
 		
@@ -861,13 +914,13 @@ class NTreeTable extends NActiveRecordBehavior
 	 * 
 	 * @return boolean 
 	 */
-	public function hasChildren(){
+	public function hasChildren()
+	{
 		$this->getProperties($left, $right);
 		$node = $this->getOwner();
 		return ($node->$right > ($node->$left + 1)) ? true : false;
 	}
 
-	
 	/**
 	 * Get an array in jstree format representing all nodes within the $rootNode
 	 * 
@@ -876,7 +929,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $rootNode the node to start from (typically the root)
 	 * @return array 
 	 */
-	public function generateJstreeArray($rootNode=null, $nameCol='name', $typeCol=null){
+	public function generateJstreeArray($rootNode=null, $nameCol='name', $typeCol=null)
+	{
 		$tree= null;
 		if($rootNode===null)
 			$rootNode = $this->getTreeRoot();
@@ -892,7 +946,8 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $rootNode
 	 * @param array $tree 
 	 */
-	private function _generateJstreeArrayRecursive($rootNode, &$tree=array(), $nameCol='name', $typeCol=null){
+	private function _generateJstreeArrayRecursive($rootNode, &$tree=array(), $nameCol='name', $typeCol=null)
+	{
 		// if child
 		$myArr = $this->getJstreeNodeArray($rootNode, $nameCol, $typeCol);
 		$tree[] =& $myArr;
@@ -916,16 +971,17 @@ class NTreeTable extends NActiveRecordBehavior
 	 * @param CActiveRecord $node
 	 * @return array 
 	 */
-	public function getJstreeNodeArray($node, $nameCol='name', $typeCol=null){
+	public function getJstreeNodeArray($node, $nameCol='name', $typeCol=null)
+	{
 		$ret = array(
-                    'data'=>$node->$nameCol,
-                    'attr'=>array(
-                        'data-id'=>$node->getPrimaryKey(),
-			'data-name'=>$node->name,
-                        'title'=>$node->description,
-                        'id'=>'treenode'.$node->getPrimaryKey()
-                    )
-                );
+			'data'=>$node->$nameCol,
+			'attr'=>array(
+				'data-id'=>$node->getPrimaryKey(),
+				'data-name'=>$node->name,
+				'title'=>$node->description,
+				'id'=>'treenode'.$node->getPrimaryKey()
+			)
+		);
 		if($typeCol!==null)
 			$ret['attr']['rel'] = $node->$typeCol;
 		if($node->hasChildren()){

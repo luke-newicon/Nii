@@ -27,5 +27,23 @@ class NActiveRecordBehavior extends CActiveRecordBehavior
 	public function afterInstall($event)
 	{
 	}
+	
+	/**
+	 * If a behavior wishes to add addiontal columns
+	 * implement the schmea array
+	 * 
+	 * @see NActiveRecord::schema
+	 * @see NActiveRecord::getSchemaComplete
+	 * @return aray schema array
+	 * array(
+	 *     'columns'=>array(
+	 *         'col_name'=>'col type'
+	 *     )
+	 * )
+	 */
+	public function schema()
+	{	
+		return array();
+	}
 }
 

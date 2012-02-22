@@ -8,13 +8,15 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-class NActiveForm extends CActiveForm {
+class NActiveForm extends CActiveForm 
+{
 
 	public $enableAjaxValidation = true;
 	public $enableClientValidation = true;
 	public $errorMessageCssClass = 'errorMessage help-inline';
 
-	public function init() {
+	public function init() 
+	{
 		// add small script to add focus class to parent .field element
 		if (!isset($this->clientOptions['inputContainer']))
 			$this->clientOptions['inputContainer'] = '.control-group';
@@ -23,11 +25,13 @@ class NActiveForm extends CActiveForm {
 		parent::init();
 	}
 
-	public function markdown() {
+	public function markdown() 
+	{
 		// todo add nii input widgets
 	}
 
-	public function wysiwyg() {
+	public function wysiwyg() 
+	{
 		// todo add nii input widget
 	}
 
@@ -41,18 +45,20 @@ class NActiveForm extends CActiveForm {
 	 * @param array $htmlOptions additional HTML attributes.
 	 * @return string the generated label tag
 	 */
-	public function labelEx($model, $attribute, $htmlOptions=array()) {
+	public function labelEx($model, $attribute, $htmlOptions=array()) 
+	{
 		if (empty($htmlOptions)) {
 			$htmlOptions = array('class' => 'control-label');
 		}
 		return parent::labelEx($model, $attribute, $htmlOptions);
 	}
 
-	public function beginField($model, $attribute, $error=true) {
+	public function beginField($model, $attribute, $error=true) 
+	{
 		$errorClass = ($error && $model->hasErrors($attribute)) ? ' error' : '';
-		$return = '<div class="control-group' . $errorClass . '">';
-		$return .= $this->labelEx($model, $attribute);
-		$return .= '<div class="controls">';
+			$return = '<div class="control-group' . $errorClass . '">';
+			$return .= $this->labelEx($model, $attribute);
+			$return .= '<div class="controls">';
 		return $return;
 	}
 
@@ -67,9 +73,35 @@ class NActiveForm extends CActiveForm {
 
 	public function field($model, $attribute, $type='textField', $data=null, $htmlOptions=array()) 
 	{
+		$type = $this->getAttributeFieldType($model, $attribute, $type);
 		return $this->editField($model, $attribute, $type, $data, $htmlOptions);
 	}
-
+	
+	/**
+	 * detect the field type from the attribute
+	 * @return string field type (textField, textArea, datefield, etc)
+	 */
+	public function getAttributeFieldType($model, $attribute, $defaultType='textField')
+	{
+		if ($model instanceof NActiveRecord){
+			$dt = $model->getAttributeDataType($attribute);
+			// mapping of dataType to form field type
+			$dataTypeToField = array(
+				'pk'=>'textField',
+				'int'=>'textField',
+				'string'=>'textField',
+				'text'=>'textArea',
+				'date'=>'dateField',
+				'datetime'=>'dateField',
+				'boolean'=>'checkBoxField',
+			);
+			if(array_key_exists($dt, $dataTypeToField))
+				return $dataTypeToField[$dt];
+		}
+		
+		return $defaultType;
+	}
+	
 	/**
 	 * Creates a form field using a default structure for labels, field and error message
 	 * @param CModel $model the data model
@@ -156,5 +188,5 @@ class NActiveForm extends CActiveForm {
 			$return .= $this->hiddenField($model, $attribute);
 		return $return;
 	}
-
+	
 }

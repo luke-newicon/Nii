@@ -5,6 +5,8 @@
 	#timesheet-totals th{text-align:right;}
 	#timesheet-totals th.total{font-weight:bold;}
 	.today .input{border: 1px solid #999;}
+	.fc-agenda-slots td div{height:16px;}
+	#calendar{line-height: 16px;}
 </style>
 
 <div id="calendar"></div>
@@ -121,7 +123,7 @@
 	</div>
 </div>
 
-<div id="addprojectDialog" class="" title="New Project" style="display:none;">
+<!--<div id="addprojectDialog" class="" title="New Project" style="display:none;">
 	<form>
 		<div class="field stacked	">
 			<label class="lbl" for="projectname" >Name your project <span class="hint">e.g &quot;Website Redesign&quot; or &quot;Product Ideas&quot;</span></label>
@@ -133,125 +135,54 @@
 			</div>
 		</div>
 	</form>
-</div>
-
-<div id="timelogday" title="Add Time Log" class="ptm" style="position:relative;width:400px;background-color:#fff;box-shadow:0px 0px 5px #000;z-index:3" >
-	<div style="position:absolute;bottom:-15px;left:190px;width:20px;height:15px;border:1px solid #000;"></div>
-<form id="timelogday" class="form-horizontal">
-	<div class="control-group mbs">
-		<label for="project" class="control-label"  style="width:60px;">When:</label>
-		<div class="controls" style="margin-left:75px;">
-			<p class="mts mbn"> Fri, 10 February, 9:00 - 11:30</p>
+</div>-->
+<script type="text/template" id="timelog-pop-template">
+	<div style="position:absolute;bottom:-11px;overflow:hidden;left:190px;width:22px;height:11px;">
+		<div style="position:absolute;left:0px;top:0px;border-color:#999999 transparent;border-width:11px;border-style:solid;"></div>
+		<div style="position:absolute;left:1px;top:0px;border-color:#F5F5F5 transparent;border-width:10px;border-style:solid;"></div>
+	</div>
+	<div class="form-horizontal">
+		<div class="control-group mbs">
+			<label for="project" class="control-label"  style="width:60px;">When:</label>
+			<div class="controls" style="margin-left:75px;">
+				<p class="mts mbn"> <% print(log.startTime()); %> - <% print(log.endTime()); %> </p>
+			</div>
+		</div>
+		<div class="control-group mbs">
+			<label for="project" class="control-label"  style="width:60px;">Project</label>
+			<div class="controls project" style="margin-left:75px;"></div>
+		</div>
+		<div class="control-group mbs">
+			<label for="task" class="control-label" style="width:60px;">Task</label>
+			<div class="controls" style="margin-left:75px;">
+				<input type="text" id="focusedInput" class="input-large focused">
+			</div>
+		</div>
+		<div class="form-actions pas line">
+			<div class="unit size1of2">
+				<button class="delete btn btn-danger">Delete</button>
+			</div>
+			<div class="lastUnit" style="text-align:right;">
+				<% if(_.isNull(log.id)) { %>
+				<button class="save btn btn-primary">Save</button>
+				<% } %>
+				<button class="cancel btn" type="reset">Cancel</button>
+			</div>
 		</div>
 	</div>
-	<div class="control-group mbs">
-		<label for="project" class="control-label"  style="width:60px;">Project</label>
-		<div class="controls" style="margin-left:75px;" id="project-select">
-			<input type="text" id="focusedInput" class="input-large focused">
-		</div>
-	</div>
-	<div class="control-group mbs">
-		<label for="task" class="control-label" style="width:60px;">Task</label>
-		<div class="controls" style="margin-left:75px;">
-			<input type="text" id="focusedInput" class="input-large focused">
-		</div>
-	</div>
-	<div class="control-group mbs">
-		<label for="focusedInput" class="control-label" style="width:60px;">Time</label>
-		<div class="controls" style="margin-left:75px;">
-			<input type="text" id="time" class="focused" style="width:40px;">
-			<script>
-				$(function(){
-					$.mask.definitions['m']='[012345]';
-					$('#time').mask('9:?m9',{placeholder:' '});
-				});	
-			</script>
-		</div>
-	</div>
-<!--	<div class="control-group">
-		<label for="focusedInput" class="control-label">Notes</label>
-		<div class="controls">
-			<textarea class="input-large"></textarea>
-		</div>
-	</div>-->
-
-	<div class="form-actions pvs">
-		<button class="btn btn-primary" type="submit">Save changes</button>
-		<button class="btn" type="reset">Cancel</button>
-	</div>
-</form>
-</div>
+</script>
 <?php $this->renderPartial('_templates'); ?>
 <?php Yii::app()->clientScript->registerCoreScript('maskedinput'); ?>
 
+<div id="timelog-pop" class="ptm" style="" ></div>
 
 <script type="text/javascript">
-	
-		
-//							if($(ui.item.option).val() == 'createnewproject'){
-//								$.fn.nii.form();
-//								$('#addprojectDialog').dialog({
-//									modal:true,
-//									width:'400',
-//									buttons:[
-//										{
-//											text:'Create Project',
-//											class:'btn btn-primary',
-//											click:function(){
-//												$.post('<?php echo NHtml::url('project/index/create'); ?>', {ProjectProject:{name:$('#projectname').val()}}, function(project){
-//													$('#addprojectDialog').dialog('close');
-//													$('#projectname').val('');
-//													$('#projectname').blur();
-//													var p = new window.timesheet.models.Project(project);
-//													window.timesheet.projects.add(p);
-//													
-//												})
-//											}
-//										},
-//										{
-//											text:'Cancel',
-//											class:'btn',
-//											click:function(){
-//												$('#addprojectDialog').dialog('close');
-//											}
-//										}
-//									]
-//								});
-//								return false;
-//							}
-//							ui.item.option.selected = true;
-//							self._trigger( "selected", event, {
-//								item: ui.item.option
-//							});
-//						change: function( event, ui ) {
-//							if ( !ui.item ) {
-//								var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
-//									valid = false;
-//								select.children( "option" ).each(function() {
-//									if ( $( this ).text().match( matcher ) ) {
-//										this.selected = valid = true;
-//										return false;
-//									}
-//								});
-//								if ( !valid ) {
-//									// remove invalid value, as it didn't match anything
-//									$( this ).val( "" );
-//									select.val( "" );
-//									input.data( "autocomplete" ).term = "";
-//									return false;
-//								}
-//							}
-//						},
 
 		
 	jQuery(function($){
 		
 		
-
 		// page is now ready, initialize the calendar...
-
-		
-
 		
 		window.project = {};
 		window.timesheet = {
@@ -391,19 +322,58 @@
 				task_id:0,
 				minutes:0
 			},
+			url : function() {
+				// Important! It's got to know where to send its REST calls.
+				// In this case, POST to '/donuts' and PUT to '/donuts/:id'
+				if(this.id)
+					return '<?php echo NHtml::url("/timesheet/api/log") ?>/'+this.id;
+				else
+					return '<?php echo NHtml::url("/timesheet/api/log") ?>';
+			},
+			start:null,
+			end:null,
 			/**
 			 * return the javascript date object for the date attribute
 			 */
 			date:function(){
 				return window.timesheet.mysqlToDate(this.get('date'));
+			},
+			// set the start and end date for this time log
+			setDate:function(start, end){
+				this.start = new Date(start.getTime());
+				this.end = new Date(end.getTime());
+				var minutes = (end.getTime() - start.getTime()) / 60000;
+				
+				this.set({
+					date:$.fullCalendar.formatDate(start, 'yyyy-MM-dd HH:mm:ss'),
+					minutes:minutes
+				})
+			},
+			startTime:function(){
+				return $.fullCalendar.formatDate(this.start, 'ddd, d MMMM, HH:mm') ;
+			},
+			endTime:function(){
+				return $.fullCalendar.formatDate(this.end, 'HH:mm')
+			},
+			createCalEventObj:function(){
+				var start = this.date();
+				var end = new Date(start.getTime() + this.get('minutes')*60000);
+				var event = {
+					className:'event-'+this.cid,
+					id:this.cid,
+					title:' ',
+					start:start,
+					end:end,
+					allDay: false
+				};
+				this.setDate(start, end);
+				return event;
 			}
 		});
 		
 		
 		timesheet.models.TimeLogCollection = Backbone.Collection.extend({
-			url:function(){
-				return '<?php echo NHtml::url("/timesheet/timesheet/weeklog/") ?>'
-			},
+			url:'<?php echo NHtml::url("/timesheet/api/log") ?>',
 			model:timesheet.models.TimeLog,
 			getProjects:function(){
 				return this.groupBy(function(m){
@@ -413,10 +383,13 @@
 			fetchLogsFor:function(date){
 				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
 			},
+			fetchLogsForCal:function(startd, endd){
+				this.fetch({data: $.param({ start: startd}) });
+			},
 			// refresh the log list, this will force a redraw of the timesheet table
 			refresh:function(){
 				var date = window.timesheet.timesheet.get('startDate');
-				this.fetch({data: $.param({ date: window.timesheet.dateToMysql(date)}) });
+				this.fetchLogsFor(date);
 			}
 		})
 		
@@ -433,13 +406,7 @@
 				row:0,
 				project_id:0,
 				task_id:0,
-				mon:'',
-				tue:'',
-				wed:'',
-				thu:'',
-				fri:'',
-				sat:'',
-				sun:''
+				mon:'',tue:'',wed:'',thu:'',fri:'',sat:'',sun:''
 			}
 		});
 		
@@ -523,7 +490,7 @@
 			model:timesheet.models.Project,
 			displayProject:function(project_id){
 				var p = this.get(project_id);
-				return _.isNull(p) ? 'unknown' :  p.get('link');
+				return (_.isNull(p)||_.isUndefined(p)) ? 'unknown' :  p.get('link');
 			},
 			/**
 			 * store the last name search filter string. as passed to this.filterByNameSearch
@@ -606,7 +573,7 @@
 			},
 			events:{},
 			render:function(){
-				this.el.html('');
+				this.$el.html('');
 				this.collection.forEach(function(row){
 					this.addOne(row)
 				}, this)
@@ -666,7 +633,7 @@
 				model.set({row:$('#timesheet-grid tbody tr').length});
 				
 				var row = new window.timesheet.views.TimeLogRow({model:model});
-				this.el.append(row.render().el)
+				this.$el.append(row.render().el)
 				row.focusProject();
 				this.doTotals();
 			}
@@ -689,7 +656,7 @@
 				'change input.time':'timeChange'
 			},
 			render:function(){
-				$(this.el).html(this.template(this.model.toJSON()));
+				this.$el.html(this.template(this.model.toJSON()));
 				if(this.model.get('editable')){
 					//add input mask to time fields
 					$.mask.definitions['m']='[012345]';
@@ -802,71 +769,9 @@
 			}
 		})
 		
-		var CProjectView = Backbone.View.extend({
-			className:'inputContainer input-xlarge',
-			render:function(){
-				$(this.el).append('<input class="select input-xlarge" type="text" /><input class="project-id" type="hidden" />\n\
-				<span style="position:absolute;top:5px;right:0px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span>');
-				this.autocomplete();
-				return this;
-			},
-			events:{
-				'click .down':'dropDown'
-			},
-			autocomplete:function(){
-				this.$('.select').autocomplete('destroy');
-				this.$('.select').autocomplete({
-					minLength: 0,
-					source: function(request, response) {
-						response(window.timesheet.projects.filterByProjectName(request.term));
-					},
-					select:_.bind(function(event, ui) {
-						this.$('.select').val(ui.item.get('name'));
-						this.$('.project-id').val(ui.item.get('id'));
-						//this.model.set({'project_id':ui.item.get('id')});
-						//this.model.save();
-						return false;
-					},this),
-					change:_.bind(function(event, ui){
-						if(_.isNull(ui.item)) {
-							
-							// remove invalid value, as it didn't match anything
-							this.$('.select').val("");
-							this.$('.project-id').val("");
-							this.$('.select').data("autocomplete").term = "";
-							return false;
-						}
-					},this),
-					position:{'my':'left top','at':'left bottom','of':this.$('.select'),'collision':'flip'}
-				})
-				.data("autocomplete")._renderItem = _.bind(function(ul, item) {
-					return $("<li></li>")
-						.data("item.autocomplete", item)
-						.append("<a>" + item.getNameSearchHighlight() + "</a>")
-						.appendTo(ul);
-				},this);
-			},
-			// function called when the drop down button of the combo box is clicked
-			dropDown:function(){
-				// close if already visible
-				if (this.$('.select').autocomplete("widget").is(":visible")) {
-					this.$('.select').autocomplete("close");
-					return false;
-				}
-				// work around a bug (likely same cause as #5265)
-				$(this).blur();
-				// pass empty string as value to search for, displaying all results
-				this.$('.select').autocomplete("search", "");
-				this.$('.select').focus();
-				return false;
-			}
-		});
-		
-		
 		
 		// timesheet 
 		var CTimesheetCal = Backbone.View.extend({
-			el:$('#timesheet-selector'),
 			months:null,
 			msWeek:604800000, 
 			msDay:86400000,
@@ -879,6 +784,7 @@
 				'click .addLog':'addLog'
 			},
 			initialize:function(){
+				this.setElement($('#timesheet-selector'));
 				this.months = Array();
 				this.months[this.months.length] = 'January';
 				this.months[this.months.length] = 'February';
@@ -953,25 +859,143 @@
 		
 		// GO GO GO!
 		window.timesheet.init(<?php echo $startDate; ?>);
-
-		var events = Array();
-		window.timesheet.timeLogList.forEach(function(log){
-			var start = log.date();
-			var end = new Date(start.getTime() + log.get('minutes')*60000);
-			
-			var event = {
-				title:'event',
-				start:start,
-				end:end,
-				allDay: false
-			}
-			events.push(event);
-		});
 		
-		console.log(events)
+		//window.timesheet.timeLogList = new timesheet.models.TimeLogCollection();
+		// full calendar js:
+		
+		var CProjectView = Backbone.View.extend({
+			className:'inputContainer input-xlarge',
+			render:function(){
+				var p = window.timesheet.projects.get(this.model.get('project_id'));
+				var val = (_.isUndefined(p)||_.isNull(p)) ? '' : p.get('name');
+				
+				this.$el.append('<div class="input-xlarge" style="position:relative;">' 
+					+ '<input class="select input-xlarge" type="text" value="'+val+'" />'
+					+ '<span style="position:absolute;top:5px;right:0px;cursor:pointer;" class="down sprite fam-bullet-arrow-down"></span></div>');
+				
+				this.autocomplete();
+				return this;
+			},
+			events:{
+				'click .down':'dropDown'
+			},
+			autocomplete:function(){
+				this.$('.select').autocomplete('destroy');
+				this.$('.select').autocomplete({
+					minLength: 0,
+					source: function(request, response) {
+						response(window.timesheet.projects.filterByProjectName(request.term));
+					},
+					select:_.bind(function(event, ui) {
+						this.$('.select').val(ui.item.get('name'));
+						this.$('.project-id').val(ui.item.get('id'));
+						this.model.set({'project_id':ui.item.get('id')});
+						//this.model.save();
+						return false;
+					},this),
+					change:_.bind(function(event, ui){
+						if(_.isNull(ui.item)) {
+							// remove invalid value, as it didn't match anything
+							this.$('.select').val("");
+							this.$('.project-id').val("");
+							this.$('.select').data("autocomplete").term = "";
+							return false;
+						}
+					},this),
+					position:{'my':'left top','at':'left bottom','of':this.$('.select'),'collision':'flip'}
+				})
+				.data("autocomplete")._renderItem = _.bind(function(ul, item) {
+					return $("<li></li>")
+						.data("item.autocomplete", item)
+						.append("<a>" + item.getNameSearchHighlight() + "</a>")
+						.appendTo(ul);
+				},this);
+			},
+			// function called when the drop down button of the combo box is clicked
+			dropDown:function(){
+				// close if already visible
+				if (this.$('.select').autocomplete("widget").is(":visible")) {
+					this.$('.select').autocomplete("close");
+					return false;
+				}
+				// work around a bug (likely same cause as #5265)
+				$(this).blur();
+				// pass empty string as value to search for, displaying all results
+				this.$('.select').autocomplete("search", "");
+				this.$('.select').focus();
+				return false;
+			}
+		});
 
+		
+		
+		
+		
+		var CLogForm = Backbone.View.extend({
+			template:_.template($('#timelog-pop-template').html()),
+			initialize:function(){
+				// this.setElement($('#timelog-pop'));
+				//this.model.on('change', this.render, this);
+				this.model.on('destroy', this.remove, this);
+				this.render();
+			},
+			events:{
+				'click .save':'save',
+				'click .cancel':'cancel',
+				'click .delete':'deleteLog'
+			},
+			render:function(){
+				this.$el.css({
+					display:'none',position:'relative',width:'400px',backgroundColor:'#fff',boxShadow:'0px 0px 5px #000',zIndex:3
+				});
+				
+				$('#timelog-pop').html(this.$el.html(this.template({log:this.model})));
+				var p = new CProjectView({model:this.model});
+				p.setElement(this.$('.project'));
+				p.render();
+				var eventEl = $('.event-'+this.model.cid);
+				if(eventEl.length==0)
+					eventEl = $('.fc-select-helper');
+				this.$el.show().position({my:'center bottom',at:'center top', of:eventEl, offset:'0px -15px'})
+				return this;
+			},
+			save:function(e){
+				this.model.save();
+				// calendar.fullCalendar('refetchEvents');
+				var ev = this.model.createCalEventObj();
+				console.log(ev);
+				this.close();
+			},
+			cancel:function(e){
+				calendar.fullCalendar('refetchEvents');
+				this.close();
+				return false;
+			},
+			deleteLog:function(e){
+				window.calendar.fullCalendar('removeEvents', [this.model.cid]);
+				this.model.destroy();
+				return false;
+			},
+			close:function(){
+				this.remove();
+				this.model.off();
+			}
+		})
 
-		var calendar = $('#calendar').fullCalendar({
+		var CCalView = Backbone.View.extend({
+			initialize:function(){
+				window.timesheet.timeLogList.on('remove', this.removeLog, this);
+			},
+			removeLog:function(log){
+				window.calendar.fullCalendar('removeEvents', [log.cid]);
+			}
+		});
+		window.calView = new CCalView();
+		
+
+		window.curForm = null;
+
+		window.calendar = $('#calendar').fullCalendar({
 			// put your options and callbacks here
 			header: {
 				left: 'prev,next today',
@@ -982,29 +1006,75 @@
 			selectable: true,
 			selectHelper: true,
 			select: function(start, end, allDay, jsEvent) {
+				// remove all timeLogs that are not saved to the database
+				window.timesheet.timeLogList.remove(window.timesheet.timeLogList.filter(function(l){
+					return _.isNull(l.id);
+				}));
+					
+				var log = new timesheet.models.TimeLog;
+				window.timesheet.timeLogList.add(log);
+				log.setDate(start, end);
 				
-				$('#timelogday').show().position({my:'center bottom',at:'center top', of:$('.fc-select-helper'), offset:'0px -15px'})
-				calendar.fullCalendar('refetchEvents');
-				//if (title) {
-					calendar.fullCalendar('renderEvent',{
-						title: '',
-						start: start,
-						end: end,
-						allDay: false
-					});
-				//}
+				window.curForm = new CLogForm({model:log});
+
+				calendar.fullCalendar('renderEvent',{
+					className:'event-'+log.cid,
+					id:log.cid,
+					title: '',
+					start: start,
+					end: end,
+					allDay: false
+//					editable:false
+				});
+				
 				calendar.fullCalendar('unselect');
+			},
+			eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+				var log = window.timesheet.timeLogList.getByCid(event.id);
+				
+				log.setDate(event.start, event.end);
+				if(!_.isNull(log.id))
+					log.save();
+				
+				window.curForm = new CLogForm({model:log});
+			},
+			eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
+				var log = window.timesheet.timeLogList.getByCid(event.id);
+				log.setDate(event.start, event.end);
+				
+				window.curForm = new CLogForm({model:log});
+				// only update do no create from a drag
+				if(!_.isNull(log.id))
+					log.save();
+			},
+			eventClick: function(calEvent, jsEvent, view) {
+				var log = window.timesheet.timeLogList.getByCid(calEvent.id);
+				window.curForm = new CLogForm({model:log});
 			},
 			editable: true,
 			firstDay:1,
 			slotMinutes:15,
 			firstHour:8,
-			minTime:5,
-			events:events
+			minTime:7,
+			maxTime:20,
+			height:700,
+			events:function(start, end, callback){
+				start = start.getTime()/1000;
+				end = end.getTime()/1000;
+				$.getJSON("<?php echo NHtml::url('/timesheet/api/log'); ?>",{start:start,end:end},function(r){
+					window.timesheet.timeLogList.reset(r);
+					var events = Array();
+					window.timesheet.timeLogList.forEach(function(log){
+						var event = log.createCalEventObj();
+						events.push(event);
+					});
+					callback(events);
+				});
+			}
 		});
 		
-		var p = new CProjectView;
-		$('#project-select').html(p.render().el);
+		//var p = new CProjectView;
+		//$('#project-select').html(p.render().el);
 		
 	});
 
