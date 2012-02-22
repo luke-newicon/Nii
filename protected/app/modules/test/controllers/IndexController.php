@@ -3,23 +3,44 @@
 class IndexController extends AController {
 
 	public function actionIndex() {
-		
-		$contactModel = Yii::app()->getModule('contact')->contactModel;
-		$model = new $contactModel('search');
-		
-		$model->unsetAttributes();
-		
-		if(isset($_GET[$contactModel]))
-			$model->attributes = $_GET[$contactModel];
-
-		$this->render('index', array(
-			'dataProvider'=>$model->search(),
-			'model'=>$model,
-		));
+		$this->render('index');
 	}
 
 	public function actionGrid() {
-		$this->render('grid');
+		$model = new TestContactGrid('search');
+		$model->unsetAttributes();
+		$model->extra = new TestExtra('search');
+		$model->extra->unsetAttributes();
+
+		if(isset($_GET['TestContactGrid']))
+			$model->attributes = $_GET['TestContactGrid'];
+		
+		$this->render('grid', array(
+			'model' => $model,
+		));
 	}
 
+	public function actionForm(){
+		$model = new TestContactForm;
+		
+		$this->performAjaxValidation($model, 'test-contact-form');
+		
+		if (isset($_POST['TestContactForm'])) {
+			$model->attributes = $_POST['TestContactForm'];
+			
+			if ($model->save()) {
+				
+			}	
+		}
+		
+		$this->render('form', array(
+			'model' => $model,
+		));
+	}
+	
+	public function actionAutoForm(){
+		$model = new TestContactForm;
+		$form = new NForm($model->fields(), $model);
+		$this->render('autoform', array('form'=>$form));
+	}
 }

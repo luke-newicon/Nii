@@ -1,15 +1,30 @@
 <?php
 
 class RActiveRecord extends NActiveRecord {
-	const TYPE_STRING='CAttributeTypeString';
-	const TYPE_ENUM='CAttributeTypeEnum';
-	const TYPE_TEXT='CAttributeTypeText';
-	const TYPE_DATE='CAttributeTypeDate';
-	const TYPE_TIME='CAttributeTypeTime';
+	const TYPE_STRING='RAttributeTypeString';
+	const TYPE_ENUM='RAttributeTypeEnum';
+	const TYPE_TEXT='RAttributeTypeText';
+	const TYPE_DATE='RAttributeTypeDate';
+	const TYPE_TIME='RAttributeTypeTime';
 
 	public $defaultType = self::TYPE_STRING;
 	private $_definitions = array();
-
+	
+	/**
+	 * This method should be overridden to declare attribute definition objects.
+	 *
+	 * Below is an example declaring attribute definitions:
+	 * <pre>
+	 * return array(
+	 *     'id'=>array(self::TYPE_INT),
+	 *     'name'=>array(self::TYPE_STRING),
+	 *     'comment'=>array(self::TYPE_TEXT),
+	 *	   'status'=>array(self::TYPE_ENUM, 'data'=>array('inactive','active','disabled')),
+	 * );
+	 * </pre>
+	 *
+	 * @return array list of attribute definitions.
+	 */
 	public function attributes() {
 		return array();
 	}
@@ -42,6 +57,22 @@ class RActiveRecord extends NActiveRecord {
 			}
 		}
 	}
+	
+	/**
+	 * Get the model in the search scenario state. Populate with search attributes
+	 * $_GET[$className];
+	 * @param string $className
+	 * @return NActiveRecord in scenario search
+	 */
+	public function searchModel()
+	{
+		$className = get_class($this);
+		$model = new $className('search');
+		$model->unsetAttributes();
+		if(isset($_GET[$className]))
+			$model->attributes = $_GET[$className];
+		return $model;
+	}
 
 	public function search() {
 		$criteria = $this->getDbCriteria();
@@ -71,7 +102,7 @@ class RActiveRecord extends NActiveRecord {
 
 }
 
-class CBaseAttributeType extends CComponent {
+class RBaseAttributeType extends CComponent {
 
 	public $name;
 	public $filter;
@@ -102,23 +133,23 @@ class CBaseAttributeType extends CComponent {
 
 }
 
-class CAttributeTypeString extends CBaseAttributeType {
+class RAttributeTypeString extends RBaseAttributeType {
 	
 }
 
-class CAttributeTypeText extends CBaseAttributeType {
+class RAttributeTypeText extends RBaseAttributeType {
 	
 }
 
-class CAttributeTypeDate extends CBaseAttributeType {
+class RAttributeTypeDate extends RBaseAttributeType {
 	
 }
 
-class CAttributeTypeTime extends CBaseAttributeType {
+class RAttributeTypeTime extends RBaseAttributeType {
 	
 }
 
-class CAttributeTypeEnum extends CBaseAttributeType {
+class RAttributeTypeEnum extends RBaseAttributeType {
 
 	private $_data;
 

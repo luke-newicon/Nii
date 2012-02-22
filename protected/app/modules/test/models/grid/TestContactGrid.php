@@ -13,7 +13,6 @@ class TestContactGrid extends TestContact {
 			'name',
 			'extra.comments',
 			'extra.number',
-			'extra.comments2',
 		);
 	}
 }

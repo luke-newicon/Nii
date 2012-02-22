@@ -11,10 +11,12 @@ class TestModule extends NWebModule {
 		Yii::import('test.models.*');
 		Yii::import('test.models.db.*');
 		Yii::import('test.models.grid.*');
+		Yii::import('test.models.form.*');
 		
 		Yii::app()->menus->addItem('main', 'Test Module', '#');
-		Yii::app()->menus->addItem('main', 'First page', array('/test/index/index'), 'Test Module');
-		Yii::app()->menus->addItem('main', 'Test Grid', array('/test/index/grid'), 'Test Module');
+		Yii::app()->menus->addItem('main', 'Grid', array('/test/index/grid'), 'Test Module');
+		Yii::app()->menus->addItem('main', 'Form', array('/test/index/form'), 'Test Module');
+		Yii::app()->menus->addItem('main', 'Auto Form', array('/test/index/autoform'), 'Test Module');
 	}
 
 	public function settings() {

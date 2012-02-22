@@ -157,28 +157,28 @@ class TestContact extends RActiveRecord {
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return NActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search() {
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
-		$criteria = $this->getDbCriteria();
-
-		$this->getSearchCriteria($criteria);
-
-		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
-		//$criteria->together = true;\
-
-		$sort = new CSort;
-		$sort->defaultOrder = 'id DESC';
-
-		return new NActiveDataProvider($this, array(
-					'criteria' => $criteria,
-					'sort' => $sort,
-					'pagination' => array(
-						'pageSize' => 20,
-					),
-				));
-	}
+//	public function search() {
+//		// Warning: Please modify the following code to remove attributes that
+//		// should not be searched.
+//
+//		$criteria = $this->getDbCriteria();
+//
+//		$this->getSearchCriteria($criteria);
+//
+//		//$criteria->with = array('student','staff','academic','cleric','diocese','church','trainingfacility');
+//		//$criteria->together = true;\
+//
+//		$sort = new CSort;
+//		$sort->defaultOrder = 'id DESC';
+//
+//		return new NActiveDataProvider($this, array(
+//					'criteria' => $criteria,
+//					'sort' => $sort,
+//					'pagination' => array(
+//						'pageSize' => 20,
+//					),
+//				));
+//	}
 
 	public function getSearchCriteria(&$criteria) {
 		$criteria->compare('id', $this->id);
