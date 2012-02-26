@@ -1,6 +1,8 @@
-<div class="page-header">
-	<h1>Test Auto Form</h1>
-</div>
-<div class="form">
-	<?php echo $form; ?>
-</div>
+<?php echo $form; ?>
+<!--<script>
+	$(function(){
+		$('.main').on('submit','form',function(){
+			alert($(this).find('.error:first').closest('.tab-pane').attr('id'));
+		});
+	});
+</script>-->

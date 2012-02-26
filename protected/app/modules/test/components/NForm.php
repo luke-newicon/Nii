@@ -2,10 +2,30 @@
 
 class NForm extends CForm {
 	
-	public $activeForm=array('class'=>'nii.widgets.NActiveForm');
+	public $activeForm=array(
+		'class'=>'nii.widgets.NActiveForm',
+		'enableClientValidation'=>false,
+	);
 	public $active = false;
 	
 	public $inputElementClass='NFormInputElement';
+	public $elementCollectionClass='CFormElementCollection';
+	
+	private $_elements;
+	
+	/**
+	 * Returns the input elements of this form.
+	 * This includes text strings, input elements and sub-forms.
+	 * Note that the returned result is a {@link CFormElementCollection} object, which
+	 * means you can use it like an array. For more details, see {@link CMap}.
+	 * @return CFormElementCollection the form elements.
+	 */
+	public function getElements()
+	{
+		if($this->_elements===null)
+			$this->_elements=new $this->elementCollectionClass($this,false);
+		return $this->_elements;
+	}
 	
 	/**
 	 * Renders the body content of this form.
@@ -21,28 +41,34 @@ class NForm extends CForm {
 	{
 		$output='';
 		
-		if(!$this->getParent() instanceof self)
+		if($this->getParent() instanceof self)
 		{
+			$attributes=$this->attributes;
+			unset($attributes['name'],$attributes['type']);
+			$output.="<div class=\"tab-pane".($this->active?' active':'')."\" id=\"".$this->name."\">\n".CHtml::openTag('fieldset', $attributes);
+			if($this->title!==null)
+				$output.="<legend>".$this->title."</legend>\n";
+		}
+		else {
+			if($this->title!==null){
+				$output.="<div class=\"page-header\"><h1>".$this->title."</h1>\n";
+				$buttonoutput='';
+				foreach($this->getButtons() as $button)
+					$buttonoutput.=$this->renderElement($button);
+				$output.=($buttonoutput!==''?"<div class=\"action-buttons\">".$buttonoutput."</div>\n":'');
+				$output.="</div>\n";
+			}
 			$output.="<div class=\"tabbable tabs-left\">\n<ul class=\"nav nav-tabs\">\n";
 			foreach($this->getElements() as $element){
 				if($element instanceof self){
-					$output.="<li".($element->active?' class="active"':'')."><a href=\"#".$element->name."\" data-toggle=\"tab\">".$element->title."</a></li>";
+					$output.="<li".($element->active?' class="active"':'')."><a href=\"#".$element->name."\" data-toggle=\"tab\">".($element->title?$element->title:$element->name)."</a></li>";
 				}
 			}
 			$output.="</ul>\n<div class=\"tab-content\">\n";
 		}
 		
-		if($this->title!==null)
-		{
-			if($this->getParent() instanceof self)
-			{
-				$attributes=$this->attributes;
-				unset($attributes['name'],$attributes['type']);
-				$output.="<div class=\"tab-pane".($this->active?' active':'')."\" id=\"".$this->name."\">\n".CHtml::openTag('fieldset', $attributes)."<legend>".$this->title."</legend>\n";
-			}
-			else
-				$output.="<fieldset>\n<legend>".$this->title."</legend>\n";
-		}
+//		if($this->title!==null)
+//			$output.="<legend>".$this->title."</legend>\n";
 
 		if($this->description!==null)
 			$output.="<div class=\"description\">\n".$this->description."</div>\n";
@@ -52,10 +78,9 @@ class NForm extends CForm {
 
 		$output.=$this->renderElements()."\n";
 
-		if($this->title!==null)
+		if($this->getParent() instanceof self)
 			$output.="</fieldset>\n</div>\n";
-
-		if(!$this->getParent() instanceof self)
+		else
 			$output.="</div>\n</div>\n";
 		
 		$output.=$this->renderButtons()."\n";
@@ -97,8 +122,7 @@ class NForm extends CForm {
 				if($element->type==='hidden')
 					return "<div style=\"visibility:hidden\">\n".$element->render()."</div>\n";
 				else
-					return "<div class=\"control-group\">\n".$element->render()."</div>\n";
-//					return "<div class=\"field_{$element->name}\">\n".$element->render()."</div>\n";
+					return "<div class=\"control-group field_{$element->name}".($element->parent->model->hasErrors($element->name)?' error':'')."\">\n".$element->render()."</div>\n";
 			}
 			else if($element instanceof CFormButtonElement)
 				return $element->render()."\n";
@@ -106,5 +130,12 @@ class NForm extends CForm {
 				return $element->render();
 		}
 		return '';
+	}
+	
+	public function performAjaxValidation(){
+		if(isset($_POST['ajax']) && isset($_POST[$this->uniqueId])) {
+			echo CActiveForm::validate($this->models);
+			Yii::app()->end();
+		}
 	}
 }

@@ -2,7 +2,9 @@
 
 class NFormInputElement extends CFormInputElement
 {
-
+	
+	public $type='text';
+	
 	public $layout="{label}\n<div class=\"controls\">\n{input}\n{hint}\n{error}</div>";
 	
 	/**

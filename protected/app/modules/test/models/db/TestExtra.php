@@ -26,7 +26,7 @@ class TestExtra extends RActiveRecord {
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('comments','required'),
+			array('comments, number','required'),
 			array('comments, number, comments2', 'safe'),
 		);
 	}

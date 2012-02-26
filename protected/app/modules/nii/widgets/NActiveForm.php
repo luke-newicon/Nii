@@ -11,9 +11,9 @@
 class NActiveForm extends CActiveForm 
 {
 
-	public $enableAjaxValidation = false;
+	public $enableAjaxValidation = true;
 	public $enableClientValidation = true;
-	public $errorMessageCssClass = 'errorMessage help-inline';
+	public $errorMessageCssClass = 'errorMessage help-block';
 
 	public function init() 
 	{

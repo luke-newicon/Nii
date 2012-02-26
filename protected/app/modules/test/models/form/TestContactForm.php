@@ -10,26 +10,24 @@ class TestContactForm extends TestContact {
 	
 	public function fields(){
 		return array(
-//			'title'=>'Please provide your login credential',
+			'title'=>'Test Auto Form',
  
 			'elements'=>array(
+				
 				'contact'=>array(
 					'title'=>'Contact form',
 					'active'=>true,
 					'type'=>'form',
 					'elements'=>array(
-						'name'=>array(
-							'type'=>'text',
-						),
+						'name'=>array(),
 					),
 				),
+				
 				'extra'=>array(
 					'title'=>'Extra form',
 					'type'=>'form',
 					'elements'=>array(
-						'comments'=>array(
-							'type'=>'text',
-						),
+						'comments'=>array(),
 						'number'=>array(
 							'type'=>'dropdownlist',
 							'items'=>TestExtra::numberData(),
@@ -37,19 +35,23 @@ class TestContactForm extends TestContact {
 						),
 					),
 				),
+				
 			),
 			
 			'buttons'=>array(
+				
 				'save'=>array(
 					'type'=>'htmlSubmit',
 					'label'=>'Save',
 					'class'=>'btn btn-primary',
 				),
+				
 				'cancel'=>array(
 					'type'=>'htmlButton',
 					'label'=>'Cancel',
 					'class'=>'btn',
 				),
+				
 			),
 		);
 	}

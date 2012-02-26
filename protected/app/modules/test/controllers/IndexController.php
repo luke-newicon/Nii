@@ -41,13 +41,19 @@ class IndexController extends AController {
 	public function actionAutoForm(){
 		$model = new TestContactForm;
 		$form = new NForm($model->fields());
-//		$form['contact']->showErrorSummary = true;
-//		$form['extra']->showErrorSummary = true;
+
 		$form['contact']->model = new TestContact;
 		$form['extra']->model = new TestExtra;
+		
+//		$form['contact']->showErrorSummary = true;
+//		$form['extra']->showErrorSummary = true;
+		
+		$form->performAjaxValidation();
+		
 		if($form->submitted('save') && $form->validate()){
 			
 		}
+		
 		$this->render('autoform', array('form'=>$form));
 	}
 }
