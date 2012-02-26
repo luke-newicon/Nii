@@ -10,11 +10,32 @@ class TestContactForm extends TestContact {
 	
 	public function fields(){
 		return array(
-			'title'=>'Please provide your login credential',
+//			'title'=>'Please provide your login credential',
  
 			'elements'=>array(
-				'name'=>array(
-					'type'=>'text',
+				'contact'=>array(
+					'title'=>'Contact form',
+					'active'=>true,
+					'type'=>'form',
+					'elements'=>array(
+						'name'=>array(
+							'type'=>'text',
+						),
+					),
+				),
+				'extra'=>array(
+					'title'=>'Extra form',
+					'type'=>'form',
+					'elements'=>array(
+						'comments'=>array(
+							'type'=>'text',
+						),
+						'number'=>array(
+							'type'=>'dropdownlist',
+							'items'=>TestExtra::numberData(),
+							'prompt'=>'Please select',
+						),
+					),
 				),
 			),
 			

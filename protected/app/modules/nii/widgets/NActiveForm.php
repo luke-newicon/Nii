@@ -11,7 +11,7 @@
 class NActiveForm extends CActiveForm 
 {
 
-	public $enableAjaxValidation = true;
+	public $enableAjaxValidation = false;
 	public $enableClientValidation = true;
 	public $errorMessageCssClass = 'errorMessage help-inline';
 
@@ -20,6 +20,8 @@ class NActiveForm extends CActiveForm
 		// add small script to add focus class to parent .field element
 		if (!isset($this->clientOptions['inputContainer']))
 			$this->clientOptions['inputContainer'] = '.control-group';
+		if (!isset($this->clientOptions['validateOnSubmit']))
+			$this->clientOptions['validateOnSubmit'] = true;
 		if (!isset($this->htmlOptions['class']))
 			$this->htmlOptions['class'] = 'form-horizontal';
 		parent::init();
