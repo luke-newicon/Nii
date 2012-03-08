@@ -6,6 +6,6 @@
 )); ?>
 
 	<?php echo $form->field($model, 'name') ?>
-	<?php echo $form->field($model, 'extra.comments') ?>
+	<?php // echo $form->field($model, 'extra.comments') ?>
 
 <?php $this->endWidget() ?>

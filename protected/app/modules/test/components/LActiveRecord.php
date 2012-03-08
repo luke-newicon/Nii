@@ -1,13 +1,8 @@
 <?php
 
-class RActiveRecord extends NActiveRecord {
-	const TYPE_STRING='RAttributeTypeString';
-	const TYPE_ENUM='RAttributeTypeEnum';
-	const TYPE_TEXT='RAttributeTypeText';
-	const TYPE_DATE='RAttributeTypeDate';
-	const TYPE_TIME='RAttributeTypeTime';
-
-	public $defaultType = self::TYPE_STRING;
+class LActiveRecord extends NActiveRecord {
+	
+//	public $defaultType = self::TYPE_STRING;
 	private $_definitions = array();
 	
 	/**
@@ -25,13 +20,13 @@ class RActiveRecord extends NActiveRecord {
 	 *
 	 * @return array list of attribute definitions.
 	 */
-	public function attributes() {
+	public function definitions() {
 		return array();
 	}
 
 	public function getDefinition($attribute) {
 		if (!isset($this->_definitions[$attribute])) {
-			$definitions = $this->attributes();
+			$definitions = $this->definitions();
 			$config = isset($definitions[$attribute]) ? $definitions[$attribute] : array();
 			$this->addDefinition($attribute, $config);
 		}
@@ -42,7 +37,7 @@ class RActiveRecord extends NActiveRecord {
 		if (isset($config[0]))  // type class
 			$className = array_shift($config);
 		else
-			$className = self::TYPE_STRING;
+			$className = LAttributeType::STRING;
 		$this->_definitions[$name] = new $className($name, $this, $config);
 	}
 
@@ -92,7 +87,7 @@ class RActiveRecord extends NActiveRecord {
 		$criteria->with = $with;
 		$criteria->together = true;
 
-		$sort = new NSort;
+		$sort = new LSort;
 		$sort->model = $this;
 		return new NActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -102,7 +97,12 @@ class RActiveRecord extends NActiveRecord {
 
 }
 
-class RBaseAttributeType extends CComponent {
+class LAttributeType extends CComponent {
+	const STRING='LAttributeTypeString';
+	const ENUM='LAttributeTypeEnum';
+	const TEXT='LAttributeTypeText';
+	const DATE='LAttributeTypeDate';
+	const TIME='LAttributeTypeTime';
 
 	public $name;
 	public $filter;
@@ -127,29 +127,33 @@ class RBaseAttributeType extends CComponent {
 		return CHtml::value($this->model, $this->name);
 	}
 	
-	public function renderFormField($htmlOptions=array()){
+	public function renderField($htmlOptions=array()){
 		return CHtml::activeTextField($this->model, $this->name, $htmlOptions);
+	}
+	
+	public function renderValue(){
+		return CHtml::value($this->model, $this->name);
 	}
 
 }
 
-class RAttributeTypeString extends RBaseAttributeType {
+class LAttributeTypeString extends LAttributeType {
 	
 }
 
-class RAttributeTypeText extends RBaseAttributeType {
+class LAttributeTypeText extends LAttributeType {
 	
 }
 
-class RAttributeTypeDate extends RBaseAttributeType {
+class LAttributeTypeDate extends LAttributeType {
 	
 }
 
-class RAttributeTypeTime extends RBaseAttributeType {
+class LAttributeTypeTime extends LAttributeType {
 	
 }
 
-class RAttributeTypeEnum extends RBaseAttributeType {
+class LAttributeTypeEnum extends LAttributeType {
 
 	private $_data;
 
@@ -170,9 +174,9 @@ class RAttributeTypeEnum extends RBaseAttributeType {
 		if ($this->data === null)
 			throw new CDbException(Yii::t('yii', '{class} requires a data definition for the attribute "{name}".', array('{class}' => get_class($this), '{name}' => $this->name)));
 		$htmlOptions = CMap::mergeArray(array(
-					'id' => false,
-					'prompt' => '',
-						), $htmlOptions);
+			'id' => false,
+			'prompt' => '',
+		), $htmlOptions);
 		return CHtml::activeDropDownList($this->model, $this->name, $this->data, $htmlOptions);
 	}
 
@@ -181,7 +185,12 @@ class RAttributeTypeEnum extends RBaseAttributeType {
 		return isset($this->data[$value]) ? $this->data[$value] : $value;
 	}
 
-	public function renderFormField($htmlOptions=array()){
+	public function renderField($htmlOptions=array()){
 		return CHtml::activeDropDownList($this->model, $this->name, $this->data, $htmlOptions);
+	}
+	
+	public function renderValue(){
+		$value = CHtml::value($this->model, $this->name);
+		return isset($this->data[$value]) ? $this->data[$value] : $value;
 	}
 }

@@ -8,7 +8,7 @@
  * @copyright Copyright &copy; 2009-2011 Newicon Ltd
  * @license http://newicon.net/framework/license/
  */
-class NActiveForm extends CActiveForm {
+class LActiveForm extends CActiveForm {
 
 	public $enableAjaxValidation = true;
 	public $enableClientValidation = true;
@@ -67,7 +67,7 @@ class NActiveForm extends CActiveForm {
 		return $return;
 	}
 
-	public function field($model, $attribute, $type = 'textField', $data = null, $htmlOptions = array()) {
+	public function field($model, $attribute, $type=null, $data = null, $htmlOptions = array()) {
 		return $this->editField($model, $attribute, $type, $data, $htmlOptions);
 	}
 
@@ -80,11 +80,13 @@ class NActiveForm extends CActiveForm {
 	 * @param array $htmlOptions Any optional HTML options to be applied
 	 * @return string The HTML to be rendered
 	 */
-	public function editField($model, $attribute, $type = 'textField', $data = null, $htmlOptions = array()) {
+	public function editField($model, $attribute, $type = null, $data = null, $htmlOptions = array()) {
 		$return = $this->beginField($model, $attribute);
-		if ($type == 'dropDownList') {
+		if($type === null)
+			$return .= LHtml::activeField($model, $attribute, $htmlOptions);
+		elseif ($type == 'dropDownList')
 			$return .= $this->dropDownList($model, $attribute, $data, $htmlOptions);
-		} else
+		else
 			$return .= $this->$type($model, $attribute, $htmlOptions);
 		$return .= $this->endField($model, $attribute);
 		return $return;
@@ -99,7 +101,7 @@ class NActiveForm extends CActiveForm {
 	 */
 	public function viewField($model, $attribute, $data = array()) {
 		$return = $this->beginField($model, $attribute, false);
-		$value = CHtml::resolveValue($model, $attribute);
+		$value = LHtml::activeValue($model, $attribute);
 		$return .= '<span class="view-field">' . (array_key_exists($value, $data) ? $data[$value] : $value) . '</span>';
 		$return .= $this->endField();
 		return $return;

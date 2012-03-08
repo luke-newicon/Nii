@@ -1,6 +1,6 @@
 <?php
 
-class NSort extends CSort {
+class LSort extends CSort {
 
 	/**
 	 * @var array separators used in the generated URL. This must be an array consisting of

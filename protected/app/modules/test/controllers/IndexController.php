@@ -40,7 +40,7 @@ class IndexController extends AController {
 	
 	public function actionAutoForm(){
 		$model = new TestContactForm;
-		$form = new NForm($model->fields());
+		$form = new LForm($model->fields());
 
 		$form['contact']->model = new TestContact;
 		$form['extra']->model = new TestExtra;

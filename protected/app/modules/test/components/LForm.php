@@ -1,15 +1,15 @@
 <?php
 
-class NForm extends CForm {
+class LForm extends CForm {
 	
 	public $activeForm=array(
-		'class'=>'nii.widgets.NActiveForm',
+		'class'=>'test.components.LActiveForm',
 		'enableClientValidation'=>false,
 	);
 	public $active = false;
 	
-	public $inputElementClass='NFormInputElement';
-	public $elementCollectionClass='CFormElementCollection';
+	public $inputElementClass='LFormInputElement';
+	public $elementCollectionClass='LFormElementCollection';
 	
 	private $_elements;
 	

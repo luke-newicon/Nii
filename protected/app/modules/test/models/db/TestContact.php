@@ -25,7 +25,7 @@
  * @property string $mobile
  * @property string $fax
  */
-class TestContact extends RActiveRecord {
+class TestContact extends LActiveRecord {
 
 	/**
 	 * Returns the static model of the specified AR class.

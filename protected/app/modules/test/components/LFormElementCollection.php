@@ -1,7 +1,22 @@
 <?php
 
-class NFormElementCollection extends CFormElementCollection
+class LFormElementCollection extends CMap
 {
+	
+	private $_form;
+	private $_forButtons;
+
+	/**
+	 * Constructor.
+	 * @param CForm $form the form object that owns this collection
+	 * @param boolean $forButtons whether this collection is used to store buttons.
+	 */
+	public function __construct($form,$forButtons=false)
+	{
+		parent::__construct();
+		$this->_form=$form;
+		$this->_forButtons=$forButtons;
+	}
 		
 	/**
 	 * Adds an item to the collection.
@@ -27,7 +42,7 @@ class NFormElementCollection extends CFormElementCollection
 			else
 			{
 				if(!isset($value['type']))
-					$value['type']='text';
+					$value['type']='';
 				if($value['type']==='string')
 				{
 					unset($value['type'],$value['name']);
@@ -60,4 +75,13 @@ class NFormElementCollection extends CFormElementCollection
 		$this->_form->addedElement($key,$element,$this->_forButtons);
 	}
 	
+	/**
+	 * Removes the specified element by key.
+	 * @param string $key the name of the element to be removed from the collection
+	 */
+	public function remove($key)
+	{
+		if(($item=parent::remove($key))!==null)
+			$this->_form->removedElement($key,$item,$this->_forButtons);
+	}
 }

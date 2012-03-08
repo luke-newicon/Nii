@@ -29,8 +29,8 @@ class TestContactForm extends TestContact {
 					'elements'=>array(
 						'comments'=>array(),
 						'number'=>array(
-							'type'=>'dropdownlist',
-							'items'=>TestExtra::numberData(),
+//							'type'=>'dropdownlist',
+//							'items'=>TestExtra::numberData(),
 							'prompt'=>'Please select',
 						),
 					),

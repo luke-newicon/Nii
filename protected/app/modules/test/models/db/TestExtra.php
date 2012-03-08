@@ -1,6 +1,6 @@
 <?php
 
-class TestExtra extends RActiveRecord {
+class TestExtra extends LActiveRecord {
 	
 	public $comments2 = 'Hello2';
 
@@ -41,10 +41,10 @@ class TestExtra extends RActiveRecord {
 		);
 	}
 	
-	public function attributes(){
+	public function definitions() {
 		return array(
-			'number' => array(self::TYPE_ENUM, 'data' => '$data->numberData()'),
-			'comments' => array(self::TYPE_TEXT),
+			'number' => array(LAttributeType::ENUM, 'data' => '$data->numberData()'),
+			'comments' => array(LAttributeType::TEXT),
 		);
 	}
 
